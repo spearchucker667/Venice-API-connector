@@ -159,6 +159,36 @@ export function registerCharacterCardFileHandlers(): void {
     }
   }));
 
+  ipcMain.handle("characterCards:consumeImportCandidate", rateLimitIpcHandler("characterCards:consumeImportCandidate", async (event, handle: unknown) => {
+    try {
+      cleanExpired();
+      if (typeof handle !== "string" || !handle) return { ok: false, error: "Invalid import handle." };
+      const entries = candidates.get(event.sender.id);
+      const candidate = entries?.get(handle);
+      if (!candidate) return { ok: false, error: "Import preview expired or is no longer valid." };
+      const decision = assessCharacterImport(candidate.card, getRuntimeLocalFamilySafeModeEnabled());
+      if (!decision.allow) {
+        entries!.delete(handle);
+        return { ok: false, error: decision.userMessage || "Character card was blocked by Local Family Safe Mode." };
+      }
+      entries!.delete(handle);
+      const cardDto = mapInternalToV2(candidate.card);
+      let avatarDataUrl: string | undefined;
+      if (candidate.avatar && candidate.avatar.length > 0) {
+        avatarDataUrl = `data:image/png;base64,${candidate.avatar.toString("base64")}`;
+      }
+      return {
+        ok: true,
+        card: cardDto,
+        preview: createImportPreview(candidate.card, candidate.warnings),
+        avatarDataUrl,
+        warnings: candidate.warnings,
+      };
+    } catch (error) {
+      return { ok: false, error: redactErrorMessage(error) };
+    }
+  }));
+
   ipcMain.handle("characterCards:applyImport", rateLimitIpcHandler("characterCards:applyImport", async (event, payload: unknown) => {
     try {
       cleanExpired();

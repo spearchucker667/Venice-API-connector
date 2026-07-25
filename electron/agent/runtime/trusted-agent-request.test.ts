@@ -74,17 +74,15 @@ describe("trusted-agent-request — P0-05 trust boundary regressions", () => {
     expect(composed.body.messages[0].content).toContain("media.listImages (trusted=true)");
   });
 
-  it("P0-05 (3) injects trusted context into /image/generate body.prompt too", () => {
+  it("does not inject System Runtime Context into /image/generate body.prompt", () => {
     const raw = {
       endpoint: "/image/generate",
       method: "POST",
       body: { model: "nano-banana", prompt: "a quiet forest at dawn" },
     };
     const composed = composeTrustedRequest(raw) as any;
-    expect(composed.body.prompt.startsWith("[System Runtime Context]")).toBe(true);
-    expect(composed.body.prompt).toContain("Toolchain Trust Ledger:");
-    expect(composed.body.prompt).toContain("a quiet forest at dawn");
-    // Original `model` is preserved.
+    expect(composed.body.prompt.startsWith("[System Runtime Context]")).toBe(false);
+    expect(composed.body.prompt).toBe("a quiet forest at dawn");
     expect(composed.body.model).toBe("nano-banana");
   });
 

@@ -4,6 +4,49 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-07-25 (Master Feature-Completion Audit & P0/P1 Character Creator Remediation)
+
+**Scope:** Reviewed `docs/audits/TODO/`, audited `VENICE_FORGE_FULL_IMPLEMENTATION_AUDIT_2026-07-25.md` and `VENICE_FORGE_MASTER_COMPLETION_WORK_ORDER_2026-07-25.md`, and executed Phase 0, Phase 1, Phase 2, Phase 3, Phase 4, and Phase 5 remediation tasks.
+
+- **Phase 0 — Baseline & Status Reconciliation**:
+  - Confirmed repository root and branch (`main`).
+  - Created `docs/reports/VENICE_FORGE_COMPLETION_EXECUTION_2026-07-25.md` execution log and registered it in `docs/DOCS_INDEX.md`.
+  - Reopened `VF-CHARACTER-CREATOR-HARDENING-001` in `docs/ROADMAP.md`.
+- **Phase 1 — P0 Character Creator Import Candidate Consumption**:
+  - Added IPC handler `characterCards:consumeImportCandidate` in `electron/ipc/characterCardFileHandlers.ts` to consume import candidates by handle, enforce expiry and Local Family Safe Mode, delete handle (one-time use), and return bounded Character Card V2 DTO with avatar data URL.
+  - Registered IPC in `electron/preload.ts`, `src/types/desktop.ts`, and `src/services/desktopBridge.ts`.
+  - Updated `CharacterCreatorImportService.loadImportHandleAsDraft(handle)` in `src/services/characterCreatorImportService.ts` to call `desktopCharacterCards.consumeImportCandidate(handle)` in Electron mode before falling back to JSON text parsing.
+- **Phase 2 — P0 Draft Durability & Autosave Repair**:
+  - Refactored `flushPendingSave` in `src/components/character-creator/CharacterCreatorView.tsx` so `pendingDraftRef.current` is retained until `CharacterDraftService.update` completes successfully.
+  - Added typed return status `{ ok: boolean; error?: string }` from `flushPendingSave`.
+  - Added persistent `autosaveError` notification banner and state in UI.
+  - Gated approval, validation, export, save, revise, and field regeneration actions when pending autosave fails.
+  - Updated `CharacterDraftService.create` to use UUID-based IDs and added CAS `expectedRevision` check to `CharacterDraftService.update`.
+- **Phase 3 & 4 — Character Creator IPC Consolidation & Export Hardening**:
+  - Cleaned up unused channel declarations in `characterCreatorIpcChannels` to match registered channels (`exportCard`, `validateCard`).
+  - Added recursive prototype pollution check `hasForbiddenKeys`, input validation, and 10 MiB avatar size cap to `exportCard` and `validateCard`.
+  - Sanitized export error messages to avoid raw error leakage.
+- **Phase 5 — Honest AI Design Process & Remediation Tests**:
+  - Updated `createProcessEvent` in `src/services/characterCreatorAiService.ts` to use UUID event IDs.
+  - Updated `generateCharacterCreatorDraft` to dynamically infer `intendedMode` (`original`, `inspired-original`, `direct-existing`, `parody`, `alternate`).
+  - Created unit test suite `tests/character-creator/p0P1Remediation.test.ts` (4/4 tests passed).
+- **Media Prompt Context Isolation (Image Text & Artifacts Remediation)**:
+  - Investigated Venice API reference contracts in `docs/reference/Venice_swagger_api.yaml` and `docs/reference/Venice_api_LLM_info.md` regarding image generation parameters and text artifact causes.
+  - Resolved root cause of random letters/symbols/text rendered inside generated pictures: `electron/agent/runtime/trusted-agent-request.ts` previously prepended `[System Runtime Context]` LLM blocks (`Current Date/Time: ...`, `Toolchain Trust Ledger: ...`) to `body.prompt` on all POST requests, including `/image/generate`, `/image/edit`, `/image/upscale`, `/video/queue`, and `/audio/speech`. Image diffusion models interpreted the system string as literal text to draw into images.
+  - Updated `composeTrustedRequest` in `electron/agent/runtime/trusted-agent-request.ts` to exclude media endpoints (`/image/*`, `/video/*`, `/audio/*`) from `runtimeContext` prepending while retaining variable placeholder substitution (`{{date}}`, `{{time}}`).
+  - Updated `trusted-agent-request.test.ts` and verified `payloadBuilders.test.ts`.
+
+**Validation Matrix:**
+
+| Command | Result |
+|---|---|
+| `npx vitest run tests/character-creator/p0P1Remediation.test.ts` | PASS — 4/4 tests passed |
+| `npm run typecheck` | PASS — 0 errors across renderer `tsc` and electron `tsconfig.electron.json` |
+| `npm run lint:eslint` | PASS — 0 warnings |
+| `npm test` | PASS — 424 test files / 4,648 tests passed (100% PASS) |
+
+### Prior Session Summary (PR Review/Merge & CodeQL Security Remediations) [demoted from "Latest Session Summary"]
+
 **Date:** 2026-07-24 (PR Review/Merge & CodeQL Security Remediations)
 
 **Scope:** Reviewed and merged all open GitHub pull requests into `main`, then audited and remediated open GitHub Code Scanning alerts across IPC handlers, file watcher services, logger utilities, and build verification scripts.

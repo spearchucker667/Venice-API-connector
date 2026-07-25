@@ -28,6 +28,7 @@ import { useSettingsStore } from "../../stores/settings-store";
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
 import { isElectron, desktopCharacterCreator, desktopCharacterCards } from "../../services/desktopBridge";
 import { toast } from "../../stores/toast-store";
+import { AlertTriangle } from "lucide-react";
 
 import { CharacterCreatorWelcome } from "./CharacterCreatorWelcome";
 import { CharacterCreatorGenerating } from "./CharacterCreatorGenerating";
@@ -68,20 +69,27 @@ export function CharacterCreatorView() {
     }
   };
 
-  const flushPendingSave = async () => {
+  const [autosaveError, setAutosaveError] = useState<string | null>(null);
+
+  const flushPendingSave = async (): Promise<{ ok: boolean; error?: string }> => {
     if (pendingSaveTimerRef.current) {
       clearTimeout(pendingSaveTimerRef.current);
       pendingSaveTimerRef.current = null;
     }
     if (pendingDraftRef.current) {
       const draftToSave = pendingDraftRef.current;
-      pendingDraftRef.current = null;
       try {
         await CharacterDraftService.update(draftToSave.id, { card: draftToSave.card });
-      } catch {
-        // Silently caught at flush boundary
+        pendingDraftRef.current = null;
+        setAutosaveError(null);
+        return { ok: true };
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "Failed to save draft changes.";
+        setAutosaveError(msg);
+        return { ok: false, error: msg };
       }
     }
+    return { ok: true };
   };
 
   useEffect(() => {
@@ -273,7 +281,11 @@ export function CharacterCreatorView() {
   };
 
   const handleSaveDraft = async () => {
-    await flushPendingSave();
+    const flushRes = await flushPendingSave();
+    if (!flushRes.ok) {
+      toast.error("Autosave failed", flushRes.error || "Cannot save draft while pending changes failed to persist.");
+      return;
+    }
     if (!activeDraft) return;
     try {
       await CharacterDraftService.update(activeDraft.id, { card: activeDraft.card });
@@ -285,7 +297,11 @@ export function CharacterCreatorView() {
   };
 
   const handleReviseDraft = async (instruction: string) => {
-    await flushPendingSave();
+    const flushRes = await flushPendingSave();
+    if (!flushRes.ok) {
+      toast.error("Autosave failed", flushRes.error || "Cannot revise draft while pending changes failed to persist.");
+      return;
+    }
     if (!activeDraft) return;
     setViewState("revising");
     setErrorDetails(null);
@@ -325,7 +341,11 @@ export function CharacterCreatorView() {
   };
 
   const handleRegenerateField = async (field: CharacterCreatorEditableField, instruction?: string) => {
-    await flushPendingSave();
+    const flushRes = await flushPendingSave();
+    if (!flushRes.ok) {
+      toast.error("Autosave failed", flushRes.error || "Cannot regenerate field while pending changes failed to persist.");
+      return;
+    }
     if (!activeDraft) return;
     setViewState("revising");
     setErrorDetails(null);
@@ -359,7 +379,11 @@ export function CharacterCreatorView() {
   };
 
   const handleValidateDraft = async () => {
-    await flushPendingSave();
+    const flushRes = await flushPendingSave();
+    if (!flushRes.ok) {
+      toast.error("Autosave failed", flushRes.error || "Cannot validate draft while pending changes failed to persist.");
+      return;
+    }
     if (!activeDraft) return;
     const localVal = validateCardForApproval(activeDraft.card);
     setValidationResults({
@@ -372,7 +396,11 @@ export function CharacterCreatorView() {
   };
 
   const handleApproveAndCreate = async (startChatImmediately = false, saveAsCopy = false) => {
-    await flushPendingSave();
+    const flushRes = await flushPendingSave();
+    if (!flushRes.ok) {
+      toast.error("Autosave failed", flushRes.error || "Cannot approve character while pending changes failed to persist.");
+      return;
+    }
     if (!activeDraft) return;
     setViewState("saving");
     try {
@@ -400,7 +428,11 @@ export function CharacterCreatorView() {
   };
 
   const handleExportCard = async () => {
-    await flushPendingSave();
+    const flushRes = await flushPendingSave();
+    if (!flushRes.ok) {
+      toast.error("Autosave failed", flushRes.error || "Cannot export card while pending changes failed to persist.");
+      return;
+    }
     if (!activeDraft) return;
     if (isElectron()) {
       try {
@@ -477,6 +509,20 @@ export function CharacterCreatorView() {
 
   return (
     <div className="h-full w-full flex flex-col bg-background text-text-primary overflow-hidden">
+      {autosaveError && (
+        <div className="mx-6 mt-4 p-3 bg-red-950/60 border border-red-500/40 rounded-lg flex items-center justify-between text-red-200 text-sm shrink-0">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+            <span><strong>Autosave failed:</strong> {autosaveError}</span>
+          </div>
+          <button
+            onClick={() => void flushPendingSave()}
+            className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-xs transition-colors" // THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR
+          >
+            Retry Save
+          </button>
+        </div>
+      )}
       {viewState === "welcome" && (
         <CharacterCreatorWelcome
           onCreateDraft={handleCreateDraft}

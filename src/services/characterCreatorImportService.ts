@@ -7,6 +7,7 @@ import type { CharacterCardV1 } from "../types/rp";
 import type { CharacterCardV2Dto, CharacterCardValidationIssue } from "../types/character-card-spec";
 import { CARD_FIELD_MAX } from "../types/rp";
 import { countPromptCharacters } from "../shared/promptLimits";
+import { isElectron, desktopCharacterCards } from "./desktopBridge";
 
 export interface ApproveAndCreateOptions {
   saveAsCopy?: boolean;
@@ -364,25 +365,43 @@ export const CharacterCreatorImportService = {
   },
 
   async loadImportHandleAsDraft(importHandle: string): Promise<CharacterCreatorDraft> {
-    // When an import handle or preview is passed, resolve it or retrieve from temporary store
-    let cardDto: CharacterCardV2Dto;
-    try {
-      const parsed = JSON.parse(importHandle);
-      if (parsed && typeof parsed === "object" && parsed.spec === "chara_card_v2") {
-        cardDto = parsed as CharacterCardV2Dto;
-      } else {
-        const mapped = mapV1ToInternal(parsed);
-        if (mapped) {
-          cardDto = mapInternalToV2(mapped);
-        } else {
-          throw new Error("Invalid card payload structure");
+    let cardDto: CharacterCardV2Dto | undefined;
+    let sourceName = "Imported Card";
+
+    if (isElectron()) {
+      try {
+        const consumed = await desktopCharacterCards.consumeImportCandidate(importHandle);
+        if (consumed.ok && consumed.card) {
+          cardDto = consumed.card;
+          if (consumed.preview?.name) sourceName = consumed.preview.name;
         }
+      } catch {
+        // Fall through to JSON text parsing if handle consumption is not applicable or fails
       }
-    } catch {
-      throw new Error(`CARD_IMPORT_FAILED: Could not parse import handle or payload '${importHandle}'.`);
     }
 
-    return this.loadCardDtoAsDraft(cardDto, cardDto.data?.name || "Imported Card");
+    if (!cardDto) {
+      try {
+        const parsed = JSON.parse(importHandle);
+        if (parsed && typeof parsed === "object" && parsed.spec === "chara_card_v2") {
+          cardDto = parsed as CharacterCardV2Dto;
+        } else {
+          const mapped = mapV1ToInternal(parsed);
+          if (mapped) {
+            cardDto = mapInternalToV2(mapped);
+          } else {
+            throw new Error("Invalid card payload structure");
+          }
+        }
+      } catch (err) {
+        if (err instanceof Error && err.message.startsWith("CARD_IMPORT_FAILED")) {
+          throw err;
+        }
+        throw new Error(`CARD_IMPORT_FAILED: Could not parse import handle or payload '${importHandle}'.`);
+      }
+    }
+
+    return this.loadCardDtoAsDraft(cardDto, cardDto.data?.name || sourceName);
   },
 
   async loadHostedCharacterAsLocalDraft(hostedCharacterId: string): Promise<CharacterCreatorDraft> {

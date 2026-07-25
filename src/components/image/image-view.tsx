@@ -21,6 +21,7 @@ import { isElectron, desktopMedia } from '../../services/desktopBridge'
 import { PROMPT_TEMPLATES } from '../../constants/promptTemplates'
 import { processBase64Image, routeAsset } from '../../utils/imageProcessor'
 import { getExtensionFromDataUrl } from '../../utils/image'
+import { downloadImage as downloadImageUtil } from '../../utils/download'
 import { getImageModelCapabilities, buildDimensionOptions, getRecipeCapabilityList } from '../../config/image-model-capabilities'
 import { enhancePrompt } from '../../services/prompt-enhancer-service'
 import {
@@ -38,10 +39,8 @@ import { DEFAULT_IMAGE_MODEL } from '../../constants/venice'
 
 
 function toImageSrc(b64: string): string {
-  if (b64.startsWith('data:')) return b64
-  if (b64.startsWith('/9j/')) return `data:image/jpeg;base64,${b64}`
-  if (b64.startsWith('iVBOR')) return `data:image/png;base64,${b64}`
-  if (b64.startsWith('UklGR')) return `data:image/webp;base64,${b64}`
+  if (!b64) return ''
+  if (b64.startsWith('data:') || b64.startsWith('http://') || b64.startsWith('https://') || b64.startsWith('blob:') || b64.startsWith('venice-media:')) return b64
   return `data:image/png;base64,${b64}`
 }
 
@@ -190,20 +189,21 @@ export function ImageView() {
     const ext = getExtensionFromDataUrl(b64);
     const filename = `venice-image${index !== undefined ? `-${index + 1}` : ''}.${ext}`;
     const routedFolder = routeAsset(prompt);
-    if (isElectron()) {
-      try {
+    try {
+      if (isElectron()) {
         const result = await desktopMedia.saveRoutedImage(b64, filename, routedFolder);
-        if (!result.ok) {
-          toast.error('Image save failed', redactErrorMessage(result.error));
+        if (result.ok) {
+          toast.success(`Image saved to Pictures/Venice Forge/${routedFolder}/${filename}`);
+        } else {
+          await downloadImageUtil(toImageSrc(b64), filename);
+          toast.success('Image downloaded');
         }
-      } catch (err) {
-        toast.error('Image save failed', redactErrorMessage(err));
+      } else {
+        await downloadImageUtil(toImageSrc(b64), filename);
+        toast.success('Image downloaded');
       }
-    } else {
-      const a = document.createElement('a')
-      a.href = toImageSrc(b64)
-      a.download = filename
-      a.click()
+    } catch (err) {
+      toast.error('Image save failed', redactErrorMessage(err));
     }
   }
 

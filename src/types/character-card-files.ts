@@ -1,4 +1,5 @@
 import type { CharacterCardImportWarning } from "../services/characterCards/characterCardAdapter";
+export type { CharacterCardImportWarning };
 
 export interface CharacterCardImportPreview {
   format: string;

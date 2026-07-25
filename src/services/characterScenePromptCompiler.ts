@@ -12,14 +12,14 @@ export function compileCharacterScenePrompt(
   const parts: string[] = [];
 
   if (context.characterName?.trim()) {
-    parts.push(`Character: ${context.characterName.trim()}.`);
+    parts.push(`featuring ${context.characterName.trim()}.`);
   }
 
   if (context.visibleContext?.trim()) {
-    parts.push(`Scene context: ${context.visibleContext.trim()}`);
+    parts.push(context.visibleContext.trim());
   }
 
-  const base = 'A cinematic scene, coherent composition, subject/environment alignment, high detail.';
+  const base = 'A cinematic scene, coherent composition, subject and environment alignment, high detail.';
   let prompt = [base, ...parts].join(' ').trim();
 
   if (prompt.length > MAX_PROMPT_LENGTH) {

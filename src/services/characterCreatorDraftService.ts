@@ -113,7 +113,9 @@ export const CharacterDraftService = {
 
   async create(input: CreateDraftRecordInput): Promise<CharacterCreatorDraft> {
     const now = new Date().toISOString();
-    const id = `ccd_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    const id = typeof crypto !== "undefined" && crypto.randomUUID
+      ? `ccd_${crypto.randomUUID()}`
+      : `ccd_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
     const draft: CharacterCreatorDraft = {
       id,
@@ -140,10 +142,14 @@ export const CharacterDraftService = {
     return draft;
   },
 
-  async update(id: string, patch: CharacterDraftPatch): Promise<CharacterCreatorDraft> {
+  async update(id: string, patch: CharacterDraftPatch, expectedRevision?: number): Promise<CharacterCreatorDraft> {
     const existing = await this.get(id);
     if (!existing) {
       throw new Error(`DRAFT_NOT_FOUND: Draft '${id}' does not exist.`);
+    }
+
+    if (expectedRevision !== undefined && existing.revision > expectedRevision) {
+      throw new Error(`DRAFT_REVISION_MISMATCH: Draft '${id}' is at revision ${existing.revision}, expected ${expectedRevision}.`);
     }
 
     const updated: CharacterCreatorDraft = {

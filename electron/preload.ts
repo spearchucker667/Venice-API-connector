@@ -548,6 +548,9 @@ const veniceForge = {
     chooseImportFile() {
       return ipcRenderer.invoke("characterCards:chooseImportFile");
     },
+    consumeImportCandidate(handle: string) {
+      return ipcRenderer.invoke("characterCards:consumeImportCandidate", handle);
+    },
     applyImport(payload: import("../src/types/character-card-files").CharacterCardImportApplyOptions) {
       return ipcRenderer.invoke("characterCards:applyImport", payload);
     },

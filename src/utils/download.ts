@@ -100,6 +100,24 @@ export async function downloadImage(url: string, filename: string): Promise<Down
 
   const safeFilename = sanitizeFilename(filename);
 
+  const dataMatch = /^data:([^;,]+);base64,(.+)$/i.exec(url);
+  if (dataMatch) {
+    const mime = dataMatch[1].toLowerCase();
+    if (!SAFE_IMAGE_MIME_TYPES.has(mime)) {
+      throw new Error("Image download returned an unsupported content type.");
+    }
+    const binaryStr = atob(dataMatch[2]);
+    const bytes = new Uint8Array(binaryStr.length);
+    for (let i = 0; i < binaryStr.length; i++) {
+      bytes[i] = binaryStr.charCodeAt(i);
+    }
+    const blob = new Blob([bytes], { type: mime });
+    const blobUrl = URL.createObjectURL(blob);
+    triggerDownload(blobUrl, safeFilename);
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 30_000);
+    return { confirmed: true, usedFallback: false };
+  }
+
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Image download failed with HTTP ${res.status}.`);

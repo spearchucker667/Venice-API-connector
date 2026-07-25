@@ -190,28 +190,36 @@ ${ledger}
       .replace(/\{\{\s*iso\s*\}\}/gi, isoTimestamp);
   };
 
-  // P0-05 (3) — inject trusted context for ALL POST endpoints, not just
-  // /chat/completions. The chat-completions endpoint receives the block
-  // through `messages[0]`; non-chat endpoints that carry a `prompt` field
-  // (/image/generate, /audio/speech, /augment/text-parser) receive it as a
-  // prefix so the model still sees temporal grounding.
   const newBody: Record<string, unknown> = { ...body };
   if (rawRequest.method !== 'POST') {
     return { ...rawRequest, body: newBody };
   }
 
-  if (Array.isArray(body.messages)) {
-    const messages = [...body.messages];
-    if (messages.length > 0 && messages[0] && typeof messages[0] === 'object' && messages[0].role === 'system' && typeof messages[0].content === 'string') {
-      const substituted = substitutePlaceholders(messages[0].content);
-      messages[0] = { ...messages[0], content: runtimeContext + substituted };
-    } else {
-      messages.unshift({ role: 'system', content: runtimeContext });
+  const rawEndpoint = typeof rawRequest.endpoint === 'string' ? rawRequest.endpoint : '';
+  const normEndpoint = rawEndpoint.toLowerCase().replace(/^\/api\/venice/, "");
+  const isMediaEndpoint =
+    normEndpoint.startsWith("/image/") ||
+    normEndpoint.startsWith("/video/") ||
+    normEndpoint.startsWith("/audio/");
+
+  if (isMediaEndpoint) {
+    if (typeof body.prompt === 'string') {
+      newBody.prompt = substitutePlaceholders(body.prompt);
     }
-    newBody.messages = messages;
-  } else if (typeof body.prompt === 'string') {
-    const substituted = substitutePlaceholders(body.prompt);
-    newBody.prompt = runtimeContext + substituted;
+  } else {
+    if (Array.isArray(body.messages)) {
+      const messages = [...body.messages];
+      if (messages.length > 0 && messages[0] && typeof messages[0] === 'object' && messages[0].role === 'system' && typeof messages[0].content === 'string') {
+        const substituted = substitutePlaceholders(messages[0].content);
+        messages[0] = { ...messages[0], content: runtimeContext + substituted };
+      } else {
+        messages.unshift({ role: 'system', content: runtimeContext });
+      }
+      newBody.messages = messages;
+    } else if (typeof body.prompt === 'string') {
+      const substituted = substitutePlaceholders(body.prompt);
+      newBody.prompt = runtimeContext + substituted;
+    }
   }
 
   return {

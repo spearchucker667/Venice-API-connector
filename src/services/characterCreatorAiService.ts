@@ -180,8 +180,12 @@ function createProcessEvent(
   details?: string[],
   source: CharacterCreatorProcessEvent["source"] = "application",
 ): CharacterCreatorProcessEvent {
+  const id = typeof crypto !== "undefined" && crypto.randomUUID
+    ? `ev_${crypto.randomUUID()}`
+    : `ev_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+
   return {
-    id: `ev_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    id,
     phase,
     status,
     title: title.slice(0, 120),
@@ -401,9 +405,21 @@ export async function generateCharacterCreatorDraft(
 ): Promise<CharacterCreatorGenerationResult> {
   const { response, processEvents } = await executeWithSingleRepair(request, callbacks, signal);
 
+  const lowerIdea = request.sourceIdea.toLowerCase();
+  let intendedMode: CharacterConceptAnalysis["intendedMode"] = "original";
+  if (lowerIdea.includes("parody") || lowerIdea.includes("spoof")) {
+    intendedMode = "parody";
+  } else if (lowerIdea.includes("inspired by") || lowerIdea.includes("similar to") || lowerIdea.includes("based on")) {
+    intendedMode = "inspired-original";
+  } else if (lowerIdea.includes("alternate") || lowerIdea.includes(" au ") || lowerIdea.endsWith(" au")) {
+    intendedMode = "alternate";
+  } else if (lowerIdea.includes("exact copy") || lowerIdea.includes("replica") || lowerIdea.includes("direct copy")) {
+    intendedMode = "direct-existing";
+  }
+
   const conceptAnalysis: CharacterConceptAnalysis = {
     normalizedConcept: request.sourceIdea,
-    intendedMode: "original",
+    intendedMode,
     coreTraits: response.draft.data.tags || [],
     settingDirection: request.optionalContext?.setting || "Original Setting",
     relationshipDirection: request.optionalContext?.relationship || "Flexible User Interaction",

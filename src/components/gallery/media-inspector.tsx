@@ -549,12 +549,12 @@ export function MediaInspector({
               <ImagePlus className="h-3 w-3" /> Edit
             </button>
           )}
-          {item.mediaType !== "image" && item.generatedMediaId && isElectron() && (
+          {item.generatedMediaId && isElectron() && (
             <button
               type="button"
               onClick={() => void desktopFiles.saveGeneratedMedia(
                 item.generatedMediaId!,
-                item.mediaType === "video" ? "venice-video.mp4" : "venice-audio",
+                item.mediaType === "video" ? "venice-video.mp4" : item.mediaType === "audio" ? "venice-audio" : "venice-image",
               ).then((saved) => {
                 if (saved) toast.success("Media saved");
               }).catch((error) => toast.fromError(error, "Media download failed"))}

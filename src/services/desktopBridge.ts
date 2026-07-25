@@ -956,6 +956,10 @@ export const desktopCharacterCards = {
     if (!isElectron()) return { ok: false, error: "Desktop file import is only available in desktop mode." };
     return window.veniceForge!.characterCards.chooseImportFile();
   },
+  async consumeImportCandidate(handle: string) {
+    if (!isElectron()) return { ok: false, error: "Desktop file import is only available in desktop mode." };
+    return window.veniceForge!.characterCards.consumeImportCandidate(handle);
+  },
   async applyImport(payload: import("../types/character-card-files").CharacterCardImportApplyOptions) {
     if (!isElectron()) return { ok: false, error: "Desktop file import is only available in desktop mode." };
     return window.veniceForge!.characterCards.applyImport(payload);

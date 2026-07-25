@@ -10,6 +10,12 @@ const EXTENSION_BY_MIME: Record<string, string> = {
   'audio/mpeg': 'mp3',
   'audio/wav': 'wav',
   'audio/flac': 'flac',
+  'image/png': 'png',
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
+  'image/webp': 'webp',
+  'image/gif': 'gif',
+  'image/avif': 'avif',
 }
 
 function sanitizeSuggestedName(value: unknown, extension: string): string {
@@ -30,11 +36,16 @@ export async function saveGeneratedMediaAs(input: { mediaId: string; suggestedNa
   const extension = EXTENSION_BY_MIME[resolved.mimeType]
   if (!extension) throw new Error('Generated media type cannot be exported.')
   const suggestedName = sanitizeSuggestedName(input.suggestedName, extension)
+  const filterLabel = resolved.mimeType.startsWith('image/')
+    ? `${extension.toUpperCase()} image`
+    : resolved.mimeType === 'video/mp4'
+      ? 'MP4 video'
+      : 'Audio';
   // verify-no-native-dialogs: allow — user-initiated generated-media Save As
   const choice = await dialog.showSaveDialog({
     title: 'Save generated media',
     defaultPath: suggestedName,
-    filters: [{ name: resolved.mimeType === 'video/mp4' ? 'MP4 video' : 'Audio', extensions: [extension] }],
+    filters: [{ name: filterLabel, extensions: [extension] }],
   })
   if (choice.canceled || !choice.filePath) return { ok: true, canceled: true }
   const parsedDestination = path.parse(choice.filePath)

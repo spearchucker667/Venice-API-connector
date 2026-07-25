@@ -211,6 +211,14 @@ export interface VeniceForgeCharacterCards {
   save(card: CharacterCardV1, origin?: MutationOrigin): Promise<{ ok: boolean; card: CharacterCardV1 | null; error?: string }>;
   delete(id: string, origin?: MutationOrigin): Promise<{ ok: boolean; error?: string }>;
   chooseImportFile(): Promise<import("./character-card-files").CharacterCardImportChoiceResult>;
+  consumeImportCandidate(handle: string): Promise<{
+    ok: boolean;
+    card?: import("./character-card-spec").CharacterCardV2Dto;
+    preview?: import("./character-card-files").CharacterCardImportPreview;
+    avatarDataUrl?: string;
+    warnings?: import("./character-card-files").CharacterCardImportWarning[];
+    error?: string;
+  }>;
   applyImport(payload: import("./character-card-files").CharacterCardImportApplyOptions): Promise<import("./character-card-files").CharacterCardImportApplyResult>;
   undoImport(payload: { handle: string }): Promise<{ ok: boolean; cardId?: string; error?: string }>;
   exportJson(payload: { cardId: string; profile?: "standard" | "privacy-reduced" }): Promise<import("./character-card-files").CharacterCardExportResult>;
