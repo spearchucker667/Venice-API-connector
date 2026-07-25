@@ -214,6 +214,22 @@ describe("enhancePrompt output handling", () => {
     expect(result.prompt.length).toBeLessThanOrEqual(1500);
     expect(result.prompt.endsWith(".")).toBe(true);
   });
+
+  it("never includes negative prompt sentinel text in the LLM enhancer prompt", async () => {
+    mockedVenice.mockResolvedValueOnce({
+      choices: [{ message: { content: "vivid polished red ceramic teapot" } }],
+    });
+    await enhancePrompt({
+      mode: "enhance",
+      prompt: "a red teapot",
+      negativePrompt: "NEGATIVE_SENTINEL_7F3B, text, watermark",
+    });
+    const body = mockedVenice.mock.calls[0][1]?.body as Record<string, unknown>;
+    const messages = body.messages as Array<{ role: string; content: string }>;
+    const userPrompt = messages[1].content;
+    expect(userPrompt).not.toContain("NEGATIVE_SENTINEL_7F3B");
+    expect(userPrompt).not.toContain("NEGATIVE PROMPT");
+  });
 });
 
 describe("remixPrompt routing", () => {

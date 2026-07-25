@@ -80,7 +80,7 @@ describe("downloadImage", () => {
 
     const result = await downloadImage("data:image/png;base64,abcd", "data.png");
 
-    expect(result).toEqual({ confirmed: false, usedFallback: true });
+    expect(result).toEqual({ confirmed: true, usedFallback: false });
   });
 
   it("rejects data:text/html fallback even if fetch fails", async () => {

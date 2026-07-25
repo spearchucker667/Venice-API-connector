@@ -30,14 +30,13 @@ This is the active handoff and validation ledger. The canonical current-work led
   - Updated `createProcessEvent` in `src/services/characterCreatorAiService.ts` to use UUID event IDs.
   - Updated `generateCharacterCreatorDraft` to dynamically infer `intendedMode` (`original`, `inspired-original`, `direct-existing`, `parody`, `alternate`).
   - Created unit test suite `tests/character-creator/p0P1Remediation.test.ts` (4/4 tests passed).
-- **Media Prompt Context Isolation & Download Remediation**:
-  - Excluded media endpoints (`/image/*`, `/video/*`, `/audio/*`) in `electron/agent/runtime/trusted-agent-request.ts` from LLM system context prepending.
-  - Rephrased `compileCharacterScenePrompt` in `src/services/characterScenePromptCompiler.ts` to remove structural label headers (`Character:`, `Scene context:`) that caused diffusion models to render floating text captions inside images.
-  - Fixed media downloads across Electron & Web: added image MIME types (`image/png`, `image/jpeg`, `image/webp`, `image/gif`, `image/avif`) to `EXTENSION_BY_MIME` in `electron/services/generatedMediaExport.ts`, enabled "Download media" button for images in `src/components/gallery/media-inspector.tsx`, and updated `downloadImage` in `src/utils/download.ts` to convert `data:` URLs directly into Blob URLs for safe, reliable browser downloads.
-  - Added user feedback toasts and fallback handling to `downloadImage` in `src/components/image/image-view.tsx`.
-- **Git Push to Main**:
-  - Ran full verification pipeline (`npm run lint:eslint`, `npm run typecheck`, `npm run verify:safety-guard`, `npm run verify:markdown-links`, `npm run verify:contracts`, `npm run build`).
-  - Committed changes (`618673f`) and pushed to `origin/main`.
+- **Image Generation Prompt, Aspect Ratio, Download, and Safety Remediation**:
+  - **Prompt Contamination Prevention:** Excluded negative prompt text from LLM prompt rewriter input in `src/services/prompt-enhancer-service.ts`. Added sentinel test (`NEGATIVE_SENTINEL_7F3B`) in `prompt-enhancer-service.test.ts` proving negative prompt terms never leak into internal prompt enhancer rewriters.
+  - **Canonical Aspect-Ratio Contract:** Exported `IMAGE_ASPECT_PRESETS` in `src/config/image-model-capabilities.ts` matching exact 7 presets (`Square (Default) 1:1`, `Landscape (3:2)`, `Cinema (16:9)`, `Widescreen (21:9)`, `Tall (9:16)`, `Portrait (2:3)`, `Instagram (3:4)`). Removed `4:3` from primary list and added `3:4` Instagram. Added `buildSupportedAspectPresets` to intersect live constraints while preserving canonical labels & ordering, and `chooseDefaultAspectRatio` to default to `1:1` whenever supported.
+  - **Download & Success Toast Contract:** Updated `downloadImage` in `src/components/image/image-view.tsx` to require `fallback.confirmed: true` before displaying `toast.success` and report failures with `toast.error`.
+  - **Safety State Matrix & Status Banner:** Updated `src/components/settings/SafetyPanel.tsx` to display an explicit effective status banner (`Local filter: OFF | Venice provider filtering: ON`) when local family safe mode is disabled. Updated `src/components/layout/sidebar.tsx` safety status text to clarify local vs provider safe mode.
+  - **Implementation Report:** Published `docs/reports/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md` and registered in `docs/DOCS_INDEX.md`.
+  - **Aspect Ratio UI Consolidation for SD Models:** Replaced the hardcoded pixel dimension `<Select>` dropdown in `src/components/image/image-view.tsx` with a `<PillGroup>` identical to the canonical Aspect Ratio UI. Realigned `SD_WIDTH_HEIGHT_PAIRS` in `src/config/image-model-capabilities.ts` to exactly match the 7 canonical Aspect Ratio presets so width/height models transparently map user aspect selections to precise, api-compatible pixel values without surfacing raw resolutions.
 
 **Validation Matrix:**
 

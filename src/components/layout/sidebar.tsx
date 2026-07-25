@@ -621,7 +621,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
             <div className="min-w-0">
               <span className="text-[12px] font-semibold uppercase tracking-wider text-text-muted leading-none">Family Safe Mode</span>
               <p className="text-[12px] leading-snug text-text-muted mt-0.5 [@media(max-height:800px)]:hidden">
-                {localFamilySafeModeEnabled ? 'ON: local family filter runs.' : 'OFF: Adult Mode skips the local filter.'}
+                {localFamilySafeModeEnabled ? 'ON: local family filter runs.' : 'OFF: Local filter OFF (Provider Safe Mode separate).'}
               </p>
             </div>
             <button
@@ -634,7 +634,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
                 localFamilySafeModeEnabled ? "bg-accent" : "bg-border"
               )}
               aria-label="Toggle Family Safe Mode"
-              title={localFamilySafeModeEnabled ? "Family Safe Mode enabled" : "Adult Mode enabled"}
+              title={localFamilySafeModeEnabled ? "Family Safe Mode enabled" : "Local Family Safe Mode disabled (Provider Safe Mode separate)"}
             >
               <div className={cn(
                 "w-3.5 h-3.5 rounded-full bg-surface-elevated shadow-sm absolute top-[1px] transition-all",

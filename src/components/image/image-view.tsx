@@ -44,26 +44,10 @@ function toImageSrc(b64: string): string {
   return `data:image/png;base64,${b64}`
 }
 
-const WH_OPTIONS = [
-  { value: '512x512', label: '512×512', w: 512, h: 512 },
-  { value: '512x768', label: '512×768', w: 512, h: 768 },
-  { value: '576x1024', label: '576×1024', w: 576, h: 1024 },
-  { value: '768x512', label: '768×512', w: 768, h: 512 },
-  { value: '768x768', label: '768×768', w: 768, h: 768 },
-  { value: '768x1024', label: '768×1024', w: 768, h: 1024 },
-  { value: '1024x576', label: '1024×576', w: 1024, h: 576 },
-  { value: '1024x768', label: '1024×768', w: 1024, h: 768 },
-  { value: '1024x1024', label: '1024×1024', w: 1024, h: 1024 },
-  { value: '1024x1280', label: '1024×1280', w: 1024, h: 1280 },
-  { value: '1280x720', label: '1280×720', w: 1280, h: 720 },
-  { value: '1280x1024', label: '1280×1024', w: 1280, h: 1024 },
-  { value: '1280x1280', label: '1280×1280', w: 1280, h: 1280 },
-]
 
 export function ImageView() {
   const promptId = useId()
   const negativePromptId = useId()
-  const sizeKeyId = useId()
   const styleId = useId()
   const seedId = useId()
   const stepsId = useId()
@@ -163,6 +147,11 @@ export function ImageView() {
     ]
   }, [dimOptions, hasAspectRatios])
 
+  const whOptions = useMemo(() => {
+    if (hasAspectRatios || !dimOptions.widthHeightOptions) return []
+    return dimOptions.widthHeightOptions.map(o => ({ value: `${o.width}x${o.height}`, label: o.label }))
+  }, [dimOptions, hasAspectRatios])
+
   const resolutionOptions = useMemo(() => {
     if (!(dimOptions.resolutions?.length)) return []
     return dimOptions.resolutions.map((r) => ({ value: r.id, label: r.label }))
@@ -195,12 +184,20 @@ export function ImageView() {
         if (result.ok) {
           toast.success(`Image saved to Pictures/Venice Forge/${routedFolder}/${filename}`);
         } else {
-          await downloadImageUtil(toImageSrc(b64), filename);
-          toast.success('Image downloaded');
+          const fallback = await downloadImageUtil(toImageSrc(b64), filename);
+          if (fallback.confirmed) {
+            toast.success('Image downloaded');
+          } else {
+            toast.error('Image save failed', 'The image could not be downloaded.');
+          }
         }
       } else {
-        await downloadImageUtil(toImageSrc(b64), filename);
-        toast.success('Image downloaded');
+        const fallback = await downloadImageUtil(toImageSrc(b64), filename);
+        if (fallback.confirmed) {
+          toast.success('Image downloaded');
+        } else {
+          toast.error('Image save failed', 'The image could not be downloaded.');
+        }
       }
     } catch (err) {
       toast.error('Image save failed', redactErrorMessage(err));
@@ -219,7 +216,7 @@ export function ImageView() {
         {
           mode: 'enhance',
           prompt: prompt.trim(),
-          negativePrompt: negativePrompt.trim() || null,
+          negativePrompt: null,
         },
         enhancerConfig,
       )
@@ -233,7 +230,7 @@ export function ImageView() {
     } finally {
       setEnhancing(false)
     }
-  }, [prompt, negativePrompt, enhancerEnabled, enhancerConfig])
+  }, [prompt, enhancerEnabled, enhancerConfig])
 
   const applyEnhancedPrompt = useCallback(() => {
     if (enhancedPrompt) setPromptClamped(enhancedPrompt)
@@ -725,12 +722,12 @@ export function ImageView() {
         <div><Label>Aspect Ratio</Label><PillGroup options={aspectOptions} value={aspectRatio} onChange={setAspectRatio} ariaLabel="Image aspect ratio" /></div>
       ) : (
         <div>
-          <Label htmlFor={sizeKeyId}>Dimensions</Label>
-          <Select
-            id={sizeKeyId}
+          <Label>Aspect Ratio</Label>
+          <PillGroup
+            options={whOptions}
             value={sizeKey}
             onChange={setSizeKey}
-            options={WH_OPTIONS.map(o => ({ value: o.value, label: o.label }))}
+            ariaLabel="Image aspect ratio"
           />
         </div>
       )}

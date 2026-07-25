@@ -94,16 +94,20 @@ export interface ImageModelCapabilities {
   patternMatch?: RegExp;
 }
 
-/** Common aspect ratio presets used across Venice models. */
-const COMMON_ASPECT_RATIOS = [
-  { id: "1:1", label: "Square (1:1)" },
-  { id: "16:9", label: "Landscape (16:9)" },
-  { id: "9:16", label: "Portrait (9:16)" },
-  { id: "4:3", label: "Standard (4:3)" },
-  { id: "3:2", label: "Photo (3:2)" },
+export const IMAGE_ASPECT_PRESETS = [
+  { id: "1:1", label: "Square (Default)" },
+  { id: "3:2", label: "Landscape (3:2)" },
+  { id: "16:9", label: "Cinema (16:9)" },
+  { id: "21:9", label: "Widescreen (21:9)" },
+  { id: "9:16", label: "Tall (9:16)" },
   { id: "2:3", label: "Portrait (2:3)" },
-  { id: "21:9", label: "Ultrawide (21:9)" },
-];
+  { id: "3:4", label: "Instagram (3:4)" },
+] as const;
+
+export type ImageAspectRatioPreset = (typeof IMAGE_ASPECT_PRESETS)[number];
+
+/** Common aspect ratio presets used across Venice models. */
+const COMMON_ASPECT_RATIOS = [...IMAGE_ASPECT_PRESETS];
 
 /**
  * Aspect ratio presets for image-edit models (EditImageRequest schema).
@@ -147,21 +151,15 @@ const COMMON_QUALITIES = [
   { id: "high" as const, label: "High" },
 ];
 
-/** Common width/height size options for SD-classic models. */
+/** Canonical width/height size options for SD-classic models, aligned to the 7 aspect ratio presets. */
 const SD_WIDTH_HEIGHT_PAIRS: ImageModelCapabilities["widthHeightOptions"] = [
-  { width: 512, height: 512, label: "512×512" },
-  { width: 512, height: 768, label: "512×768" },
-  { width: 576, height: 1024, label: "576×1024" },
-  { width: 768, height: 512, label: "768×512" },
-  { width: 768, height: 768, label: "768×768" },
-  { width: 768, height: 1024, label: "768×1024" },
-  { width: 1024, height: 576, label: "1024×576" },
-  { width: 1024, height: 768, label: "1024×768" },
-  { width: 1024, height: 1024, label: "1024×1024" },
-  { width: 1024, height: 1280, label: "1024×1280" },
-  { width: 1280, height: 720, label: "1280×720" },
-  { width: 1280, height: 1024, label: "1280×1280" },
-  { width: 1280, height: 1280, label: "1280×1280" },
+  { width: 1024, height: 1024, label: "Square (Default)" },
+  { width: 1152, height: 768, label: "Landscape (3:2)" },
+  { width: 1280, height: 704, label: "Cinema (16:9)" },
+  { width: 1216, height: 512, label: "Widescreen (21:9)" },
+  { width: 704, height: 1280, label: "Tall (9:16)" },
+  { width: 768, height: 1152, label: "Portrait (2:3)" },
+  { width: 768, height: 1024, label: "Instagram (3:4)" },
 ];
 
 /**
@@ -513,6 +511,31 @@ export function getEditModelCapabilities(
   return caps;
 }
 
+export function buildSupportedAspectPresets(
+  supportedRatios: readonly string[] | undefined,
+): Array<{ id: string; label: string }> {
+  if (!supportedRatios || supportedRatios.length === 0) {
+    return [...IMAGE_ASPECT_PRESETS];
+  }
+  const supportedSet = new Set(supportedRatios);
+  const canonicalMatched = IMAGE_ASPECT_PRESETS.filter((p) => supportedSet.has(p.id));
+  if (canonicalMatched.length > 0) {
+    return canonicalMatched;
+  }
+  return supportedRatios.map((r) => ({ id: r, label: r }));
+}
+
+export function chooseDefaultAspectRatio(input: {
+  supported: readonly string[];
+  providerDefault?: string;
+}): string {
+  if (input.supported.includes("1:1")) return "1:1";
+  if (input.providerDefault && input.supported.includes(input.providerDefault)) {
+    return input.providerDefault;
+  }
+  return input.supported[0] ?? "1:1";
+}
+
 /** Build dimension options for the model, preferring live `/models`
  *  constraints over the static registry. */
 export function buildDimensionOptions(
@@ -526,11 +549,14 @@ export function buildDimensionOptions(
   const normalised = normaliseConstraints(constraints);
 
   if (normalised && normalised.aspectRatios && normalised.aspectRatios.length > 0) {
-    const aspectRatios = normalised.aspectRatios.map((a) => ({ id: a, label: a }));
+    const aspectRatios = buildSupportedAspectPresets(normalised.aspectRatios);
+    const supportedIds = aspectRatios.map((a) => a.id);
     const hasResolutions =
       Array.isArray(normalised.resolutions) && normalised.resolutions.length > 0;
-    const defaultAspectRatio =
-      normalised.defaultAspectRatio ?? normalised.aspectRatios[0];
+    const defaultAspectRatio = chooseDefaultAspectRatio({
+      supported: supportedIds,
+      providerDefault: normalised.defaultAspectRatio,
+    });
     const defaultResolution = hasResolutions
       ? normalised.defaultResolution ?? normalised.resolutions![0]
       : undefined;
@@ -549,12 +575,26 @@ export function buildDimensionOptions(
     };
   }
 
+  const aspectRatios = known.aspectRatios
+    ? buildSupportedAspectPresets(known.aspectRatios.map((a) => a.id))
+    : [...IMAGE_ASPECT_PRESETS];
+  const supportedIds = aspectRatios.map((a) => a.id);
+  const defaultAspectRatio = chooseDefaultAspectRatio({
+    supported: supportedIds,
+    providerDefault: known.defaultDimensions.aspectRatio,
+  });
+
   return {
     dimensionMode: known.dimensionMode,
     widthHeightOptions: known.widthHeightOptions,
-    aspectRatios: known.aspectRatios,
+    aspectRatios,
     resolutions: known.resolutions,
-    defaultDimensions: known.defaultDimensions,
+    defaultDimensions: {
+      ...known.defaultDimensions,
+      ...(known.dimensionMode === "aspectRatio" || known.dimensionMode === "aspectResolution"
+        ? { aspectRatio: defaultAspectRatio }
+        : {}),
+    },
     qualities: known.qualities,
     defaultQuality: known.defaultQuality,
   };

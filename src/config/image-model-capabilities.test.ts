@@ -59,7 +59,7 @@ describe("buildDimensionOptions — widthHeight fallback", () => {
 });
 
 describe("buildDimensionOptions — camelCase constraints", () => {
-  it("treats camelCase aspectRatios as aspect-only mode", () => {
+  it("treats camelCase aspectRatios as aspect-only mode and defaults to 1:1 when supported", () => {
     const constraints: ImageConstraints = {
       aspectRatios: ["1:1", "16:9"],
       defaultAspectRatio: "16:9",
@@ -67,7 +67,7 @@ describe("buildDimensionOptions — camelCase constraints", () => {
     const out = buildDimensionOptions("some-model", constraints);
     expect(out.dimensionMode).toBe("aspectRatio");
     expect(out.aspectRatios?.map((a) => a.id)).toEqual(["1:1", "16:9"]);
-    expect(out.defaultDimensions.aspectRatio).toBe("16:9");
+    expect(out.defaultDimensions.aspectRatio).toBe("1:1");
   });
 
   it("treats camelCase aspectRatios + resolutions as aspectResolution", () => {
@@ -87,13 +87,13 @@ describe("buildDimensionOptions — camelCase constraints", () => {
 describe("buildDimensionOptions — snake_case constraints", () => {
   it("normalises snake_case aspect_ratios + default_aspect_ratio", () => {
     const raw = {
-      aspect_ratios: ["1:1", "4:3"],
-      default_aspect_ratio: "4:3",
+      aspect_ratios: ["1:1", "3:2"],
+      default_aspect_ratio: "3:2",
     };
     const out = buildDimensionOptions("some-model", raw as unknown as ImageConstraints);
     expect(out.dimensionMode).toBe("aspectRatio");
-    expect(out.aspectRatios?.map((a) => a.id)).toEqual(["1:1", "4:3"]);
-    expect(out.defaultDimensions.aspectRatio).toBe("4:3");
+    expect(out.aspectRatios?.map((a) => a.id)).toEqual(["1:1", "3:2"]);
+    expect(out.defaultDimensions.aspectRatio).toBe("1:1");
   });
 
   it("normalises snake_case resolutions + default_resolution", () => {

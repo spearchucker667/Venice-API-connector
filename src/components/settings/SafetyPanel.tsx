@@ -46,7 +46,7 @@ export function SafetyPanel({
               className="h-4 w-4 rounded border-border bg-surface text-accent"
             />
             <span className="text-[12.5px] font-medium text-text-primary">
-              {localFamilySafeModeEnabled ? "ON: Family Safe Mode" : "OFF: Adult Mode"}
+              {localFamilySafeModeEnabled ? "ON: Family Safe Mode" : "OFF: Adult Mode (Local Filter OFF)"}
             </span>
           </label>
         </div>
@@ -54,8 +54,22 @@ export function SafetyPanel({
         <p className="text-[12px] text-text-muted leading-relaxed">
           {localFamilySafeModeEnabled
             ? "When enabled, matching requests are blocked locally before the provider is called."
-            : "Bypasses Venice Forge's local family-safe filter. Venice/API-level safety and provider-side safemode are controlled separately."}
+            : "Bypasses Venice Forge's local family-safe filter. Note: Venice API provider-side Safe Mode is controlled separately below."}
         </p>
+
+        <div className="rounded-lg bg-surface-base p-3 border border-border text-[12px] space-y-1">
+          <div className="font-medium text-text-primary">
+            Effective Status: Local filter: {localFamilySafeModeEnabled ? "ON" : "OFF"} | Venice provider filtering: {veniceApiSafeMode ? "ON" : "OFF"}
+          </div>
+          <div className="text-text-muted">
+            {!localFamilySafeModeEnabled && veniceApiSafeMode
+              ? "Local family filter is OFF, but Venice API provider-side Safe Mode is still ON. Outbound requests include safe_mode: true."
+              : !localFamilySafeModeEnabled && !veniceApiSafeMode
+              ? "Both local family filter and Venice API provider Safe Mode are OFF. Outbound requests include safe_mode: false."
+              : "Matching requests are filtered locally before reaching the provider."}
+          </div>
+        </div>
+
         <div className="mt-2">
           {!masterPasswordSet ? (
             <button

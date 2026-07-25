@@ -141,12 +141,6 @@ function buildEnhancePrompt(input: EnhancePromptInput): string {
   sections.push("INPUT PROMPT:");
   sections.push(input.prompt);
 
-  if (input.negativePrompt?.trim()) {
-    sections.push("");
-    sections.push("NEGATIVE PROMPT (preserve/contrast as appropriate):");
-    sections.push(input.negativePrompt);
-  }
-
   if (input.mode === "remix") {
     if (input.model) {
       sections.push("");

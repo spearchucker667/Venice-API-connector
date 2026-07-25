@@ -71,7 +71,7 @@ describe('ImageView model-aware payloads', () => {
     expect(request).toMatchObject({
       model: 'nano-banana-v1',
       prompt: 'A copper city at dusk',
-      aspect_ratio: '16:9',
+      aspect_ratio: '1:1',
       resolution: '2k',
       quality: 'high',
     })
