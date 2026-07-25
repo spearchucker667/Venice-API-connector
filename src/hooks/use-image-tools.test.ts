@@ -19,7 +19,7 @@ describe('image tool hooks', () => {
   it('sends only canonical edit fields', async () => {
     const { result } = renderHook(() => useImageEdit(), { wrapper })
     await act(() => result.current.mutateAsync({ image: PNG, prompt: 'edit', model: 'flux-2-max-edit' }))
-    expect(veniceBlob).toHaveBeenCalledWith('/image/edit', { image: PNG_BASE64, prompt: 'edit', model: 'flux-2-max-edit' })
+    expect(veniceBlob).toHaveBeenCalledWith('/image/edit', { image: PNG_BASE64, prompt: 'edit', model: 'flux-2-max-edit', output_format: 'png' })
   })
 
   it('sends only image, scale, and creativity for upscale', async () => {

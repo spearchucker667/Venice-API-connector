@@ -1,0 +1,366 @@
+diff --git a/docs/DOCS_INDEX.md b/docs/DOCS_INDEX.md
+index 4740b75..65a2aa7 100644
+--- a/docs/DOCS_INDEX.md
++++ b/docs/DOCS_INDEX.md
+@@ -141,6 +141,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
+ - [pastel-theme-pack-report.md](pastel-theme-pack-report.md) — 2026-07-23 implementation report for the Pastel Aqua/Pink Theme Pack (Cotton Candy Console, Sweet Nightmare, Dual Persona, Polaroid Board). Records token corrections, WCAG AA validation, border analysis, and pre-existing failure evidence.
+ - [reports/character-creator-implementation-report.md](reports/character-creator-implementation-report.md) — Implementation report for the Build Character Creator feature powered immutably by `zai-org-glm-5-2`.
+ - [reports/VENICE_FORGE_COMPLETION_EXECUTION_2026-07-25.md](reports/VENICE_FORGE_COMPLETION_EXECUTION_2026-07-25.md) — Execution log for the 2026-07-25 master feature-completion work order.
++- [reports/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md](reports/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md) — Implementation report for the 2026-07-25 Image Generation Prompt, Aspect Ratio, Download, and Safety Remediation work order.
+ - [reports/historical/final-massive-bug-hunt-with-proof.md](reports/historical/final-massive-bug-hunt-with-proof.md) — Historical audit log of closed validation checks from the v2.1.0 release boundary.
+ - [audits/Records/Venice_Forge_Full_Repository_Audit_2026-07-18/12-final-report.md](audits/Records/Venice_Forge_Full_Repository_Audit_2026-07-18/12-final-report.md) — Retained July 18 full-repository audit evidence, moved byte-for-byte from the former active-audit location.
+ - [audits/Records/Venice_Forge_Most_Recent_Change_Audit_2026-07-20/09-final-report.md](audits/Records/Venice_Forge_Most_Recent_Change_Audit_2026-07-20/09-final-report.md) — Retained July 20 recent-change audit evidence, moved byte-for-byte from the former active-audit location.
+diff --git a/docs/summary_of_work.md b/docs/summary_of_work.md
+index 57140a9..786182f 100644
+--- a/docs/summary_of_work.md
++++ b/docs/summary_of_work.md
+@@ -30,14 +30,12 @@ This is the active handoff and validation ledger. The canonical current-work led
+   - Updated `createProcessEvent` in `src/services/characterCreatorAiService.ts` to use UUID event IDs.
+   - Updated `generateCharacterCreatorDraft` to dynamically infer `intendedMode` (`original`, `inspired-original`, `direct-existing`, `parody`, `alternate`).
+   - Created unit test suite `tests/character-creator/p0P1Remediation.test.ts` (4/4 tests passed).
+-- **Media Prompt Context Isolation & Download Remediation**:
+-  - Excluded media endpoints (`/image/*`, `/video/*`, `/audio/*`) in `electron/agent/runtime/trusted-agent-request.ts` from LLM system context prepending.
+-  - Rephrased `compileCharacterScenePrompt` in `src/services/characterScenePromptCompiler.ts` to remove structural label headers (`Character:`, `Scene context:`) that caused diffusion models to render floating text captions inside images.
+-  - Fixed media downloads across Electron & Web: added image MIME types (`image/png`, `image/jpeg`, `image/webp`, `image/gif`, `image/avif`) to `EXTENSION_BY_MIME` in `electron/services/generatedMediaExport.ts`, enabled "Download media" button for images in `src/components/gallery/media-inspector.tsx`, and updated `downloadImage` in `src/utils/download.ts` to convert `data:` URLs directly into Blob URLs for safe, reliable browser downloads.
+-  - Added user feedback toasts and fallback handling to `downloadImage` in `src/components/image/image-view.tsx`.
+-- **Git Push to Main**:
+-  - Ran full verification pipeline (`npm run lint:eslint`, `npm run typecheck`, `npm run verify:safety-guard`, `npm run verify:markdown-links`, `npm run verify:contracts`, `npm run build`).
+-  - Committed changes (`618673f`) and pushed to `origin/main`.
++- **Image Generation Prompt, Aspect Ratio, Download, and Safety Remediation**:
++  - **Prompt Contamination Prevention:** Excluded negative prompt text from LLM prompt rewriter input in `src/services/prompt-enhancer-service.ts`. Added sentinel test (`NEGATIVE_SENTINEL_7F3B`) in `prompt-enhancer-service.test.ts` proving negative prompt terms never leak into internal prompt enhancer rewriters.
++  - **Canonical Aspect-Ratio Contract:** Exported `IMAGE_ASPECT_PRESETS` in `src/config/image-model-capabilities.ts` matching exact 7 presets (`Square (Default) 1:1`, `Landscape (3:2)`, `Cinema (16:9)`, `Widescreen (21:9)`, `Tall (9:16)`, `Portrait (2:3)`, `Instagram (3:4)`). Removed `4:3` from primary list and added `3:4` Instagram. Added `buildSupportedAspectPresets` to intersect live constraints while preserving canonical labels & ordering, and `chooseDefaultAspectRatio` to default to `1:1` whenever supported.
++  - **Download & Success Toast Contract:** Updated `downloadImage` in `src/components/image/image-view.tsx` to require `fallback.confirmed: true` before displaying `toast.success` and report failures with `toast.error`.
++  - **Safety State Matrix & Status Banner:** Updated `src/components/settings/SafetyPanel.tsx` to display an explicit effective status banner (`Local filter: OFF | Venice provider filtering: ON`) when local family safe mode is disabled. Updated `src/components/layout/sidebar.tsx` safety status text to clarify local vs provider safe mode.
++  - **Implementation Report:** Published `docs/reports/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md` and registered in `docs/DOCS_INDEX.md`.
+ 
+ **Validation Matrix:**
+ 
+diff --git a/src/components/image/image-view.test.tsx b/src/components/image/image-view.test.tsx
+index 2d37f53..d40ed65 100644
+--- a/src/components/image/image-view.test.tsx
++++ b/src/components/image/image-view.test.tsx
+@@ -71,7 +71,7 @@ describe('ImageView model-aware payloads', () => {
+     expect(request).toMatchObject({
+       model: 'nano-banana-v1',
+       prompt: 'A copper city at dusk',
+-      aspect_ratio: '16:9',
++      aspect_ratio: '1:1',
+       resolution: '2k',
+       quality: 'high',
+     })
+diff --git a/src/components/image/image-view.tsx b/src/components/image/image-view.tsx
+index 15314f5..2a85f32 100644
+--- a/src/components/image/image-view.tsx
++++ b/src/components/image/image-view.tsx
+@@ -195,12 +195,20 @@ export function ImageView() {
+         if (result.ok) {
+           toast.success(`Image saved to Pictures/Venice Forge/${routedFolder}/${filename}`);
+         } else {
+-          await downloadImageUtil(toImageSrc(b64), filename);
+-          toast.success('Image downloaded');
++          const fallback = await downloadImageUtil(toImageSrc(b64), filename);
++          if (fallback.confirmed) {
++            toast.success('Image downloaded');
++          } else {
++            toast.error('Image save failed', 'The image could not be downloaded.');
++          }
+         }
+       } else {
+-        await downloadImageUtil(toImageSrc(b64), filename);
+-        toast.success('Image downloaded');
++        const fallback = await downloadImageUtil(toImageSrc(b64), filename);
++        if (fallback.confirmed) {
++          toast.success('Image downloaded');
++        } else {
++          toast.error('Image save failed', 'The image could not be downloaded.');
++        }
+       }
+     } catch (err) {
+       toast.error('Image save failed', redactErrorMessage(err));
+@@ -219,7 +227,7 @@ export function ImageView() {
+         {
+           mode: 'enhance',
+           prompt: prompt.trim(),
+-          negativePrompt: negativePrompt.trim() || null,
++          negativePrompt: null,
+         },
+         enhancerConfig,
+       )
+@@ -233,7 +241,7 @@ export function ImageView() {
+     } finally {
+       setEnhancing(false)
+     }
+-  }, [prompt, negativePrompt, enhancerEnabled, enhancerConfig])
++  }, [prompt, enhancerEnabled, enhancerConfig])
+ 
+   const applyEnhancedPrompt = useCallback(() => {
+     if (enhancedPrompt) setPromptClamped(enhancedPrompt)
+diff --git a/src/components/layout/sidebar.tsx b/src/components/layout/sidebar.tsx
+index 98ac68a..6cbfc5c 100644
+--- a/src/components/layout/sidebar.tsx
++++ b/src/components/layout/sidebar.tsx
+@@ -621,7 +621,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
+             <div className="min-w-0">
+               <span className="text-[12px] font-semibold uppercase tracking-wider text-text-muted leading-none">Family Safe Mode</span>
+               <p className="text-[12px] leading-snug text-text-muted mt-0.5 [@media(max-height:800px)]:hidden">
+-                {localFamilySafeModeEnabled ? 'ON: local family filter runs.' : 'OFF: Adult Mode skips the local filter.'}
++                {localFamilySafeModeEnabled ? 'ON: local family filter runs.' : 'OFF: Local filter OFF (Provider Safe Mode separate).'}
+               </p>
+             </div>
+             <button
+@@ -634,7 +634,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
+                 localFamilySafeModeEnabled ? "bg-accent" : "bg-border"
+               )}
+               aria-label="Toggle Family Safe Mode"
+-              title={localFamilySafeModeEnabled ? "Family Safe Mode enabled" : "Adult Mode enabled"}
++              title={localFamilySafeModeEnabled ? "Family Safe Mode enabled" : "Local Family Safe Mode disabled (Provider Safe Mode separate)"}
+             >
+               <div className={cn(
+                 "w-3.5 h-3.5 rounded-full bg-surface-elevated shadow-sm absolute top-[1px] transition-all",
+diff --git a/src/components/settings/SafetyPanel.tsx b/src/components/settings/SafetyPanel.tsx
+index 0762ffb..9f14f69 100644
+--- a/src/components/settings/SafetyPanel.tsx
++++ b/src/components/settings/SafetyPanel.tsx
+@@ -46,7 +46,7 @@ export function SafetyPanel({
+               className="h-4 w-4 rounded border-border bg-surface text-accent"
+             />
+             <span className="text-[12.5px] font-medium text-text-primary">
+-              {localFamilySafeModeEnabled ? "ON: Family Safe Mode" : "OFF: Adult Mode"}
++              {localFamilySafeModeEnabled ? "ON: Family Safe Mode" : "OFF: Adult Mode (Local Filter OFF)"}
+             </span>
+           </label>
+         </div>
+@@ -54,8 +54,22 @@ export function SafetyPanel({
+         <p className="text-[12px] text-text-muted leading-relaxed">
+           {localFamilySafeModeEnabled
+             ? "When enabled, matching requests are blocked locally before the provider is called."
+-            : "Bypasses Venice Forge's local family-safe filter. Venice/API-level safety and provider-side safemode are controlled separately."}
++            : "Bypasses Venice Forge's local family-safe filter. Note: Venice API provider-side Safe Mode is controlled separately below."}
+         </p>
++
++        <div className="rounded-lg bg-surface-base p-3 border border-border text-[12px] space-y-1">
++          <div className="font-medium text-text-primary">
++            Effective Status: Local filter: {localFamilySafeModeEnabled ? "ON" : "OFF"} | Venice provider filtering: {veniceApiSafeMode ? "ON" : "OFF"}
++          </div>
++          <div className="text-text-muted">
++            {!localFamilySafeModeEnabled && veniceApiSafeMode
++              ? "Local family filter is OFF, but Venice API provider-side Safe Mode is still ON. Outbound requests include safe_mode: true."
++              : !localFamilySafeModeEnabled && !veniceApiSafeMode
++              ? "Both local family filter and Venice API provider Safe Mode are OFF. Outbound requests include safe_mode: false."
++              : "Matching requests are filtered locally before reaching the provider."}
++          </div>
++        </div>
++
+         <div className="mt-2">
+           {!masterPasswordSet ? (
+             <button
+diff --git a/src/config/image-model-capabilities.test.ts b/src/config/image-model-capabilities.test.ts
+index dea9e10..bd6f3a2 100644
+--- a/src/config/image-model-capabilities.test.ts
++++ b/src/config/image-model-capabilities.test.ts
+@@ -59,7 +59,7 @@ describe("buildDimensionOptions — widthHeight fallback", () => {
+ });
+ 
+ describe("buildDimensionOptions — camelCase constraints", () => {
+-  it("treats camelCase aspectRatios as aspect-only mode", () => {
++  it("treats camelCase aspectRatios as aspect-only mode and defaults to 1:1 when supported", () => {
+     const constraints: ImageConstraints = {
+       aspectRatios: ["1:1", "16:9"],
+       defaultAspectRatio: "16:9",
+@@ -67,7 +67,7 @@ describe("buildDimensionOptions — camelCase constraints", () => {
+     const out = buildDimensionOptions("some-model", constraints);
+     expect(out.dimensionMode).toBe("aspectRatio");
+     expect(out.aspectRatios?.map((a) => a.id)).toEqual(["1:1", "16:9"]);
+-    expect(out.defaultDimensions.aspectRatio).toBe("16:9");
++    expect(out.defaultDimensions.aspectRatio).toBe("1:1");
+   });
+ 
+   it("treats camelCase aspectRatios + resolutions as aspectResolution", () => {
+@@ -87,13 +87,13 @@ describe("buildDimensionOptions — camelCase constraints", () => {
+ describe("buildDimensionOptions — snake_case constraints", () => {
+   it("normalises snake_case aspect_ratios + default_aspect_ratio", () => {
+     const raw = {
+-      aspect_ratios: ["1:1", "4:3"],
+-      default_aspect_ratio: "4:3",
++      aspect_ratios: ["1:1", "3:2"],
++      default_aspect_ratio: "3:2",
+     };
+     const out = buildDimensionOptions("some-model", raw as unknown as ImageConstraints);
+     expect(out.dimensionMode).toBe("aspectRatio");
+-    expect(out.aspectRatios?.map((a) => a.id)).toEqual(["1:1", "4:3"]);
+-    expect(out.defaultDimensions.aspectRatio).toBe("4:3");
++    expect(out.aspectRatios?.map((a) => a.id)).toEqual(["1:1", "3:2"]);
++    expect(out.defaultDimensions.aspectRatio).toBe("1:1");
+   });
+ 
+   it("normalises snake_case resolutions + default_resolution", () => {
+diff --git a/src/config/image-model-capabilities.ts b/src/config/image-model-capabilities.ts
+index 97613d2..840b3e6 100644
+--- a/src/config/image-model-capabilities.ts
++++ b/src/config/image-model-capabilities.ts
+@@ -94,16 +94,20 @@ export interface ImageModelCapabilities {
+   patternMatch?: RegExp;
+ }
+ 
+-/** Common aspect ratio presets used across Venice models. */
+-const COMMON_ASPECT_RATIOS = [
+-  { id: "1:1", label: "Square (1:1)" },
+-  { id: "16:9", label: "Landscape (16:9)" },
+-  { id: "9:16", label: "Portrait (9:16)" },
+-  { id: "4:3", label: "Standard (4:3)" },
+-  { id: "3:2", label: "Photo (3:2)" },
++export const IMAGE_ASPECT_PRESETS = [
++  { id: "1:1", label: "Square (Default)" },
++  { id: "3:2", label: "Landscape (3:2)" },
++  { id: "16:9", label: "Cinema (16:9)" },
++  { id: "21:9", label: "Widescreen (21:9)" },
++  { id: "9:16", label: "Tall (9:16)" },
+   { id: "2:3", label: "Portrait (2:3)" },
+-  { id: "21:9", label: "Ultrawide (21:9)" },
+-];
++  { id: "3:4", label: "Instagram (3:4)" },
++] as const;
++
++export type ImageAspectRatioPreset = (typeof IMAGE_ASPECT_PRESETS)[number];
++
++/** Common aspect ratio presets used across Venice models. */
++const COMMON_ASPECT_RATIOS = [...IMAGE_ASPECT_PRESETS];
+ 
+ /**
+  * Aspect ratio presets for image-edit models (EditImageRequest schema).
+@@ -513,6 +517,31 @@ export function getEditModelCapabilities(
+   return caps;
+ }
+ 
++export function buildSupportedAspectPresets(
++  supportedRatios: readonly string[] | undefined,
++): Array<{ id: string; label: string }> {
++  if (!supportedRatios || supportedRatios.length === 0) {
++    return [...IMAGE_ASPECT_PRESETS];
++  }
++  const supportedSet = new Set(supportedRatios);
++  const canonicalMatched = IMAGE_ASPECT_PRESETS.filter((p) => supportedSet.has(p.id));
++  if (canonicalMatched.length > 0) {
++    return canonicalMatched;
++  }
++  return supportedRatios.map((r) => ({ id: r, label: r }));
++}
++
++export function chooseDefaultAspectRatio(input: {
++  supported: readonly string[];
++  providerDefault?: string;
++}): string {
++  if (input.supported.includes("1:1")) return "1:1";
++  if (input.providerDefault && input.supported.includes(input.providerDefault)) {
++    return input.providerDefault;
++  }
++  return input.supported[0] ?? "1:1";
++}
++
+ /** Build dimension options for the model, preferring live `/models`
+  *  constraints over the static registry. */
+ export function buildDimensionOptions(
+@@ -526,11 +555,14 @@ export function buildDimensionOptions(
+   const normalised = normaliseConstraints(constraints);
+ 
+   if (normalised && normalised.aspectRatios && normalised.aspectRatios.length > 0) {
+-    const aspectRatios = normalised.aspectRatios.map((a) => ({ id: a, label: a }));
++    const aspectRatios = buildSupportedAspectPresets(normalised.aspectRatios);
++    const supportedIds = aspectRatios.map((a) => a.id);
+     const hasResolutions =
+       Array.isArray(normalised.resolutions) && normalised.resolutions.length > 0;
+-    const defaultAspectRatio =
+-      normalised.defaultAspectRatio ?? normalised.aspectRatios[0];
++    const defaultAspectRatio = chooseDefaultAspectRatio({
++      supported: supportedIds,
++      providerDefault: normalised.defaultAspectRatio,
++    });
+     const defaultResolution = hasResolutions
+       ? normalised.defaultResolution ?? normalised.resolutions![0]
+       : undefined;
+@@ -549,12 +581,26 @@ export function buildDimensionOptions(
+     };
+   }
+ 
++  const aspectRatios = known.aspectRatios
++    ? buildSupportedAspectPresets(known.aspectRatios.map((a) => a.id))
++    : [...IMAGE_ASPECT_PRESETS];
++  const supportedIds = aspectRatios.map((a) => a.id);
++  const defaultAspectRatio = chooseDefaultAspectRatio({
++    supported: supportedIds,
++    providerDefault: known.defaultDimensions.aspectRatio,
++  });
++
+   return {
+     dimensionMode: known.dimensionMode,
+     widthHeightOptions: known.widthHeightOptions,
+-    aspectRatios: known.aspectRatios,
++    aspectRatios,
+     resolutions: known.resolutions,
+-    defaultDimensions: known.defaultDimensions,
++    defaultDimensions: {
++      ...known.defaultDimensions,
++      ...(known.dimensionMode === "aspectRatio" || known.dimensionMode === "aspectResolution"
++        ? { aspectRatio: defaultAspectRatio }
++        : {}),
++    },
+     qualities: known.qualities,
+     defaultQuality: known.defaultQuality,
+   };
+diff --git a/src/services/prompt-enhancer-service.test.ts b/src/services/prompt-enhancer-service.test.ts
+index c1a0d11..6f6f363 100644
+--- a/src/services/prompt-enhancer-service.test.ts
++++ b/src/services/prompt-enhancer-service.test.ts
+@@ -214,6 +214,22 @@ describe("enhancePrompt output handling", () => {
+     expect(result.prompt.length).toBeLessThanOrEqual(1500);
+     expect(result.prompt.endsWith(".")).toBe(true);
+   });
++
++  it("never includes negative prompt sentinel text in the LLM enhancer prompt", async () => {
++    mockedVenice.mockResolvedValueOnce({
++      choices: [{ message: { content: "vivid polished red ceramic teapot" } }],
++    });
++    await enhancePrompt({
++      mode: "enhance",
++      prompt: "a red teapot",
++      negativePrompt: "NEGATIVE_SENTINEL_7F3B, text, watermark",
++    });
++    const body = mockedVenice.mock.calls[0][1]?.body as Record<string, unknown>;
++    const messages = body.messages as Array<{ role: string; content: string }>;
++    const userPrompt = messages[1].content;
++    expect(userPrompt).not.toContain("NEGATIVE_SENTINEL_7F3B");
++    expect(userPrompt).not.toContain("NEGATIVE PROMPT");
++  });
+ });
+ 
+ describe("remixPrompt routing", () => {
+diff --git a/src/services/prompt-enhancer-service.ts b/src/services/prompt-enhancer-service.ts
+index 4534fd7..c7d157c 100644
+--- a/src/services/prompt-enhancer-service.ts
++++ b/src/services/prompt-enhancer-service.ts
+@@ -141,12 +141,6 @@ function buildEnhancePrompt(input: EnhancePromptInput): string {
+   sections.push("INPUT PROMPT:");
+   sections.push(input.prompt);
+ 
+-  if (input.negativePrompt?.trim()) {
+-    sections.push("");
+-    sections.push("NEGATIVE PROMPT (preserve/contrast as appropriate):");
+-    sections.push(input.negativePrompt);
+-  }
+-
+   if (input.mode === "remix") {
+     if (input.model) {
+       sections.push("");
+diff --git a/src/utils/download.test.ts b/src/utils/download.test.ts
+index 7de3351..22bbdad 100644
+--- a/src/utils/download.test.ts
++++ b/src/utils/download.test.ts
+@@ -80,7 +80,7 @@ describe("downloadImage", () => {
+ 
+     const result = await downloadImage("data:image/png;base64,abcd", "data.png");
+ 
+-    expect(result).toEqual({ confirmed: false, usedFallback: true });
++    expect(result).toEqual({ confirmed: true, usedFallback: false });
+   });
+ 
+   it("rejects data:text/html fallback even if fetch fails", async () => {

@@ -37,6 +37,7 @@ This is the active handoff and validation ledger. The canonical current-work led
   - **Safety State Matrix & Status Banner:** Updated `src/components/settings/SafetyPanel.tsx` to display an explicit effective status banner (`Local filter: OFF | Venice provider filtering: ON`) when local family safe mode is disabled. Updated `src/components/layout/sidebar.tsx` safety status text to clarify local vs provider safe mode.
   - **Implementation Report:** Published `docs/reports/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md` and registered in `docs/DOCS_INDEX.md`.
   - **Aspect Ratio UI Consolidation for SD Models:** Replaced the hardcoded pixel dimension `<Select>` dropdown in `src/components/image/image-view.tsx` with a `<PillGroup>` identical to the canonical Aspect Ratio UI. Realigned `SD_WIDTH_HEIGHT_PAIRS` in `src/config/image-model-capabilities.ts` to exactly match the 7 canonical Aspect Ratio presets so width/height models transparently map user aspect selections to precise, api-compatible pixel values without surfacing raw resolutions.
+  - **Enforce PNG Output:** Added `output_format: "png"` to `/image/generate` and `/image/edit` endpoints in `src/utils/payloadBuilders.ts`, `src/lib/workflow-engine.ts`, `src/services/rp/sceneGenerationService.ts`, and `src/services/media-request-adapter.ts` to fix models sometimes defaulting to webp.
 
 **Validation Matrix:**
 

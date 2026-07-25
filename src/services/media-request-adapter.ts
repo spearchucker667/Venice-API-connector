@@ -207,7 +207,7 @@ export function buildImageEditRequest(input: ImageEditRequest): ImageEditRequest
     model,
     ...(input.aspect_ratio ? { aspect_ratio: input.aspect_ratio } : {}),
     ...(input.resolution ? { resolution: input.resolution } : {}),
-    ...(input.output_format ? { output_format: input.output_format } : {}),
+    output_format: input.output_format || 'png',
     ...(input.safe_mode !== undefined ? { safe_mode: input.safe_mode } : {}),
   }
 }

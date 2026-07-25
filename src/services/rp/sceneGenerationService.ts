@@ -127,6 +127,7 @@ export async function generateScene(
       ...(req.width !== undefined ? { width: req.width } : {}),
       ...(req.height !== undefined ? { height: req.height } : {}),
       ...(req.steps !== undefined ? { steps: req.steps } : {}),
+      output_format: 'png',
     },
     veniceApiSafeMode,
   );
