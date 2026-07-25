@@ -1,14 +1,17 @@
 /**
- * @fileoverview Character Creator splash screen and idea composer.
+ * @fileoverview Character Creator splash screen and idea composer with animated Mio mascot.
  */
 
 import { useState } from "react";
-import { UserRoundPen, Sparkles, FolderOpen, FileUp, Edit3, ChevronDown, ChevronUp } from "lucide-react";
+import { Sparkles, FolderOpen, FileUp, Edit3, ChevronDown, ChevronUp, Copy, Trash2 } from "lucide-react";
 import type { CharacterCreatorDraftSummary, OptionalDraftContext } from "../../types/character-creator";
+import { CharacterCreatorMascot } from "./CharacterCreatorMascot";
 
 interface Props {
   onCreateDraft: (idea: string, context?: OptionalDraftContext) => void;
   onOpenDraft: (draftId: string) => void;
+  onDuplicateDraft?: (draftId: string) => void;
+  onDeleteDraft?: (draftId: string) => void;
   onImportCard: () => void;
   onEditLocalCharacter: () => void;
   recentDrafts: CharacterCreatorDraftSummary[];
@@ -18,6 +21,8 @@ interface Props {
 export function CharacterCreatorWelcome({
   onCreateDraft,
   onOpenDraft,
+  onDuplicateDraft,
+  onDeleteDraft,
   onImportCard,
   onEditLocalCharacter,
   recentDrafts,
@@ -37,8 +42,8 @@ export function CharacterCreatorWelcome({
     <div className="flex flex-col items-center justify-start min-h-full p-6 md:p-10 max-w-4xl mx-auto overflow-y-auto">
       {/* Hero Section */}
       <div className="flex flex-col items-center text-center gap-3 mb-8">
-        <div className="p-4 rounded-2xl bg-accent/10 border border-accent/20 text-accent mb-2">
-          <UserRoundPen className="w-10 h-10" />
+        <div className="p-3 rounded-2xl bg-accent/10 border border-accent/20 mb-2 flex items-center justify-center">
+          <CharacterCreatorMascot size="lg" />
         </div>
         <h1 className="text-2xl md:text-3xl font-bold text-text-primary tracking-tight">
           Character Creator
@@ -207,16 +212,51 @@ export function CharacterCreatorWelcome({
             {recentDrafts.map((d) => (
               <div
                 key={d.id}
-                onClick={() => onOpenDraft(d.id)}
-                className="p-3 rounded-xl bg-surface border border-border hover:border-accent/40 cursor-pointer flex flex-col gap-1 transition-colors"
+                className="p-3 rounded-xl bg-surface border border-border hover:border-accent/40 flex flex-col justify-between gap-2 transition-colors group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-text-primary truncate">{d.name}</span>
+                  <span
+                    onClick={() => onOpenDraft(d.id)}
+                    className="text-xs font-bold text-text-primary hover:text-accent truncate cursor-pointer"
+                  >
+                    {d.name}
+                  </span>
                   <span className="text-[10px] px-2 py-0.5 rounded bg-surface-elevated text-text-muted font-mono">
                     Rev {d.revision}
                   </span>
                 </div>
                 <p className="text-[11px] text-text-muted line-clamp-1 italic">{d.sourceIdea}</p>
+                <div className="flex items-center justify-end gap-2 pt-1 border-t border-border/30">
+                  <button
+                    type="button"
+                    onClick={() => onOpenDraft(d.id)}
+                    className="text-[11px] font-medium text-accent hover:underline"
+                  >
+                    Open
+                  </button>
+                  {onDuplicateDraft && (
+                    <button
+                      type="button"
+                      onClick={() => onDuplicateDraft(d.id)}
+                      className="text-[11px] text-text-muted hover:text-text-primary flex items-center gap-1"
+                      title="Duplicate Draft"
+                    >
+                      <Copy className="w-3 h-3" />
+                      <span>Duplicate</span>
+                    </button>
+                  )}
+                  {onDeleteDraft && (
+                    <button
+                      type="button"
+                      onClick={() => onDeleteDraft(d.id)}
+                      className="text-[11px] text-text-muted hover:text-rose-400 flex items-center gap-1"
+                      title="Delete Draft"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      <span>Delete</span>
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

@@ -1,5 +1,7 @@
 /**
  * @fileoverview Main top-level Character Creator view orchestrator.
+ * Handles transient launch intents, event-driven AI generation, debounced autosave,
+ * local character picking, card import, and atomic approval into the character library.
  */
 
 import { useState, useEffect, useRef } from "react";
@@ -7,6 +9,7 @@ import type {
   CharacterCreatorDraft,
   CharacterCreatorDraftSummary,
   CharacterCreatorEditableField,
+  CharacterCreatorProcessEvent,
   CharacterCreatorViewState,
   OptionalDraftContext,
 } from "../../types/character-creator";
@@ -14,7 +17,7 @@ import type { CharacterCardV2Dto } from "../../types/character-card-spec";
 import type { CharacterCardV1 } from "../../types/rp";
 import { CharacterDraftService } from "../../services/characterCreatorDraftService";
 import {
-  createCharacterDraftAI,
+  generateCharacterCreatorDraft,
   regenerateCharacterFieldAI,
   reviseCharacterDraftAI,
 } from "../../services/characterCreatorAiService";
@@ -22,7 +25,8 @@ import { CharacterCreatorImportService, validateCardForApproval } from "../../se
 import { startNormalChatForCharacter } from "../../services/rpHelpers";
 import { useCharacterCardStore } from "../../stores/character-card-store";
 import { useSettingsStore } from "../../stores/settings-store";
-import { isElectron, desktopCharacterCreator } from "../../services/desktopBridge";
+import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
+import { isElectron, desktopCharacterCreator, desktopCharacterCards } from "../../services/desktopBridge";
 import { toast } from "../../stores/toast-store";
 
 import { CharacterCreatorWelcome } from "./CharacterCreatorWelcome";
@@ -31,8 +35,10 @@ import { CharacterCreatorDraftEditor } from "./CharacterCreatorDraftEditor";
 import { CharacterCreatorReady } from "./CharacterCreatorReady";
 import { CharacterCreatorCompleted } from "./CharacterCreatorCompleted";
 import { CharacterCreatorError } from "./CharacterCreatorError";
+import { CharacterCreatorLocalPickerModal } from "./CharacterCreatorLocalPickerModal";
 
 export function CharacterCreatorView() {
+  const activeTab = useSettingsStore((s) => s.activeTab);
   const [viewState, setViewState] = useState<CharacterCreatorViewState>("welcome");
   const [activeDraft, setActiveDraft] = useState<CharacterCreatorDraft | null>(null);
   const [recentDrafts, setRecentDrafts] = useState<CharacterCreatorDraftSummary[]>([]);
@@ -40,6 +46,8 @@ export function CharacterCreatorView() {
   const [activeIdea, setActiveIdea] = useState("");
   const [avatarDataUrl, setAvatarDataUrl] = useState<string | undefined>(undefined);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
+  const [processEvents, setProcessEvents] = useState<CharacterCreatorProcessEvent[]>([]);
+  const [showLocalPicker, setShowLocalPicker] = useState(false);
   const [validationResults, setValidationResults] = useState<{ valid: boolean; errors: string[]; warnings: string[]; recommendations: string[] }>({
     valid: true,
     errors: [],
@@ -48,6 +56,8 @@ export function CharacterCreatorView() {
   });
 
   const abortControllerRef = useRef<AbortController | null>(null);
+  const pendingSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingDraftRef = useRef<CharacterCreatorDraft | null>(null);
 
   const loadRecentDrafts = async () => {
     try {
@@ -58,41 +68,138 @@ export function CharacterCreatorView() {
     }
   };
 
+  const flushPendingSave = async () => {
+    if (pendingSaveTimerRef.current) {
+      clearTimeout(pendingSaveTimerRef.current);
+      pendingSaveTimerRef.current = null;
+    }
+    if (pendingDraftRef.current) {
+      const draftToSave = pendingDraftRef.current;
+      pendingDraftRef.current = null;
+      try {
+        await CharacterDraftService.update(draftToSave.id, { card: draftToSave.card });
+      } catch {
+        // Silently caught at flush boundary
+      }
+    }
+  };
+
   useEffect(() => {
-    loadRecentDrafts();
+    void loadRecentDrafts();
+    if (activeTab === "character-creator") {
+      const intent = useCharacterCreatorLaunchStore.getState().consume();
+      if (intent) {
+        (async () => {
+          try {
+            switch (intent.mode) {
+              case "new-from-idea":
+                if (intent.sourceIdea) {
+                  await handleCreateDraft(intent.sourceIdea, intent.optionalContext);
+                } else {
+                  setViewState("welcome");
+                }
+                break;
+              case "open-draft":
+                if (intent.draftId) {
+                  await handleOpenDraft(intent.draftId);
+                } else {
+                  setViewState("welcome");
+                }
+                break;
+              case "edit-local-character":
+                if (intent.localCharacterId) {
+                  const draft = await CharacterCreatorImportService.loadExistingCharacterAsDraft(intent.localCharacterId);
+                  setActiveDraft(draft);
+                  setViewState("draft");
+                  await loadRecentDrafts();
+                } else {
+                  setViewState("welcome");
+                }
+                break;
+              case "import-card":
+                if (intent.importHandle) {
+                  const draft = await CharacterCreatorImportService.loadImportHandleAsDraft(intent.importHandle);
+                  setActiveDraft(draft);
+                  setViewState("draft");
+                  await loadRecentDrafts();
+                } else {
+                  setViewState("welcome");
+                }
+                break;
+              case "duplicate-hosted-character":
+                if (intent.hostedCharacterId) {
+                  const draft = await CharacterCreatorImportService.loadHostedCharacterAsLocalDraft(intent.hostedCharacterId);
+                  setActiveDraft(draft);
+                  setViewState("draft");
+                  await loadRecentDrafts();
+                } else {
+                  setViewState("welcome");
+                }
+                break;
+              default:
+                setViewState("welcome");
+                break;
+            }
+          } catch (err) {
+            const msg = err instanceof Error ? err.message : String(err);
+            setErrorDetails(msg);
+            setViewState("error");
+          }
+        })();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
+
+  useEffect(() => {
+    return () => {
+      void flushPendingSave();
+    };
   }, []);
 
   const handleCreateDraft = async (idea: string, optionalContext?: OptionalDraftContext) => {
     setActiveIdea(idea);
     setViewState("generating");
     setErrorDetails(null);
+    setProcessEvents([]);
 
     abortControllerRef.current = new AbortController();
 
     try {
-      const res = await createCharacterDraftAI(
+      const res = await generateCharacterCreatorDraft(
         {
           operation: "create_draft",
           sourceIdea: idea,
           optionalContext,
+        },
+        {
+          onEvent(ev) {
+            setProcessEvents((prev) => [...prev, ev]);
+          },
         },
         abortControllerRef.current.signal,
       );
 
       const draft = await CharacterDraftService.create({
         sourceIdea: idea,
-        card: res.draft,
+        card: res.response.draft,
         creatorMetadata: {
           inspiration: idea.includes("mimics") ? "User requested archetype inspiration" : undefined,
-          designSummary: res.design_summary,
-          assumptions: res.assumptions,
-          warnings: res.warnings,
-          suggestedTags: res.draft.data.tags || [],
-          avatarPrompt: (res.draft.data.extensions?.["venice-forge"] as Record<string, unknown>)?.avatarPrompt as string | undefined,
+          designSummary: res.response.design_summary,
+          assumptions: res.response.assumptions,
+          warnings: res.response.warnings,
+          suggestedTags: res.response.draft.data.tags || [],
+          avatarPrompt: (res.response.draft.data.extensions?.["venice-forge"] as Record<string, unknown>)?.avatarPrompt as string | undefined,
+          processSummary: res.response.process_summary,
         },
       });
 
-      setActiveDraft(draft);
+      const updatedDraft = await CharacterDraftService.update(draft.id, {
+        conceptAnalysis: res.analysis,
+        processTrace: res.processEvents,
+      });
+
+      setActiveDraft(updatedDraft);
       setViewState("draft");
       await loadRecentDrafts();
     } catch (err: unknown) {
@@ -114,6 +221,7 @@ export function CharacterCreatorView() {
   };
 
   const handleOpenDraft = async (draftId: string) => {
+    await flushPendingSave();
     try {
       const d = await CharacterDraftService.get(draftId);
       if (!d) throw new Error("Draft not found.");
@@ -124,23 +232,48 @@ export function CharacterCreatorView() {
     }
   };
 
-  const handleUpdateDraftCard = async (updatedCard: CharacterCardV2Dto) => {
+  const handleDuplicateDraft = async (draftId: string) => {
+    try {
+      const dup = await CharacterDraftService.duplicate(draftId);
+      toast.success("Draft duplicated", dup.card.data.name);
+      await loadRecentDrafts();
+    } catch (err) {
+      toast.error("Could not duplicate draft", String(err));
+    }
+  };
+
+  const handleDeleteDraft = async (draftId: string) => {
+    try {
+      await CharacterDraftService.delete(draftId);
+      toast.success("Draft deleted");
+      await loadRecentDrafts();
+    } catch (err) {
+      toast.error("Could not delete draft", String(err));
+    }
+  };
+
+  const handleUpdateDraftCard = (updatedCard: CharacterCardV2Dto) => {
     if (!activeDraft) return;
-    const nextDraft = {
+    const nextDraft: CharacterCreatorDraft = {
       ...activeDraft,
       card: updatedCard,
       updatedAt: new Date().toISOString(),
     };
     setActiveDraft(nextDraft);
-    // Debounced autosave
-    try {
-      await CharacterDraftService.update(activeDraft.id, { card: updatedCard });
-    } catch {
-      // Ignore autosave errors
+    pendingDraftRef.current = nextDraft;
+
+    if (pendingSaveTimerRef.current) {
+      clearTimeout(pendingSaveTimerRef.current);
     }
+
+    pendingSaveTimerRef.current = setTimeout(async () => {
+      pendingSaveTimerRef.current = null;
+      await flushPendingSave();
+    }, 600);
   };
 
   const handleSaveDraft = async () => {
+    await flushPendingSave();
     if (!activeDraft) return;
     try {
       await CharacterDraftService.update(activeDraft.id, { card: activeDraft.card });
@@ -152,6 +285,7 @@ export function CharacterCreatorView() {
   };
 
   const handleReviseDraft = async (instruction: string) => {
+    await flushPendingSave();
     if (!activeDraft) return;
     setViewState("revising");
     setErrorDetails(null);
@@ -176,6 +310,7 @@ export function CharacterCreatorView() {
           assumptions: res.assumptions,
           warnings: res.warnings,
           suggestedTags: res.draft.data.tags || [],
+          processSummary: res.process_summary,
         },
       });
 
@@ -190,6 +325,7 @@ export function CharacterCreatorView() {
   };
 
   const handleRegenerateField = async (field: CharacterCreatorEditableField, instruction?: string) => {
+    await flushPendingSave();
     if (!activeDraft) return;
     setViewState("revising");
     setErrorDetails(null);
@@ -222,7 +358,8 @@ export function CharacterCreatorView() {
     }
   };
 
-  const handleValidateDraft = () => {
+  const handleValidateDraft = async () => {
+    await flushPendingSave();
     if (!activeDraft) return;
     const localVal = validateCardForApproval(activeDraft.card);
     setValidationResults({
@@ -235,6 +372,7 @@ export function CharacterCreatorView() {
   };
 
   const handleApproveAndCreate = async (startChatImmediately = false, saveAsCopy = false) => {
+    await flushPendingSave();
     if (!activeDraft) return;
     setViewState("saving");
     try {
@@ -262,6 +400,7 @@ export function CharacterCreatorView() {
   };
 
   const handleExportCard = async () => {
+    await flushPendingSave();
     if (!activeDraft) return;
     if (isElectron()) {
       try {
@@ -277,7 +416,6 @@ export function CharacterCreatorView() {
         toast.error("Export failed", String(err));
       }
     } else {
-      // Browser JSON download fallback
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(activeDraft.card, null, 2));
       const downloadAnchor = document.createElement("a");
       downloadAnchor.setAttribute("href", dataStr);
@@ -289,16 +427,49 @@ export function CharacterCreatorView() {
     }
   };
 
-  const handleEditLocalCharacter = async () => {
-    const cards = useCharacterCardStore.getState().cards;
-    if (cards.length === 0) {
-      toast.error("No local characters available to edit");
-      return;
+  const handleImportCardFile = async () => {
+    if (isElectron()) {
+      try {
+        const res = await desktopCharacterCards.chooseImportFile();
+        if (res.ok && res.handle) {
+          const draft = await CharacterCreatorImportService.loadImportHandleAsDraft(res.handle);
+          setActiveDraft(draft);
+          setViewState("draft");
+          await loadRecentDrafts();
+          toast.success("Card imported into Character Creator", draft.card.data.name || "Imported Card");
+        }
+      } catch (err) {
+        toast.error("Import failed", String(err));
+      }
+    } else {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".json,image/png";
+      input.onchange = async (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (!file) return;
+        try {
+          const text = await file.text();
+          const draft = await CharacterCreatorImportService.loadImportHandleAsDraft(text);
+          setActiveDraft(draft);
+          setViewState("draft");
+          await loadRecentDrafts();
+          toast.success("Card imported into Character Creator", draft.card.data.name);
+        } catch (err) {
+          toast.error("Could not parse card file", String(err));
+        }
+      };
+      input.click();
     }
+  };
+
+  const handleSelectLocalCharacterToEdit = async (characterId: string) => {
+    setShowLocalPicker(false);
     try {
-      const draft = await CharacterCreatorImportService.loadExistingCharacterAsDraft(cards[0].id);
+      const draft = await CharacterCreatorImportService.loadExistingCharacterAsDraft(characterId);
       setActiveDraft(draft);
       setViewState("draft");
+      await loadRecentDrafts();
     } catch (err) {
       toast.error("Could not load character", String(err));
     }
@@ -310,10 +481,10 @@ export function CharacterCreatorView() {
         <CharacterCreatorWelcome
           onCreateDraft={handleCreateDraft}
           onOpenDraft={handleOpenDraft}
-          onImportCard={() => {
-            useSettingsStore.getState().setActiveTab("characters");
-          }}
-          onEditLocalCharacter={handleEditLocalCharacter}
+          onDuplicateDraft={handleDuplicateDraft}
+          onDeleteDraft={handleDeleteDraft}
+          onImportCard={handleImportCardFile}
+          onEditLocalCharacter={() => setShowLocalPicker(true)}
           recentDrafts={recentDrafts}
         />
       )}
@@ -322,6 +493,9 @@ export function CharacterCreatorView() {
         <CharacterCreatorGenerating
           onCancel={handleCancelGeneration}
           idea={activeIdea}
+          events={processEvents}
+          processSummary={activeDraft?.creatorMetadata?.processSummary}
+          designSummary={activeDraft?.creatorMetadata?.designSummary}
         />
       )}
 
@@ -331,7 +505,7 @@ export function CharacterCreatorView() {
           onUpdateDraft={handleUpdateDraftCard}
           onSaveDraft={handleSaveDraft}
           onValidateDraft={handleValidateDraft}
-          onApproveAndCreate={() => handleValidateDraft()}
+          onApproveAndCreate={() => void handleValidateDraft()}
           onReviseDraft={handleReviseDraft}
           onRegenerateField={handleRegenerateField}
           onSelectAvatarImage={(dataUrl) => setAvatarDataUrl(dataUrl)}
@@ -386,6 +560,13 @@ export function CharacterCreatorView() {
           }}
           onReturnToDraft={() => setViewState("draft")}
           hasDraftWork={Boolean(activeDraft)}
+        />
+      )}
+
+      {showLocalPicker && (
+        <CharacterCreatorLocalPickerModal
+          onSelectCharacter={handleSelectLocalCharacterToEdit}
+          onClose={() => setShowLocalPicker(false)}
         />
       )}
     </div>

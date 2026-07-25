@@ -1,5 +1,5 @@
 import { CHARACTER_CREATOR_MODEL_ID } from "../constants/character-creator";
-import { mapV2ToInternal, mapInternalToV2, validateCharacterCardV2 } from "./characterCards/characterCardAdapter";
+import { mapV2ToInternal, mapV1ToInternal, mapInternalToV2, validateCharacterCardV2 } from "./characterCards/characterCardAdapter";
 import { CharacterDraftService } from "./characterCreatorDraftService";
 import { useCharacterCardStore } from "../stores/character-card-store";
 import type { CharacterCreatorDraft } from "../types/character-creator";
@@ -342,6 +342,91 @@ export const CharacterCreatorImportService = {
         assumptions: [],
         warnings: [],
         suggestedTags: card.tags || [],
+      },
+    });
+
+    return draft;
+  },
+
+  async loadCardDtoAsDraft(cardDto: CharacterCardV2Dto, sourceName = "Imported Card"): Promise<CharacterCreatorDraft> {
+    const name = cardDto.data?.name || sourceName;
+    const draft = await CharacterDraftService.create({
+      sourceIdea: `Imported character card '${name}'`,
+      card: cardDto,
+      creatorMetadata: {
+        designSummary: `Imported from character card '${name}'`,
+        assumptions: [],
+        warnings: [],
+        suggestedTags: cardDto.data?.tags || [],
+      },
+    });
+    return draft;
+  },
+
+  async loadImportHandleAsDraft(importHandle: string): Promise<CharacterCreatorDraft> {
+    // When an import handle or preview is passed, resolve it or retrieve from temporary store
+    let cardDto: CharacterCardV2Dto;
+    try {
+      const parsed = JSON.parse(importHandle);
+      if (parsed && typeof parsed === "object" && parsed.spec === "chara_card_v2") {
+        cardDto = parsed as CharacterCardV2Dto;
+      } else {
+        const mapped = mapV1ToInternal(parsed);
+        if (mapped) {
+          cardDto = mapInternalToV2(mapped);
+        } else {
+          throw new Error("Invalid card payload structure");
+        }
+      }
+    } catch {
+      throw new Error(`CARD_IMPORT_FAILED: Could not parse import handle or payload '${importHandle}'.`);
+    }
+
+    return this.loadCardDtoAsDraft(cardDto, cardDto.data?.name || "Imported Card");
+  },
+
+  async loadHostedCharacterAsLocalDraft(hostedCharacterId: string): Promise<CharacterCreatorDraft> {
+    const { getCharacter } = await import("./characterService");
+    const hosted = await getCharacter(hostedCharacterId);
+    if (!hosted) {
+      throw new Error(`CHARACTER_NOT_FOUND: Hosted character '${hostedCharacterId}' not found.`);
+    }
+
+    const cardDto: CharacterCardV2Dto = {
+      spec: "chara_card_v2",
+      spec_version: "2.0",
+      data: {
+        name: hosted.name,
+        description: hosted.description || "",
+        personality: "",
+        scenario: "",
+        first_mes: hosted.greeting || "",
+        mes_example: "",
+        creator_notes: `Duplicated from Venice hosted character '${hosted.name}' (${hosted.slug})`,
+        system_prompt: "",
+        post_history_instructions: "",
+        alternate_greetings: [],
+        tags: hosted.tags || [],
+        creator: hosted.author || "Venice Hosted",
+        character_version: "1.0",
+        extensions: {
+          "venice-forge": {
+            generatedBy: "character-creator",
+            modelId: CHARACTER_CREATOR_MODEL_ID,
+            sourceHostedSlug: hosted.slug,
+          },
+        },
+      },
+    };
+
+    const draft = await CharacterDraftService.create({
+      sourceIdea: `Duplicating hosted character '${hosted.name}'`,
+      card: cardDto,
+      creatorMetadata: {
+        designSummary: `Duplicated from hosted character '${hosted.name}'`,
+        assumptions: ["Created local editable draft from hosted character metadata"],
+        warnings: [],
+        suggestedTags: hosted.tags || [],
       },
     });
 

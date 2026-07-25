@@ -5,6 +5,8 @@ import { CharacterCreatorView } from "./CharacterCreatorView";
 import * as aiService from "../../services/characterCreatorAiService";
 import StorageService from "../../services/storageService";
 import { useCharacterCardStore } from "../../stores/character-card-store";
+import { useSettingsStore } from "../../stores/settings-store";
+import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
 import { CHARACTER_CREATOR_MODEL_ID } from "../../constants/character-creator";
 
 vi.mock("../../services/storageService", () => {
@@ -29,6 +31,7 @@ vi.mock("../../services/characterCreatorAiService", async () => {
   const actual = await vi.importActual("../../services/characterCreatorAiService");
   return {
     ...actual,
+    generateCharacterCreatorDraft: vi.fn(),
     createCharacterDraftAI: vi.fn(),
     reviseCharacterDraftAI: vi.fn(),
     regenerateCharacterFieldAI: vi.fn(),
@@ -39,6 +42,8 @@ describe("CharacterCreatorView Component", () => {
   beforeEach(() => {
     (StorageService as any)._clear();
     useCharacterCardStore.setState({ cards: [] });
+    useCharacterCreatorLaunchStore.getState().clear();
+    useSettingsStore.getState().setActiveTab("character-creator");
     vi.clearAllMocks();
   });
 
@@ -51,62 +56,85 @@ describe("CharacterCreatorView Component", () => {
     expect(screen.queryByRole("combobox", { name: /model/i })).not.toBeInTheDocument();
   });
 
-  it("transitions to generating state and then draft editor upon successful AI response", async () => {
-    const mockResponse = {
-      operation: "create_draft" as const,
-      design_summary: "Batman inspired hero",
-      assumptions: ["Original character name created"],
-      warnings: [],
-      draft: {
-        spec: "chara_card_v2" as const,
-        spec_version: "2.0" as const,
-        data: {
-          name: "Shadow Knight",
-          description: "Nocturnal protector",
-          personality: "Brooding",
-          scenario: "Gotham roof",
-          first_mes: "I watch over the city.",
-          mes_example: "",
-          creator_notes: "",
-          system_prompt: "",
-          post_history_instructions: "",
-          alternate_greetings: [],
-          tags: ["hero"],
-          creator: "Venice Forge",
-          character_version: "1.0",
-          extensions: {},
-        },
+  it("consumes pending launch intent on mount", async () => {
+    useCharacterCreatorLaunchStore.getState().launch({
+      mode: "new-from-idea",
+      sourceIdea: "Batman-inspired detective",
+    });
+
+    const mockResult = {
+      analysis: {
+        normalizedConcept: "Batman-inspired detective",
+        intendedMode: "original" as const,
+        coreTraits: ["detective"],
+        settingDirection: "",
+        relationshipDirection: "",
+        toneDirection: "",
+        originalityPlan: [],
+        assumptions: [],
+        warnings: [],
+        userVisibleSummary: "Summary",
       },
-      validation: { valid: true, errors: [], warnings: [], recommendations: [] },
+      response: {
+        operation: "create_draft" as const,
+        design_summary: "Batman inspired hero",
+        assumptions: ["Original character name created"],
+        warnings: [],
+        draft: {
+          spec: "chara_card_v2" as const,
+          spec_version: "2.0" as const,
+          data: {
+            name: "Shadow Knight",
+            description: "Nocturnal protector",
+            personality: "Brooding",
+            scenario: "Gotham roof",
+            first_mes: "I watch over the city.",
+            mes_example: "",
+            creator_notes: "",
+            system_prompt: "",
+            post_history_instructions: "",
+            alternate_greetings: [],
+            tags: ["hero"],
+            creator: "Venice Forge",
+            character_version: "1.0",
+            extensions: {},
+          },
+        },
+        validation: { valid: true, errors: [], warnings: [], recommendations: [] },
+      },
+      processEvents: [
+        {
+          id: "ev_1",
+          phase: "concept-analysis" as const,
+          status: "complete" as const,
+          title: "Concept analysis complete",
+          summary: "Parsed idea",
+          source: "model-summary" as const,
+          createdAt: new Date().toISOString(),
+        },
+      ],
     };
 
-    vi.mocked(aiService.createCharacterDraftAI).mockResolvedValueOnce(mockResponse);
+    vi.mocked(aiService.generateCharacterCreatorDraft).mockResolvedValueOnce(mockResult);
 
     render(<CharacterCreatorView />);
-
-    const input = screen.getByPlaceholderText(/I want a brooding nocturnal detective/i);
-    fireEvent.change(input, { target: { value: "I want a character that mimics Batman." } });
-
-    const createBtn = screen.getByRole("button", { name: /Create Draft/i });
-    fireEvent.click(createBtn);
-
-    expect(screen.getByText("Building identity")).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByDisplayValue("Shadow Knight")).toBeInTheDocument();
     });
 
-    expect(aiService.createCharacterDraftAI).toHaveBeenCalledWith(
+    expect(aiService.generateCharacterCreatorDraft).toHaveBeenCalledWith(
       expect.objectContaining({
         operation: "create_draft",
-        sourceIdea: "I want a character that mimics Batman.",
+        sourceIdea: "Batman-inspired detective",
       }),
       expect.any(Object),
+      expect.anything(),
     );
   });
 
   it("handles model unavailability gracefully and displays error screen while preserving state", async () => {
-    vi.mocked(aiService.createCharacterDraftAI).mockRejectedValueOnce(
+    vi.mocked(aiService.generateCharacterCreatorDraft).mockRejectedValueOnce(
       new Error(`MODEL_UNAVAILABLE: Model '${CHARACTER_CREATOR_MODEL_ID}' is currently unavailable on Venice API.`),
     );
 
@@ -123,35 +151,50 @@ describe("CharacterCreatorView Component", () => {
   });
 
   it("requires explicit user approval before saving character card into local library", async () => {
-    const mockResponse = {
-      operation: "create_draft" as const,
-      design_summary: "Test Summary",
-      assumptions: [],
-      warnings: [],
-      draft: {
-        spec: "chara_card_v2" as const,
-        spec_version: "2.0" as const,
-        data: {
-          name: "Vigilante Hero",
-          description: "Bio text",
-          personality: "Stern",
-          scenario: "City street",
-          first_mes: "Hello.",
-          mes_example: "",
-          creator_notes: "",
-          system_prompt: "",
-          post_history_instructions: "",
-          alternate_greetings: [],
-          tags: [],
-          creator: "Venice Forge",
-          character_version: "1.0",
-          extensions: {},
-        },
+    const mockResult = {
+      analysis: {
+        normalizedConcept: "Create hero",
+        intendedMode: "original" as const,
+        coreTraits: [],
+        settingDirection: "",
+        relationshipDirection: "",
+        toneDirection: "",
+        originalityPlan: [],
+        assumptions: [],
+        warnings: [],
+        userVisibleSummary: "Test Summary",
       },
-      validation: { valid: true, errors: [], warnings: [], recommendations: [] },
+      response: {
+        operation: "create_draft" as const,
+        design_summary: "Test Summary",
+        assumptions: [],
+        warnings: [],
+        draft: {
+          spec: "chara_card_v2" as const,
+          spec_version: "2.0" as const,
+          data: {
+            name: "Vigilante Hero",
+            description: "Bio text",
+            personality: "Stern",
+            scenario: "City street",
+            first_mes: "Hello.",
+            mes_example: "",
+            creator_notes: "",
+            system_prompt: "",
+            post_history_instructions: "",
+            alternate_greetings: [],
+            tags: [],
+            creator: "Venice Forge",
+            character_version: "1.0",
+            extensions: {},
+          },
+        },
+        validation: { valid: true, errors: [], warnings: [], recommendations: [] },
+      },
+      processEvents: [],
     };
 
-    vi.mocked(aiService.createCharacterDraftAI).mockResolvedValueOnce(mockResponse);
+    vi.mocked(aiService.generateCharacterCreatorDraft).mockResolvedValueOnce(mockResult);
 
     render(<CharacterCreatorView />);
 
@@ -170,7 +213,9 @@ describe("CharacterCreatorView Component", () => {
     // Click Approve & Create Character in Editor -> goes to Ready screen
     fireEvent.click(screen.getByRole("button", { name: /Approve & Create Character/i }));
 
-    expect(screen.getByText("Character Ready for Approval")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Character Ready for Approval")).toBeInTheDocument();
+    });
 
     // Click Create Character on Ready screen -> explicit approval
     fireEvent.click(screen.getByRole("button", { name: /Create Character/i }));

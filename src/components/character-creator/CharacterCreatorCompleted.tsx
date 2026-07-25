@@ -4,6 +4,7 @@
 
 import { CheckCircle2, MessageSquare, User, FileUp, Sparkles, Edit3 } from "lucide-react";
 import type { CharacterCardV1 } from "../../types/rp";
+import { CharacterCreatorMascot } from "./CharacterCreatorMascot";
 
 interface Props {
   character: CharacterCardV1;
@@ -24,8 +25,11 @@ export function CharacterCreatorCompleted({
 }: Props) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[450px] h-full p-6 text-center max-w-md mx-auto">
-      <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4 animate-bounce">
-        <CheckCircle2 className="w-8 h-8" />
+      <div className="relative mb-4">
+        <CharacterCreatorMascot size="lg" />
+        <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 text-surface flex items-center justify-center border-2 border-surface">
+          <CheckCircle2 className="w-4 h-4" />
+        </div>
       </div>
 
       <h2 className="text-xl font-bold text-text-primary mb-1">Character Created</h2>

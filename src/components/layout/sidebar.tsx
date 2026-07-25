@@ -16,7 +16,7 @@ import { DEFAULT_CHAT_MODEL } from '../../constants/venice'
 import { getConversationDisplayTitle } from '../../utils/conversationDisplayTitle'
 import { CharacterAvatar } from '../characters/CharacterAvatar'
 import { Meteocon } from '../ui/Meteocon'
-import { UserRoundPen } from 'lucide-react'
+import { CharacterCreatorMascot } from '../character-creator/CharacterCreatorMascot'
 
 function ChatIcon() {
   return <Meteocon name="clear-day" size={20} />
@@ -25,7 +25,7 @@ function CharacterChatsIcon() {
   return <Meteocon name="clear-night" size={20} />
 }
 function CharacterCreatorIcon() {
-  return <UserRoundPen className="w-[20px] h-[20px]" />
+  return <CharacterCreatorMascot size="nav" />
 }
 function StatusIcon() {
   return <Meteocon name="humidity" size={20} />

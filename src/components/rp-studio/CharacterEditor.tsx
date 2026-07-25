@@ -6,6 +6,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { openCharacterCreator } from "../../stores/character-creator-launch-store";
 import { useCharacterCardStore } from "../../stores/character-card-store";
 import { useSettingsStore } from "../../stores/settings-store";
 import { usePromptLibraryStore } from "../../stores/prompt-library-store";
@@ -41,7 +42,6 @@ import type { CharacterCardExportReport } from "../../types/character-card-files
 import { compileRpPrompt } from "../../services/rpPromptCompiler";
 import { veniceFetch } from "../../services/veniceClient/fetch";
 import { useChatStore } from "../../stores/chat-store";
-import { CharacterCreatorImportService } from "../../services/characterCreatorImportService";
 
 /** Module-scoped WeakMap mapping each example object (by identity) to a stable
  *  client-side React key. Lives outside the component so keys survive remounts
@@ -657,13 +657,11 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               <div>Raw estimate {tokenBudget.raw.count.toLocaleString()} · output reserve {tokenBudget.reservedOutputTokens.toLocaleString()}</div>
             </div>
           )}
-          <GhostButton onClick={async () => {
-            try {
-              await CharacterCreatorImportService.loadExistingCharacterAsDraft(draft.id);
-              useSettingsStore.getState().setActiveTab("character-creator");
-            } catch {
-              toast.error("Could not load character into Character Creator");
-            }
+          <GhostButton onClick={() => {
+            openCharacterCreator({
+              mode: "edit-local-character",
+              localCharacterId: draft.id,
+            });
           }}>
             Edit with Character Creator
           </GhostButton>

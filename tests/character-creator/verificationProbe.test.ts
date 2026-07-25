@@ -60,15 +60,22 @@ describe("Adversarial Verification Probe Suite", () => {
         card,
       });
 
-      // Fetch raw rows directly from StorageService underlying store
-      const items = await StorageService.getItems<Record<string, unknown>>("character_creator_drafts");
-      const rawRow = items.find((item: any) => item.id === draft.id) as any;
+      // Fetch raw rows directly from StorageService underlying IndexedDB store
+      const db = await StorageService.openDB();
+      const rawRow = await new Promise<Record<string, unknown> | undefined>((resolve, reject) => {
+        const tx = db.transaction("character_creator_drafts", "readonly");
+        const request = tx
+          .objectStore("character_creator_drafts")
+          .get(`profile-alpha:${draft.id}`);
+        request.onsuccess = () => resolve(request.result as Record<string, unknown> | undefined);
+        request.onerror = () => reject(request.error);
+      });
 
       expect(rawRow).toBeDefined();
       // Verify raw row contains encryption wrapper flags
-      expect(rawRow._isEncryptedWrapper).toBe(true);
-      expect(rawRow.data).toBeDefined();
-      expect(rawRow.data.ciphertext).toBeDefined();
+      expect(rawRow!._isEncryptedWrapper).toBe(true);
+      expect(rawRow!.data).toBeDefined();
+      expect(rawRow!.sourceIdea).toBeUndefined();
 
       // Stringify raw row and assert plaintext sensitive string is NOT present anywhere in raw storage wrapper
       const rawJson = JSON.stringify(rawRow);

@@ -44,6 +44,63 @@ export type CharacterCreatorEditableField =
   | "character_version"
   | "avatar_prompt";
 
+export interface CharacterCreatorMajorDecision {
+  area: "identity" | "personality" | "scenario" | "greeting" | "dialogue" | "prompting" | "lore";
+  summary: string;
+}
+
+export interface CharacterCreatorProcessSummary {
+  concept_interpretation: string;
+  design_direction: string;
+  originality_strategy: string[];
+  major_decisions: CharacterCreatorMajorDecision[];
+}
+
+export type CharacterCreatorProcessPhase =
+  | "queued"
+  | "concept-analysis"
+  | "design-brief"
+  | "card-draft"
+  | "consistency-review"
+  | "schema-validation"
+  | "repair"
+  | "draft-persistence"
+  | "complete"
+  | "failed"
+  | "cancelled";
+
+export type CharacterCreatorProcessStatus =
+  | "pending"
+  | "active"
+  | "complete"
+  | "warning"
+  | "failed";
+
+export interface CharacterCreatorProcessEvent {
+  id: string;
+  phase: CharacterCreatorProcessPhase;
+  status: CharacterCreatorProcessStatus;
+  title: string;
+  summary: string;
+  details?: string[];
+  source: "application" | "model-summary" | "validator";
+  createdAt: string;
+  completedAt?: string;
+}
+
+export interface CharacterConceptAnalysis {
+  normalizedConcept: string;
+  intendedMode: "original" | "inspired-original" | "direct-existing" | "parody" | "alternate";
+  coreTraits: string[];
+  settingDirection: string;
+  relationshipDirection: string;
+  toneDirection: string;
+  originalityPlan: string[];
+  assumptions: string[];
+  warnings: string[];
+  userVisibleSummary: string;
+}
+
 export interface CharacterCreatorDraftSummary {
   id: string;
   name: string;
@@ -71,6 +128,9 @@ export interface CharacterCreatorDraft {
 
   card: CharacterCardV2Dto;
 
+  conceptAnalysis?: CharacterConceptAnalysis;
+  processTrace?: CharacterCreatorProcessEvent[];
+
   creatorMetadata: {
     inspiration?: string;
     designSummary: string;
@@ -78,6 +138,7 @@ export interface CharacterCreatorDraft {
     warnings: string[];
     suggestedTags: string[];
     avatarPrompt?: string;
+    processSummary?: CharacterCreatorProcessSummary;
   };
 
   fieldHistory?: Record<string, string[]>;
@@ -139,9 +200,16 @@ export interface CharacterCreatorResponseValidation {
 
 export interface CharacterCreatorResponse {
   operation: CharacterCreatorOperation;
+  process_summary?: CharacterCreatorProcessSummary;
   design_summary: string;
   assumptions: string[];
   warnings: string[];
   draft: CharacterCardV2Dto;
   validation: CharacterCreatorResponseValidation;
+}
+
+export interface CharacterCreatorGenerationResult {
+  analysis: CharacterConceptAnalysis;
+  response: CharacterCreatorResponse;
+  processEvents: CharacterCreatorProcessEvent[];
 }

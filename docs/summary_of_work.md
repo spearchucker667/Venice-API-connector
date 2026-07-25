@@ -4,6 +4,30 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-07-24 (Character Creator Integration, Visible Process & Mascot Remediation)
+
+**Scope:** Repaired and completed the end-to-end Character Creator workflow (`character-creator` route) so every AI-assisted character creation or editing entry point opens and operates inside the dedicated Character Creator workflow. Enforced model lock `zai-org-glm-5-2` immutably, implemented an event-driven visible AI process panel (`CharacterCreatorProcessPanel`), replaced Lucide `UserRoundPen` with the animated Mio mascot GIF (`assets/mio-xc3-nerdprofeta-gifs/mio-xc3-nerdprofeta-jumping.gif`), created `CharacterCreatorLocalPickerModal`, and implemented real debounced autosave (600ms) with explicit flush (`flushPendingSave`).
+
+- **Entry Point & Launch Intent Integration**: Built `useCharacterCreatorLaunchStore` and helper `openCharacterCreator(intent)`. All entry points (`RP Studio CharacterLibrary` "Build Character" and prompt bar, `RP Studio CharacterEditor` "Edit with Character Creator", `Welcome Screen` actions) publish launch intents. Intents are consumed exactly once (`consume()`) on mount or tab focus.
+- **Model Lock Enforcement (`zai-org-glm-5-2`)**: `CHARACTER_CREATOR_MODEL_ID = "zai-org-glm-5-2"` is enforced across all request builders, AI services, draft sanitizers, and UI components. Passing a different model throws `CharacterCreatorModelOverrideError`. Model unavailability produces a typed `MODEL_UNAVAILABLE` error screen while preserving active draft data.
+- **Event-Driven Visible AI Process**: Generation progress emits structured `CharacterCreatorProcessEvent` updates (`queued`, `concept-analysis`, `card-draft`, `consistency-review`, `schema-validation`, `repair`, `complete`) displayed in real-time in `CharacterCreatorProcessPanel`. Private hidden chain-of-thought (`reasoning_content`), system prompt text, and API keys are strictly excluded. Fake timer loops (`setInterval`) were removed.
+- **Mascot Remediation**: Swapped `UserRoundPen` icon with animated Mio mascot GIF (`mio-xc3-nerdprofeta-jumping.gif`) with reduced-motion static PNG fallback (`mio-xc3-nerdprofeta-jumping-static.png`).
+- **Local Character Picker Modal**: Implemented `CharacterCreatorLocalPickerModal` for selecting local cards to edit in Character Creator with search filtering, avatar previews, tags, and updated timestamps.
+- **Debounced Autosave & Approval**: Implemented 600ms debounced draft updates with explicit flush before validation, approval, and export. Characters are saved into the local library only upon explicit user approval on the Ready screen.
+- **Prompt Limit & IPC Validation Remediation**: Streamlined `CHARACTER_CREATOR_SYSTEM_PROMPT` in `src/constants/character-creator.ts` to 6,988 Unicode code points (down from 12,220), remaining comfortably below the 8,000 warning threshold and 12,000 hard limit. Configured `electron/ipc/validation.ts` to enforce `SYSTEM_PROMPT_LARGE_CONTEXT_OVERRIDE` (16,000 code points) as the ceiling for IPC system prompt validations.
+
+**Validation Matrix:**
+
+| Command | Result |
+|---|---|
+| `npx vitest run src/constants/character-creator.test.ts src/services/characterCreatorAiService.test.ts src/services/characterCreatorDraftService.test.ts src/services/characterCreatorImportService.test.ts src/components/character-creator/CharacterCreatorView.test.tsx src/stores/character-creator-launch-store.test.ts src/components/rp-studio/CharacterLibrary.test.tsx tests/character-creator/` | PASS — 7 test files / 26 tests (100% PASS) |
+| `npm run lint:eslint` | PASS — zero warnings (`--max-warnings=0`) |
+| `npm run typecheck` | PASS — zero errors across renderer `tsc` and electron `tsconfig.electron.json` |
+| `npm run verify:contracts` | PASS — 103/103 checks passed |
+| `npm run build` | PASS — Vite renderer, Express server, and Electron main/preload bundled clean |
+
+### Prior Session Summary (Draft Store Hardening — P0-01, P0-02, P1-03 implementation) [demoted from "Latest Session Summary"]
+
 **Date:** 2026-07-24 (Draft Store Hardening — P0-01, P0-02, P1-03 implementation)
 
 **Scope:** Implemented the three originally authorized code fixes against `VF-CHARACTER-CREATOR-HARDENING-001`: idempotent atomic draft creation, guaranteed-state compensating rollback, and backup compatibility for the new `character_creator_drafts` store. Other items tracked under the same blocker (minimal IPC validator reachability, mocked/incomplete acceptance coverage, JPEG/WebP end-to-end evidence, 390×844 RP Studio clipping, README/repository-tree sync, and full documentation refresh) remain open by user direction.

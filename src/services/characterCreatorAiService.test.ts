@@ -2,9 +2,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   buildCharacterCreatorRequest,
   createCharacterDraftAI,
+  generateCharacterCreatorDraft,
   validateCharacterCreatorResponse,
 } from "./characterCreatorAiService";
 import { CharacterCreatorModelOverrideError } from "../constants/character-creator";
+import type { CharacterCreatorProcessEvent } from "../types/character-creator";
 import * as fetchModule from "./veniceClient/fetch";
 
 vi.mock("./veniceClient/fetch", () => ({
@@ -216,6 +218,81 @@ describe("characterCreatorAiService", () => {
           sourceIdea: "Test concept",
         }),
       ).rejects.toThrow("MODEL_UNAVAILABLE");
+    });
+  });
+
+  describe("generateCharacterCreatorDraft with process events", () => {
+    it("emits process events to callback and returns complete result", async () => {
+      const validResponse = {
+        data: {
+          choices: [
+            {
+              message: {
+                content: JSON.stringify({
+                  operation: "create_draft",
+                  process_summary: {
+                    concept_interpretation: "Nocturnal vigilante detective concept",
+                    design_direction: "Original character inspired by classic dark detective archetypes",
+                    originality_strategy: ["Distinct city setting", "Original costume & name"],
+                    major_decisions: [
+                      { area: "identity", summary: "Named Bruce Obsidian" },
+                      { area: "personality", summary: "Methodical and stoic" },
+                    ],
+                  },
+                  design_summary: "Inspired nocturnal detective character",
+                  assumptions: ["Original setting"],
+                  warnings: [],
+                  draft: {
+                    spec: "chara_card_v2",
+                    spec_version: "2.0",
+                    data: {
+                      name: "Bruce Obsidian",
+                      description: "Nocturnal vigilante detective",
+                      personality: "Methodical and stoic",
+                      scenario: "Gotham-like alleyway",
+                      first_mes: "The city never sleeps, neither do I.",
+                      mes_example: "",
+                      creator_notes: "",
+                      system_prompt: "",
+                      post_history_instructions: "",
+                      alternate_greetings: [],
+                      tags: ["detective", "vigilante"],
+                      creator: "Venice Forge",
+                      character_version: "1.0",
+                      extensions: {},
+                    },
+                  },
+                  validation: { valid: true, errors: [], warnings: [], recommendations: [] },
+                }),
+              },
+            },
+          ],
+        },
+      };
+
+      vi.mocked(fetchModule.veniceFetch).mockResolvedValueOnce(validResponse as any);
+
+      const eventsEmitted: CharacterCreatorProcessEvent[] = [];
+      const result = await generateCharacterCreatorDraft(
+        {
+          operation: "create_draft",
+          sourceIdea: "I want a character that mimics Batman",
+        },
+        {
+          onEvent(ev) {
+            eventsEmitted.push(ev);
+          },
+        },
+      );
+
+      expect(eventsEmitted.length).toBeGreaterThan(0);
+      expect(eventsEmitted.some((e) => e.phase === "queued")).toBe(true);
+      expect(eventsEmitted.some((e) => e.phase === "concept-analysis")).toBe(true);
+      expect(eventsEmitted.some((e) => e.phase === "card-draft")).toBe(true);
+      expect(eventsEmitted.some((e) => e.phase === "complete")).toBe(true);
+
+      expect(result.response.draft.data.name).toBe("Bruce Obsidian");
+      expect(result.analysis.userVisibleSummary).toContain("Nocturnal vigilante detective");
     });
   });
 });

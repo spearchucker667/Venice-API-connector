@@ -76,7 +76,7 @@ By prioritizing local data ownership, Venice Forge runs all storage operations l
 - **Video & Music Studios:** Queue text/image-to-video and lyrics-driven music requests with explicit stage tracking (`queued` → `generating` → `retrieving` → `saving` → `completed`), durable stream persistence, and MP4/audio exports.
 - **Research Workspace:** Synthesize facts using Venice/Jina-backed search, web scraping, and social discovery within an isolated sandbox.
 - **Prompt Library & Scene Composer:** Version, tag, and reuse prompts; arrange prompts, media references, and models into structured visual scene compositions.
-- **ST Card Studio & RP Studio:** Create, preview-import, edit, version, test, and verified-export Tavern V1 / Character Card V2 JSON and V2 PNG cards; manage personas, scenarios, lorebooks, multi-character chats, and scene generation.
+- **ST Card Studio, Character Creator & RP Studio:** Turn rough ideas into complete, editable character cards with model `zai-org-glm-5-2` immutably; view real event-driven design process decisions; create, preview-import, edit, version, test, and verified-export Tavern V1 / Character Card V2 JSON and V2 PNG cards; manage personas, scenarios, lorebooks, multi-character chats, and scene generation.
 - **Playground & Workflow Editor:** Interactive visual node graph builder for constructing and running multi-modal AI task chains.
 - **Token-Based Styling:** Dynamic premium glassmorphism theme system supporting 35 built-in themes and fully custom YAML palette imports.
 
@@ -91,7 +91,7 @@ flowchart LR
   VF["Venice Forge"]
   VF --> Conversation["Conversation<br/>Chat · Character Chats · History"]
   VF --> Generate["Generate<br/>Image Studio · Media Studio · Image Inspector · Prompts · Scene Composer<br/>Audio Studio · Music Studio · Video Studio · Embeddings<br/>Research · Characters"]
-  VF --> Build["Build<br/>RP Studio · Workflows · Documents · Playground"]
+  VF --> Build["Build<br/>RP Studio · Character Creator · Workflows · Documents · Playground"]
   VF --> System["System<br/>Privacy · Config · Status"]
 ```
 
@@ -113,6 +113,7 @@ flowchart LR
 | **Embeddings** | Beta | Text vector array inspection and model evaluation |
 | **Research** | Beta | Integrated search/scrape runner with Jina and Venice search synthesis |
 | **Characters & RP** | Beta | SillyTavern-compatible ST Card Studio, local cards, personas, lorebooks, and multi-character chats |
+| **Character Creator** | Beta | AI-assisted character authoring pipeline using `zai-org-glm-5-2` with visible event-driven design process decisions and local library persistence |
 | **RP Studio** | Beta | Standalone scenarios, openers, setting text, and character card seeding |
 | **Workflows** | Beta | Versioned template-based automation chains |
 | **Playground** | Beta | Interactive visual node graph builder and multi-model workflow execution engine |

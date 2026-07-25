@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import type { CharacterCardV2Dto } from "../../types/character-card-spec";
 import type { CharacterCreatorDraft, CharacterCreatorEditableField } from "../../types/character-creator";
+import { CharacterCreatorProcessPanel } from "./CharacterCreatorProcessPanel";
 
 interface Props {
   draft: CharacterCreatorDraft;
@@ -62,6 +63,7 @@ export function CharacterCreatorDraftEditor({
 }: Props) {
   const [activeTab, setActiveTab] = useState<TabCategory>("overview");
   const [revisionInput, setRevisionInput] = useState("");
+  const [showProcessLog, setShowProcessLog] = useState(false);
 
   const cardData = draft.card.data;
 
@@ -158,9 +160,18 @@ export function CharacterCreatorDraftEditor({
       {/* Assumptions & Design Summary Banner */}
       {draft.creatorMetadata && (
         <div className="p-3 bg-surface-elevated/40 border-b border-border/40 text-xs flex flex-col gap-1 shrink-0">
-          <div className="flex items-center gap-2 text-text-primary font-semibold">
-            <Info className="w-3.5 h-3.5 text-accent" />
-            <span>{draft.creatorMetadata.designSummary}</span>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-text-primary font-semibold">
+              <Info className="w-3.5 h-3.5 text-accent" />
+              <span>{draft.creatorMetadata.designSummary}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowProcessLog(!showProcessLog)}
+              className="text-[11px] font-medium text-accent hover:underline flex items-center gap-1 shrink-0"
+            >
+              <span>{showProcessLog ? "Hide AI Design Process" : "View AI Design Process Log"}</span>
+            </button>
           </div>
           {draft.creatorMetadata.assumptions.length > 0 && (
             <div className="text-text-muted text-[11px] flex flex-wrap gap-2">
@@ -170,6 +181,16 @@ export function CharacterCreatorDraftEditor({
                   {a}
                 </span>
               ))}
+            </div>
+          )}
+          {showProcessLog && (
+            <div className="mt-2 pt-2 border-t border-border/40">
+              <CharacterCreatorProcessPanel
+                events={draft.processTrace || []}
+                processSummary={draft.creatorMetadata.processSummary}
+                designSummary={draft.creatorMetadata.designSummary}
+                isGenerating={isRevising}
+              />
             </div>
           )}
         </div>
