@@ -15,6 +15,7 @@ import { toast } from '../../stores/toast-store'
 import { redactErrorMessage } from '../../shared/redaction'
 import type { MediaItem } from '../../types/media'
 import { createCharacterCardDraftFromMedia } from '../../services/characterCards/characterCardStudioHandoff'
+import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
 import { generateId } from '../../lib/utils'
 import { getPromptStartersForCategory } from '../../services/promptStarterService'
 import { isElectron, desktopMedia } from '../../services/desktopBridge'
@@ -890,9 +891,12 @@ export function ImageView() {
                   event.stopPropagation();
                   const media = useMediaStore.getState().items.find((item) => item.image === img);
                   if (!media) { toast.error('Save the image to Media Studio before creating a card.'); return; }
-                  await createCharacterCardDraftFromMedia(media.id);
-                  useSettingsStore.getState().setActiveTab('rp-studio');
-                  toast.success('ST Card draft created');
+                  useCharacterCreatorLaunchStore.getState().launch({
+                    mode: 'new-from-image',
+                    sourceMediaId: media.id,
+                  });
+                  useSettingsStore.getState().setActiveTab('character-creator');
+                  toast.success('AI Character Creator launched');
                 }}
                 className="absolute bottom-2 left-2 rounded-lg border border-accent bg-overlay px-2 py-1 text-[11px] text-accent opacity-0 transition-all group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100"
                 data-testid="image-create-st-card"

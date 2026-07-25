@@ -4,6 +4,16 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-07-25 (Character Creator Image Routing and Dimension Cleanup)
+
+**Scope:** Resolved the "Create ST Card" image routing issue where clicking the button would incorrectly route to the RP Studio manual editor instead of the AI Character Creator. Cleaned up remaining unused UI dimension configurations.
+
+- **Character Creator Launch Target:** Updated `image-view.tsx` and `media-inspector.tsx` to dispatch a `new-from-image` launch intent to the Character Creator via `CharacterCreatorLaunchStore` and navigate to the `character-creator` tab, replacing the previous legacy behavior of creating an empty RP Studio draft.
+- **Image Avatar Generation:** Fixed type errors and property mismatches in `CharacterCreatorView.tsx`. Modified the `new-from-image` handling to analyze the image using `getVisionCapableCharacterModels`, generate a draft based on visual characteristics, and successfully assign the original image data URL to the draft's avatar.
+- **Verification:** Ran TypeScript compiler (`npm run typecheck`) which passed cleanly without errors. Verified the UI tests.
+
+### Prior Session Summary (Master Feature-Completion Audit & P0/P1 Character Creator Remediation) [demoted from "Latest Session Summary"]
+
 **Date:** 2026-07-25 (Master Feature-Completion Audit & P0/P1 Character Creator Remediation)
 
 **Scope:** Reviewed `docs/audits/TODO/`, audited `VENICE_FORGE_FULL_IMPLEMENTATION_AUDIT_2026-07-25.md` and `VENICE_FORGE_MASTER_COMPLETION_WORK_ORDER_2026-07-25.md`, and executed Phase 0, Phase 1, Phase 2, Phase 3, Phase 4, and Phase 5 remediation tasks.

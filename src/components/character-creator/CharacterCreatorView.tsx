@@ -22,7 +22,10 @@ import {
   reviseCharacterDraftAI,
 } from "../../services/characterCreatorAiService";
 import { CharacterCreatorImportService, validateCardForApproval } from "../../services/characterCreatorImportService";
+import { analyzeCharacterImage, getVisionCapableCharacterModels } from "../../services/characterCards/characterCardGenerationService";
+import { useModels } from "../../hooks/use-models";
 import { startNormalChatForCharacter } from "../../services/rpHelpers";
+import { useMediaStore } from "../../stores/media-store";
 import { useCharacterCardStore } from "../../stores/character-card-store";
 import { useSettingsStore } from "../../stores/settings-store";
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
@@ -40,6 +43,7 @@ import { CharacterCreatorLocalPickerModal } from "./CharacterCreatorLocalPickerM
 
 export function CharacterCreatorView() {
   const activeTab = useSettingsStore((s) => s.activeTab);
+  const { data: liveTextModels } = useModels("text");
   const [viewState, setViewState] = useState<CharacterCreatorViewState>("welcome");
   const [activeDraft, setActiveDraft] = useState<CharacterCreatorDraft | null>(null);
   const [recentDrafts, setRecentDrafts] = useState<CharacterCreatorDraftSummary[]>([]);
@@ -103,6 +107,13 @@ export function CharacterCreatorView() {
               case "new-from-idea":
                 if (intent.sourceIdea) {
                   await handleCreateDraft(intent.sourceIdea, intent.optionalContext);
+                } else {
+                  setViewState("welcome");
+                }
+                break;
+              case "new-from-image":
+                if (intent.sourceMediaId) {
+                  await handleCreateDraftFromImage(intent.sourceMediaId, intent.optionalContext);
                 } else {
                   setViewState("welcome");
                 }
@@ -206,6 +217,86 @@ export function CharacterCreatorView() {
         conceptAnalysis: res.analysis,
         processTrace: res.processEvents,
       });
+
+      setActiveDraft(updatedDraft);
+      setViewState("draft");
+      await loadRecentDrafts();
+    } catch (err: unknown) {
+      if (abortControllerRef.current?.signal.aborted) {
+        setViewState("welcome");
+        return;
+      }
+      const msg = err instanceof Error ? err.message : String(err);
+      setErrorDetails(msg);
+      setViewState("error");
+    }
+  };
+
+  const handleCreateDraftFromImage = async (mediaId: string, optionalContext?: OptionalDraftContext) => {
+    setActiveIdea("Analyzing image...");
+    setViewState("generating");
+    setErrorDetails(null);
+    setProcessEvents([]);
+
+    abortControllerRef.current = new AbortController();
+
+    try {
+      setProcessEvents([{ id: crypto.randomUUID(), phase: "concept-analysis", status: "active", source: "application", title: "Analyzing Image", summary: "Extracting visual appearance, genre, and setting from the image.", createdAt: new Date().toISOString() }]);
+      const visionModels = await getVisionCapableCharacterModels(liveTextModels ?? []);
+      const model = visionModels.length > 0 ? visionModels[0] : undefined;
+      
+      if (!model) {
+        throw new Error("No vision-capable AI model is available to analyze this image.");
+      }
+
+      const analysis = await analyzeCharacterImage({
+        assetId: mediaId,
+        modelId: model.id,
+        model,
+        requestedFields: ["appearance", "setting", "genre"],
+        signal: abortControllerRef.current.signal,
+      });
+
+      const idea = `A character based on this visual analysis:\nAppearance: ${analysis.visualDescription}\nGenre: ${analysis.scenarioSuggestions?.[0] ?? ""}\nSetting: ${analysis.scenarioSuggestions?.[1] ?? ""}`;
+      setActiveIdea(idea);
+
+      const res = await generateCharacterCreatorDraft(
+        {
+          operation: "create_draft",
+          sourceIdea: idea,
+          optionalContext,
+        },
+        {
+          onEvent(ev) {
+            setProcessEvents((prev) => [...prev, ev]);
+          },
+        },
+        abortControllerRef.current.signal,
+      );
+
+      const draft = await CharacterDraftService.create({
+        sourceIdea: idea,
+        card: res.response.draft,
+        creatorMetadata: {
+          inspiration: idea.includes("mimics") ? "User requested archetype inspiration" : undefined,
+          designSummary: res.response.design_summary,
+          assumptions: res.response.assumptions,
+          warnings: res.response.warnings,
+          suggestedTags: res.response.draft.data.tags || [],
+          avatarPrompt: (res.response.draft.data.extensions?.["venice-forge"] as Record<string, unknown>)?.avatarPrompt as string | undefined,
+          processSummary: res.response.process_summary,
+        },
+      });
+
+      const updatedDraft = await CharacterDraftService.update(draft.id, {
+        conceptAnalysis: res.analysis,
+        processTrace: res.processEvents,
+      });
+
+      const media = useMediaStore.getState().items.find(m => m.id === mediaId);
+      if (media && media.image) {
+        setAvatarDataUrl(media.image);
+      }
 
       setActiveDraft(updatedDraft);
       setViewState("draft");

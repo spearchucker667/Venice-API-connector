@@ -14,7 +14,8 @@ export type CharacterCreatorLaunchMode =
   | "open-draft"
   | "edit-local-character"
   | "import-card"
-  | "duplicate-hosted-character";
+  | "duplicate-hosted-character"
+  | "new-from-image";
 
 export interface CharacterCreatorLaunchIntent {
   id: string;
@@ -26,6 +27,7 @@ export interface CharacterCreatorLaunchIntent {
   localCharacterId?: string;
   importHandle?: string;
   hostedCharacterId?: string;
+  sourceMediaId?: string;
 
   optionalContext?: OptionalDraftContext;
 }
