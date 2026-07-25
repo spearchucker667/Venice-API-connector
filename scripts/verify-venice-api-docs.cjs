@@ -115,7 +115,7 @@ function verifyVeniceApiDocs(rootDir, options = {}) {
       if (metadata.content_type !== "text/markdown") {
         failures.push("LLM info provenance content_type must be text/markdown.");
       }
-      if (!body.includes(API_BASE_URL)) {
+      if (!/https:\/\/api\.venice\.ai\/api\/v1\b/.test(body)) {
         failures.push("LLM info doc lacks the canonical API base URL.");
       }
       if (!/^### Characters$/m.test(body) || !body.includes("/endpoint/characters/list")) {
@@ -151,7 +151,7 @@ function verifyVeniceApiDocs(rootDir, options = {}) {
       const serverUrls = Array.isArray(swagger.servers)
         ? swagger.servers.map((server) => isRecord(server) ? server.url : undefined)
         : [];
-      if (!serverUrls.includes(API_BASE_URL)) {
+      if (!serverUrls.some((url) => typeof url === "string" && url === API_BASE_URL)) {
         failures.push(`Swagger servers must include the canonical API base URL: ${API_BASE_URL}.`);
       }
 

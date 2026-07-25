@@ -125,9 +125,15 @@ export function registerCharacterCardFileHandlers(): void {
       const selection = await dialog.showOpenDialog({ properties: ["openFile"], filters: [{ name: "Character cards", extensions: ["json", "png"] }] });
       if (selection.canceled || selection.filePaths.length !== 1) return { ok: true, canceled: true };
       const filePath = selection.filePaths[0];
-      const stat = await fs.stat(filePath);
-      if (!stat.isFile() || stat.size > MAX_FILE_BYTES) return { ok: false, error: "Character-card file exceeds the 20 MiB limit." };
-      const input = await fs.readFile(filePath);
+      const fileHandle = await fs.open(filePath, "r");
+      let input: Buffer;
+      try {
+        const stat = await fileHandle.stat();
+        if (!stat.isFile() || stat.size > MAX_FILE_BYTES) return { ok: false, error: "Character-card file exceeds the 20 MiB limit." };
+        input = await fileHandle.readFile();
+      } finally {
+        await fileHandle.close();
+      }
       let card: CharacterCardV1 | null = null;
       let avatar: Buffer | undefined;
       let image: { width: number; height: number; byteLength: number } | undefined;

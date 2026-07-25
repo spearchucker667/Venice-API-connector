@@ -115,15 +115,13 @@ async function openSecureWatchedFile(filePath: string): Promise<Awaited<ReturnTy
     ensureSecureDirectory(currentSyncPath, path.join(vfbackupPath, "blobs")),
     ensureSecureDirectory(currentSyncPath, path.join(vfbackupPath, "objects")),
   ]);
-  const linkStat = await fs.lstat(filePath);
-  if (linkStat.isSymbolicLink()) throw new Error("Sync packet must not be a symbolic link.");
-  if (!linkStat.isFile()) throw new Error("Sync packet must be a regular file.");
   const requestedParent = await fs.realpath(path.dirname(filePath));
   if (!allowedParents.includes(requestedParent)) throw new Error("Sync packet path escapes the watched directories.");
 
   const handle = await fs.open(filePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW);
   try {
-    if (!(await handle.stat()).isFile()) throw new Error("Sync packet must be a regular file.");
+    const handleStat = await handle.stat();
+    if (!handleStat.isFile()) throw new Error("Sync packet must be a regular file.");
     const resolvedFile = await fs.realpath(filePath);
     if (!allowedParents.includes(path.dirname(resolvedFile))) {
       throw new Error("Sync packet resolves outside the watched directories.");

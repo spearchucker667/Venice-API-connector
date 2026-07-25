@@ -156,7 +156,15 @@ async function drainLogQueue(): Promise<void> {
     const batch = queuedLines.splice(0, MAX_BATCH_LINES).join("");
     try {
       await prepareLogFileForAppend();
-      await fs.promises.appendFile(getLogPath(), batch, "utf-8");
+      const targetPath = path.resolve(getLogPath());
+      const expectedDir = path.resolve(getLogsDir());
+      if (!targetPath.startsWith(expectedDir)) throw new Error("Invalid log file path");
+      const handle = await fs.promises.open(targetPath, "a");
+      try {
+        await handle.appendFile(batch, "utf-8");
+      } finally {
+        await handle.close();
+      }
     } catch {
       // Logging remains best-effort and must never break app work.
     }
