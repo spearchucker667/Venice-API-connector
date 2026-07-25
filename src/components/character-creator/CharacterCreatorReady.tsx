@@ -1,0 +1,141 @@
+/**
+ * @fileoverview Validation preview and explicit approval screen before character card creation.
+ */
+
+import { CheckCircle2, AlertTriangle, XCircle, MessageSquare, ArrowLeft } from "lucide-react";
+import type { CharacterCreatorDraft } from "../../types/character-creator";
+
+interface Props {
+  draft: CharacterCreatorDraft;
+  validationResults: {
+    valid: boolean;
+    errors: string[];
+    warnings: string[];
+    recommendations: string[];
+  };
+  onApproveAndCreate: (startChatImmediately?: boolean, saveAsCopy?: boolean) => void;
+  onReturnToDraft: () => void;
+}
+
+export function CharacterCreatorReady({
+  draft,
+  validationResults,
+  onApproveAndCreate,
+  onReturnToDraft,
+}: Props) {
+  const cardData = draft.card.data;
+  const isEditingExisting = Boolean(draft.sourceCharacterId);
+
+  return (
+    <div className="flex flex-col items-center justify-start min-h-full p-6 md:p-10 max-w-2xl mx-auto overflow-y-auto">
+      <div className="w-full bg-surface/60 p-6 rounded-2xl border border-border flex flex-col gap-6 shadow-sm">
+        {/* Header */}
+        <div className="flex items-center gap-3 border-b border-border/50 pb-4">
+          <div className={`p-3 rounded-xl ${validationResults.valid ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-400"}`}>
+            {validationResults.valid ? <CheckCircle2 className="w-6 h-6" /> : <XCircle className="w-6 h-6" />}
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-text-primary">
+              {validationResults.valid ? "Character Ready for Approval" : "Validation Issues Detected"}
+            </h2>
+            <p className="text-xs text-text-muted">
+              {validationResults.valid
+                ? "Review the validation preview and explicitly approve creation to add to your local library."
+                : "Resolve validation errors before approving character card creation."}
+            </p>
+          </div>
+        </div>
+
+        {/* Character Card Preview Summary */}
+        <div className="flex flex-col gap-2 p-4 rounded-xl bg-surface-elevated/50 border border-border/40 text-xs">
+          <div className="flex justify-between items-center">
+            <span className="font-bold text-text-primary text-sm">{cardData.name}</span>
+            <span className="text-[11px] px-2 py-0.5 rounded bg-accent/15 text-accent font-mono">
+              chara_card_v2
+            </span>
+          </div>
+          <p className="text-text-secondary line-clamp-2 italic">{cardData.description || "No description specified"}</p>
+        </div>
+
+        {/* Validation Output */}
+        <div className="flex flex-col gap-3">
+          {validationResults.errors.length > 0 && (
+            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs flex flex-col gap-1.5">
+              <span className="font-bold text-rose-400 flex items-center gap-1.5">
+                <XCircle className="w-4 h-4" /> Errors (Must resolve)
+              </span>
+              <ul className="list-disc list-inside text-rose-300 gap-1 flex flex-col pl-1">
+                {validationResults.errors.map((err, i) => (
+                  <li key={i}>{err}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {validationResults.warnings.length > 0 && (
+            <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs flex flex-col gap-1.5">
+              <span className="font-bold text-amber-300 flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4" /> Warnings (Optional)
+              </span>
+              <ul className="list-disc list-inside text-amber-200/90 gap-1 flex flex-col pl-1">
+                {validationResults.warnings.map((warn, i) => (
+                  <li key={i}>{warn}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Explicit Approval Notice */}
+        <div className="p-3 rounded-xl bg-surface border border-border/50 text-[11px] text-text-muted italic">
+          {isEditingExisting
+            ? "This draft was loaded from an existing character. You can update the character in-place or save as a new copy."
+            : "This will create a new local character from the current draft. You can continue editing it after creation."}
+        </div>
+
+        {/* Actions */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+          <button
+            type="button"
+            onClick={onReturnToDraft}
+            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-secondary flex items-center justify-center gap-1.5 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Return to Draft</span>
+          </button>
+
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            {isEditingExisting && (
+              <button
+                type="button"
+                disabled={!validationResults.valid}
+                onClick={() => onApproveAndCreate(false, true)}
+                className="flex-1 sm:flex-initial px-3 py-2 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-text-secondary text-xs font-medium flex items-center justify-center gap-1 disabled:opacity-50 transition-colors"
+              >
+                <span>Save as Copy</span>
+              </button>
+            )}
+            <button
+              type="button"
+              disabled={!validationResults.valid}
+              onClick={() => onApproveAndCreate(false, false)}
+              className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-surface border border-accent/40 hover:bg-accent/10 text-accent font-medium text-xs flex items-center justify-center gap-1.5 disabled:opacity-50 transition-colors"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              <span>{isEditingExisting ? "Update Character" : "Create Character"}</span>
+            </button>
+            <button
+              type="button"
+              disabled={!validationResults.valid}
+              onClick={() => onApproveAndCreate(true, false)}
+              className="flex-1 sm:flex-initial px-5 py-2 rounded-xl bg-accent text-accent-contrast font-medium text-xs flex items-center justify-center gap-1.5 hover:opacity-90 disabled:opacity-50 transition-opacity"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>{isEditingExisting ? "Update & Start Chat" : "Create & Start Chat"}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

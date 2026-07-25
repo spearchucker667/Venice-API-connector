@@ -779,6 +779,14 @@ const veniceForge = {
       search(input: Parameters<import("../src/types/desktop").VeniceForgeDocumentAgent["workspace"]["search"]>[0]) { return ipcRenderer.invoke("documentAgent:workspace:search", input); },
     },
   },
+  characterCreator: {
+    exportCard(payload: unknown) {
+      return ipcRenderer.invoke("characterCreator:exportCard", payload);
+    },
+    validateCard(payload: unknown) {
+      return ipcRenderer.invoke("characterCreator:validateCard", payload);
+    },
+  },
 };
 
 contextBridge.exposeInMainWorld("veniceForge", veniceForge);

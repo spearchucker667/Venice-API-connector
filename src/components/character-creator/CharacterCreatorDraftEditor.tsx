@@ -1,0 +1,631 @@
+/**
+ * @fileoverview Fully editable character card draft editor component.
+ */
+
+import { useState } from "react";
+import {
+  Save,
+  Sparkles,
+  CheckCircle2,
+  AlertTriangle,
+  RotateCcw,
+  Plus,
+  Trash2,
+  FileText,
+  User,
+  MessageSquare,
+  ShieldAlert,
+  BookOpen,
+  Image as ImageIcon,
+  Info,
+  Wand2,
+} from "lucide-react";
+import type { CharacterCardV2Dto } from "../../types/character-card-spec";
+import type { CharacterCreatorDraft, CharacterCreatorEditableField } from "../../types/character-creator";
+
+interface Props {
+  draft: CharacterCreatorDraft;
+  onUpdateDraft: (updatedCard: CharacterCardV2Dto) => void;
+  onSaveDraft: () => void;
+  onValidateDraft: () => void;
+  onApproveAndCreate: () => void;
+  onReviseDraft: (instruction: string) => void;
+  onRegenerateField: (field: CharacterCreatorEditableField, instruction?: string) => void;
+  onGenerateAvatar?: () => void;
+  onSelectAvatarImage?: (dataUrl: string) => void;
+  avatarDataUrl?: string;
+  isRevising?: boolean;
+}
+
+type TabCategory =
+  | "overview"
+  | "identity"
+  | "behavior"
+  | "conversation"
+  | "advanced"
+  | "lore"
+  | "appearance"
+  | "metadata";
+
+export function CharacterCreatorDraftEditor({
+  draft,
+  onUpdateDraft,
+  onSaveDraft,
+  onValidateDraft,
+  onApproveAndCreate,
+  onReviseDraft,
+  onRegenerateField,
+  onGenerateAvatar,
+  onSelectAvatarImage,
+  avatarDataUrl,
+  isRevising = false,
+}: Props) {
+  const [activeTab, setActiveTab] = useState<TabCategory>("overview");
+  const [revisionInput, setRevisionInput] = useState("");
+
+  const cardData = draft.card.data;
+
+  const updateCardField = <K extends keyof typeof cardData>(field: K, value: (typeof cardData)[K]) => {
+    onUpdateDraft({
+      ...draft.card,
+      data: {
+        ...cardData,
+        [field]: value,
+      },
+    });
+  };
+
+  const handleFullRevisionSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!revisionInput.trim() || isRevising) return;
+    onReviseDraft(revisionInput.trim());
+    setRevisionInput("");
+  };
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !onSelectAvatarImage) return;
+    const reader = new FileReader();
+    reader.onload = async () => {
+      if (typeof reader.result === "string") {
+        const rawUrl = reader.result;
+        if (rawUrl.startsWith("data:image/jpeg") || rawUrl.startsWith("data:image/webp")) {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth || 512;
+            canvas.height = img.naturalHeight || 512;
+            const ctx = canvas.getContext("2d");
+            if (ctx) {
+              ctx.drawImage(img, 0, 0);
+              onSelectAvatarImage(canvas.toDataURL("image/png"));
+              return;
+            }
+            onSelectAvatarImage(rawUrl);
+          };
+          img.onerror = () => onSelectAvatarImage(rawUrl);
+          img.src = rawUrl;
+        } else {
+          onSelectAvatarImage(rawUrl);
+        }
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="flex flex-col h-full overflow-hidden bg-background">
+      {/* Header Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 p-4 border-b border-border/60 bg-surface/60 shrink-0">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <span className="text-xs px-2.5 py-1 rounded-full bg-accent/15 text-accent font-semibold shrink-0">
+            Draft Rev {draft.revision}
+          </span>
+          <h2 className="text-base font-bold text-text-primary truncate min-w-0">
+            {cardData.name || "Untitled Character"}
+          </h2>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onSaveDraft}
+            className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-secondary hover:text-text-primary flex items-center gap-1.5 transition-colors"
+          >
+            <Save className="w-3.5 h-3.5" />
+            <span>Save Draft</span>
+          </button>
+          <button
+            type="button"
+            onClick={onValidateDraft}
+            className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-secondary hover:text-text-primary flex items-center gap-1.5 transition-colors"
+          >
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Validate</span>
+          </button>
+          <button
+            type="button"
+            onClick={onApproveAndCreate}
+            className="px-4 py-1.5 rounded-lg bg-accent text-accent-contrast font-medium text-xs flex items-center gap-1.5 hover:opacity-90 transition-opacity"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Approve & Create Character</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Assumptions & Design Summary Banner */}
+      {draft.creatorMetadata && (
+        <div className="p-3 bg-surface-elevated/40 border-b border-border/40 text-xs flex flex-col gap-1 shrink-0">
+          <div className="flex items-center gap-2 text-text-primary font-semibold">
+            <Info className="w-3.5 h-3.5 text-accent" />
+            <span>{draft.creatorMetadata.designSummary}</span>
+          </div>
+          {draft.creatorMetadata.assumptions.length > 0 && (
+            <div className="text-text-muted text-[11px] flex flex-wrap gap-2">
+              <span className="font-semibold text-text-secondary">Assumptions:</span>
+              {draft.creatorMetadata.assumptions.map((a, i) => (
+                <span key={i} className="px-1.5 py-0.5 rounded bg-surface border border-border">
+                  {a}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Main Tab Bar */}
+      <div className="flex items-center gap-1 px-4 pt-2 border-b border-border/50 bg-surface/30 overflow-x-auto shrink-0 scrollbar-none">
+        {[
+          { id: "overview", label: "Overview", icon: FileText },
+          { id: "identity", label: "Identity", icon: User },
+          { id: "behavior", label: "Behavior", icon: Wand2 },
+          { id: "conversation", label: "Conversation", icon: MessageSquare },
+          { id: "advanced", label: "Advanced Prompting", icon: ShieldAlert },
+          { id: "lore", label: "Lore", icon: BookOpen },
+          { id: "appearance", label: "Appearance", icon: ImageIcon },
+          { id: "metadata", label: "Metadata", icon: Info },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as TabCategory)}
+              className={`px-3 py-2 text-xs font-medium border-b-2 flex items-center gap-1.5 whitespace-nowrap transition-colors ${
+                isActive
+                  ? "border-accent text-accent font-semibold"
+                  : "border-transparent text-text-secondary hover:text-text-primary"
+              }`}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Tab Content & Revision Split View */}
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+        {/* Active Tab Form Fields */}
+        <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-6">
+          {activeTab === "overview" && (
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Character Name *</label>
+                <input
+                  type="text"
+                  value={cardData.name}
+                  onChange={(e) => updateCardField("name", e.target.value)}
+                  className="w-full mt-1 p-3 text-sm rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Short Description / Summary</label>
+                <textarea
+                  rows={4}
+                  value={cardData.description}
+                  onChange={(e) => updateCardField("description", e.target.value)}
+                  className="w-full mt-1 p-3 text-xs rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Tags (Comma-separated)</label>
+                <input
+                  type="text"
+                  value={cardData.tags.join(", ")}
+                  onChange={(e) => updateCardField("tags", e.target.value.split(",").map((t) => t.trim()).filter(Boolean))}
+                  className="w-full mt-1 p-3 text-xs rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Creator Notes</label>
+                <textarea
+                  rows={3}
+                  value={cardData.creator_notes}
+                  onChange={(e) => updateCardField("creator_notes", e.target.value)}
+                  className="w-full mt-1 p-3 text-xs rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
+                />
+              </div>
+            </div>
+          )}
+
+          {activeTab === "identity" && (
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Full Identity & Background</label>
+                <textarea
+                  rows={8}
+                  value={cardData.description}
+                  onChange={(e) => updateCardField("description", e.target.value)}
+                  className="w-full mt-1 p-3 text-xs rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
+                />
+              </div>
+            </div>
+          )}
+
+          {activeTab === "behavior" && (
+            <div className="flex flex-col gap-4">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Personality & Speech Style</label>
+                  <button
+                    type="button"
+                    onClick={() => onRegenerateField("personality")}
+                    className="text-[11px] text-accent hover:underline flex items-center gap-1 font-medium"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>AI Regenerate</span>
+                  </button>
+                </div>
+                <textarea
+                  rows={8}
+                  value={cardData.personality}
+                  onChange={(e) => updateCardField("personality", e.target.value)}
+                  className="w-full p-3 text-xs rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
+                />
+              </div>
+            </div>
+          )}
+
+          {activeTab === "conversation" && (
+            <div className="flex flex-col gap-5">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Scenario Context</label>
+                  <button
+                    type="button"
+                    onClick={() => onRegenerateField("scenario")}
+                    className="text-[11px] text-accent hover:underline flex items-center gap-1 font-medium"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>AI Regenerate</span>
+                  </button>
+                </div>
+                <textarea
+                  rows={4}
+                  value={cardData.scenario}
+                  onChange={(e) => updateCardField("scenario", e.target.value)}
+                  className="w-full p-3 text-xs rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">First Message (Primary Greeting) *</label>
+                  <button
+                    type="button"
+                    onClick={() => onRegenerateField("first_mes")}
+                    className="text-[11px] text-accent hover:underline flex items-center gap-1 font-medium"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>AI Regenerate</span>
+                  </button>
+                </div>
+                <textarea
+                  rows={5}
+                  value={cardData.first_mes}
+                  onChange={(e) => updateCardField("first_mes", e.target.value)}
+                  className="w-full p-3 text-xs rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Alternate Greetings</label>
+                <div className="flex flex-col gap-2 mt-1">
+                  {cardData.alternate_greetings.map((g, idx) => (
+                    <div key={idx} className="flex items-start gap-2">
+                      <textarea
+                        rows={2}
+                        value={g}
+                        onChange={(e) => {
+                          const next = [...cardData.alternate_greetings];
+                          next[idx] = e.target.value;
+                          updateCardField("alternate_greetings", next);
+                        }}
+                        className="flex-1 p-2 text-xs rounded-lg bg-surface border border-border text-text-primary"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const next = cardData.alternate_greetings.filter((_, i) => i !== idx);
+                          updateCardField("alternate_greetings", next);
+                        }}
+                        className="p-1 text-rose-400 hover:bg-surface-elevated rounded"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => updateCardField("alternate_greetings", [...cardData.alternate_greetings, ""])}
+                    className="self-start text-xs text-accent hover:underline flex items-center gap-1 mt-1 font-medium"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add Alternate Greeting</span>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Example Dialogue</label>
+                <textarea
+                  rows={6}
+                  value={cardData.mes_example}
+                  onChange={(e) => updateCardField("mes_example", e.target.value)}
+                  placeholder="<START>&#10;{{user}}: Hello!&#10;{{char}}: Greetings..."
+                  className="w-full mt-1 p-3 text-xs rounded-xl bg-surface border border-border text-text-primary font-mono focus:outline-none focus:border-accent"
+                />
+              </div>
+            </div>
+          )}
+
+          {activeTab === "advanced" && (
+            <div className="flex flex-col gap-4">
+              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>
+                  Advanced prompting instructions directly modify system prompt steering during model execution. Inspect carefully before creation.
+                </span>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">System Prompt Override</label>
+                <textarea
+                  rows={6}
+                  value={cardData.system_prompt}
+                  onChange={(e) => updateCardField("system_prompt", e.target.value)}
+                  className="w-full mt-1 p-3 text-xs rounded-xl bg-surface border border-border text-text-primary font-mono focus:outline-none focus:border-accent"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Post-History Instructions</label>
+                <textarea
+                  rows={4}
+                  value={cardData.post_history_instructions}
+                  onChange={(e) => updateCardField("post_history_instructions", e.target.value)}
+                  className="w-full mt-1 p-3 text-xs rounded-xl bg-surface border border-border text-text-primary font-mono focus:outline-none focus:border-accent"
+                />
+              </div>
+            </div>
+          )}
+
+          {activeTab === "appearance" && (
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col sm:flex-row gap-4 items-start">
+                <div className="w-32 h-32 rounded-xl bg-surface-elevated border border-border flex items-center justify-center overflow-hidden shrink-0">
+                  {avatarDataUrl ? (
+                    <img src={avatarDataUrl} alt="Avatar Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-xs text-text-muted text-center p-2">No Avatar Selected</span>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Avatar Controls</label>
+                  <div className="flex flex-wrap gap-2">
+                    <label className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-elevated text-xs font-medium cursor-pointer transition-colors">
+                      <span>Choose Image File</span>
+                      <input type="file" accept="image/*" onChange={handleImageFileChange} className="hidden" />
+                    </label>
+                    {onGenerateAvatar && (
+                      <button
+                        type="button"
+                        onClick={onGenerateAvatar}
+                        className="px-3 py-1.5 rounded-lg bg-accent/20 border border-accent/30 text-accent text-xs font-medium flex items-center gap-1 hover:bg-accent/30 transition-colors"
+                      >
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>Generate Avatar</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Visual Avatar Prompt</label>
+                <textarea
+                  rows={4}
+                  value={draft.creatorMetadata.avatarPrompt || ""}
+                  onChange={(e) => {
+                    onUpdateDraft({
+                      ...draft.card,
+                      data: {
+                        ...cardData,
+                        extensions: {
+                          ...(cardData.extensions || {}),
+                          "venice-forge": {
+                            ...((cardData.extensions?.["venice-forge"] as Record<string, unknown>) || {}),
+                            avatarPrompt: e.target.value,
+                          },
+                        },
+                      },
+                    });
+                  }}
+                  className="w-full mt-1 p-3 text-xs rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
+                />
+              </div>
+            </div>
+          )}
+
+          {activeTab === "lore" && (
+            <div className="flex flex-col gap-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider">Embedded Lorebook & World Info</h3>
+                  <p className="text-[11px] text-text-muted">Manage world lore entries embedded inside this Character Card V2 draft.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const currentBook = cardData.character_book || {
+                      name: `${cardData.name || "Character"} Lorebook`,
+                      extensions: {},
+                      entries: [],
+                    };
+                    const newEntry = {
+                      keys: ["keyword"],
+                      content: "",
+                      enabled: true,
+                      insertion_order: (currentBook.entries?.length || 0) + 1,
+                      extensions: {},
+                    };
+                    updateCardField("character_book", {
+                      ...currentBook,
+                      entries: [...(currentBook.entries || []), newEntry],
+                    });
+                  }}
+                  className="px-3 py-1.5 rounded-lg bg-accent text-accent-contrast text-xs font-medium flex items-center gap-1 hover:opacity-90 transition-opacity"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add Lore Entry</span>
+                </button>
+              </div>
+
+              {(!cardData.character_book?.entries || cardData.character_book.entries.length === 0) ? (
+                <div className="p-6 text-center rounded-xl bg-surface border border-border text-xs text-text-muted flex flex-col items-center gap-2">
+                  <BookOpen className="w-8 h-8 text-text-muted/60" />
+                  <span>No embedded lore entries yet. Add keywords and background details for deep character worldbuilding.</span>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {cardData.character_book.entries.map((entry, idx) => (
+                    <div key={idx} className="p-4 rounded-xl bg-surface border border-border flex flex-col gap-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-elevated text-accent font-bold">
+                            #{entry.insertion_order || idx + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={entry.keys.join(", ")}
+                            onChange={(e) => {
+                              const newKeys = e.target.value.split(",").map((k) => k.trim()).filter(Boolean);
+                              const entries = [...(cardData.character_book?.entries || [])];
+                              entries[idx] = { ...entries[idx], keys: newKeys };
+                              updateCardField("character_book", { ...cardData.character_book!, entries });
+                            }}
+                            placeholder="Trigger keywords (e.g. Gotham, Batcave)"
+                            className="p-1.5 text-xs rounded-lg bg-surface-elevated border border-border text-text-primary focus:outline-none focus:border-accent w-64"
+                          />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <label className="flex items-center gap-1 text-[11px] text-text-secondary cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={entry.enabled}
+                              onChange={(e) => {
+                                const entries = [...(cardData.character_book?.entries || [])];
+                                entries[idx] = { ...entries[idx], enabled: e.target.checked };
+                                updateCardField("character_book", { ...cardData.character_book!, entries });
+                              }}
+                              className="rounded border-border bg-surface text-accent"
+                            />
+                            <span>Enabled</span>
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const entries = (cardData.character_book?.entries || []).filter((_, i) => i !== idx);
+                              updateCardField("character_book", { ...cardData.character_book!, entries });
+                            }}
+                            className="p-1 text-text-muted hover:text-rose-400 rounded transition-colors"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                      <textarea
+                        rows={3}
+                        value={entry.content}
+                        onChange={(e) => {
+                          const entries = [...(cardData.character_book?.entries || [])];
+                          entries[idx] = { ...entries[idx], content: e.target.value };
+                          updateCardField("character_book", { ...cardData.character_book!, entries });
+                        }}
+                        placeholder="Lore detail content triggered when any keyword appears in conversation..."
+                        className="w-full p-2.5 text-xs rounded-lg bg-surface-elevated border border-border text-text-primary focus:outline-none focus:border-accent"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "metadata" && (
+            <div className="flex flex-col gap-3 text-xs">
+              <div className="p-3 rounded-xl bg-surface border border-border flex justify-between">
+                <span className="text-text-muted">Draft ID:</span>
+                <span className="font-mono text-text-primary">{draft.id}</span>
+              </div>
+              <div className="p-3 rounded-xl bg-surface border border-border flex justify-between">
+                <span className="text-text-muted">Revision Number:</span>
+                <span className="font-mono text-text-primary">{draft.revision}</span>
+              </div>
+              <div className="p-3 rounded-xl bg-surface border border-border flex justify-between">
+                <span className="text-text-muted">Creator Model:</span>
+                <span className="font-mono text-accent font-semibold">{draft.modelId}</span>
+              </div>
+              <div className="p-3 rounded-xl bg-surface border border-border flex justify-between">
+                <span className="text-text-muted">Specification:</span>
+                <span className="font-mono text-text-primary">{draft.card.spec} v{draft.card.spec_version}</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Right Side Natural Language AI Revision Panel */}
+        <div className="w-full md:w-80 border-t md:border-t-0 md:border-l border-border/50 bg-surface/20 p-4 flex flex-col gap-4 shrink-0">
+          <div className="flex items-center gap-2 text-xs font-bold text-text-primary">
+            <Sparkles className="w-4 h-4 text-accent" />
+            <span>AI Assisted Revisions</span>
+          </div>
+
+          <form onSubmit={handleFullRevisionSubmit} className="flex flex-col gap-2">
+            <label className="text-[11px] text-text-muted font-medium">
+              Natural Language Request
+            </label>
+            <textarea
+              rows={3}
+              value={revisionInput}
+              onChange={(e) => setRevisionInput(e.target.value)}
+              placeholder="e.g. Make her less hostile, give him a dry sense of humor, or move setting to 1920s Berlin..."
+              className="w-full p-2.5 text-xs rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
+            />
+            <button
+              type="submit"
+              disabled={!revisionInput.trim() || isRevising}
+              className="w-full py-2 rounded-xl bg-accent/20 border border-accent/30 text-accent font-medium text-xs flex items-center justify-center gap-1.5 hover:bg-accent/30 disabled:opacity-50 transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>{isRevising ? "Revising Draft..." : "Revise Whole Draft"}</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}

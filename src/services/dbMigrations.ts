@@ -257,6 +257,15 @@ export const MIGRATIONS: MigrationStep[] = [
       }
     },
   },
+  {
+    toVersion: 20,
+    description: "Add character_creator_drafts store for Character Creator feature",
+    up(db) {
+      if (!db.objectStoreNames.contains("character_creator_drafts")) {
+        db.createObjectStore("character_creator_drafts", { keyPath: "id" });
+      }
+    },
+  },
 ];
 
 /**

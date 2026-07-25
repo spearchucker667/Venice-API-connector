@@ -13,6 +13,7 @@ import { registerSyncHandlers } from "./syncHandlers";
 import { registerBackgroundTaskHandlers } from "./backgroundTaskHandlers";
 import { registerChatTtsHandlers } from "./chatTtsHandlers";
 import { registerCharacterCardFileHandlers } from "../characterCardFileHandlers";
+import { registerCharacterCreatorHandlers } from "../characterCreatorHandlers";
 import { registerDocumentAgentHandlers } from "./documentAgentHandlers";
 
 import { registerChatFolderHandlers } from "./chatFolderHandlers";
@@ -40,6 +41,7 @@ export function registerIpcHandlers(): void {
   registerSyncHandlers();
   registerChatTtsHandlers();
   registerCharacterCardFileHandlers();
+  registerCharacterCreatorHandlers();
   registerDocumentAgentHandlers();
   registerChatFolderHandlers();
   registerImageInspectorHandlers();

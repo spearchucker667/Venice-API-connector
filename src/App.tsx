@@ -105,6 +105,11 @@ function CharactersView() {
   return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading Characters…</div>}><LazyCharactersView /></Suspense>
 }
 
+const LazyCharacterCreatorView = lazy(() => import('./components/character-creator/CharacterCreatorView').then(m => ({ default: m.CharacterCreatorView })))
+function CharacterCreatorViewLazy() {
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading Character Creator…</div>}><LazyCharacterCreatorView /></Suspense>
+}
+
 const LazySettingsView = lazy(() => import('./components/SettingsView').then((m) => ({ default: m.SettingsView })))
 function SettingsView() {
   return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading settings…</div>}><LazySettingsView /></Suspense>
@@ -166,6 +171,7 @@ const views: Record<TabId, React.ComponentType> = {
   settings: SettingsView,
   search: SearchScrapeView,
   characters: CharactersView,
+  'character-creator': CharacterCreatorViewLazy,
   'rp-studio': RpStudioViewLazy,
   // Unused legacy ids — fall back to Config.
   models: SettingsView,

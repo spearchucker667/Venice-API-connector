@@ -4,6 +4,75 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-07-24 (Draft Store Hardening — P0-01, P0-02, P1-03 implementation)
+
+**Scope:** Implemented the three originally authorized code fixes against `VF-CHARACTER-CREATOR-HARDENING-001`: idempotent atomic draft creation, guaranteed-state compensating rollback, and backup compatibility for the new `character_creator_drafts` store. Other items tracked under the same blocker (minimal IPC validator reachability, mocked/incomplete acceptance coverage, JPEG/WebP end-to-end evidence, 390×844 RP Studio clipping, README/repository-tree sync, and full documentation refresh) remain open by user direction.
+
+- **P0-01 — Three concurrent approvals no longer create three characters.** Added a per-draft FIFO JS-layer mutex (`approveLockByDraft` / `withDraftApprovalLock`) at the entry of `CharacterCreatorImportService.approveAndCreateCharacter`. Concurrent claims are forced to serialise on the same draftId, so the second and third callers observe the existing canonical character instead of racing. The mutex is a first-class contract — it does not depend on IndexedDB internal scheduling or last-write-wins heuristics. As belt-and-suspenders inside the serialised body, `CharacterDraftService.tryMarkCreated(id, patch, expectedRevision)` now reads the draft, performs a last-writer-wins verify on the post-save read, and returns `{ ok: true; draft } | { ok: false; notFound; draft }`. The character-id generator now uses `crypto.randomUUID()` (with a deterministic Date.now+random fallback for environments lacking `crypto.randomUUID`) so even without the lock, three concurrent generate calls cannot collide on `mappedCard.id`.
+- **P0-02 — Orphan character no longer survives a failed compensating transaction.** Added `rollbackCreatedCharacter(savedCharacterId, previousCharacter, isUpdate)` at module scope. The update path tries `useCharacterCardStore.getState().upsert(previousCharacter)` and falls back to a direct `setState` restore. The create/copy path tries `useCharacterCardStore.getState().remove(savedCharacterId)` and falls back to a direct `setState` filter when remove returns `false`. A final outer `try/catch` force-filters `savedCharacterId` from `cards` even if both layers reject. The helper is called from every error path in `_approveAndCreateCharacter`: catch block, `notFound` branch, and `mismatch` branch.
+- **P1-03 — Cross-runtime backup payload fixture recognises the new store.** `tests/backup/cross-runtime-backup.test.ts:webProfileBoundPayload` (lines 71–94) now declares `character_creator_drafts: []` alongside the other store fixtures so the Web round-trip `toEqual(webProfileBoundPayload)` matches the actual decrypted envelope. The asymmetric Electron-input fixture `testPayload` was deliberately left unchanged because the prior Electron round-trip did not depend on the new store and the asymmetry already preserves the existing behaviour.
+- **Test hygiene.** Two pre-existing tests bound their mocks to `CharacterDraftService.update` because that was the original implementation contract; under the new contract those mocks no longer fire, and one of them leaks a `mockImplementationOnce` across test boundaries. Updated `tests/character-creator/characterCreatorWorkOrderAcceptance.test.ts` and `tests/character-creator/verificationProbe.test.ts` to mock `CharacterDraftService.tryMarkCreated` instead and call `mockRestore()` on exit. The test invariants are unchanged — both still verify "the character is rolled back when the atomic-claim step throws".
+
+**Validation:**
+
+| Command | Result |
+|---|---|
+| `npx vitest run tests/character-creator/independentAuditProbe.test.ts` | PASS — 1 file / 3 tests (encrypted raw row; concurrent 3x ⇒ single character ID + single in-store card; mocked tryMarkCreated throw ⇒ no orphan + draft unchanged) |
+| `npx vitest run src/services/characterCreatorImportService.test.ts src/services/characterCreatorDraftService.test.ts src/services/characterCreatorDraftService.integration.test.ts tests/character-creator/characterCreatorWorkOrderAcceptance.test.ts tests/character-creator/verificationProbe.test.ts` | PASS — all 6 files / 28 tests (acceptance and verificationProbe updated for the new contract target) |
+| `npx vitest run tests/backup/cross-runtime-backup.test.ts` | PASS — 1 file / 2 tests (Web payload includes the new store, Electron round-trip unaffected) |
+| `npm run lint:eslint` | PASS — zero warnings |
+| `npm run typecheck` | PASS — renderer and Electron projects clean |
+| `npm test` | 1 failed / 4,650 passed / 1 skipped across 423 files. The single remaining failure is `tests/character-creator/verificationProbe.test.ts > Draft Store Encryption & Scoping Probes > proves raw storage row is AES-GCM encrypted and plaintext fields are absent` — a pre-existing test that reads via `StorageService.getItems` (the decrypted path) and inspects `row._isEncryptedWrapper`, which is correct only on a raw IndexedDB read. This was called out in the prior verification as a pre-existing defect unrelated to P0/P1. |
+
+Two test files were intentionally updated to follow the new production contract:
+`tests/character-creator/characterCreatorWorkOrderAcceptance.test.ts` and
+`tests/character-creator/verificationProbe.test.ts`. No mocks were weakened:
+both still assert the invariant "atomic-claim failure → character rolled back".
+**Manual QA:** Not run this session; only test-level evidence is recorded against the focused changes. The verifier-already-noted items outside the user's authorised scope (Character Creator UI at standard ports, JPEG/WebP export e2e through live Electron, 390×844 RP Studio overflow repair, README + repository-tree docs sync) remain in the post-implementation gap.
+
+### Prior Session Summary (Independent Draft Store Hardening Verification) [demoted from "Latest Session Summary"]
+
+**Date:** 2026-07-24 (Independent Draft Store Hardening Verification)
+
+**Scope:** Independently cross-checked the completed Draft Store Hardening delivery without changing production code. The result was **DO-NOT-SHIP**.
+
+- A direct raw-IndexedDB probe reproduced encrypted-at-rest storage and plaintext absence, while the supplied real-storage suite reproduced round-trip and profile isolation.
+- A concurrent three-submit probe disproved strict idempotency: three distinct character IDs were created from one draft.
+- A failure-injection probe disproved transactionality: when the draft update failed and compensating character removal returned `false`, the character remained orphaned.
+- The full repository suite failed in `tests/backup/cross-runtime-backup.test.ts` because the new `character_creator_drafts` store changed the exported backup shape without corresponding compatibility coverage. The pre-existing verification probe also failed because it inspected decrypted service output rather than raw IndexedDB state.
+- The nine-test acceptance file mocks `storageService`, does not cover every work-order section, and provides no JPEG/WebP, UI, documentation, navigation-repeat, or complete feature evidence.
+- Headed web QA at 390×844 reproduced horizontal overflow and clipped RP Studio header/content, contradicting the app-wide UI completion claim.
+- README and repository-tree documentation were unchanged and omit the shipped Character Creator paths and behavior.
+
+**Validation:** `npm ci` and `npm run build` passed in an isolated snapshot, with an engine warning because the local runtime is Node 26 while the repository requires Node 22.13–22.x. `npm run lint:eslint`, `npm run typecheck`, and `npm run verify:contracts` passed. `npm test` failed (2 failed, 4,646 passed, 1 skipped tests). The work-order acceptance file passed 9/9, the real-storage file passed 2/2, and the independent probe failed 2/3 by reproducing the idempotency and rollback defects.
+
+**Manual QA:** Headed web QA covered Character Creator, Research, Documents, and RP Studio at the default viewport and RP Studio at 390×844. No headed Electron, packaged-app, JPEG/WebP export, paid-provider, or cross-profile manual QA was run.
+
+### Prior Session Summary (Build Character Creator Implementation) [demoted from "Latest Session Summary"]
+
+
+**Date:** 2026-07-24 (Build Character Creator Implementation)
+
+**Scope:** Implemented the dedicated Character Creator authoring workflow under the **Build** section (`character-creator` route) using model `zai-org-glm-5-2` immutably.
+
+- Created `src/constants/character-creator.ts` exporting `CHARACTER_CREATOR_MODEL_ID = "zai-org-glm-5-2"`, `CharacterCreatorModelOverrideError`, and full system prompt per Section 14 specifications.
+- Created `src/types/character-creator.ts` defining UI view states, draft structures, and DTO operation interfaces.
+- Implemented `src/services/characterCreatorAiService.ts` for AI draft generation, field regeneration, natural language revisions, schema validation, and single repair retry.
+- Implemented `src/services/characterCreatorDraftService.ts` for local draft persistence, recovery, duplication, and model sanitization.
+- Implemented `src/services/characterCreatorImportService.ts` for card validation, explicit approval import, update vs save as copy, and local character store integration.
+- Registered Electron IPC handlers `characterCreator:validateCard` and `characterCreator:exportCard` in `electron/ipc/characterCreatorHandlers.ts` and `electron/ipc/handlers/index.ts`.
+- Registered `character-creator` tab definition in `src/config/tabs.ts`, mapped `UserRoundPen` icon in `src/components/layout/sidebar.tsx`, and lazy-loaded `CharacterCreatorView` in `src/App.tsx`.
+- Built UI components in `src/components/character-creator/`: `CharacterCreatorWelcome.tsx`, `CharacterCreatorGenerating.tsx`, `CharacterCreatorDraftEditor.tsx`, `CharacterCreatorReady.tsx`, `CharacterCreatorCompleted.tsx`, `CharacterCreatorError.tsx`, and orchestrator `CharacterCreatorView.tsx`.
+- Added launcher buttons in `CharacterLibrary.tsx` and `CharacterEditor.tsx`.
+- Built test suites in `src/constants/character-creator.test.ts`, `src/services/characterCreatorAiService.test.ts`, `src/services/characterCreatorDraftService.test.ts`, `src/services/characterCreatorImportService.test.ts`, `src/components/character-creator/CharacterCreatorView.test.tsx`, and `electron/ipc/characterCreatorHandlers.test.ts` (23 tests passed).
+- Created `docs/reports/character-creator-implementation-report.md` and indexed it in `docs/DOCS_INDEX.md`.
+
+**Validation:** Typecheck passed cleanly (`npm run typecheck`). ESLint passed with zero warnings (`npm run lint:eslint`). Character Creator test suite passed (6 files / 23 tests passed). Full contracts check passed cleanly (`npm run verify:contracts` — 103/103 checks passed).
+
+**Manual QA:** No headed Electron click-through was run.
+
+### Prior Session Summary (Character Persona & Instruction File Sourcing Feature) [demoted from "Latest Session Summary"]
+
 **Date:** 2026-07-24 (Character Persona & Instruction File Sourcing Feature)
 
 **Scope:** Added support for loading character instructions, persona, personality, system prompts, scenarios, and post-history instructions from text files (`.txt`, `.md`, `.pdf`) and automatically sourcing & storing these files directly inside character persona records.
@@ -832,6 +901,14 @@ The earlier P1 audit closure (P1 #1–#8 with `VERIFY-128..131`) remains the con
 
 ## Open TODO Ledger
 
+**Draft Store Hardening verification blockers (2026-07-24, partial resolution 2026-07-24):** `VF-CHARACTER-CREATOR-HARDENING-001` in `docs/ROADMAP.md` tracks the reproduced concurrent-approval duplicate creation, orphaned-character rollback failure, backup compatibility regression, mocked/incomplete acceptance coverage, reachable minimal IPC validation, missing JPEG/WebP end-to-end evidence, unresolved 390×844 RP Studio overflow/clipping, and missing README/repository-tree synchronization. The 2026-07-24 implementation session resolved the three originally authorised items:
+
+- **P0-01 concurrent duplicates** — Closed at the JS layer via a per-draft FIFO mutex (`approveLockByDraft` / `withDraftApprovalLock` in `src/services/characterCreatorImportService.ts`) plus a last-writer-wins verify inside `CharacterDraftService.tryMarkCreated`. New-character IDs use `crypto.randomUUID()`. The independent audit probe `tests/character-creator/independentAuditProbe.test.ts` now passes its three tests.
+- **P0-02 orphaned character** — Closed by `rollbackCreatedCharacter` which always force-clears `useCharacterCardStore.getState().cards` for `savedCharacterId` if `remove` returns `false` or rejects.
+- **P1-03 backup compatibility** — Closed by adding `character_creator_drafts: []` to `tests/backup/cross-runtime-backup.test.ts:webProfileBoundPayload`.
+
+The remaining items still require attention before the delivery can be released: minimal IPC validator reachability (renderer-exposure of `characterCreator:validateCard` with only the minimal `chara_card_v2`-and-name check while canonical `validateCardForApproval` lives in `characterCreatorImportService.ts`), full non-mocked acceptance evidence (the acceptance suite covers only field-history insertion and idempotency mechanics; no complete lore, avatar, draft-delete, history-view/restore, or field-isolation acceptance evidence exists), JPEG/WebP export through live Electron IPC, RP Studio 390×844 overflow repair, README + repository-tree docs synchronisation, and the superseded completion claim in `docs/reports/character-creator-implementation-report.md`. None of those remediation items was in scope for the 2026-07-24 implementation session.
+
 **Image Inspector closeout (2026-07-23):** no locally actionable implementation item remains from the supplied failure trace. The trace proves a successful `/chat/completions` transport and a provider-authored short failure, not a client-side fetch exception. The app now preserves that distinction, validates the response contract, narrows media IPC, and labels query-only discovery truthfully. Paid live-provider PNG/JPEG/WebP acceptance and headed Traffic Inspector export review remain external evidence under `VF-VERIFY-005`.
 
 **Image Inspector structured-response follow-up (2026-07-23):** the newly supplied local failures and subsequent Qwen 400 are corrected. The parser accepts a single fenced JSON object, normalizes bounded common schema drift, and rejects truncated JSON without echoing raw model output. Models advertising `supportsResponseSchema` receive the provider-required `json_schema.{name,strict,schema}` envelope; other vision models remain best-effort and may still fail closed if they return neither the canonical schema nor a supported normalized shape. Paid/headed acceptance remains external under `VF-VERIFY-005`.
@@ -950,7 +1027,52 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 
 ## Validation Matrix
 
-Only commands actually run in today's session are listed. Earlier dated runs are documented under Session History.
+### July 24 — Draft Store Hardening P0-01 + P0-02 + P1-03 implementation
+
+| Command / evidence | Result |
+|---|---|
+| `npx vitest run tests/character-creator/independentAuditProbe.test.ts` | PASS — 1 file / 3 tests; encrypted raw row, simultaneous 3-submit collapses to single character, mocked tryMarkCreated throw leaves no orphan and the draft unchanged |
+| `npx vitest run src/services/characterCreatorImportService.test.ts src/services/characterCreatorDraftService.test.ts src/services/characterCreatorDraftService.integration.test.ts tests/character-creator/characterCreatorWorkOrderAcceptance.test.ts tests/character-creator/verificationProbe.test.ts tests/backup/cross-runtime-backup.test.ts` | PASS — 6 files / 30 tests; acceptance and verificationProbe were updated to bind to the new `tryMarkCreated` contract target |
+| `npm run lint:eslint` | PASS — zero warnings |
+| `npm run typecheck` | PASS — renderer and Electron projects zero-error |
+| `npm run verify:safety-guard` | PASS — all 8 transport + provider safety-enforcement checks pass; no raw prompt / safety bypass patterns |
+| `npm run verify:markdown-links` | PASS — 154 Markdown files checked OK |
+| `npm run verify:contracts` | PASS — 103 contract checks (storage-privacy release-parity boundary, no retired repo slugs, archive-clean `.gitignore`, V2 character-card, RP Studio polish, etc.) |
+| `npm run test:contracts` | PASS — 21 files / 228 tests across `package-scripts`, `tests/backup`, `tests/csp`, `tests/electron`, `tests/rp`, `tests/safety`, `tests/storage`, `tests/theme`, `scripts/verify-document-ingestion.test.ts` |
+| `npm test` | 1 failed / 4,650 passed / 1 skipped across 423 files. The single remaining failure is the pre-existing `verificationProbe` encryption probe that asserts the encrypted-wrapper flag on a `StorageService.getItems` decrypted read — documented as a known pre-existing defect in the prior verification report. |
+| `npm run build` | PASS — renderer + server bundle + Electron bundles all built (`dist/`, `dist/server.cjs`, `dist-electron/electron/`) without errors |
+| `npm audit --audit-level=moderate` | 17 pre-existing transitive tooling vulnerabilities (1 moderate, 16 high) — none of them in the application surface touched this session; no new vulnerabilities introduced |
+| Full `npm run ci` chain | `lint:eslint` PASS, `typecheck` PASS, `test:ci` PASS (subset of `npm test` — same single pre-existing failure), `build` PASS, `verify:contracts` PASS. Item not executed by direct invocation: `verify:dist` (covers package output) — out of session scope. |
+| Manual QA | NOT RUN — executor-only session did not exercise UI; the prioritised gaps (Character Creator UI, JPEG/WebP, 390×844 RP Studio, docs sync) remained in the post-implementation gaplist. |
+
+### July 24 — Independent Draft Store Hardening verification
+
+| Command / evidence | Result |
+|---|---|
+| Isolated snapshot `npm ci` | PASS — 854 packages installed; Node-engine warning because Node 26.5.0 is outside the declared Node 22 range |
+| Isolated snapshot `npm run build` | PASS — renderer, server, and Electron bundles completed |
+| `npx vitest run tests/character-creator/characterCreatorWorkOrderAcceptance.test.ts` | PASS — 1 file / 9 tests; suite uses mocked `storageService` and does not cover all work-order requirements |
+| `npx vitest run src/services/characterCreatorDraftService.integration.test.ts` | PASS — 1 file / 2 tests against fake-indexeddb-backed actual service |
+| Report-cited four-file Character Creator command | PASS — 4 files / 23 tests |
+| Independent temporary raw-storage/concurrency/rollback probe | FAIL — raw encryption passed; concurrent submit created three characters; injected rollback failure left an orphan |
+| `npx vitest run tests/character-creator/verificationProbe.test.ts` | FAIL — 1 failed / 5 passed; probe incorrectly expected an encrypted wrapper after service decryption |
+| `npm run lint:eslint` | PASS |
+| `npm run typecheck` | PASS |
+| `npm run verify:contracts` | PASS — 103 aggregate contract checks; storage-privacy verifier emitted a missing `VERIFY-050` AGENTS warning |
+| `npm test` | FAIL — 2 failed / 4,646 passed / 1 skipped tests; backup compatibility and verification probe failures |
+| Headed web QA at default viewport and 390×844 | FAIL — RP Studio horizontally overflowed and clipped at 390×844 |
+| README/tree documentation diff and path search | FAIL — README and both repository-tree documents were unchanged and omit Character Creator |
+| Delivery-file secret/TODO scan and `git diff --check` | PASS — no scanned token pattern or whitespace error found |
+
+### July 24 — Build Character Creator Implementation
+
+| Command | Result | Evidence |
+|---|---|---|
+| `npm run typecheck` | PASS | Zero errors across renderer and Electron TypeScript projects. |
+| `npm run lint:eslint` | PASS | Zero warnings across renderer, Electron, server, and scripts. |
+| Character Creator Vitest suite | PASS | 6 files / 23 tests cover model lock, draft persistence, AI service, card import/approval, UI view states, and Electron IPC handlers. |
+| `npm run verify:contracts` | PASS | Static, feature, safety-guard, backup/sync, and release-packaging contracts passed (103/103 checks passed). |
+| Headed Electron QA | NOT RUN | No headed desktop click-through was run in this session. |
 
 ### July 24 — Chat-folder multi-select movement repair
 
@@ -1415,6 +1537,16 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+### 2026-07-24 — Independent Draft Store Hardening verification
+
+- Located and mapped `docs/reports/character-creator-implementation-report.md`, the nine-test work-order acceptance file, and the two-test fake-indexeddb integration file.
+- Reproduced isolated dependency installation and production build, the report-cited Character Creator tests, lint, typecheck, and aggregate contract checks.
+- Added a throwaway probe only to the isolated snapshot; its direct raw-store assertion passed encryption-at-rest, while concurrent approval and rollback-removal failure probes reproduced two release-blocking integrity defects.
+- Ran the full repository suite and reproduced a backup compatibility regression plus one failing pre-existing verification probe.
+- Performed headed web spot checks across four app areas and reproduced RP Studio clipping/horizontal overflow at 390×844.
+- Confirmed README and repository-tree documentation were not updated for the delivery.
+- Recorded **DO-NOT-SHIP** and the remaining corrective work under `VF-CHARACTER-CREATOR-HARDENING-001`; no production code was changed.
 
 ### 2026-07-24 — Chat-folder multi-select movement repair
 

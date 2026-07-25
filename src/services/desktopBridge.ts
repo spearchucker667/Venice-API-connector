@@ -1429,3 +1429,11 @@ export const desktopDocumentAgent = {
     search(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["workspace"]["search"]>[0]) { return isElectron() ? window.veniceForge!.documentAgent.workspace.search(input) : Promise.resolve(documentAgentUnavailable); },
   },
 };
+
+/** Proxies Character Creator desktop operations. */
+export const desktopCharacterCreator = {
+  async exportCard(payload: { card: unknown; format: "json" | "png"; avatarDataUrl?: string }): Promise<{ ok: boolean; canceled?: boolean; filename?: string; error?: string }> {
+    if (!isElectron()) return { ok: false, error: "Desktop export only available in Electron" };
+    return (window as unknown as { veniceForge: { characterCreator: { exportCard: (p: unknown) => Promise<{ ok: boolean; canceled?: boolean; filename?: string; error?: string }> } } }).veniceForge.characterCreator.exportCard(payload);
+  },
+};

@@ -91,6 +91,7 @@ describe("cross-runtime backup compatibility", () => {
     imageInspectorSessions: [],
     tombstones: [],
     chat_folders: [],
+    character_creator_drafts: [],
   };
 
   it("should create backups that can be decrypted by both runtimes", async () => {

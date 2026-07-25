@@ -518,6 +518,9 @@ export function CharacterLibrary({ onEdit }: Props) {
           <PrimaryButton onClick={handleCreateMe} size="sm" disabled={isCreatingMe || !createMePrompt.trim()}>
             {isCreatingMe ? "Creating..." : "Create Me"}
           </PrimaryButton>
+          <PrimaryButton onClick={() => useSettingsStore.getState().setActiveTab('character-creator')} size="sm">
+            Character Creator
+          </PrimaryButton>
           <PrimaryButton onClick={handleCreate} size="sm">
             Create ST Card
           </PrimaryButton>

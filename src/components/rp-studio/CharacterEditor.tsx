@@ -41,6 +41,7 @@ import type { CharacterCardExportReport } from "../../types/character-card-files
 import { compileRpPrompt } from "../../services/rpPromptCompiler";
 import { veniceFetch } from "../../services/veniceClient/fetch";
 import { useChatStore } from "../../stores/chat-store";
+import { CharacterCreatorImportService } from "../../services/characterCreatorImportService";
 
 /** Module-scoped WeakMap mapping each example object (by identity) to a stable
  *  client-side React key. Lives outside the component so keys survive remounts
@@ -656,6 +657,16 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               <div>Raw estimate {tokenBudget.raw.count.toLocaleString()} · output reserve {tokenBudget.reservedOutputTokens.toLocaleString()}</div>
             </div>
           )}
+          <GhostButton onClick={async () => {
+            try {
+              await CharacterCreatorImportService.loadExistingCharacterAsDraft(draft.id);
+              useSettingsStore.getState().setActiveTab("character-creator");
+            } catch {
+              toast.error("Could not load character into Character Creator");
+            }
+          }}>
+            Edit with Character Creator
+          </GhostButton>
           <GhostButton onClick={handleDelete}>Delete</GhostButton>
           <GhostButton onClick={() => void handleArchive()}>
             {draft.archivedAt ? "Unarchive" : "Archive"}
@@ -1471,7 +1482,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         )}
 
         {typeof activeStudioStep === "number" && (
-          <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
+          <div className="flex items-center justify-between pt-4 border-t border-border/50 mt-4">
             <button
               type="button"
               disabled={activeStudioStep === 0}
@@ -1500,9 +1511,9 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
       </div>
 
       {viewingContextFile && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"> {/* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */}
           <div className="flex flex-col w-full max-w-2xl max-h-[80vh] rounded-xl border border-border bg-surface shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-surface-elevated">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-surface-elevated">
               <div>
                 <h3 className="text-[14px] font-semibold text-text-primary">{viewingContextFile.name}</h3>
                 <p className="text-[11px] text-text-muted">
@@ -1524,7 +1535,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
             <div className="flex-1 overflow-y-auto p-4 font-mono text-[12px] text-text-secondary whitespace-pre-wrap bg-surface-elevated/30">
               {viewingContextFile.content}
             </div>
-            <div className="flex items-center justify-end px-4 py-3 border-t border-border bg-surface gap-2">
+            <div className="flex items-center justify-end px-4 py-3 border-t border-border/50 bg-surface gap-2">
               {viewingContextFile.targetField && viewingContextFile.targetField !== "general" && (
                 <PrimaryButton size="sm" onClick={() => { handleReapplySourcedFile(viewingContextFile); setViewingContextFile(null); }}>
                   Re-apply to {viewingContextFile.targetField}

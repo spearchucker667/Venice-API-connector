@@ -44,7 +44,7 @@ export function compileCharacterEditorPrompt(card: CharacterCardV1): string {
 
 export function getCharacterTokenBudget(card: CharacterCardV1) {
   const rawText = [card.description, card.instructions, card.systemPrompt, card.scenario, card.firstMessage,
-    ...card.exampleDialogues.flatMap((dialogue) => [dialogue.speaker, dialogue.text]),
+    ...(card.exampleDialogues ?? []).flatMap((dialogue) => [dialogue.speaker, dialogue.text]),
     ...(card.contextFiles ?? []).map((file) => file.content),
   ].filter(Boolean).join('\n')
   const raw = estimateTokenCount(rawText, card.modelId)
