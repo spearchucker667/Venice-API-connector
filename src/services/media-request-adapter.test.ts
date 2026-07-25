@@ -26,7 +26,7 @@ const PNG_BASE64 = PNG.split(',')[1]
 describe('media request adapter', () => {
   it('builds canonical edit requests without legacy keys', () => {
     const request = buildImageEditRequest({ image: PNG, prompt: '  recolor  ', model: 'flux-2-max-edit' })
-    expect(request).toEqual({ image: PNG_BASE64, prompt: 'recolor', model: 'flux-2-max-edit' })
+    expect(request).toEqual({ image: PNG_BASE64, prompt: 'recolor', model: 'flux-2-max-edit', output_format: 'png' })
     expect(request).not.toHaveProperty('return_binary')
     expect(request).not.toHaveProperty('modelId')
   })
