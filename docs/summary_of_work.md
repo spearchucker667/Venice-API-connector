@@ -4,27 +4,31 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
-**Date:** 2026-07-24 (Character Creator Integration, Visible Process & Mascot Remediation)
+**Date:** 2026-07-24 (PR Review/Merge & CodeQL Security Remediations)
 
-**Scope:** Repaired and completed the end-to-end Character Creator workflow (`character-creator` route) so every AI-assisted character creation or editing entry point opens and operates inside the dedicated Character Creator workflow. Enforced model lock `zai-org-glm-5-2` immutably, implemented an event-driven visible AI process panel (`CharacterCreatorProcessPanel`), replaced Lucide `UserRoundPen` with the animated Mio mascot GIF (`assets/mio-xc3-nerdprofeta-gifs/mio-xc3-nerdprofeta-jumping.gif`), created `CharacterCreatorLocalPickerModal`, and implemented real debounced autosave (600ms) with explicit flush (`flushPendingSave`).
+**Scope:** Reviewed and merged all open GitHub pull requests into `main`, then audited and remediated open GitHub Code Scanning alerts across IPC handlers, file watcher services, logger utilities, and build verification scripts.
 
-- **Entry Point & Launch Intent Integration**: Built `useCharacterCreatorLaunchStore` and helper `openCharacterCreator(intent)`. All entry points (`RP Studio CharacterLibrary` "Build Character" and prompt bar, `RP Studio CharacterEditor` "Edit with Character Creator", `Welcome Screen` actions) publish launch intents. Intents are consumed exactly once (`consume()`) on mount or tab focus.
-- **Model Lock Enforcement (`zai-org-glm-5-2`)**: `CHARACTER_CREATOR_MODEL_ID = "zai-org-glm-5-2"` is enforced across all request builders, AI services, draft sanitizers, and UI components. Passing a different model throws `CharacterCreatorModelOverrideError`. Model unavailability produces a typed `MODEL_UNAVAILABLE` error screen while preserving active draft data.
-- **Event-Driven Visible AI Process**: Generation progress emits structured `CharacterCreatorProcessEvent` updates (`queued`, `concept-analysis`, `card-draft`, `consistency-review`, `schema-validation`, `repair`, `complete`) displayed in real-time in `CharacterCreatorProcessPanel`. Private hidden chain-of-thought (`reasoning_content`), system prompt text, and API keys are strictly excluded. Fake timer loops (`setInterval`) were removed.
-- **Mascot Remediation**: Swapped `UserRoundPen` icon with animated Mio mascot GIF (`mio-xc3-nerdprofeta-jumping.gif`) with reduced-motion static PNG fallback (`mio-xc3-nerdprofeta-jumping-static.png`).
-- **Local Character Picker Modal**: Implemented `CharacterCreatorLocalPickerModal` for selecting local cards to edit in Character Creator with search filtering, avatar previews, tags, and updated timestamps.
-- **Debounced Autosave & Approval**: Implemented 600ms debounced draft updates with explicit flush before validation, approval, and export. Characters are saved into the local library only upon explicit user approval on the Ready screen.
-- **Prompt Limit & IPC Validation Remediation**: Streamlined `CHARACTER_CREATOR_SYSTEM_PROMPT` in `src/constants/character-creator.ts` to 6,988 Unicode code points (down from 12,220), remaining comfortably below the 8,000 warning threshold and 12,000 hard limit. Configured `electron/ipc/validation.ts` to enforce `SYSTEM_PROMPT_LARGE_CONTEXT_OVERRIDE` (16,000 code points) as the ceiling for IPC system prompt validations.
+- **PR Review & Merge**: Merged 4 open Dependabot pull requests into `main`:
+  - PR #47: `build(deps): bump github/codeql-action/analyze from 4.36.3 to 4.37.3`
+  - PR #48: `build(deps): bump github/codeql-action/init from 4.36.3 to 4.37.3`
+  - PR #49: `build(deps): bump actions/checkout from 7.0.0 to 7.0.1`
+  - PR #50: `build(deps): bump the npm-dependencies group with 16 updates`
+- **CodeQL Security Remediations**:
+  - `electron/ipc/characterCardFileHandlers.ts`: Eliminated TOCTOU file system race condition (`js/file-system-race`, Alert 186) by opening file handle `fs.open` before stat/read operations.
+  - `electron/services/syncFolderWatcher.ts`: Resolved file system race and insecure temp file alerts (`js/file-system-race`, `js/insecure-temporary-file`, Alerts 183 & 185) via atomic handle opening with `O_NOFOLLOW` and handle stat validation.
+  - `electron/services/logger.ts`: Confined log file path to `userData/logs` and performed file handle append (`js/http-to-file-access`, Alert 187).
+  - `scripts/verify-venice-api-docs.cjs`: Resolved URL substring sanitization alerts (`js/incomplete-url-substring-sanitization`, Alerts 181 & 182) using regex boundary testing and exact array element equality.
+- **Verification & Deployment**: Executed full typecheck and test suite (`npm test`). All 424 test files / 4,648 tests passed cleanly (100% pass). Pushed commit `4e44854` to `origin/main`.
 
 **Validation Matrix:**
 
 | Command | Result |
 |---|---|
-| `npx vitest run src/constants/character-creator.test.ts src/services/characterCreatorAiService.test.ts src/services/characterCreatorDraftService.test.ts src/services/characterCreatorImportService.test.ts src/components/character-creator/CharacterCreatorView.test.tsx src/stores/character-creator-launch-store.test.ts src/components/rp-studio/CharacterLibrary.test.tsx tests/character-creator/` | PASS — 7 test files / 26 tests (100% PASS) |
-| `npm run lint:eslint` | PASS — zero warnings (`--max-warnings=0`) |
+| `gh pr list --state open` | PASS — 0 open PRs remaining (all merged) |
+| `node scripts/verify-venice-api-docs.cjs` | PASS — Venice API docs verification passed with parsed provenance |
+| `npx vitest run electron/services/syncFolderWatcher.test.ts` | PASS — 43/43 tests passed |
 | `npm run typecheck` | PASS — zero errors across renderer `tsc` and electron `tsconfig.electron.json` |
-| `npm run verify:contracts` | PASS — 103/103 checks passed |
-| `npm run build` | PASS — Vite renderer, Express server, and Electron main/preload bundled clean |
+| `npm test` | PASS — 424 test files / 4,648 tests passed (100% PASS) |
 
 ### Prior Session Summary (Draft Store Hardening — P0-01, P0-02, P1-03 implementation) [demoted from "Latest Session Summary"]
 
