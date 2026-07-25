@@ -30,11 +30,14 @@ This is the active handoff and validation ledger. The canonical current-work led
   - Updated `createProcessEvent` in `src/services/characterCreatorAiService.ts` to use UUID event IDs.
   - Updated `generateCharacterCreatorDraft` to dynamically infer `intendedMode` (`original`, `inspired-original`, `direct-existing`, `parody`, `alternate`).
   - Created unit test suite `tests/character-creator/p0P1Remediation.test.ts` (4/4 tests passed).
-- **Media Prompt Context Isolation (Image Text & Artifacts Remediation)**:
-  - Investigated Venice API reference contracts in `docs/reference/Venice_swagger_api.yaml` and `docs/reference/Venice_api_LLM_info.md` regarding image generation parameters and text artifact causes.
-  - Resolved root cause of random letters/symbols/text rendered inside generated pictures: `electron/agent/runtime/trusted-agent-request.ts` previously prepended `[System Runtime Context]` LLM blocks (`Current Date/Time: ...`, `Toolchain Trust Ledger: ...`) to `body.prompt` on all POST requests, including `/image/generate`, `/image/edit`, `/image/upscale`, `/video/queue`, and `/audio/speech`. Image diffusion models interpreted the system string as literal text to draw into images.
-  - Updated `composeTrustedRequest` in `electron/agent/runtime/trusted-agent-request.ts` to exclude media endpoints (`/image/*`, `/video/*`, `/audio/*`) from `runtimeContext` prepending while retaining variable placeholder substitution (`{{date}}`, `{{time}}`).
-  - Updated `trusted-agent-request.test.ts` and verified `payloadBuilders.test.ts`.
+- **Media Prompt Context Isolation & Download Remediation**:
+  - Excluded media endpoints (`/image/*`, `/video/*`, `/audio/*`) in `electron/agent/runtime/trusted-agent-request.ts` from LLM system context prepending.
+  - Rephrased `compileCharacterScenePrompt` in `src/services/characterScenePromptCompiler.ts` to remove structural label headers (`Character:`, `Scene context:`) that caused diffusion models to render floating text captions inside images.
+  - Fixed media downloads across Electron & Web: added image MIME types (`image/png`, `image/jpeg`, `image/webp`, `image/gif`, `image/avif`) to `EXTENSION_BY_MIME` in `electron/services/generatedMediaExport.ts`, enabled "Download media" button for images in `src/components/gallery/media-inspector.tsx`, and updated `downloadImage` in `src/utils/download.ts` to convert `data:` URLs directly into Blob URLs for safe, reliable browser downloads.
+  - Added user feedback toasts and fallback handling to `downloadImage` in `src/components/image/image-view.tsx`.
+- **Git Push to Main**:
+  - Ran full verification pipeline (`npm run lint:eslint`, `npm run typecheck`, `npm run verify:safety-guard`, `npm run verify:markdown-links`, `npm run verify:contracts`, `npm run build`).
+  - Committed changes (`618673f`) and pushed to `origin/main`.
 
 **Validation Matrix:**
 
