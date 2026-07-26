@@ -42,7 +42,7 @@
 ---
 
 <p align="center">
-  <img src="assets/ChatGPT Image Jul 22, 2026, 07_51_49 PM.png" alt="Venice Forge - Your Local AI Workspace" width="100%" />
+  <img src="assets/ReadMe_Preview.png" alt="Venice Forge - Your Local AI Workspace" width="100%" />
 </p>
 
 ---
