@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "note": "Finite dynamic-key families. Each family is a known source-code pattern that constructs i18n keys at runtime using a finite enum source. The extractor merges these expansions into its source-key set so the verifier does not flag them as unused or missing.",
+  "families": [
+    {
+      "name": "navigation.tabs.label",
+      "namespace": "navigation",
+      "pattern": "tabs.${id}.label",
+      "source": "src/config/tabs.ts:18 TAB_IDS literal-union",
+      "values": [
+        "tabs.chat.label",
+        "tabs.character-chats.label",
+        "tabs.history.label",
+        "tabs.image.label",
+        "tabs.media.label",
+        "tabs.image-inspector.label",
+        "tabs.prompts.label",
+        "tabs.scenes.label",
+        "tabs.audio.label",
+        "tabs.music.label",
+        "tabs.video.label",
+        "tabs.embeddings.label",
+        "tabs.search.label",
+        "tabs.characters.label",
+        "tabs.character-creator.label",
+        "tabs.rp-studio.label",
+        "tabs.workflows.label",
+        "tabs.documents.label",
+        "tabs.privacy.label",
+        "tabs.playground.label",
+        "tabs.settings.label",
+        "tabs.status.label"
+      ]
+    },
+    {
+      "name": "navigation.groups",
+      "namespace": "navigation",
+      "pattern": "groups.${group}",
+      "source": "src/config/tabs.ts:52 TabGroup union = 'conversation' | 'generate' | 'build' | 'system'",
+      "values": [
+        "groups.conversation",
+        "groups.generate",
+        "groups.build",
+        "groups.system"
+      ]
+    }
+  ]
+}

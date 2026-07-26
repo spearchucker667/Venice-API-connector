@@ -1,31 +1,31 @@
 {
   "welcomeTitle": "Venice Forgeへようこそ",
-  "welcomeSubtitle": "__MISSING__:welcomeSubtitle",
-  "welcomeDescription": "__MISSING__:welcomeDescription",
-  "privacyNote": "__MISSING__:privacyNote",
-  "getStarted": "__MISSING__:getStarted",
-  "createProfile": "__MISSING__:createProfile",
+  "welcomeSubtitle": "プライベートなローカルワークベンチ。",
+  "welcomeDescription": "アプリデータをこのデバイスに保存し、設定したリモートプロバイダーにリクエストを送信するローカルデスクトップワークベンチです。",
+  "privacyNote": "データはローカルに保持されます。APIキーはOSの安全なストレージに保存されます。",
+  "getStarted": "はじめる",
+  "createProfile": "プロファイルを作成",
   "continue": "続行",
-  "languageSelectorLabel": "__MISSING__:languageSelectorLabel",
-  "systemLanguageOption": "__MISSING__:systemLanguageOption",
+  "languageSelectorLabel": "アプリケーション言語",
+  "systemLanguageOption": "システム言語 ({{language}})",
   "selectLanguage": "選択：language",
-  "stepIndicator": "__MISSING__:stepIndicator",
+  "stepIndicator": "オンボーディング手順 {{current}} / {{total}}",
   "steps": {
     "welcome": {
       "title": "Venice Forgeへようこそ",
-      "description": "__MISSING__:steps.welcome.description"
+      "description": "アプリデータをこのデバイスに保存し、設定したリモートプロバイダーにリクエストを送信するローカルデスクトップワークベンチです。"
     },
     "profiles": {
       "title": "プロファイル",
-      "description": "__MISSING__:steps.profiles.description"
+      "description": "レンダラー設定やライブラリを分けるためにプロファイルを作成します。一部のデスクトップボルトファイルと共有キャッシュはマシンレベルで維持されます。"
     },
     "security": {
-      "title": "__MISSING__:steps.security.title",
-      "description": "__MISSING__:steps.security.description"
+      "title": "デフォルトで安全",
+      "description": "パスワードとシークレットはOSネイティブのキーチェーン（macOS）または資格情報マネージャー（Windows）で暗号化されます。プレーンテキストで保存されることはありません。"
     },
     "safety": {
-      "title": "__MISSING__:steps.safety.title",
-      "description": "__MISSING__:steps.safety.description"
+      "title": "ファミリーセーフモード",
+      "description": "ファミリーセーフモードのオン/オフを切り替えるにはマスターパスワードが必要です。ファミリーセーフモードは、対応しているプロバイダーのsafe_modeも強制します。"
     }
   }
 }

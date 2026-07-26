@@ -39,6 +39,8 @@ const verifier = require("./verify-i18n.cjs") as {
     docsDir?: string;
     docsRequired?: string[];
     skipSourceInventory?: boolean;
+    writeStatus?: boolean;
+    statusPath?: string;
   }) => {
     ok: boolean;
     errors: string[];

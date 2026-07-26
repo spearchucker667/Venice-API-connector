@@ -2,96 +2,41 @@
  * @fileoverview Locale registry and fallback resolution logic.
  */
 
+import { LOCALE_COMPLETION } from './locale-completion-status';
 import type { LocaleMetadata, LocaleSetting, SupportedLocale, TextDirection } from './locale-types';
 
 export const DEFAULT_LOCALE: SupportedLocale = 'en-US';
 
-export const SUPPORTED_LOCALES: Record<SupportedLocale, LocaleMetadata> = {
-  'en-US': {
-    code: 'en-US',
-    nativeName: 'English (US)',
-    englishName: 'English (US)',
-    dir: 'ltr',
-    isProductionComplete: true,
-  },
-  es: {
-    code: 'es',
-    nativeName: 'Español',
-    englishName: 'Spanish',
-    dir: 'ltr',
-    isProductionComplete: true,
-  },
-  fr: {
-    code: 'fr',
-    nativeName: 'Français',
-    englishName: 'French',
-    dir: 'ltr',
-    isProductionComplete: true,
-  },
-  de: {
-    code: 'de',
-    nativeName: 'Deutsch',
-    englishName: 'German',
-    dir: 'ltr',
-    isProductionComplete: true,
-  },
-  'pt-BR': {
-    code: 'pt-BR',
-    nativeName: 'Português (Brasil)',
-    englishName: 'Portuguese (Brazil)',
-    dir: 'ltr',
-    isProductionComplete: true,
-  },
-  ru: {
-    code: 'ru',
-    nativeName: 'Русский',
-    englishName: 'Russian',
-    dir: 'ltr',
-    isProductionComplete: true,
-  },
-  'zh-CN': {
-    code: 'zh-CN',
-    nativeName: '简体中文',
-    englishName: 'Simplified Chinese',
-    dir: 'ltr',
-    isProductionComplete: true,
-  },
-  ja: {
-    code: 'ja',
-    nativeName: '日本語',
-    englishName: 'Japanese',
-    dir: 'ltr',
-    isProductionComplete: true,
-  },
-  hi: {
-    code: 'hi',
-    nativeName: 'हिन्दी',
-    englishName: 'Hindi',
-    dir: 'ltr',
-    isProductionComplete: true,
-  },
-  ar: {
-    code: 'ar',
-    nativeName: 'العربية',
-    englishName: 'Arabic',
-    dir: 'rtl',
-    isProductionComplete: true,
-  },
-  ko: {
-    code: 'ko',
-    nativeName: '한국어',
-    englishName: 'Korean',
-    dir: 'ltr',
-    isProductionComplete: true,
-  },
-  'sv-SE': {
-    code: 'sv-SE',
-    nativeName: 'Svenska',
-    englishName: 'Swedish',
-    dir: 'ltr',
-    isProductionComplete: true,
-  },
+const LOCALE_REGISTRY_BASE = {
+  'en-US': { englishName: 'English (US)', dir: 'ltr' as TextDirection },
+  es: { englishName: 'Spanish', dir: 'ltr' as TextDirection },
+  fr: { englishName: 'French', dir: 'ltr' as TextDirection },
+  de: { englishName: 'German', dir: 'ltr' as TextDirection },
+  'pt-BR': { englishName: 'Portuguese (Brazil)', dir: 'ltr' as TextDirection },
+  ru: { englishName: 'Russian', dir: 'ltr' as TextDirection },
+  'zh-CN': { englishName: 'Simplified Chinese', dir: 'ltr' as TextDirection },
+  ja: { englishName: 'Japanese', dir: 'ltr' as TextDirection },
+  hi: { englishName: 'Hindi', dir: 'ltr' as TextDirection },
+  ar: { englishName: 'Arabic', dir: 'rtl' as TextDirection },
+  ko: { englishName: 'Korean', dir: 'ltr' as TextDirection },
+  'sv-SE': { englishName: 'Swedish', dir: 'ltr' as TextDirection },
 };
+
+export const SUPPORTED_LOCALES: Record<SupportedLocale, LocaleMetadata> =
+  Object.fromEntries(
+    (Object.entries(LOCALE_REGISTRY_BASE) as Array<
+      [SupportedLocale, { englishName: string; dir: TextDirection }]
+    >).map(([code, base]) => [
+      code,
+      {
+        code,
+        nativeName: LOCALE_COMPLETION[code].nativeName,
+        englishName: base.englishName,
+        dir: base.dir,
+        isProductionComplete: LOCALE_COMPLETION[code].isProductionComplete,
+      },
+    ]),
+  ) as Record<SupportedLocale, LocaleMetadata>;
 
 export const SUPPORTED_LOCALE_CODES: SupportedLocale[] = Object.keys(
   SUPPORTED_LOCALES,

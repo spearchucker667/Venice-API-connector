@@ -19,13 +19,13 @@
   },
   "languageRegion": {
     "title": "Langue et région",
-    "description": "__MISSING__:languageRegion.description",
+    "description": "Personnalisez la langue de l'application, le sens du texte et les préférences de formatage régional.",
     "uiLanguageLabel": "Langue de l'interface",
     "useSystemLanguage": "Utiliser la langue du système",
     "resolvedLocale": "Paramètre régional actif",
     "textDirection": "Sens du texte",
-    "leftToRight": "__MISSING__:languageRegion.leftToRight",
-    "rightToLeft": "__MISSING__:languageRegion.rightToLeft",
+    "leftToRight": "De gauche à droite (LTR)",
+    "rightToLeft": "De droite à gauche (RTL)",
     "formattingPreview": "Aperçu du formatage régional",
     "dateExample": "Date",
     "timeExample": "Heure",
@@ -34,280 +34,280 @@
   },
   "apiKeys": {
     "title": "Clé d'API Venice",
-    "keyInputLabel": "__MISSING__:apiKeys.keyInputLabel",
-    "testConnection": "__MISSING__:apiKeys.testConnection",
+    "keyInputLabel": "Clé API",
+    "testConnection": "Tester la connexion",
     "saveKey": "Enregistrer Key",
     "deleteKey": "Supprimer Key",
-    "veniceTitle": "__MISSING__:apiKeys.veniceTitle",
+    "veniceTitle": "Intégration Venice.ai",
     "status": {
-      "configured": "__MISSING__:apiKeys.status.configured",
-      "unset": "__MISSING__:apiKeys.status.unset",
-      "optional": "__MISSING__:apiKeys.status.optional"
+      "configured": "Configuré",
+      "unset": "Non défini",
+      "optional": "Optionnel"
     },
-    "veniceDescription": "__MISSING__:apiKeys.veniceDescription",
-    "jinaTitle": "__MISSING__:apiKeys.jinaTitle",
+    "veniceDescription": "Votre clé API est enregistrée à l'aide d'un chiffrement de stockage sécurisé et n'est jamais exposée au bac à sable web.",
+    "jinaTitle": "Intégration Jina.ai",
     "jinaDescription": {
-      "prefix": "__MISSING__:apiKeys.jinaDescription.prefix",
-      "electron": "__MISSING__:apiKeys.jinaDescription.electron",
-      "web": "__MISSING__:apiKeys.jinaDescription.web"
+      "prefix": "Fournit des capacités de recherche web approfondie, de scraping et de découverte/mappage de profils sociaux.",
+      "electron": "Les clés API Jina sont enregistrées avec le même stockage sécurisé du système d'exploitation.",
+      "web": "Les clés API Jina sont conservées uniquement en mémoire pour cette session de navigateur ; utilisez l'environnement serveur pour une configuration web persistante."
     },
-    "savedElectron": "__MISSING__:apiKeys.savedElectron",
-    "savedWeb": "__MISSING__:apiKeys.savedWeb",
+    "savedElectron": "Clé API Venice enregistrée de manière sécurisée.",
+    "savedWeb": "Clé API Venice enregistrée pour cette session de développement.",
     "saveFailed": "Échec de save API key.",
     "deleteConfirm": {
       "title": "Supprimer Venice API key?",
-      "electron": "__MISSING__:apiKeys.deleteConfirm.electron",
-      "web": "__MISSING__:apiKeys.deleteConfirm.web"
+      "electron": "Cela supprimera votre clé API Venice du stockage sécurisé du système d'exploitation. Vous devrez la saisir à nouveau pour effectuer des requêtes.",
+      "web": "Cela supprimera la clé API Venice de la session de développement actuelle."
     },
-    "deleted": "__MISSING__:apiKeys.deleted",
+    "deleted": "Clé API Venice supprimée.",
     "deleteFailed": "Échec de delete API key.",
-    "testSuccess": "__MISSING__:apiKeys.testSuccess",
-    "testFailed": "__MISSING__:apiKeys.testFailed",
-    "testError": "__MISSING__:apiKeys.testError"
+    "testSuccess": "Connexion réussie{{status}}.",
+    "testFailed": "Échec de la connexion : {{message}}",
+    "testError": "Échec du test de connexion."
   },
   "safety": {
-    "title": "__MISSING__:safety.title",
-    "localFamilySafeMode": "__MISSING__:safety.localFamilySafeMode",
-    "veniceApiSafeMode": "__MISSING__:safety.veniceApiSafeMode",
-    "statusBanner": "__MISSING__:safety.statusBanner",
-    "familySafeModeTitle": "__MISSING__:safety.familySafeModeTitle",
-    "familySafeModeDescription": "__MISSING__:safety.familySafeModeDescription",
-    "onFamilySafeMode": "__MISSING__:safety.onFamilySafeMode",
-    "offAdultMode": "__MISSING__:safety.offAdultMode",
+    "title": "Sécurité et protection",
+    "localFamilySafeMode": "Mode de sécurité familial local",
+    "veniceApiSafeMode": "Mode de sécurité API Venice",
+    "statusBanner": "Filtre local : {{localStatus}} | Filtrage du fournisseur Venice : {{veniceStatus}}",
+    "familySafeModeTitle": "Mode de sécurité familial",
+    "familySafeModeDescription": "Exécute Venice Forge",
+    "onFamilySafeMode": "ACTIVÉ : Mode de sécurité familial",
+    "offAdultMode": "DÉSACTIVÉ : Mode adulte (filtre local DÉSACTIVÉ)",
     "status": {
-      "enabled": "__MISSING__:safety.status.enabled",
-      "disabled": "__MISSING__:safety.status.disabled",
-      "localOffProviderOn": "__MISSING__:safety.status.localOffProviderOn",
-      "bothOff": "__MISSING__:safety.status.bothOff",
-      "filteredLocally": "__MISSING__:safety.status.filteredLocally"
+      "enabled": "Lorsqu'activé, les requêtes correspondantes sont bloquées localement avant l'appel au fournisseur.",
+      "disabled": "Contourne Venice Forge",
+      "localOffProviderOn": "Le filtre familial local est DÉSACTIVÉ, mais le mode de sécurité côté fournisseur de l'API Venice est toujours ACTIVÉ. Les requêtes sortantes incluent safe_mode: true.",
+      "bothOff": "Le filtre familial local et le mode de sécurité du fournisseur de l'API Venice sont tous deux DÉSACTIVÉS. Les requêtes sortantes incluent safe_mode: false.",
+      "filteredLocally": "Les requêtes correspondantes sont filtrées localement avant d'atteindre le fournisseur."
     },
-    "effectiveStatus": "__MISSING__:safety.effectiveStatus",
-    "setMasterPassword": "__MISSING__:safety.setMasterPassword",
-    "masterPasswordEnabled": "__MISSING__:safety.masterPasswordEnabled",
-    "veniceApiSafeModeTitle": "__MISSING__:safety.veniceApiSafeModeTitle",
-    "veniceApiSafeModeDescription": "__MISSING__:safety.veniceApiSafeModeDescription",
+    "effectiveStatus": "Statut effectif : Filtre local : {{local}} | Filtrage du fournisseur Venice : {{provider}}",
+    "setMasterPassword": "Définir un mot de passe maître pour verrouiller le mode de sécurité familial",
+    "masterPasswordEnabled": "Le mot de passe maître est activé",
+    "veniceApiSafeModeTitle": "Mode de sécurité API Venice",
+    "veniceApiSafeModeDescription": "Contrôle le paramètre safemode côté fournisseur envoyé à Venice. Il est distinct du mode de sécurité familial.",
     "errors": {
-      "cannotDisableTitle": "__MISSING__:safety.errors.cannotDisableTitle",
-      "cannotDisableDetail": "__MISSING__:safety.errors.cannotDisableDetail"
+      "cannotDisableTitle": "Impossible de désactiver le mode de sécurité du fournisseur",
+      "cannotDisableDetail": "Le mode de sécurité familial doit d'abord être désactivé."
     },
-    "keepCurrent": "__MISSING__:safety.keepCurrent"
+    "keepCurrent": "Conserver la sécurité actuelle"
   },
   "aboutPanel": {
-    "unofficial": "__MISSING__:aboutPanel.unofficial",
-    "disclaimer": "__MISSING__:aboutPanel.disclaimer",
-    "officialLinks": "__MISSING__:aboutPanel.officialLinks",
-    "termsOfService": "__MISSING__:aboutPanel.termsOfService",
-    "privacyPolicy": "__MISSING__:aboutPanel.privacyPolicy",
-    "apiDocs": "__MISSING__:aboutPanel.apiDocs",
-    "trademarks": "__MISSING__:aboutPanel.trademarks",
-    "resetGate": "__MISSING__:aboutPanel.resetGate",
+    "unofficial": "Non officiel",
+    "disclaimer": "Venice Forge est un client de bureau tiers configuré pour s'interfacer directement avec les points de terminaison de l'API d'inférence Venice.ai. Il n'est ni affilié à, ni approuvé par, ni sponsorisé par, ni agréé par Venice.ai, Inc.",
+    "officialLinks": "Liens officiels",
+    "termsOfService": "Conditions d'utilisation",
+    "privacyPolicy": "Politique de confidentialité",
+    "apiDocs": "Documentation API",
+    "trademarks": "Venice , Venice.ai , et les logos associés sont des marques de Venice.ai, Inc. L'utilisation de ces noms est uniquement à des fins d'identification nominative de la compatibilité API.",
+    "resetGate": "Réinitialiser la porte d'acceptation légale :",
     "toasts": {
-      "resetSuccess": "__MISSING__:aboutPanel.toasts.resetSuccess",
-      "resetFailed": "__MISSING__:aboutPanel.toasts.resetFailed"
+      "resetSuccess": "Acceptation légale réinitialisée. Elle apparaîtra au prochain rechargement.",
+      "resetFailed": "Impossible de réinitialiser l'acceptation."
     },
-    "resetGateBtn": "__MISSING__:aboutPanel.resetGateBtn"
+    "resetGateBtn": "Réinitialiser la porte"
   },
   "audioSpeech": {
-    "cacheCleared": "__MISSING__:audioSpeech.cacheCleared",
+    "cacheCleared": "Cache TTS vidé",
     "errors": {
-      "clearCache": "__MISSING__:audioSpeech.errors.clearCache"
+      "clearCache": "Impossible de vider le cache TTS"
     },
     "title": "Audio et parole",
-    "description": "__MISSING__:audioSpeech.description",
-    "interfaceSoundsTitle": "__MISSING__:audioSpeech.interfaceSoundsTitle",
-    "interfaceSoundsDescription": "__MISSING__:audioSpeech.interfaceSoundsDescription",
-    "soundPack": "__MISSING__:audioSpeech.soundPack",
+    "description": "Configurez les sons de l'interface et la synthèse vocale pour les réponses du modèle.",
+    "interfaceSoundsTitle": "Sons de l'interface",
+    "interfaceSoundsDescription": "Les sons de l'interface utilisent des fichiers audio locaux intégrés et ne contactent aucun service réseau.",
+    "soundPack": "Pack de sons",
     "packs": {
-      "soft": "__MISSING__:audioSpeech.packs.soft",
-      "tactile": "__MISSING__:audioSpeech.packs.tactile",
-      "glass": "__MISSING__:audioSpeech.packs.glass",
-      "retro": "__MISSING__:audioSpeech.packs.retro",
-      "minimal": "__MISSING__:audioSpeech.packs.minimal"
+      "soft": "Doux",
+      "tactile": "Tactile",
+      "glass": "Verre",
+      "retro": "Rétro",
+      "minimal": "Minimal"
     },
-    "volume": "__MISSING__:audioSpeech.volume",
-    "restoreDefaults": "__MISSING__:audioSpeech.restoreDefaults",
-    "chatTtsTitle": "__MISSING__:audioSpeech.chatTtsTitle",
-    "chatTtsDescription": "__MISSING__:audioSpeech.chatTtsDescription",
-    "showControls": "__MISSING__:audioSpeech.showControls",
-    "autoRead": "__MISSING__:audioSpeech.autoRead",
-    "ttsModel": "__MISSING__:audioSpeech.ttsModel",
+    "volume": "Volume",
+    "restoreDefaults": "Restaurer les valeurs par défaut",
+    "chatTtsTitle": "Synthèse vocale du chat",
+    "chatTtsDescription": "La synthèse vocale envoie le texte de la réponse de l'assistant sélectionnée à votre fournisseur de synthèse vocale configuré et peut consommer de l'utilisation d'API. La lecture automatique est désactivée par défaut.",
+    "showControls": "Afficher les contrôles de synthèse vocale sur les réponses de l'assistant",
+    "autoRead": "Lire automatiquement les réponses terminées",
+    "ttsModel": "Modèle de synthèse vocale",
     "defaultProviderModel": "Par défaut provider model",
-    "saved": "__MISSING__:audioSpeech.saved",
-    "loadingModels": "__MISSING__:audioSpeech.loadingModels",
-    "voice": "__MISSING__:audioSpeech.voice",
+    "saved": "(enregistré)",
+    "loadingModels": "Chargement des modèles de synthèse vocale…",
+    "voice": "Voix",
     "defaultVoice": "Par défaut voice",
-    "speed": "__MISSING__:audioSpeech.speed",
-    "volumeLabel": "__MISSING__:audioSpeech.volumeLabel",
-    "skipCodeBlocks": "__MISSING__:audioSpeech.skipCodeBlocks",
-    "stopOnNewReply": "__MISSING__:audioSpeech.stopOnNewReply",
-    "cacheSpeech": "__MISSING__:audioSpeech.cacheSpeech",
-    "clearing": "__MISSING__:audioSpeech.clearing",
+    "speed": "Vitesse : {{speed}}x",
+    "volumeLabel": "Volume : {{volume}}%",
+    "skipCodeBlocks": "Ignorer les blocs de code",
+    "stopOnNewReply": "Arrêter la lecture en cours lorsqu'une nouvelle réponse commence",
+    "cacheSpeech": "Mettre en cache la synthèse vocale générée",
+    "clearing": "Effacement…",
     "clearCache": "Effacer TTS cache"
   },
   "backupSync": {
     "toasts": {
-      "sessionReattached": "__MISSING__:backupSync.toasts.sessionReattached",
+      "sessionReattached": "Session de synchronisation réattachée.",
       "chooseFolderFailed": "Échec de choose sync folder.",
-      "folderConfigured": "__MISSING__:backupSync.toasts.folderConfigured",
+      "folderConfigured": "Dossier de synchronisation chiffré configuré.",
       "setFolderFailed": "Échec de set sync folder: {{error}}",
-      "enterPassphrase": "__MISSING__:backupSync.toasts.enterPassphrase",
+      "enterPassphrase": "Veuillez saisir une phrase secrète de synchronisation.",
       "startFailed": "Échec de start sync.",
-      "syncStartedMedia": "__MISSING__:backupSync.toasts.syncStartedMedia",
-      "syncStartedOptIn": "__MISSING__:backupSync.toasts.syncStartedOptIn",
+      "syncStartedMedia": "Synchronisation démarrée — les blobs média seront synchronisés.",
+      "syncStartedOptIn": "Synchronisation démarrée — les médias sont en option.",
       "startFailedReason": "Échec de start sync: {{error}}",
       "pauseFailed": "Échec de pause sync.",
-      "syncPaused": "__MISSING__:backupSync.toasts.syncPaused",
+      "syncPaused": "Synchronisation en pause. Saisissez à nouveau la phrase secrète pour reprendre.",
       "pauseFailedReason": "Échec de pause sync: {{error}}",
-      "enterPassphraseReattach": "__MISSING__:backupSync.toasts.enterPassphraseReattach",
+      "enterPassphraseReattach": "Veuillez saisir la phrase secrète de synchronisation pour réattacher.",
       "reattachFailed": "Échec de reattach sync session.",
       "reattachFailedReason": "Échec de reattach sync: {{error}}"
     },
     "title": "Sauvegarde et synchronisation",
-    "desktopOnly": "__MISSING__:backupSync.desktopOnly",
-    "description": "__MISSING__:backupSync.description",
+    "desktopOnly": "La synchronisation locale est actuellement disponible uniquement sur l'application de bureau.",
+    "description": "Gardez vos données locales synchronisées en toute sécurité sur tous vos appareils sans forcer de compte cloud central.",
     "syncFolder": {
-      "title": "__MISSING__:backupSync.syncFolder.title",
-      "description": "__MISSING__:backupSync.syncFolder.description",
-      "none": "__MISSING__:backupSync.syncFolder.none",
-      "change": "__MISSING__:backupSync.syncFolder.change",
+      "title": "Dossier de synchronisation",
+      "description": "Synchroniser en continu les données chiffrées vers un dossier (par ex. iCloud Drive, Dropbox).",
+      "none": "Aucun dossier de synchronisation sélectionné",
+      "change": "Changer de dossier",
       "choose": "Choisir Folder",
-      "includeMedia": "__MISSING__:backupSync.syncFolder.includeMedia",
-      "includeMediaNote": "__MISSING__:backupSync.syncFolder.includeMediaNote",
+      "includeMedia": "Inclure les blobs média dans les paquets de synchronisation",
+      "includeMediaNote": "(images, fichiers, ressources RP)",
       "passphrasePlaceholder": "Entrer Encryption Passphrase",
-      "pause": "__MISSING__:backupSync.syncFolder.pause",
-      "reattach": "__MISSING__:backupSync.syncFolder.reattach",
-      "start": "__MISSING__:backupSync.syncFolder.start"
+      "pause": "Mettre en pause la synchronisation",
+      "reattach": "Réattacher la session",
+      "start": "Démarrer la synchronisation"
     },
     "status": {
       "active": "Actif",
       "error": "Erreur",
-      "paused": "__MISSING__:backupSync.status.paused",
-      "off": "__MISSING__:backupSync.status.off"
+      "paused": "En pause",
+      "off": "Désactivé"
     },
     "security": {
-      "encryption": "__MISSING__:backupSync.security.encryption",
-      "noKeys": "__MISSING__:backupSync.security.noKeys"
+      "encryption": "Les paquets de synchronisation utilisent un chiffrement XChaCha20-Poly1305 dérivé d'Argon2id avant d'être écrits dans ce dossier.",
+      "noKeys": "Vos clés API et les chemins absolus de la machine ne sont JAMAIS synchronisés."
     },
     "conflicts": {
-      "title": "__MISSING__:backupSync.conflicts.title",
-      "description": "__MISSING__:backupSync.conflicts.description",
-      "statusError": "__MISSING__:backupSync.conflicts.statusError",
-      "statusDetached": "__MISSING__:backupSync.conflicts.statusDetached",
-      "statusConfigured": "__MISSING__:backupSync.conflicts.statusConfigured",
-      "statusDisabled": "__MISSING__:backupSync.conflicts.statusDisabled",
-      "checking": "__MISSING__:backupSync.conflicts.checking",
-      "noConflicts": "__MISSING__:backupSync.conflicts.noConflicts",
-      "mediaIncluded": "__MISSING__:backupSync.conflicts.mediaIncluded",
-      "mediaExcluded": "__MISSING__:backupSync.conflicts.mediaExcluded",
-      "found": "__MISSING__:backupSync.conflicts.found",
-      "resolutionNote": "__MISSING__:backupSync.conflicts.resolutionNote",
-      "keepOriginalTitle": "__MISSING__:backupSync.conflicts.keepOriginalTitle",
-      "keepOriginal": "__MISSING__:backupSync.conflicts.keepOriginal",
-      "keepConflictTitle": "__MISSING__:backupSync.conflicts.keepConflictTitle",
-      "keepConflict": "__MISSING__:backupSync.conflicts.keepConflict",
-      "keepBothTitle": "__MISSING__:backupSync.conflicts.keepBothTitle",
+      "title": "Statut de synchronisation et conflits",
+      "description": "Surveiller l'activité de synchronisation et résoudre les conflits de données.",
+      "statusError": "Erreur de synchronisation : {{error}}",
+      "statusDetached": "Le surveillant du processus principal est en cours d'exécution mais la session du moteur de rendu est détachée. Saisissez à nouveau la phrase secrète pour réattacher.",
+      "statusConfigured": "La synchronisation est configurée mais pas entièrement active. Saisissez la phrase secrète et démarrez la synchronisation.",
+      "statusDisabled": "Activez la synchronisation pour surveiller l'activité.",
+      "checking": "Vérification des conflits...",
+      "noConflicts": "La synchronisation est active. Aucun conflit trouvé.",
+      "mediaIncluded": " Les blobs média sont inclus.",
+      "mediaExcluded": " Les blobs média sont exclus (optionnel).",
+      "found": "{{count}} conflit(s) trouvé(s). Résolvez-les ci-dessous :",
+      "resolutionNote": "La synchronisation a conservé {{winner}} ; la révision {{loser}} en conflit ({{loserTitle}}) est préservée jusqu'à ce que vous résolviez le conflit.",
+      "keepOriginalTitle": "Conserver la révision actuellement enregistrée à cet identifiant et supprimer la copie en conflit.",
+      "keepOriginal": "Conserver la copie {{winner}}",
+      "keepConflictTitle": "Remplacer la révision actuelle par la copie {{loser}}.",
+      "keepConflict": "Utiliser la copie {{loser}}",
+      "keepBothTitle": "Conserver la révision actuelle et enregistrer la copie {{loser}} comme un enregistrement distinct.",
       "keepBoth": "Enregistrer {{loser}} as copy"
     }
   },
   "configPanel": {
     "toasts": {
-      "reloaded": "__MISSING__:configPanel.toasts.reloaded",
+      "reloaded": "Configuration locale rechargée.",
       "reloadFailed": "Échec de reload config.",
       "openFolderFailed": "Échec de open config folder.",
-      "templateExported": "__MISSING__:configPanel.toasts.templateExported",
-      "exportCancelled": "__MISSING__:configPanel.toasts.exportCancelled",
+      "templateExported": "Modèle exporté.",
+      "exportCancelled": "Exportation annulée.",
       "exportFailed": "Échec de export config template.",
-      "secureStoreCleared": "__MISSING__:configPanel.toasts.secureStoreCleared",
+      "secureStoreCleared": "Magasin sécurisé effacé.",
       "secureStoreClearFailed": "Échec de clear secure store."
     },
     "masterConfig": {
-      "title": "__MISSING__:configPanel.masterConfig.title",
-      "description1": "__MISSING__:configPanel.masterConfig.description1",
-      "description2": "__MISSING__:configPanel.masterConfig.description2",
-      "description3": "__MISSING__:configPanel.masterConfig.description3",
-      "description4": "__MISSING__:configPanel.masterConfig.description4",
-      "configPath": "__MISSING__:configPanel.masterConfig.configPath",
-      "unavailable": "__MISSING__:configPanel.masterConfig.unavailable",
-      "themesPath": "__MISSING__:configPanel.masterConfig.themesPath",
-      "loadedFrom": "__MISSING__:configPanel.masterConfig.loadedFrom",
-      "profile": "__MISSING__:configPanel.masterConfig.profile",
-      "parseError": "__MISSING__:configPanel.masterConfig.parseError",
-      "validationWarnings": "__MISSING__:configPanel.masterConfig.validationWarnings"
+      "title": "Configuration maîtresse locale",
+      "description1": "Modifiez ",
+      "description2": " et ",
+      "description3": " sur le disque pour configurer Venice Forge sans toucher à l'interface. Consultez ",
+      "description4": " pour le schéma complet.",
+      "configPath": "Chemin de configuration",
+      "unavailable": "(indisponible)",
+      "themesPath": "Chemin des thèmes",
+      "loadedFrom": "Chargé depuis",
+      "profile": "Profil",
+      "parseError": "Erreur d'analyse :",
+      "validationWarnings": "Avertissements de validation"
     },
     "actions": {
-      "reload": "__MISSING__:configPanel.actions.reload",
-      "openFolder": "__MISSING__:configPanel.actions.openFolder",
-      "exportTemplate": "__MISSING__:configPanel.actions.exportTemplate",
+      "reload": "Recharger la configuration",
+      "openFolder": "Ouvrir le dossier de configuration",
+      "exportTemplate": "Exporter un modèle assaini",
       "clearSecureStore": "Effacer Secure Store"
     },
     "apiKeyImport": {
-      "title": "__MISSING__:configPanel.apiKeyImport.title",
-      "description1": "__MISSING__:configPanel.apiKeyImport.description1",
-      "description2": "__MISSING__:configPanel.apiKeyImport.description2",
-      "description3": "__MISSING__:configPanel.apiKeyImport.description3",
-      "veniceKey": "__MISSING__:configPanel.apiKeyImport.veniceKey",
-      "configured": "__MISSING__:configPanel.apiKeyImport.configured",
-      "notConfigured": "__MISSING__:configPanel.apiKeyImport.notConfigured",
-      "imported": "__MISSING__:configPanel.apiKeyImport.imported",
-      "redacted": "__MISSING__:configPanel.apiKeyImport.redacted",
-      "jinaKey": "__MISSING__:configPanel.apiKeyImport.jinaKey",
-      "note": "__MISSING__:configPanel.apiKeyImport.note",
+      "title": "Importation de clé API",
+      "description1": "Les clés en texte clair dans ",
+      "description2": " sont importées dans le stockage sécurisé du système au démarrage et masquées du fichier (sauf si ",
+      "description3": " est défini).",
+      "veniceKey": "Clé Venice",
+      "configured": "Configurée (magasin sécurisé)",
+      "notConfigured": "Non configurée",
+      "imported": "Importée lors de cette exécution",
+      "redacted": "Texte clair masqué",
+      "jinaKey": "Clé Jina",
+      "note": "Les clés brutes ne sont jamais envoyées au moteur de rendu. Réinitialisez le magasin sécurisé pour effacer les clés stockées ; vous pourrez ensuite les saisir à nouveau via l'onglet Clés API.",
       "clearConfirm": {
         "title": "Effacer secure store keys?",
-        "detail": "__MISSING__:configPanel.apiKeyImport.clearConfirm.detail",
+        "detail": "Cela supprime toutes les clés API stockées du magasin sécurisé. Cette action est irréversible.",
         "action": "Effacer keys"
       }
     },
     "effectiveSettings": {
-      "title": "__MISSING__:configPanel.effectiveSettings.title",
-      "description1": "__MISSING__:configPanel.effectiveSettings.description1",
-      "description2": "__MISSING__:configPanel.effectiveSettings.description2",
-      "activeTheme": "__MISSING__:configPanel.effectiveSettings.activeTheme",
+      "title": "Paramètres effectifs (aperçu)",
+      "description1": "Aperçu en lecture seule de la configuration fusionnée actuellement en mémoire. La source ",
+      "description2": " reste la source de vérité canonique — modifiez-la sur le disque et cliquez sur ",
+      "activeTheme": "Thème actif",
       "defaultChatModel": "Par défaut chat model",
-      "useUiDefault": "__MISSING__:configPanel.effectiveSettings.useUiDefault",
-      "temperature": "__MISSING__:configPanel.effectiveSettings.temperature",
-      "topP": "__MISSING__:configPanel.effectiveSettings.topP",
-      "maxTokens": "__MISSING__:configPanel.effectiveSettings.maxTokens",
-      "webSearch": "__MISSING__:configPanel.effectiveSettings.webSearch"
+      "useUiDefault": "(utiliser la valeur par défaut de l'interface)",
+      "temperature": "Température",
+      "topP": "Top-p",
+      "maxTokens": "Tokens maximum",
+      "webSearch": "Recherche web"
     }
   },
   "dataStorage": {
     "toasts": {
       "importReadFailed": "Échec de read backup. Incorrect password or corrupt file.",
-      "importNothingNewProfile": "__MISSING__:dataStorage.toasts.importNothingNewProfile",
-      "importNothingDetail": "__MISSING__:dataStorage.toasts.importNothingDetail",
-      "importCompleteNewProfile": "__MISSING__:dataStorage.toasts.importCompleteNewProfile",
-      "importNothing": "__MISSING__:dataStorage.toasts.importNothing",
-      "importPartial": "__MISSING__:dataStorage.toasts.importPartial",
-      "importPartialDetail": "__MISSING__:dataStorage.toasts.importPartialDetail",
-      "importComplete": "__MISSING__:dataStorage.toasts.importComplete",
-      "replaceFailedRestored": "__MISSING__:dataStorage.toasts.replaceFailedRestored",
-      "replaceFailedRecovery": "__MISSING__:dataStorage.toasts.replaceFailedRecovery",
-      "importFailed": "__MISSING__:dataStorage.toasts.importFailed",
-      "recoveryRestored": "__MISSING__:dataStorage.toasts.recoveryRestored",
-      "recoveryRestoredDetail": "__MISSING__:dataStorage.toasts.recoveryRestoredDetail",
-      "recoveryRestoreFailed": "__MISSING__:dataStorage.toasts.recoveryRestoreFailed",
-      "recoveryRestoreFailedDetail": "__MISSING__:dataStorage.toasts.recoveryRestoreFailedDetail"
+      "importNothingNewProfile": "Rien importé dans le nouveau profil : {{skipped}} ignoré(s)",
+      "importNothingDetail": "Aucun enregistrement appliqué ; vérifiez la sauvegarde",
+      "importCompleteNewProfile": "Importation terminée dans le nouveau profil : {{imported}} importé(s). Rechargement...",
+      "importNothing": "Rien importé : {{skipped}} ignoré(s)",
+      "importPartial": "Importation partielle : {{imported}} importé(s), {{skipped}} ignoré(s)",
+      "importPartialDetail": "{{tombstones}} pierres tombales appliquées. Vérifiez le nombre d'ignorés avant de vous fier à cette sauvegarde.",
+      "importComplete": "Importation terminée : {{imported}} importé(s), {{skipped}} ignoré(s), {{tombstones}} pierres tombales appliquées.",
+      "replaceFailedRestored": "Remplacement échoué ; données restaurées",
+      "replaceFailedRecovery": "Remplacement échoué ; récupération requise",
+      "importFailed": "Importation échouée.",
+      "recoveryRestored": "Récupération restaurée",
+      "recoveryRestoredDetail": "L'état précédent du profil a été restauré et l'état remplacé a été conservé comme nouvelle sauvegarde de récupération.",
+      "recoveryRestoreFailed": "Échec de la restauration de récupération",
+      "recoveryRestoreFailedDetail": "La sauvegarde de récupération n'a pas pu être restaurée."
     },
     "manualBackup": {
-      "title": "__MISSING__:dataStorage.manualBackup.title",
-      "description": "__MISSING__:dataStorage.manualBackup.description",
-      "passwordPlaceholder": "__MISSING__:dataStorage.manualBackup.passwordPlaceholder",
-      "includeDrafts": "__MISSING__:dataStorage.manualBackup.includeDrafts",
-      "includeMedia": "__MISSING__:dataStorage.manualBackup.includeMedia",
-      "export": "__MISSING__:dataStorage.manualBackup.export",
-      "import": "__MISSING__:dataStorage.manualBackup.import"
+      "title": "Sauvegarde manuelle",
+      "description": "Créez une sauvegarde chiffrée et portable de votre historique local, de vos fiches de personnage et de vos flux de travail. Vous pouvez importer cette sauvegarde sur n'importe quel appareil.",
+      "passwordPlaceholder": "Mot de passe de sauvegarde",
+      "includeDrafts": "Inclure les brouillons chiffrés de fiches ST locales (les brouillons ne se synchronisent jamais)",
+      "includeMedia": "Inclure les médias dans cette sauvegarde (images, fichiers, ressources RP — chiffrés avec le reste de la sauvegarde)",
+      "export": "Exporter la sauvegarde",
+      "import": "Importer la sauvegarde"
     },
     "recovery": {
-      "title": "__MISSING__:dataStorage.recovery.title",
-      "description": "__MISSING__:dataStorage.recovery.description",
-      "restore": "__MISSING__:dataStorage.recovery.restore"
+      "title": "Récupération pré-remplacement",
+      "description": "Une sauvegarde de récupération chiffrée et vérifiée datant du {{date}} est disponible. Saisissez son mot de passe de sauvegarde ci-dessus pour la restaurer de manière transactionnelle.",
+      "restore": "Restaurer la sauvegarde de récupération"
     },
     "dangerZone": {
-      "title": "__MISSING__:dataStorage.dangerZone.title",
-      "description": "__MISSING__:dataStorage.dangerZone.description",
+      "title": "Zone de danger",
+      "description": "Ces opérations sont destructives et irréversibles. Exportez toujours une sauvegarde au préalable si vous avez un historique important.",
       "clearDefaults": "Effacer App Defaults",
-      "clearIndexedDB": "Effacer IndexedDB Data"
+      "clearIndexedDB": "Effacer les données IndexedDB"
     }
   },
   "defaultsPanel": {
@@ -315,125 +315,125 @@
     "defaultImageModel": "Par défaut Image Model",
     "defaultWebSearch": "Par défaut Web Search",
     "defaultSystemPrompt": "Par défaut System Prompt",
-    "systemPromptPlaceholder": "__MISSING__:defaultsPanel.systemPromptPlaceholder",
-    "veniceSystemPromptToggle": "__MISSING__:defaultsPanel.veniceSystemPromptToggle",
-    "enableCitations": "__MISSING__:defaultsPanel.enableCitations",
+    "systemPromptPlaceholder": "Facultatif. Laisser vide pour éviter d'ajouter un message système créé par l'application.",
+    "veniceSystemPromptToggle": "Bascule du message système Venice",
+    "enableCitations": "Activer les citations par défaut",
     "characterSceneGeneration": {
-      "title": "__MISSING__:defaultsPanel.characterSceneGeneration.title",
-      "description": "__MISSING__:defaultsPanel.characterSceneGeneration.description",
-      "mode": "__MISSING__:defaultsPanel.characterSceneGeneration.mode",
-      "modeAriaLabel": "__MISSING__:defaultsPanel.characterSceneGeneration.modeAriaLabel",
-      "manualOnly": "__MISSING__:defaultsPanel.characterSceneGeneration.manualOnly",
-      "autoManual": "__MISSING__:defaultsPanel.characterSceneGeneration.autoManual"
+      "title": "Génération de scène de personnage",
+      "description": "Autoriser les conversations de personnage à créer des images de scène intégrées à partir de la conversation actuelle uniquement. Protégé par des limites de débit locales.",
+      "mode": "Mode",
+      "modeAriaLabel": "Mode de génération de scène de personnage",
+      "manualOnly": "Manuel uniquement",
+      "autoManual": "Automatique + manuel"
     }
   },
   "importPlan": {
-    "title": "__MISSING__:importPlan.title",
-    "summary": "__MISSING__:importPlan.summary",
+    "title": "Examiner le plan d'importation",
+    "summary": "Cette sauvegarde contient {{records}} enregistrements répartis sur {{stores}} magasins de données.",
     "metadata": {
-      "authenticated": "__MISSING__:importPlan.metadata.authenticated",
-      "legacy": "__MISSING__:importPlan.metadata.legacy",
-      "format": "__MISSING__:importPlan.metadata.format",
-      "exportedAt": "__MISSING__:importPlan.metadata.exportedAt",
-      "source": "__MISSING__:importPlan.metadata.source",
-      "profileRef": "__MISSING__:importPlan.metadata.profileRef",
-      "crypto": "__MISSING__:importPlan.metadata.crypto",
-      "counts": "__MISSING__:importPlan.metadata.counts",
-      "sha": "__MISSING__:importPlan.metadata.sha"
+      "authenticated": "Métadonnées de sauvegarde authentifiées",
+      "legacy": "Métadonnées de sauvegarde héritées",
+      "format": "Format : v{{version}}{{appVersion}}",
+      "exportedAt": "Exporté : {{date}}",
+      "source": "Source : {{runtime}} / {{device}}",
+      "profileRef": "Réf. de profil : {{ref}}",
+      "crypto": "Chiffrement : {{alg}} / {{kdf}} / clé v{{key}}",
+      "counts": "{{tombstones}} pierres tombales / {{blobs}} blobs intégrés",
+      "sha": "Charge utile SHA-256 : {{sha}}"
     },
-    "warningsLabel": "__MISSING__:importPlan.warningsLabel",
+    "warningsLabel": "Avertissements d'importation",
     "preview": {
-      "title": "__MISSING__:importPlan.preview.title",
-      "recordsCount": "__MISSING__:importPlan.preview.recordsCount",
-      "new": "__MISSING__:importPlan.preview.new",
-      "modified": "__MISSING__:importPlan.preview.modified",
-      "conflicts": "__MISSING__:importPlan.preview.conflicts",
-      "identical": "__MISSING__:importPlan.preview.identical",
-      "noChanges": "__MISSING__:importPlan.preview.noChanges"
+      "title": "Aperçu des modifications de données",
+      "recordsCount": "{{count}} enregistrements",
+      "new": "{{count}} nouveaux",
+      "modified": "{{count}} modifiés",
+      "conflicts": "{{count}} conflits",
+      "identical": "{{count}} identiques",
+      "noChanges": "Aucune modification"
     },
     "mode": {
       "title": "Choisir Import Mode",
-      "merge": "__MISSING__:importPlan.mode.merge",
-      "mergeDesc": "__MISSING__:importPlan.mode.mergeDesc",
-      "replace": "__MISSING__:importPlan.mode.replace",
-      "replaceDesc": "__MISSING__:importPlan.mode.replaceDesc",
-      "newProfile": "__MISSING__:importPlan.mode.newProfile",
-      "newProfileDesc": "__MISSING__:importPlan.mode.newProfileDesc"
+      "merge": "Fusionner les données",
+      "mergeDesc": "Conserver les données existantes et ajouter les nouveaux enregistrements. Les conflits seront enregistrés à côté des versions locales.",
+      "replace": "Tout remplacer",
+      "replaceDesc": "Effacer toutes les données locales actuelles et les remplacer entièrement par cette sauvegarde.",
+      "newProfile": "Nouveau profil",
+      "newProfileDesc": "Créer un nouvel espace de travail de profil et y importer cette sauvegarde."
     },
     "warnings": {
-      "recoveryEnabled": "__MISSING__:importPlan.warnings.recoveryEnabled",
-      "recoveryEnabledDesc": "__MISSING__:importPlan.warnings.recoveryEnabledDesc",
-      "replaceUnavailable": "__MISSING__:importPlan.warnings.replaceUnavailable",
-      "replaceUnavailableDesc": "__MISSING__:importPlan.warnings.replaceUnavailableDesc"
+      "recoveryEnabled": "Récupération automatique activée",
+      "recoveryEnabledDesc": "L'application de bureau préparera cette sauvegarde, créera et vérifiera un artefact de récupération chiffré, puis annulera automatiquement en cas d'échec du remplacement.",
+      "replaceUnavailable": "Remplacement indisponible en mode Web",
+      "replaceUnavailableDesc": "Utilisez Fusionner ou Nouveau profil. La récupération durable par remplacement nécessite l'application de bureau Venice Forge."
     },
-    "profileName": "__MISSING__:importPlan.profileName",
-    "profileNamePlaceholder": "__MISSING__:importPlan.profileNamePlaceholder",
+    "profileName": "Nom du profil",
+    "profileNamePlaceholder": "ex. Sauvegarde de travail",
     "actions": {
-      "confirm": "__MISSING__:importPlan.actions.confirm"
+      "confirm": "Confirmer l'importation"
     }
   },
   "masterPassword": {
     "errors": {
-      "mismatch": "__MISSING__:masterPassword.errors.mismatch",
-      "tooShort": "__MISSING__:masterPassword.errors.tooShort",
+      "mismatch": "Les mots de passe ne correspondent pas",
+      "tooShort": "Mot de passe trop court (min {{min}} caractères)",
       "saveFailed": "Échec de securely save password",
-      "lockedOut": "__MISSING__:masterPassword.errors.lockedOut",
-      "incorrect": "__MISSING__:masterPassword.errors.incorrect",
+      "lockedOut": " Verrouillé. Réessayez dans {{seconds}} s.",
+      "incorrect": "Mot de passe incorrect.",
       "verifyFailed": "Échec de verify password"
     },
-    "titleSet": "__MISSING__:masterPassword.titleSet",
+    "titleSet": "Définir le mot de passe maître",
     "titleEnter": "Entrer Master Password",
-    "description": "__MISSING__:masterPassword.description",
+    "description": "Ce mot de passe de contrôle local protège les modifications du Mode Sécurisé Famille. L'application stocke un vérificateur salé, et non le mot de passe lui-même.",
     "labels": {
-      "password": "__MISSING__:masterPassword.labels.password",
-      "confirm": "__MISSING__:masterPassword.labels.confirm"
+      "password": "Mot de passe maître",
+      "confirm": "Confirmer le mot de passe maître"
     }
   },
   "profiles": {
     "removePassword": {
-      "title": "__MISSING__:profiles.removePassword.title",
-      "detail": "__MISSING__:profiles.removePassword.detail",
+      "title": "Supprimer le mot de passe du profil ?",
+      "detail": "« {{name}} » ne nécessitera plus de déverrouillage avant le changement.",
       "action": "Retirer"
     },
     "errors": {
       "removeFailed": "Échec de remove profile password",
-      "tooShort": "__MISSING__:profiles.errors.tooShort",
-      "mismatch": "__MISSING__:profiles.errors.mismatch",
+      "tooShort": "Mot de passe trop court (min {{min}} caractères)",
+      "mismatch": "Les mots de passe ne correspondent pas",
       "saveFailed": "Échec de save profile password",
-      "incorrect": "__MISSING__:profiles.errors.incorrect",
-      "deleteFailed": "__MISSING__:profiles.errors.deleteFailed"
+      "incorrect": "Mot de passe incorrect",
+      "deleteFailed": "Échec de la suppression du profil."
     },
-    "title": "__MISSING__:profiles.title",
-    "description": "__MISSING__:profiles.description",
+    "title": "Gérer les profils",
+    "description": "Chaque profil maintient des paramètres, des clés API et des configurations isolés. Changer de profil effacera l'état actif de l'application et rechargera.",
     "badge": {
-      "active": "__MISSING__:profiles.badge.active",
-      "locked": "__MISSING__:profiles.badge.locked"
+      "active": "ACTIF",
+      "locked": "VERROUILLÉ"
     },
     "aria": {
-      "removePassword": "__MISSING__:profiles.aria.removePassword",
-      "setPassword": "__MISSING__:profiles.aria.setPassword",
-      "switchTo": "__MISSING__:profiles.aria.switchTo",
+      "removePassword": "Supprimer le mot de passe pour {{name}}",
+      "setPassword": "Définir le mot de passe pour {{name}}",
+      "switchTo": "Basculer vers {{name}}",
       "delete": "Supprimer {{name}}"
     },
     "actions": {
-      "removePassword": "__MISSING__:profiles.actions.removePassword",
-      "setPassword": "__MISSING__:profiles.actions.setPassword",
-      "switchTo": "__MISSING__:profiles.actions.switchTo",
-      "createProfile": "__MISSING__:profiles.actions.createProfile"
+      "removePassword": "Supprimer le mot de passe",
+      "setPassword": "Définir le mot de passe",
+      "switchTo": "Basculer vers",
+      "createProfile": "Créer un profil"
     },
     "deleteProfile": {
       "title": "Supprimer profile?",
-      "detail": "__MISSING__:profiles.deleteProfile.detail",
+      "detail": "\"{{name}}\" sera supprimé. Son Conversation Vault, les enregistrements du renderer, les paramètres locaux spécifiques au profil, les clés API et le vérificateur de mot de passe seront purgés. Les caches globaux partagés sont conservés.",
       "action": "Supprimer"
     },
-    "newProfilePlaceholder": "__MISSING__:profiles.newProfilePlaceholder",
+    "newProfilePlaceholder": "Nouveau nom de profil",
     "dialog": {
-      "titleSet": "__MISSING__:profiles.dialog.titleSet",
-      "titleUnlock": "__MISSING__:profiles.dialog.titleUnlock",
-      "description": "__MISSING__:profiles.dialog.description",
-      "labelSet": "__MISSING__:profiles.dialog.labelSet",
-      "labelUnlock": "__MISSING__:profiles.dialog.labelUnlock",
-      "labelConfirm": "__MISSING__:profiles.dialog.labelConfirm",
+      "titleSet": "Définir le mot de passe pour {{name}}",
+      "titleUnlock": "Déverrouiller {{name}}",
+      "description": "Ce mot de passe protège le basculement vers ce profil local.",
+      "labelSet": "Mot de passe du profil",
+      "labelUnlock": "Mot de passe de déverrouillage",
+      "labelConfirm": "Confirmer le mot de passe du profil",
       "savePassword": "Enregistrer Password"
     }
   },
@@ -441,30 +441,30 @@
     "errors": {
       "loadFailed": "Échec de load provider settings.",
       "saveFailed": "Échec de save provider settings.",
-      "enableWithoutKey": "__MISSING__:providers.errors.enableWithoutKey"
+      "enableWithoutKey": "Impossible d'activer le fournisseur sans une clé API."
     },
     "title": "Fournisseurs de secours",
-    "description": "__MISSING__:providers.description",
-    "deferredNotice": "__MISSING__:providers.deferredNotice",
+    "description": "Configurez les clés API pour les fournisseurs de secours. Elles ne seront utilisées que si elles sont explicitement activées et lorsque les modèles Venice sont indisponibles ou si vous demandez un modèle de secours spécifique.",
+    "deferredNotice": "Différé dans cette version (aucune saisie de clé, routage ou trafic) : {{deferred}}. Les clés des fournisseurs sont remplacées ou supprimées manuellement ; la rotation planifiée des clés n'est pas implémentée.",
     "autoFallback": {
-      "title": "__MISSING__:providers.autoFallback.title",
-      "description": "__MISSING__:providers.autoFallback.description",
-      "enableAria": "__MISSING__:providers.autoFallback.enableAria",
-      "orderingLabel": "__MISSING__:providers.autoFallback.orderingLabel",
-      "orderingPlaceholder": "__MISSING__:providers.autoFallback.orderingPlaceholder",
-      "orderingNotice": "__MISSING__:providers.autoFallback.orderingNotice"
+      "title": "Routeur de secours automatique",
+      "description": "Acheminer automatiquement les requêtes vers les fournisseurs de secours si Venice est indisponible ou renvoie une erreur.",
+      "enableAria": "Activer le secours automatique",
+      "orderingLabel": "Ordre de secours (IDs de fournisseurs séparés par des virgules)",
+      "orderingPlaceholder": "together, groq, anthropic",
+      "orderingNotice": "Les fournisseurs seront essayés dans cet ordre exact. Assurez-vous de les avoir activés ci-dessous. Disponibles : {{available}}"
     },
     "badge": {
-      "deferred": "__MISSING__:providers.badge.deferred"
+      "deferred": "Différé"
     },
     "aria": {
-      "enable": "__MISSING__:providers.aria.enable"
+      "enable": "Activer {{label}}"
     },
     "status": {
-      "keyConfigured": "__MISSING__:providers.status.keyConfigured"
+      "keyConfigured": "Clé API configurée"
     },
     "actions": {
-      "removeKey": "__MISSING__:providers.actions.removeKey"
+      "removeKey": "Supprimer la clé"
     },
     "inputs": {
       "keyPlaceholder": "Entrer API Key"
@@ -474,37 +474,37 @@
     "persistSafety": "Échec de persist safety setting."
   },
   "updates": {
-    "available": "__MISSING__:updates.available",
-    "upToDate": "__MISSING__:updates.upToDate",
-    "downloading": "__MISSING__:updates.downloading",
-    "downloaded": "__MISSING__:updates.downloaded",
-    "error": "__MISSING__:updates.error",
-    "checking": "__MISSING__:updates.checking",
-    "devBuild": "__MISSING__:updates.devBuild",
-    "checkFailed": "__MISSING__:updates.checkFailed",
-    "checkCompleted": "__MISSING__:updates.checkCompleted",
-    "installFailed": "__MISSING__:updates.installFailed"
+    "available": "Mise à jour disponible : v{{version}}",
+    "upToDate": "L'application est à jour.",
+    "downloading": "Téléchargement de la mise à jour : {{percent}}%",
+    "downloaded": "Mise à jour téléchargée et prête à installer.",
+    "error": "Erreur de mise à jour : {{error}}",
+    "checking": "Recherche de mises à jour...",
+    "devBuild": "Build de développement — les vérifications de mise à jour ne s'exécutent que dans les builds de production empaquetés.",
+    "checkFailed": "Échec de la vérification de mise à jour : {{error}}",
+    "checkCompleted": "Vérification de mise à jour terminée.",
+    "installFailed": "Échec de l'installation : {{error}}"
   },
   "jinaKeys": {
-    "savedElectron": "__MISSING__:jinaKeys.savedElectron",
-    "savedWeb": "__MISSING__:jinaKeys.savedWeb",
+    "savedElectron": "Clé API Jina enregistrée de manière sécurisée.",
+    "savedWeb": "Clé API Jina enregistrée pour cette session de navigateur.",
     "saveFailed": "Échec de save Jina API key.",
     "deleteConfirm": {
       "title": "Supprimer Jina API key?",
-      "electron": "__MISSING__:jinaKeys.deleteConfirm.electron",
-      "web": "__MISSING__:jinaKeys.deleteConfirm.web"
+      "electron": "Cela supprimera votre clé API Jina du stockage sécurisé du système d'exploitation.",
+      "web": "Cela supprimera la clé API Jina en mémoire pour cette session de navigateur."
     },
-    "deleted": "__MISSING__:jinaKeys.deleted",
+    "deleted": "Clé API Jina supprimée.",
     "deleteFailed": "Échec de delete Jina API key.",
-    "testSuccess": "__MISSING__:jinaKeys.testSuccess",
-    "testFailed": "__MISSING__:jinaKeys.testFailed",
-    "testError": "__MISSING__:jinaKeys.testError"
+    "testSuccess": "Connexion Jina réussie{{status}}.",
+    "testFailed": "Échec de la connexion Jina : {{message}}",
+    "testError": "Échec du test de connexion Jina."
   },
   "header": {
     "title": "Configuration",
     "description": {
       "electron": "Gérez les points de terminaison d'API, les valeurs par défaut et les styles d'apparence.",
-      "web": "__MISSING__:header.description.web"
+      "web": "Configurez les prompts par défaut et les modèles de style."
     }
   },
   "tabs": {
@@ -524,11 +524,11 @@
     "audioSpeech": "Audio et parole"
   },
   "updatesPanel": {
-    "title": "__MISSING__:updatesPanel.title",
-    "description": "__MISSING__:updatesPanel.description",
-    "status": "__MISSING__:updatesPanel.status",
-    "checking": "__MISSING__:updatesPanel.checking",
-    "checkForUpdates": "__MISSING__:updatesPanel.checkForUpdates",
-    "restartAndInstall": "__MISSING__:updatesPanel.restartAndInstall"
+    "title": "Mises à jour de l'application",
+    "description": "Vérifiez les mises à jour de l'application de bureau de manière sécurisée via GitHub Releases.",
+    "status": "Statut :",
+    "checking": "Vérification...",
+    "checkForUpdates": "Vérifier les mises à jour",
+    "restartAndInstall": "Redémarrer et installer"
   }
 }

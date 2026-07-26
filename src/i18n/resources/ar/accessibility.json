@@ -1,11 +1,11 @@
 {
-  "skipToContent": "__MISSING__:skipToContent",
-  "mainNavigation": "__MISSING__:mainNavigation",
-  "dialogTitle": "__MISSING__:dialogTitle",
-  "closeDialog": "__MISSING__:closeDialog",
-  "expanded": "__MISSING__:expanded",
-  "collapsed": "__MISSING__:collapsed",
-  "selected": "__MISSING__:selected",
-  "stepIndicator": "__MISSING__:stepIndicator",
-  "statusNotification": "__MISSING__:statusNotification"
+  "skipToContent": "تخطي إلى المحتوى الرئيسي",
+  "mainNavigation": "التنقل الرئيسي",
+  "dialogTitle": "نافذة الحوار",
+  "closeDialog": "إغلاق الحوار",
+  "expanded": "موسّع",
+  "collapsed": "مطوي",
+  "selected": "محدد",
+  "stepIndicator": "الخطوة {{current}} من {{total}}",
+  "statusNotification": "تحديث الحالة"
 }

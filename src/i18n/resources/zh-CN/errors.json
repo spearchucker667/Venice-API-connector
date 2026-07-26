@@ -1,12 +1,12 @@
 {
-  "networkError": "__MISSING__:networkError",
-  "apiKeyMissing": "__MISSING__:apiKeyMissing",
-  "rateLimit429": "__MISSING__:rateLimit429",
-  "safeModeBlock451": "__MISSING__:safeModeBlock451",
-  "gatewayTimeout504": "__MISSING__:gatewayTimeout504",
-  "modelUnavailable": "__MISSING__:modelUnavailable",
-  "autosaveFailed": "__MISSING__:autosaveFailed",
+  "networkError": "网络请求失败。请检查您的互联网连接。",
+  "apiKeyMissing": "API 密钥缺失。请在设置中配置您的 API 密钥。",
+  "rateLimit429": "已超出速率限制。请稍后再试。",
+  "safeModeBlock451": "请求被家庭安全模式过滤器拦截。",
+  "gatewayTimeout504": "请求超时。请重试。",
+  "modelUnavailable": "模型 {{model}} 当前不可用。",
+  "autosaveFailed": "自动保存失败：{{error}}",
   "fileReadError": "无法read file.",
-  "invalidFormat": "__MISSING__:invalidFormat",
-  "unknownError": "__MISSING__:unknownError"
+  "invalidFormat": "无效的文件格式。",
+  "unknownError": "发生意外错误。"
 }

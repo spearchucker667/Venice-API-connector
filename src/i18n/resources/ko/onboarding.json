@@ -1,31 +1,31 @@
 {
-  "welcomeTitle": "__MISSING__:welcomeTitle",
-  "welcomeSubtitle": "__MISSING__:welcomeSubtitle",
-  "welcomeDescription": "__MISSING__:welcomeDescription",
-  "privacyNote": "__MISSING__:privacyNote",
-  "getStarted": "__MISSING__:getStarted",
-  "createProfile": "__MISSING__:createProfile",
-  "continue": "__MISSING__:continue",
-  "languageSelectorLabel": "__MISSING__:languageSelectorLabel",
-  "systemLanguageOption": "__MISSING__:systemLanguageOption",
-  "selectLanguage": "__MISSING__:selectLanguage",
-  "stepIndicator": "__MISSING__:stepIndicator",
+  "welcomeTitle": "Venice Forge에 오신 것을 환영합니다",
+  "welcomeSubtitle": "프라이빗 로컬 워크벤치.",
+  "welcomeDescription": "앱 데이터를 이 기기에 저장하고 구성한 원격 제공자에게 요청을 보내는 로컬 데스크톱 워크벤치입니다.",
+  "privacyNote": "데이터는 로컬에 보관됩니다. API 키는 안전한 OS 저장소에 저장됩니다.",
+  "getStarted": "시작하기",
+  "createProfile": "프로필 만들기",
+  "continue": "계속",
+  "languageSelectorLabel": "애플리케이션 언어",
+  "systemLanguageOption": "시스템 언어 ({{language}})",
+  "selectLanguage": "언어 선택",
+  "stepIndicator": "온보딩 단계 {{total}} 중 {{current}}",
   "steps": {
     "welcome": {
-      "title": "__MISSING__:steps.welcome.title",
-      "description": "__MISSING__:steps.welcome.description"
+      "title": "Venice Forge에 오신 것을 환영합니다",
+      "description": "앱 데이터를 이 기기에 저장하고 구성한 원격 제공자에게 요청을 보내는 로컬 데스크톱 워크벤치입니다."
     },
     "profiles": {
-      "title": "__MISSING__:steps.profiles.title",
-      "description": "__MISSING__:steps.profiles.description"
+      "title": "프로필",
+      "description": "별도의 렌더러 설정과 라이브러리를 위한 프로필을 만드세요. 일부 데스크톱 볼트 파일과 공유 캐시는 머신 수준으로 유지됩니다."
     },
     "security": {
-      "title": "__MISSING__:steps.security.title",
-      "description": "__MISSING__:steps.security.description"
+      "title": "기본적으로 안전",
+      "description": "비밀번호와 비밀 정보는 OS 기본 키체인(macOS) 또는 자격 증명 관리자(Windows)를 통해 암호화됩니다. 평문으로 저장되지 않습니다."
     },
     "safety": {
-      "title": "__MISSING__:steps.safety.title",
-      "description": "__MISSING__:steps.safety.description"
+      "title": "가족 안전 모드",
+      "description": "가족 안전 모드를 켜거나 끄려면 마스터 비밀번호가 필요합니다. 가족 안전 모드는 지원되는 경우 제공자의 safe_mode를 강제 적용합니다."
     }
   }
 }

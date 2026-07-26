@@ -1,534 +1,534 @@
 {
-  "title": "__MISSING__:title",
-  "subtitle": "__MISSING__:subtitle",
+  "title": "الإعدادات والتكوين",
+  "subtitle": "إدارة نقاط نهاية API والإعدادات الافتراضية وأنماط المظهر.",
   "sections": {
-    "languageRegion": "__MISSING__:sections.languageRegion",
-    "profiles": "__MISSING__:sections.profiles",
-    "apiKeys": "__MISSING__:sections.apiKeys",
-    "providers": "__MISSING__:sections.providers",
-    "defaults": "__MISSING__:sections.defaults",
-    "safety": "__MISSING__:sections.safety",
-    "vault": "__MISSING__:sections.vault",
-    "appearance": "__MISSING__:sections.appearance",
-    "data": "__MISSING__:sections.data",
-    "backupSync": "__MISSING__:sections.backupSync",
-    "about": "__MISSING__:sections.about",
-    "updates": "Updates",
-    "config": "__MISSING__:sections.config",
-    "audioSpeech": "__MISSING__:sections.audioSpeech"
+    "languageRegion": "اللغة والمنطقة",
+    "profiles": "الملفات الشخصية",
+    "apiKeys": "مفتاح Venice API",
+    "providers": "المزودون الاحتياطيون",
+    "defaults": "الإعدادات الافتراضية والسلوك",
+    "safety": "الأمان",
+    "vault": "خزنة المحادثات",
+    "appearance": "المظهر",
+    "data": "البيانات والتخزين",
+    "backupSync": "النسخ الاحتياطي والمزامنة",
+    "about": "حول وقانوني",
+    "updates": "التحديثات",
+    "config": "التكوين المحلي",
+    "audioSpeech": "الصوت والكلام"
   },
   "languageRegion": {
-    "title": "__MISSING__:languageRegion.title",
-    "description": "__MISSING__:languageRegion.description",
-    "uiLanguageLabel": "__MISSING__:languageRegion.uiLanguageLabel",
-    "useSystemLanguage": "__MISSING__:languageRegion.useSystemLanguage",
-    "resolvedLocale": "__MISSING__:languageRegion.resolvedLocale",
-    "textDirection": "__MISSING__:languageRegion.textDirection",
-    "leftToRight": "__MISSING__:languageRegion.leftToRight",
-    "rightToLeft": "__MISSING__:languageRegion.rightToLeft",
-    "formattingPreview": "__MISSING__:languageRegion.formattingPreview",
-    "dateExample": "Date",
-    "timeExample": "__MISSING__:languageRegion.timeExample",
-    "numberExample": "__MISSING__:languageRegion.numberExample",
-    "bytesExample": "__MISSING__:languageRegion.bytesExample"
+    "title": "اللغة والمنطقة",
+    "description": "تخصيص لغة التطبيق واتجاه النص وتفضيلات التنسيق الإقليمي.",
+    "uiLanguageLabel": "لغة الواجهة",
+    "useSystemLanguage": "استخدام لغة النظام",
+    "resolvedLocale": "اللغة النشطة",
+    "textDirection": "اتجاه النص",
+    "leftToRight": "من اليسار إلى اليمين (LTR)",
+    "rightToLeft": "من اليمين إلى اليسار (RTL)",
+    "formattingPreview": "معاينة التنسيق الإقليمي",
+    "dateExample": "التاريخ",
+    "timeExample": "الوقت",
+    "numberExample": "الرقم",
+    "bytesExample": "حجم الملف"
   },
   "apiKeys": {
-    "title": "__MISSING__:apiKeys.title",
-    "keyInputLabel": "__MISSING__:apiKeys.keyInputLabel",
-    "testConnection": "__MISSING__:apiKeys.testConnection",
-    "saveKey": "__MISSING__:apiKeys.saveKey",
-    "deleteKey": "__MISSING__:apiKeys.deleteKey",
-    "veniceTitle": "__MISSING__:apiKeys.veniceTitle",
+    "title": "مفتاح Venice API",
+    "keyInputLabel": "مفتاح API",
+    "testConnection": "اختبار الاتصال",
+    "saveKey": "حفظ المفتاح",
+    "deleteKey": "حذف المفتاح",
+    "veniceTitle": "تكامل Venice.ai",
     "status": {
-      "configured": "__MISSING__:apiKeys.status.configured",
-      "unset": "__MISSING__:apiKeys.status.unset",
-      "optional": "__MISSING__:apiKeys.status.optional"
+      "configured": "مُعد",
+      "unset": "غير مُعد",
+      "optional": "اختياري"
     },
-    "veniceDescription": "__MISSING__:apiKeys.veniceDescription",
-    "jinaTitle": "__MISSING__:apiKeys.jinaTitle",
+    "veniceDescription": "يتم حفظ مفتاح API الخاص بك باستخدام تشفير التخزين الآمن ولا يتم كشفه أبداً لبيئة الويب المعزولة.",
+    "jinaTitle": "تكامل Jina.ai",
     "jinaDescription": {
-      "prefix": "__MISSING__:apiKeys.jinaDescription.prefix",
-      "electron": "__MISSING__:apiKeys.jinaDescription.electron",
-      "web": "__MISSING__:apiKeys.jinaDescription.web"
+      "prefix": "يوفر إمكانيات البحث العميق في الويب وكشط البيانات واكتشاف وربط ملفات التواصل الاجتماعي.",
+      "electron": "يتم حفظ مفاتيح Jina API بنفس التخزين الآمن للنظام.",
+      "web": "يتم الاحتفاظ بمفاتيح Jina API في الذاكرة فقط لجلسة المتصفح هذه؛ استخدم بيئة الخادم للتكوين المستمر للويب."
     },
-    "savedElectron": "__MISSING__:apiKeys.savedElectron",
-    "savedWeb": "__MISSING__:apiKeys.savedWeb",
-    "saveFailed": "__MISSING__:apiKeys.saveFailed",
+    "savedElectron": "تم حفظ مفتاح Venice API بشكل آمن.",
+    "savedWeb": "تم حفظ مفتاح Venice API لجلسة التطوير هذه.",
+    "saveFailed": "فشل حفظ مفتاح API.",
     "deleteConfirm": {
-      "title": "__MISSING__:apiKeys.deleteConfirm.title",
-      "electron": "__MISSING__:apiKeys.deleteConfirm.electron",
-      "web": "__MISSING__:apiKeys.deleteConfirm.web"
+      "title": "حذف مفتاح Venice API؟",
+      "electron": "سيؤدي هذا إلى إزالة مفتاح Venice API الخاص بك من التخزين الآمن للنظام. ستحتاج إلى إعادة إدخاله لإجراء الطلبات.",
+      "web": "سيؤدي هذا إلى إزالة مفتاح Venice API من جلسة التطوير الحالية."
     },
-    "deleted": "__MISSING__:apiKeys.deleted",
-    "deleteFailed": "__MISSING__:apiKeys.deleteFailed",
-    "testSuccess": "__MISSING__:apiKeys.testSuccess",
-    "testFailed": "__MISSING__:apiKeys.testFailed",
-    "testError": "__MISSING__:apiKeys.testError"
+    "deleted": "تم حذف مفتاح Venice API.",
+    "deleteFailed": "فشل حذف مفتاح API.",
+    "testSuccess": "تم الاتصال بنجاح{{status}}.",
+    "testFailed": "فشل الاتصال: {{message}}",
+    "testError": "فشل اختبار الاتصال."
   },
   "safety": {
-    "title": "__MISSING__:safety.title",
-    "localFamilySafeMode": "__MISSING__:safety.localFamilySafeMode",
-    "veniceApiSafeMode": "__MISSING__:safety.veniceApiSafeMode",
-    "statusBanner": "__MISSING__:safety.statusBanner",
-    "familySafeModeTitle": "__MISSING__:safety.familySafeModeTitle",
-    "familySafeModeDescription": "__MISSING__:safety.familySafeModeDescription",
-    "onFamilySafeMode": "__MISSING__:safety.onFamilySafeMode",
-    "offAdultMode": "__MISSING__:safety.offAdultMode",
+    "title": "الأمان والحماية",
+    "localFamilySafeMode": "وضع الأمان العائلي المحلي",
+    "veniceApiSafeMode": "وضع الأمان لـ Venice API",
+    "statusBanner": "الفلتر المحلي: {{localStatus}} | فلترة مزود Venice: {{veniceStatus}}",
+    "familySafeModeTitle": "وضع الأمان العائلي",
+    "familySafeModeDescription": "يشغل Venice Forge",
+    "onFamilySafeMode": "تشغيل: وضع الأمان العائلي",
+    "offAdultMode": "إيقاف: وضع البالغين (عامل التصفية المحلي متوقف)",
     "status": {
-      "enabled": "__MISSING__:safety.status.enabled",
-      "disabled": "__MISSING__:safety.status.disabled",
-      "localOffProviderOn": "__MISSING__:safety.status.localOffProviderOn",
-      "bothOff": "__MISSING__:safety.status.bothOff",
-      "filteredLocally": "__MISSING__:safety.status.filteredLocally"
+      "enabled": "عند التمكين، يتم حظر الطلبات المطابقة محليًا قبل استدعاء المزود.",
+      "disabled": "يتجاوز Venice Forge",
+      "localOffProviderOn": "عامل التصفية العائلي المحلي متوقف، لكن وضع الأمان من جانب مزود Venice API لا يزال قيد التشغيل. تتضمن الطلبات الصادرة safe_mode: true.",
+      "bothOff": "كل من عامل التصفية العائلي المحلي ووضع الأمان لمزود Venice API متوقفان. تتضمن الطلبات الصادرة safe_mode: false.",
+      "filteredLocally": "يتم تصفية الطلبات المطابقة محليًا قبل وصولها إلى المزود."
     },
-    "effectiveStatus": "__MISSING__:safety.effectiveStatus",
-    "setMasterPassword": "__MISSING__:safety.setMasterPassword",
-    "masterPasswordEnabled": "__MISSING__:safety.masterPasswordEnabled",
-    "veniceApiSafeModeTitle": "__MISSING__:safety.veniceApiSafeModeTitle",
-    "veniceApiSafeModeDescription": "__MISSING__:safety.veniceApiSafeModeDescription",
+    "effectiveStatus": "الحالة الفعلية: التصفية المحلية: {{local}} | تصفية مزود Venice: {{provider}}",
+    "setMasterPassword": "تعيين كلمة مرور رئيسية لقفل وضع الأمان العائلي",
+    "masterPasswordEnabled": "كلمة المرور الرئيسية مُمكّنة",
+    "veniceApiSafeModeTitle": "وضع الأمان لـ Venice API",
+    "veniceApiSafeModeDescription": "يتحكم في معامل وضع الأمان من جانب المزود المُرسل إلى Venice. هذا منفصل عن وضع الأمان العائلي.",
     "errors": {
-      "cannotDisableTitle": "__MISSING__:safety.errors.cannotDisableTitle",
-      "cannotDisableDetail": "__MISSING__:safety.errors.cannotDisableDetail"
+      "cannotDisableTitle": "تعذر تعطيل وضع الأمان للمزود",
+      "cannotDisableDetail": "يجب إيقاف وضع الأمان العائلي أولاً."
     },
-    "keepCurrent": "__MISSING__:safety.keepCurrent"
+    "keepCurrent": "الاحتفاظ بإعدادات الأمان الحالية"
   },
   "aboutPanel": {
-    "unofficial": "__MISSING__:aboutPanel.unofficial",
-    "disclaimer": "__MISSING__:aboutPanel.disclaimer",
-    "officialLinks": "__MISSING__:aboutPanel.officialLinks",
-    "termsOfService": "__MISSING__:aboutPanel.termsOfService",
-    "privacyPolicy": "__MISSING__:aboutPanel.privacyPolicy",
-    "apiDocs": "__MISSING__:aboutPanel.apiDocs",
-    "trademarks": "__MISSING__:aboutPanel.trademarks",
-    "resetGate": "__MISSING__:aboutPanel.resetGate",
+    "unofficial": "غير رسمي",
+    "disclaimer": "Venice Forge هو عميل سطح مكتب تابع لجهة خارجية مُعد للتفاعل مباشرة مع نقاط نهاية واجهة برمجة تطبيقات الاستدلال لـ Venice.ai. وهو غير تابع لـ Venice.ai, Inc. أو معتمد أو مدعوم أو موافق عليه من قِبلها.",
+    "officialLinks": "روابط رسمية",
+    "termsOfService": "شروط الخدمة",
+    "privacyPolicy": "سياسة الخصوصية",
+    "apiDocs": "وثائق API",
+    "trademarks": "Venice و Venice.ai والشعارات ذات الصلة هي علامات تجارية لـ Venice.ai, Inc. استخدام هذه الأسماء هو لأغراض التعريف التوافقي مع API فقط.",
+    "resetGate": "إعادة تعيين بوابة الإقرار القانوني:",
     "toasts": {
-      "resetSuccess": "__MISSING__:aboutPanel.toasts.resetSuccess",
-      "resetFailed": "__MISSING__:aboutPanel.toasts.resetFailed"
+      "resetSuccess": "تمت إعادة تعيين الإقرار القانوني. سيظهر عند إعادة التحميل التالية.",
+      "resetFailed": "تعذرت إعادة تعيين الإقرار."
     },
-    "resetGateBtn": "__MISSING__:aboutPanel.resetGateBtn"
+    "resetGateBtn": "إعادة تعيين البوابة"
   },
   "audioSpeech": {
-    "cacheCleared": "__MISSING__:audioSpeech.cacheCleared",
+    "cacheCleared": "تم مسح ذاكرة التخزين المؤقت لـ TTS",
     "errors": {
-      "clearCache": "__MISSING__:audioSpeech.errors.clearCache"
+      "clearCache": "تعذر مسح ذاكرة التخزين المؤقت لـ TTS"
     },
-    "title": "__MISSING__:audioSpeech.title",
-    "description": "__MISSING__:audioSpeech.description",
-    "interfaceSoundsTitle": "__MISSING__:audioSpeech.interfaceSoundsTitle",
-    "interfaceSoundsDescription": "__MISSING__:audioSpeech.interfaceSoundsDescription",
-    "soundPack": "__MISSING__:audioSpeech.soundPack",
+    "title": "الصوت والكلام",
+    "description": "تكوين أصوات الواجهة وتحويل النص إلى كلام لردود النموذج.",
+    "interfaceSoundsTitle": "أصوات الواجهة",
+    "interfaceSoundsDescription": "تستخدم أصوات الواجهة ملفات صوتية محلية مُجمّعة ولا تتصل بأي خدمة شبكة.",
+    "soundPack": "حزمة الأصوات",
     "packs": {
-      "soft": "__MISSING__:audioSpeech.packs.soft",
-      "tactile": "__MISSING__:audioSpeech.packs.tactile",
-      "glass": "__MISSING__:audioSpeech.packs.glass",
-      "retro": "__MISSING__:audioSpeech.packs.retro",
-      "minimal": "__MISSING__:audioSpeech.packs.minimal"
+      "soft": "ناعم",
+      "tactile": "ملموس",
+      "glass": "زجاج",
+      "retro": "ريترو",
+      "minimal": "بسيط"
     },
-    "volume": "__MISSING__:audioSpeech.volume",
-    "restoreDefaults": "__MISSING__:audioSpeech.restoreDefaults",
-    "chatTtsTitle": "__MISSING__:audioSpeech.chatTtsTitle",
-    "chatTtsDescription": "__MISSING__:audioSpeech.chatTtsDescription",
-    "showControls": "__MISSING__:audioSpeech.showControls",
-    "autoRead": "__MISSING__:audioSpeech.autoRead",
-    "ttsModel": "__MISSING__:audioSpeech.ttsModel",
-    "defaultProviderModel": "__MISSING__:audioSpeech.defaultProviderModel",
-    "saved": "__MISSING__:audioSpeech.saved",
-    "loadingModels": "__MISSING__:audioSpeech.loadingModels",
-    "voice": "__MISSING__:audioSpeech.voice",
-    "defaultVoice": "__MISSING__:audioSpeech.defaultVoice",
-    "speed": "__MISSING__:audioSpeech.speed",
-    "volumeLabel": "__MISSING__:audioSpeech.volumeLabel",
-    "skipCodeBlocks": "__MISSING__:audioSpeech.skipCodeBlocks",
-    "stopOnNewReply": "__MISSING__:audioSpeech.stopOnNewReply",
-    "cacheSpeech": "__MISSING__:audioSpeech.cacheSpeech",
-    "clearing": "__MISSING__:audioSpeech.clearing",
-    "clearCache": "__MISSING__:audioSpeech.clearCache"
+    "volume": "مستوى الصوت",
+    "restoreDefaults": "استعادة الافتراضي",
+    "chatTtsTitle": "تحويل النص إلى كلام في الدردشة",
+    "chatTtsDescription": "يُرسل تحويل النص إلى كلام نص رد المساعد المحدد إلى مزود الكلام المُكوّن وقد يستهلك استخدام API. التشغيل التلقائي متوقف افتراضيًا.",
+    "showControls": "إظهار عناصر تحكم TTS على ردود المساعد",
+    "autoRead": "قراءة الردود المكتملة تلقائيًا",
+    "ttsModel": "نموذج TTS",
+    "defaultProviderModel": "نموذج المزود الافتراضي",
+    "saved": "(محفوظ)",
+    "loadingModels": "جارٍ تحميل نماذج الكلام…",
+    "voice": "الصوت",
+    "defaultVoice": "الصوت الافتراضي",
+    "speed": "السرعة: {{speed}}x",
+    "volumeLabel": "مستوى الصوت: {{volume}}%",
+    "skipCodeBlocks": "تخطي كتل التعليمات البرمجية",
+    "stopOnNewReply": "إيقاف التشغيل الحالي عند بدء رد جديد",
+    "cacheSpeech": "تخزين الكلام المُولّد مؤقتًا",
+    "clearing": "جارٍ المسح…",
+    "clearCache": "مسح ذاكرة التخزين المؤقت لـ TTS"
   },
   "backupSync": {
     "toasts": {
-      "sessionReattached": "__MISSING__:backupSync.toasts.sessionReattached",
-      "chooseFolderFailed": "__MISSING__:backupSync.toasts.chooseFolderFailed",
-      "folderConfigured": "__MISSING__:backupSync.toasts.folderConfigured",
-      "setFolderFailed": "__MISSING__:backupSync.toasts.setFolderFailed",
-      "enterPassphrase": "__MISSING__:backupSync.toasts.enterPassphrase",
-      "startFailed": "__MISSING__:backupSync.toasts.startFailed",
-      "syncStartedMedia": "__MISSING__:backupSync.toasts.syncStartedMedia",
-      "syncStartedOptIn": "__MISSING__:backupSync.toasts.syncStartedOptIn",
-      "startFailedReason": "__MISSING__:backupSync.toasts.startFailedReason",
-      "pauseFailed": "__MISSING__:backupSync.toasts.pauseFailed",
-      "syncPaused": "__MISSING__:backupSync.toasts.syncPaused",
-      "pauseFailedReason": "__MISSING__:backupSync.toasts.pauseFailedReason",
-      "enterPassphraseReattach": "__MISSING__:backupSync.toasts.enterPassphraseReattach",
-      "reattachFailed": "__MISSING__:backupSync.toasts.reattachFailed",
-      "reattachFailedReason": "__MISSING__:backupSync.toasts.reattachFailedReason"
+      "sessionReattached": "تمت إعادة ربط جلسة المزامنة.",
+      "chooseFolderFailed": "فشل اختيار مجلد المزامنة.",
+      "folderConfigured": "تم تكوين مجلد المزامنة المشفّر.",
+      "setFolderFailed": "فشل تعيين مجلد المزامنة: {{error}}",
+      "enterPassphrase": "الرجاء إدخال عبارة مرور المزامنة.",
+      "startFailed": "فشل بدء المزامنة.",
+      "syncStartedMedia": "بدأت المزامنة — سيتم مزامنة كتل الوسائط.",
+      "syncStartedOptIn": "بدأت المزامنة — الوسائط اختيارية.",
+      "startFailedReason": "فشل بدء المزامنة: {{error}}",
+      "pauseFailed": "فشل إيقاف المزامنة مؤقتًا.",
+      "syncPaused": "تم إيقاف المزامنة مؤقتًا. أعد إدخال عبارة المرور للاستئناف.",
+      "pauseFailedReason": "فشل إيقاف المزامنة مؤقتًا: {{error}}",
+      "enterPassphraseReattach": "الرجاء إدخال عبارة مرور المزامنة لإعادة الإرفاق.",
+      "reattachFailed": "فشل إعادة إرفاق جلسة المزامنة.",
+      "reattachFailedReason": "فشل إعادة إرفاق المزامنة: {{error}}"
     },
-    "title": "__MISSING__:backupSync.title",
-    "desktopOnly": "__MISSING__:backupSync.desktopOnly",
-    "description": "__MISSING__:backupSync.description",
+    "title": "النسخ الاحتياطي والمزامنة",
+    "desktopOnly": "المزامنة المحلية أولاً متاحة حاليًا فقط على تطبيق سطح المكتب.",
+    "description": "حافظ على مزامنة بياناتك المحلية بأمان عبر أجهزتك دون إلزامك بحساب سحابي مركزي.",
     "syncFolder": {
-      "title": "__MISSING__:backupSync.syncFolder.title",
-      "description": "__MISSING__:backupSync.syncFolder.description",
-      "none": "__MISSING__:backupSync.syncFolder.none",
-      "change": "__MISSING__:backupSync.syncFolder.change",
-      "choose": "__MISSING__:backupSync.syncFolder.choose",
-      "includeMedia": "__MISSING__:backupSync.syncFolder.includeMedia",
-      "includeMediaNote": "__MISSING__:backupSync.syncFolder.includeMediaNote",
-      "passphrasePlaceholder": "__MISSING__:backupSync.syncFolder.passphrasePlaceholder",
-      "pause": "__MISSING__:backupSync.syncFolder.pause",
-      "reattach": "__MISSING__:backupSync.syncFolder.reattach",
-      "start": "__MISSING__:backupSync.syncFolder.start"
+      "title": "مجلد المزامنة",
+      "description": "مزامنة مستمرة للبيانات المشفرة إلى مجلد (مثل iCloud Drive، Dropbox).",
+      "none": "لم يتم تحديد مجلد مزامنة",
+      "change": "تغيير المجلد",
+      "choose": "اختيار المجلد",
+      "includeMedia": "تضمين كتل الوسائط في حزم المزامنة",
+      "includeMediaNote": "(الصور، الملفات، أصول RP)",
+      "passphrasePlaceholder": "أدخل عبارة مرور التشفير",
+      "pause": "إيقاف المزامنة مؤقتًا",
+      "reattach": "إعادة إرفاق الجلسة",
+      "start": "بدء المزامنة"
     },
     "status": {
-      "active": "__MISSING__:backupSync.status.active",
-      "error": "Error",
-      "paused": "__MISSING__:backupSync.status.paused",
-      "off": "__MISSING__:backupSync.status.off"
+      "active": "نشط",
+      "error": "خطأ",
+      "paused": "متوقف مؤقتًا",
+      "off": "متوقف"
     },
     "security": {
-      "encryption": "__MISSING__:backupSync.security.encryption",
-      "noKeys": "__MISSING__:backupSync.security.noKeys"
+      "encryption": "تستخدم حزم المزامنة تشفير XChaCha20-Poly1305 المشتق من Argon2id قبل كتابتها إلى هذا المجلد.",
+      "noKeys": "لا يتم أبدًا مزامنة مفاتيح API ومسارات الجهاز المطلقة."
     },
     "conflicts": {
-      "title": "__MISSING__:backupSync.conflicts.title",
-      "description": "__MISSING__:backupSync.conflicts.description",
-      "statusError": "__MISSING__:backupSync.conflicts.statusError",
-      "statusDetached": "__MISSING__:backupSync.conflicts.statusDetached",
-      "statusConfigured": "__MISSING__:backupSync.conflicts.statusConfigured",
-      "statusDisabled": "__MISSING__:backupSync.conflicts.statusDisabled",
-      "checking": "__MISSING__:backupSync.conflicts.checking",
-      "noConflicts": "__MISSING__:backupSync.conflicts.noConflicts",
-      "mediaIncluded": "__MISSING__:backupSync.conflicts.mediaIncluded",
-      "mediaExcluded": "__MISSING__:backupSync.conflicts.mediaExcluded",
-      "found": "__MISSING__:backupSync.conflicts.found",
-      "resolutionNote": "__MISSING__:backupSync.conflicts.resolutionNote",
-      "keepOriginalTitle": "__MISSING__:backupSync.conflicts.keepOriginalTitle",
-      "keepOriginal": "__MISSING__:backupSync.conflicts.keepOriginal",
-      "keepConflictTitle": "__MISSING__:backupSync.conflicts.keepConflictTitle",
-      "keepConflict": "__MISSING__:backupSync.conflicts.keepConflict",
-      "keepBothTitle": "__MISSING__:backupSync.conflicts.keepBothTitle",
-      "keepBoth": "__MISSING__:backupSync.conflicts.keepBoth"
+      "title": "حالة المزامنة والتعارضات",
+      "description": "راقب نشاط المزامنة وحل تعارضات البيانات.",
+      "statusError": "خطأ في المزامنة: {{error}}",
+      "statusDetached": "مراقب العملية الرئيسية قيد التشغيل ولكن جلسة العارض غير متصلة. أعد إدخال عبارة المرور لإعادة الإرفاق.",
+      "statusConfigured": "تم تكوين المزامنة ولكنها غير نشطة بالكامل. أدخل عبارة المرور وابدأ المزامنة.",
+      "statusDisabled": "فعّل المزامنة لمراقبة النشاط.",
+      "checking": "جارٍ التحقق من التعارضات...",
+      "noConflicts": "المزامنة نشطة. لم يتم العثور على تعارضات.",
+      "mediaIncluded": " كتل الوسائط مضمّنة.",
+      "mediaExcluded": " كتل الوسائط مستبعدة (اختيارية).",
+      "found": "تم العثور على {{count}} تعارض(ات). حلها أدناه:",
+      "resolutionNote": "احتفظت المزامنة بـ {{winner}}؛ يتم الاحتفاظ بالمراجعة المتعارضة {{loser}} ({{loserTitle}}) حتى تحل التعارض.",
+      "keepOriginalTitle": "احتفظ بالمراجعة المحفوظة حاليًا في هذا المعرف وتجاهل النسخة المتعارضة.",
+      "keepOriginal": "احتفظ بنسخة {{winner}}",
+      "keepConflictTitle": "استبدل المراجعة الحالية بنسخة {{loser}}.",
+      "keepConflict": "استخدم نسخة {{loser}}",
+      "keepBothTitle": "احتفظ بالمراجعة الحالية واحفظ نسخة {{loser}} كسجل منفصل.",
+      "keepBoth": "احفظ {{loser}} كنسخة"
     }
   },
   "configPanel": {
     "toasts": {
-      "reloaded": "__MISSING__:configPanel.toasts.reloaded",
-      "reloadFailed": "__MISSING__:configPanel.toasts.reloadFailed",
-      "openFolderFailed": "__MISSING__:configPanel.toasts.openFolderFailed",
-      "templateExported": "__MISSING__:configPanel.toasts.templateExported",
-      "exportCancelled": "__MISSING__:configPanel.toasts.exportCancelled",
-      "exportFailed": "__MISSING__:configPanel.toasts.exportFailed",
-      "secureStoreCleared": "__MISSING__:configPanel.toasts.secureStoreCleared",
-      "secureStoreClearFailed": "__MISSING__:configPanel.toasts.secureStoreClearFailed"
+      "reloaded": "تمت إعادة تحميل التكوين المحلي.",
+      "reloadFailed": "فشل إعادة تحميل التكوين.",
+      "openFolderFailed": "فشل فتح مجلد التكوين.",
+      "templateExported": "تم تصدير القالب.",
+      "exportCancelled": "تم إلغاء التصدير.",
+      "exportFailed": "فشل تصدير قالب التكوين.",
+      "secureStoreCleared": "تم مسح المخزن الآمن.",
+      "secureStoreClearFailed": "فشل مسح المخزن الآمن."
     },
     "masterConfig": {
-      "title": "__MISSING__:configPanel.masterConfig.title",
-      "description1": "__MISSING__:configPanel.masterConfig.description1",
-      "description2": "__MISSING__:configPanel.masterConfig.description2",
-      "description3": "__MISSING__:configPanel.masterConfig.description3",
-      "description4": "__MISSING__:configPanel.masterConfig.description4",
-      "configPath": "__MISSING__:configPanel.masterConfig.configPath",
-      "unavailable": "__MISSING__:configPanel.masterConfig.unavailable",
-      "themesPath": "__MISSING__:configPanel.masterConfig.themesPath",
-      "loadedFrom": "__MISSING__:configPanel.masterConfig.loadedFrom",
-      "profile": "__MISSING__:configPanel.masterConfig.profile",
-      "parseError": "__MISSING__:configPanel.masterConfig.parseError",
-      "validationWarnings": "__MISSING__:configPanel.masterConfig.validationWarnings"
+      "title": "التكوين الرئيسي المحلي",
+      "description1": "تحرير ",
+      "description2": " و",
+      "description3": " على القرص لتكوين Venice Forge دون لمس واجهة المستخدم. راجع ",
+      "description4": " للمخطط الكامل.",
+      "configPath": "مسار التكوين",
+      "unavailable": "(غير متاح)",
+      "themesPath": "مسار السمات",
+      "loadedFrom": "تم التحميل من",
+      "profile": "الملف الشخصي",
+      "parseError": "خطأ في التحليل:",
+      "validationWarnings": "تحذيرات التحقق"
     },
     "actions": {
-      "reload": "__MISSING__:configPanel.actions.reload",
-      "openFolder": "__MISSING__:configPanel.actions.openFolder",
-      "exportTemplate": "__MISSING__:configPanel.actions.exportTemplate",
-      "clearSecureStore": "__MISSING__:configPanel.actions.clearSecureStore"
+      "reload": "إعادة تحميل التكوين",
+      "openFolder": "فتح مجلد التكوين",
+      "exportTemplate": "تصدير قالب منقح",
+      "clearSecureStore": "مسح المخزن الآمن"
     },
     "apiKeyImport": {
-      "title": "__MISSING__:configPanel.apiKeyImport.title",
-      "description1": "__MISSING__:configPanel.apiKeyImport.description1",
-      "description2": "__MISSING__:configPanel.apiKeyImport.description2",
-      "description3": "__MISSING__:configPanel.apiKeyImport.description3",
-      "veniceKey": "__MISSING__:configPanel.apiKeyImport.veniceKey",
-      "configured": "__MISSING__:configPanel.apiKeyImport.configured",
-      "notConfigured": "__MISSING__:configPanel.apiKeyImport.notConfigured",
-      "imported": "__MISSING__:configPanel.apiKeyImport.imported",
-      "redacted": "__MISSING__:configPanel.apiKeyImport.redacted",
-      "jinaKey": "__MISSING__:configPanel.apiKeyImport.jinaKey",
-      "note": "__MISSING__:configPanel.apiKeyImport.note",
+      "title": "استيراد مفتاح API",
+      "description1": "المفاتيح النصية في ",
+      "description2": " يتم استيرادها إلى تخزين نظام التشغيل الآمن عند بدء التشغيل وتُحذف من الملف (إلا إذا تم تعيين ",
+      "description3": ").",
+      "veniceKey": "مفتاح Venice",
+      "configured": "مُكوّن (المخزن الآمن)",
+      "notConfigured": "غير مُكوّن",
+      "imported": "تم استيرادها في هذه الجلسة",
+      "redacted": "تم تنقيح النص العادي",
+      "jinaKey": "مفتاح Jina",
+      "note": "لا يتم إرسال المفاتيح الخام إلى العارض أبداً. أعد ضبط المخزن الآمن لمسح المفاتيح المخزنة؛ يمكنك بعد ذلك إعادة إدخالها عبر علامة تبويب مفاتيح API.",
       "clearConfirm": {
-        "title": "__MISSING__:configPanel.apiKeyImport.clearConfirm.title",
-        "detail": "__MISSING__:configPanel.apiKeyImport.clearConfirm.detail",
-        "action": "__MISSING__:configPanel.apiKeyImport.clearConfirm.action"
+        "title": "مسح مفاتيح المخزن الآمن؟",
+        "detail": "يؤدي هذا إلى إزالة جميع مفاتيح API المخزنة من المخزن الآمن. لا يمكن التراجع عن هذا الإجراء.",
+        "action": "مسح المفاتيح"
       }
     },
     "effectiveSettings": {
-      "title": "__MISSING__:configPanel.effectiveSettings.title",
-      "description1": "__MISSING__:configPanel.effectiveSettings.description1",
-      "description2": "__MISSING__:configPanel.effectiveSettings.description2",
-      "activeTheme": "__MISSING__:configPanel.effectiveSettings.activeTheme",
-      "defaultChatModel": "__MISSING__:configPanel.effectiveSettings.defaultChatModel",
-      "useUiDefault": "__MISSING__:configPanel.effectiveSettings.useUiDefault",
-      "temperature": "__MISSING__:configPanel.effectiveSettings.temperature",
-      "topP": "__MISSING__:configPanel.effectiveSettings.topP",
-      "maxTokens": "__MISSING__:configPanel.effectiveSettings.maxTokens",
-      "webSearch": "__MISSING__:configPanel.effectiveSettings.webSearch"
+      "title": "الإعدادات الفعّالة (معاينة)",
+      "description1": "معاينة للقراءة فقط للتكوين المدمج الحالي في الذاكرة. يبقى مصدر ",
+      "description2": " هو المصدر الرسمي للحقيقة — قم بتحريره على القرص وانقر ",
+      "activeTheme": "السمة النشطة",
+      "defaultChatModel": "نموذج الدردشة الافتراضي",
+      "useUiDefault": "(استخدم الافتراضي لواجهة المستخدم)",
+      "temperature": "درجة الحرارة",
+      "topP": "Top-p",
+      "maxTokens": "الحد الأقصى للرموز",
+      "webSearch": "بحث الويب"
     }
   },
   "dataStorage": {
     "toasts": {
-      "importReadFailed": "__MISSING__:dataStorage.toasts.importReadFailed",
-      "importNothingNewProfile": "__MISSING__:dataStorage.toasts.importNothingNewProfile",
-      "importNothingDetail": "__MISSING__:dataStorage.toasts.importNothingDetail",
-      "importCompleteNewProfile": "__MISSING__:dataStorage.toasts.importCompleteNewProfile",
-      "importNothing": "__MISSING__:dataStorage.toasts.importNothing",
-      "importPartial": "__MISSING__:dataStorage.toasts.importPartial",
-      "importPartialDetail": "__MISSING__:dataStorage.toasts.importPartialDetail",
-      "importComplete": "__MISSING__:dataStorage.toasts.importComplete",
-      "replaceFailedRestored": "__MISSING__:dataStorage.toasts.replaceFailedRestored",
-      "replaceFailedRecovery": "__MISSING__:dataStorage.toasts.replaceFailedRecovery",
-      "importFailed": "__MISSING__:dataStorage.toasts.importFailed",
-      "recoveryRestored": "__MISSING__:dataStorage.toasts.recoveryRestored",
-      "recoveryRestoredDetail": "__MISSING__:dataStorage.toasts.recoveryRestoredDetail",
-      "recoveryRestoreFailed": "__MISSING__:dataStorage.toasts.recoveryRestoreFailed",
-      "recoveryRestoreFailedDetail": "__MISSING__:dataStorage.toasts.recoveryRestoreFailedDetail"
+      "importReadFailed": "فشل قراءة النسخة الاحتياطية. كلمة مرور غير صحيحة أو ملف تالف.",
+      "importNothingNewProfile": "لم يتم استيراد شيء إلى الملف الشخصي الجديد: تم تخطي {{skipped}}",
+      "importNothingDetail": "لم يتم تطبيق أي سجلات؛ تحقق من النسخة الاحتياطية",
+      "importCompleteNewProfile": "اكتمل الاستيراد إلى الملف الشخصي الجديد: تم استيراد {{imported}}. جاري إعادة التحميل...",
+      "importNothing": "لم يتم استيراد شيء: تم تخطي {{skipped}}",
+      "importPartial": "استيراد جزئي: تم استيراد {{imported}}، تم تخطي {{skipped}}",
+      "importPartialDetail": "تم تطبيق {{tombstones}} علامة حذف. افحص عدد العناصر المتخطاة قبل الاعتماد على هذه النسخة الاحتياطية.",
+      "importComplete": "اكتمل الاستيراد: تم استيراد {{imported}}، تم تخطي {{skipped}}، تم تطبيق {{tombstones}} علامة حذف.",
+      "replaceFailedRestored": "فشل الاستبدال؛ تمت استعادة البيانات",
+      "replaceFailedRecovery": "فشل الاستبدال؛ الاسترداد مطلوب",
+      "importFailed": "فشل الاستيراد.",
+      "recoveryRestored": "تمت استعادة الاسترداد",
+      "recoveryRestoredDetail": "تمت استعادة حالة الملف الشخصي السابقة وتم الاحتفاظ بالحالة المستبدلة كنسخة احتياطية للاسترداد جديدة.",
+      "recoveryRestoreFailed": "فشل استعادة الاسترداد",
+      "recoveryRestoreFailedDetail": "تعذرت استعادة النسخة الاحتياطية للاسترداد."
     },
     "manualBackup": {
-      "title": "__MISSING__:dataStorage.manualBackup.title",
-      "description": "__MISSING__:dataStorage.manualBackup.description",
-      "passwordPlaceholder": "__MISSING__:dataStorage.manualBackup.passwordPlaceholder",
-      "includeDrafts": "__MISSING__:dataStorage.manualBackup.includeDrafts",
-      "includeMedia": "__MISSING__:dataStorage.manualBackup.includeMedia",
-      "export": "__MISSING__:dataStorage.manualBackup.export",
-      "import": "__MISSING__:dataStorage.manualBackup.import"
+      "title": "نسخة احتياطية يدوية",
+      "description": "أنشئ نسخة احتياطية مشفرة وقابلة للنقل لسجل المحادثات المحلي وبطاقات الشخصيات وسير العمل. يمكنك استيراد هذه النسخة الاحتياطية على أي جهاز.",
+      "passwordPlaceholder": "كلمة مرور النسخة الاحتياطية",
+      "includeDrafts": "تضمين مسودات بطاقات ST المحلية المشفرة (المسودات لا تتم مزامنتها أبداً)",
+      "includeMedia": "تضمين الوسائط في هذه النسخة الاحتياطية (الصور والملفات وأصول RP — مشفرة مع باقي النسخة الاحتياطية)",
+      "export": "تصدير النسخة الاحتياطية",
+      "import": "استيراد النسخة الاحتياطية"
     },
     "recovery": {
-      "title": "__MISSING__:dataStorage.recovery.title",
-      "description": "__MISSING__:dataStorage.recovery.description",
-      "restore": "__MISSING__:dataStorage.recovery.restore"
+      "title": "استعادة ما قبل الاستبدال",
+      "description": "تتوفر نسخة احتياطية مشفرة وموثقة من {{date}}. أدخل كلمة مرور النسخة الاحتياطية أعلاه لاستعادتها بشكل معاملاتي.",
+      "restore": "استعادة النسخة الاحتياطية للاستعادة"
     },
     "dangerZone": {
-      "title": "__MISSING__:dataStorage.dangerZone.title",
-      "description": "__MISSING__:dataStorage.dangerZone.description",
-      "clearDefaults": "__MISSING__:dataStorage.dangerZone.clearDefaults",
-      "clearIndexedDB": "__MISSING__:dataStorage.dangerZone.clearIndexedDB"
+      "title": "منطقة الخطر",
+      "description": "هذه العمليات مدمرة ولا يمكن التراجع عنها. قم دائمًا بتصدير نسخة احتياطية أولاً إذا كان لديك سجل مهم.",
+      "clearDefaults": "مسح الإعدادات الافتراضية للتطبيق",
+      "clearIndexedDB": "مسح بيانات IndexedDB"
     }
   },
   "defaultsPanel": {
-    "defaultChatModel": "__MISSING__:defaultsPanel.defaultChatModel",
-    "defaultImageModel": "__MISSING__:defaultsPanel.defaultImageModel",
-    "defaultWebSearch": "__MISSING__:defaultsPanel.defaultWebSearch",
-    "defaultSystemPrompt": "__MISSING__:defaultsPanel.defaultSystemPrompt",
-    "systemPromptPlaceholder": "__MISSING__:defaultsPanel.systemPromptPlaceholder",
-    "veniceSystemPromptToggle": "__MISSING__:defaultsPanel.veniceSystemPromptToggle",
-    "enableCitations": "__MISSING__:defaultsPanel.enableCitations",
+    "defaultChatModel": "نموذج الدردشة الافتراضي",
+    "defaultImageModel": "نموذج الصور الافتراضي",
+    "defaultWebSearch": "البحث على الويب الافتراضي",
+    "defaultSystemPrompt": "الموجه الافتراضي للنظام",
+    "systemPromptPlaceholder": "اختياري. اتركه فارغًا لتجنب إضافة رسالة نظام من تأليف التطبيق.",
+    "veniceSystemPromptToggle": "مفتاح تبديل موجه Venice",
+    "enableCitations": "تمكين الاستشهادات افتراضيًا",
     "characterSceneGeneration": {
-      "title": "__MISSING__:defaultsPanel.characterSceneGeneration.title",
-      "description": "__MISSING__:defaultsPanel.characterSceneGeneration.description",
-      "mode": "__MISSING__:defaultsPanel.characterSceneGeneration.mode",
-      "modeAriaLabel": "__MISSING__:defaultsPanel.characterSceneGeneration.modeAriaLabel",
-      "manualOnly": "__MISSING__:defaultsPanel.characterSceneGeneration.manualOnly",
-      "autoManual": "__MISSING__:defaultsPanel.characterSceneGeneration.autoManual"
+      "title": "توليد مشهد الشخصية",
+      "description": "السماح لمحادثات الشخصية بإنشاء صور مشهد مضمّنة من المحادثة الحالية فقط. محمية بحدود معدل محلية.",
+      "mode": "الوضع",
+      "modeAriaLabel": "وضع توليد مشهد الشخصية",
+      "manualOnly": "يدوي فقط",
+      "autoManual": "تلقائي + يدوي"
     }
   },
   "importPlan": {
-    "title": "__MISSING__:importPlan.title",
-    "summary": "__MISSING__:importPlan.summary",
+    "title": "مراجعة خطة الاستيراد",
+    "summary": "تحتوي هذه النسخة الاحتياطية على {{records}} سجلًا عبر {{stores}} مخازن بيانات.",
     "metadata": {
-      "authenticated": "__MISSING__:importPlan.metadata.authenticated",
-      "legacy": "__MISSING__:importPlan.metadata.legacy",
-      "format": "__MISSING__:importPlan.metadata.format",
-      "exportedAt": "__MISSING__:importPlan.metadata.exportedAt",
-      "source": "__MISSING__:importPlan.metadata.source",
-      "profileRef": "__MISSING__:importPlan.metadata.profileRef",
-      "crypto": "__MISSING__:importPlan.metadata.crypto",
-      "counts": "__MISSING__:importPlan.metadata.counts",
-      "sha": "__MISSING__:importPlan.metadata.sha"
+      "authenticated": "بيانات تعريف النسخة الاحتياطية الموثقة",
+      "legacy": "بيانات تعريف النسخة الاحتياطية القديمة",
+      "format": "التنسيق: v{{version}}{{appVersion}}",
+      "exportedAt": "تم التصدير: {{date}}",
+      "source": "المصدر: {{runtime}} / {{device}}",
+      "profileRef": "مرجع الملف الشخصي: {{ref}}",
+      "crypto": "التشفير: {{alg}} / {{kdf}} / مفتاح v{{key}}",
+      "counts": "{{tombstones}} شواهد قبور / {{blobs}} كائنات ثنائية مضمّنة",
+      "sha": "حمولة SHA-256: {{sha}}"
     },
-    "warningsLabel": "__MISSING__:importPlan.warningsLabel",
+    "warningsLabel": "تحذيرات الاستيراد",
     "preview": {
-      "title": "__MISSING__:importPlan.preview.title",
-      "recordsCount": "__MISSING__:importPlan.preview.recordsCount",
-      "new": "__MISSING__:importPlan.preview.new",
-      "modified": "__MISSING__:importPlan.preview.modified",
-      "conflicts": "__MISSING__:importPlan.preview.conflicts",
-      "identical": "__MISSING__:importPlan.preview.identical",
-      "noChanges": "__MISSING__:importPlan.preview.noChanges"
+      "title": "معاينة تغييرات البيانات",
+      "recordsCount": "{{count}} سجلًا",
+      "new": "{{count}} جديد",
+      "modified": "{{count}} معدّل",
+      "conflicts": "{{count}} تعارض",
+      "identical": "{{count}} متطابق",
+      "noChanges": "لا توجد تغييرات"
     },
     "mode": {
-      "title": "__MISSING__:importPlan.mode.title",
-      "merge": "__MISSING__:importPlan.mode.merge",
-      "mergeDesc": "__MISSING__:importPlan.mode.mergeDesc",
-      "replace": "__MISSING__:importPlan.mode.replace",
-      "replaceDesc": "__MISSING__:importPlan.mode.replaceDesc",
-      "newProfile": "__MISSING__:importPlan.mode.newProfile",
-      "newProfileDesc": "__MISSING__:importPlan.mode.newProfileDesc"
+      "title": "اختر وضع الاستيراد",
+      "merge": "دمج البيانات",
+      "mergeDesc": "الاحتفاظ بالبيانات الحالية وإضافة سجلات جديدة. سيتم حفظ التعارضات بجانب الإصدارات المحلية.",
+      "replace": "استبدال الكل",
+      "replaceDesc": "مسح جميع البيانات المحلية الحالية واستبدالها بالكامل بهذه النسخة الاحتياطية.",
+      "newProfile": "ملف شخصي جديد",
+      "newProfileDesc": "إنشاء مساحة عمل ملف شخصي جديدة واستيراد هذه النسخة الاحتياطية إليها."
     },
     "warnings": {
-      "recoveryEnabled": "__MISSING__:importPlan.warnings.recoveryEnabled",
-      "recoveryEnabledDesc": "__MISSING__:importPlan.warnings.recoveryEnabledDesc",
-      "replaceUnavailable": "__MISSING__:importPlan.warnings.replaceUnavailable",
-      "replaceUnavailableDesc": "__MISSING__:importPlan.warnings.replaceUnavailableDesc"
+      "recoveryEnabled": "تمكين الاستعادة التلقائية",
+      "recoveryEnabledDesc": "سيقوم تطبيق سطح المكتب بتهيئة هذه النسخة الاحتياطية، وإنشاء والتحقق من قطعة استعادة مشفرة، ثم التراجع تلقائيًا إذا فشل الاستبدال.",
+      "replaceUnavailable": "الاستبدال غير متاح في وضع الويب",
+      "replaceUnavailableDesc": "استخدم الدمج أو ملف شخصي جديد. تتطلب استعادة الاستبدال الدائمة تطبيق Venice Forge لسطح المكتب."
     },
-    "profileName": "__MISSING__:importPlan.profileName",
-    "profileNamePlaceholder": "__MISSING__:importPlan.profileNamePlaceholder",
+    "profileName": "اسم الملف الشخصي",
+    "profileNamePlaceholder": "مثال: نسخة احتياطية للعمل",
     "actions": {
-      "confirm": "__MISSING__:importPlan.actions.confirm"
+      "confirm": "تأكيد الاستيراد"
     }
   },
   "masterPassword": {
     "errors": {
-      "mismatch": "__MISSING__:masterPassword.errors.mismatch",
-      "tooShort": "__MISSING__:masterPassword.errors.tooShort",
-      "saveFailed": "__MISSING__:masterPassword.errors.saveFailed",
-      "lockedOut": "__MISSING__:masterPassword.errors.lockedOut",
-      "incorrect": "__MISSING__:masterPassword.errors.incorrect",
-      "verifyFailed": "__MISSING__:masterPassword.errors.verifyFailed"
+      "mismatch": "كلمات المرور غير متطابقة",
+      "tooShort": "كلمة المرور قصيرة جدًا (الحد الأدنى {{min}} حرفًا)",
+      "saveFailed": "فشل حفظ كلمة المرور بشكل آمن",
+      "lockedOut": " تم القفل. حاول مرة أخرى خلال {{seconds}} ثانية.",
+      "incorrect": "كلمة مرور غير صحيحة.",
+      "verifyFailed": "فشل التحقق من كلمة المرور"
     },
-    "titleSet": "__MISSING__:masterPassword.titleSet",
-    "titleEnter": "__MISSING__:masterPassword.titleEnter",
-    "description": "__MISSING__:masterPassword.description",
+    "titleSet": "تعيين كلمة المرور الرئيسية",
+    "titleEnter": "أدخل كلمة المرور الرئيسية",
+    "description": "كلمة مرور التحكم المحلية هذه تحمي تغييرات وضع الأمان العائلي. يخزن التطبيق مُتحققًا مملحًا، وليس كلمة المرور نفسها.",
     "labels": {
-      "password": "__MISSING__:masterPassword.labels.password",
-      "confirm": "__MISSING__:masterPassword.labels.confirm"
+      "password": "كلمة المرور الرئيسية",
+      "confirm": "تأكيد كلمة المرور الرئيسية"
     }
   },
   "profiles": {
     "removePassword": {
-      "title": "__MISSING__:profiles.removePassword.title",
-      "detail": "__MISSING__:profiles.removePassword.detail",
-      "action": "__MISSING__:profiles.removePassword.action"
+      "title": "إزالة كلمة مرور الملف الشخصي؟",
+      "detail": "لن يتطلب \"{{name}}\" إلغاء القفل قبل التبديل بعد الآن.",
+      "action": "إزالة"
     },
     "errors": {
-      "removeFailed": "__MISSING__:profiles.errors.removeFailed",
-      "tooShort": "__MISSING__:profiles.errors.tooShort",
-      "mismatch": "__MISSING__:profiles.errors.mismatch",
-      "saveFailed": "__MISSING__:profiles.errors.saveFailed",
-      "incorrect": "__MISSING__:profiles.errors.incorrect",
-      "deleteFailed": "__MISSING__:profiles.errors.deleteFailed"
+      "removeFailed": "فشل إزالة كلمة مرور الملف الشخصي",
+      "tooShort": "كلمة المرور قصيرة جدًا (الحد الأدنى {{min}} حرفًا)",
+      "mismatch": "كلمتا المرور غير متطابقتين",
+      "saveFailed": "فشل حفظ كلمة مرور الملف الشخصي",
+      "incorrect": "كلمة مرور غير صحيحة",
+      "deleteFailed": "فشل حذف الملف الشخصي."
     },
-    "title": "__MISSING__:profiles.title",
-    "description": "__MISSING__:profiles.description",
+    "title": "إدارة الملفات الشخصية",
+    "description": "يحافظ كل ملف شخصي على إعدادات ومعادلات API وتكوينات معزولة. سيؤدي تبديل الملفات الشخصية إلى مسح حالة التطبيق النشطة وإعادة التحميل.",
     "badge": {
-      "active": "__MISSING__:profiles.badge.active",
-      "locked": "__MISSING__:profiles.badge.locked"
+      "active": "نشط",
+      "locked": "مقفل"
     },
     "aria": {
-      "removePassword": "__MISSING__:profiles.aria.removePassword",
-      "setPassword": "__MISSING__:profiles.aria.setPassword",
-      "switchTo": "__MISSING__:profiles.aria.switchTo",
-      "delete": "__MISSING__:profiles.aria.delete"
+      "removePassword": "إزالة كلمة المرور لـ {{name}}",
+      "setPassword": "تعيين كلمة المرور لـ {{name}}",
+      "switchTo": "التبديل إلى {{name}}",
+      "delete": "حذف {{name}}"
     },
     "actions": {
-      "removePassword": "__MISSING__:profiles.actions.removePassword",
-      "setPassword": "__MISSING__:profiles.actions.setPassword",
-      "switchTo": "__MISSING__:profiles.actions.switchTo",
-      "createProfile": "__MISSING__:profiles.actions.createProfile"
+      "removePassword": "إزالة كلمة المرور",
+      "setPassword": "تعيين كلمة المرور",
+      "switchTo": "التبديل إلى",
+      "createProfile": "إنشاء ملف شخصي"
     },
     "deleteProfile": {
-      "title": "__MISSING__:profiles.deleteProfile.title",
-      "detail": "__MISSING__:profiles.deleteProfile.detail",
-      "action": "__MISSING__:profiles.deleteProfile.action"
+      "title": "حذف الملف الشخصي؟",
+      "detail": "سيتم إزالة \"{{name}}\". سيتم مسح خزنة المحادثات الخاصة به وسجلات العارض والإعدادات المحلية النطاق الخاصة بالملف الشخصي ومعادلات API ومُتحقق كلمة المرور. يتم الاحتفاظ بذاكرات التخزين المؤقت العامة المشتركة.",
+      "action": "حذف"
     },
-    "newProfilePlaceholder": "__MISSING__:profiles.newProfilePlaceholder",
+    "newProfilePlaceholder": "اسم ملف شخصي جديد",
     "dialog": {
-      "titleSet": "__MISSING__:profiles.dialog.titleSet",
-      "titleUnlock": "__MISSING__:profiles.dialog.titleUnlock",
-      "description": "__MISSING__:profiles.dialog.description",
-      "labelSet": "__MISSING__:profiles.dialog.labelSet",
-      "labelUnlock": "__MISSING__:profiles.dialog.labelUnlock",
-      "labelConfirm": "__MISSING__:profiles.dialog.labelConfirm",
-      "savePassword": "__MISSING__:profiles.dialog.savePassword"
+      "titleSet": "تعيين كلمة المرور لـ {{name}}",
+      "titleUnlock": "إلغاء قفل {{name}}",
+      "description": "تحمي كلمة المرور هذه التبديل إلى هذا الملف الشخصي المحلي.",
+      "labelSet": "كلمة مرور الملف الشخصي",
+      "labelUnlock": "كلمة مرور إلغاء القفل",
+      "labelConfirm": "تأكيد كلمة مرور الملف الشخصي",
+      "savePassword": "حفظ كلمة المرور"
     }
   },
   "providers": {
     "errors": {
-      "loadFailed": "__MISSING__:providers.errors.loadFailed",
-      "saveFailed": "__MISSING__:providers.errors.saveFailed",
-      "enableWithoutKey": "__MISSING__:providers.errors.enableWithoutKey"
+      "loadFailed": "فشل تحميل إعدادات المزود.",
+      "saveFailed": "فشل حفظ إعدادات المزود.",
+      "enableWithoutKey": "لا يمكن تمكين المزود بدون مفتاح API."
     },
-    "title": "__MISSING__:providers.title",
-    "description": "__MISSING__:providers.description",
-    "deferredNotice": "__MISSING__:providers.deferredNotice",
+    "title": "المزودون الاحتياطيون",
+    "description": "قم بتكوين مفاتيح API للمزودين الاحتياطيين. سيتم استخدامها فقط إذا تم تمكينها صراحةً وعندما تكون نماذج Venice غير متاحة أو تطلب نموذجًا احتياطيًا محددًا.",
+    "deferredNotice": "مؤجل في هذا الإصدار (لا يوجد إدخال مفاتيح أو توجيه أو حركة مرور): {{deferred}}. يتم استبدال مفاتيح المزود أو إزالتها يدويًا؛ لم يتم تنفيذ تدوير المفاتيح المجدول.",
     "autoFallback": {
-      "title": "__MISSING__:providers.autoFallback.title",
-      "description": "__MISSING__:providers.autoFallback.description",
-      "enableAria": "__MISSING__:providers.autoFallback.enableAria",
-      "orderingLabel": "__MISSING__:providers.autoFallback.orderingLabel",
-      "orderingPlaceholder": "__MISSING__:providers.autoFallback.orderingPlaceholder",
-      "orderingNotice": "__MISSING__:providers.autoFallback.orderingNotice"
+      "title": "موجّه احتياطي تلقائي",
+      "description": "توجيه الطلبات تلقائيًا إلى المزودين الاحتياطيين إذا كانت Venice غير متاحة أو أرجأت خطأً.",
+      "enableAria": "تمكين الاحتياطي التلقائي",
+      "orderingLabel": "ترتيب الاحتياطي (معرفات المزود مفصولة بفواصل)",
+      "orderingPlaceholder": "together, groq, anthropic",
+      "orderingNotice": "سيتم تجربة المزودين بهذا الترتيب المحدد. تأكد من تمكينهم أدناه. المتاح: {{available}}"
     },
     "badge": {
-      "deferred": "__MISSING__:providers.badge.deferred"
+      "deferred": "مؤجل"
     },
     "aria": {
-      "enable": "__MISSING__:providers.aria.enable"
+      "enable": "تمكين {{label}}"
     },
     "status": {
-      "keyConfigured": "__MISSING__:providers.status.keyConfigured"
+      "keyConfigured": "تم تكوين مفتاح API"
     },
     "actions": {
-      "removeKey": "__MISSING__:providers.actions.removeKey"
+      "removeKey": "إزالة المفتاح"
     },
     "inputs": {
-      "keyPlaceholder": "__MISSING__:providers.inputs.keyPlaceholder"
+      "keyPlaceholder": "أدخل مفتاح API"
     }
   },
   "errors": {
-    "persistSafety": "__MISSING__:errors.persistSafety"
+    "persistSafety": "فشل الاحتفاظ بإعداد الأمان."
   },
   "updates": {
-    "available": "__MISSING__:updates.available",
-    "upToDate": "__MISSING__:updates.upToDate",
-    "downloading": "__MISSING__:updates.downloading",
-    "downloaded": "__MISSING__:updates.downloaded",
-    "error": "__MISSING__:updates.error",
-    "checking": "__MISSING__:updates.checking",
-    "devBuild": "__MISSING__:updates.devBuild",
-    "checkFailed": "__MISSING__:updates.checkFailed",
-    "checkCompleted": "__MISSING__:updates.checkCompleted",
-    "installFailed": "__MISSING__:updates.installFailed"
+    "available": "تحديث متاح: v{{version}}",
+    "upToDate": "التطبيق محدّث.",
+    "downloading": "جارٍ تنزيل التحديث: {{percent}}%",
+    "downloaded": "تم تنزيل التحديث وهو جاهز للتثبيت.",
+    "error": "خطأ في التحديث: {{error}}",
+    "checking": "جارٍ التحقق من وجود تحديثات...",
+    "devBuild": "نسخة تطويرية — يتم فحص التحديثات فقط في النسخ الإنتاجية المُغلَّفة.",
+    "checkFailed": "فشل فحص التحديث: {{error}}",
+    "checkCompleted": "اكتمل فحص التحديث.",
+    "installFailed": "فشل التثبيت: {{error}}"
   },
   "jinaKeys": {
-    "savedElectron": "__MISSING__:jinaKeys.savedElectron",
-    "savedWeb": "__MISSING__:jinaKeys.savedWeb",
-    "saveFailed": "__MISSING__:jinaKeys.saveFailed",
+    "savedElectron": "تم حفظ مفتاح جينا API بشكل آمن.",
+    "savedWeb": "تم حفظ مفتاح جينا API لجلسة المتصفح هذه.",
+    "saveFailed": "فشل حفظ مفتاح جينا API.",
     "deleteConfirm": {
-      "title": "__MISSING__:jinaKeys.deleteConfirm.title",
-      "electron": "__MISSING__:jinaKeys.deleteConfirm.electron",
-      "web": "__MISSING__:jinaKeys.deleteConfirm.web"
+      "title": "حذف مفتاح جينا API؟",
+      "electron": "سيؤدي هذا إلى إزالة مفتاح جينا API من التخزين الآمن لنظام التشغيل.",
+      "web": "سيؤدي هذا إلى إزالة مفتاح جينا API من الذاكرة لجلسة المتصفح هذه."
     },
-    "deleted": "__MISSING__:jinaKeys.deleted",
-    "deleteFailed": "__MISSING__:jinaKeys.deleteFailed",
-    "testSuccess": "__MISSING__:jinaKeys.testSuccess",
-    "testFailed": "__MISSING__:jinaKeys.testFailed",
-    "testError": "__MISSING__:jinaKeys.testError"
+    "deleted": "تم حذف مفتاح جينا API.",
+    "deleteFailed": "فشل حذف مفتاح جينا API.",
+    "testSuccess": "اتصال جينا ناجح{{status}}.",
+    "testFailed": "فشل اتصال جينا: {{message}}",
+    "testError": "فشل اختبار اتصال جينا."
   },
   "header": {
-    "title": "__MISSING__:header.title",
+    "title": "التكوين",
     "description": {
-      "electron": "__MISSING__:header.description.electron",
-      "web": "__MISSING__:header.description.web"
+      "electron": "إدارة نقاط نهاية API والقيم الافتراضية وأنماط المظهر.",
+      "web": "تكوين المطالبات الافتراضية وقوالب التنسيق."
     }
   },
   "tabs": {
-    "languageRegion": "__MISSING__:tabs.languageRegion",
-    "profiles": "__MISSING__:tabs.profiles",
-    "apiKeys": "__MISSING__:tabs.apiKeys",
-    "providers": "__MISSING__:tabs.providers",
-    "defaults": "__MISSING__:tabs.defaults",
-    "safety": "__MISSING__:tabs.safety",
-    "vault": "__MISSING__:tabs.vault",
-    "appearance": "__MISSING__:tabs.appearance",
-    "data": "__MISSING__:tabs.data",
-    "backupSync": "__MISSING__:tabs.backupSync",
-    "about": "__MISSING__:tabs.about",
-    "updates": "Updates",
-    "config": "__MISSING__:tabs.config",
-    "audioSpeech": "__MISSING__:tabs.audioSpeech"
+    "languageRegion": "اللغة والمنطقة",
+    "profiles": "الملفات الشخصية",
+    "apiKeys": "مفتاح Venice API",
+    "providers": "المزودون الاحتياطيون",
+    "defaults": "القيم الافتراضية والسلوك",
+    "safety": "الأمان",
+    "vault": "خزنة المحادثات",
+    "appearance": "المظهر",
+    "data": "البيانات والتخزين",
+    "backupSync": "النسخ الاحتياطي والمزامنة",
+    "about": "حول والمعلومات القانونية",
+    "updates": "التحديثات",
+    "config": "التكوين المحلي",
+    "audioSpeech": "الصوت والكلام"
   },
   "updatesPanel": {
-    "title": "__MISSING__:updatesPanel.title",
-    "description": "__MISSING__:updatesPanel.description",
-    "status": "__MISSING__:updatesPanel.status",
-    "checking": "__MISSING__:updatesPanel.checking",
-    "checkForUpdates": "__MISSING__:updatesPanel.checkForUpdates",
-    "restartAndInstall": "__MISSING__:updatesPanel.restartAndInstall"
+    "title": "تحديثات التطبيق",
+    "description": "تحقق من تحديثات تطبيق سطح المكتب بشكل آمن عبر إصدارات جيت هب.",
+    "status": "الحالة:",
+    "checking": "جارٍ الفحص...",
+    "checkForUpdates": "التحقق من التحديثات",
+    "restartAndInstall": "إعادة التشغيل والتثبيت"
   }
 }

@@ -1,14 +1,14 @@
 {
   "title": "Исследования",
-  "searchAndScrape": "__MISSING__:searchAndScrape",
-  "provider": "__MISSING__:provider",
-  "veniceProvider": "__MISSING__:veniceProvider",
-  "jinaProvider": "__MISSING__:jinaProvider",
-  "autoProvider": "__MISSING__:autoProvider",
-  "socialDiscovery": "__MISSING__:socialDiscovery",
+  "searchAndScrape": "Поиск и сбор данных",
+  "provider": "Провайдер",
+  "veniceProvider": "Venice Поиск",
+  "jinaProvider": "Jina Поиск",
+  "autoProvider": "Автоматический провайдер",
+  "socialDiscovery": "Социальное обнаружение",
   "queryPlaceholder": "Введите research topic or URL to scrape...",
-  "results": "__MISSING__:results",
-  "sources": "__MISSING__:sources",
-  "timeline": "__MISSING__:timeline",
+  "results": "Результаты поиска",
+  "sources": "Источники",
+  "timeline": "Хронология",
   "noResults": "Нет research results found for query."
 }

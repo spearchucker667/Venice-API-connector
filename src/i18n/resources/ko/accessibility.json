@@ -1,11 +1,11 @@
 {
-  "skipToContent": "__MISSING__:skipToContent",
-  "mainNavigation": "__MISSING__:mainNavigation",
-  "dialogTitle": "__MISSING__:dialogTitle",
-  "closeDialog": "__MISSING__:closeDialog",
-  "expanded": "__MISSING__:expanded",
-  "collapsed": "__MISSING__:collapsed",
-  "selected": "__MISSING__:selected",
-  "stepIndicator": "__MISSING__:stepIndicator",
-  "statusNotification": "__MISSING__:statusNotification"
+  "skipToContent": "메인 콘텐츠로 건너뛰기",
+  "mainNavigation": "메인 내비게이션",
+  "dialogTitle": "대화 상자",
+  "closeDialog": "대화 상자 닫기",
+  "expanded": "확장됨",
+  "collapsed": "축소됨",
+  "selected": "선택됨",
+  "stepIndicator": "{{total}}단계 중 {{current}}단계",
+  "statusNotification": "상태 업데이트"
 }

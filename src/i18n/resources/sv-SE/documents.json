@@ -1,14 +1,14 @@
 {
-  "title": "Documents",
-  "workingGroups": "__MISSING__:workingGroups",
-  "managedLibrary": "__MISSING__:managedLibrary",
-  "connectedWorkspace": "__MISSING__:connectedWorkspace",
-  "documentAgent": "__MISSING__:documentAgent",
-  "proposals": "__MISSING__:proposals",
-  "revisions": "__MISSING__:revisions",
-  "createDocument": "__MISSING__:createDocument",
-  "importDocument": "__MISSING__:importDocument",
-  "searchWorkspace": "__MISSING__:searchWorkspace",
-  "fileInspector": "__MISSING__:fileInspector",
-  "noDocuments": "__MISSING__:noDocuments"
+  "title": "Dokument",
+  "workingGroups": "Arbetsgrupper",
+  "managedLibrary": "Hanterat bibliotek",
+  "connectedWorkspace": "Ansluten arbetsyta",
+  "documentAgent": "Dokumentagent",
+  "proposals": "Förslag",
+  "revisions": "Revisionshistorik",
+  "createDocument": "Skapa dokument",
+  "importDocument": "Importera dokument",
+  "searchWorkspace": "Sök i arbetsyta",
+  "fileInspector": "Filgranskare",
+  "noDocuments": "Inga dokument hittades i arbetsgruppen."
 }

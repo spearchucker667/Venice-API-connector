@@ -1,14 +1,14 @@
 {
-  "title": "Documents",
-  "workingGroups": "__MISSING__:workingGroups",
-  "managedLibrary": "__MISSING__:managedLibrary",
-  "connectedWorkspace": "__MISSING__:connectedWorkspace",
-  "documentAgent": "__MISSING__:documentAgent",
-  "proposals": "__MISSING__:proposals",
-  "revisions": "__MISSING__:revisions",
-  "createDocument": "__MISSING__:createDocument",
-  "importDocument": "__MISSING__:importDocument",
-  "searchWorkspace": "__MISSING__:searchWorkspace",
-  "fileInspector": "__MISSING__:fileInspector",
-  "noDocuments": "__MISSING__:noDocuments"
+  "title": "दस्तावेज़",
+  "workingGroups": "कार्य समूह",
+  "managedLibrary": "प्रबंधित लाइब्रेरी",
+  "connectedWorkspace": "कनेक्टेड वर्कस्पेस",
+  "documentAgent": "दस्तावेज़ एजेंट",
+  "proposals": "प्रस्ताव",
+  "revisions": "संशोधन इतिहास",
+  "createDocument": "दस्तावेज़ बनाएँ",
+  "importDocument": "दस्तावेज़ आयात करें",
+  "searchWorkspace": "वर्कस्पेस खोजें",
+  "fileInspector": "फ़ाइल निरीक्षक",
+  "noDocuments": "कार्य समूह में कोई दस्तावेज़ नहीं मिला।"
 }

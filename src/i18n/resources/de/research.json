@@ -1,14 +1,14 @@
 {
   "title": "Recherche",
-  "searchAndScrape": "__MISSING__:searchAndScrape",
-  "provider": "__MISSING__:provider",
-  "veniceProvider": "__MISSING__:veniceProvider",
-  "jinaProvider": "__MISSING__:jinaProvider",
-  "autoProvider": "__MISSING__:autoProvider",
-  "socialDiscovery": "__MISSING__:socialDiscovery",
+  "searchAndScrape": "Suche & Scraping",
+  "provider": "Provider",
+  "veniceProvider": "Venice Suche",
+  "jinaProvider": "Jina Suche",
+  "autoProvider": "Auto-Provider",
+  "socialDiscovery": "Soziale Entdeckung",
   "queryPlaceholder": "Eingeben: research topic or URL to scrape...",
-  "results": "__MISSING__:results",
-  "sources": "__MISSING__:sources",
-  "timeline": "__MISSING__:timeline",
-  "noResults": "__MISSING__:noResults"
+  "results": "Suchergebnisse",
+  "sources": "Quellen",
+  "timeline": "Zeitleiste",
+  "noResults": "Keine Rechercheergebnisse für die Abfrage gefunden."
 }

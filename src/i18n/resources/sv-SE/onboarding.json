@@ -1,31 +1,31 @@
 {
-  "welcomeTitle": "__MISSING__:welcomeTitle",
-  "welcomeSubtitle": "__MISSING__:welcomeSubtitle",
-  "welcomeDescription": "__MISSING__:welcomeDescription",
-  "privacyNote": "__MISSING__:privacyNote",
-  "getStarted": "__MISSING__:getStarted",
-  "createProfile": "__MISSING__:createProfile",
-  "continue": "__MISSING__:continue",
-  "languageSelectorLabel": "__MISSING__:languageSelectorLabel",
-  "systemLanguageOption": "__MISSING__:systemLanguageOption",
-  "selectLanguage": "__MISSING__:selectLanguage",
-  "stepIndicator": "__MISSING__:stepIndicator",
+  "welcomeTitle": "Välkommen till Venice Forge",
+  "welcomeSubtitle": "Den privata lokala arbetsbänken.",
+  "welcomeDescription": "En lokal skrivbordsarbetsbänk som lagrar appdata på denna enhet och skickar förfrågningar till de fjärrleverantörer du konfigurerar.",
+  "privacyNote": "Din data förblir lokal. API-nycklar lagras i operativsystemets säkra lagring.",
+  "getStarted": "Kom igång",
+  "createProfile": "Skapa profil",
+  "continue": "Fortsätt",
+  "languageSelectorLabel": "Applikationsspråk",
+  "systemLanguageOption": "Systemspråk ({{language}})",
+  "selectLanguage": "Välj språk",
+  "stepIndicator": "Introduktionssteg {{current}} av {{total}}",
   "steps": {
     "welcome": {
-      "title": "__MISSING__:steps.welcome.title",
-      "description": "__MISSING__:steps.welcome.description"
+      "title": "Välkommen till Venice Forge",
+      "description": "En lokal skrivbordsarbetsbänk som lagrar appdata på denna enhet och skickar förfrågningar till de fjärrleverantörer du konfigurerar."
     },
     "profiles": {
-      "title": "__MISSING__:steps.profiles.title",
-      "description": "__MISSING__:steps.profiles.description"
+      "title": "Profiler",
+      "description": "Skapa profiler för separata renderarinställningar och bibliotek. Vissa skrivbordsvalv-filer och delade cacheminnen förblir på maskinnivå."
     },
     "security": {
-      "title": "__MISSING__:steps.security.title",
-      "description": "__MISSING__:steps.security.description"
+      "title": "Säker som standard",
+      "description": "Lösenord och hemligheter krypteras via operativsystemets inbyggda nyckelring (macOS) eller Credential Manager (Windows). Lagras aldrig i klartext."
     },
     "safety": {
-      "title": "__MISSING__:steps.safety.title",
-      "description": "__MISSING__:steps.safety.description"
+      "title": "Familjesäkert läge",
+      "description": "Ett huvudlösenord krävs innan Familjesäkert läge kan aktiveras eller inaktiveras. Familjesäkert läge tvingar också fram leverantörens safe_mode där det stöds."
     }
   }
 }

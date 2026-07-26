@@ -1,31 +1,31 @@
 {
   "welcomeTitle": "欢迎使用 Venice Forge",
-  "welcomeSubtitle": "__MISSING__:welcomeSubtitle",
-  "welcomeDescription": "__MISSING__:welcomeDescription",
-  "privacyNote": "__MISSING__:privacyNote",
-  "getStarted": "__MISSING__:getStarted",
-  "createProfile": "__MISSING__:createProfile",
+  "welcomeSubtitle": "私密本地工作台。",
+  "welcomeDescription": "本地桌面工作台，将应用数据存储在此设备上，并向您配置的远程提供商发送请求。",
+  "privacyNote": "您的数据保留在本地。API 密钥存储在安全的操作系统存储中。",
+  "getStarted": "开始使用",
+  "createProfile": "创建配置文件",
   "continue": "继续",
-  "languageSelectorLabel": "__MISSING__:languageSelectorLabel",
-  "systemLanguageOption": "__MISSING__:systemLanguageOption",
+  "languageSelectorLabel": "应用语言",
+  "systemLanguageOption": "系统语言（{{language}}）",
   "selectLanguage": "选择language",
-  "stepIndicator": "__MISSING__:stepIndicator",
+  "stepIndicator": "引导步骤 {{current}} / {{total}}",
   "steps": {
     "welcome": {
       "title": "欢迎使用 Venice Forge",
-      "description": "__MISSING__:steps.welcome.description"
+      "description": "本地桌面工作台，将应用数据存储在此设备上，并向您配置的远程提供商发送请求。"
     },
     "profiles": {
       "title": "配置文件",
-      "description": "__MISSING__:steps.profiles.description"
+      "description": "创建配置文件以分离渲染器设置和库。部分桌面保险库文件和共享缓存仍保留在机器级别。"
     },
     "security": {
-      "title": "__MISSING__:steps.security.title",
-      "description": "__MISSING__:steps.security.description"
+      "title": "默认安全",
+      "description": "密码和密钥通过操作系统原生钥匙串（macOS）或凭据管理器（Windows）加密。绝不以明文形式存储。"
     },
     "safety": {
-      "title": "__MISSING__:steps.safety.title",
-      "description": "__MISSING__:steps.safety.description"
+      "title": "家庭安全模式",
+      "description": "开启或关闭家庭安全模式前需要主密码。家庭安全模式还会在支持的情况下强制启用提供商的 safe_mode。"
     }
   }
 }

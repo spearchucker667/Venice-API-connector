@@ -1,12 +1,12 @@
 {
-  "networkError": "__MISSING__:networkError",
-  "apiKeyMissing": "__MISSING__:apiKeyMissing",
-  "rateLimit429": "__MISSING__:rateLimit429",
-  "safeModeBlock451": "__MISSING__:safeModeBlock451",
-  "gatewayTimeout504": "__MISSING__:gatewayTimeout504",
-  "modelUnavailable": "__MISSING__:modelUnavailable",
-  "autosaveFailed": "__MISSING__:autosaveFailed",
+  "networkError": "Сбой сетевого запроса. Проверьте подключение к интернету.",
+  "apiKeyMissing": "Отсутствует API-ключ. Настройте API-ключ в настройках.",
+  "rateLimit429": "Превышен лимит запросов. Подождите перед повторной попыткой.",
+  "safeModeBlock451": "Запрос заблокирован фильтром Семейного безопасного режима.",
+  "gatewayTimeout504": "Время запроса истекло. Попробуйте снова.",
+  "modelUnavailable": "Модель {{model}} в настоящее время недоступна.",
+  "autosaveFailed": "Сбой автосохранения: {{error}}",
   "fileReadError": "Не удалось read file.",
-  "invalidFormat": "__MISSING__:invalidFormat",
-  "unknownError": "__MISSING__:unknownError"
+  "invalidFormat": "Недопустимый формат файла.",
+  "unknownError": "Произошла непредвиденная ошибка."
 }

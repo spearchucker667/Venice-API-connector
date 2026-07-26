@@ -2,261 +2,261 @@
   "project": {
     "label": "Projekt",
     "activeProject": "Aktives Projekt",
-    "newProjectName": "__MISSING__:project.newProjectName",
-    "untitledProject": "__MISSING__:project.untitledProject",
+    "newProjectName": "Neuer Projektname",
+    "untitledProject": "Unbenanntes Projekt",
     "create": "Erstellen",
     "enterProjectName": "Eingeben: a project name.",
-    "created": "__MISSING__:project.created",
+    "created": "\"{{name}}\" erstellt",
     "createFailed": "Fehlgeschlagen: create project",
-    "new": "__MISSING__:project.new",
+    "new": "+ Neu",
     "allProjects": "Alle Projekte",
-    "switchOpenCurrent": "__MISSING__:project.switchOpenCurrent",
-    "rename": "__MISSING__:project.rename",
-    "renameAction": "__MISSING__:project.renameAction",
-    "renamed": "__MISSING__:project.renamed",
-    "archivePrompt": "__MISSING__:project.archivePrompt",
-    "archiveDetail": "__MISSING__:project.archiveDetail",
-    "archiveAction": "__MISSING__:project.archiveAction",
-    "archived": "__MISSING__:project.archived",
+    "switchOpenCurrent": "Projekt wechseln / aktuelles öffnen",
+    "rename": "Projekt umbenennen",
+    "renameAction": "Umbenennen",
+    "renamed": "Projekt umbenannt",
+    "archivePrompt": "Projekt archivieren?",
+    "archiveDetail": "Medien- und Konversationsreferenzen werden beibehalten.",
+    "archiveAction": "Archivieren",
+    "archived": "Projekt archiviert",
     "deletePrompt": "Löschen: project?",
-    "deleteDetail": "__MISSING__:project.deleteDetail",
+    "deleteDetail": "Projekte, die von Medien oder Konversationen referenziert werden, müssen stattdessen archiviert werden.",
     "deleteAction": "Löschen",
-    "deleted": "__MISSING__:project.deleted",
-    "deleteError": "__MISSING__:project.deleteError",
-    "encryptionNote": "__MISSING__:project.encryptionNote"
+    "deleted": "Projekt gelöscht",
+    "deleteError": "Projekt kann nicht gelöscht werden, während Medien oder Konversationen es referenzieren. Archivieren Sie es stattdessen.",
+    "encryptionNote": "Projekte sind IDB-verschlüsselt • generierte Elemente verwenden das aktive Projekt"
   },
   "chat": {
-    "newChat": "__MISSING__:chat.newChat",
-    "newChatShortcut": "__MISSING__:chat.newChatShortcut",
+    "newChat": "Neuer Chat",
+    "newChatShortcut": "Neuer Chat (⌘N)",
     "newChatAction": "+ Neuer Chat",
-    "history": "__MISSING__:chat.history",
-    "collapseHistory": "__MISSING__:chat.collapseHistory",
-    "expandHistory": "__MISSING__:chat.expandHistory",
-    "options": "__MISSING__:chat.options",
-    "searchChats": "__MISSING__:chat.searchChats",
-    "exportActive": "__MISSING__:chat.exportActive",
+    "history": "Verlauf",
+    "collapseHistory": "Verlauf einklappen",
+    "expandHistory": "Verlauf ausklappen",
+    "options": "Chat-Optionen",
+    "searchChats": "Chats durchsuchen",
+    "exportActive": "Aktiven Chat exportieren",
     "deleteActive": "Löschen: active chat",
     "clearActiveSelection": "Löschen: active chat selection",
-    "searchPlaceholder": "__MISSING__:chat.searchPlaceholder",
-    "searchAria": "__MISSING__:chat.searchAria",
-    "searching": "__MISSING__:chat.searching",
-    "showingMatches": "__MISSING__:chat.showingMatches",
-    "noMatches": "__MISSING__:chat.noMatches",
-    "noConversations": "__MISSING__:chat.noConversations",
+    "searchPlaceholder": "Suchen…",
+    "searchAria": "Konversationen durchsuchen",
+    "searching": "Suchen…",
+    "showingMatches": "Zeige die ersten {{count}} von {{total}} Treffern",
+    "noMatches": "Keine Treffer",
+    "noConversations": "Noch keine Konversationen",
     "deletePrompt": "Chat löschen?",
-    "untitled": "__MISSING__:chat.untitled",
+    "untitled": "Unbenannt",
     "deleteAction": "Löschen",
     "exportAsMarkdown": "Als Markdown exportieren",
-    "deleted": "__MISSING__:chat.deleted",
-    "undo": "__MISSING__:chat.undo",
-    "restored": "__MISSING__:chat.restored",
+    "deleted": "Konversation gelöscht",
+    "undo": "Rückgängig",
+    "restored": "Konversation wiederhergestellt",
     "restoreFailed": "Fehlgeschlagen: restore",
-    "restoreUnavailable": "__MISSING__:chat.restoreUnavailable"
+    "restoreUnavailable": "Konversation ist nicht mehr zur Wiederherstellung verfügbar."
   },
   "inspector": {
-    "title": "__MISSING__:inspector.title",
-    "description": "__MISSING__:inspector.description",
+    "title": "Traffic Inspector",
+    "description": "Zeigt rohe Modellausgaben und lokale Sicherheitsentscheidungen.",
     "toggle": "Traffic-Inspektor umschalten",
-    "enabled": "__MISSING__:inspector.enabled",
-    "disabled": "__MISSING__:inspector.disabled",
-    "enabledDetail": "__MISSING__:inspector.enabledDetail",
-    "disabledDetail": "__MISSING__:inspector.disabledDetail",
-    "show": "__MISSING__:inspector.show",
-    "hide": "__MISSING__:inspector.hide"
+    "enabled": "Traffic Inspector aktiviert",
+    "disabled": "Traffic Inspector deaktiviert",
+    "enabledDetail": "Rohe Antworten, Sicherheitsentscheidungen und Steuerungen für erwachsene Charaktere sind sichtbar.",
+    "disabledDetail": "Standard-Rendering wiederhergestellt.",
+    "show": "Inspektor anzeigen",
+    "hide": "Inspektor ausblenden"
   },
   "familySafeMode": {
-    "title": "__MISSING__:familySafeMode.title",
-    "on": "__MISSING__:familySafeMode.on",
-    "off": "__MISSING__:familySafeMode.off",
+    "title": "Family Safe Mode",
+    "on": "AN: lokaler Familienfilter läuft.",
+    "off": "AUS: lokaler Filter AUS (Provider Safe Mode separat).",
     "toggle": "Familien-Sicherheitsmodus umschalten",
-    "enabledTooltip": "__MISSING__:familySafeMode.enabledTooltip",
-    "disabledTooltip": "__MISSING__:familySafeMode.disabledTooltip",
-    "notSaved": "__MISSING__:familySafeMode.notSaved",
-    "writeFailed": "__MISSING__:familySafeMode.writeFailed",
-    "enabledSuccess": "__MISSING__:familySafeMode.enabledSuccess",
-    "disabledSuccess": "__MISSING__:familySafeMode.disabledSuccess"
+    "enabledTooltip": "Family Safe Mode aktiviert",
+    "disabledTooltip": "Lokaler Family Safe Mode deaktiviert (Provider Safe Mode separat)",
+    "notSaved": "Family Safe Mode wurde nicht gespeichert",
+    "writeFailed": "Konfigurationsschreiben fehlgeschlagen.",
+    "enabledSuccess": "Family Safe Mode aktiviert — lokaler Familienfilter läuft bei jeder Eingabe",
+    "disabledSuccess": "Adult Mode aktiviert — lokaler Familienfilter wird übersprungen"
   },
   "keyboardShortcuts": {
-    "switchTab": "__MISSING__:keyboardShortcuts.switchTab"
+    "switchTab": "Tab wechseln"
   },
   "tabs": {
     "chat": {
       "label": "Chat",
-      "subtitle": "__MISSING__:tabs.chat.subtitle"
+      "subtitle": "Konversations-KI"
     },
     "character-chats": {
-      "label": "__MISSING__:tabs.character-chats.label",
-      "subtitle": "__MISSING__:tabs.character-chats.subtitle"
+      "label": "Charakter-Chats",
+      "subtitle": "Konversationen mit gehosteten und lokalen Charakteren"
     },
     "history": {
-      "label": "__MISSING__:tabs.history.label",
-      "subtitle": "__MISSING__:tabs.history.subtitle"
+      "label": "Verlauf",
+      "subtitle": "Frühere Konversationen durchsuchen"
     },
     "image": {
       "label": "Bild-Studio",
-      "subtitle": "__MISSING__:tabs.image.subtitle"
+      "subtitle": "Bilder aus Text generieren"
     },
     "media": {
       "label": "Medien-Studio",
-      "subtitle": "__MISSING__:tabs.media.subtitle"
+      "subtitle": "Durchsuchen, taggen, bearbeiten und exportieren Sie Ihre generierten Medien"
     },
     "image-inspector": {
       "label": "Bild-Inspektor",
-      "subtitle": "__MISSING__:tabs.image-inspector.subtitle"
+      "subtitle": "Bilder analysieren und rekonstruieren"
     },
     "prompts": {
       "label": "Prompts",
-      "subtitle": "__MISSING__:tabs.prompts.subtitle"
+      "subtitle": "Ihre Prompt-Bibliothek durchsuchen und verwalten"
     },
     "scenes": {
       "label": "Szenen-Composer",
-      "subtitle": "__MISSING__:tabs.scenes.subtitle"
+      "subtitle": "Komplexe Bildgenerierungsszenen zusammenstellen"
     },
     "audio": {
       "label": "Audio-Studio",
-      "subtitle": "__MISSING__:tabs.audio.subtitle"
+      "subtitle": "Text-to-Speech und Transkription"
     },
     "music": {
       "label": "Musik-Studio",
-      "subtitle": "__MISSING__:tabs.music.subtitle"
+      "subtitle": "Musik und Klänge generieren"
     },
     "video": {
       "label": "Video-Studio",
-      "subtitle": "__MISSING__:tabs.video.subtitle"
+      "subtitle": "Videoclips generieren"
     },
     "embeddings": {
       "label": "Embeddings",
-      "subtitle": "__MISSING__:tabs.embeddings.subtitle"
+      "subtitle": "Vektorrepräsentationen von Text"
     },
     "search": {
       "label": "Recherche",
-      "subtitle": "__MISSING__:tabs.search.subtitle"
+      "subtitle": "Tiefenrecherche und Web-Scraping"
     },
     "characters": {
-      "label": "__MISSING__:tabs.characters.label",
-      "subtitle": "__MISSING__:tabs.characters.subtitle"
+      "label": "Charaktere",
+      "subtitle": "Rollenspiel-Charaktere konfigurieren"
     },
     "character-creator": {
       "label": "Charakter-Ersteller",
-      "subtitle": "__MISSING__:tabs.character-creator.subtitle"
+      "subtitle": "Eine grobe Idee in eine vollständige, bearbeitbare Charakterkarte umwandeln"
     },
     "rp-studio": {
       "label": "RP-Studio",
-      "subtitle": "__MISSING__:tabs.rp-studio.subtitle"
+      "subtitle": "Rollenspiel-Charakter- und Szenario-Workshop"
     },
     "workflows": {
-      "label": "__MISSING__:tabs.workflows.label",
-      "subtitle": "__MISSING__:tabs.workflows.subtitle"
+      "label": "Workflow-Vorlagen",
+      "subtitle": "Wiederverwendbare Automatisierungsketten erstellen"
     },
     "documents": {
       "label": "Dokumente",
-      "subtitle": "__MISSING__:tabs.documents.subtitle"
+      "subtitle": "Verwaltete Dokumente und bereichsbezogene Workspace-Werkzeuge"
     },
     "privacy": {
       "label": "Datenschutz",
-      "subtitle": "__MISSING__:tabs.privacy.subtitle"
+      "subtitle": "Speicher- und Datenschutzeinstellungen verwalten"
     },
     "playground": {
       "label": "Spielwiese",
-      "subtitle": "__MISSING__:tabs.playground.subtitle"
+      "subtitle": "Workflows durch Chatten erstellen"
     },
     "settings": {
       "label": "Konfiguration",
-      "subtitle": "__MISSING__:tabs.settings.subtitle"
+      "subtitle": "App-Konfiguration"
     },
     "status": {
       "label": "Status",
-      "subtitle": "__MISSING__:tabs.status.subtitle"
+      "subtitle": "App-Status und Diagnose"
     }
   },
   "groups": {
-    "conversation": "__MISSING__:groups.conversation",
-    "generate": "__MISSING__:groups.generate",
-    "build": "__MISSING__:groups.build",
-    "system": "__MISSING__:groups.system",
-    "projectsAndActions": "__MISSING__:groups.projectsAndActions",
-    "mediaStudio": "__MISSING__:groups.mediaStudio",
-    "promptLibrary": "__MISSING__:groups.promptLibrary",
+    "conversation": "Konversation",
+    "generate": "Generieren",
+    "build": "Erstellen",
+    "system": "System",
+    "projectsAndActions": "Projekte & Aktionen",
+    "mediaStudio": "Media Studio ({{count}} ausgewählt)",
+    "promptLibrary": "Prompt-Bibliothek",
     "sceneComposer": "Szenen-Composer",
     "rpStudio": "RP-Studio",
-    "researchWorkspace": "__MISSING__:groups.researchWorkspace",
-    "privacyAndStorage": "__MISSING__:groups.privacyAndStorage"
+    "researchWorkspace": "Recherche-Workspace",
+    "privacyAndStorage": "Datenschutz & Speicher"
   },
   "commandPalette": {
-    "command": "__MISSING__:commandPalette.command",
-    "searchPlaceholder": "__MISSING__:commandPalette.searchPlaceholder",
-    "esc": "__MISSING__:commandPalette.esc",
-    "tabsCanonical": "__MISSING__:commandPalette.tabsCanonical",
-    "noMatchingTabs": "__MISSING__:commandPalette.noMatchingTabs",
-    "newProject": "__MISSING__:commandPalette.newProject",
-    "switchOpenCurrent": "__MISSING__:commandPalette.switchOpenCurrent",
+    "command": "Befehl",
+    "searchPlaceholder": "Tabs oder Aktionen suchen… (z. B. Bild, neues Projekt)",
+    "esc": "ESC",
+    "tabsCanonical": "Tabs (kanonisch)",
+    "noMatchingTabs": "Keine übereinstimmenden Tabs",
+    "newProject": "Neues Projekt",
+    "switchOpenCurrent": "Aktuelles Projekt wechseln / öffnen",
     "selectAllVisible": "Auswählen: All Visible Media",
     "clearSelection": "Löschen: Media Selection",
-    "compareSelected": "__MISSING__:commandPalette.compareSelected",
-    "exportSelected": "__MISSING__:commandPalette.exportSelected",
-    "favoriteSelected": "__MISSING__:commandPalette.favoriteSelected",
-    "addTagSelected": "__MISSING__:commandPalette.addTagSelected",
-    "sendToImage": "__MISSING__:commandPalette.sendToImage",
-    "copyRecipe": "__MISSING__:commandPalette.copyRecipe",
-    "onlyAvailableMediaStudio": "__MISSING__:commandPalette.onlyAvailableMediaStudio",
-    "selectedAllVisible": "__MISSING__:commandPalette.selectedAllVisible",
-    "clearedSelection": "__MISSING__:commandPalette.clearedSelection",
+    "compareSelected": "Ausgewählte Medien vergleichen",
+    "exportSelected": "Ausgewählte Medien exportieren",
+    "favoriteSelected": "Ausgewählte Medien favorisieren",
+    "addTagSelected": "Tag zu ausgewählten Medien hinzufügen",
+    "sendToImage": "Auswahl an Image Studio senden",
+    "copyRecipe": "Ausgewähltes Recipe JSON kopieren",
+    "onlyAvailableMediaStudio": "Dieser Befehl ist nur im Media Studio verfügbar.",
+    "selectedAllVisible": "Alle sichtbaren Medien ausgewählt",
+    "clearedSelection": "Medienauswahl gelöscht",
     "selectCountToCompare": "Auswählen: 2 to {{max}} items to compare.",
     "selectOneToExport": "Auswählen: at least one media item to export.",
     "selectOne": "Auswählen: at least one media item.",
-    "openPromptLibrary": "__MISSING__:commandPalette.openPromptLibrary",
-    "newPrompt": "__MISSING__:commandPalette.newPrompt",
-    "useSelectedPrompt": "__MISSING__:commandPalette.useSelectedPrompt",
-    "exportPrompts": "__MISSING__:commandPalette.exportPrompts",
-    "importPrompts": "__MISSING__:commandPalette.importPrompts",
+    "openPromptLibrary": "Prompt-Bibliothek öffnen",
+    "newPrompt": "Neuer Prompt",
+    "useSelectedPrompt": "Ausgewählten Prompt verwenden (Kopie)",
+    "exportPrompts": "Prompts exportieren",
+    "importPrompts": "Prompts importieren…",
     "saveCurrentPrompt": "Speichern: Current Prompt to Library",
-    "untitledPrompt": "__MISSING__:commandPalette.untitledPrompt",
-    "emptyDraftPrompt": "__MISSING__:commandPalette.emptyDraftPrompt",
-    "createdNewPrompt": "__MISSING__:commandPalette.createdNewPrompt",
+    "untitledPrompt": "Unbenannter Prompt",
+    "emptyDraftPrompt": "(leerer Entwurf — durch Ihren Prompt ersetzen)",
+    "createdNewPrompt": "Neuen Prompt erstellt",
     "selectPromptFirst": "Auswählen: a prompt in the Prompt Library first.",
-    "noPromptSelected": "__MISSING__:commandPalette.noPromptSelected",
-    "promptCopied": "__MISSING__:commandPalette.promptCopied",
-    "couldNotCopyPrompt": "__MISSING__:commandPalette.couldNotCopyPrompt",
-    "noPromptsToExport": "__MISSING__:commandPalette.noPromptsToExport",
-    "exportedPrompts": "__MISSING__:commandPalette.exportedPrompts",
-    "importSuccess": "__MISSING__:commandPalette.importSuccess",
-    "importUpToDate": "__MISSING__:commandPalette.importUpToDate",
-    "couldNotImport": "__MISSING__:commandPalette.couldNotImport",
-    "importedCount": "__MISSING__:commandPalette.importedCount",
-    "syncedCount": "__MISSING__:commandPalette.syncedCount",
-    "skippedCount": "__MISSING__:commandPalette.skippedCount",
-    "openSceneComposer": "__MISSING__:commandPalette.openSceneComposer",
-    "exportScenes": "__MISSING__:commandPalette.exportScenes",
-    "importScenes": "__MISSING__:commandPalette.importScenes",
-    "noScenesToExport": "__MISSING__:commandPalette.noScenesToExport",
-    "exportedScenes": "__MISSING__:commandPalette.exportedScenes",
-    "importedScenesSuccess": "__MISSING__:commandPalette.importedScenesSuccess",
-    "skippedScenes": "__MISSING__:commandPalette.skippedScenes",
-    "openRpStudio": "__MISSING__:commandPalette.openRpStudio",
-    "createStCard": "__MISSING__:commandPalette.createStCard",
-    "startChatWithSelected": "__MISSING__:commandPalette.startChatWithSelected",
-    "newScenario": "__MISSING__:commandPalette.newScenario",
-    "createdLocalDraft": "__MISSING__:commandPalette.createdLocalDraft",
+    "noPromptSelected": "Kein Prompt ausgewählt.",
+    "promptCopied": "Prompt in die Zwischenablage kopiert",
+    "couldNotCopyPrompt": "Prompt konnte nicht kopiert werden",
+    "noPromptsToExport": "Keine Prompts zu exportieren.",
+    "exportedPrompts": "Exportiert {{count}} Prompt{{plural}}",
+    "importSuccess": "Prompt-Bibliothek: {{parts}}",
+    "importUpToDate": "Prompt-Bibliothek aktuell",
+    "couldNotImport": "Import fehlgeschlagen",
+    "importedCount": "importiert {{count}} Prompt{{plural}}",
+    "syncedCount": "synchronisiert {{count}} Prompt{{plural}}",
+    "skippedCount": "übersprungen {{count}}",
+    "openSceneComposer": "Scene Composer öffnen",
+    "exportScenes": "Szenen exportieren",
+    "importScenes": "Szenen importieren…",
+    "noScenesToExport": "Keine Szenen zu exportieren.",
+    "exportedScenes": "Exportiert {{count}} Szene{{plural}}",
+    "importedScenesSuccess": "Importiert {{count}} Szene{{plural}}{{skipped}}",
+    "skippedScenes": " (übersprungen {{count}})",
+    "openRpStudio": "RP Studio öffnen",
+    "createStCard": "ST-Karte erstellen",
+    "startChatWithSelected": "Chat mit ausgewähltem Charakter starten",
+    "newScenario": "Neues Szenario",
+    "createdLocalDraft": "Lokalen ST-Karten-Entwurf erstellt",
     "selectCharacterFirst": "Auswählen: a character in the RP Studio first.",
-    "chatStarted": "__MISSING__:commandPalette.chatStarted",
-    "couldNotStartChat": "__MISSING__:commandPalette.couldNotStartChat",
-    "scenarioFor": "__MISSING__:commandPalette.scenarioFor",
-    "createdNewScenario": "__MISSING__:commandPalette.createdNewScenario",
-    "openWorkflows": "__MISSING__:commandPalette.openWorkflows",
-    "openResearchWorkspace": "__MISSING__:commandPalette.openResearchWorkspace",
-    "newResearchSession": "__MISSING__:commandPalette.newResearchSession",
-    "exportResearchSessions": "__MISSING__:commandPalette.exportResearchSessions",
-    "importResearchSessions": "__MISSING__:commandPalette.importResearchSessions",
-    "createdNewResearchSession": "__MISSING__:commandPalette.createdNewResearchSession",
-    "noResearchToExport": "__MISSING__:commandPalette.noResearchToExport",
-    "exportedResearch": "__MISSING__:commandPalette.exportedResearch",
-    "importedResearchSuccess": "__MISSING__:commandPalette.importedResearchSuccess",
-    "openPrivacyDashboard": "__MISSING__:commandPalette.openPrivacyDashboard",
-    "refreshStorageInventory": "__MISSING__:commandPalette.refreshStorageInventory",
-    "copySafePrivacySummary": "__MISSING__:commandPalette.copySafePrivacySummary",
-    "exportSafePrivacySummary": "__MISSING__:commandPalette.exportSafePrivacySummary",
-    "toggleInspector": "__MISSING__:commandPalette.toggleInspector",
-    "toggleHint": "__MISSING__:commandPalette.toggleHint",
-    "navigateHint": "__MISSING__:commandPalette.navigateHint"
+    "chatStarted": "Chat gestartet",
+    "couldNotStartChat": "Chat konnte nicht gestartet werden",
+    "scenarioFor": "Szenario für {{name}}",
+    "createdNewScenario": "Neues Szenario erstellt",
+    "openWorkflows": "Workflows öffnen",
+    "openResearchWorkspace": "Research Workspace öffnen",
+    "newResearchSession": "Neue Research-Session",
+    "exportResearchSessions": "Research-Sessions exportieren",
+    "importResearchSessions": "Research-Sessions importieren…",
+    "createdNewResearchSession": "Neue Research-Session erstellt",
+    "noResearchToExport": "Keine Research-Sessions zu exportieren.",
+    "exportedResearch": "Exportiert {{count}} Research-Session{{plural}}",
+    "importedResearchSuccess": "Importiert {{count}} Session{{plural}}{{skipped}}",
+    "openPrivacyDashboard": "Privacy Dashboard öffnen",
+    "refreshStorageInventory": "Speicherinventar aktualisieren",
+    "copySafePrivacySummary": "Sichere Datenschutz-Zusammenfassung kopieren",
+    "exportSafePrivacySummary": "Sichere Datenschutz-Zusammenfassung exportieren",
+    "toggleInspector": "Inspector umschalten",
+    "toggleHint": "⌘K zum Umschalten",
+    "navigateHint": "↑↓ zum Navigieren · Enter zum Auswählen"
   }
 }

@@ -1,11 +1,11 @@
 {
-  "skipToContent": "__MISSING__:skipToContent",
-  "mainNavigation": "__MISSING__:mainNavigation",
-  "dialogTitle": "__MISSING__:dialogTitle",
-  "closeDialog": "__MISSING__:closeDialog",
-  "expanded": "__MISSING__:expanded",
-  "collapsed": "__MISSING__:collapsed",
-  "selected": "__MISSING__:selected",
-  "stepIndicator": "__MISSING__:stepIndicator",
-  "statusNotification": "__MISSING__:statusNotification"
+  "skipToContent": "Saltar al contenido principal",
+  "mainNavigation": "Navegación principal",
+  "dialogTitle": "Ventana de diálogo",
+  "closeDialog": "Cerrar diálogo",
+  "expanded": "Expandido",
+  "collapsed": "Contraído",
+  "selected": "Seleccionado",
+  "stepIndicator": "Paso {{current}} de {{total}}",
+  "statusNotification": "Actualización de estado"
 }

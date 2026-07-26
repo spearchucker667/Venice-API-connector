@@ -1,12 +1,12 @@
 {
-  "networkError": "__MISSING__:networkError",
-  "apiKeyMissing": "__MISSING__:apiKeyMissing",
-  "rateLimit429": "__MISSING__:rateLimit429",
-  "safeModeBlock451": "__MISSING__:safeModeBlock451",
-  "gatewayTimeout504": "__MISSING__:gatewayTimeout504",
-  "modelUnavailable": "__MISSING__:modelUnavailable",
-  "autosaveFailed": "__MISSING__:autosaveFailed",
+  "networkError": "ネットワークリクエストが失敗しました。インターネット接続を確認してください。",
+  "apiKeyMissing": "APIキーがありません。設定でAPIキーを構成してください。",
+  "rateLimit429": "レート制限を超過しました。再試行するまでお待ちください。",
+  "safeModeBlock451": "リクエストはファミリーセーフモードフィルターによってブロックされました。",
+  "gatewayTimeout504": "リクエストがタイムアウトしました。もう一度お試しください。",
+  "modelUnavailable": "モデル {{model}} は現在利用できません。",
+  "autosaveFailed": "自動保存に失敗しました: {{error}}",
   "fileReadError": "失敗：read file.",
-  "invalidFormat": "__MISSING__:invalidFormat",
-  "unknownError": "__MISSING__:unknownError"
+  "invalidFormat": "無効なファイル形式です。",
+  "unknownError": "予期しないエラーが発生しました。"
 }

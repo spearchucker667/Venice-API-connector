@@ -1,12 +1,12 @@
 {
-  "networkError": "__MISSING__:networkError",
-  "apiKeyMissing": "__MISSING__:apiKeyMissing",
-  "rateLimit429": "__MISSING__:rateLimit429",
-  "safeModeBlock451": "__MISSING__:safeModeBlock451",
-  "gatewayTimeout504": "__MISSING__:gatewayTimeout504",
-  "modelUnavailable": "__MISSING__:modelUnavailable",
-  "autosaveFailed": "__MISSING__:autosaveFailed",
+  "networkError": "Netzwerkanfrage fehlgeschlagen. Bitte überprüfen Sie Ihre Internetverbindung.",
+  "apiKeyMissing": "API-Schlüssel fehlt. Bitte konfigurieren Sie Ihren API-Schlüssel in den Einstellungen.",
+  "rateLimit429": "Ratenlimit überschritten. Bitte warten Sie, bevor Sie es erneut versuchen.",
+  "safeModeBlock451": "Anfrage durch den Filter für den Familien-Sicherheitsmodus blockiert.",
+  "gatewayTimeout504": "Zeitüberschreitung der Anfrage. Bitte versuchen Sie es erneut.",
+  "modelUnavailable": "Modell {{model}} ist derzeit nicht verfügbar.",
+  "autosaveFailed": "Automatisches Speichern fehlgeschlagen: {{error}}",
   "fileReadError": "Fehlgeschlagen: read file.",
-  "invalidFormat": "__MISSING__:invalidFormat",
-  "unknownError": "__MISSING__:unknownError"
+  "invalidFormat": "Ungültiges Dateiformat.",
+  "unknownError": "Ein unerwarteter Fehler ist aufgetreten."
 }

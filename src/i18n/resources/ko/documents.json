@@ -1,14 +1,14 @@
 {
-  "title": "Documents",
-  "workingGroups": "__MISSING__:workingGroups",
-  "managedLibrary": "__MISSING__:managedLibrary",
-  "connectedWorkspace": "__MISSING__:connectedWorkspace",
-  "documentAgent": "__MISSING__:documentAgent",
-  "proposals": "__MISSING__:proposals",
-  "revisions": "__MISSING__:revisions",
-  "createDocument": "__MISSING__:createDocument",
-  "importDocument": "__MISSING__:importDocument",
-  "searchWorkspace": "__MISSING__:searchWorkspace",
-  "fileInspector": "__MISSING__:fileInspector",
-  "noDocuments": "__MISSING__:noDocuments"
+  "title": "문서",
+  "workingGroups": "작업 그룹",
+  "managedLibrary": "관리 라이브러리",
+  "connectedWorkspace": "연결된 워크스페이스",
+  "documentAgent": "문서 에이전트",
+  "proposals": "제안",
+  "revisions": "수정 이력",
+  "createDocument": "문서 만들기",
+  "importDocument": "문서 가져오기",
+  "searchWorkspace": "워크스페이스 검색",
+  "fileInspector": "파일 검사기",
+  "noDocuments": "작업 그룹에 문서가 없습니다."
 }

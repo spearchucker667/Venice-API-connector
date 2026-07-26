@@ -1,262 +1,262 @@
 {
   "project": {
-    "label": "__MISSING__:project.label",
-    "activeProject": "__MISSING__:project.activeProject",
-    "newProjectName": "__MISSING__:project.newProjectName",
-    "untitledProject": "__MISSING__:project.untitledProject",
-    "create": "__MISSING__:project.create",
-    "enterProjectName": "__MISSING__:project.enterProjectName",
-    "created": "__MISSING__:project.created",
-    "createFailed": "__MISSING__:project.createFailed",
-    "new": "__MISSING__:project.new",
-    "allProjects": "__MISSING__:project.allProjects",
-    "switchOpenCurrent": "__MISSING__:project.switchOpenCurrent",
-    "rename": "__MISSING__:project.rename",
-    "renameAction": "__MISSING__:project.renameAction",
-    "renamed": "__MISSING__:project.renamed",
-    "archivePrompt": "__MISSING__:project.archivePrompt",
-    "archiveDetail": "__MISSING__:project.archiveDetail",
-    "archiveAction": "__MISSING__:project.archiveAction",
-    "archived": "__MISSING__:project.archived",
-    "deletePrompt": "__MISSING__:project.deletePrompt",
-    "deleteDetail": "__MISSING__:project.deleteDetail",
-    "deleteAction": "__MISSING__:project.deleteAction",
-    "deleted": "__MISSING__:project.deleted",
-    "deleteError": "__MISSING__:project.deleteError",
-    "encryptionNote": "__MISSING__:project.encryptionNote"
+    "label": "مشروع",
+    "activeProject": "المشروع النشط",
+    "newProjectName": "اسم المشروع الجديد",
+    "untitledProject": "مشروع بدون عنوان",
+    "create": "إنشاء",
+    "enterProjectName": "أدخل اسم المشروع.",
+    "created": "تم إنشاء \"{{name}}\"",
+    "createFailed": "فشل إنشاء المشروع",
+    "new": "+ جديد",
+    "allProjects": "كل المشاريع",
+    "switchOpenCurrent": "تبديل / فتح المشروع الحالي",
+    "rename": "إعادة تسمية المشروع",
+    "renameAction": "إعادة تسمية",
+    "renamed": "تمت إعادة تسمية المشروع",
+    "archivePrompt": "أرشفة المشروع؟",
+    "archiveDetail": "سيتم الحفاظ على مراجع الوسائط والمحادثات.",
+    "archiveAction": "أرشفة",
+    "archived": "تمت أرشفة المشروع",
+    "deletePrompt": "حذف المشروع؟",
+    "deleteDetail": "المشاريع المُشار إليها بواسطة الوسائط أو المحادثات يجب أرشفتها بدلاً من ذلك.",
+    "deleteAction": "حذف",
+    "deleted": "تم حذف المشروع",
+    "deleteError": "لا يمكن حذف المشروع بينما تُشير إليه وسائط أو محادثات. قم بأرشفته بدلاً من ذلك.",
+    "encryptionNote": "المشاريع مشفرة عبر IDB • العناصر المُنشأة تستخدم المشروع النشط"
   },
   "chat": {
-    "newChat": "__MISSING__:chat.newChat",
-    "newChatShortcut": "__MISSING__:chat.newChatShortcut",
-    "newChatAction": "__MISSING__:chat.newChatAction",
-    "history": "__MISSING__:chat.history",
-    "collapseHistory": "__MISSING__:chat.collapseHistory",
-    "expandHistory": "__MISSING__:chat.expandHistory",
-    "options": "__MISSING__:chat.options",
-    "searchChats": "__MISSING__:chat.searchChats",
-    "exportActive": "__MISSING__:chat.exportActive",
-    "deleteActive": "__MISSING__:chat.deleteActive",
-    "clearActiveSelection": "__MISSING__:chat.clearActiveSelection",
-    "searchPlaceholder": "__MISSING__:chat.searchPlaceholder",
-    "searchAria": "__MISSING__:chat.searchAria",
-    "searching": "__MISSING__:chat.searching",
-    "showingMatches": "__MISSING__:chat.showingMatches",
-    "noMatches": "__MISSING__:chat.noMatches",
-    "noConversations": "__MISSING__:chat.noConversations",
-    "deletePrompt": "__MISSING__:chat.deletePrompt",
-    "untitled": "__MISSING__:chat.untitled",
-    "deleteAction": "__MISSING__:chat.deleteAction",
-    "exportAsMarkdown": "__MISSING__:chat.exportAsMarkdown",
-    "deleted": "__MISSING__:chat.deleted",
-    "undo": "__MISSING__:chat.undo",
-    "restored": "__MISSING__:chat.restored",
-    "restoreFailed": "__MISSING__:chat.restoreFailed",
-    "restoreUnavailable": "__MISSING__:chat.restoreUnavailable"
+    "newChat": "محادثة جديدة",
+    "newChatShortcut": "محادثة جديدة (⌘N)",
+    "newChatAction": "+ محادثة جديدة",
+    "history": "السجل",
+    "collapseHistory": "طي السجل",
+    "expandHistory": "توسيع السجل",
+    "options": "خيارات المحادثة",
+    "searchChats": "البحث في المحادثات",
+    "exportActive": "تصدير المحادثة النشطة",
+    "deleteActive": "حذف المحادثة النشطة",
+    "clearActiveSelection": "مسح تحديد المحادثة النشطة",
+    "searchPlaceholder": "بحث…",
+    "searchAria": "البحث في المحادثات",
+    "searching": "جارٍ البحث…",
+    "showingMatches": "عرض أول {{count}} من {{total}} نتيجة",
+    "noMatches": "لا توجد نتائج",
+    "noConversations": "لا توجد محادثات بعد",
+    "deletePrompt": "حذف المحادثة؟",
+    "untitled": "بدون عنوان",
+    "deleteAction": "حذف",
+    "exportAsMarkdown": "تصدير كـ Markdown",
+    "deleted": "تم حذف المحادثة",
+    "undo": "تراجع",
+    "restored": "تمت استعادة المحادثة",
+    "restoreFailed": "فشل الاستعادة",
+    "restoreUnavailable": "المحادثة لم تعد متاحة للاستعادة."
   },
   "inspector": {
-    "title": "__MISSING__:inspector.title",
-    "description": "__MISSING__:inspector.description",
-    "toggle": "__MISSING__:inspector.toggle",
-    "enabled": "__MISSING__:inspector.enabled",
-    "disabled": "__MISSING__:inspector.disabled",
-    "enabledDetail": "__MISSING__:inspector.enabledDetail",
-    "disabledDetail": "__MISSING__:inspector.disabledDetail",
-    "show": "__MISSING__:inspector.show",
-    "hide": "__MISSING__:inspector.hide"
+    "title": "مفتش حركة المرور",
+    "description": "يعرض مخرجات النموذج الخام وقرارات الأمان المحلية.",
+    "toggle": "تبديل مفتش حركة المرور",
+    "enabled": "تم تفعيل مفتش حركة المرور",
+    "disabled": "تم تعطيل مفتش حركة المرور",
+    "enabledDetail": "الاستجابات الخام وقرارات الأمان وعناصر تحكم الشخصيات البالغة مرئية.",
+    "disabledDetail": "تمت استعادة العرض القياسي.",
+    "show": "إظهار المفتش",
+    "hide": "إخفاء المفتش"
   },
   "familySafeMode": {
-    "title": "__MISSING__:familySafeMode.title",
-    "on": "__MISSING__:familySafeMode.on",
-    "off": "__MISSING__:familySafeMode.off",
-    "toggle": "__MISSING__:familySafeMode.toggle",
-    "enabledTooltip": "__MISSING__:familySafeMode.enabledTooltip",
-    "disabledTooltip": "__MISSING__:familySafeMode.disabledTooltip",
-    "notSaved": "__MISSING__:familySafeMode.notSaved",
-    "writeFailed": "__MISSING__:familySafeMode.writeFailed",
-    "enabledSuccess": "__MISSING__:familySafeMode.enabledSuccess",
-    "disabledSuccess": "__MISSING__:familySafeMode.disabledSuccess"
+    "title": "الوضع الآمن للعائلة",
+    "on": "تشغيل: يعمل فلتر العائلة المحلي.",
+    "off": "إيقاف: الفلتر المحلي متوقف (وضع المزود الآمن منفصل).",
+    "toggle": "تبديل وضع الأمان العائلي",
+    "enabledTooltip": "تم تفعيل وضع الأمان العائلي",
+    "disabledTooltip": "وضع الأمان العائلي المحلي معطل (وضع المزود الآمن منفصل)",
+    "notSaved": "لم يتم حفظ وضع الأمان العائلي",
+    "writeFailed": "فشل كتابة التكوين.",
+    "enabledSuccess": "تم تفعيل وضع الأمان العائلي — يعمل فلتر العائلة المحلي مع كل طلب",
+    "disabledSuccess": "تم تفعيل وضع البالغين — يتم تخطي فلتر العائلة المحلي"
   },
   "keyboardShortcuts": {
-    "switchTab": "__MISSING__:keyboardShortcuts.switchTab"
+    "switchTab": "تبديل التبويب"
   },
   "tabs": {
     "chat": {
-      "label": "Chat",
-      "subtitle": "__MISSING__:tabs.chat.subtitle"
+      "label": "المحادثة",
+      "subtitle": "ذكاء اصطناعي للمحادثة"
     },
     "character-chats": {
-      "label": "__MISSING__:tabs.character-chats.label",
-      "subtitle": "__MISSING__:tabs.character-chats.subtitle"
+      "label": "محادثات الشخصيات",
+      "subtitle": "محادثات مع شخصيات مستضافة ومحلية"
     },
     "history": {
-      "label": "__MISSING__:tabs.history.label",
-      "subtitle": "__MISSING__:tabs.history.subtitle"
+      "label": "السجل",
+      "subtitle": "تصفح المحادثات السابقة"
     },
     "image": {
-      "label": "__MISSING__:tabs.image.label",
-      "subtitle": "__MISSING__:tabs.image.subtitle"
+      "label": "استوديو الصور",
+      "subtitle": "توليد الصور من النص"
     },
     "media": {
-      "label": "__MISSING__:tabs.media.label",
-      "subtitle": "__MISSING__:tabs.media.subtitle"
+      "label": "استوديو الوسائط",
+      "subtitle": "تصفح ووسم وتحرير وتصدير الوسائط المُنشأة"
     },
     "image-inspector": {
-      "label": "__MISSING__:tabs.image-inspector.label",
-      "subtitle": "__MISSING__:tabs.image-inspector.subtitle"
+      "label": "مفتش الصور",
+      "subtitle": "تحليل وإعادة بناء الصور"
     },
     "prompts": {
-      "label": "Prompts",
-      "subtitle": "__MISSING__:tabs.prompts.subtitle"
+      "label": "الطلبات",
+      "subtitle": "تصفح وإدارة مكتبة الطلبات"
     },
     "scenes": {
-      "label": "__MISSING__:tabs.scenes.label",
-      "subtitle": "__MISSING__:tabs.scenes.subtitle"
+      "label": "مؤلف المشاهد",
+      "subtitle": "تأليف مشاهد معقدة لتوليد الصور"
     },
     "audio": {
-      "label": "__MISSING__:tabs.audio.label",
-      "subtitle": "__MISSING__:tabs.audio.subtitle"
+      "label": "استوديو الصوت",
+      "subtitle": "تحويل النص إلى كلام والتفريغ الصوتي"
     },
     "music": {
-      "label": "__MISSING__:tabs.music.label",
-      "subtitle": "__MISSING__:tabs.music.subtitle"
+      "label": "استوديو الموسيقى",
+      "subtitle": "توليد الموسيقى والصوت"
     },
     "video": {
-      "label": "__MISSING__:tabs.video.label",
-      "subtitle": "__MISSING__:tabs.video.subtitle"
+      "label": "استوديو الفيديو",
+      "subtitle": "توليد مقاطع الفيديو"
     },
     "embeddings": {
-      "label": "Embeddings",
-      "subtitle": "__MISSING__:tabs.embeddings.subtitle"
+      "label": "التضمينات",
+      "subtitle": "تمثيلات متجهة للنص"
     },
     "search": {
-      "label": "__MISSING__:tabs.search.label",
-      "subtitle": "__MISSING__:tabs.search.subtitle"
+      "label": "البحث",
+      "subtitle": "بحث متعمق واستخراج من الويب"
     },
     "characters": {
-      "label": "__MISSING__:tabs.characters.label",
-      "subtitle": "__MISSING__:tabs.characters.subtitle"
+      "label": "الشخصيات",
+      "subtitle": "تكوين شخصيات لعب الأدوار"
     },
     "character-creator": {
-      "label": "__MISSING__:tabs.character-creator.label",
-      "subtitle": "__MISSING__:tabs.character-creator.subtitle"
+      "label": "منشئ الشخصيات",
+      "subtitle": "حوّل فكرة أولية إلى بطاقة شخصية كاملة قابلة للتحرير"
     },
     "rp-studio": {
-      "label": "__MISSING__:tabs.rp-studio.label",
-      "subtitle": "__MISSING__:tabs.rp-studio.subtitle"
+      "label": "استوديو لعب الأدوار",
+      "subtitle": "ورشة شخصيات وسيناريوهات لعب الأدوار"
     },
     "workflows": {
-      "label": "__MISSING__:tabs.workflows.label",
-      "subtitle": "__MISSING__:tabs.workflows.subtitle"
+      "label": "قوالب سير العمل",
+      "subtitle": "بناء سلاسل أتمتة قابلة لإعادة الاستخدام"
     },
     "documents": {
-      "label": "Documents",
-      "subtitle": "__MISSING__:tabs.documents.subtitle"
+      "label": "المستندات",
+      "subtitle": "مستندات مُدارة وأدوات مساحة عمل محددة النطاق"
     },
     "privacy": {
-      "label": "__MISSING__:tabs.privacy.label",
-      "subtitle": "__MISSING__:tabs.privacy.subtitle"
+      "label": "الخصوصية",
+      "subtitle": "إدارة التخزين وإعدادات الخصوصية"
     },
     "playground": {
-      "label": "__MISSING__:tabs.playground.label",
-      "subtitle": "__MISSING__:tabs.playground.subtitle"
+      "label": "ساحة اللعب",
+      "subtitle": "بناء سير العمل عبر المحادثة"
     },
     "settings": {
-      "label": "__MISSING__:tabs.settings.label",
-      "subtitle": "__MISSING__:tabs.settings.subtitle"
+      "label": "التكوين",
+      "subtitle": "تكوين التطبيق"
     },
     "status": {
-      "label": "Status",
-      "subtitle": "__MISSING__:tabs.status.subtitle"
+      "label": "الحالة",
+      "subtitle": "حالة التطبيق والتشخيصات"
     }
   },
   "groups": {
-    "conversation": "__MISSING__:groups.conversation",
-    "generate": "__MISSING__:groups.generate",
-    "build": "__MISSING__:groups.build",
-    "system": "__MISSING__:groups.system",
-    "projectsAndActions": "__MISSING__:groups.projectsAndActions",
-    "mediaStudio": "__MISSING__:groups.mediaStudio",
-    "promptLibrary": "__MISSING__:groups.promptLibrary",
-    "sceneComposer": "__MISSING__:groups.sceneComposer",
-    "rpStudio": "__MISSING__:groups.rpStudio",
-    "researchWorkspace": "__MISSING__:groups.researchWorkspace",
-    "privacyAndStorage": "__MISSING__:groups.privacyAndStorage"
+    "conversation": "المحادثة",
+    "generate": "التوليد",
+    "build": "البناء",
+    "system": "النظام",
+    "projectsAndActions": "المشاريع والإجراءات",
+    "mediaStudio": "استوديو الوسائط ({{count}} محدد)",
+    "promptLibrary": "مكتبة الأوامر",
+    "sceneComposer": "منشئ المشاهد",
+    "rpStudio": "استوديو RP",
+    "researchWorkspace": "مساحة العمل البحثية",
+    "privacyAndStorage": "الخصوصية والتخزين"
   },
   "commandPalette": {
-    "command": "__MISSING__:commandPalette.command",
-    "searchPlaceholder": "__MISSING__:commandPalette.searchPlaceholder",
-    "esc": "__MISSING__:commandPalette.esc",
-    "tabsCanonical": "__MISSING__:commandPalette.tabsCanonical",
-    "noMatchingTabs": "__MISSING__:commandPalette.noMatchingTabs",
-    "newProject": "__MISSING__:commandPalette.newProject",
-    "switchOpenCurrent": "__MISSING__:commandPalette.switchOpenCurrent",
-    "selectAllVisible": "__MISSING__:commandPalette.selectAllVisible",
-    "clearSelection": "__MISSING__:commandPalette.clearSelection",
-    "compareSelected": "__MISSING__:commandPalette.compareSelected",
-    "exportSelected": "__MISSING__:commandPalette.exportSelected",
-    "favoriteSelected": "__MISSING__:commandPalette.favoriteSelected",
-    "addTagSelected": "__MISSING__:commandPalette.addTagSelected",
-    "sendToImage": "__MISSING__:commandPalette.sendToImage",
-    "copyRecipe": "__MISSING__:commandPalette.copyRecipe",
-    "onlyAvailableMediaStudio": "__MISSING__:commandPalette.onlyAvailableMediaStudio",
-    "selectedAllVisible": "__MISSING__:commandPalette.selectedAllVisible",
-    "clearedSelection": "__MISSING__:commandPalette.clearedSelection",
-    "selectCountToCompare": "__MISSING__:commandPalette.selectCountToCompare",
-    "selectOneToExport": "__MISSING__:commandPalette.selectOneToExport",
-    "selectOne": "__MISSING__:commandPalette.selectOne",
-    "openPromptLibrary": "__MISSING__:commandPalette.openPromptLibrary",
-    "newPrompt": "__MISSING__:commandPalette.newPrompt",
-    "useSelectedPrompt": "__MISSING__:commandPalette.useSelectedPrompt",
-    "exportPrompts": "__MISSING__:commandPalette.exportPrompts",
-    "importPrompts": "__MISSING__:commandPalette.importPrompts",
-    "saveCurrentPrompt": "__MISSING__:commandPalette.saveCurrentPrompt",
-    "untitledPrompt": "__MISSING__:commandPalette.untitledPrompt",
-    "emptyDraftPrompt": "__MISSING__:commandPalette.emptyDraftPrompt",
-    "createdNewPrompt": "__MISSING__:commandPalette.createdNewPrompt",
-    "selectPromptFirst": "__MISSING__:commandPalette.selectPromptFirst",
-    "noPromptSelected": "__MISSING__:commandPalette.noPromptSelected",
-    "promptCopied": "__MISSING__:commandPalette.promptCopied",
-    "couldNotCopyPrompt": "__MISSING__:commandPalette.couldNotCopyPrompt",
-    "noPromptsToExport": "__MISSING__:commandPalette.noPromptsToExport",
-    "exportedPrompts": "__MISSING__:commandPalette.exportedPrompts",
-    "importSuccess": "__MISSING__:commandPalette.importSuccess",
-    "importUpToDate": "__MISSING__:commandPalette.importUpToDate",
-    "couldNotImport": "__MISSING__:commandPalette.couldNotImport",
-    "importedCount": "__MISSING__:commandPalette.importedCount",
-    "syncedCount": "__MISSING__:commandPalette.syncedCount",
-    "skippedCount": "__MISSING__:commandPalette.skippedCount",
-    "openSceneComposer": "__MISSING__:commandPalette.openSceneComposer",
-    "exportScenes": "__MISSING__:commandPalette.exportScenes",
-    "importScenes": "__MISSING__:commandPalette.importScenes",
-    "noScenesToExport": "__MISSING__:commandPalette.noScenesToExport",
-    "exportedScenes": "__MISSING__:commandPalette.exportedScenes",
-    "importedScenesSuccess": "__MISSING__:commandPalette.importedScenesSuccess",
-    "skippedScenes": "__MISSING__:commandPalette.skippedScenes",
-    "openRpStudio": "__MISSING__:commandPalette.openRpStudio",
-    "createStCard": "__MISSING__:commandPalette.createStCard",
-    "startChatWithSelected": "__MISSING__:commandPalette.startChatWithSelected",
-    "newScenario": "__MISSING__:commandPalette.newScenario",
-    "createdLocalDraft": "__MISSING__:commandPalette.createdLocalDraft",
-    "selectCharacterFirst": "__MISSING__:commandPalette.selectCharacterFirst",
-    "chatStarted": "__MISSING__:commandPalette.chatStarted",
-    "couldNotStartChat": "__MISSING__:commandPalette.couldNotStartChat",
-    "scenarioFor": "__MISSING__:commandPalette.scenarioFor",
-    "createdNewScenario": "__MISSING__:commandPalette.createdNewScenario",
-    "openWorkflows": "__MISSING__:commandPalette.openWorkflows",
-    "openResearchWorkspace": "__MISSING__:commandPalette.openResearchWorkspace",
-    "newResearchSession": "__MISSING__:commandPalette.newResearchSession",
-    "exportResearchSessions": "__MISSING__:commandPalette.exportResearchSessions",
-    "importResearchSessions": "__MISSING__:commandPalette.importResearchSessions",
-    "createdNewResearchSession": "__MISSING__:commandPalette.createdNewResearchSession",
-    "noResearchToExport": "__MISSING__:commandPalette.noResearchToExport",
-    "exportedResearch": "__MISSING__:commandPalette.exportedResearch",
-    "importedResearchSuccess": "__MISSING__:commandPalette.importedResearchSuccess",
-    "openPrivacyDashboard": "__MISSING__:commandPalette.openPrivacyDashboard",
-    "refreshStorageInventory": "__MISSING__:commandPalette.refreshStorageInventory",
-    "copySafePrivacySummary": "__MISSING__:commandPalette.copySafePrivacySummary",
-    "exportSafePrivacySummary": "__MISSING__:commandPalette.exportSafePrivacySummary",
-    "toggleInspector": "__MISSING__:commandPalette.toggleInspector",
-    "toggleHint": "__MISSING__:commandPalette.toggleHint",
-    "navigateHint": "__MISSING__:commandPalette.navigateHint"
+    "command": "أمر",
+    "searchPlaceholder": "ابحث في التبويبات أو الإجراءات… (مثل: صورة، مشروع جديد)",
+    "esc": "ESC",
+    "tabsCanonical": "التبويبات (أساسية)",
+    "noMatchingTabs": "لا توجد تبويبات مطابقة",
+    "newProject": "مشروع جديد",
+    "switchOpenCurrent": "تبديل / فتح المشروع الحالي",
+    "selectAllVisible": "تحديد كل الوسائط المرئية",
+    "clearSelection": "مسح تحديد الوسائط",
+    "compareSelected": "مقارنة الوسائط المحددة",
+    "exportSelected": "تصدير الوسائط المحددة",
+    "favoriteSelected": "تمييز الوسائط المحددة بالمفضلة",
+    "addTagSelected": "إضافة وسم للوسائط المحددة",
+    "sendToImage": "إرسال المحدد إلى استوديو الصور",
+    "copyRecipe": "نسخ وصفة JSON المحددة",
+    "onlyAvailableMediaStudio": "هذا الأمر متاح فقط في استوديو الوسائط.",
+    "selectedAllVisible": "تم تحديد كل الوسائط المرئية",
+    "clearedSelection": "تم مسح تحديد الوسائط",
+    "selectCountToCompare": "حدد من 2 إلى {{max}} عناصر للمقارنة.",
+    "selectOneToExport": "حدد عنصر وسائط واحد على الأقل للتصدير.",
+    "selectOne": "حدد عنصر وسائط واحد على الأقل.",
+    "openPromptLibrary": "فتح مكتبة الأوامر",
+    "newPrompt": "أمر جديد",
+    "useSelectedPrompt": "استخدام الأمر المحدد (نسخ)",
+    "exportPrompts": "تصدير الأوامر",
+    "importPrompts": "استيراد الأوامر…",
+    "saveCurrentPrompt": "حفظ الأمر الحالي إلى المكتبة",
+    "untitledPrompt": "أمر بدون عنوان",
+    "emptyDraftPrompt": "(مسودة فارغة — استبدلها بأمرك)",
+    "createdNewPrompt": "تم إنشاء أمر جديد",
+    "selectPromptFirst": "حدد أمرًا في مكتبة الأوامر أولاً.",
+    "noPromptSelected": "لم يتم تحديد أي أمر.",
+    "promptCopied": "تم نسخ الأمر إلى الحافظة",
+    "couldNotCopyPrompt": "تعذر نسخ الأمر",
+    "noPromptsToExport": "لا توجد أوامر للتصدير.",
+    "exportedPrompts": "تم تصدير {{count}} أمر{{plural}}",
+    "importSuccess": "مكتبة الأوامر: {{parts}}",
+    "importUpToDate": "مكتبة الأوامر محدّثة",
+    "couldNotImport": "تعذر الاستيراد",
+    "importedCount": "تم استيراد {{count}} أمر{{plural}}",
+    "syncedCount": "تمت مزامنة {{count}} أمر{{plural}}",
+    "skippedCount": "تم تخطي {{count}}",
+    "openSceneComposer": "فتح منشئ المشاهد",
+    "exportScenes": "تصدير المشاهد",
+    "importScenes": "استيراد المشاهد…",
+    "noScenesToExport": "لا توجد مشاهد للتصدير.",
+    "exportedScenes": "تم تصدير {{count}} مشهد{{plural}}",
+    "importedScenesSuccess": "تم استيراد {{count}} مشهد{{plural}}{{skipped}}",
+    "skippedScenes": " (تم تخطي {{count}})",
+    "openRpStudio": "فتح استوديو RP",
+    "createStCard": "إنشاء بطاقة ST",
+    "startChatWithSelected": "بدء الدردشة مع الشخصية المحددة",
+    "newScenario": "سيناريو جديد",
+    "createdLocalDraft": "تم إنشاء مسودة بطاقة ST محلية",
+    "selectCharacterFirst": "حدد شخصية في استوديو RP أولاً.",
+    "chatStarted": "بدأت المحادثة",
+    "couldNotStartChat": "تعذر بدء المحادثة",
+    "scenarioFor": "سيناريو لـ {{name}}",
+    "createdNewScenario": "تم إنشاء سيناريو جديد",
+    "openWorkflows": "فتح سير العمل",
+    "openResearchWorkspace": "فتح مساحة البحث",
+    "newResearchSession": "جلسة بحث جديدة",
+    "exportResearchSessions": "تصدير جلسات البحث",
+    "importResearchSessions": "استيراد جلسات البحث…",
+    "createdNewResearchSession": "تم إنشاء جلسة بحث جديدة",
+    "noResearchToExport": "لا توجد جلسات بحث للتصدير.",
+    "exportedResearch": "تم تصدير {{count}} جلسة بحث{{plural}}",
+    "importedResearchSuccess": "تم استيراد {{count}} جلسة{{plural}}{{skipped}}",
+    "openPrivacyDashboard": "فتح لوحة الخصوصية",
+    "refreshStorageInventory": "تحديث جرد التخزين",
+    "copySafePrivacySummary": "نسخ ملخص الخصوصية الآمن",
+    "exportSafePrivacySummary": "تصدير ملخص الخصوصية الآمن",
+    "toggleInspector": "تبديل المفتش",
+    "toggleHint": "⌘K للتبديل",
+    "navigateHint": "↑↓ للتنقل · Enter للاختيار"
   }
 }

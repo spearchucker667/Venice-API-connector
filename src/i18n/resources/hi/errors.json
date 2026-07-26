@@ -1,12 +1,12 @@
 {
-  "networkError": "__MISSING__:networkError",
-  "apiKeyMissing": "__MISSING__:apiKeyMissing",
-  "rateLimit429": "__MISSING__:rateLimit429",
-  "safeModeBlock451": "__MISSING__:safeModeBlock451",
-  "gatewayTimeout504": "__MISSING__:gatewayTimeout504",
-  "modelUnavailable": "__MISSING__:modelUnavailable",
-  "autosaveFailed": "__MISSING__:autosaveFailed",
-  "fileReadError": "__MISSING__:fileReadError",
-  "invalidFormat": "__MISSING__:invalidFormat",
-  "unknownError": "__MISSING__:unknownError"
+  "networkError": "नेटवर्क अनुरोध विफल हो गया। कृपया अपना इंटरनेट कनेक्शन जांचें।",
+  "apiKeyMissing": "API कुंजी अनुपस्थित है। कृपया सेटिंग्स में अपनी API कुंजी कॉन्फ़िगर करें।",
+  "rateLimit429": "दर सीमा पार हो गई। कृपया पुनः प्रयास करने से पहले प्रतीक्षा करें।",
+  "safeModeBlock451": "अनुरोध परिवार सुरक्षित मोड फ़िल्टर द्वारा अवरुद्ध कर दिया गया है।",
+  "gatewayTimeout504": "अनुरोध का समय समाप्त हो गया। कृपया पुनः प्रयास करें।",
+  "modelUnavailable": "मॉडल {{model}} वर्तमान में अनुपलब्ध है।",
+  "autosaveFailed": "स्वतः सहेजना विफल: {{error}}",
+  "fileReadError": "फ़ाइल पढ़ने में विफल।",
+  "invalidFormat": "अमान्य फ़ाइल प्रारूप।",
+  "unknownError": "एक अप्रत्याशित त्रुटि उत्पन्न हुई।"
 }

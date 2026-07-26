@@ -1,534 +1,534 @@
 {
-  "title": "__MISSING__:title",
-  "subtitle": "__MISSING__:subtitle",
+  "title": "구성 및 설정",
+  "subtitle": "API 엔드포인트, 기본값 및 외관 스타일을 관리합니다.",
   "sections": {
-    "languageRegion": "__MISSING__:sections.languageRegion",
-    "profiles": "__MISSING__:sections.profiles",
-    "apiKeys": "__MISSING__:sections.apiKeys",
-    "providers": "__MISSING__:sections.providers",
-    "defaults": "__MISSING__:sections.defaults",
-    "safety": "__MISSING__:sections.safety",
-    "vault": "__MISSING__:sections.vault",
-    "appearance": "__MISSING__:sections.appearance",
-    "data": "__MISSING__:sections.data",
-    "backupSync": "__MISSING__:sections.backupSync",
-    "about": "__MISSING__:sections.about",
-    "updates": "Updates",
-    "config": "__MISSING__:sections.config",
-    "audioSpeech": "__MISSING__:sections.audioSpeech"
+    "languageRegion": "언어 및 지역",
+    "profiles": "프로필",
+    "apiKeys": "Venice API 키",
+    "providers": "대체 제공자",
+    "defaults": "기본값 및 동작",
+    "safety": "안전",
+    "vault": "대화 금고",
+    "appearance": "외관",
+    "data": "데이터 및 저장소",
+    "backupSync": "백업 및 동기화",
+    "about": "정보 및 법적 고지",
+    "updates": "업데이트",
+    "config": "로컬 구성",
+    "audioSpeech": "오디오 및 음성"
   },
   "languageRegion": {
-    "title": "__MISSING__:languageRegion.title",
-    "description": "__MISSING__:languageRegion.description",
-    "uiLanguageLabel": "__MISSING__:languageRegion.uiLanguageLabel",
-    "useSystemLanguage": "__MISSING__:languageRegion.useSystemLanguage",
-    "resolvedLocale": "__MISSING__:languageRegion.resolvedLocale",
-    "textDirection": "__MISSING__:languageRegion.textDirection",
-    "leftToRight": "__MISSING__:languageRegion.leftToRight",
-    "rightToLeft": "__MISSING__:languageRegion.rightToLeft",
-    "formattingPreview": "__MISSING__:languageRegion.formattingPreview",
-    "dateExample": "Date",
-    "timeExample": "__MISSING__:languageRegion.timeExample",
-    "numberExample": "__MISSING__:languageRegion.numberExample",
-    "bytesExample": "__MISSING__:languageRegion.bytesExample"
+    "title": "언어 및 지역",
+    "description": "애플리케이션 언어, 텍스트 방향 및 지역 형식 기본 설정을 사용자 지정합니다.",
+    "uiLanguageLabel": "인터페이스 언어",
+    "useSystemLanguage": "시스템 언어 사용",
+    "resolvedLocale": "활성 로케일",
+    "textDirection": "텍스트 방향",
+    "leftToRight": "왼쪽에서 오른쪽 (LTR)",
+    "rightToLeft": "오른쪽에서 왼쪽 (RTL)",
+    "formattingPreview": "지역 형식 미리보기",
+    "dateExample": "날짜",
+    "timeExample": "시간",
+    "numberExample": "숫자",
+    "bytesExample": "파일 크기"
   },
   "apiKeys": {
-    "title": "__MISSING__:apiKeys.title",
-    "keyInputLabel": "__MISSING__:apiKeys.keyInputLabel",
-    "testConnection": "__MISSING__:apiKeys.testConnection",
-    "saveKey": "__MISSING__:apiKeys.saveKey",
-    "deleteKey": "__MISSING__:apiKeys.deleteKey",
-    "veniceTitle": "__MISSING__:apiKeys.veniceTitle",
+    "title": "Venice API 키",
+    "keyInputLabel": "API 키",
+    "testConnection": "연결 테스트",
+    "saveKey": "키 저장",
+    "deleteKey": "키 삭제",
+    "veniceTitle": "Venice.ai 통합",
     "status": {
-      "configured": "__MISSING__:apiKeys.status.configured",
-      "unset": "__MISSING__:apiKeys.status.unset",
-      "optional": "__MISSING__:apiKeys.status.optional"
+      "configured": "구성됨",
+      "unset": "설정되지 않음",
+      "optional": "선택 사항"
     },
-    "veniceDescription": "__MISSING__:apiKeys.veniceDescription",
-    "jinaTitle": "__MISSING__:apiKeys.jinaTitle",
+    "veniceDescription": "API 키는 안전한 저장소 암호화를 사용하여 저장되며 웹 샌드박스에 노출되지 않습니다.",
+    "jinaTitle": "Jina.ai 통합",
     "jinaDescription": {
-      "prefix": "__MISSING__:apiKeys.jinaDescription.prefix",
-      "electron": "__MISSING__:apiKeys.jinaDescription.electron",
-      "web": "__MISSING__:apiKeys.jinaDescription.web"
+      "prefix": "심층 웹 검색, 스크래핑 및 소셜 프로필 발견 매핑 기능을 제공합니다.",
+      "electron": "Jina API 키는 동일한 OS 안전 저장소에 저장됩니다.",
+      "web": "Jina API 키는 이 브라우저 세션의 메모리에만 보관됩니다. 영구 웹 구성을 위해서는 서버 환경을 사용하세요."
     },
-    "savedElectron": "__MISSING__:apiKeys.savedElectron",
-    "savedWeb": "__MISSING__:apiKeys.savedWeb",
-    "saveFailed": "__MISSING__:apiKeys.saveFailed",
+    "savedElectron": "Venice API 키가 안전하게 저장되었습니다.",
+    "savedWeb": "이 개발 세션을 위해 Venice API 키가 저장되었습니다.",
+    "saveFailed": "API 키 저장에 실패했습니다.",
     "deleteConfirm": {
-      "title": "__MISSING__:apiKeys.deleteConfirm.title",
-      "electron": "__MISSING__:apiKeys.deleteConfirm.electron",
-      "web": "__MISSING__:apiKeys.deleteConfirm.web"
+      "title": "Venice API 키를 삭제하시겠습니까?",
+      "electron": "이 작업은 OS 안전 저장소에서 Venice API 키를 제거합니다. 요청을 하려면 다시 입력해야 합니다.",
+      "web": "이 작업은 현재 개발 세션에서 Venice API 키를 제거합니다."
     },
-    "deleted": "__MISSING__:apiKeys.deleted",
-    "deleteFailed": "__MISSING__:apiKeys.deleteFailed",
-    "testSuccess": "__MISSING__:apiKeys.testSuccess",
-    "testFailed": "__MISSING__:apiKeys.testFailed",
-    "testError": "__MISSING__:apiKeys.testError"
+    "deleted": "Venice API 키가 삭제되었습니다.",
+    "deleteFailed": "API 키 삭제에 실패했습니다.",
+    "testSuccess": "연결 성공{{status}}.",
+    "testFailed": "연결 실패: {{message}}",
+    "testError": "연결 테스트에 실패했습니다."
   },
   "safety": {
-    "title": "__MISSING__:safety.title",
-    "localFamilySafeMode": "__MISSING__:safety.localFamilySafeMode",
-    "veniceApiSafeMode": "__MISSING__:safety.veniceApiSafeMode",
-    "statusBanner": "__MISSING__:safety.statusBanner",
-    "familySafeModeTitle": "__MISSING__:safety.familySafeModeTitle",
-    "familySafeModeDescription": "__MISSING__:safety.familySafeModeDescription",
-    "onFamilySafeMode": "__MISSING__:safety.onFamilySafeMode",
-    "offAdultMode": "__MISSING__:safety.offAdultMode",
+    "title": "안전 및 보호",
+    "localFamilySafeMode": "로컬 가족 안전 모드",
+    "veniceApiSafeMode": "Venice API 안전 모드",
+    "statusBanner": "로컬 필터: {{localStatus}} | Venice 제공자 필터링: {{veniceStatus}}",
+    "familySafeModeTitle": "가족 안전 모드",
+    "familySafeModeDescription": "Venice Forge 실행",
+    "onFamilySafeMode": "ON: 가족 세이프 모드",
+    "offAdultMode": "OFF: 성인 모드 (로컬 필터 OFF)",
     "status": {
-      "enabled": "__MISSING__:safety.status.enabled",
-      "disabled": "__MISSING__:safety.status.disabled",
-      "localOffProviderOn": "__MISSING__:safety.status.localOffProviderOn",
-      "bothOff": "__MISSING__:safety.status.bothOff",
-      "filteredLocally": "__MISSING__:safety.status.filteredLocally"
+      "enabled": "활성화하면 일치하는 요청이 공급자를 호출하기 전에 로컬에서 차단됩니다.",
+      "disabled": "Venice Forge를 우회합니다",
+      "localOffProviderOn": "로컬 가족 필터가 꺼져 있지만 Venice API 공급자 측 세이프 모드는 여전히 켜져 있습니다. 아웃바운드 요청에는 safe_mode: true가 포함됩니다.",
+      "bothOff": "로컬 가족 필터와 Venice API 공급자 세이프 모드 모두 꺼져 있습니다. 아웃바운드 요청에는 safe_mode: false가 포함됩니다.",
+      "filteredLocally": "일치하는 요청은 공급자에 도달하기 전에 로컬에서 필터링됩니다."
     },
-    "effectiveStatus": "__MISSING__:safety.effectiveStatus",
-    "setMasterPassword": "__MISSING__:safety.setMasterPassword",
-    "masterPasswordEnabled": "__MISSING__:safety.masterPasswordEnabled",
-    "veniceApiSafeModeTitle": "__MISSING__:safety.veniceApiSafeModeTitle",
-    "veniceApiSafeModeDescription": "__MISSING__:safety.veniceApiSafeModeDescription",
+    "effectiveStatus": "유효 상태: 로컬 필터: {{local}} | Venice 공급자 필터링: {{provider}}",
+    "setMasterPassword": "가족 세이프 모드를 잠그려면 마스터 비밀번호 설정",
+    "masterPasswordEnabled": "마스터 비밀번호가 활성화되었습니다",
+    "veniceApiSafeModeTitle": "Venice API 세이프 모드",
+    "veniceApiSafeModeDescription": "Venice로 전송되는 공급자 측 세이프모드 매개변수를 제어합니다. 이는 가족 세이프 모드와 별개입니다.",
     "errors": {
-      "cannotDisableTitle": "__MISSING__:safety.errors.cannotDisableTitle",
-      "cannotDisableDetail": "__MISSING__:safety.errors.cannotDisableDetail"
+      "cannotDisableTitle": "공급자 세이프 모드를 비활성화할 수 없음",
+      "cannotDisableDetail": "먼저 가족 세이프 모드를 꺼야 합니다."
     },
-    "keepCurrent": "__MISSING__:safety.keepCurrent"
+    "keepCurrent": "현재 안전 설정 유지"
   },
   "aboutPanel": {
-    "unofficial": "__MISSING__:aboutPanel.unofficial",
-    "disclaimer": "__MISSING__:aboutPanel.disclaimer",
-    "officialLinks": "__MISSING__:aboutPanel.officialLinks",
-    "termsOfService": "__MISSING__:aboutPanel.termsOfService",
-    "privacyPolicy": "__MISSING__:aboutPanel.privacyPolicy",
-    "apiDocs": "__MISSING__:aboutPanel.apiDocs",
-    "trademarks": "__MISSING__:aboutPanel.trademarks",
-    "resetGate": "__MISSING__:aboutPanel.resetGate",
+    "unofficial": "비공식",
+    "disclaimer": "Venice Forge는 Venice.ai 추론 API 엔드포인트와 직접 인터페이스하도록 구성된 타사 데스크톱 클라이언트입니다. Venice.ai, Inc.와 제휴, 보증, 후원 또는 승인되지 않았습니다.",
+    "officialLinks": "공식 링크",
+    "termsOfService": "서비스 약관",
+    "privacyPolicy": "개인정보 처리방침",
+    "apiDocs": "API 문서",
+    "trademarks": "Venice, Venice.ai 및 관련 로고는 Venice.ai, Inc.의 상표입니다. 이러한 이름의 사용은 API 호환성을 지칭하기 위한 목적으로만 사용됩니다.",
+    "resetGate": "법적 승인 게이트 재설정:",
     "toasts": {
-      "resetSuccess": "__MISSING__:aboutPanel.toasts.resetSuccess",
-      "resetFailed": "__MISSING__:aboutPanel.toasts.resetFailed"
+      "resetSuccess": "법적 승인이 재설정되었습니다. 다음에 다시 로드할 때 나타납니다.",
+      "resetFailed": "승인을 재설정할 수 없습니다."
     },
-    "resetGateBtn": "__MISSING__:aboutPanel.resetGateBtn"
+    "resetGateBtn": "게이트 재설정"
   },
   "audioSpeech": {
-    "cacheCleared": "__MISSING__:audioSpeech.cacheCleared",
+    "cacheCleared": "TTS 캐시가 지워졌습니다",
     "errors": {
-      "clearCache": "__MISSING__:audioSpeech.errors.clearCache"
+      "clearCache": "TTS 캐시를 지울 수 없습니다"
     },
-    "title": "__MISSING__:audioSpeech.title",
-    "description": "__MISSING__:audioSpeech.description",
-    "interfaceSoundsTitle": "__MISSING__:audioSpeech.interfaceSoundsTitle",
-    "interfaceSoundsDescription": "__MISSING__:audioSpeech.interfaceSoundsDescription",
-    "soundPack": "__MISSING__:audioSpeech.soundPack",
+    "title": "오디오 및 음성",
+    "description": "인터페이스 소리 및 모델 응답에 대한 텍스트 음성 변환을 구성합니다.",
+    "interfaceSoundsTitle": "인터페이스 소리",
+    "interfaceSoundsDescription": "인터페이스 소리는 번들로 제공되는 로컬 오디오를 사용하며 네트워크 서비스에 연결하지 않습니다.",
+    "soundPack": "사운드 팩",
     "packs": {
-      "soft": "__MISSING__:audioSpeech.packs.soft",
-      "tactile": "__MISSING__:audioSpeech.packs.tactile",
-      "glass": "__MISSING__:audioSpeech.packs.glass",
-      "retro": "__MISSING__:audioSpeech.packs.retro",
-      "minimal": "__MISSING__:audioSpeech.packs.minimal"
+      "soft": "부드러움",
+      "tactile": "촉각",
+      "glass": "글래스",
+      "retro": "레트로",
+      "minimal": "미니멀"
     },
-    "volume": "__MISSING__:audioSpeech.volume",
-    "restoreDefaults": "__MISSING__:audioSpeech.restoreDefaults",
-    "chatTtsTitle": "__MISSING__:audioSpeech.chatTtsTitle",
-    "chatTtsDescription": "__MISSING__:audioSpeech.chatTtsDescription",
-    "showControls": "__MISSING__:audioSpeech.showControls",
-    "autoRead": "__MISSING__:audioSpeech.autoRead",
-    "ttsModel": "__MISSING__:audioSpeech.ttsModel",
-    "defaultProviderModel": "__MISSING__:audioSpeech.defaultProviderModel",
-    "saved": "__MISSING__:audioSpeech.saved",
-    "loadingModels": "__MISSING__:audioSpeech.loadingModels",
-    "voice": "__MISSING__:audioSpeech.voice",
-    "defaultVoice": "__MISSING__:audioSpeech.defaultVoice",
-    "speed": "__MISSING__:audioSpeech.speed",
-    "volumeLabel": "__MISSING__:audioSpeech.volumeLabel",
-    "skipCodeBlocks": "__MISSING__:audioSpeech.skipCodeBlocks",
-    "stopOnNewReply": "__MISSING__:audioSpeech.stopOnNewReply",
-    "cacheSpeech": "__MISSING__:audioSpeech.cacheSpeech",
-    "clearing": "__MISSING__:audioSpeech.clearing",
-    "clearCache": "__MISSING__:audioSpeech.clearCache"
+    "volume": "볼륨",
+    "restoreDefaults": "기본값 복원",
+    "chatTtsTitle": "채팅 텍스트 음성 변환",
+    "chatTtsDescription": "텍스트 음성 변환은 선택한 어시스턴트 응답 텍스트를 구성된 음성 공급자에게 보내며 API 사용량을 소모할 수 있습니다. 자동 재생은 기본적으로 꺼져 있습니다.",
+    "showControls": "어시스턴트 응답에 TTS 컨트롤 표시",
+    "autoRead": "완료된 응답 자동으로 읽기",
+    "ttsModel": "TTS 모델",
+    "defaultProviderModel": "기본 공급자 모델",
+    "saved": "(저장됨)",
+    "loadingModels": "음성 모델 로드 중…",
+    "voice": "음성",
+    "defaultVoice": "기본 음성",
+    "speed": "속도: {{speed}}x",
+    "volumeLabel": "볼륨: {{volume}}%",
+    "skipCodeBlocks": "코드 블록 건너뛰기",
+    "stopOnNewReply": "새 응답이 시작되면 현재 재생 중지",
+    "cacheSpeech": "생성된 음성 캐시",
+    "clearing": "지우는 중…",
+    "clearCache": "TTS 캐시 지우기"
   },
   "backupSync": {
     "toasts": {
-      "sessionReattached": "__MISSING__:backupSync.toasts.sessionReattached",
-      "chooseFolderFailed": "__MISSING__:backupSync.toasts.chooseFolderFailed",
-      "folderConfigured": "__MISSING__:backupSync.toasts.folderConfigured",
-      "setFolderFailed": "__MISSING__:backupSync.toasts.setFolderFailed",
-      "enterPassphrase": "__MISSING__:backupSync.toasts.enterPassphrase",
-      "startFailed": "__MISSING__:backupSync.toasts.startFailed",
-      "syncStartedMedia": "__MISSING__:backupSync.toasts.syncStartedMedia",
-      "syncStartedOptIn": "__MISSING__:backupSync.toasts.syncStartedOptIn",
-      "startFailedReason": "__MISSING__:backupSync.toasts.startFailedReason",
-      "pauseFailed": "__MISSING__:backupSync.toasts.pauseFailed",
-      "syncPaused": "__MISSING__:backupSync.toasts.syncPaused",
-      "pauseFailedReason": "__MISSING__:backupSync.toasts.pauseFailedReason",
-      "enterPassphraseReattach": "__MISSING__:backupSync.toasts.enterPassphraseReattach",
-      "reattachFailed": "__MISSING__:backupSync.toasts.reattachFailed",
-      "reattachFailedReason": "__MISSING__:backupSync.toasts.reattachFailedReason"
+      "sessionReattached": "동기화 세션이 다시 연결되었습니다.",
+      "chooseFolderFailed": "동기화 폴더를 선택하지 못했습니다.",
+      "folderConfigured": "암호화된 동기화 폴더가 구성되었습니다.",
+      "setFolderFailed": "동기화 폴더 설정 실패: {{error}}",
+      "enterPassphrase": "동기화 암호를 입력하세요.",
+      "startFailed": "동기화 시작 실패.",
+      "syncStartedMedia": "동기화 시작됨 — 미디어 블롭이 동기화됩니다.",
+      "syncStartedOptIn": "동기화 시작됨 — 미디어는 선택 사항입니다.",
+      "startFailedReason": "동기화 시작 실패: {{error}}",
+      "pauseFailed": "동기화 일시정지 실패.",
+      "syncPaused": "동기화가 일시정지되었습니다. 재개하려면 암호를 다시 입력하세요.",
+      "pauseFailedReason": "동기화 일시정지 실패: {{error}}",
+      "enterPassphraseReattach": "다시 연결하려면 동기화 암호를 입력하세요.",
+      "reattachFailed": "동기화 세션 재연결 실패.",
+      "reattachFailedReason": "동기화 재연결 실패: {{error}}"
     },
-    "title": "__MISSING__:backupSync.title",
-    "desktopOnly": "__MISSING__:backupSync.desktopOnly",
-    "description": "__MISSING__:backupSync.description",
+    "title": "백업 및 동기화",
+    "desktopOnly": "로컬 우선 동기화는 현재 데스크톱 앱에서만 사용할 수 있습니다.",
+    "description": "중앙 클라우드 계정 없이도 기기 간에 로컬 데이터를 안전하게 동기화하세요.",
     "syncFolder": {
-      "title": "__MISSING__:backupSync.syncFolder.title",
-      "description": "__MISSING__:backupSync.syncFolder.description",
-      "none": "__MISSING__:backupSync.syncFolder.none",
-      "change": "__MISSING__:backupSync.syncFolder.change",
-      "choose": "__MISSING__:backupSync.syncFolder.choose",
-      "includeMedia": "__MISSING__:backupSync.syncFolder.includeMedia",
-      "includeMediaNote": "__MISSING__:backupSync.syncFolder.includeMediaNote",
-      "passphrasePlaceholder": "__MISSING__:backupSync.syncFolder.passphrasePlaceholder",
-      "pause": "__MISSING__:backupSync.syncFolder.pause",
-      "reattach": "__MISSING__:backupSync.syncFolder.reattach",
-      "start": "__MISSING__:backupSync.syncFolder.start"
+      "title": "동기화 폴더",
+      "description": "암호화된 데이터를 폴더에 지속적으로 동기화합니다(예: iCloud Drive, Dropbox).",
+      "none": "선택된 동기화 폴더가 없습니다",
+      "change": "폴더 변경",
+      "choose": "폴더 선택",
+      "includeMedia": "동기화 패킷에 미디어 블롭 포함",
+      "includeMediaNote": "(이미지, 파일, RP 자산)",
+      "passphrasePlaceholder": "암호화 암호 입력",
+      "pause": "동기화 일시정지",
+      "reattach": "세션 재연결",
+      "start": "동기화 시작"
     },
     "status": {
-      "active": "__MISSING__:backupSync.status.active",
-      "error": "Error",
-      "paused": "__MISSING__:backupSync.status.paused",
-      "off": "__MISSING__:backupSync.status.off"
+      "active": "활성",
+      "error": "오류",
+      "paused": "일시정지됨",
+      "off": "꺼짐"
     },
     "security": {
-      "encryption": "__MISSING__:backupSync.security.encryption",
-      "noKeys": "__MISSING__:backupSync.security.noKeys"
+      "encryption": "동기화 패킷은 이 폴더에 기록되기 전에 Argon2id에서 파생된 XChaCha20-Poly1305 암호화를 사용합니다.",
+      "noKeys": "API 키와 절대 머신 경로는 절대 동기화되지 않습니다."
     },
     "conflicts": {
-      "title": "__MISSING__:backupSync.conflicts.title",
-      "description": "__MISSING__:backupSync.conflicts.description",
-      "statusError": "__MISSING__:backupSync.conflicts.statusError",
-      "statusDetached": "__MISSING__:backupSync.conflicts.statusDetached",
-      "statusConfigured": "__MISSING__:backupSync.conflicts.statusConfigured",
-      "statusDisabled": "__MISSING__:backupSync.conflicts.statusDisabled",
-      "checking": "__MISSING__:backupSync.conflicts.checking",
-      "noConflicts": "__MISSING__:backupSync.conflicts.noConflicts",
-      "mediaIncluded": "__MISSING__:backupSync.conflicts.mediaIncluded",
-      "mediaExcluded": "__MISSING__:backupSync.conflicts.mediaExcluded",
-      "found": "__MISSING__:backupSync.conflicts.found",
-      "resolutionNote": "__MISSING__:backupSync.conflicts.resolutionNote",
-      "keepOriginalTitle": "__MISSING__:backupSync.conflicts.keepOriginalTitle",
-      "keepOriginal": "__MISSING__:backupSync.conflicts.keepOriginal",
-      "keepConflictTitle": "__MISSING__:backupSync.conflicts.keepConflictTitle",
-      "keepConflict": "__MISSING__:backupSync.conflicts.keepConflict",
-      "keepBothTitle": "__MISSING__:backupSync.conflicts.keepBothTitle",
-      "keepBoth": "__MISSING__:backupSync.conflicts.keepBoth"
+      "title": "동기화 상태 및 충돌",
+      "description": "동기화 활동을 모니터링하고 데이터 충돌을 해결합니다.",
+      "statusError": "동기화 오류: {{error}}",
+      "statusDetached": "메인 프로세스 감시자가 실행 중이지만 렌더러 세션이 분리되어 있습니다. 다시 연결하려면 암호를 다시 입력하세요.",
+      "statusConfigured": "동기화가 구성되었지만 완전히 활성화되지 않았습니다. 암호를 입력하고 동기화를 시작하세요.",
+      "statusDisabled": "활동을 모니터링하려면 동기화를 활성화하세요.",
+      "checking": "충돌 확인 중...",
+      "noConflicts": "동기화가 활성화되었습니다. 충돌이 없습니다.",
+      "mediaIncluded": " 미디어 블롭이 포함되어 있습니다.",
+      "mediaExcluded": " 미디어 블롭은 제외됩니다(선택 사항).",
+      "found": "{{count}}개의 충돌을 발견했습니다. 아래에서 해결하세요:",
+      "resolutionNote": "동기화가 {{winner}}를 유지했습니다. 충돌하는 {{loser}} 개정판({{loserTitle}})은 충돌을 해결할 때까지 보존됩니다.",
+      "keepOriginalTitle": "이 ID에 현재 저장된 개정판을 유지하고 충돌하는 복사본을 폐기합니다.",
+      "keepOriginal": "{{winner}} 복사본 유지",
+      "keepConflictTitle": "현재 개정판을 {{loser}} 복사본으로 교체합니다.",
+      "keepConflict": "{{loser}} 복사본 사용",
+      "keepBothTitle": "현재 개정판을 유지하고 {{loser}} 복사본을 별도의 레코드로 저장합니다.",
+      "keepBoth": "{{loser}}를 복사본으로 저장"
     }
   },
   "configPanel": {
     "toasts": {
-      "reloaded": "__MISSING__:configPanel.toasts.reloaded",
-      "reloadFailed": "__MISSING__:configPanel.toasts.reloadFailed",
-      "openFolderFailed": "__MISSING__:configPanel.toasts.openFolderFailed",
-      "templateExported": "__MISSING__:configPanel.toasts.templateExported",
-      "exportCancelled": "__MISSING__:configPanel.toasts.exportCancelled",
-      "exportFailed": "__MISSING__:configPanel.toasts.exportFailed",
-      "secureStoreCleared": "__MISSING__:configPanel.toasts.secureStoreCleared",
-      "secureStoreClearFailed": "__MISSING__:configPanel.toasts.secureStoreClearFailed"
+      "reloaded": "로컬 구성이 다시 로드되었습니다.",
+      "reloadFailed": "구성 다시 로드 실패.",
+      "openFolderFailed": "구성 폴더 열기 실패.",
+      "templateExported": "템플릿이 내보내기되었습니다.",
+      "exportCancelled": "내보내기가 취소되었습니다.",
+      "exportFailed": "구성 템플릿 내보내기 실패.",
+      "secureStoreCleared": "보안 저장소가 지워졌습니다.",
+      "secureStoreClearFailed": "보안 저장소 지우기 실패."
     },
     "masterConfig": {
-      "title": "__MISSING__:configPanel.masterConfig.title",
-      "description1": "__MISSING__:configPanel.masterConfig.description1",
-      "description2": "__MISSING__:configPanel.masterConfig.description2",
-      "description3": "__MISSING__:configPanel.masterConfig.description3",
-      "description4": "__MISSING__:configPanel.masterConfig.description4",
-      "configPath": "__MISSING__:configPanel.masterConfig.configPath",
-      "unavailable": "__MISSING__:configPanel.masterConfig.unavailable",
-      "themesPath": "__MISSING__:configPanel.masterConfig.themesPath",
-      "loadedFrom": "__MISSING__:configPanel.masterConfig.loadedFrom",
-      "profile": "__MISSING__:configPanel.masterConfig.profile",
-      "parseError": "__MISSING__:configPanel.masterConfig.parseError",
-      "validationWarnings": "__MISSING__:configPanel.masterConfig.validationWarnings"
+      "title": "로컬 마스터 구성",
+      "description1": "편집 ",
+      "description2": " 및 ",
+      "description3": " 파일을 디스크에서 편집하여 UI를 조작하지 않고 Venice Forge를 구성할 수 있습니다. ",
+      "description4": " 에서 전체 스키마를 확인하세요.",
+      "configPath": "구성 경로",
+      "unavailable": "(사용 불가)",
+      "themesPath": "테마 경로",
+      "loadedFrom": "불러온 위치",
+      "profile": "프로필",
+      "parseError": "구문 분석 오류:",
+      "validationWarnings": "검증 경고"
     },
     "actions": {
-      "reload": "__MISSING__:configPanel.actions.reload",
-      "openFolder": "__MISSING__:configPanel.actions.openFolder",
-      "exportTemplate": "__MISSING__:configPanel.actions.exportTemplate",
-      "clearSecureStore": "__MISSING__:configPanel.actions.clearSecureStore"
+      "reload": "구성 다시 불러오기",
+      "openFolder": "구성 폴더 열기",
+      "exportTemplate": "정리된 템플릿 내보내기",
+      "clearSecureStore": "보안 저장소 지우기"
     },
     "apiKeyImport": {
-      "title": "__MISSING__:configPanel.apiKeyImport.title",
-      "description1": "__MISSING__:configPanel.apiKeyImport.description1",
-      "description2": "__MISSING__:configPanel.apiKeyImport.description2",
-      "description3": "__MISSING__:configPanel.apiKeyImport.description3",
-      "veniceKey": "__MISSING__:configPanel.apiKeyImport.veniceKey",
-      "configured": "__MISSING__:configPanel.apiKeyImport.configured",
-      "notConfigured": "__MISSING__:configPanel.apiKeyImport.notConfigured",
-      "imported": "__MISSING__:configPanel.apiKeyImport.imported",
-      "redacted": "__MISSING__:configPanel.apiKeyImport.redacted",
-      "jinaKey": "__MISSING__:configPanel.apiKeyImport.jinaKey",
-      "note": "__MISSING__:configPanel.apiKeyImport.note",
+      "title": "API 키 가져오기",
+      "description1": " 평문 키가 ",
+      "description2": " 에 있으며, 시작 시 OS 보안 저장소로 가져오고 파일에서 삭제됩니다 (단, ",
+      "description3": " 가 설정된 경우 제외).",
+      "veniceKey": "Venice 키",
+      "configured": "구성됨 (보안 저장소)",
+      "notConfigured": "구성되지 않음",
+      "imported": "이번 실행에 가져옴",
+      "redacted": "평문 삭제됨",
+      "jinaKey": "Jina 키",
+      "note": "원시 키는 렌더러로 전송되지 않습니다. 저장된 키를 지우려면 보안 저장소를 재설정하세요. 그런 다음 API 키 탭에서 다시 입력할 수 있습니다.",
       "clearConfirm": {
-        "title": "__MISSING__:configPanel.apiKeyImport.clearConfirm.title",
-        "detail": "__MISSING__:configPanel.apiKeyImport.clearConfirm.detail",
-        "action": "__MISSING__:configPanel.apiKeyImport.clearConfirm.action"
+        "title": "보안 저장소 키를 지우시겠습니까?",
+        "detail": "이 작업은 보안 저장소에서 모든 저장된 API 키를 제거합니다. 이 작업은 취소할 수 없습니다.",
+        "action": "키 지우기"
       }
     },
     "effectiveSettings": {
-      "title": "__MISSING__:configPanel.effectiveSettings.title",
-      "description1": "__MISSING__:configPanel.effectiveSettings.description1",
-      "description2": "__MISSING__:configPanel.effectiveSettings.description2",
-      "activeTheme": "__MISSING__:configPanel.effectiveSettings.activeTheme",
-      "defaultChatModel": "__MISSING__:configPanel.effectiveSettings.defaultChatModel",
-      "useUiDefault": "__MISSING__:configPanel.effectiveSettings.useUiDefault",
-      "temperature": "__MISSING__:configPanel.effectiveSettings.temperature",
-      "topP": "__MISSING__:configPanel.effectiveSettings.topP",
-      "maxTokens": "__MISSING__:configPanel.effectiveSettings.maxTokens",
-      "webSearch": "__MISSING__:configPanel.effectiveSettings.webSearch"
+      "title": "유효 설정 (미리보기)",
+      "description1": "현재 메모리에 있는 병합된 구성의 읽기 전용 미리보기입니다. ",
+      "description2": " 소스는 여전히 정규 소스입니다 — 디스크에서 편집하고 ",
+      "activeTheme": "활성 테마",
+      "defaultChatModel": "기본 채팅 모델",
+      "useUiDefault": "(UI 기본값 사용)",
+      "temperature": "온도",
+      "topP": "Top-p",
+      "maxTokens": "최대 토큰",
+      "webSearch": "웹 검색"
     }
   },
   "dataStorage": {
     "toasts": {
-      "importReadFailed": "__MISSING__:dataStorage.toasts.importReadFailed",
-      "importNothingNewProfile": "__MISSING__:dataStorage.toasts.importNothingNewProfile",
-      "importNothingDetail": "__MISSING__:dataStorage.toasts.importNothingDetail",
-      "importCompleteNewProfile": "__MISSING__:dataStorage.toasts.importCompleteNewProfile",
-      "importNothing": "__MISSING__:dataStorage.toasts.importNothing",
-      "importPartial": "__MISSING__:dataStorage.toasts.importPartial",
-      "importPartialDetail": "__MISSING__:dataStorage.toasts.importPartialDetail",
-      "importComplete": "__MISSING__:dataStorage.toasts.importComplete",
-      "replaceFailedRestored": "__MISSING__:dataStorage.toasts.replaceFailedRestored",
-      "replaceFailedRecovery": "__MISSING__:dataStorage.toasts.replaceFailedRecovery",
-      "importFailed": "__MISSING__:dataStorage.toasts.importFailed",
-      "recoveryRestored": "__MISSING__:dataStorage.toasts.recoveryRestored",
-      "recoveryRestoredDetail": "__MISSING__:dataStorage.toasts.recoveryRestoredDetail",
-      "recoveryRestoreFailed": "__MISSING__:dataStorage.toasts.recoveryRestoreFailed",
-      "recoveryRestoreFailedDetail": "__MISSING__:dataStorage.toasts.recoveryRestoreFailedDetail"
+      "importReadFailed": "백업 읽기에 실패했습니다. 잘못된 비밀번호이거나 파일이 손상되었습니다.",
+      "importNothingNewProfile": "새 프로필로 가져온 항목 없음: {{skipped}} 건 건너뜀",
+      "importNothingDetail": "적용된 레코드가 없습니다; 백업을 확인하세요",
+      "importCompleteNewProfile": "새 프로필로 가져오기 완료: {{imported}} 건 가져옴. 다시 불러오는 중...",
+      "importNothing": "가져온 항목 없음: {{skipped}} 건 건너뜀",
+      "importPartial": "부분 가져오기: {{imported}} 건 가져옴, {{skipped}} 건 건너뜀",
+      "importPartialDetail": "{{tombstones}} 개의 톰스톤이 적용되었습니다. 이 백업을 신뢰하기 전에 건너뛴 수를 확인하세요.",
+      "importComplete": "가져오기 완료: {{imported}} 건 가져옴, {{skipped}} 건 건너뜀, {{tombstones}} 개의 톰스톤 적용됨.",
+      "replaceFailedRestored": "교체 실패; 데이터 복원됨",
+      "replaceFailedRecovery": "교체 실패; 복구 필요",
+      "importFailed": "가져오기 실패.",
+      "recoveryRestored": "복구 복원됨",
+      "recoveryRestoredDetail": "이전 프로필 상태가 복원되고 교체된 상태가 새 복구 백업으로 보존되었습니다.",
+      "recoveryRestoreFailed": "복구 복원 실패",
+      "recoveryRestoreFailedDetail": "복구 백업을 복원할 수 없습니다."
     },
     "manualBackup": {
-      "title": "__MISSING__:dataStorage.manualBackup.title",
-      "description": "__MISSING__:dataStorage.manualBackup.description",
-      "passwordPlaceholder": "__MISSING__:dataStorage.manualBackup.passwordPlaceholder",
-      "includeDrafts": "__MISSING__:dataStorage.manualBackup.includeDrafts",
-      "includeMedia": "__MISSING__:dataStorage.manualBackup.includeMedia",
-      "export": "__MISSING__:dataStorage.manualBackup.export",
-      "import": "__MISSING__:dataStorage.manualBackup.import"
+      "title": "수동 백업",
+      "description": "로컬 기록, 캐릭터 카드, 워크플로우의 암호화된 휴대용 백업을 생성합니다. 이 백업은 모든 기기에서 가져올 수 있습니다.",
+      "passwordPlaceholder": "백업 비밀번호",
+      "includeDrafts": "암호화된 로컬 ST 카드 초안 포함 (초안은 동기화되지 않음)",
+      "includeMedia": "이 백업에 미디어 포함 (이미지, 파일, RP 자산 — 나머지 백업과 함께 암호화됨)",
+      "export": "백업 내보내기",
+      "import": "백업 가져오기"
     },
     "recovery": {
-      "title": "__MISSING__:dataStorage.recovery.title",
-      "description": "__MISSING__:dataStorage.recovery.description",
-      "restore": "__MISSING__:dataStorage.recovery.restore"
+      "title": "교체 전 복구",
+      "description": "{{date}}의 확인된 암호화 복구 백업을 사용할 수 있습니다. 트랜잭션으로 복원하려면 위에 백업 비밀번호를 입력하세요.",
+      "restore": "복구 백업 복원"
     },
     "dangerZone": {
-      "title": "__MISSING__:dataStorage.dangerZone.title",
-      "description": "__MISSING__:dataStorage.dangerZone.description",
-      "clearDefaults": "__MISSING__:dataStorage.dangerZone.clearDefaults",
-      "clearIndexedDB": "__MISSING__:dataStorage.dangerZone.clearIndexedDB"
+      "title": "위험 구역",
+      "description": "이 작업들은 파괴적이며 되돌릴 수 없습니다. 중요한 기록이 있다면 항상 먼저 백업을 내보내세요.",
+      "clearDefaults": "앱 기본값 지우기",
+      "clearIndexedDB": "IndexedDB 데이터 지우기"
     }
   },
   "defaultsPanel": {
-    "defaultChatModel": "__MISSING__:defaultsPanel.defaultChatModel",
-    "defaultImageModel": "__MISSING__:defaultsPanel.defaultImageModel",
-    "defaultWebSearch": "__MISSING__:defaultsPanel.defaultWebSearch",
-    "defaultSystemPrompt": "__MISSING__:defaultsPanel.defaultSystemPrompt",
-    "systemPromptPlaceholder": "__MISSING__:defaultsPanel.systemPromptPlaceholder",
-    "veniceSystemPromptToggle": "__MISSING__:defaultsPanel.veniceSystemPromptToggle",
-    "enableCitations": "__MISSING__:defaultsPanel.enableCitations",
+    "defaultChatModel": "기본 채팅 모델",
+    "defaultImageModel": "기본 이미지 모델",
+    "defaultWebSearch": "기본 웹 검색",
+    "defaultSystemPrompt": "기본 시스템 프롬프트",
+    "systemPromptPlaceholder": "선택 사항. 앱 작성 시스템 메시지 추가를 피하려면 비워두세요.",
+    "veniceSystemPromptToggle": "Venice 시스템 프롬프트 토글",
+    "enableCitations": "기본적으로 인용 활성화",
     "characterSceneGeneration": {
-      "title": "__MISSING__:defaultsPanel.characterSceneGeneration.title",
-      "description": "__MISSING__:defaultsPanel.characterSceneGeneration.description",
-      "mode": "__MISSING__:defaultsPanel.characterSceneGeneration.mode",
-      "modeAriaLabel": "__MISSING__:defaultsPanel.characterSceneGeneration.modeAriaLabel",
-      "manualOnly": "__MISSING__:defaultsPanel.characterSceneGeneration.manualOnly",
-      "autoManual": "__MISSING__:defaultsPanel.characterSceneGeneration.autoManual"
+      "title": "캐릭터 장면 생성",
+      "description": "캐릭터 채팅이 현재 대화에서만 인라인 장면 이미지를 생성하도록 허용합니다. 로컬 속도 제한으로 보호됩니다.",
+      "mode": "모드",
+      "modeAriaLabel": "캐릭터 장면 생성 모드",
+      "manualOnly": "수동 전용",
+      "autoManual": "자동 + 수동"
     }
   },
   "importPlan": {
-    "title": "__MISSING__:importPlan.title",
-    "summary": "__MISSING__:importPlan.summary",
+    "title": "가져오기 계획 검토",
+    "summary": "이 백업에는 {{stores}}개 데이터 저장소에 걸쳐 {{records}}개 레코드가 포함되어 있습니다.",
     "metadata": {
-      "authenticated": "__MISSING__:importPlan.metadata.authenticated",
-      "legacy": "__MISSING__:importPlan.metadata.legacy",
-      "format": "__MISSING__:importPlan.metadata.format",
-      "exportedAt": "__MISSING__:importPlan.metadata.exportedAt",
-      "source": "__MISSING__:importPlan.metadata.source",
-      "profileRef": "__MISSING__:importPlan.metadata.profileRef",
-      "crypto": "__MISSING__:importPlan.metadata.crypto",
-      "counts": "__MISSING__:importPlan.metadata.counts",
-      "sha": "__MISSING__:importPlan.metadata.sha"
+      "authenticated": "인증된 백업 메타데이터",
+      "legacy": "레거시 백업 메타데이터",
+      "format": "형식: v{{version}}{{appVersion}}",
+      "exportedAt": "내보낸 날짜: {{date}}",
+      "source": "소스: {{runtime}} / {{device}}",
+      "profileRef": "프로필 참조: {{ref}}",
+      "crypto": "암호화: {{alg}} / {{kdf}} / 키 v{{key}}",
+      "counts": "{{tombstones}} 톰스톤 / {{blobs}} 임베디드 블롭",
+      "sha": "페이로드 SHA-256: {{sha}}"
     },
-    "warningsLabel": "__MISSING__:importPlan.warningsLabel",
+    "warningsLabel": "가져오기 경고",
     "preview": {
-      "title": "__MISSING__:importPlan.preview.title",
-      "recordsCount": "__MISSING__:importPlan.preview.recordsCount",
-      "new": "__MISSING__:importPlan.preview.new",
-      "modified": "__MISSING__:importPlan.preview.modified",
-      "conflicts": "__MISSING__:importPlan.preview.conflicts",
-      "identical": "__MISSING__:importPlan.preview.identical",
-      "noChanges": "__MISSING__:importPlan.preview.noChanges"
+      "title": "데이터 변경 사항 미리보기",
+      "recordsCount": "{{count}}개 레코드",
+      "new": "{{count}}개 신규",
+      "modified": "{{count}}개 수정됨",
+      "conflicts": "{{count}}개 충돌",
+      "identical": "{{count}}개 동일",
+      "noChanges": "변경 사항 없음"
     },
     "mode": {
-      "title": "__MISSING__:importPlan.mode.title",
-      "merge": "__MISSING__:importPlan.mode.merge",
-      "mergeDesc": "__MISSING__:importPlan.mode.mergeDesc",
-      "replace": "__MISSING__:importPlan.mode.replace",
-      "replaceDesc": "__MISSING__:importPlan.mode.replaceDesc",
-      "newProfile": "__MISSING__:importPlan.mode.newProfile",
-      "newProfileDesc": "__MISSING__:importPlan.mode.newProfileDesc"
+      "title": "가져오기 모드 선택",
+      "merge": "데이터 병합",
+      "mergeDesc": "기존 데이터를 유지하고 새 레코드를 추가합니다. 충돌은 로컬 버전과 함께 저장됩니다.",
+      "replace": "전체 교체",
+      "replaceDesc": "현재 로컬 데이터를 모두 지우고 이 백업으로 완전히 교체합니다.",
+      "newProfile": "새 프로필",
+      "newProfileDesc": "새 프로필 작업 공간을 만들고 이 백업을 가져옵니다."
     },
     "warnings": {
-      "recoveryEnabled": "__MISSING__:importPlan.warnings.recoveryEnabled",
-      "recoveryEnabledDesc": "__MISSING__:importPlan.warnings.recoveryEnabledDesc",
-      "replaceUnavailable": "__MISSING__:importPlan.warnings.replaceUnavailable",
-      "replaceUnavailableDesc": "__MISSING__:importPlan.warnings.replaceUnavailableDesc"
+      "recoveryEnabled": "자동 복구 활성화됨",
+      "recoveryEnabledDesc": "데스크톱 앱은 이 백업을 스테이징하고, 암호화된 복구 아티팩트를 생성 및 확인한 후, 교체 실패 시 자동으로 롤백합니다.",
+      "replaceUnavailable": "웹 모드에서는 교체를 사용할 수 없음",
+      "replaceUnavailableDesc": "병합 또는 새 프로필을 사용하세요. 지속 가능한 교체 복구에는 Venice Forge 데스크톱 앱이 필요합니다."
     },
-    "profileName": "__MISSING__:importPlan.profileName",
-    "profileNamePlaceholder": "__MISSING__:importPlan.profileNamePlaceholder",
+    "profileName": "프로필 이름",
+    "profileNamePlaceholder": "예: 업무 백업",
     "actions": {
-      "confirm": "__MISSING__:importPlan.actions.confirm"
+      "confirm": "가져오기 확인"
     }
   },
   "masterPassword": {
     "errors": {
-      "mismatch": "__MISSING__:masterPassword.errors.mismatch",
-      "tooShort": "__MISSING__:masterPassword.errors.tooShort",
-      "saveFailed": "__MISSING__:masterPassword.errors.saveFailed",
-      "lockedOut": "__MISSING__:masterPassword.errors.lockedOut",
-      "incorrect": "__MISSING__:masterPassword.errors.incorrect",
-      "verifyFailed": "__MISSING__:masterPassword.errors.verifyFailed"
+      "mismatch": "비밀번호가 일치하지 않습니다",
+      "tooShort": "비밀번호가 너무 짧습니다 (최소 {{min}}자)",
+      "saveFailed": "비밀번호를 안전하게 저장하지 못했습니다",
+      "lockedOut": " 잠겼습니다. {{seconds}}초 후에 다시 시도하세요.",
+      "incorrect": "잘못된 비밀번호입니다.",
+      "verifyFailed": "비밀번호 확인에 실패했습니다"
     },
-    "titleSet": "__MISSING__:masterPassword.titleSet",
-    "titleEnter": "__MISSING__:masterPassword.titleEnter",
-    "description": "__MISSING__:masterPassword.description",
+    "titleSet": "마스터 비밀번호 설정",
+    "titleEnter": "마스터 비밀번호 입력",
+    "description": "이 로컬 제어 비밀번호는 가족 안전 모드 변경 사항을 보호합니다. 앱은 비밀번호 자체가 아닌 솔트가 적용된 검증자를 저장합니다.",
     "labels": {
-      "password": "__MISSING__:masterPassword.labels.password",
-      "confirm": "__MISSING__:masterPassword.labels.confirm"
+      "password": "마스터 비밀번호",
+      "confirm": "마스터 비밀번호 확인"
     }
   },
   "profiles": {
     "removePassword": {
-      "title": "__MISSING__:profiles.removePassword.title",
-      "detail": "__MISSING__:profiles.removePassword.detail",
-      "action": "__MISSING__:profiles.removePassword.action"
+      "title": "프로필 비밀번호를 제거하시겠습니까?",
+      "detail": "\"{{name}}\"은(는) 전환 전 더 이상 잠금 해제가 필요하지 않습니다.",
+      "action": "제거"
     },
     "errors": {
-      "removeFailed": "__MISSING__:profiles.errors.removeFailed",
-      "tooShort": "__MISSING__:profiles.errors.tooShort",
-      "mismatch": "__MISSING__:profiles.errors.mismatch",
-      "saveFailed": "__MISSING__:profiles.errors.saveFailed",
-      "incorrect": "__MISSING__:profiles.errors.incorrect",
-      "deleteFailed": "__MISSING__:profiles.errors.deleteFailed"
+      "removeFailed": "프로필 비밀번호 제거 실패",
+      "tooShort": "비밀번호가 너무 짧습니다(최소 {{min}}자)",
+      "mismatch": "비밀번호가 일치하지 않습니다",
+      "saveFailed": "프로필 비밀번호 저장 실패",
+      "incorrect": "잘못된 비밀번호",
+      "deleteFailed": "프로필 삭제 실패."
     },
-    "title": "__MISSING__:profiles.title",
-    "description": "__MISSING__:profiles.description",
+    "title": "프로필 관리",
+    "description": "각 프로필은 격리된 설정, API 키 및 구성을 유지합니다. 프로필을 전환하면 활성 애플리케이션 상태가 지워지고 다시 로드됩니다.",
     "badge": {
-      "active": "__MISSING__:profiles.badge.active",
-      "locked": "__MISSING__:profiles.badge.locked"
+      "active": "활성",
+      "locked": "잠김"
     },
     "aria": {
-      "removePassword": "__MISSING__:profiles.aria.removePassword",
-      "setPassword": "__MISSING__:profiles.aria.setPassword",
-      "switchTo": "__MISSING__:profiles.aria.switchTo",
-      "delete": "__MISSING__:profiles.aria.delete"
+      "removePassword": "{{name}}의 비밀번호 제거",
+      "setPassword": "{{name}}의 비밀번호 설정",
+      "switchTo": "{{name}}로 전환",
+      "delete": "{{name}} 삭제"
     },
     "actions": {
-      "removePassword": "__MISSING__:profiles.actions.removePassword",
-      "setPassword": "__MISSING__:profiles.actions.setPassword",
-      "switchTo": "__MISSING__:profiles.actions.switchTo",
-      "createProfile": "__MISSING__:profiles.actions.createProfile"
+      "removePassword": "비밀번호 제거",
+      "setPassword": "비밀번호 설정",
+      "switchTo": "전환",
+      "createProfile": "프로필 생성"
     },
     "deleteProfile": {
-      "title": "__MISSING__:profiles.deleteProfile.title",
-      "detail": "__MISSING__:profiles.deleteProfile.detail",
-      "action": "__MISSING__:profiles.deleteProfile.action"
+      "title": "프로필을 삭제하시겠습니까?",
+      "detail": "\"{{name}}\"이(가) 제거됩니다. 해당 대화 금고, 렌더러 기록, 프로필 범위 로컬 설정, API 키 및 비밀번호 검증자가 삭제됩니다. 공유 글로벌 캐시는 유지됩니다.",
+      "action": "삭제"
     },
-    "newProfilePlaceholder": "__MISSING__:profiles.newProfilePlaceholder",
+    "newProfilePlaceholder": "새 프로필 이름",
     "dialog": {
-      "titleSet": "__MISSING__:profiles.dialog.titleSet",
-      "titleUnlock": "__MISSING__:profiles.dialog.titleUnlock",
-      "description": "__MISSING__:profiles.dialog.description",
-      "labelSet": "__MISSING__:profiles.dialog.labelSet",
-      "labelUnlock": "__MISSING__:profiles.dialog.labelUnlock",
-      "labelConfirm": "__MISSING__:profiles.dialog.labelConfirm",
-      "savePassword": "__MISSING__:profiles.dialog.savePassword"
+      "titleSet": "{{name}}의 비밀번호 설정",
+      "titleUnlock": "{{name}} 잠금 해제",
+      "description": "이 비밀번호는 이 로컬 프로필로 전환하는 것을 보호합니다.",
+      "labelSet": "프로필 비밀번호",
+      "labelUnlock": "잠금 해제 비밀번호",
+      "labelConfirm": "프로필 비밀번호 확인",
+      "savePassword": "비밀번호 저장"
     }
   },
   "providers": {
     "errors": {
-      "loadFailed": "__MISSING__:providers.errors.loadFailed",
-      "saveFailed": "__MISSING__:providers.errors.saveFailed",
-      "enableWithoutKey": "__MISSING__:providers.errors.enableWithoutKey"
+      "loadFailed": "제공자 설정 로드 실패.",
+      "saveFailed": "제공자 설정 저장 실패.",
+      "enableWithoutKey": "API 키 없이 제공자를 활성화할 수 없습니다."
     },
-    "title": "__MISSING__:providers.title",
-    "description": "__MISSING__:providers.description",
-    "deferredNotice": "__MISSING__:providers.deferredNotice",
+    "title": "폴백 제공자",
+    "description": "폴백 제공자의 API 키를 구성합니다. 이들은 명시적으로 활성화되고 Venice 모델을 사용할 수 없거나 특정 폴백 모델을 요청할 때만 사용됩니다.",
+    "deferredNotice": "이 릴리스에서는 지연됨(키 입력, 라우팅 또는 트래픽 없음): {{deferred}}. 제공자 키는 수동으로 교체 또는 제거됩니다; 예약된 키 교체는 구현되지 않았습니다.",
     "autoFallback": {
-      "title": "__MISSING__:providers.autoFallback.title",
-      "description": "__MISSING__:providers.autoFallback.description",
-      "enableAria": "__MISSING__:providers.autoFallback.enableAria",
-      "orderingLabel": "__MISSING__:providers.autoFallback.orderingLabel",
-      "orderingPlaceholder": "__MISSING__:providers.autoFallback.orderingPlaceholder",
-      "orderingNotice": "__MISSING__:providers.autoFallback.orderingNotice"
+      "title": "자동 폴백 라우터",
+      "description": "Venice를 사용할 수 없거나 오류를 반환하는 경우 요청을 폴백 제공자로 자동 라우팅합니다.",
+      "enableAria": "자동 폴백 활성화",
+      "orderingLabel": "폴백 순서(쉼표로 구분된 제공자 ID)",
+      "orderingPlaceholder": "together, groq, anthropic",
+      "orderingNotice": "제공자는 이 정확한 순서로 시도됩니다. 아래에서 활성화했는지 확인하십시오. 사용 가능: {{available}}"
     },
     "badge": {
-      "deferred": "__MISSING__:providers.badge.deferred"
+      "deferred": "지연됨"
     },
     "aria": {
-      "enable": "__MISSING__:providers.aria.enable"
+      "enable": "{{label}} 활성화"
     },
     "status": {
-      "keyConfigured": "__MISSING__:providers.status.keyConfigured"
+      "keyConfigured": "API 키 구성됨"
     },
     "actions": {
-      "removeKey": "__MISSING__:providers.actions.removeKey"
+      "removeKey": "키 제거"
     },
     "inputs": {
-      "keyPlaceholder": "__MISSING__:providers.inputs.keyPlaceholder"
+      "keyPlaceholder": "API 키 입력"
     }
   },
   "errors": {
-    "persistSafety": "__MISSING__:errors.persistSafety"
+    "persistSafety": "안전 설정 저장 실패."
   },
   "updates": {
-    "available": "__MISSING__:updates.available",
-    "upToDate": "__MISSING__:updates.upToDate",
-    "downloading": "__MISSING__:updates.downloading",
-    "downloaded": "__MISSING__:updates.downloaded",
-    "error": "__MISSING__:updates.error",
-    "checking": "__MISSING__:updates.checking",
-    "devBuild": "__MISSING__:updates.devBuild",
-    "checkFailed": "__MISSING__:updates.checkFailed",
-    "checkCompleted": "__MISSING__:updates.checkCompleted",
-    "installFailed": "__MISSING__:updates.installFailed"
+    "available": "업데이트 가능: v{{version}}",
+    "upToDate": "앱이 최신 상태입니다.",
+    "downloading": "업데이트 다운로드 중: {{percent}}%",
+    "downloaded": "업데이트가 다운로드되었으며 설치할 준비가 되었습니다.",
+    "error": "업데이트 오류: {{error}}",
+    "checking": "업데이트 확인 중...",
+    "devBuild": "개발 빌드 — 업데이트 확인은 패키징된 프로덕션 빌드에서만 실행됩니다.",
+    "checkFailed": "업데이트 확인 실패: {{error}}",
+    "checkCompleted": "업데이트 확인이 완료되었습니다.",
+    "installFailed": "설치 실패: {{error}}"
   },
   "jinaKeys": {
-    "savedElectron": "__MISSING__:jinaKeys.savedElectron",
-    "savedWeb": "__MISSING__:jinaKeys.savedWeb",
-    "saveFailed": "__MISSING__:jinaKeys.saveFailed",
+    "savedElectron": "Jina API 키가 안전하게 저장되었습니다.",
+    "savedWeb": "Jina API 키가 이 브라우저 세션에 저장되었습니다.",
+    "saveFailed": "Jina API 키 저장에 실패했습니다.",
     "deleteConfirm": {
-      "title": "__MISSING__:jinaKeys.deleteConfirm.title",
-      "electron": "__MISSING__:jinaKeys.deleteConfirm.electron",
-      "web": "__MISSING__:jinaKeys.deleteConfirm.web"
+      "title": "Jina API 키를 삭제하시겠습니까?",
+      "electron": "OS 보안 저장소에서 Jina API 키가 제거됩니다.",
+      "web": "이 브라우저 세션의 메모리 내 Jina API 키가 제거됩니다."
     },
-    "deleted": "__MISSING__:jinaKeys.deleted",
-    "deleteFailed": "__MISSING__:jinaKeys.deleteFailed",
-    "testSuccess": "__MISSING__:jinaKeys.testSuccess",
-    "testFailed": "__MISSING__:jinaKeys.testFailed",
-    "testError": "__MISSING__:jinaKeys.testError"
+    "deleted": "Jina API 키가 삭제되었습니다.",
+    "deleteFailed": "Jina API 키 삭제에 실패했습니다.",
+    "testSuccess": "Jina 연결 성공{{status}}.",
+    "testFailed": "Jina 연결 실패: {{message}}",
+    "testError": "Jina 테스트 연결에 실패했습니다."
   },
   "header": {
-    "title": "__MISSING__:header.title",
+    "title": "설정",
     "description": {
-      "electron": "__MISSING__:header.description.electron",
-      "web": "__MISSING__:header.description.web"
+      "electron": "API 엔드포인트, 기본값 및 외관 스타일을 관리합니다.",
+      "web": "기본 프롬프트와 스타일링 템플릿을 구성합니다."
     }
   },
   "tabs": {
-    "languageRegion": "__MISSING__:tabs.languageRegion",
-    "profiles": "__MISSING__:tabs.profiles",
-    "apiKeys": "__MISSING__:tabs.apiKeys",
-    "providers": "__MISSING__:tabs.providers",
-    "defaults": "__MISSING__:tabs.defaults",
-    "safety": "__MISSING__:tabs.safety",
-    "vault": "__MISSING__:tabs.vault",
-    "appearance": "__MISSING__:tabs.appearance",
-    "data": "__MISSING__:tabs.data",
-    "backupSync": "__MISSING__:tabs.backupSync",
-    "about": "__MISSING__:tabs.about",
-    "updates": "Updates",
-    "config": "__MISSING__:tabs.config",
-    "audioSpeech": "__MISSING__:tabs.audioSpeech"
+    "languageRegion": "언어 및 지역",
+    "profiles": "프로필",
+    "apiKeys": "Venice API 키",
+    "providers": "폴백 제공자",
+    "defaults": "기본값 및 동작",
+    "safety": "안전",
+    "vault": "대화 금고",
+    "appearance": "외관",
+    "data": "데이터 및 저장소",
+    "backupSync": "백업 및 동기화",
+    "about": "정보 및 법적 고지",
+    "updates": "업데이트",
+    "config": "로컬 설정",
+    "audioSpeech": "오디오 및 음성"
   },
   "updatesPanel": {
-    "title": "__MISSING__:updatesPanel.title",
-    "description": "__MISSING__:updatesPanel.description",
-    "status": "__MISSING__:updatesPanel.status",
-    "checking": "__MISSING__:updatesPanel.checking",
-    "checkForUpdates": "__MISSING__:updatesPanel.checkForUpdates",
-    "restartAndInstall": "__MISSING__:updatesPanel.restartAndInstall"
+    "title": "애플리케이션 업데이트",
+    "description": "GitHub Releases를 통해 데스크톱 애플리케이션 업데이트를 안전하게 확인합니다.",
+    "status": "상태:",
+    "checking": "확인 중...",
+    "checkForUpdates": "업데이트 확인",
+    "restartAndInstall": "다시 시작하고 설치"
   }
 }

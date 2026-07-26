@@ -1,11 +1,11 @@
 {
-  "skipToContent": "__MISSING__:skipToContent",
-  "mainNavigation": "__MISSING__:mainNavigation",
-  "dialogTitle": "__MISSING__:dialogTitle",
-  "closeDialog": "__MISSING__:closeDialog",
-  "expanded": "__MISSING__:expanded",
-  "collapsed": "__MISSING__:collapsed",
-  "selected": "__MISSING__:selected",
-  "stepIndicator": "__MISSING__:stepIndicator",
-  "statusNotification": "__MISSING__:statusNotification"
+  "skipToContent": "跳转到主内容",
+  "mainNavigation": "主导航",
+  "dialogTitle": "对话框窗口",
+  "closeDialog": "关闭对话框",
+  "expanded": "已展开",
+  "collapsed": "已折叠",
+  "selected": "已选中",
+  "stepIndicator": "第 {{current}} 步，共 {{total}} 步",
+  "statusNotification": "状态更新"
 }

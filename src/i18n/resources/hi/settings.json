@@ -1,534 +1,534 @@
 {
-  "title": "__MISSING__:title",
-  "subtitle": "__MISSING__:subtitle",
+  "title": "कॉन्फ़िग और सेटिंग्स",
+  "subtitle": "API एंडपॉइंट, डिफ़ॉल्ट और रूप शैलियाँ प्रबंधित करें।",
   "sections": {
-    "languageRegion": "__MISSING__:sections.languageRegion",
-    "profiles": "__MISSING__:sections.profiles",
-    "apiKeys": "__MISSING__:sections.apiKeys",
-    "providers": "__MISSING__:sections.providers",
-    "defaults": "__MISSING__:sections.defaults",
-    "safety": "__MISSING__:sections.safety",
-    "vault": "__MISSING__:sections.vault",
-    "appearance": "__MISSING__:sections.appearance",
-    "data": "__MISSING__:sections.data",
-    "backupSync": "__MISSING__:sections.backupSync",
-    "about": "__MISSING__:sections.about",
-    "updates": "Updates",
-    "config": "__MISSING__:sections.config",
-    "audioSpeech": "__MISSING__:sections.audioSpeech"
+    "languageRegion": "भाषा और क्षेत्र",
+    "profiles": "प्रोफ़ाइल",
+    "apiKeys": "Venice API कुंजी",
+    "providers": "फ़ॉलबैक प्रदाता",
+    "defaults": "डिफ़ॉल्ट और व्यवहार",
+    "safety": "सुरक्षा",
+    "vault": "वार्तालाप वॉल्ट",
+    "appearance": "रूप",
+    "data": "डेटा और भंडारण",
+    "backupSync": "बैकअप और सिंक",
+    "about": "परिचय और कानूनी",
+    "updates": "अपडेट",
+    "config": "स्थानीय कॉन्फ़िग",
+    "audioSpeech": "ऑडियो और वाक्"
   },
   "languageRegion": {
-    "title": "__MISSING__:languageRegion.title",
-    "description": "__MISSING__:languageRegion.description",
-    "uiLanguageLabel": "__MISSING__:languageRegion.uiLanguageLabel",
-    "useSystemLanguage": "__MISSING__:languageRegion.useSystemLanguage",
-    "resolvedLocale": "__MISSING__:languageRegion.resolvedLocale",
-    "textDirection": "__MISSING__:languageRegion.textDirection",
-    "leftToRight": "__MISSING__:languageRegion.leftToRight",
-    "rightToLeft": "__MISSING__:languageRegion.rightToLeft",
-    "formattingPreview": "__MISSING__:languageRegion.formattingPreview",
-    "dateExample": "Date",
-    "timeExample": "__MISSING__:languageRegion.timeExample",
-    "numberExample": "__MISSING__:languageRegion.numberExample",
-    "bytesExample": "__MISSING__:languageRegion.bytesExample"
+    "title": "भाषा और क्षेत्र",
+    "description": "एप्लिकेशन भाषा, पाठ दिशा और क्षेत्रीय स्वरूपण प्राथमिकताएँ अनुकूलित करें।",
+    "uiLanguageLabel": "इंटरफ़ेस भाषा",
+    "useSystemLanguage": "सिस्टम भाषा का उपयोग करें",
+    "resolvedLocale": "सक्रिय लोकेल",
+    "textDirection": "पाठ दिशा",
+    "leftToRight": "बाएं-से-दाएं (LTR)",
+    "rightToLeft": "दाएं-से-बाएं (RTL)",
+    "formattingPreview": "क्षेत्रीय स्वरूपण पूर्वावलोकन",
+    "dateExample": "तारीख",
+    "timeExample": "समय",
+    "numberExample": "संख्या",
+    "bytesExample": "फ़ाइल आकार"
   },
   "apiKeys": {
-    "title": "__MISSING__:apiKeys.title",
-    "keyInputLabel": "__MISSING__:apiKeys.keyInputLabel",
-    "testConnection": "__MISSING__:apiKeys.testConnection",
-    "saveKey": "__MISSING__:apiKeys.saveKey",
-    "deleteKey": "__MISSING__:apiKeys.deleteKey",
-    "veniceTitle": "__MISSING__:apiKeys.veniceTitle",
+    "title": "Venice API कुंजी",
+    "keyInputLabel": "API कुंजी",
+    "testConnection": "कनेक्शन परीक्षण",
+    "saveKey": "कुंजी सहेजें",
+    "deleteKey": "कुंजी हटाएँ",
+    "veniceTitle": "Venice.ai एकीकरण",
     "status": {
-      "configured": "__MISSING__:apiKeys.status.configured",
-      "unset": "__MISSING__:apiKeys.status.unset",
-      "optional": "__MISSING__:apiKeys.status.optional"
+      "configured": "कॉन्फ़िगर किया गया",
+      "unset": "अनसेट",
+      "optional": "वैकल्पिक"
     },
-    "veniceDescription": "__MISSING__:apiKeys.veniceDescription",
-    "jinaTitle": "__MISSING__:apiKeys.jinaTitle",
+    "veniceDescription": "आपकी API कुंजी सुरक्षित भंडारण एन्क्रिप्शन का उपयोग करके सहेजी जाती है और कभी भी वेब सैंडबॉक्स के सामने उजागर नहीं होती।",
+    "jinaTitle": "Jina.ai एकीकरण",
     "jinaDescription": {
-      "prefix": "__MISSING__:apiKeys.jinaDescription.prefix",
-      "electron": "__MISSING__:apiKeys.jinaDescription.electron",
-      "web": "__MISSING__:apiKeys.jinaDescription.web"
+      "prefix": "गहन वेब खोज, स्क्रैपिंग और सामाजिक प्रोफ़ाइल खोज मैपिंग क्षमताएँ प्रदान करता है।",
+      "electron": "Jina API कुंजियाँ उसी OS सुरक्षित भंडारण के साथ सहेजी जाती हैं।",
+      "web": "Jina API कुंजियाँ केवल इस ब्राउज़र सत्र के लिए मेमोरी में रखी जाती हैं; लगातार वेब कॉन्फ़िगरेशन के लिए सर्वर वातावरण का उपयोग करें।"
     },
-    "savedElectron": "__MISSING__:apiKeys.savedElectron",
-    "savedWeb": "__MISSING__:apiKeys.savedWeb",
-    "saveFailed": "__MISSING__:apiKeys.saveFailed",
+    "savedElectron": "Venice API कुंजी सुरक्षित रूप से सहेजी गई।",
+    "savedWeb": "Venice API कुंजी इस विकास सत्र के लिए सहेजी गई।",
+    "saveFailed": "API कुंजी सहेजने में विफल।",
     "deleteConfirm": {
-      "title": "__MISSING__:apiKeys.deleteConfirm.title",
-      "electron": "__MISSING__:apiKeys.deleteConfirm.electron",
-      "web": "__MISSING__:apiKeys.deleteConfirm.web"
+      "title": "Venice API कुंजी हटाएँ?",
+      "electron": "यह आपकी Venice API कुंजी को OS सुरक्षित भंडारण से हटा देगा। अनुरोध करने के लिए आपको इसे पुनः दर्ज करना होगा।",
+      "web": "यह Venice API कुंजी को वर्तमान विकास सत्र से हटा देगा।"
     },
-    "deleted": "__MISSING__:apiKeys.deleted",
-    "deleteFailed": "__MISSING__:apiKeys.deleteFailed",
-    "testSuccess": "__MISSING__:apiKeys.testSuccess",
-    "testFailed": "__MISSING__:apiKeys.testFailed",
-    "testError": "__MISSING__:apiKeys.testError"
+    "deleted": "Venice API कुंजी हटा दी गई।",
+    "deleteFailed": "API कुंजी हटाने में विफल।",
+    "testSuccess": "कनेक्शन सफल{{status}}।",
+    "testFailed": "कनेक्शन विफल: {{message}}",
+    "testError": "कनेक्शन परीक्षण विफल।"
   },
   "safety": {
-    "title": "__MISSING__:safety.title",
-    "localFamilySafeMode": "__MISSING__:safety.localFamilySafeMode",
-    "veniceApiSafeMode": "__MISSING__:safety.veniceApiSafeMode",
-    "statusBanner": "__MISSING__:safety.statusBanner",
-    "familySafeModeTitle": "__MISSING__:safety.familySafeModeTitle",
-    "familySafeModeDescription": "__MISSING__:safety.familySafeModeDescription",
-    "onFamilySafeMode": "__MISSING__:safety.onFamilySafeMode",
-    "offAdultMode": "__MISSING__:safety.offAdultMode",
+    "title": "सुरक्षा और गार्ड",
+    "localFamilySafeMode": "स्थानीय परिवार सुरक्षित मोड",
+    "veniceApiSafeMode": "Venice API सुरक्षित मोड",
+    "statusBanner": "स्थानीय फ़िल्टर: {{localStatus}} | Venice प्रदाता फ़िल्टरिंग: {{veniceStatus}}",
+    "familySafeModeTitle": "परिवार सुरक्षित मोड",
+    "familySafeModeDescription": "Venice Forge चलाता है",
+    "onFamilySafeMode": "चालू: पारिवारिक सुरक्षित मोड",
+    "offAdultMode": "बंद: वयस्क मोड (स्थानीय फ़िल्टर बंद)",
     "status": {
-      "enabled": "__MISSING__:safety.status.enabled",
-      "disabled": "__MISSING__:safety.status.disabled",
-      "localOffProviderOn": "__MISSING__:safety.status.localOffProviderOn",
-      "bothOff": "__MISSING__:safety.status.bothOff",
-      "filteredLocally": "__MISSING__:safety.status.filteredLocally"
+      "enabled": "जब सक्षम हो, तो मेल खाते अनुरोध प्रदाता को बुलाए जाने से पहले स्थानीय रूप से अवरुद्ध कर दिए जाते हैं।",
+      "disabled": "Venice Forge को बायपास करता है",
+      "localOffProviderOn": "स्थानीय पारिवारिक फ़िल्टर बंद है, लेकिन Venice API प्रदाता-पक्ष सुरक्षित मोड अभी भी चालू है। आउटबाउंड अनुरोधों में safe_mode: true शामिल है।",
+      "bothOff": "स्थानीय पारिवारिक फ़िल्टर और Venice API प्रदाता सुरक्षित मोड दोनों बंद हैं। आउटबाउंड अनुरोधों में safe_mode: false शामिल है।",
+      "filteredLocally": "मेल खाते अनुरोध प्रदाता तक पहुँचने से पहले स्थानीय रूप से फ़िल्टर किए जाते हैं।"
     },
-    "effectiveStatus": "__MISSING__:safety.effectiveStatus",
-    "setMasterPassword": "__MISSING__:safety.setMasterPassword",
-    "masterPasswordEnabled": "__MISSING__:safety.masterPasswordEnabled",
-    "veniceApiSafeModeTitle": "__MISSING__:safety.veniceApiSafeModeTitle",
-    "veniceApiSafeModeDescription": "__MISSING__:safety.veniceApiSafeModeDescription",
+    "effectiveStatus": "प्रभावी स्थिति: स्थानीय फ़िल्टर: {{local}} | Venice प्रदाता फ़िल्टरिंग: {{provider}}",
+    "setMasterPassword": "पारिवारिक सुरक्षित मोड को लॉक करने के लिए मास्टर पासवर्ड सेट करें",
+    "masterPasswordEnabled": "मास्टर पासवर्ड सक्षम है",
+    "veniceApiSafeModeTitle": "Venice API सुरक्षित मोड",
+    "veniceApiSafeModeDescription": "Venice को भेजे गए प्रदाता-पक्ष safemode पैरामीटर को नियंत्रित करता है। यह पारिवारिक सुरक्षित मोड से अलग है।",
     "errors": {
-      "cannotDisableTitle": "__MISSING__:safety.errors.cannotDisableTitle",
-      "cannotDisableDetail": "__MISSING__:safety.errors.cannotDisableDetail"
+      "cannotDisableTitle": "प्रदाता सुरक्षित मोड को अक्षम नहीं कर सकते",
+      "cannotDisableDetail": "पारिवारिक सुरक्षित मोड को पहले बंद किया जाना चाहिए।"
     },
-    "keepCurrent": "__MISSING__:safety.keepCurrent"
+    "keepCurrent": "वर्तमान सुरक्षा रखें"
   },
   "aboutPanel": {
-    "unofficial": "__MISSING__:aboutPanel.unofficial",
-    "disclaimer": "__MISSING__:aboutPanel.disclaimer",
-    "officialLinks": "__MISSING__:aboutPanel.officialLinks",
-    "termsOfService": "__MISSING__:aboutPanel.termsOfService",
-    "privacyPolicy": "__MISSING__:aboutPanel.privacyPolicy",
-    "apiDocs": "__MISSING__:aboutPanel.apiDocs",
-    "trademarks": "__MISSING__:aboutPanel.trademarks",
-    "resetGate": "__MISSING__:aboutPanel.resetGate",
+    "unofficial": "अनौपचारिक",
+    "disclaimer": "Venice Forge एक तृतीय-पक्ष डेस्कटॉप क्लाइंट है जिसे Venice.ai इन्फरेंस API एंडपॉइंट्स के साथ सीधे इंटरफ़ेस करने के लिए कॉन्फ़िगर किया गया है। यह Venice.ai, Inc. के साथ संबद्ध, समर्थित, प्रायोजित, या अनुमोदित नहीं है।",
+    "officialLinks": "आधिकारिक लिंक",
+    "termsOfService": "सेवा की शर्तें",
+    "privacyPolicy": "गोपनीयता नीति",
+    "apiDocs": "API दस्तावेज़ीकरण",
+    "trademarks": "Venice, Venice.ai और संबंधित लोगो Venice.ai, Inc. के ट्रेडमार्क हैं। इन नामों का उपयोग केवल API संगतता की नाममात्र पहचान के लिए है।",
+    "resetGate": "कानूनी स्वीकृति गेट रीसेट करें:",
     "toasts": {
-      "resetSuccess": "__MISSING__:aboutPanel.toasts.resetSuccess",
-      "resetFailed": "__MISSING__:aboutPanel.toasts.resetFailed"
+      "resetSuccess": "कानूनी स्वीकृति रीसेट हो गई। यह अगली रीलोड पर दिखाई देगी।",
+      "resetFailed": "स्वीकृति रीसेट नहीं कर सका।"
     },
-    "resetGateBtn": "__MISSING__:aboutPanel.resetGateBtn"
+    "resetGateBtn": "गेट रीसेट करें"
   },
   "audioSpeech": {
-    "cacheCleared": "__MISSING__:audioSpeech.cacheCleared",
+    "cacheCleared": "TTS कैश साफ़ कर दिया गया",
     "errors": {
-      "clearCache": "__MISSING__:audioSpeech.errors.clearCache"
+      "clearCache": "TTS कैश साफ़ करने में असमर्थ"
     },
-    "title": "__MISSING__:audioSpeech.title",
-    "description": "__MISSING__:audioSpeech.description",
-    "interfaceSoundsTitle": "__MISSING__:audioSpeech.interfaceSoundsTitle",
-    "interfaceSoundsDescription": "__MISSING__:audioSpeech.interfaceSoundsDescription",
-    "soundPack": "__MISSING__:audioSpeech.soundPack",
+    "title": "ऑडियो और वाक्",
+    "description": "मॉडल उत्तरों के लिए इंटरफ़ेस ध्वनियाँ और टेक्स्ट-टू-स्पीच कॉन्फ़िगर करें।",
+    "interfaceSoundsTitle": "इंटरफ़ेस ध्वनियाँ",
+    "interfaceSoundsDescription": "इंटरफ़ेस ध्वनियाँ बंडल किए गए स्थानीय ऑडियो का उपयोग करती हैं और किसी नेटवर्क सेवा से संपर्क नहीं करती हैं।",
+    "soundPack": "ध्वनि पैक",
     "packs": {
-      "soft": "__MISSING__:audioSpeech.packs.soft",
-      "tactile": "__MISSING__:audioSpeech.packs.tactile",
-      "glass": "__MISSING__:audioSpeech.packs.glass",
-      "retro": "__MISSING__:audioSpeech.packs.retro",
-      "minimal": "__MISSING__:audioSpeech.packs.minimal"
+      "soft": "सॉफ्ट",
+      "tactile": "टैक्टाइल",
+      "glass": "ग्लास",
+      "retro": "रेट्रो",
+      "minimal": "मिनिमल"
     },
-    "volume": "__MISSING__:audioSpeech.volume",
-    "restoreDefaults": "__MISSING__:audioSpeech.restoreDefaults",
-    "chatTtsTitle": "__MISSING__:audioSpeech.chatTtsTitle",
-    "chatTtsDescription": "__MISSING__:audioSpeech.chatTtsDescription",
-    "showControls": "__MISSING__:audioSpeech.showControls",
-    "autoRead": "__MISSING__:audioSpeech.autoRead",
-    "ttsModel": "__MISSING__:audioSpeech.ttsModel",
-    "defaultProviderModel": "__MISSING__:audioSpeech.defaultProviderModel",
-    "saved": "__MISSING__:audioSpeech.saved",
-    "loadingModels": "__MISSING__:audioSpeech.loadingModels",
-    "voice": "__MISSING__:audioSpeech.voice",
-    "defaultVoice": "__MISSING__:audioSpeech.defaultVoice",
-    "speed": "__MISSING__:audioSpeech.speed",
-    "volumeLabel": "__MISSING__:audioSpeech.volumeLabel",
-    "skipCodeBlocks": "__MISSING__:audioSpeech.skipCodeBlocks",
-    "stopOnNewReply": "__MISSING__:audioSpeech.stopOnNewReply",
-    "cacheSpeech": "__MISSING__:audioSpeech.cacheSpeech",
-    "clearing": "__MISSING__:audioSpeech.clearing",
-    "clearCache": "__MISSING__:audioSpeech.clearCache"
+    "volume": "वॉल्यूम",
+    "restoreDefaults": "डिफ़ॉल्ट बहाल करें",
+    "chatTtsTitle": "चैट टेक्स्ट-टू-स्पीच",
+    "chatTtsDescription": "टेक्स्ट-टू-स्पीच चयनित सहायक उत्तर टेक्स्ट को आपके कॉन्फ़िगर किए गए स्पीच प्रदाता को भेजता है और API उपयोग का उपभोग कर सकता है। स्वचालित प्लेबैक डिफ़ॉल्ट रूप से बंद है।",
+    "showControls": "सहायक उत्तरों पर TTS नियंत्रण दिखाएँ",
+    "autoRead": "पूर्ण उत्तरों को स्वचालित रूप से पढ़ें",
+    "ttsModel": "TTS मॉडल",
+    "defaultProviderModel": "डिफ़ॉल्ट प्रदाता मॉडल",
+    "saved": "(सहेजा गया)",
+    "loadingModels": "स्पीच मॉडल लोड हो रहे हैं…",
+    "voice": "आवाज़",
+    "defaultVoice": "डिफ़ॉल्ट आवाज़",
+    "speed": "गति: {{speed}}x",
+    "volumeLabel": "वॉल्यूम: {{volume}}%",
+    "skipCodeBlocks": "कोड ब्लॉक छोड़ें",
+    "stopOnNewReply": "जब कोई नया उत्तर शुरू हो तो वर्तमान प्लेबैक रोकें",
+    "cacheSpeech": "उत्पन्न स्पीच कैश करें",
+    "clearing": "साफ़ किया जा रहा है…",
+    "clearCache": "TTS कैश साफ़ करें"
   },
   "backupSync": {
     "toasts": {
-      "sessionReattached": "__MISSING__:backupSync.toasts.sessionReattached",
-      "chooseFolderFailed": "__MISSING__:backupSync.toasts.chooseFolderFailed",
-      "folderConfigured": "__MISSING__:backupSync.toasts.folderConfigured",
-      "setFolderFailed": "__MISSING__:backupSync.toasts.setFolderFailed",
-      "enterPassphrase": "__MISSING__:backupSync.toasts.enterPassphrase",
-      "startFailed": "__MISSING__:backupSync.toasts.startFailed",
-      "syncStartedMedia": "__MISSING__:backupSync.toasts.syncStartedMedia",
-      "syncStartedOptIn": "__MISSING__:backupSync.toasts.syncStartedOptIn",
-      "startFailedReason": "__MISSING__:backupSync.toasts.startFailedReason",
-      "pauseFailed": "__MISSING__:backupSync.toasts.pauseFailed",
-      "syncPaused": "__MISSING__:backupSync.toasts.syncPaused",
-      "pauseFailedReason": "__MISSING__:backupSync.toasts.pauseFailedReason",
-      "enterPassphraseReattach": "__MISSING__:backupSync.toasts.enterPassphraseReattach",
-      "reattachFailed": "__MISSING__:backupSync.toasts.reattachFailed",
-      "reattachFailedReason": "__MISSING__:backupSync.toasts.reattachFailedReason"
+      "sessionReattached": "सिंक सत्र पुनः जुड़ा।",
+      "chooseFolderFailed": "सिंक फ़ोल्डर चुनने में विफल।",
+      "folderConfigured": "एन्क्रिप्टेड सिंक फ़ोल्डर कॉन्फ़िगर किया गया।",
+      "setFolderFailed": "सिंक फ़ोल्डर सेट करने में विफल: {{error}}",
+      "enterPassphrase": "कृपया एक सिंक पासफ़्रेज़ दर्ज करें।",
+      "startFailed": "सिंक शुरू करने में विफल।",
+      "syncStartedMedia": "सिंक शुरू हुआ — मीडिया ब्लॉब सिंक किए जाएंगे।",
+      "syncStartedOptIn": "सिंक शुरू हुआ — मीडिया वैकल्पिक है।",
+      "startFailedReason": "सिंक शुरू करने में विफल: {{error}}",
+      "pauseFailed": "सिंक रोकने में विफल।",
+      "syncPaused": "सिंक रोका गया। फिर से शुरू करने के लिए पासफ़्रेज़ दर्ज करें।",
+      "pauseFailedReason": "सिंक रोकने में विफल: {{error}}",
+      "enterPassphraseReattach": "फिर से जोड़ने के लिए कृपया सिंक पासफ़्रेज़ दर्ज करें।",
+      "reattachFailed": "सिंक सत्र फिर से जोड़ने में विफल।",
+      "reattachFailedReason": "सिंक फिर से जोड़ने में विफल: {{error}}"
     },
-    "title": "__MISSING__:backupSync.title",
-    "desktopOnly": "__MISSING__:backupSync.desktopOnly",
-    "description": "__MISSING__:backupSync.description",
+    "title": "बैकअप और सिंक",
+    "desktopOnly": "लोकल-फर्स्ट सिंक वर्तमान में केवल डेस्कटॉप ऐप पर उपलब्ध है।",
+    "description": "केंद्रीय क्लाउड खाते के बिना अपने सभी डिवाइस पर अपना लोकल डेटा सुरक्षित रूप से सिंक रखें।",
     "syncFolder": {
-      "title": "__MISSING__:backupSync.syncFolder.title",
-      "description": "__MISSING__:backupSync.syncFolder.description",
-      "none": "__MISSING__:backupSync.syncFolder.none",
-      "change": "__MISSING__:backupSync.syncFolder.change",
-      "choose": "__MISSING__:backupSync.syncFolder.choose",
-      "includeMedia": "__MISSING__:backupSync.syncFolder.includeMedia",
-      "includeMediaNote": "__MISSING__:backupSync.syncFolder.includeMediaNote",
-      "passphrasePlaceholder": "__MISSING__:backupSync.syncFolder.passphrasePlaceholder",
-      "pause": "__MISSING__:backupSync.syncFolder.pause",
-      "reattach": "__MISSING__:backupSync.syncFolder.reattach",
-      "start": "__MISSING__:backupSync.syncFolder.start"
+      "title": "सिंक फ़ोल्डर",
+      "description": "एन्क्रिप्टेड डेटा को लगातार किसी फ़ोल्डर (जैसे iCloud Drive, Dropbox) में सिंक करें।",
+      "none": "कोई सिंक फ़ोल्डर चयनित नहीं",
+      "change": "फ़ोल्डर बदलें",
+      "choose": "फ़ोल्डर चुनें",
+      "includeMedia": "सिंक पैकेट में मीडिया ब्लॉब शामिल करें",
+      "includeMediaNote": "(चित्र, फ़ाइलें, RP एसेट)",
+      "passphrasePlaceholder": "एन्क्रिप्शन पासफ़्रेज़ दर्ज करें",
+      "pause": "सिंक रोकें",
+      "reattach": "सत्र फिर से जोड़ें",
+      "start": "सिंक शुरू करें"
     },
     "status": {
-      "active": "__MISSING__:backupSync.status.active",
-      "error": "Error",
-      "paused": "__MISSING__:backupSync.status.paused",
-      "off": "__MISSING__:backupSync.status.off"
+      "active": "सक्रिय",
+      "error": "त्रुटि",
+      "paused": "रुका हुआ",
+      "off": "बंद"
     },
     "security": {
-      "encryption": "__MISSING__:backupSync.security.encryption",
-      "noKeys": "__MISSING__:backupSync.security.noKeys"
+      "encryption": "सिंक पैकेट इस फ़ोल्डर में लिखे जाने से पहले Argon2id-व्युत्पन्न XChaCha20-Poly1305 एन्क्रिप्शन का उपयोग करते हैं।",
+      "noKeys": "आपकी API कुंजी और पूर्ण मशीन पथ कभी सिंक नहीं किए जाते।"
     },
     "conflicts": {
-      "title": "__MISSING__:backupSync.conflicts.title",
-      "description": "__MISSING__:backupSync.conflicts.description",
-      "statusError": "__MISSING__:backupSync.conflicts.statusError",
-      "statusDetached": "__MISSING__:backupSync.conflicts.statusDetached",
-      "statusConfigured": "__MISSING__:backupSync.conflicts.statusConfigured",
-      "statusDisabled": "__MISSING__:backupSync.conflicts.statusDisabled",
-      "checking": "__MISSING__:backupSync.conflicts.checking",
-      "noConflicts": "__MISSING__:backupSync.conflicts.noConflicts",
-      "mediaIncluded": "__MISSING__:backupSync.conflicts.mediaIncluded",
-      "mediaExcluded": "__MISSING__:backupSync.conflicts.mediaExcluded",
-      "found": "__MISSING__:backupSync.conflicts.found",
-      "resolutionNote": "__MISSING__:backupSync.conflicts.resolutionNote",
-      "keepOriginalTitle": "__MISSING__:backupSync.conflicts.keepOriginalTitle",
-      "keepOriginal": "__MISSING__:backupSync.conflicts.keepOriginal",
-      "keepConflictTitle": "__MISSING__:backupSync.conflicts.keepConflictTitle",
-      "keepConflict": "__MISSING__:backupSync.conflicts.keepConflict",
-      "keepBothTitle": "__MISSING__:backupSync.conflicts.keepBothTitle",
-      "keepBoth": "__MISSING__:backupSync.conflicts.keepBoth"
+      "title": "सिंक स्थिति और टकराव",
+      "description": "सिंक गतिविधि की निगरानी करें और डेटा टकराव हल करें।",
+      "statusError": "सिंक त्रुटि: {{error}}",
+      "statusDetached": "मुख्य प्रक्रिया वॉचर चल रहा है लेकिन रेंडरर सत्र अलग हो गया है। फिर से जोड़ने के लिए पासफ़्रेज़ दर्ज करें।",
+      "statusConfigured": "सिंक कॉन्फ़िगर किया गया है लेकिन पूरी तरह से सक्रिय नहीं है। पासफ़्रेज़ दर्ज करें और सिंक शुरू करें।",
+      "statusDisabled": "गतिविधि की निगरानी के लिए सिंक सक्षम करें।",
+      "checking": "टकराव की जाँच हो रही है...",
+      "noConflicts": "सिंक सक्रिय है। कोई टकराव नहीं मिला।",
+      "mediaIncluded": " मीडिया ब्लॉब शामिल हैं।",
+      "mediaExcluded": " मीडिया ब्लॉब बाहर रखे गए हैं (वैकल्पिक)।",
+      "found": "{{count}} टकराव मिले। उन्हें नीचे हल करें:",
+      "resolutionNote": "सिंक ने {{winner}} रखा; परस्पर विरोधी {{loser}} संशोधन ({{loserTitle}}) तब तक सुरक्षित रखा गया है जब तक आप विरोध का समाधान न करें।",
+      "keepOriginalTitle": "इस आईडी पर वर्तमान में सहेजा गया संशोधन रखें और टकरावपूर्ण प्रति हटा दें।",
+      "keepOriginal": "{{winner}} प्रति रखें",
+      "keepConflictTitle": "वर्तमान संशोधन को {{loser}} प्रति से बदलें।",
+      "keepConflict": "{{loser}} प्रति का उपयोग करें",
+      "keepBothTitle": "वर्तमान संशोधन रखें और {{loser}} प्रति को एक अलग रिकॉर्ड के रूप में सहेजें।",
+      "keepBoth": "{{loser}} को प्रति के रूप में सहेजें"
     }
   },
   "configPanel": {
     "toasts": {
-      "reloaded": "__MISSING__:configPanel.toasts.reloaded",
-      "reloadFailed": "__MISSING__:configPanel.toasts.reloadFailed",
-      "openFolderFailed": "__MISSING__:configPanel.toasts.openFolderFailed",
-      "templateExported": "__MISSING__:configPanel.toasts.templateExported",
-      "exportCancelled": "__MISSING__:configPanel.toasts.exportCancelled",
-      "exportFailed": "__MISSING__:configPanel.toasts.exportFailed",
-      "secureStoreCleared": "__MISSING__:configPanel.toasts.secureStoreCleared",
-      "secureStoreClearFailed": "__MISSING__:configPanel.toasts.secureStoreClearFailed"
+      "reloaded": "लोकल कॉन्फ़िग फिर से लोड किया गया।",
+      "reloadFailed": "कॉन्फ़िग फिर से लोड करने में विफल।",
+      "openFolderFailed": "कॉन्फ़िग फ़ोल्डर खोलने में विफल।",
+      "templateExported": "टेम्पलेट निर्यात किया गया।",
+      "exportCancelled": "निर्यात रद्द किया गया।",
+      "exportFailed": "कॉन्फ़िग टेम्पलेट निर्यात करने में विफल।",
+      "secureStoreCleared": "सुरक्षित स्टोर साफ़ किया गया।",
+      "secureStoreClearFailed": "सुरक्षित स्टोर साफ़ करने में विफल।"
     },
     "masterConfig": {
-      "title": "__MISSING__:configPanel.masterConfig.title",
-      "description1": "__MISSING__:configPanel.masterConfig.description1",
-      "description2": "__MISSING__:configPanel.masterConfig.description2",
-      "description3": "__MISSING__:configPanel.masterConfig.description3",
-      "description4": "__MISSING__:configPanel.masterConfig.description4",
-      "configPath": "__MISSING__:configPanel.masterConfig.configPath",
-      "unavailable": "__MISSING__:configPanel.masterConfig.unavailable",
-      "themesPath": "__MISSING__:configPanel.masterConfig.themesPath",
-      "loadedFrom": "__MISSING__:configPanel.masterConfig.loadedFrom",
-      "profile": "__MISSING__:configPanel.masterConfig.profile",
-      "parseError": "__MISSING__:configPanel.masterConfig.parseError",
-      "validationWarnings": "__MISSING__:configPanel.masterConfig.validationWarnings"
+      "title": "लोकल मास्टर कॉन्फ़िग",
+      "description1": "संपादित करें ",
+      "description2": " और ",
+      "description3": " डिस्क पर Venice Forge को UI को छूए बिना कॉन्फ़िगर करने के लिए। देखें ",
+      "description4": " पूर्ण स्कीमा के लिए।",
+      "configPath": "कॉन्फ़िग पथ",
+      "unavailable": "(अनुपलब्ध)",
+      "themesPath": "थीम पथ",
+      "loadedFrom": "से लोड किया गया",
+      "profile": "प्रोफ़ाइल",
+      "parseError": "पार्स त्रुटि:",
+      "validationWarnings": "सत्यापन चेतावनियाँ"
     },
     "actions": {
-      "reload": "__MISSING__:configPanel.actions.reload",
-      "openFolder": "__MISSING__:configPanel.actions.openFolder",
-      "exportTemplate": "__MISSING__:configPanel.actions.exportTemplate",
-      "clearSecureStore": "__MISSING__:configPanel.actions.clearSecureStore"
+      "reload": "कॉन्फ़िग पुनः लोड करें",
+      "openFolder": "कॉन्फ़िग फ़ोल्डर खोलें",
+      "exportTemplate": "सैनिटाइज़्ड टेम्पलेट निर्यात करें",
+      "clearSecureStore": "सुरक्षित स्टोर साफ़ करें"
     },
     "apiKeyImport": {
-      "title": "__MISSING__:configPanel.apiKeyImport.title",
-      "description1": "__MISSING__:configPanel.apiKeyImport.description1",
-      "description2": "__MISSING__:configPanel.apiKeyImport.description2",
-      "description3": "__MISSING__:configPanel.apiKeyImport.description3",
-      "veniceKey": "__MISSING__:configPanel.apiKeyImport.veniceKey",
-      "configured": "__MISSING__:configPanel.apiKeyImport.configured",
-      "notConfigured": "__MISSING__:configPanel.apiKeyImport.notConfigured",
-      "imported": "__MISSING__:configPanel.apiKeyImport.imported",
-      "redacted": "__MISSING__:configPanel.apiKeyImport.redacted",
-      "jinaKey": "__MISSING__:configPanel.apiKeyImport.jinaKey",
-      "note": "__MISSING__:configPanel.apiKeyImport.note",
+      "title": "API कुंजी आयात",
+      "description1": "प्लेनटेक्स्ट कुंजियाँ ",
+      "description2": " में स्टार्टअप पर OS सुरक्षित स्टोरेज में आयात की जाती हैं और फ़ाइल से हटा दी जाती हैं (जब तक ",
+      "description3": " सेट न हो)।",
+      "veniceKey": "Venice कुंजी",
+      "configured": "कॉन्फ़िगर किया गया (सुरक्षित स्टोर)",
+      "notConfigured": "कॉन्फ़िगर नहीं किया गया",
+      "imported": "इस रन में आयातित",
+      "redacted": "प्लेनटेक्स्ट हटाया गया",
+      "jinaKey": "Jina कुंजी",
+      "note": "रॉ कुंजियाँ कभी भी रेंडरर को नहीं भेजी जातीं। संग्रहीत कुंजियाँ साफ़ करने के लिए सुरक्षित स्टोर रीसेट करें; फिर आप उन्हें API Keys टैब के माध्यम से फिर से दर्ज कर सकते हैं।",
       "clearConfirm": {
-        "title": "__MISSING__:configPanel.apiKeyImport.clearConfirm.title",
-        "detail": "__MISSING__:configPanel.apiKeyImport.clearConfirm.detail",
-        "action": "__MISSING__:configPanel.apiKeyImport.clearConfirm.action"
+        "title": "सुरक्षित स्टोर कुंजियाँ साफ़ करें?",
+        "detail": "यह सुरक्षित स्टोर से सभी संग्रहीत API कुंजियाँ हटा देता है। इसे पूर्ववत नहीं किया जा सकता।",
+        "action": "कुंजियाँ साफ़ करें"
       }
     },
     "effectiveSettings": {
-      "title": "__MISSING__:configPanel.effectiveSettings.title",
-      "description1": "__MISSING__:configPanel.effectiveSettings.description1",
-      "description2": "__MISSING__:configPanel.effectiveSettings.description2",
-      "activeTheme": "__MISSING__:configPanel.effectiveSettings.activeTheme",
-      "defaultChatModel": "__MISSING__:configPanel.effectiveSettings.defaultChatModel",
-      "useUiDefault": "__MISSING__:configPanel.effectiveSettings.useUiDefault",
-      "temperature": "__MISSING__:configPanel.effectiveSettings.temperature",
-      "topP": "__MISSING__:configPanel.effectiveSettings.topP",
-      "maxTokens": "__MISSING__:configPanel.effectiveSettings.maxTokens",
-      "webSearch": "__MISSING__:configPanel.effectiveSettings.webSearch"
+      "title": "प्रभावी सेटिंग्स (पूर्वावलोकन)",
+      "description1": "वर्तमान में मेमोरी में मौजूद मर्ज किए गए कॉन्फ़िग का केवल-पढ़ने योग्य पूर्वावलोकन। ",
+      "description2": " स्रोत अभी भी सत्य का मानक स्रोत है — इसे डिस्क पर संपादित करें और क्लिक करें ",
+      "activeTheme": "सक्रिय थीम",
+      "defaultChatModel": "डिफ़ॉल्ट चैट मॉडल",
+      "useUiDefault": "(UI डिफ़ॉल्ट का उपयोग करें)",
+      "temperature": "तापमान",
+      "topP": "Top-p",
+      "maxTokens": "अधिकतम टोकन",
+      "webSearch": "वेब खोज"
     }
   },
   "dataStorage": {
     "toasts": {
-      "importReadFailed": "__MISSING__:dataStorage.toasts.importReadFailed",
-      "importNothingNewProfile": "__MISSING__:dataStorage.toasts.importNothingNewProfile",
-      "importNothingDetail": "__MISSING__:dataStorage.toasts.importNothingDetail",
-      "importCompleteNewProfile": "__MISSING__:dataStorage.toasts.importCompleteNewProfile",
-      "importNothing": "__MISSING__:dataStorage.toasts.importNothing",
-      "importPartial": "__MISSING__:dataStorage.toasts.importPartial",
-      "importPartialDetail": "__MISSING__:dataStorage.toasts.importPartialDetail",
-      "importComplete": "__MISSING__:dataStorage.toasts.importComplete",
-      "replaceFailedRestored": "__MISSING__:dataStorage.toasts.replaceFailedRestored",
-      "replaceFailedRecovery": "__MISSING__:dataStorage.toasts.replaceFailedRecovery",
-      "importFailed": "__MISSING__:dataStorage.toasts.importFailed",
-      "recoveryRestored": "__MISSING__:dataStorage.toasts.recoveryRestored",
-      "recoveryRestoredDetail": "__MISSING__:dataStorage.toasts.recoveryRestoredDetail",
-      "recoveryRestoreFailed": "__MISSING__:dataStorage.toasts.recoveryRestoreFailed",
-      "recoveryRestoreFailedDetail": "__MISSING__:dataStorage.toasts.recoveryRestoreFailedDetail"
+      "importReadFailed": "बैकअप पढ़ने में विफल। ग़लत पासवर्ड या दूषित फ़ाइल।",
+      "importNothingNewProfile": "नई प्रोफ़ाइल में कुछ भी आयात नहीं किया गया: {{skipped}} छोड़े गए",
+      "importNothingDetail": "कोई रिकॉर्ड लागू नहीं किए गए; बैकअप जाँचें",
+      "importCompleteNewProfile": "नई प्रोफ़ाइल में आयात पूर्ण: {{imported}} आयातित। पुनः लोड हो रहा है...",
+      "importNothing": "कुछ भी आयात नहीं किया गया: {{skipped}} छोड़े गए",
+      "importPartial": "आंशिक आयात: {{imported}} आयातित, {{skipped}} छोड़े गए",
+      "importPartialDetail": "{{tombstones}} टॉम्बस्टोन लागू किए गए। इस बैकअप पर निर्भर होने से पहले छोड़े गए काउंट की जाँच करें।",
+      "importComplete": "आयात पूर्ण: {{imported}} आयातित, {{skipped}} छोड़े गए, {{tombstones}} टॉम्बस्टोन लागू किए गए।",
+      "replaceFailedRestored": "प्रतिस्थापन विफल; डेटा पुनर्स्थापित",
+      "replaceFailedRecovery": "प्रतिस्थापन विफल; पुनर्प्राप्ति आवश्यक",
+      "importFailed": "आयात विफल।",
+      "recoveryRestored": "पुनर्प्राप्ति पुनर्स्थापित",
+      "recoveryRestoredDetail": "पूर्व प्रोफ़ाइल स्थिति पुनर्स्थापित की गई और प्रतिस्थापित स्थिति को एक नए पुनर्प्राप्ति बैकअप के रूप में बनाए रखा गया।",
+      "recoveryRestoreFailed": "पुनर्प्राप्ति पुनर्स्थापना विफल",
+      "recoveryRestoreFailedDetail": "पुनर्प्राप्ति बैकअप पुनर्स्थापित नहीं किया जा सका।"
     },
     "manualBackup": {
-      "title": "__MISSING__:dataStorage.manualBackup.title",
-      "description": "__MISSING__:dataStorage.manualBackup.description",
-      "passwordPlaceholder": "__MISSING__:dataStorage.manualBackup.passwordPlaceholder",
-      "includeDrafts": "__MISSING__:dataStorage.manualBackup.includeDrafts",
-      "includeMedia": "__MISSING__:dataStorage.manualBackup.includeMedia",
-      "export": "__MISSING__:dataStorage.manualBackup.export",
-      "import": "__MISSING__:dataStorage.manualBackup.import"
+      "title": "मैन्युअल बैकअप",
+      "description": "अपने स्थानीय इतिहास, कैरेक्टर कार्ड, और वर्कफ़्लो का एक एन्क्रिप्टेड, पोर्टेबल बैकअप बनाएँ। आप इस बैकअप को किसी भी डिवाइस पर आयात कर सकते हैं।",
+      "passwordPlaceholder": "बैकअप पासवर्ड",
+      "includeDrafts": "एन्क्रिप्टेड स्थानीय ST Card ड्राफ्ट शामिल करें (ड्राफ्ट कभी सिंक नहीं होते)",
+      "includeMedia": "इस बैकअप में मीडिया शामिल करें (चित्र, फ़ाइलें, RP एसेट्स — बैकअप के बाकी हिस्से के साथ एन्क्रिप्टेड)",
+      "export": "बैकअप निर्यात करें",
+      "import": "बैकअप आयात करें"
     },
     "recovery": {
-      "title": "__MISSING__:dataStorage.recovery.title",
-      "description": "__MISSING__:dataStorage.recovery.description",
-      "restore": "__MISSING__:dataStorage.recovery.restore"
+      "title": "प्रतिस्थापन-पूर्व पुनर्प्राप्ति",
+      "description": "{{date}} से एक सत्यापित एन्क्रिप्टेड पुनर्प्राप्ति बैकअप उपलब्ध है। इसे लेन-देन के रूप में पुनर्स्थापित करने के लिए ऊपर इसका बैकअप पासवर्ड दर्ज करें।",
+      "restore": "पुनर्प्राप्ति बैकअप पुनर्स्थापित करें"
     },
     "dangerZone": {
-      "title": "__MISSING__:dataStorage.dangerZone.title",
-      "description": "__MISSING__:dataStorage.dangerZone.description",
-      "clearDefaults": "__MISSING__:dataStorage.dangerZone.clearDefaults",
-      "clearIndexedDB": "__MISSING__:dataStorage.dangerZone.clearIndexedDB"
+      "title": "खतरनाक क्षेत्र",
+      "description": "ये क्रियाएँ विनाशकारी हैं और पूर्ववत नहीं की जा सकतीं। यदि आपके पास महत्वपूर्ण इतिहास है तो हमेशा पहले एक बैकअप निर्यात करें।",
+      "clearDefaults": "ऐप डिफ़ॉल्ट साफ़ करें",
+      "clearIndexedDB": "IndexedDB डेटा साफ़ करें"
     }
   },
   "defaultsPanel": {
-    "defaultChatModel": "__MISSING__:defaultsPanel.defaultChatModel",
-    "defaultImageModel": "__MISSING__:defaultsPanel.defaultImageModel",
-    "defaultWebSearch": "__MISSING__:defaultsPanel.defaultWebSearch",
-    "defaultSystemPrompt": "__MISSING__:defaultsPanel.defaultSystemPrompt",
-    "systemPromptPlaceholder": "__MISSING__:defaultsPanel.systemPromptPlaceholder",
-    "veniceSystemPromptToggle": "__MISSING__:defaultsPanel.veniceSystemPromptToggle",
-    "enableCitations": "__MISSING__:defaultsPanel.enableCitations",
+    "defaultChatModel": "डिफ़ॉल्ट चैट मॉडल",
+    "defaultImageModel": "डिफ़ॉल्ट छवि मॉडल",
+    "defaultWebSearch": "डिफ़ॉल्ट वेब खोज",
+    "defaultSystemPrompt": "डिफ़ॉल्ट सिस्टम प्रॉम्प्ट",
+    "systemPromptPlaceholder": "वैकल्पिक। ऐप-लिखित सिस्टम संदेश जोड़ने से बचने के लिए खाली छोड़ें।",
+    "veniceSystemPromptToggle": "Venice सिस्टम प्रॉम्प्ट टॉगल",
+    "enableCitations": "डिफ़ॉल्ट रूप से उद्धरण सक्षम करें",
     "characterSceneGeneration": {
-      "title": "__MISSING__:defaultsPanel.characterSceneGeneration.title",
-      "description": "__MISSING__:defaultsPanel.characterSceneGeneration.description",
-      "mode": "__MISSING__:defaultsPanel.characterSceneGeneration.mode",
-      "modeAriaLabel": "__MISSING__:defaultsPanel.characterSceneGeneration.modeAriaLabel",
-      "manualOnly": "__MISSING__:defaultsPanel.characterSceneGeneration.manualOnly",
-      "autoManual": "__MISSING__:defaultsPanel.characterSceneGeneration.autoManual"
+      "title": "चरित्र दृश्य निर्माण",
+      "description": "चरित्र चैट को केवल वर्तमान वार्तालाप से इनलाइन दृश्य छवियाँ बनाने की अनुमति दें। स्थानीय दर सीमाओं द्वारा सुरक्षित।",
+      "mode": "मोड",
+      "modeAriaLabel": "चरित्र दृश्य निर्माण मोड",
+      "manualOnly": "केवल मैनुअल",
+      "autoManual": "स्वचालित + मैनुअल"
     }
   },
   "importPlan": {
-    "title": "__MISSING__:importPlan.title",
-    "summary": "__MISSING__:importPlan.summary",
+    "title": "आयात योजना की समीक्षा करें",
+    "summary": "इस बैकअप में {{stores}} डेटा स्टोर में {{records}} रिकॉर्ड शामिल हैं।",
     "metadata": {
-      "authenticated": "__MISSING__:importPlan.metadata.authenticated",
-      "legacy": "__MISSING__:importPlan.metadata.legacy",
-      "format": "__MISSING__:importPlan.metadata.format",
-      "exportedAt": "__MISSING__:importPlan.metadata.exportedAt",
-      "source": "__MISSING__:importPlan.metadata.source",
-      "profileRef": "__MISSING__:importPlan.metadata.profileRef",
-      "crypto": "__MISSING__:importPlan.metadata.crypto",
-      "counts": "__MISSING__:importPlan.metadata.counts",
-      "sha": "__MISSING__:importPlan.metadata.sha"
+      "authenticated": "प्रमाणित बैकअप मेटाडेटा",
+      "legacy": "लीगेसी बैकअप मेटाडेटा",
+      "format": "प्रारूप: v{{version}}{{appVersion}}",
+      "exportedAt": "निर्यात किया गया: {{date}}",
+      "source": "स्रोत: {{runtime}} / {{device}}",
+      "profileRef": "प्रोफ़ाइल संदर्भ: {{ref}}",
+      "crypto": "क्रिप्टो: {{alg}} / {{kdf}} / कुंजी v{{key}}",
+      "counts": "{{tombstones}} टॉम्बस्टोन / {{blobs}} एम्बेडेड ब्लॉब्स",
+      "sha": "पेलोड SHA-256: {{sha}}"
     },
-    "warningsLabel": "__MISSING__:importPlan.warningsLabel",
+    "warningsLabel": "आयात चेतावनियाँ",
     "preview": {
-      "title": "__MISSING__:importPlan.preview.title",
-      "recordsCount": "__MISSING__:importPlan.preview.recordsCount",
-      "new": "__MISSING__:importPlan.preview.new",
-      "modified": "__MISSING__:importPlan.preview.modified",
-      "conflicts": "__MISSING__:importPlan.preview.conflicts",
-      "identical": "__MISSING__:importPlan.preview.identical",
-      "noChanges": "__MISSING__:importPlan.preview.noChanges"
+      "title": "डेटा परिवर्तन पूर्वावलोकन",
+      "recordsCount": "{{count}} रिकॉर्ड",
+      "new": "{{count}} नया",
+      "modified": "{{count}} संशोधित",
+      "conflicts": "{{count}} टकराव",
+      "identical": "{{count}} समान",
+      "noChanges": "कोई परिवर्तन नहीं"
     },
     "mode": {
-      "title": "__MISSING__:importPlan.mode.title",
-      "merge": "__MISSING__:importPlan.mode.merge",
-      "mergeDesc": "__MISSING__:importPlan.mode.mergeDesc",
-      "replace": "__MISSING__:importPlan.mode.replace",
-      "replaceDesc": "__MISSING__:importPlan.mode.replaceDesc",
-      "newProfile": "__MISSING__:importPlan.mode.newProfile",
-      "newProfileDesc": "__MISSING__:importPlan.mode.newProfileDesc"
+      "title": "आयात मोड चुनें",
+      "merge": "डेटा मर्ज करें",
+      "mergeDesc": "मौजूदा डेटा रखें और नए रिकॉर्ड जोड़ें। टकरावों को स्थानीय संस्करणों के साथ सहेजा जाएगा।",
+      "replace": "सभी प्रतिस्थापित करें",
+      "replaceDesc": "सभी वर्तमान स्थानीय डेटा मिटाएँ और इसे पूरी तरह से इस बैकअप से प्रतिस्थापित करें।",
+      "newProfile": "नई प्रोफ़ाइल",
+      "newProfileDesc": "एक नया प्रोफ़ाइल कार्यस्थान बनाएँ और इस बैकअप को इसमें आयात करें।"
     },
     "warnings": {
-      "recoveryEnabled": "__MISSING__:importPlan.warnings.recoveryEnabled",
-      "recoveryEnabledDesc": "__MISSING__:importPlan.warnings.recoveryEnabledDesc",
-      "replaceUnavailable": "__MISSING__:importPlan.warnings.replaceUnavailable",
-      "replaceUnavailableDesc": "__MISSING__:importPlan.warnings.replaceUnavailableDesc"
+      "recoveryEnabled": "स्वचालित पुनर्प्राप्ति सक्षम",
+      "recoveryEnabledDesc": "डेस्कटॉप ऐप इस बैकअप को चरणबद्ध करेगा, एक एन्क्रिप्टेड पुनर्प्राप्ति कलाकृति बनाएगा और सत्यापित करेगा, फिर यदि प्रतिस्थापन विफल हो जाता है तो स्वचालित रूप से रोल बैक करेगा।",
+      "replaceUnavailable": "वेब मोड में प्रतिस्थापन अनुपलब्ध",
+      "replaceUnavailableDesc": "मर्ज या नई प्रोफ़ाइल का उपयोग करें। टिकाऊ प्रतिस्थापन पुनर्प्राप्ति के लिए Venice Forge डेस्कटॉप ऐप की आवश्यकता होती है।"
     },
-    "profileName": "__MISSING__:importPlan.profileName",
-    "profileNamePlaceholder": "__MISSING__:importPlan.profileNamePlaceholder",
+    "profileName": "प्रोफ़ाइल नाम",
+    "profileNamePlaceholder": "उदा. कार्य बैकअप",
     "actions": {
-      "confirm": "__MISSING__:importPlan.actions.confirm"
+      "confirm": "आयात की पुष्टि करें"
     }
   },
   "masterPassword": {
     "errors": {
-      "mismatch": "__MISSING__:masterPassword.errors.mismatch",
-      "tooShort": "__MISSING__:masterPassword.errors.tooShort",
-      "saveFailed": "__MISSING__:masterPassword.errors.saveFailed",
-      "lockedOut": "__MISSING__:masterPassword.errors.lockedOut",
-      "incorrect": "__MISSING__:masterPassword.errors.incorrect",
-      "verifyFailed": "__MISSING__:masterPassword.errors.verifyFailed"
+      "mismatch": "पासवर्ड मेल नहीं खाते",
+      "tooShort": "पासवर्ड बहुत छोटा है (न्यूनतम {{min}} अक्षर)",
+      "saveFailed": "पासवर्ड सुरक्षित रूप से सहेजने में विफल",
+      "lockedOut": " लॉक आउट। {{seconds}} सेकंड में पुनः प्रयास करें।",
+      "incorrect": "गलत पासवर्ड।",
+      "verifyFailed": "पासवर्ड सत्यापित करने में विफल"
     },
-    "titleSet": "__MISSING__:masterPassword.titleSet",
-    "titleEnter": "__MISSING__:masterPassword.titleEnter",
-    "description": "__MISSING__:masterPassword.description",
+    "titleSet": "मास्टर पासवर्ड सेट करें",
+    "titleEnter": "मास्टर पासवर्ड दर्ज करें",
+    "description": "यह स्थानीय नियंत्रण पासवर्ड परिवार सुरक्षित मोड परिवर्तनों की रक्षा करता है। ऐप एक साल्टेड वेरिफायर संग्रहीत करता है, पासवर्ड स्वयं नहीं।",
     "labels": {
-      "password": "__MISSING__:masterPassword.labels.password",
-      "confirm": "__MISSING__:masterPassword.labels.confirm"
+      "password": "मास्टर पासवर्ड",
+      "confirm": "मास्टर पासवर्ड की पुष्टि करें"
     }
   },
   "profiles": {
     "removePassword": {
-      "title": "__MISSING__:profiles.removePassword.title",
-      "detail": "__MISSING__:profiles.removePassword.detail",
-      "action": "__MISSING__:profiles.removePassword.action"
+      "title": "प्रोफ़ाइल पासवर्ड हटाएं?",
+      "detail": "\"{{name}}\" को स्विच करने से पहले अनलॉक करने की आवश्यकता नहीं होगी।",
+      "action": "हटाएं"
     },
     "errors": {
-      "removeFailed": "__MISSING__:profiles.errors.removeFailed",
-      "tooShort": "__MISSING__:profiles.errors.tooShort",
-      "mismatch": "__MISSING__:profiles.errors.mismatch",
-      "saveFailed": "__MISSING__:profiles.errors.saveFailed",
-      "incorrect": "__MISSING__:profiles.errors.incorrect",
-      "deleteFailed": "__MISSING__:profiles.errors.deleteFailed"
+      "removeFailed": "प्रोफ़ाइल पासवर्ड हटाने में विफल",
+      "tooShort": "पासवर्ड बहुत छोटा है (न्यूनतम {{min}} अक्षर)",
+      "mismatch": "पासवर्ड मेल नहीं खाते",
+      "saveFailed": "प्रोफ़ाइल पासवर्ड सहेजने में विफल",
+      "incorrect": "गलत पासवर्ड",
+      "deleteFailed": "प्रोफ़ाइल हटाना विफल।"
     },
-    "title": "__MISSING__:profiles.title",
-    "description": "__MISSING__:profiles.description",
+    "title": "प्रोफ़ाइल प्रबंधित करें",
+    "description": "प्रत्येक प्रोफ़ाइल पृथक सेटिंग्स, API कुंजी और कॉन्फ़िगरेशन बनाए रखता है। प्रोफ़ाइल बदलने पर सक्रिय एप्लिकेशन स्थिति साफ़ हो जाएगी और पुनः लोड होगी।",
     "badge": {
-      "active": "__MISSING__:profiles.badge.active",
-      "locked": "__MISSING__:profiles.badge.locked"
+      "active": "सक्रिय",
+      "locked": "लॉक्ड"
     },
     "aria": {
-      "removePassword": "__MISSING__:profiles.aria.removePassword",
-      "setPassword": "__MISSING__:profiles.aria.setPassword",
-      "switchTo": "__MISSING__:profiles.aria.switchTo",
-      "delete": "__MISSING__:profiles.aria.delete"
+      "removePassword": "{{name}} के लिए पासवर्ड हटाएं",
+      "setPassword": "{{name}} के लिए पासवर्ड सेट करें",
+      "switchTo": "{{name}} पर स्विच करें",
+      "delete": "{{name}} हटाएं"
     },
     "actions": {
-      "removePassword": "__MISSING__:profiles.actions.removePassword",
-      "setPassword": "__MISSING__:profiles.actions.setPassword",
-      "switchTo": "__MISSING__:profiles.actions.switchTo",
-      "createProfile": "__MISSING__:profiles.actions.createProfile"
+      "removePassword": "पासवर्ड हटाएं",
+      "setPassword": "पासवर्ड सेट करें",
+      "switchTo": "इस पर स्विच करें",
+      "createProfile": "प्रोफ़ाइल बनाएं"
     },
     "deleteProfile": {
-      "title": "__MISSING__:profiles.deleteProfile.title",
-      "detail": "__MISSING__:profiles.deleteProfile.detail",
-      "action": "__MISSING__:profiles.deleteProfile.action"
+      "title": "प्रोफ़ाइल हटाएं?",
+      "detail": "\"{{name}}\" हटा दिया जाएगा। इसकी वार्तालाप वॉल्ट, रेंडरर रिकॉर्ड, प्रोफ़ाइल-स्कोप्ड स्थानीय सेटिंग्स, API कुंजी और पासवर्ड वेरिफायर साफ़ कर दिए जाएंगे। साझा वैश्विक कैश बरकरार रखे जाएंगे।",
+      "action": "हटाएं"
     },
-    "newProfilePlaceholder": "__MISSING__:profiles.newProfilePlaceholder",
+    "newProfilePlaceholder": "नई प्रोफ़ाइल नाम",
     "dialog": {
-      "titleSet": "__MISSING__:profiles.dialog.titleSet",
-      "titleUnlock": "__MISSING__:profiles.dialog.titleUnlock",
-      "description": "__MISSING__:profiles.dialog.description",
-      "labelSet": "__MISSING__:profiles.dialog.labelSet",
-      "labelUnlock": "__MISSING__:profiles.dialog.labelUnlock",
-      "labelConfirm": "__MISSING__:profiles.dialog.labelConfirm",
-      "savePassword": "__MISSING__:profiles.dialog.savePassword"
+      "titleSet": "{{name}} के लिए पासवर्ड सेट करें",
+      "titleUnlock": "{{name}} अनलॉक करें",
+      "description": "यह पासवर्ड इस स्थानीय प्रोफ़ाइल में स्विच करने की रक्षा करता है।",
+      "labelSet": "प्रोफ़ाइल पासवर्ड",
+      "labelUnlock": "अनलॉक पासवर्ड",
+      "labelConfirm": "प्रोफ़ाइल पासवर्ड की पुष्टि करें",
+      "savePassword": "पासवर्ड सहेजें"
     }
   },
   "providers": {
     "errors": {
-      "loadFailed": "__MISSING__:providers.errors.loadFailed",
-      "saveFailed": "__MISSING__:providers.errors.saveFailed",
-      "enableWithoutKey": "__MISSING__:providers.errors.enableWithoutKey"
+      "loadFailed": "प्रदाता सेटिंग्स लोड करने में विफल।",
+      "saveFailed": "प्रदाता सेटिंग्स सहेजने में विफल।",
+      "enableWithoutKey": "API कुंजी के बिना प्रदाता सक्षम नहीं किया जा सकता।"
     },
-    "title": "__MISSING__:providers.title",
-    "description": "__MISSING__:providers.description",
-    "deferredNotice": "__MISSING__:providers.deferredNotice",
+    "title": "फ़ॉलबैक प्रदाता",
+    "description": "फ़ॉलबैक प्रदाताओं के लिए API कुंजी कॉन्फ़िगर करें। इनका उपयोग केवल तभी किया जाएगा जब स्पष्ट रूप से सक्षम किया गया हो और जब Venice मॉडल अनुपलब्ध हों या आप किसी विशिष्ट फ़ॉलबैक मॉडल का अनुरोध करें।",
+    "deferredNotice": "इस रिलीज़ में टाला गया (कोई कुंजी प्रविष्टि, रूटिंग, या ट्रैफ़िक नहीं): {{deferred}}। प्रदाता कुंजी मैन्युअल रूप से बदली या हटाई जाती हैं; अनुसूचित कुंजी रोटेशन लागू नहीं किया गया है।",
     "autoFallback": {
-      "title": "__MISSING__:providers.autoFallback.title",
-      "description": "__MISSING__:providers.autoFallback.description",
-      "enableAria": "__MISSING__:providers.autoFallback.enableAria",
-      "orderingLabel": "__MISSING__:providers.autoFallback.orderingLabel",
-      "orderingPlaceholder": "__MISSING__:providers.autoFallback.orderingPlaceholder",
-      "orderingNotice": "__MISSING__:providers.autoFallback.orderingNotice"
+      "title": "स्वचालित फ़ॉलबैक राउटर",
+      "description": "यदि Venice अनुपलब्ध है या त्रुटि लौटाता है तो अनुरोधों को स्वचालित रूप से फ़ॉलबैक प्रदाताओं पर रूट करें।",
+      "enableAria": "स्वचालित फ़ॉलबैक सक्षम करें",
+      "orderingLabel": "फ़ॉलबैक क्रम (कॉमा-सेपरेटेड प्रदाता ID)",
+      "orderingPlaceholder": "together, groq, anthropic",
+      "orderingNotice": "प्रदाताओं को इसी सटीक क्रम में आज़माया जाएगा। सुनिश्चित करें कि आपने उन्हें नीचे सक्षम किया है। उपलब्ध: {{available}}"
     },
     "badge": {
-      "deferred": "__MISSING__:providers.badge.deferred"
+      "deferred": "टाला गया"
     },
     "aria": {
-      "enable": "__MISSING__:providers.aria.enable"
+      "enable": "{{label}} सक्षम करें"
     },
     "status": {
-      "keyConfigured": "__MISSING__:providers.status.keyConfigured"
+      "keyConfigured": "API कुंजी कॉन्फ़िगर की गई"
     },
     "actions": {
-      "removeKey": "__MISSING__:providers.actions.removeKey"
+      "removeKey": "कुंजी हटाएं"
     },
     "inputs": {
-      "keyPlaceholder": "__MISSING__:providers.inputs.keyPlaceholder"
+      "keyPlaceholder": "API कुंजी दर्ज करें"
     }
   },
   "errors": {
-    "persistSafety": "__MISSING__:errors.persistSafety"
+    "persistSafety": "सुरक्षा सेटिंग सहेजने में विफल।"
   },
   "updates": {
-    "available": "__MISSING__:updates.available",
-    "upToDate": "__MISSING__:updates.upToDate",
-    "downloading": "__MISSING__:updates.downloading",
-    "downloaded": "__MISSING__:updates.downloaded",
-    "error": "__MISSING__:updates.error",
-    "checking": "__MISSING__:updates.checking",
-    "devBuild": "__MISSING__:updates.devBuild",
-    "checkFailed": "__MISSING__:updates.checkFailed",
-    "checkCompleted": "__MISSING__:updates.checkCompleted",
-    "installFailed": "__MISSING__:updates.installFailed"
+    "available": "अपडेट उपलब्ध: v{{version}}",
+    "upToDate": "ऐप अद्यतित है।",
+    "downloading": "अपडेट डाउनलोड हो रहा है: {{percent}}%",
+    "downloaded": "अपडेट डाउनलोड हो गया है और इंस्टॉल करने के लिए तैयार है।",
+    "error": "अपडेट त्रुटि: {{error}}",
+    "checking": "अपडेट के लिए जाँच की जा रही है...",
+    "devBuild": "डेवलपमेंट बिल्ड — अपडेट जाँच केवल पैकेज्ड प्रोडक्शन बिल्ड में चलती है।",
+    "checkFailed": "अपडेट जाँच विफल: {{error}}",
+    "checkCompleted": "अपडेट जाँच पूर्ण हुई।",
+    "installFailed": "इंस्टॉल विफल: {{error}}"
   },
   "jinaKeys": {
-    "savedElectron": "__MISSING__:jinaKeys.savedElectron",
-    "savedWeb": "__MISSING__:jinaKeys.savedWeb",
-    "saveFailed": "__MISSING__:jinaKeys.saveFailed",
+    "savedElectron": "Jina API कुंजी सुरक्षित रूप से सहेजी गई।",
+    "savedWeb": "Jina API कुंजी इस ब्राउज़र सत्र के लिए सहेजी गई।",
+    "saveFailed": "Jina API कुंजी सहेजने में विफल।",
     "deleteConfirm": {
-      "title": "__MISSING__:jinaKeys.deleteConfirm.title",
-      "electron": "__MISSING__:jinaKeys.deleteConfirm.electron",
-      "web": "__MISSING__:jinaKeys.deleteConfirm.web"
+      "title": "Jina API कुंजी हटाएँ?",
+      "electron": "यह आपकी Jina API कुंजी को OS सुरक्षित स्टोरेज से हटा देगा।",
+      "web": "यह इस ब्राउज़र सत्र के लिए इन-मेमोरी Jina API कुंजी को हटा देगा।"
     },
-    "deleted": "__MISSING__:jinaKeys.deleted",
-    "deleteFailed": "__MISSING__:jinaKeys.deleteFailed",
-    "testSuccess": "__MISSING__:jinaKeys.testSuccess",
-    "testFailed": "__MISSING__:jinaKeys.testFailed",
-    "testError": "__MISSING__:jinaKeys.testError"
+    "deleted": "Jina API कुंजी हटा दी गई।",
+    "deleteFailed": "Jina API कुंजी हटाने में विफल।",
+    "testSuccess": "Jina कनेक्शन सफल{{status}}।",
+    "testFailed": "Jina कनेक्शन विफल: {{message}}",
+    "testError": "Jina परीक्षण कनेक्शन विफल।"
   },
   "header": {
-    "title": "__MISSING__:header.title",
+    "title": "कॉन्फ़िग",
     "description": {
-      "electron": "__MISSING__:header.description.electron",
-      "web": "__MISSING__:header.description.web"
+      "electron": "API एंडपॉइंट, डिफ़ॉल्ट और दिखावट शैलियाँ प्रबंधित करें।",
+      "web": "डिफ़ॉल्ट प्रॉम्प्ट और स्टाइलिंग टेम्पलेट कॉन्फ़िगर करें।"
     }
   },
   "tabs": {
-    "languageRegion": "__MISSING__:tabs.languageRegion",
-    "profiles": "__MISSING__:tabs.profiles",
-    "apiKeys": "__MISSING__:tabs.apiKeys",
-    "providers": "__MISSING__:tabs.providers",
-    "defaults": "__MISSING__:tabs.defaults",
-    "safety": "__MISSING__:tabs.safety",
-    "vault": "__MISSING__:tabs.vault",
-    "appearance": "__MISSING__:tabs.appearance",
-    "data": "__MISSING__:tabs.data",
-    "backupSync": "__MISSING__:tabs.backupSync",
-    "about": "__MISSING__:tabs.about",
-    "updates": "Updates",
-    "config": "__MISSING__:tabs.config",
-    "audioSpeech": "__MISSING__:tabs.audioSpeech"
+    "languageRegion": "भाषा और क्षेत्र",
+    "profiles": "प्रोफ़ाइल",
+    "apiKeys": "Venice API कुंजी",
+    "providers": "फ़ॉलबैक प्रदाता",
+    "defaults": "डिफ़ॉल्ट और व्यवहार",
+    "safety": "सुरक्षा",
+    "vault": "वार्तालाप वॉल्ट",
+    "appearance": "दिखावट",
+    "data": "डेटा और स्टोरेज",
+    "backupSync": "बैकअप और सिंक",
+    "about": "परिचय और कानूनी",
+    "updates": "अपडेट",
+    "config": "स्थानीय कॉन्फ़िग",
+    "audioSpeech": "ऑडियो और वाक्"
   },
   "updatesPanel": {
-    "title": "__MISSING__:updatesPanel.title",
-    "description": "__MISSING__:updatesPanel.description",
-    "status": "__MISSING__:updatesPanel.status",
-    "checking": "__MISSING__:updatesPanel.checking",
-    "checkForUpdates": "__MISSING__:updatesPanel.checkForUpdates",
-    "restartAndInstall": "__MISSING__:updatesPanel.restartAndInstall"
+    "title": "एप्लिकेशन अपडेट",
+    "description": "GitHub Releases के माध्यम से सुरक्षित रूप से डेस्कटॉप एप्लिकेशन अपडेट की जाँच करें।",
+    "status": "स्थिति:",
+    "checking": "जाँच हो रही है...",
+    "checkForUpdates": "अपडेट के लिए जाँच करें",
+    "restartAndInstall": "पुनर्प्रारंभ करें और इंस्टॉल करें"
   }
 }

@@ -1,10 +1,10 @@
 {
-  "title": "Workflows",
-  "playground": "__MISSING__:playground",
-  "templates": "__MISSING__:templates",
-  "nodes": "__MISSING__:nodes",
-  "canvas": "__MISSING__:canvas",
-  "runWorkflow": "__MISSING__:runWorkflow",
-  "exportWorkflow": "__MISSING__:exportWorkflow",
-  "importWorkflow": "__MISSING__:importWorkflow"
+  "title": "Fluxos de Trabalho",
+  "playground": "Ambiente de Testes de Fluxo de Trabalho",
+  "templates": "Modelos",
+  "nodes": "Nós",
+  "canvas": "Tela de Fluxo de Trabalho",
+  "runWorkflow": "Executar Fluxo de Trabalho",
+  "exportWorkflow": "Exportar Fluxo de Trabalho",
+  "importWorkflow": "Importar Fluxo de Trabalho"
 }

@@ -1,534 +1,534 @@
 {
-  "title": "__MISSING__:title",
-  "subtitle": "__MISSING__:subtitle",
+  "title": "Konfiguration & inställningar",
+  "subtitle": "Hantera API-slutpunkter, standardvärden och utseendestilar.",
   "sections": {
-    "languageRegion": "__MISSING__:sections.languageRegion",
-    "profiles": "__MISSING__:sections.profiles",
-    "apiKeys": "__MISSING__:sections.apiKeys",
-    "providers": "__MISSING__:sections.providers",
-    "defaults": "__MISSING__:sections.defaults",
-    "safety": "__MISSING__:sections.safety",
-    "vault": "__MISSING__:sections.vault",
-    "appearance": "__MISSING__:sections.appearance",
-    "data": "__MISSING__:sections.data",
-    "backupSync": "__MISSING__:sections.backupSync",
-    "about": "__MISSING__:sections.about",
-    "updates": "Updates",
-    "config": "__MISSING__:sections.config",
-    "audioSpeech": "__MISSING__:sections.audioSpeech"
+    "languageRegion": "Språk & Region",
+    "profiles": "Profiler",
+    "apiKeys": "Venice API-nyckel",
+    "providers": "Reservleverantörer",
+    "defaults": "Standardvärden & Beteende",
+    "safety": "Säkerhet",
+    "vault": "Konversationsvalv",
+    "appearance": "Utseende",
+    "data": "Data & Lagring",
+    "backupSync": "Säkerhetskopiering & Synkronisering",
+    "about": "Om & Juridik",
+    "updates": "Uppdateringar",
+    "config": "Lokal konfiguration",
+    "audioSpeech": "Ljud & Tal"
   },
   "languageRegion": {
-    "title": "__MISSING__:languageRegion.title",
-    "description": "__MISSING__:languageRegion.description",
-    "uiLanguageLabel": "__MISSING__:languageRegion.uiLanguageLabel",
-    "useSystemLanguage": "__MISSING__:languageRegion.useSystemLanguage",
-    "resolvedLocale": "__MISSING__:languageRegion.resolvedLocale",
-    "textDirection": "__MISSING__:languageRegion.textDirection",
-    "leftToRight": "__MISSING__:languageRegion.leftToRight",
-    "rightToLeft": "__MISSING__:languageRegion.rightToLeft",
-    "formattingPreview": "__MISSING__:languageRegion.formattingPreview",
-    "dateExample": "Date",
-    "timeExample": "__MISSING__:languageRegion.timeExample",
-    "numberExample": "__MISSING__:languageRegion.numberExample",
-    "bytesExample": "__MISSING__:languageRegion.bytesExample"
+    "title": "Språk & Region",
+    "description": "Anpassa applikationsspråk, textriktning och regionala formateringsinställningar.",
+    "uiLanguageLabel": "Gränssnittsspråk",
+    "useSystemLanguage": "Använd systemspråk",
+    "resolvedLocale": "Aktiv locale",
+    "textDirection": "Textriktning",
+    "leftToRight": "Vänster-till-höger (LTR)",
+    "rightToLeft": "Höger-till-vänster (RTL)",
+    "formattingPreview": "Regional formateringsförhandsgranskning",
+    "dateExample": "Datum",
+    "timeExample": "Tid",
+    "numberExample": "Nummer",
+    "bytesExample": "Filstorlek"
   },
   "apiKeys": {
-    "title": "__MISSING__:apiKeys.title",
-    "keyInputLabel": "__MISSING__:apiKeys.keyInputLabel",
-    "testConnection": "__MISSING__:apiKeys.testConnection",
-    "saveKey": "__MISSING__:apiKeys.saveKey",
-    "deleteKey": "__MISSING__:apiKeys.deleteKey",
-    "veniceTitle": "__MISSING__:apiKeys.veniceTitle",
+    "title": "Venice API-nyckel",
+    "keyInputLabel": "API-nyckel",
+    "testConnection": "Testa anslutning",
+    "saveKey": "Spara nyckel",
+    "deleteKey": "Ta bort nyckel",
+    "veniceTitle": "Venice.ai-integration",
     "status": {
-      "configured": "__MISSING__:apiKeys.status.configured",
-      "unset": "__MISSING__:apiKeys.status.unset",
-      "optional": "__MISSING__:apiKeys.status.optional"
+      "configured": "Konfigurerad",
+      "unset": "Ej inställd",
+      "optional": "Valfritt"
     },
-    "veniceDescription": "__MISSING__:apiKeys.veniceDescription",
-    "jinaTitle": "__MISSING__:apiKeys.jinaTitle",
+    "veniceDescription": "Din API-nyckel sparas med säker lagringskryptering och exponeras aldrig för webbsandlådan.",
+    "jinaTitle": "Jina.ai-integration",
     "jinaDescription": {
-      "prefix": "__MISSING__:apiKeys.jinaDescription.prefix",
-      "electron": "__MISSING__:apiKeys.jinaDescription.electron",
-      "web": "__MISSING__:apiKeys.jinaDescription.web"
+      "prefix": "Tillhandahåller djup webbsökning, skrapning och kartläggning av sociala profiler.",
+      "electron": "Jina API-nycklar sparas med samma OS-säkra lagring.",
+      "web": "Jina API-nycklar sparas endast i minnet för denna webbläsarsession; använd servermiljön för beständig webbkonfiguration."
     },
-    "savedElectron": "__MISSING__:apiKeys.savedElectron",
-    "savedWeb": "__MISSING__:apiKeys.savedWeb",
-    "saveFailed": "__MISSING__:apiKeys.saveFailed",
+    "savedElectron": "Venice API-nyckel sparad säkert.",
+    "savedWeb": "Venice API-nyckel sparad för denna utvecklingssession.",
+    "saveFailed": "Det gick inte att spara API-nyckel.",
     "deleteConfirm": {
-      "title": "__MISSING__:apiKeys.deleteConfirm.title",
-      "electron": "__MISSING__:apiKeys.deleteConfirm.electron",
-      "web": "__MISSING__:apiKeys.deleteConfirm.web"
+      "title": "Ta bort Venice API-nyckel?",
+      "electron": "Detta tar bort din Venice API-nyckel från OS-säker lagring. Du måste ange den igen för att göra förfrågningar.",
+      "web": "Detta tar bort Venice API-nyckeln från den aktuella utvecklingssessionen."
     },
-    "deleted": "__MISSING__:apiKeys.deleted",
-    "deleteFailed": "__MISSING__:apiKeys.deleteFailed",
-    "testSuccess": "__MISSING__:apiKeys.testSuccess",
-    "testFailed": "__MISSING__:apiKeys.testFailed",
-    "testError": "__MISSING__:apiKeys.testError"
+    "deleted": "Venice API-nyckel borttagen.",
+    "deleteFailed": "Det gick inte att ta bort API-nyckel.",
+    "testSuccess": "Anslutning lyckades{{status}}.",
+    "testFailed": "Anslutning misslyckades: {{message}}",
+    "testError": "Test av anslutning misslyckades."
   },
   "safety": {
-    "title": "__MISSING__:safety.title",
-    "localFamilySafeMode": "__MISSING__:safety.localFamilySafeMode",
-    "veniceApiSafeMode": "__MISSING__:safety.veniceApiSafeMode",
-    "statusBanner": "__MISSING__:safety.statusBanner",
-    "familySafeModeTitle": "__MISSING__:safety.familySafeModeTitle",
-    "familySafeModeDescription": "__MISSING__:safety.familySafeModeDescription",
-    "onFamilySafeMode": "__MISSING__:safety.onFamilySafeMode",
-    "offAdultMode": "__MISSING__:safety.offAdultMode",
+    "title": "Säkerhet & Skydd",
+    "localFamilySafeMode": "Lokalt familjesäkert läge",
+    "veniceApiSafeMode": "Venice API säkert läge",
+    "statusBanner": "Lokalt filter: {{localStatus}} | Venice-leverantörsfiltrering: {{veniceStatus}}",
+    "familySafeModeTitle": "Familjesäkert läge",
+    "familySafeModeDescription": "Kör Venice Forge",
+    "onFamilySafeMode": "PÅ: Familjesäkert läge",
+    "offAdultMode": "AV: Vuxenläge (Lokalt filter AV)",
     "status": {
-      "enabled": "__MISSING__:safety.status.enabled",
-      "disabled": "__MISSING__:safety.status.disabled",
-      "localOffProviderOn": "__MISSING__:safety.status.localOffProviderOn",
-      "bothOff": "__MISSING__:safety.status.bothOff",
-      "filteredLocally": "__MISSING__:safety.status.filteredLocally"
+      "enabled": "När aktiverad blockeras matchande förfrågningar lokalt innan leverantören anropas.",
+      "disabled": "Kringgår Venice Forge",
+      "localOffProviderOn": "Det lokala familjefiltret är AV, men Venice API-leverantörens säkra läge är fortfarande PÅ. Utgående förfrågningar inkluderar safe_mode: true.",
+      "bothOff": "Både det lokala familjefiltret och Venice API-leverantörens säkra läge är AV. Utgående förfrågningar inkluderar safe_mode: false.",
+      "filteredLocally": "Matchande förfrågningar filtreras lokalt innan de når leverantören."
     },
-    "effectiveStatus": "__MISSING__:safety.effectiveStatus",
-    "setMasterPassword": "__MISSING__:safety.setMasterPassword",
-    "masterPasswordEnabled": "__MISSING__:safety.masterPasswordEnabled",
-    "veniceApiSafeModeTitle": "__MISSING__:safety.veniceApiSafeModeTitle",
-    "veniceApiSafeModeDescription": "__MISSING__:safety.veniceApiSafeModeDescription",
+    "effectiveStatus": "Effektiv status: Lokalt filter: {{local}} | Venice-leverantörsfiltrering: {{provider}}",
+    "setMasterPassword": "Ange huvudlösenord för att låsa Familjesäkert läge",
+    "masterPasswordEnabled": "Huvudlösenord är aktiverat",
+    "veniceApiSafeModeTitle": "Venice API säkert läge",
+    "veniceApiSafeModeDescription": "Styr den leverantörsspecifika parametern för säkert läge som skickas till Venice. Detta är separat från Familjesäkert läge.",
     "errors": {
-      "cannotDisableTitle": "__MISSING__:safety.errors.cannotDisableTitle",
-      "cannotDisableDetail": "__MISSING__:safety.errors.cannotDisableDetail"
+      "cannotDisableTitle": "Kan inte inaktivera leverantörens säkra läge",
+      "cannotDisableDetail": "Familjesäkert läge måste stängas av först."
     },
-    "keepCurrent": "__MISSING__:safety.keepCurrent"
+    "keepCurrent": "Behåll nuvarande säkerhet"
   },
   "aboutPanel": {
-    "unofficial": "__MISSING__:aboutPanel.unofficial",
-    "disclaimer": "__MISSING__:aboutPanel.disclaimer",
-    "officialLinks": "__MISSING__:aboutPanel.officialLinks",
-    "termsOfService": "__MISSING__:aboutPanel.termsOfService",
-    "privacyPolicy": "__MISSING__:aboutPanel.privacyPolicy",
-    "apiDocs": "__MISSING__:aboutPanel.apiDocs",
-    "trademarks": "__MISSING__:aboutPanel.trademarks",
-    "resetGate": "__MISSING__:aboutPanel.resetGate",
+    "unofficial": "Inofficiell",
+    "disclaimer": "Venice Forge är en skrivbordsklient från tredje part som är konfigurerad för att gränssnittas direkt med Venice.ai:s inferens-API-slutpunkter. Den är inte ansluten till, stöds av, sponsras av eller godkänns av Venice.ai, Inc.",
+    "officialLinks": "Officiella länkar",
+    "termsOfService": "Användarvillkor",
+    "privacyPolicy": "Integritetspolicy",
+    "apiDocs": "API-dokumentation",
+    "trademarks": "Venice , Venice.ai och relaterade logotyper är varumärken som tillhör Venice.ai, Inc. Användning av dessa namn är endast för nominativ identifiering av API-kompatibilitet.",
+    "resetGate": "Återställ juridisk bekräftelseport:",
     "toasts": {
-      "resetSuccess": "__MISSING__:aboutPanel.toasts.resetSuccess",
-      "resetFailed": "__MISSING__:aboutPanel.toasts.resetFailed"
+      "resetSuccess": "Juridisk bekräftelse återställd. Den kommer att visas vid nästa omladdning.",
+      "resetFailed": "Kunde inte återställa bekräftelsen."
     },
-    "resetGateBtn": "__MISSING__:aboutPanel.resetGateBtn"
+    "resetGateBtn": "Återställ port"
   },
   "audioSpeech": {
-    "cacheCleared": "__MISSING__:audioSpeech.cacheCleared",
+    "cacheCleared": "TTS-cache rensad",
     "errors": {
-      "clearCache": "__MISSING__:audioSpeech.errors.clearCache"
+      "clearCache": "Det gick inte att rensa TTS-cachen"
     },
-    "title": "__MISSING__:audioSpeech.title",
-    "description": "__MISSING__:audioSpeech.description",
-    "interfaceSoundsTitle": "__MISSING__:audioSpeech.interfaceSoundsTitle",
-    "interfaceSoundsDescription": "__MISSING__:audioSpeech.interfaceSoundsDescription",
-    "soundPack": "__MISSING__:audioSpeech.soundPack",
+    "title": "Ljud & Tal",
+    "description": "Konfigurera gränssnittsljud och text-till-tal för modellsvar.",
+    "interfaceSoundsTitle": "Gränssnittsljud",
+    "interfaceSoundsDescription": "Gränssnittsljud använder medföljande lokalt ljud och kontaktar inte en nätverkstjänst.",
+    "soundPack": "Ljudpaket",
     "packs": {
-      "soft": "__MISSING__:audioSpeech.packs.soft",
-      "tactile": "__MISSING__:audioSpeech.packs.tactile",
-      "glass": "__MISSING__:audioSpeech.packs.glass",
-      "retro": "__MISSING__:audioSpeech.packs.retro",
-      "minimal": "__MISSING__:audioSpeech.packs.minimal"
+      "soft": "Mjuk",
+      "tactile": "Taktil",
+      "glass": "Glas",
+      "retro": "Retro",
+      "minimal": "Minimal"
     },
-    "volume": "__MISSING__:audioSpeech.volume",
-    "restoreDefaults": "__MISSING__:audioSpeech.restoreDefaults",
-    "chatTtsTitle": "__MISSING__:audioSpeech.chatTtsTitle",
-    "chatTtsDescription": "__MISSING__:audioSpeech.chatTtsDescription",
-    "showControls": "__MISSING__:audioSpeech.showControls",
-    "autoRead": "__MISSING__:audioSpeech.autoRead",
-    "ttsModel": "__MISSING__:audioSpeech.ttsModel",
-    "defaultProviderModel": "__MISSING__:audioSpeech.defaultProviderModel",
-    "saved": "__MISSING__:audioSpeech.saved",
-    "loadingModels": "__MISSING__:audioSpeech.loadingModels",
-    "voice": "__MISSING__:audioSpeech.voice",
-    "defaultVoice": "__MISSING__:audioSpeech.defaultVoice",
-    "speed": "__MISSING__:audioSpeech.speed",
-    "volumeLabel": "__MISSING__:audioSpeech.volumeLabel",
-    "skipCodeBlocks": "__MISSING__:audioSpeech.skipCodeBlocks",
-    "stopOnNewReply": "__MISSING__:audioSpeech.stopOnNewReply",
-    "cacheSpeech": "__MISSING__:audioSpeech.cacheSpeech",
-    "clearing": "__MISSING__:audioSpeech.clearing",
-    "clearCache": "__MISSING__:audioSpeech.clearCache"
+    "volume": "Volym",
+    "restoreDefaults": "Återställ standardvärden",
+    "chatTtsTitle": "Chatt-text-till-tal",
+    "chatTtsDescription": "Text-till-tal skickar den valda assistentsvarstexten till din konfigurerade talleverantör och kan förbruka API-användning. Automatisk uppspelning är av som standard.",
+    "showControls": "Visa TTS-kontroller på assistentsvar",
+    "autoRead": "Läs automatiskt upp slutförda svar",
+    "ttsModel": "TTS-modell",
+    "defaultProviderModel": "Standardleverantörsmodell",
+    "saved": "(sparad)",
+    "loadingModels": "Laddar talmodeller…",
+    "voice": "Röst",
+    "defaultVoice": "Standardröst",
+    "speed": "Hastighet: {{speed}}x",
+    "volumeLabel": "Volym: {{volume}}%",
+    "skipCodeBlocks": "Hoppa över kodblock",
+    "stopOnNewReply": "Stoppa nuvarande uppspelning när ett nytt svar börjar",
+    "cacheSpeech": "Cacha genererat tal",
+    "clearing": "Rensar…",
+    "clearCache": "Rensa TTS-cache"
   },
   "backupSync": {
     "toasts": {
-      "sessionReattached": "__MISSING__:backupSync.toasts.sessionReattached",
-      "chooseFolderFailed": "__MISSING__:backupSync.toasts.chooseFolderFailed",
-      "folderConfigured": "__MISSING__:backupSync.toasts.folderConfigured",
-      "setFolderFailed": "__MISSING__:backupSync.toasts.setFolderFailed",
-      "enterPassphrase": "__MISSING__:backupSync.toasts.enterPassphrase",
-      "startFailed": "__MISSING__:backupSync.toasts.startFailed",
-      "syncStartedMedia": "__MISSING__:backupSync.toasts.syncStartedMedia",
-      "syncStartedOptIn": "__MISSING__:backupSync.toasts.syncStartedOptIn",
-      "startFailedReason": "__MISSING__:backupSync.toasts.startFailedReason",
-      "pauseFailed": "__MISSING__:backupSync.toasts.pauseFailed",
-      "syncPaused": "__MISSING__:backupSync.toasts.syncPaused",
-      "pauseFailedReason": "__MISSING__:backupSync.toasts.pauseFailedReason",
-      "enterPassphraseReattach": "__MISSING__:backupSync.toasts.enterPassphraseReattach",
-      "reattachFailed": "__MISSING__:backupSync.toasts.reattachFailed",
-      "reattachFailedReason": "__MISSING__:backupSync.toasts.reattachFailedReason"
+      "sessionReattached": "Synkroniseringssession återkopplad.",
+      "chooseFolderFailed": "Misslyckades med att välja synkroniseringsmapp.",
+      "folderConfigured": "Krypterad synkroniseringsmapp konfigurerad.",
+      "setFolderFailed": "Misslyckades att ställa in synkroniseringsmapp: {{error}}",
+      "enterPassphrase": "Ange en synkroniseringslösenfras.",
+      "startFailed": "Misslyckades att starta synkronisering.",
+      "syncStartedMedia": "Synkronisering startad — media-blobs kommer att synkroniseras.",
+      "syncStartedOptIn": "Synkronisering startad — media är valfritt.",
+      "startFailedReason": "Misslyckades att starta synkronisering: {{error}}",
+      "pauseFailed": "Misslyckades att pausa synkronisering.",
+      "syncPaused": "Synkronisering pausad. Ange lösenfrasen igen för att återuppta.",
+      "pauseFailedReason": "Misslyckades att pausa synkronisering: {{error}}",
+      "enterPassphraseReattach": "Ange synkroniseringslösenfrasen för att återansluta.",
+      "reattachFailed": "Misslyckades att återansluta synkroniseringssession.",
+      "reattachFailedReason": "Misslyckades att återansluta synkronisering: {{error}}"
     },
-    "title": "__MISSING__:backupSync.title",
-    "desktopOnly": "__MISSING__:backupSync.desktopOnly",
-    "description": "__MISSING__:backupSync.description",
+    "title": "Säkerhetskopiering & Synkronisering",
+    "desktopOnly": "Lokal-först-synkronisering är för närvarande endast tillgänglig i skrivbordsappen.",
+    "description": "Håll din lokala data säkert synkroniserad mellan dina enheter utan att tvinga ett centralt molnkonto.",
     "syncFolder": {
-      "title": "__MISSING__:backupSync.syncFolder.title",
-      "description": "__MISSING__:backupSync.syncFolder.description",
-      "none": "__MISSING__:backupSync.syncFolder.none",
-      "change": "__MISSING__:backupSync.syncFolder.change",
-      "choose": "__MISSING__:backupSync.syncFolder.choose",
-      "includeMedia": "__MISSING__:backupSync.syncFolder.includeMedia",
-      "includeMediaNote": "__MISSING__:backupSync.syncFolder.includeMediaNote",
-      "passphrasePlaceholder": "__MISSING__:backupSync.syncFolder.passphrasePlaceholder",
-      "pause": "__MISSING__:backupSync.syncFolder.pause",
-      "reattach": "__MISSING__:backupSync.syncFolder.reattach",
-      "start": "__MISSING__:backupSync.syncFolder.start"
+      "title": "Synkroniseringsmapp",
+      "description": "Synka krypterad data kontinuerligt till en mapp (t.ex. iCloud Drive, Dropbox).",
+      "none": "Ingen synkroniseringsmapp vald",
+      "change": "Ändra mapp",
+      "choose": "Välj mapp",
+      "includeMedia": "Inkludera media-blobs i synkroniseringspaket",
+      "includeMediaNote": "(bilder, filer, RP-tillgångar)",
+      "passphrasePlaceholder": "Ange krypteringslösenfras",
+      "pause": "Pausa synkronisering",
+      "reattach": "Återanslut session",
+      "start": "Starta synkronisering"
     },
     "status": {
-      "active": "__MISSING__:backupSync.status.active",
-      "error": "Error",
-      "paused": "__MISSING__:backupSync.status.paused",
-      "off": "__MISSING__:backupSync.status.off"
+      "active": "Aktiv",
+      "error": "Fel",
+      "paused": "Pausad",
+      "off": "Av"
     },
     "security": {
-      "encryption": "__MISSING__:backupSync.security.encryption",
-      "noKeys": "__MISSING__:backupSync.security.noKeys"
+      "encryption": "Synkpaket använder Argon2id-härledd XChaCha20-Poly1305-kryptering innan de skrivs till denna mapp.",
+      "noKeys": "Dina API-nycklar och absoluta maskinsökvägar synkroniseras ALDRIG."
     },
     "conflicts": {
-      "title": "__MISSING__:backupSync.conflicts.title",
-      "description": "__MISSING__:backupSync.conflicts.description",
-      "statusError": "__MISSING__:backupSync.conflicts.statusError",
-      "statusDetached": "__MISSING__:backupSync.conflicts.statusDetached",
-      "statusConfigured": "__MISSING__:backupSync.conflicts.statusConfigured",
-      "statusDisabled": "__MISSING__:backupSync.conflicts.statusDisabled",
-      "checking": "__MISSING__:backupSync.conflicts.checking",
-      "noConflicts": "__MISSING__:backupSync.conflicts.noConflicts",
-      "mediaIncluded": "__MISSING__:backupSync.conflicts.mediaIncluded",
-      "mediaExcluded": "__MISSING__:backupSync.conflicts.mediaExcluded",
-      "found": "__MISSING__:backupSync.conflicts.found",
-      "resolutionNote": "__MISSING__:backupSync.conflicts.resolutionNote",
-      "keepOriginalTitle": "__MISSING__:backupSync.conflicts.keepOriginalTitle",
-      "keepOriginal": "__MISSING__:backupSync.conflicts.keepOriginal",
-      "keepConflictTitle": "__MISSING__:backupSync.conflicts.keepConflictTitle",
-      "keepConflict": "__MISSING__:backupSync.conflicts.keepConflict",
-      "keepBothTitle": "__MISSING__:backupSync.conflicts.keepBothTitle",
-      "keepBoth": "__MISSING__:backupSync.conflicts.keepBoth"
+      "title": "Synkroniseringsstatus & Konflikter",
+      "description": "Övervaka synkroniseringsaktivitet och lös datakonflikter.",
+      "statusError": "Synkroniseringsfel: {{error}}",
+      "statusDetached": "Huvudprocessens övervakare körs men renderarsessionen är frånkopplad. Ange lösenfrasen igen för att återansluta.",
+      "statusConfigured": "Synkronisering är konfigurerad men inte helt aktiv. Ange lösenfrasen och starta synkronisering.",
+      "statusDisabled": "Aktivera synkronisering för att övervaka aktivitet.",
+      "checking": "Söker efter konflikter...",
+      "noConflicts": "Synkronisering är aktiv. Inga konflikter hittades.",
+      "mediaIncluded": " Media-blobs är inkluderade.",
+      "mediaExcluded": " Media-blobs är exkluderade (valfritt).",
+      "found": "Hittade {{count}} konflikt(er). Lös dem nedan:",
+      "resolutionNote": "Synken behöll {{winner}}; den motstridiga {{loser}}-revisionen ({{loserTitle}}) bevaras tills du löser konflikten.",
+      "keepOriginalTitle": "Behåll revisionen som för närvarande är sparad vid detta id och förkasta den motstridiga kopian.",
+      "keepOriginal": "Behåll {{winner}}-kopia",
+      "keepConflictTitle": "Ersätt den nuvarande revisionen med {{loser}}-kopian.",
+      "keepConflict": "Använd {{loser}}-kopia",
+      "keepBothTitle": "Behåll den nuvarande revisionen och spara {{loser}}-kopian som en separat post.",
+      "keepBoth": "Spara {{loser}} som kopia"
     }
   },
   "configPanel": {
     "toasts": {
-      "reloaded": "__MISSING__:configPanel.toasts.reloaded",
-      "reloadFailed": "__MISSING__:configPanel.toasts.reloadFailed",
-      "openFolderFailed": "__MISSING__:configPanel.toasts.openFolderFailed",
-      "templateExported": "__MISSING__:configPanel.toasts.templateExported",
-      "exportCancelled": "__MISSING__:configPanel.toasts.exportCancelled",
-      "exportFailed": "__MISSING__:configPanel.toasts.exportFailed",
-      "secureStoreCleared": "__MISSING__:configPanel.toasts.secureStoreCleared",
-      "secureStoreClearFailed": "__MISSING__:configPanel.toasts.secureStoreClearFailed"
+      "reloaded": "Lokal konfiguration laddades om.",
+      "reloadFailed": "Misslyckades att ladda om konfiguration.",
+      "openFolderFailed": "Misslyckades att öppna konfigurationsmapp.",
+      "templateExported": "Mall exporterad.",
+      "exportCancelled": "Export avbruten.",
+      "exportFailed": "Misslyckades att exportera konfigurationsmall.",
+      "secureStoreCleared": "Säker lagring rensad.",
+      "secureStoreClearFailed": "Misslyckades att rensa säker lagring."
     },
     "masterConfig": {
-      "title": "__MISSING__:configPanel.masterConfig.title",
-      "description1": "__MISSING__:configPanel.masterConfig.description1",
-      "description2": "__MISSING__:configPanel.masterConfig.description2",
-      "description3": "__MISSING__:configPanel.masterConfig.description3",
-      "description4": "__MISSING__:configPanel.masterConfig.description4",
-      "configPath": "__MISSING__:configPanel.masterConfig.configPath",
-      "unavailable": "__MISSING__:configPanel.masterConfig.unavailable",
-      "themesPath": "__MISSING__:configPanel.masterConfig.themesPath",
-      "loadedFrom": "__MISSING__:configPanel.masterConfig.loadedFrom",
-      "profile": "__MISSING__:configPanel.masterConfig.profile",
-      "parseError": "__MISSING__:configPanel.masterConfig.parseError",
-      "validationWarnings": "__MISSING__:configPanel.masterConfig.validationWarnings"
+      "title": "Lokal huvudkonfiguration",
+      "description1": "Redigera ",
+      "description2": " och ",
+      "description3": " på disk för att konfigurera Venice Forge utan att röra gränssnittet. Se ",
+      "description4": " för det fullständiga schemat.",
+      "configPath": "Konfigurationssökväg",
+      "unavailable": "(otillgänglig)",
+      "themesPath": "Sökväg för teman",
+      "loadedFrom": "Laddad från",
+      "profile": "Profil",
+      "parseError": "Tolkningsfel:",
+      "validationWarnings": "Valideringsvarningar"
     },
     "actions": {
-      "reload": "__MISSING__:configPanel.actions.reload",
-      "openFolder": "__MISSING__:configPanel.actions.openFolder",
-      "exportTemplate": "__MISSING__:configPanel.actions.exportTemplate",
-      "clearSecureStore": "__MISSING__:configPanel.actions.clearSecureStore"
+      "reload": "Ladda om konfiguration",
+      "openFolder": "Öppna konfigurationsmapp",
+      "exportTemplate": "Exportera sanerad mall",
+      "clearSecureStore": "Rensa säker lagring"
     },
     "apiKeyImport": {
-      "title": "__MISSING__:configPanel.apiKeyImport.title",
-      "description1": "__MISSING__:configPanel.apiKeyImport.description1",
-      "description2": "__MISSING__:configPanel.apiKeyImport.description2",
-      "description3": "__MISSING__:configPanel.apiKeyImport.description3",
-      "veniceKey": "__MISSING__:configPanel.apiKeyImport.veniceKey",
-      "configured": "__MISSING__:configPanel.apiKeyImport.configured",
-      "notConfigured": "__MISSING__:configPanel.apiKeyImport.notConfigured",
-      "imported": "__MISSING__:configPanel.apiKeyImport.imported",
-      "redacted": "__MISSING__:configPanel.apiKeyImport.redacted",
-      "jinaKey": "__MISSING__:configPanel.apiKeyImport.jinaKey",
-      "note": "__MISSING__:configPanel.apiKeyImport.note",
+      "title": "Import av API-nyckel",
+      "description1": "Nycklar i klartext i ",
+      "description2": " importeras till operativsystemets säkra lagring vid uppstart och maskeras från filen (om inte ",
+      "description3": " är inställt).",
+      "veniceKey": "Venice-nyckel",
+      "configured": "Konfigurerad (säker lagring)",
+      "notConfigured": "Inte konfigurerad",
+      "imported": "Importerad denna körning",
+      "redacted": "Klartext maskerad",
+      "jinaKey": "Jina-nyckel",
+      "note": "Råa nycklar skickas aldrig till renderaren. Återställ den säkra lagringen för att rensa lagrade nycklar; du kan sedan ange dem igen via fliken API-nycklar.",
       "clearConfirm": {
-        "title": "__MISSING__:configPanel.apiKeyImport.clearConfirm.title",
-        "detail": "__MISSING__:configPanel.apiKeyImport.clearConfirm.detail",
-        "action": "__MISSING__:configPanel.apiKeyImport.clearConfirm.action"
+        "title": "Rensa nycklar i säker lagring?",
+        "detail": "Detta tar bort alla lagrade API-nycklar från den säkra lagringen. Detta kan inte ångras.",
+        "action": "Rensa nycklar"
       }
     },
     "effectiveSettings": {
-      "title": "__MISSING__:configPanel.effectiveSettings.title",
-      "description1": "__MISSING__:configPanel.effectiveSettings.description1",
-      "description2": "__MISSING__:configPanel.effectiveSettings.description2",
-      "activeTheme": "__MISSING__:configPanel.effectiveSettings.activeTheme",
-      "defaultChatModel": "__MISSING__:configPanel.effectiveSettings.defaultChatModel",
-      "useUiDefault": "__MISSING__:configPanel.effectiveSettings.useUiDefault",
-      "temperature": "__MISSING__:configPanel.effectiveSettings.temperature",
-      "topP": "__MISSING__:configPanel.effectiveSettings.topP",
-      "maxTokens": "__MISSING__:configPanel.effectiveSettings.maxTokens",
-      "webSearch": "__MISSING__:configPanel.effectiveSettings.webSearch"
+      "title": "Gällande inställningar (förhandsgranskning)",
+      "description1": "Skrivskyddad förhandsgranskning av den sammanslagna konfigurationen som för närvarande finns i minnet. ",
+      "description2": " källan förblir den kanoniska sanningens källa — redigera den på disk och klicka på ",
+      "activeTheme": "Aktivt tema",
+      "defaultChatModel": "Standardchattmodell",
+      "useUiDefault": "(använd gränssnittets standard)",
+      "temperature": "Temperatur",
+      "topP": "Top-p",
+      "maxTokens": "Max antal token",
+      "webSearch": "Webbsökning"
     }
   },
   "dataStorage": {
     "toasts": {
-      "importReadFailed": "__MISSING__:dataStorage.toasts.importReadFailed",
-      "importNothingNewProfile": "__MISSING__:dataStorage.toasts.importNothingNewProfile",
-      "importNothingDetail": "__MISSING__:dataStorage.toasts.importNothingDetail",
-      "importCompleteNewProfile": "__MISSING__:dataStorage.toasts.importCompleteNewProfile",
-      "importNothing": "__MISSING__:dataStorage.toasts.importNothing",
-      "importPartial": "__MISSING__:dataStorage.toasts.importPartial",
-      "importPartialDetail": "__MISSING__:dataStorage.toasts.importPartialDetail",
-      "importComplete": "__MISSING__:dataStorage.toasts.importComplete",
-      "replaceFailedRestored": "__MISSING__:dataStorage.toasts.replaceFailedRestored",
-      "replaceFailedRecovery": "__MISSING__:dataStorage.toasts.replaceFailedRecovery",
-      "importFailed": "__MISSING__:dataStorage.toasts.importFailed",
-      "recoveryRestored": "__MISSING__:dataStorage.toasts.recoveryRestored",
-      "recoveryRestoredDetail": "__MISSING__:dataStorage.toasts.recoveryRestoredDetail",
-      "recoveryRestoreFailed": "__MISSING__:dataStorage.toasts.recoveryRestoreFailed",
-      "recoveryRestoreFailedDetail": "__MISSING__:dataStorage.toasts.recoveryRestoreFailedDetail"
+      "importReadFailed": "Det gick inte att läsa säkerhetskopan. Felaktigt lösenord eller korrupt fil.",
+      "importNothingNewProfile": "Inget importerat till ny profil: {{skipped}} hoppades över",
+      "importNothingDetail": "Inga poster tillämpades; kontrollera säkerhetskopan",
+      "importCompleteNewProfile": "Import komplett till ny profil: {{imported}} importerade. Laddar om...",
+      "importNothing": "Inget importerat: {{skipped}} hoppades över",
+      "importPartial": "Partiell import: {{imported}} importerade, {{skipped}} hoppades över",
+      "importPartialDetail": "{{tombstones}} gravstenar tillämpades. Inspektera antalet överhoppade innan du förlitar dig på denna säkerhetskopia.",
+      "importComplete": "Import komplett: {{imported}} importerade, {{skipped}} hoppades över, {{tombstones}} gravstenar tillämpade.",
+      "replaceFailedRestored": "Ersättning misslyckades; data återställd",
+      "replaceFailedRecovery": "Ersättning misslyckades; återställning krävs",
+      "importFailed": "Import misslyckades.",
+      "recoveryRestored": "Återställning återställd",
+      "recoveryRestoredDetail": "Den tidigare profilens tillstånd återställdes och det ersatta tillståndet behölls som en ny återställningssäkerhetskopia.",
+      "recoveryRestoreFailed": "Återställning misslyckades",
+      "recoveryRestoreFailedDetail": "Återställningssäkerhetskopian kunde inte återställas."
     },
     "manualBackup": {
-      "title": "__MISSING__:dataStorage.manualBackup.title",
-      "description": "__MISSING__:dataStorage.manualBackup.description",
-      "passwordPlaceholder": "__MISSING__:dataStorage.manualBackup.passwordPlaceholder",
-      "includeDrafts": "__MISSING__:dataStorage.manualBackup.includeDrafts",
-      "includeMedia": "__MISSING__:dataStorage.manualBackup.includeMedia",
-      "export": "__MISSING__:dataStorage.manualBackup.export",
-      "import": "__MISSING__:dataStorage.manualBackup.import"
+      "title": "Manuell säkerhetskopiering",
+      "description": "Skapa en krypterad, portabel säkerhetskopia av din lokala historik, karaktärskort och arbetsflöden. Du kan importera denna säkerhetskopia på vilken enhet som helst.",
+      "passwordPlaceholder": "Lösenord för säkerhetskopia",
+      "includeDrafts": "Inkludera krypterade lokala ST-kortsutkast (utkast synkroniseras aldrig)",
+      "includeMedia": "Inkludera media i denna säkerhetskopia (bilder, filer, RP-tillgångar — krypterade med resten av säkerhetskopan)",
+      "export": "Exportera säkerhetskopia",
+      "import": "Importera säkerhetskopia"
     },
     "recovery": {
-      "title": "__MISSING__:dataStorage.recovery.title",
-      "description": "__MISSING__:dataStorage.recovery.description",
-      "restore": "__MISSING__:dataStorage.recovery.restore"
+      "title": "Återställning före ersättning",
+      "description": "En verifierad krypterad återställningsbackup från {{date}} är tillgänglig. Ange dess backup-lösenord ovan för att återställa den transaktionellt.",
+      "restore": "Återställ återställningsbackup"
     },
     "dangerZone": {
-      "title": "__MISSING__:dataStorage.dangerZone.title",
-      "description": "__MISSING__:dataStorage.dangerZone.description",
-      "clearDefaults": "__MISSING__:dataStorage.dangerZone.clearDefaults",
-      "clearIndexedDB": "__MISSING__:dataStorage.dangerZone.clearIndexedDB"
+      "title": "Farozon",
+      "description": "Dessa åtgärder är destruktiva och kan inte ångras. Exportera alltid en backup först om du har viktig historik.",
+      "clearDefaults": "Rensa appstandarder",
+      "clearIndexedDB": "Rensa IndexedDB-data"
     }
   },
   "defaultsPanel": {
-    "defaultChatModel": "__MISSING__:defaultsPanel.defaultChatModel",
-    "defaultImageModel": "__MISSING__:defaultsPanel.defaultImageModel",
-    "defaultWebSearch": "__MISSING__:defaultsPanel.defaultWebSearch",
-    "defaultSystemPrompt": "__MISSING__:defaultsPanel.defaultSystemPrompt",
-    "systemPromptPlaceholder": "__MISSING__:defaultsPanel.systemPromptPlaceholder",
-    "veniceSystemPromptToggle": "__MISSING__:defaultsPanel.veniceSystemPromptToggle",
-    "enableCitations": "__MISSING__:defaultsPanel.enableCitations",
+    "defaultChatModel": "Standard chattmodell",
+    "defaultImageModel": "Standard bildmodell",
+    "defaultWebSearch": "Standard webbsökning",
+    "defaultSystemPrompt": "Standard systemprompt",
+    "systemPromptPlaceholder": "Valfritt. Lämna tomt för att undvika att lägga till ett app-skrivet systemmeddelande.",
+    "veniceSystemPromptToggle": "Venice systemprompt-växling",
+    "enableCitations": "Aktivera källhänvisningar som standard",
     "characterSceneGeneration": {
-      "title": "__MISSING__:defaultsPanel.characterSceneGeneration.title",
-      "description": "__MISSING__:defaultsPanel.characterSceneGeneration.description",
-      "mode": "__MISSING__:defaultsPanel.characterSceneGeneration.mode",
-      "modeAriaLabel": "__MISSING__:defaultsPanel.characterSceneGeneration.modeAriaLabel",
-      "manualOnly": "__MISSING__:defaultsPanel.characterSceneGeneration.manualOnly",
-      "autoManual": "__MISSING__:defaultsPanel.characterSceneGeneration.autoManual"
+      "title": "Karaktärsscengenerering",
+      "description": "Tillåt karaktärschattar att skapa inline-scenbilder från endast den aktuella konversationen. Skyddad av lokala hastighetsbegränsningar.",
+      "mode": "Läge",
+      "modeAriaLabel": "Läge för karaktärsscengenerering",
+      "manualOnly": "Endast manuell",
+      "autoManual": "Automatisk + manuell"
     }
   },
   "importPlan": {
-    "title": "__MISSING__:importPlan.title",
-    "summary": "__MISSING__:importPlan.summary",
+    "title": "Granska importplan",
+    "summary": "Denna backup innehåller {{records}} poster över {{stores}} datalager.",
     "metadata": {
-      "authenticated": "__MISSING__:importPlan.metadata.authenticated",
-      "legacy": "__MISSING__:importPlan.metadata.legacy",
-      "format": "__MISSING__:importPlan.metadata.format",
-      "exportedAt": "__MISSING__:importPlan.metadata.exportedAt",
-      "source": "__MISSING__:importPlan.metadata.source",
-      "profileRef": "__MISSING__:importPlan.metadata.profileRef",
-      "crypto": "__MISSING__:importPlan.metadata.crypto",
-      "counts": "__MISSING__:importPlan.metadata.counts",
-      "sha": "__MISSING__:importPlan.metadata.sha"
+      "authenticated": "Autentiserad backup-metadata",
+      "legacy": "Äldre backup-metadata",
+      "format": "Format: v{{version}}{{appVersion}}",
+      "exportedAt": "Exporterad: {{date}}",
+      "source": "Källa: {{runtime}} / {{device}}",
+      "profileRef": "Profilreferens: {{ref}}",
+      "crypto": "Krypto: {{alg}} / {{kdf}} / nyckel v{{key}}",
+      "counts": "{{tombstones}} gravstenar / {{blobs}} inbäddade blobbar",
+      "sha": "Nyttolast SHA-256: {{sha}}"
     },
-    "warningsLabel": "__MISSING__:importPlan.warningsLabel",
+    "warningsLabel": "Importvarningar",
     "preview": {
-      "title": "__MISSING__:importPlan.preview.title",
-      "recordsCount": "__MISSING__:importPlan.preview.recordsCount",
-      "new": "__MISSING__:importPlan.preview.new",
-      "modified": "__MISSING__:importPlan.preview.modified",
-      "conflicts": "__MISSING__:importPlan.preview.conflicts",
-      "identical": "__MISSING__:importPlan.preview.identical",
-      "noChanges": "__MISSING__:importPlan.preview.noChanges"
+      "title": "Förhandsgranskning av dataändringar",
+      "recordsCount": "{{count}} poster",
+      "new": "{{count}} nya",
+      "modified": "{{count}} ändrade",
+      "conflicts": "{{count}} konflikter",
+      "identical": "{{count}} identiska",
+      "noChanges": "Inga ändringar"
     },
     "mode": {
-      "title": "__MISSING__:importPlan.mode.title",
-      "merge": "__MISSING__:importPlan.mode.merge",
-      "mergeDesc": "__MISSING__:importPlan.mode.mergeDesc",
-      "replace": "__MISSING__:importPlan.mode.replace",
-      "replaceDesc": "__MISSING__:importPlan.mode.replaceDesc",
-      "newProfile": "__MISSING__:importPlan.mode.newProfile",
-      "newProfileDesc": "__MISSING__:importPlan.mode.newProfileDesc"
+      "title": "Välj importläge",
+      "merge": "Slå samman data",
+      "mergeDesc": "Behåll befintlig data och lägg till nya poster. Konflikter sparas tillsammans med lokala versioner.",
+      "replace": "Ersätt allt",
+      "replaceDesc": "Radera all nuvarande lokal data och ersätt den helt med denna backup.",
+      "newProfile": "Ny profil",
+      "newProfileDesc": "Skapa en ny profilarbetsyta och importera denna backup till den."
     },
     "warnings": {
-      "recoveryEnabled": "__MISSING__:importPlan.warnings.recoveryEnabled",
-      "recoveryEnabledDesc": "__MISSING__:importPlan.warnings.recoveryEnabledDesc",
-      "replaceUnavailable": "__MISSING__:importPlan.warnings.replaceUnavailable",
-      "replaceUnavailableDesc": "__MISSING__:importPlan.warnings.replaceUnavailableDesc"
+      "recoveryEnabled": "Automatisk återställning aktiverad",
+      "recoveryEnabledDesc": "Skrivbordsappen kommer att förbereda denna backup, skapa och verifiera en krypterad återställningsartefakt, och sedan rulla tillbaka automatiskt om ersättningen misslyckas.",
+      "replaceUnavailable": "Ersättning inte tillgänglig i webbläge",
+      "replaceUnavailableDesc": "Använd Slå samman eller Ny profil. Hållbar ersättningsåterställning kräver Venice Forge-skrivbordsappen."
     },
-    "profileName": "__MISSING__:importPlan.profileName",
-    "profileNamePlaceholder": "__MISSING__:importPlan.profileNamePlaceholder",
+    "profileName": "Profilnamn",
+    "profileNamePlaceholder": "t.ex. Jobbbackup",
     "actions": {
-      "confirm": "__MISSING__:importPlan.actions.confirm"
+      "confirm": "Bekräfta import"
     }
   },
   "masterPassword": {
     "errors": {
-      "mismatch": "__MISSING__:masterPassword.errors.mismatch",
-      "tooShort": "__MISSING__:masterPassword.errors.tooShort",
-      "saveFailed": "__MISSING__:masterPassword.errors.saveFailed",
-      "lockedOut": "__MISSING__:masterPassword.errors.lockedOut",
-      "incorrect": "__MISSING__:masterPassword.errors.incorrect",
-      "verifyFailed": "__MISSING__:masterPassword.errors.verifyFailed"
+      "mismatch": "Lösenorden matchar inte",
+      "tooShort": "Lösenordet för kort (minst {{min}} tecken)",
+      "saveFailed": "Misslyckades att spara lösenord säkert",
+      "lockedOut": " Utelåst. Försök igen om {{seconds}}s.",
+      "incorrect": "Felaktigt lösenord.",
+      "verifyFailed": "Misslyckades att verifiera lösenord"
     },
-    "titleSet": "__MISSING__:masterPassword.titleSet",
-    "titleEnter": "__MISSING__:masterPassword.titleEnter",
-    "description": "__MISSING__:masterPassword.description",
+    "titleSet": "Ange huvudlösenord",
+    "titleEnter": "Ange huvudlösenord",
+    "description": "Detta lokala kontrollösenord skyddar ändringar av Familjesäkert läge. Appen lagrar en saltad verifierare, inte själva lösenordet.",
     "labels": {
-      "password": "__MISSING__:masterPassword.labels.password",
-      "confirm": "__MISSING__:masterPassword.labels.confirm"
+      "password": "Huvudlösenord",
+      "confirm": "Bekräfta huvudlösenord"
     }
   },
   "profiles": {
     "removePassword": {
-      "title": "__MISSING__:profiles.removePassword.title",
-      "detail": "__MISSING__:profiles.removePassword.detail",
-      "action": "__MISSING__:profiles.removePassword.action"
+      "title": "Ta bort profillösenord?",
+      "detail": "\"{{name}}\" kommer inte längre att kräva upplåsning innan byte.",
+      "action": "Ta bort"
     },
     "errors": {
-      "removeFailed": "__MISSING__:profiles.errors.removeFailed",
-      "tooShort": "__MISSING__:profiles.errors.tooShort",
-      "mismatch": "__MISSING__:profiles.errors.mismatch",
-      "saveFailed": "__MISSING__:profiles.errors.saveFailed",
-      "incorrect": "__MISSING__:profiles.errors.incorrect",
-      "deleteFailed": "__MISSING__:profiles.errors.deleteFailed"
+      "removeFailed": "Det gick inte att ta bort profillösenord",
+      "tooShort": "Lösenordet är för kort (minst {{min}} tecken)",
+      "mismatch": "Lösenorden matchar inte",
+      "saveFailed": "Det gick inte att spara profillösenord",
+      "incorrect": "Felaktigt lösenord",
+      "deleteFailed": "Borttagning av profil misslyckades."
     },
-    "title": "__MISSING__:profiles.title",
-    "description": "__MISSING__:profiles.description",
+    "title": "Hantera profiler",
+    "description": "Varje profil har isolerade inställningar, API-nycklar och konfigurationer. Byte av profil rensar aktivt applikationstillstånd och laddar om.",
     "badge": {
-      "active": "__MISSING__:profiles.badge.active",
-      "locked": "__MISSING__:profiles.badge.locked"
+      "active": "AKTIV",
+      "locked": "LÅST"
     },
     "aria": {
-      "removePassword": "__MISSING__:profiles.aria.removePassword",
-      "setPassword": "__MISSING__:profiles.aria.setPassword",
-      "switchTo": "__MISSING__:profiles.aria.switchTo",
-      "delete": "__MISSING__:profiles.aria.delete"
+      "removePassword": "Ta bort lösenord för {{name}}",
+      "setPassword": "Ange lösenord för {{name}}",
+      "switchTo": "Byt till {{name}}",
+      "delete": "Ta bort {{name}}"
     },
     "actions": {
-      "removePassword": "__MISSING__:profiles.actions.removePassword",
-      "setPassword": "__MISSING__:profiles.actions.setPassword",
-      "switchTo": "__MISSING__:profiles.actions.switchTo",
-      "createProfile": "__MISSING__:profiles.actions.createProfile"
+      "removePassword": "Ta bort lösenord",
+      "setPassword": "Ange lösenord",
+      "switchTo": "Byt till",
+      "createProfile": "Skapa profil"
     },
     "deleteProfile": {
-      "title": "__MISSING__:profiles.deleteProfile.title",
-      "detail": "__MISSING__:profiles.deleteProfile.detail",
-      "action": "__MISSING__:profiles.deleteProfile.action"
+      "title": "Ta bort profil?",
+      "detail": "\"{{name}}\" kommer att tas bort. Dess konversationsvalv, renderarposter, profilomfattande lokala inställningar, API-nycklar och lösenordsverifierare kommer att rensas. Delade globala cachar behålls.",
+      "action": "Ta bort"
     },
-    "newProfilePlaceholder": "__MISSING__:profiles.newProfilePlaceholder",
+    "newProfilePlaceholder": "Nytt profilnamn",
     "dialog": {
-      "titleSet": "__MISSING__:profiles.dialog.titleSet",
-      "titleUnlock": "__MISSING__:profiles.dialog.titleUnlock",
-      "description": "__MISSING__:profiles.dialog.description",
-      "labelSet": "__MISSING__:profiles.dialog.labelSet",
-      "labelUnlock": "__MISSING__:profiles.dialog.labelUnlock",
-      "labelConfirm": "__MISSING__:profiles.dialog.labelConfirm",
-      "savePassword": "__MISSING__:profiles.dialog.savePassword"
+      "titleSet": "Ange lösenord för {{name}}",
+      "titleUnlock": "Lås upp {{name}}",
+      "description": "Detta lösenord skyddar byte till denna lokala profil.",
+      "labelSet": "Profillösenord",
+      "labelUnlock": "Upplåsningslösenord",
+      "labelConfirm": "Bekräfta profillösenord",
+      "savePassword": "Spara lösenord"
     }
   },
   "providers": {
     "errors": {
-      "loadFailed": "__MISSING__:providers.errors.loadFailed",
-      "saveFailed": "__MISSING__:providers.errors.saveFailed",
-      "enableWithoutKey": "__MISSING__:providers.errors.enableWithoutKey"
+      "loadFailed": "Det gick inte att läsa in leverantörsinställningar.",
+      "saveFailed": "Det gick inte att spara leverantörsinställningar.",
+      "enableWithoutKey": "Kan inte aktivera leverantör utan en API-nyckel."
     },
-    "title": "__MISSING__:providers.title",
-    "description": "__MISSING__:providers.description",
-    "deferredNotice": "__MISSING__:providers.deferredNotice",
+    "title": "Reservleverantörer",
+    "description": "Konfigurera API-nycklar för reservleverantörer. Dessa används endast om de uttryckligen är aktiverade och när Venice-modeller inte är tillgängliga eller du begär en specifik reservmodell.",
+    "deferredNotice": "Uppskjutet i denna version (ingen nyckelinmatning, routning eller trafik): {{deferred}}. Leverantörsnycklar ersätts eller tas bort manuellt; schemalagd nyckelrotation är inte implementerad.",
     "autoFallback": {
-      "title": "__MISSING__:providers.autoFallback.title",
-      "description": "__MISSING__:providers.autoFallback.description",
-      "enableAria": "__MISSING__:providers.autoFallback.enableAria",
-      "orderingLabel": "__MISSING__:providers.autoFallback.orderingLabel",
-      "orderingPlaceholder": "__MISSING__:providers.autoFallback.orderingPlaceholder",
-      "orderingNotice": "__MISSING__:providers.autoFallback.orderingNotice"
+      "title": "Automatisk reservrouter",
+      "description": "Dirigera automatiskt förfrågningar till reservleverantörer om Venice inte är tillgängligt eller returnerar ett fel.",
+      "enableAria": "Aktivera automatiskt reserv",
+      "orderingLabel": "Reservordning (kommaseparerade leverantörs-ID:n)",
+      "orderingPlaceholder": "together, groq, anthropic",
+      "orderingNotice": "Leverantörer kommer att provas i denna exakta ordning. Se till att du har aktiverat dem nedan. Tillgängliga: {{available}}"
     },
     "badge": {
-      "deferred": "__MISSING__:providers.badge.deferred"
+      "deferred": "Uppskjutet"
     },
     "aria": {
-      "enable": "__MISSING__:providers.aria.enable"
+      "enable": "Aktivera {{label}}"
     },
     "status": {
-      "keyConfigured": "__MISSING__:providers.status.keyConfigured"
+      "keyConfigured": "API-nyckel konfigurerad"
     },
     "actions": {
-      "removeKey": "__MISSING__:providers.actions.removeKey"
+      "removeKey": "Ta bort nyckel"
     },
     "inputs": {
-      "keyPlaceholder": "__MISSING__:providers.inputs.keyPlaceholder"
+      "keyPlaceholder": "Ange API-nyckel"
     }
   },
   "errors": {
-    "persistSafety": "__MISSING__:errors.persistSafety"
+    "persistSafety": "Det gick inte att spara säkerhetsinställning."
   },
   "updates": {
-    "available": "__MISSING__:updates.available",
-    "upToDate": "__MISSING__:updates.upToDate",
-    "downloading": "__MISSING__:updates.downloading",
-    "downloaded": "__MISSING__:updates.downloaded",
-    "error": "__MISSING__:updates.error",
-    "checking": "__MISSING__:updates.checking",
-    "devBuild": "__MISSING__:updates.devBuild",
-    "checkFailed": "__MISSING__:updates.checkFailed",
-    "checkCompleted": "__MISSING__:updates.checkCompleted",
-    "installFailed": "__MISSING__:updates.installFailed"
+    "available": "Uppdatering tillgänglig: v{{version}}",
+    "upToDate": "Appen är uppdaterad.",
+    "downloading": "Laddar ner uppdatering: {{percent}}%",
+    "downloaded": "Uppdatering nedladdad och redo att installeras.",
+    "error": "Uppdateringsfel: {{error}}",
+    "checking": "Söker efter uppdateringar...",
+    "devBuild": "Utvecklingsbygge — uppdateringskontroller körs endast i paketerade produktionsbyggen.",
+    "checkFailed": "Uppdateringskontroll misslyckades: {{error}}",
+    "checkCompleted": "Uppdateringskontroll slutförd.",
+    "installFailed": "Installation misslyckades: {{error}}"
   },
   "jinaKeys": {
-    "savedElectron": "__MISSING__:jinaKeys.savedElectron",
-    "savedWeb": "__MISSING__:jinaKeys.savedWeb",
-    "saveFailed": "__MISSING__:jinaKeys.saveFailed",
+    "savedElectron": "Jina API-nyckel sparad säkert.",
+    "savedWeb": "Jina API-nyckel sparad för denna webbläsarsession.",
+    "saveFailed": "Misslyckades med att spara Jina API-nyckel.",
     "deleteConfirm": {
-      "title": "__MISSING__:jinaKeys.deleteConfirm.title",
-      "electron": "__MISSING__:jinaKeys.deleteConfirm.electron",
-      "web": "__MISSING__:jinaKeys.deleteConfirm.web"
+      "title": "Ta bort Jina API-nyckel?",
+      "electron": "Detta tar bort din Jina API-nyckel från operativsystemets säkra lagring.",
+      "web": "Detta tar bort Jina API-nyckeln från minnet för denna webbläsarsession."
     },
-    "deleted": "__MISSING__:jinaKeys.deleted",
-    "deleteFailed": "__MISSING__:jinaKeys.deleteFailed",
-    "testSuccess": "__MISSING__:jinaKeys.testSuccess",
-    "testFailed": "__MISSING__:jinaKeys.testFailed",
-    "testError": "__MISSING__:jinaKeys.testError"
+    "deleted": "Jina API-nyckel borttagen.",
+    "deleteFailed": "Misslyckades med att ta bort Jina API-nyckel.",
+    "testSuccess": "Jina-anslutning lyckades{{status}}.",
+    "testFailed": "Jina-anslutning misslyckades: {{message}}",
+    "testError": "Jina-testanslutning misslyckades."
   },
   "header": {
-    "title": "__MISSING__:header.title",
+    "title": "Konfiguration",
     "description": {
-      "electron": "__MISSING__:header.description.electron",
-      "web": "__MISSING__:header.description.web"
+      "electron": "Hantera API-slutpunkter, standardvärden och utseendestilar.",
+      "web": "Konfigurera standard-prompter och stilsmallar."
     }
   },
   "tabs": {
-    "languageRegion": "__MISSING__:tabs.languageRegion",
-    "profiles": "__MISSING__:tabs.profiles",
-    "apiKeys": "__MISSING__:tabs.apiKeys",
-    "providers": "__MISSING__:tabs.providers",
-    "defaults": "__MISSING__:tabs.defaults",
-    "safety": "__MISSING__:tabs.safety",
-    "vault": "__MISSING__:tabs.vault",
-    "appearance": "__MISSING__:tabs.appearance",
-    "data": "__MISSING__:tabs.data",
-    "backupSync": "__MISSING__:tabs.backupSync",
-    "about": "__MISSING__:tabs.about",
-    "updates": "Updates",
-    "config": "__MISSING__:tabs.config",
-    "audioSpeech": "__MISSING__:tabs.audioSpeech"
+    "languageRegion": "Språk & Region",
+    "profiles": "Profiler",
+    "apiKeys": "Venice API-nyckel",
+    "providers": "Reservleverantörer",
+    "defaults": "Standardvärden & Beteende",
+    "safety": "Säkerhet",
+    "vault": "Konversationsvalv",
+    "appearance": "Utseende",
+    "data": "Data & Lagring",
+    "backupSync": "Säkerhetskopiering & Synkronisering",
+    "about": "Om & Juridik",
+    "updates": "Uppdateringar",
+    "config": "Lokal konfiguration",
+    "audioSpeech": "Ljud & Tal"
   },
   "updatesPanel": {
-    "title": "__MISSING__:updatesPanel.title",
-    "description": "__MISSING__:updatesPanel.description",
-    "status": "__MISSING__:updatesPanel.status",
-    "checking": "__MISSING__:updatesPanel.checking",
-    "checkForUpdates": "__MISSING__:updatesPanel.checkForUpdates",
-    "restartAndInstall": "__MISSING__:updatesPanel.restartAndInstall"
+    "title": "Programuppdateringar",
+    "description": "Sök efter uppdateringar för skrivbordsprogrammet säkert via GitHub Releases.",
+    "status": "Status:",
+    "checking": "Kontrollerar...",
+    "checkForUpdates": "Sök efter uppdateringar",
+    "restartAndInstall": "Starta om och installera"
   }
 }

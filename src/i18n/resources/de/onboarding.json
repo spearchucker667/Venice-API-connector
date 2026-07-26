@@ -1,31 +1,31 @@
 {
   "welcomeTitle": "Willkommen bei Venice Forge",
-  "welcomeSubtitle": "__MISSING__:welcomeSubtitle",
-  "welcomeDescription": "__MISSING__:welcomeDescription",
-  "privacyNote": "__MISSING__:privacyNote",
-  "getStarted": "__MISSING__:getStarted",
-  "createProfile": "__MISSING__:createProfile",
+  "welcomeSubtitle": "Die private lokale Werkbank.",
+  "welcomeDescription": "Eine lokale Desktop-Werkbank, die App-Daten auf diesem Gerät speichert und Anfragen an die von Ihnen konfigurierten Remote-Anbieter sendet.",
+  "privacyNote": "Ihre Daten bleiben lokal. API-Schlüssel werden im sicheren Betriebssystem-Speicher abgelegt.",
+  "getStarted": "Loslegen",
+  "createProfile": "Profil erstellen",
   "continue": "Fortfahren",
-  "languageSelectorLabel": "__MISSING__:languageSelectorLabel",
-  "systemLanguageOption": "__MISSING__:systemLanguageOption",
+  "languageSelectorLabel": "Anwendungssprache",
+  "systemLanguageOption": "Systemsprache ({{language}})",
   "selectLanguage": "Auswählen: language",
-  "stepIndicator": "__MISSING__:stepIndicator",
+  "stepIndicator": "Onboarding-Schritt {{current}} von {{total}}",
   "steps": {
     "welcome": {
       "title": "Willkommen bei Venice Forge",
-      "description": "__MISSING__:steps.welcome.description"
+      "description": "Eine lokale Desktop-Werkbank, die App-Daten auf diesem Gerät speichert und Anfragen an die von Ihnen konfigurierten Remote-Anbieter sendet."
     },
     "profiles": {
       "title": "Profile",
-      "description": "__MISSING__:steps.profiles.description"
+      "description": "Erstellen Sie Profile für separate Renderer-Einstellungen und Bibliotheken. Einige Desktop-Tresor-Dateien und gemeinsame Caches bleiben auf Maschinenebene."
     },
     "security": {
-      "title": "__MISSING__:steps.security.title",
-      "description": "__MISSING__:steps.security.description"
+      "title": "Standardmäßig sicher",
+      "description": "Passwörter und Geheimnisse werden über den nativen Schlüsselbund des Betriebssystems (macOS) oder den Anmeldeinformations-Manager (Windows) verschlüsselt. Niemals im Klartext gespeichert."
     },
     "safety": {
-      "title": "__MISSING__:steps.safety.title",
-      "description": "__MISSING__:steps.safety.description"
+      "title": "Familien-Sicherheitsmodus",
+      "description": "Ein Master-Passwort ist erforderlich, bevor der Familien-Sicherheitsmodus ein- oder ausgeschaltet werden kann. Der Familien-Sicherheitsmodus erzwingt außerdem den safe_mode des Anbieters, sofern dieser unterstützt wird."
     }
   }
 }

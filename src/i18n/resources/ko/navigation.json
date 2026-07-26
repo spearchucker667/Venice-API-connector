@@ -1,262 +1,262 @@
 {
   "project": {
-    "label": "__MISSING__:project.label",
-    "activeProject": "__MISSING__:project.activeProject",
-    "newProjectName": "__MISSING__:project.newProjectName",
-    "untitledProject": "__MISSING__:project.untitledProject",
-    "create": "__MISSING__:project.create",
-    "enterProjectName": "__MISSING__:project.enterProjectName",
-    "created": "__MISSING__:project.created",
-    "createFailed": "__MISSING__:project.createFailed",
-    "new": "__MISSING__:project.new",
-    "allProjects": "__MISSING__:project.allProjects",
-    "switchOpenCurrent": "__MISSING__:project.switchOpenCurrent",
-    "rename": "__MISSING__:project.rename",
-    "renameAction": "__MISSING__:project.renameAction",
-    "renamed": "__MISSING__:project.renamed",
-    "archivePrompt": "__MISSING__:project.archivePrompt",
-    "archiveDetail": "__MISSING__:project.archiveDetail",
-    "archiveAction": "__MISSING__:project.archiveAction",
-    "archived": "__MISSING__:project.archived",
-    "deletePrompt": "__MISSING__:project.deletePrompt",
-    "deleteDetail": "__MISSING__:project.deleteDetail",
-    "deleteAction": "__MISSING__:project.deleteAction",
-    "deleted": "__MISSING__:project.deleted",
-    "deleteError": "__MISSING__:project.deleteError",
-    "encryptionNote": "__MISSING__:project.encryptionNote"
+    "label": "프로젝트",
+    "activeProject": "활성 프로젝트",
+    "newProjectName": "새 프로젝트 이름",
+    "untitledProject": "제목 없는 프로젝트",
+    "create": "만들기",
+    "enterProjectName": "프로젝트 이름을 입력하세요.",
+    "created": "\"{{name}}\" 생성됨",
+    "createFailed": "프로젝트 생성 실패",
+    "new": "+ 새로 만들기",
+    "allProjects": "모든 프로젝트",
+    "switchOpenCurrent": "현재 프로젝트 전환 / 열기",
+    "rename": "프로젝트 이름 바꾸기",
+    "renameAction": "이름 바꾸기",
+    "renamed": "프로젝트 이름이 변경되었습니다",
+    "archivePrompt": "프로젝트를 보관하시겠습니까?",
+    "archiveDetail": "미디어 및 대화 참조가 보존됩니다.",
+    "archiveAction": "보관",
+    "archived": "프로젝트가 보관되었습니다",
+    "deletePrompt": "프로젝트를 삭제하시겠습니까?",
+    "deleteDetail": "미디어나 대화에서 참조 중인 프로젝트는 보관해야 합니다.",
+    "deleteAction": "삭제",
+    "deleted": "프로젝트가 삭제되었습니다",
+    "deleteError": "미디어나 대화에서 참조 중인 프로젝트는 삭제할 수 없습니다. 대신 보관하세요.",
+    "encryptionNote": "프로젝트는 IDB로 암호화됩니다 • 생성된 항목은 활성 프로젝트를 사용합니다"
   },
   "chat": {
-    "newChat": "__MISSING__:chat.newChat",
-    "newChatShortcut": "__MISSING__:chat.newChatShortcut",
-    "newChatAction": "__MISSING__:chat.newChatAction",
-    "history": "__MISSING__:chat.history",
-    "collapseHistory": "__MISSING__:chat.collapseHistory",
-    "expandHistory": "__MISSING__:chat.expandHistory",
-    "options": "__MISSING__:chat.options",
-    "searchChats": "__MISSING__:chat.searchChats",
-    "exportActive": "__MISSING__:chat.exportActive",
-    "deleteActive": "__MISSING__:chat.deleteActive",
-    "clearActiveSelection": "__MISSING__:chat.clearActiveSelection",
-    "searchPlaceholder": "__MISSING__:chat.searchPlaceholder",
-    "searchAria": "__MISSING__:chat.searchAria",
-    "searching": "__MISSING__:chat.searching",
-    "showingMatches": "__MISSING__:chat.showingMatches",
-    "noMatches": "__MISSING__:chat.noMatches",
-    "noConversations": "__MISSING__:chat.noConversations",
-    "deletePrompt": "__MISSING__:chat.deletePrompt",
-    "untitled": "__MISSING__:chat.untitled",
-    "deleteAction": "__MISSING__:chat.deleteAction",
-    "exportAsMarkdown": "__MISSING__:chat.exportAsMarkdown",
-    "deleted": "__MISSING__:chat.deleted",
-    "undo": "__MISSING__:chat.undo",
-    "restored": "__MISSING__:chat.restored",
-    "restoreFailed": "__MISSING__:chat.restoreFailed",
-    "restoreUnavailable": "__MISSING__:chat.restoreUnavailable"
+    "newChat": "새 채팅",
+    "newChatShortcut": "새 채팅 (⌘N)",
+    "newChatAction": "+ 새 채팅",
+    "history": "기록",
+    "collapseHistory": "기록 접기",
+    "expandHistory": "기록 펼치기",
+    "options": "채팅 옵션",
+    "searchChats": "채팅 검색",
+    "exportActive": "활성 채팅 내보내기",
+    "deleteActive": "활성 채팅 삭제",
+    "clearActiveSelection": "활성 채팅 선택 해제",
+    "searchPlaceholder": "검색…",
+    "searchAria": "대화 검색",
+    "searching": "검색 중…",
+    "showingMatches": "전체 {{total}}개 중 처음 {{count}}개 일치 항목 표시",
+    "noMatches": "일치 항목 없음",
+    "noConversations": "아직 대화가 없습니다",
+    "deletePrompt": "채팅을 삭제하시겠습니까?",
+    "untitled": "제목 없음",
+    "deleteAction": "삭제",
+    "exportAsMarkdown": "Markdown으로 내보내기",
+    "deleted": "대화가 삭제되었습니다",
+    "undo": "실행 취소",
+    "restored": "대화가 복원되었습니다",
+    "restoreFailed": "복원 실패",
+    "restoreUnavailable": "더 이상 복원할 수 없는 대화입니다."
   },
   "inspector": {
-    "title": "__MISSING__:inspector.title",
-    "description": "__MISSING__:inspector.description",
-    "toggle": "__MISSING__:inspector.toggle",
-    "enabled": "__MISSING__:inspector.enabled",
-    "disabled": "__MISSING__:inspector.disabled",
-    "enabledDetail": "__MISSING__:inspector.enabledDetail",
-    "disabledDetail": "__MISSING__:inspector.disabledDetail",
-    "show": "__MISSING__:inspector.show",
-    "hide": "__MISSING__:inspector.hide"
+    "title": "트래픽 검사기",
+    "description": "원본 모델 출력과 로컬 안전 결정을 표시합니다.",
+    "toggle": "트래픽 검사기 전환",
+    "enabled": "트래픽 검사기 활성화됨",
+    "disabled": "트래픽 검사기 비활성화됨",
+    "enabledDetail": "원본 응답, 안전 결정, 성인 캐릭터 컨트롤이 표시됩니다.",
+    "disabledDetail": "표준 렌더링이 복원되었습니다.",
+    "show": "검사기 표시",
+    "hide": "검사기 숨기기"
   },
   "familySafeMode": {
-    "title": "__MISSING__:familySafeMode.title",
-    "on": "__MISSING__:familySafeMode.on",
-    "off": "__MISSING__:familySafeMode.off",
-    "toggle": "__MISSING__:familySafeMode.toggle",
-    "enabledTooltip": "__MISSING__:familySafeMode.enabledTooltip",
-    "disabledTooltip": "__MISSING__:familySafeMode.disabledTooltip",
-    "notSaved": "__MISSING__:familySafeMode.notSaved",
-    "writeFailed": "__MISSING__:familySafeMode.writeFailed",
-    "enabledSuccess": "__MISSING__:familySafeMode.enabledSuccess",
-    "disabledSuccess": "__MISSING__:familySafeMode.disabledSuccess"
+    "title": "가족 안전 모드",
+    "on": "켜짐: 로컬 가족 필터가 실행됩니다.",
+    "off": "꺼짐: 로컬 필터 꺼짐 (제공자 안전 모드는 별개).",
+    "toggle": "가족 안전 모드 전환",
+    "enabledTooltip": "가족 안전 모드 활성화됨",
+    "disabledTooltip": "로컬 가족 안전 모드 비활성화됨 (제공자 안전 모드는 별개)",
+    "notSaved": "가족 안전 모드가 저장되지 않았습니다",
+    "writeFailed": "설정 저장에 실패했습니다.",
+    "enabledSuccess": "가족 안전 모드 활성화됨 — 모든 프롬프트에 로컬 가족 필터가 실행됩니다",
+    "disabledSuccess": "성인 모드 활성화됨 — 로컬 가족 필터를 건너뜁니다"
   },
   "keyboardShortcuts": {
-    "switchTab": "__MISSING__:keyboardShortcuts.switchTab"
+    "switchTab": "탭 전환"
   },
   "tabs": {
     "chat": {
-      "label": "Chat",
-      "subtitle": "__MISSING__:tabs.chat.subtitle"
+      "label": "채팅",
+      "subtitle": "대화형 AI"
     },
     "character-chats": {
-      "label": "__MISSING__:tabs.character-chats.label",
-      "subtitle": "__MISSING__:tabs.character-chats.subtitle"
+      "label": "캐릭터 채팅",
+      "subtitle": "호스팅 및 로컬 캐릭터와의 대화"
     },
     "history": {
-      "label": "__MISSING__:tabs.history.label",
-      "subtitle": "__MISSING__:tabs.history.subtitle"
+      "label": "기록",
+      "subtitle": "과거 대화 탐색"
     },
     "image": {
-      "label": "__MISSING__:tabs.image.label",
-      "subtitle": "__MISSING__:tabs.image.subtitle"
+      "label": "이미지 스튜디오",
+      "subtitle": "텍스트로 이미지 생성"
     },
     "media": {
-      "label": "__MISSING__:tabs.media.label",
-      "subtitle": "__MISSING__:tabs.media.subtitle"
+      "label": "미디어 스튜디오",
+      "subtitle": "생성된 미디어 탐색, 태그 지정, 편집 및 내보내기"
     },
     "image-inspector": {
-      "label": "__MISSING__:tabs.image-inspector.label",
-      "subtitle": "__MISSING__:tabs.image-inspector.subtitle"
+      "label": "이미지 검사기",
+      "subtitle": "이미지 분석 및 재구성"
     },
     "prompts": {
-      "label": "Prompts",
-      "subtitle": "__MISSING__:tabs.prompts.subtitle"
+      "label": "프롬프트",
+      "subtitle": "프롬프트 라이브러리 탐색 및 관리"
     },
     "scenes": {
-      "label": "__MISSING__:tabs.scenes.label",
-      "subtitle": "__MISSING__:tabs.scenes.subtitle"
+      "label": "장면 구성기",
+      "subtitle": "복잡한 이미지 생성 장면 구성"
     },
     "audio": {
-      "label": "__MISSING__:tabs.audio.label",
-      "subtitle": "__MISSING__:tabs.audio.subtitle"
+      "label": "오디오 스튜디오",
+      "subtitle": "텍스트 음성 변환 및 전사"
     },
     "music": {
-      "label": "__MISSING__:tabs.music.label",
-      "subtitle": "__MISSING__:tabs.music.subtitle"
+      "label": "음악 스튜디오",
+      "subtitle": "음악 및 소리 생성"
     },
     "video": {
-      "label": "__MISSING__:tabs.video.label",
-      "subtitle": "__MISSING__:tabs.video.subtitle"
+      "label": "비디오 스튜디오",
+      "subtitle": "비디오 클립 생성"
     },
     "embeddings": {
-      "label": "Embeddings",
-      "subtitle": "__MISSING__:tabs.embeddings.subtitle"
+      "label": "임베딩",
+      "subtitle": "텍스트의 벡터 표현"
     },
     "search": {
-      "label": "__MISSING__:tabs.search.label",
-      "subtitle": "__MISSING__:tabs.search.subtitle"
+      "label": "연구",
+      "subtitle": "심층 연구 및 웹 스크래핑"
     },
     "characters": {
-      "label": "__MISSING__:tabs.characters.label",
-      "subtitle": "__MISSING__:tabs.characters.subtitle"
+      "label": "캐릭터",
+      "subtitle": "롤플레이 캐릭터 구성"
     },
     "character-creator": {
-      "label": "__MISSING__:tabs.character-creator.label",
-      "subtitle": "__MISSING__:tabs.character-creator.subtitle"
+      "label": "캐릭터 생성기",
+      "subtitle": "대략적인 아이디어를 완전하고 편집 가능한 캐릭터 카드로 변환"
     },
     "rp-studio": {
-      "label": "__MISSING__:tabs.rp-studio.label",
-      "subtitle": "__MISSING__:tabs.rp-studio.subtitle"
+      "label": "RP 스튜디오",
+      "subtitle": "롤플레이 캐릭터 및 시나리오 워크숍"
     },
     "workflows": {
-      "label": "__MISSING__:tabs.workflows.label",
-      "subtitle": "__MISSING__:tabs.workflows.subtitle"
+      "label": "워크플로 템플릿",
+      "subtitle": "재사용 가능한 자동화 체인 구축"
     },
     "documents": {
-      "label": "Documents",
-      "subtitle": "__MISSING__:tabs.documents.subtitle"
+      "label": "문서",
+      "subtitle": "관리되는 문서 및 범위 지정된 워크스페이스 도구"
     },
     "privacy": {
-      "label": "__MISSING__:tabs.privacy.label",
-      "subtitle": "__MISSING__:tabs.privacy.subtitle"
+      "label": "개인정보",
+      "subtitle": "저장소 및 개인정보 설정 관리"
     },
     "playground": {
-      "label": "__MISSING__:tabs.playground.label",
-      "subtitle": "__MISSING__:tabs.playground.subtitle"
+      "label": "플레이그라운드",
+      "subtitle": "채팅으로 워크플로 구축"
     },
     "settings": {
-      "label": "__MISSING__:tabs.settings.label",
-      "subtitle": "__MISSING__:tabs.settings.subtitle"
+      "label": "설정",
+      "subtitle": "앱 설정"
     },
     "status": {
-      "label": "Status",
-      "subtitle": "__MISSING__:tabs.status.subtitle"
+      "label": "상태",
+      "subtitle": "앱 상태 및 진단"
     }
   },
   "groups": {
-    "conversation": "__MISSING__:groups.conversation",
-    "generate": "__MISSING__:groups.generate",
-    "build": "__MISSING__:groups.build",
-    "system": "__MISSING__:groups.system",
-    "projectsAndActions": "__MISSING__:groups.projectsAndActions",
-    "mediaStudio": "__MISSING__:groups.mediaStudio",
-    "promptLibrary": "__MISSING__:groups.promptLibrary",
-    "sceneComposer": "__MISSING__:groups.sceneComposer",
-    "rpStudio": "__MISSING__:groups.rpStudio",
-    "researchWorkspace": "__MISSING__:groups.researchWorkspace",
-    "privacyAndStorage": "__MISSING__:groups.privacyAndStorage"
+    "conversation": "대화",
+    "generate": "생성",
+    "build": "구축",
+    "system": "시스템",
+    "projectsAndActions": "프로젝트 및 작업",
+    "mediaStudio": "미디어 스튜디오 ({{count}}개 선택됨)",
+    "promptLibrary": "프롬프트 라이브러리",
+    "sceneComposer": "씬 컴포저",
+    "rpStudio": "RP 스튜디오",
+    "researchWorkspace": "리서치 워크스페이스",
+    "privacyAndStorage": "개인정보 및 저장소"
   },
   "commandPalette": {
-    "command": "__MISSING__:commandPalette.command",
-    "searchPlaceholder": "__MISSING__:commandPalette.searchPlaceholder",
-    "esc": "__MISSING__:commandPalette.esc",
-    "tabsCanonical": "__MISSING__:commandPalette.tabsCanonical",
-    "noMatchingTabs": "__MISSING__:commandPalette.noMatchingTabs",
-    "newProject": "__MISSING__:commandPalette.newProject",
-    "switchOpenCurrent": "__MISSING__:commandPalette.switchOpenCurrent",
-    "selectAllVisible": "__MISSING__:commandPalette.selectAllVisible",
-    "clearSelection": "__MISSING__:commandPalette.clearSelection",
-    "compareSelected": "__MISSING__:commandPalette.compareSelected",
-    "exportSelected": "__MISSING__:commandPalette.exportSelected",
-    "favoriteSelected": "__MISSING__:commandPalette.favoriteSelected",
-    "addTagSelected": "__MISSING__:commandPalette.addTagSelected",
-    "sendToImage": "__MISSING__:commandPalette.sendToImage",
-    "copyRecipe": "__MISSING__:commandPalette.copyRecipe",
-    "onlyAvailableMediaStudio": "__MISSING__:commandPalette.onlyAvailableMediaStudio",
-    "selectedAllVisible": "__MISSING__:commandPalette.selectedAllVisible",
-    "clearedSelection": "__MISSING__:commandPalette.clearedSelection",
-    "selectCountToCompare": "__MISSING__:commandPalette.selectCountToCompare",
-    "selectOneToExport": "__MISSING__:commandPalette.selectOneToExport",
-    "selectOne": "__MISSING__:commandPalette.selectOne",
-    "openPromptLibrary": "__MISSING__:commandPalette.openPromptLibrary",
-    "newPrompt": "__MISSING__:commandPalette.newPrompt",
-    "useSelectedPrompt": "__MISSING__:commandPalette.useSelectedPrompt",
-    "exportPrompts": "__MISSING__:commandPalette.exportPrompts",
-    "importPrompts": "__MISSING__:commandPalette.importPrompts",
-    "saveCurrentPrompt": "__MISSING__:commandPalette.saveCurrentPrompt",
-    "untitledPrompt": "__MISSING__:commandPalette.untitledPrompt",
-    "emptyDraftPrompt": "__MISSING__:commandPalette.emptyDraftPrompt",
-    "createdNewPrompt": "__MISSING__:commandPalette.createdNewPrompt",
-    "selectPromptFirst": "__MISSING__:commandPalette.selectPromptFirst",
-    "noPromptSelected": "__MISSING__:commandPalette.noPromptSelected",
-    "promptCopied": "__MISSING__:commandPalette.promptCopied",
-    "couldNotCopyPrompt": "__MISSING__:commandPalette.couldNotCopyPrompt",
-    "noPromptsToExport": "__MISSING__:commandPalette.noPromptsToExport",
-    "exportedPrompts": "__MISSING__:commandPalette.exportedPrompts",
-    "importSuccess": "__MISSING__:commandPalette.importSuccess",
-    "importUpToDate": "__MISSING__:commandPalette.importUpToDate",
-    "couldNotImport": "__MISSING__:commandPalette.couldNotImport",
-    "importedCount": "__MISSING__:commandPalette.importedCount",
-    "syncedCount": "__MISSING__:commandPalette.syncedCount",
-    "skippedCount": "__MISSING__:commandPalette.skippedCount",
-    "openSceneComposer": "__MISSING__:commandPalette.openSceneComposer",
-    "exportScenes": "__MISSING__:commandPalette.exportScenes",
-    "importScenes": "__MISSING__:commandPalette.importScenes",
-    "noScenesToExport": "__MISSING__:commandPalette.noScenesToExport",
-    "exportedScenes": "__MISSING__:commandPalette.exportedScenes",
-    "importedScenesSuccess": "__MISSING__:commandPalette.importedScenesSuccess",
-    "skippedScenes": "__MISSING__:commandPalette.skippedScenes",
-    "openRpStudio": "__MISSING__:commandPalette.openRpStudio",
-    "createStCard": "__MISSING__:commandPalette.createStCard",
-    "startChatWithSelected": "__MISSING__:commandPalette.startChatWithSelected",
-    "newScenario": "__MISSING__:commandPalette.newScenario",
-    "createdLocalDraft": "__MISSING__:commandPalette.createdLocalDraft",
-    "selectCharacterFirst": "__MISSING__:commandPalette.selectCharacterFirst",
-    "chatStarted": "__MISSING__:commandPalette.chatStarted",
-    "couldNotStartChat": "__MISSING__:commandPalette.couldNotStartChat",
-    "scenarioFor": "__MISSING__:commandPalette.scenarioFor",
-    "createdNewScenario": "__MISSING__:commandPalette.createdNewScenario",
-    "openWorkflows": "__MISSING__:commandPalette.openWorkflows",
-    "openResearchWorkspace": "__MISSING__:commandPalette.openResearchWorkspace",
-    "newResearchSession": "__MISSING__:commandPalette.newResearchSession",
-    "exportResearchSessions": "__MISSING__:commandPalette.exportResearchSessions",
-    "importResearchSessions": "__MISSING__:commandPalette.importResearchSessions",
-    "createdNewResearchSession": "__MISSING__:commandPalette.createdNewResearchSession",
-    "noResearchToExport": "__MISSING__:commandPalette.noResearchToExport",
-    "exportedResearch": "__MISSING__:commandPalette.exportedResearch",
-    "importedResearchSuccess": "__MISSING__:commandPalette.importedResearchSuccess",
-    "openPrivacyDashboard": "__MISSING__:commandPalette.openPrivacyDashboard",
-    "refreshStorageInventory": "__MISSING__:commandPalette.refreshStorageInventory",
-    "copySafePrivacySummary": "__MISSING__:commandPalette.copySafePrivacySummary",
-    "exportSafePrivacySummary": "__MISSING__:commandPalette.exportSafePrivacySummary",
-    "toggleInspector": "__MISSING__:commandPalette.toggleInspector",
-    "toggleHint": "__MISSING__:commandPalette.toggleHint",
-    "navigateHint": "__MISSING__:commandPalette.navigateHint"
+    "command": "명령",
+    "searchPlaceholder": "탭 또는 작업 검색… (예: 이미지, 새 프로젝트)",
+    "esc": "ESC",
+    "tabsCanonical": "탭 (표준)",
+    "noMatchingTabs": "일치하는 탭 없음",
+    "newProject": "새 프로젝트",
+    "switchOpenCurrent": "현재 프로젝트 전환 / 열기",
+    "selectAllVisible": "표시된 모든 미디어 선택",
+    "clearSelection": "미디어 선택 해제",
+    "compareSelected": "선택한 미디어 비교",
+    "exportSelected": "선택한 미디어 내보내기",
+    "favoriteSelected": "선택한 미디어 즐겨찾기",
+    "addTagSelected": "선택한 미디어에 태그 추가",
+    "sendToImage": "선택 항목을 이미지 스튜디오로 보내기",
+    "copyRecipe": "선택한 레시피 JSON 복사",
+    "onlyAvailableMediaStudio": "이 명령은 미디어 스튜디오에서만 사용할 수 있습니다.",
+    "selectedAllVisible": "표시된 모든 미디어를 선택했습니다",
+    "clearedSelection": "미디어 선택을 해제했습니다",
+    "selectCountToCompare": "비교하려면 2~{{max}}개 항목을 선택하세요.",
+    "selectOneToExport": "내보내려면 미디어 항목을 하나 이상 선택하세요.",
+    "selectOne": "미디어 항목을 하나 이상 선택하세요.",
+    "openPromptLibrary": "프롬프트 라이브러리 열기",
+    "newPrompt": "새 프롬프트",
+    "useSelectedPrompt": "선택한 프롬프트 사용 (복사)",
+    "exportPrompts": "프롬프트 내보내기",
+    "importPrompts": "프롬프트 가져오기…",
+    "saveCurrentPrompt": "현재 프롬프트를 라이브러리에 저장",
+    "untitledPrompt": "제목 없는 프롬프트",
+    "emptyDraftPrompt": "(빈 초안 — 프롬프트로 교체하세요)",
+    "createdNewPrompt": "새 프롬프트를 만들었습니다",
+    "selectPromptFirst": "먼저 프롬프트 라이브러리에서 프롬프트를 선택하세요.",
+    "noPromptSelected": "선택한 프롬프트가 없습니다.",
+    "promptCopied": "프롬프트가 클립보드에 복사되었습니다",
+    "couldNotCopyPrompt": "프롬프트를 복사할 수 없습니다",
+    "noPromptsToExport": "내보낼 프롬프트가 없습니다.",
+    "exportedPrompts": "{{count}}개 프롬프트{{plural}}를 내보냈습니다",
+    "importSuccess": "프롬프트 라이브러리: {{parts}}",
+    "importUpToDate": "프롬프트 라이브러리가 최신 상태입니다",
+    "couldNotImport": "가져올 수 없습니다",
+    "importedCount": "{{count}}개 프롬프트{{plural}} 가져옴",
+    "syncedCount": "{{count}}개 프롬프트{{plural}} 동기화됨",
+    "skippedCount": "{{count}}개 건너뜀",
+    "openSceneComposer": "씬 컴포저 열기",
+    "exportScenes": "씬 내보내기",
+    "importScenes": "씬 가져오기…",
+    "noScenesToExport": "내보낼 씬이 없습니다.",
+    "exportedScenes": "{{count}}개 씬{{plural}}을 내보냈습니다",
+    "importedScenesSuccess": "{{count}}개 씬{{plural}} 가져옴{{skipped}}",
+    "skippedScenes": " ({{count}}개 건너뜀)",
+    "openRpStudio": "RP 스튜디오 열기",
+    "createStCard": "ST 카드 만들기",
+    "startChatWithSelected": "선택한 캐릭터와 채팅 시작",
+    "newScenario": "새 시나리오",
+    "createdLocalDraft": "로컬 ST 카드 초안을 만들었습니다",
+    "selectCharacterFirst": "먼저 RP 스튜디오에서 캐릭터를 선택하세요.",
+    "chatStarted": "채팅이 시작되었습니다",
+    "couldNotStartChat": "채팅을 시작할 수 없습니다",
+    "scenarioFor": "{{name}}에 대한 시나리오",
+    "createdNewScenario": "새 시나리오를 만들었습니다",
+    "openWorkflows": "워크플로 열기",
+    "openResearchWorkspace": "연구 워크스페이스 열기",
+    "newResearchSession": "새 연구 세션",
+    "exportResearchSessions": "연구 세션 내보내기",
+    "importResearchSessions": "연구 세션 가져오기…",
+    "createdNewResearchSession": "새 연구 세션을 만들었습니다",
+    "noResearchToExport": "내보낼 연구 세션이 없습니다.",
+    "exportedResearch": "연구 세션 {{count}}개를 내보냈습니다{{plural}}",
+    "importedResearchSuccess": "세션 {{count}}개를 가져왔습니다{{plural}}{{skipped}}",
+    "openPrivacyDashboard": "개인정보 대시보드 열기",
+    "refreshStorageInventory": "저장소 인벤토리 새로고침",
+    "copySafePrivacySummary": "안전한 개인정보 요약 복사",
+    "exportSafePrivacySummary": "안전한 개인정보 요약 내보내기",
+    "toggleInspector": "인스펙터 전환",
+    "toggleHint": "⌘K로 전환",
+    "navigateHint": "↑↓로 탐색 · Enter로 선택"
   }
 }

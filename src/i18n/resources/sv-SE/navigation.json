@@ -1,262 +1,262 @@
 {
   "project": {
-    "label": "__MISSING__:project.label",
-    "activeProject": "__MISSING__:project.activeProject",
-    "newProjectName": "__MISSING__:project.newProjectName",
-    "untitledProject": "__MISSING__:project.untitledProject",
-    "create": "__MISSING__:project.create",
-    "enterProjectName": "__MISSING__:project.enterProjectName",
-    "created": "__MISSING__:project.created",
-    "createFailed": "__MISSING__:project.createFailed",
-    "new": "__MISSING__:project.new",
-    "allProjects": "__MISSING__:project.allProjects",
-    "switchOpenCurrent": "__MISSING__:project.switchOpenCurrent",
-    "rename": "__MISSING__:project.rename",
-    "renameAction": "__MISSING__:project.renameAction",
-    "renamed": "__MISSING__:project.renamed",
-    "archivePrompt": "__MISSING__:project.archivePrompt",
-    "archiveDetail": "__MISSING__:project.archiveDetail",
-    "archiveAction": "__MISSING__:project.archiveAction",
-    "archived": "__MISSING__:project.archived",
-    "deletePrompt": "__MISSING__:project.deletePrompt",
-    "deleteDetail": "__MISSING__:project.deleteDetail",
-    "deleteAction": "__MISSING__:project.deleteAction",
-    "deleted": "__MISSING__:project.deleted",
-    "deleteError": "__MISSING__:project.deleteError",
-    "encryptionNote": "__MISSING__:project.encryptionNote"
+    "label": "Projekt",
+    "activeProject": "Aktivt projekt",
+    "newProjectName": "Nytt projektnamn",
+    "untitledProject": "Namnlöst projekt",
+    "create": "Skapa",
+    "enterProjectName": "Ange ett projektnamn.",
+    "created": "Skapade \"{{name}}\"",
+    "createFailed": "Det gick inte att skapa projektet",
+    "new": "+ Nytt",
+    "allProjects": "Alla projekt",
+    "switchOpenCurrent": "Växla / öppna aktuellt projekt",
+    "rename": "Byt namn på projekt",
+    "renameAction": "Byt namn",
+    "renamed": "Projektet har bytt namn",
+    "archivePrompt": "Arkivera projekt?",
+    "archiveDetail": "Referenser till media och konversationer bevaras.",
+    "archiveAction": "Arkivera",
+    "archived": "Projekt arkiverat",
+    "deletePrompt": "Ta bort projekt?",
+    "deleteDetail": "Projekt som refereras till av media eller konversationer måste arkiveras istället.",
+    "deleteAction": "Ta bort",
+    "deleted": "Projekt borttaget",
+    "deleteError": "Projektet kan inte tas bort medan media eller konversationer refererar till det. Arkivera det istället.",
+    "encryptionNote": "Projekt är IDB-krypterade • genererade objekt använder det aktiva projektet"
   },
   "chat": {
-    "newChat": "__MISSING__:chat.newChat",
-    "newChatShortcut": "__MISSING__:chat.newChatShortcut",
-    "newChatAction": "__MISSING__:chat.newChatAction",
-    "history": "__MISSING__:chat.history",
-    "collapseHistory": "__MISSING__:chat.collapseHistory",
-    "expandHistory": "__MISSING__:chat.expandHistory",
-    "options": "__MISSING__:chat.options",
-    "searchChats": "__MISSING__:chat.searchChats",
-    "exportActive": "__MISSING__:chat.exportActive",
-    "deleteActive": "__MISSING__:chat.deleteActive",
-    "clearActiveSelection": "__MISSING__:chat.clearActiveSelection",
-    "searchPlaceholder": "__MISSING__:chat.searchPlaceholder",
-    "searchAria": "__MISSING__:chat.searchAria",
-    "searching": "__MISSING__:chat.searching",
-    "showingMatches": "__MISSING__:chat.showingMatches",
-    "noMatches": "__MISSING__:chat.noMatches",
-    "noConversations": "__MISSING__:chat.noConversations",
-    "deletePrompt": "__MISSING__:chat.deletePrompt",
-    "untitled": "__MISSING__:chat.untitled",
-    "deleteAction": "__MISSING__:chat.deleteAction",
-    "exportAsMarkdown": "__MISSING__:chat.exportAsMarkdown",
-    "deleted": "__MISSING__:chat.deleted",
-    "undo": "__MISSING__:chat.undo",
-    "restored": "__MISSING__:chat.restored",
-    "restoreFailed": "__MISSING__:chat.restoreFailed",
-    "restoreUnavailable": "__MISSING__:chat.restoreUnavailable"
+    "newChat": "Ny chatt",
+    "newChatShortcut": "Ny chatt (⌘N)",
+    "newChatAction": "+ Ny chatt",
+    "history": "Historik",
+    "collapseHistory": "Fäll ihop historik",
+    "expandHistory": "Expandera historik",
+    "options": "Chattalternativ",
+    "searchChats": "Sök chatter",
+    "exportActive": "Exportera aktiv chatt",
+    "deleteActive": "Ta bort aktiv chatt",
+    "clearActiveSelection": "Rensa val av aktiv chatt",
+    "searchPlaceholder": "Sök…",
+    "searchAria": "Sök konversationer",
+    "searching": "Söker…",
+    "showingMatches": "Visar första {{count}} av {{total}} träffar",
+    "noMatches": "Inga träffar",
+    "noConversations": "Inga konversationer än",
+    "deletePrompt": "Ta bort chatt?",
+    "untitled": "Namnlös",
+    "deleteAction": "Ta bort",
+    "exportAsMarkdown": "Exportera som Markdown",
+    "deleted": "Konversation borttagen",
+    "undo": "Ångra",
+    "restored": "Konversation återställd",
+    "restoreFailed": "Det gick inte att återställa",
+    "restoreUnavailable": "Konversationen är inte längre tillgänglig för återställning."
   },
   "inspector": {
-    "title": "__MISSING__:inspector.title",
-    "description": "__MISSING__:inspector.description",
-    "toggle": "__MISSING__:inspector.toggle",
-    "enabled": "__MISSING__:inspector.enabled",
-    "disabled": "__MISSING__:inspector.disabled",
-    "enabledDetail": "__MISSING__:inspector.enabledDetail",
-    "disabledDetail": "__MISSING__:inspector.disabledDetail",
-    "show": "__MISSING__:inspector.show",
-    "hide": "__MISSING__:inspector.hide"
+    "title": "Trafikinspekterare",
+    "description": "Visar rå modellutdata och lokala säkerhetsbeslut.",
+    "toggle": "Växla trafikinspekterare",
+    "enabled": "Trafikinspekterare aktiverad",
+    "disabled": "Trafikinspekterare inaktiverad",
+    "enabledDetail": "Råa svar, säkerhetsbeslut och kontroller för vuxenkaraktärer är synliga.",
+    "disabledDetail": "Standardrendering återställd.",
+    "show": "Visa inspekterare",
+    "hide": "Dölj inspekterare"
   },
   "familySafeMode": {
-    "title": "__MISSING__:familySafeMode.title",
-    "on": "__MISSING__:familySafeMode.on",
-    "off": "__MISSING__:familySafeMode.off",
-    "toggle": "__MISSING__:familySafeMode.toggle",
-    "enabledTooltip": "__MISSING__:familySafeMode.enabledTooltip",
-    "disabledTooltip": "__MISSING__:familySafeMode.disabledTooltip",
-    "notSaved": "__MISSING__:familySafeMode.notSaved",
-    "writeFailed": "__MISSING__:familySafeMode.writeFailed",
-    "enabledSuccess": "__MISSING__:familySafeMode.enabledSuccess",
-    "disabledSuccess": "__MISSING__:familySafeMode.disabledSuccess"
+    "title": "Familjesäkert läge",
+    "on": "PÅ: lokalt familjefilter körs.",
+    "off": "AV: Lokalt filter AV (leverantörens säkert läge separat).",
+    "toggle": "Växla Familjesäkert läge",
+    "enabledTooltip": "Familjesäkert läge aktiverat",
+    "disabledTooltip": "Lokalt Familjesäkert läge inaktiverat (leverantörens säkert läge separat)",
+    "notSaved": "Familjesäkert läge sparades inte",
+    "writeFailed": "Konfigurationsskrivning misslyckades.",
+    "enabledSuccess": "Familjesäkert läge aktiverat — lokalt familjefilter körs vid varje prompt",
+    "disabledSuccess": "Vuxet läge aktiverat — lokalt familjefilter hoppas över"
   },
   "keyboardShortcuts": {
-    "switchTab": "__MISSING__:keyboardShortcuts.switchTab"
+    "switchTab": "Växla flik"
   },
   "tabs": {
     "chat": {
-      "label": "Chat",
-      "subtitle": "__MISSING__:tabs.chat.subtitle"
+      "label": "Chatt",
+      "subtitle": "Konversations-AI"
     },
     "character-chats": {
-      "label": "__MISSING__:tabs.character-chats.label",
-      "subtitle": "__MISSING__:tabs.character-chats.subtitle"
+      "label": "Karaktärschattar",
+      "subtitle": "Konversationer med värdbaserade och lokala karaktärer"
     },
     "history": {
-      "label": "__MISSING__:tabs.history.label",
-      "subtitle": "__MISSING__:tabs.history.subtitle"
+      "label": "Historik",
+      "subtitle": "Bläddra bland tidigare konversationer"
     },
     "image": {
-      "label": "__MISSING__:tabs.image.label",
-      "subtitle": "__MISSING__:tabs.image.subtitle"
+      "label": "Bildstudio",
+      "subtitle": "Generera bilder från text"
     },
     "media": {
-      "label": "__MISSING__:tabs.media.label",
-      "subtitle": "__MISSING__:tabs.media.subtitle"
+      "label": "Mediastudio",
+      "subtitle": "Bläddra bland, tagga, redigera och exportera ditt genererade media"
     },
     "image-inspector": {
-      "label": "__MISSING__:tabs.image-inspector.label",
-      "subtitle": "__MISSING__:tabs.image-inspector.subtitle"
+      "label": "Bildinspektör",
+      "subtitle": "Analysera och återskapa bilder"
     },
     "prompts": {
-      "label": "Prompts",
-      "subtitle": "__MISSING__:tabs.prompts.subtitle"
+      "label": "Promptar",
+      "subtitle": "Bläddra bland och hantera ditt promptbibliotek"
     },
     "scenes": {
-      "label": "__MISSING__:tabs.scenes.label",
-      "subtitle": "__MISSING__:tabs.scenes.subtitle"
+      "label": "Scenkompositör",
+      "subtitle": "Komponera komplexa bildgenereringsscener"
     },
     "audio": {
-      "label": "__MISSING__:tabs.audio.label",
-      "subtitle": "__MISSING__:tabs.audio.subtitle"
+      "label": "Ljudstudio",
+      "subtitle": "Text-till-tal och transkription"
     },
     "music": {
-      "label": "__MISSING__:tabs.music.label",
-      "subtitle": "__MISSING__:tabs.music.subtitle"
+      "label": "Musikstudio",
+      "subtitle": "Generera musik och ljud"
     },
     "video": {
-      "label": "__MISSING__:tabs.video.label",
-      "subtitle": "__MISSING__:tabs.video.subtitle"
+      "label": "Videostudio",
+      "subtitle": "Generera videoklipp"
     },
     "embeddings": {
-      "label": "Embeddings",
-      "subtitle": "__MISSING__:tabs.embeddings.subtitle"
+      "label": "Inbäddningar",
+      "subtitle": "Vektorrepresentationer av text"
     },
     "search": {
-      "label": "__MISSING__:tabs.search.label",
-      "subtitle": "__MISSING__:tabs.search.subtitle"
+      "label": "Forskning",
+      "subtitle": "Djupforskning och webbskrapning"
     },
     "characters": {
-      "label": "__MISSING__:tabs.characters.label",
-      "subtitle": "__MISSING__:tabs.characters.subtitle"
+      "label": "Karaktärer",
+      "subtitle": "Konfigurera rollspelskaraktärer"
     },
     "character-creator": {
-      "label": "__MISSING__:tabs.character-creator.label",
-      "subtitle": "__MISSING__:tabs.character-creator.subtitle"
+      "label": "Karaktärsskapare",
+      "subtitle": "Förvandla en grov idé till ett komplett, redigerbart karaktärskort"
     },
     "rp-studio": {
-      "label": "__MISSING__:tabs.rp-studio.label",
-      "subtitle": "__MISSING__:tabs.rp-studio.subtitle"
+      "label": "RP-studio",
+      "subtitle": "Rollspelskaraktär och scenariowerkshop"
     },
     "workflows": {
-      "label": "__MISSING__:tabs.workflows.label",
-      "subtitle": "__MISSING__:tabs.workflows.subtitle"
+      "label": "Arbetsflödesmallar",
+      "subtitle": "Bygg återanvändbara automationskedjor"
     },
     "documents": {
-      "label": "Documents",
-      "subtitle": "__MISSING__:tabs.documents.subtitle"
+      "label": "Dokument",
+      "subtitle": "Hanterade dokument och omfångsbegränsade arbetsyteverktyg"
     },
     "privacy": {
-      "label": "__MISSING__:tabs.privacy.label",
-      "subtitle": "__MISSING__:tabs.privacy.subtitle"
+      "label": "Integritet",
+      "subtitle": "Hantera lagring och integritetsinställningar"
     },
     "playground": {
-      "label": "__MISSING__:tabs.playground.label",
-      "subtitle": "__MISSING__:tabs.playground.subtitle"
+      "label": "Lekplats",
+      "subtitle": "Bygg arbetsflöden genom att chatta"
     },
     "settings": {
-      "label": "__MISSING__:tabs.settings.label",
-      "subtitle": "__MISSING__:tabs.settings.subtitle"
+      "label": "Konfiguration",
+      "subtitle": "Appkonfiguration"
     },
     "status": {
       "label": "Status",
-      "subtitle": "__MISSING__:tabs.status.subtitle"
+      "subtitle": "Appstatus och diagnostik"
     }
   },
   "groups": {
-    "conversation": "__MISSING__:groups.conversation",
-    "generate": "__MISSING__:groups.generate",
-    "build": "__MISSING__:groups.build",
-    "system": "__MISSING__:groups.system",
-    "projectsAndActions": "__MISSING__:groups.projectsAndActions",
-    "mediaStudio": "__MISSING__:groups.mediaStudio",
-    "promptLibrary": "__MISSING__:groups.promptLibrary",
-    "sceneComposer": "__MISSING__:groups.sceneComposer",
-    "rpStudio": "__MISSING__:groups.rpStudio",
-    "researchWorkspace": "__MISSING__:groups.researchWorkspace",
-    "privacyAndStorage": "__MISSING__:groups.privacyAndStorage"
+    "conversation": "Konversation",
+    "generate": "Generera",
+    "build": "Bygg",
+    "system": "System",
+    "projectsAndActions": "Projekt & Åtgärder",
+    "mediaStudio": "Mediastudio ({{count}} valda)",
+    "promptLibrary": "Prompt-bibliotek",
+    "sceneComposer": "Scenkompositör",
+    "rpStudio": "RP Studio",
+    "researchWorkspace": "Forskningsarbetsyta",
+    "privacyAndStorage": "Integritet & Lagring"
   },
   "commandPalette": {
-    "command": "__MISSING__:commandPalette.command",
-    "searchPlaceholder": "__MISSING__:commandPalette.searchPlaceholder",
-    "esc": "__MISSING__:commandPalette.esc",
-    "tabsCanonical": "__MISSING__:commandPalette.tabsCanonical",
-    "noMatchingTabs": "__MISSING__:commandPalette.noMatchingTabs",
-    "newProject": "__MISSING__:commandPalette.newProject",
-    "switchOpenCurrent": "__MISSING__:commandPalette.switchOpenCurrent",
-    "selectAllVisible": "__MISSING__:commandPalette.selectAllVisible",
-    "clearSelection": "__MISSING__:commandPalette.clearSelection",
-    "compareSelected": "__MISSING__:commandPalette.compareSelected",
-    "exportSelected": "__MISSING__:commandPalette.exportSelected",
-    "favoriteSelected": "__MISSING__:commandPalette.favoriteSelected",
-    "addTagSelected": "__MISSING__:commandPalette.addTagSelected",
-    "sendToImage": "__MISSING__:commandPalette.sendToImage",
-    "copyRecipe": "__MISSING__:commandPalette.copyRecipe",
-    "onlyAvailableMediaStudio": "__MISSING__:commandPalette.onlyAvailableMediaStudio",
-    "selectedAllVisible": "__MISSING__:commandPalette.selectedAllVisible",
-    "clearedSelection": "__MISSING__:commandPalette.clearedSelection",
-    "selectCountToCompare": "__MISSING__:commandPalette.selectCountToCompare",
-    "selectOneToExport": "__MISSING__:commandPalette.selectOneToExport",
-    "selectOne": "__MISSING__:commandPalette.selectOne",
-    "openPromptLibrary": "__MISSING__:commandPalette.openPromptLibrary",
-    "newPrompt": "__MISSING__:commandPalette.newPrompt",
-    "useSelectedPrompt": "__MISSING__:commandPalette.useSelectedPrompt",
-    "exportPrompts": "__MISSING__:commandPalette.exportPrompts",
-    "importPrompts": "__MISSING__:commandPalette.importPrompts",
-    "saveCurrentPrompt": "__MISSING__:commandPalette.saveCurrentPrompt",
-    "untitledPrompt": "__MISSING__:commandPalette.untitledPrompt",
-    "emptyDraftPrompt": "__MISSING__:commandPalette.emptyDraftPrompt",
-    "createdNewPrompt": "__MISSING__:commandPalette.createdNewPrompt",
-    "selectPromptFirst": "__MISSING__:commandPalette.selectPromptFirst",
-    "noPromptSelected": "__MISSING__:commandPalette.noPromptSelected",
-    "promptCopied": "__MISSING__:commandPalette.promptCopied",
-    "couldNotCopyPrompt": "__MISSING__:commandPalette.couldNotCopyPrompt",
-    "noPromptsToExport": "__MISSING__:commandPalette.noPromptsToExport",
-    "exportedPrompts": "__MISSING__:commandPalette.exportedPrompts",
-    "importSuccess": "__MISSING__:commandPalette.importSuccess",
-    "importUpToDate": "__MISSING__:commandPalette.importUpToDate",
-    "couldNotImport": "__MISSING__:commandPalette.couldNotImport",
-    "importedCount": "__MISSING__:commandPalette.importedCount",
-    "syncedCount": "__MISSING__:commandPalette.syncedCount",
-    "skippedCount": "__MISSING__:commandPalette.skippedCount",
-    "openSceneComposer": "__MISSING__:commandPalette.openSceneComposer",
-    "exportScenes": "__MISSING__:commandPalette.exportScenes",
-    "importScenes": "__MISSING__:commandPalette.importScenes",
-    "noScenesToExport": "__MISSING__:commandPalette.noScenesToExport",
-    "exportedScenes": "__MISSING__:commandPalette.exportedScenes",
-    "importedScenesSuccess": "__MISSING__:commandPalette.importedScenesSuccess",
-    "skippedScenes": "__MISSING__:commandPalette.skippedScenes",
-    "openRpStudio": "__MISSING__:commandPalette.openRpStudio",
-    "createStCard": "__MISSING__:commandPalette.createStCard",
-    "startChatWithSelected": "__MISSING__:commandPalette.startChatWithSelected",
-    "newScenario": "__MISSING__:commandPalette.newScenario",
-    "createdLocalDraft": "__MISSING__:commandPalette.createdLocalDraft",
-    "selectCharacterFirst": "__MISSING__:commandPalette.selectCharacterFirst",
-    "chatStarted": "__MISSING__:commandPalette.chatStarted",
-    "couldNotStartChat": "__MISSING__:commandPalette.couldNotStartChat",
-    "scenarioFor": "__MISSING__:commandPalette.scenarioFor",
-    "createdNewScenario": "__MISSING__:commandPalette.createdNewScenario",
-    "openWorkflows": "__MISSING__:commandPalette.openWorkflows",
-    "openResearchWorkspace": "__MISSING__:commandPalette.openResearchWorkspace",
-    "newResearchSession": "__MISSING__:commandPalette.newResearchSession",
-    "exportResearchSessions": "__MISSING__:commandPalette.exportResearchSessions",
-    "importResearchSessions": "__MISSING__:commandPalette.importResearchSessions",
-    "createdNewResearchSession": "__MISSING__:commandPalette.createdNewResearchSession",
-    "noResearchToExport": "__MISSING__:commandPalette.noResearchToExport",
-    "exportedResearch": "__MISSING__:commandPalette.exportedResearch",
-    "importedResearchSuccess": "__MISSING__:commandPalette.importedResearchSuccess",
-    "openPrivacyDashboard": "__MISSING__:commandPalette.openPrivacyDashboard",
-    "refreshStorageInventory": "__MISSING__:commandPalette.refreshStorageInventory",
-    "copySafePrivacySummary": "__MISSING__:commandPalette.copySafePrivacySummary",
-    "exportSafePrivacySummary": "__MISSING__:commandPalette.exportSafePrivacySummary",
-    "toggleInspector": "__MISSING__:commandPalette.toggleInspector",
-    "toggleHint": "__MISSING__:commandPalette.toggleHint",
-    "navigateHint": "__MISSING__:commandPalette.navigateHint"
+    "command": "Kommando",
+    "searchPlaceholder": "Sök flikar eller åtgärder… (t.ex. bild, nytt projekt)",
+    "esc": "ESC",
+    "tabsCanonical": "Flikar (kanoniska)",
+    "noMatchingTabs": "Inga matchande flikar",
+    "newProject": "Nytt projekt",
+    "switchOpenCurrent": "Växla / Öppna aktuellt projekt",
+    "selectAllVisible": "Markera all synlig media",
+    "clearSelection": "Rensa mediaval",
+    "compareSelected": "Jämför vald media",
+    "exportSelected": "Exportera vald media",
+    "favoriteSelected": "Favoritmarkera vald media",
+    "addTagSelected": "Lägg till tagg till vald media",
+    "sendToImage": "Skicka vald till Bildstudio",
+    "copyRecipe": "Kopiera valt recept-JSON",
+    "onlyAvailableMediaStudio": "Detta kommando är endast tillgängligt i Mediastudion.",
+    "selectedAllVisible": "Markerade all synlig media",
+    "clearedSelection": "Rensade mediaval",
+    "selectCountToCompare": "Markera 2 till {{max}} objekt för att jämföra.",
+    "selectOneToExport": "Markera minst ett mediaobjekt att exportera.",
+    "selectOne": "Markera minst ett mediaobjekt.",
+    "openPromptLibrary": "Öppna prompt-bibliotek",
+    "newPrompt": "Ny prompt",
+    "useSelectedPrompt": "Använd vald prompt (kopiera)",
+    "exportPrompts": "Exportera prompter",
+    "importPrompts": "Importera prompter…",
+    "saveCurrentPrompt": "Spara aktuell prompt till bibliotek",
+    "untitledPrompt": "Namnlös prompt",
+    "emptyDraftPrompt": "(tomt utkast — ersätt med din prompt)",
+    "createdNewPrompt": "Skapade ny prompt",
+    "selectPromptFirst": "Markera en prompt i prompt-biblioteket först.",
+    "noPromptSelected": "Ingen prompt vald.",
+    "promptCopied": "Prompt kopierad till urklipp",
+    "couldNotCopyPrompt": "Kunde inte kopiera prompt",
+    "noPromptsToExport": "Inga prompter att exportera.",
+    "exportedPrompts": "Exporterade {{count}} prompt{{plural}}",
+    "importSuccess": "Prompt-bibliotek: {{parts}}",
+    "importUpToDate": "Prompt-biblioteket är uppdaterat",
+    "couldNotImport": "Kunde inte importera",
+    "importedCount": "importerade {{count}} prompt{{plural}}",
+    "syncedCount": "synkroniserade {{count}} prompt{{plural}}",
+    "skippedCount": "hoppade över {{count}}",
+    "openSceneComposer": "Öppna scenkompositör",
+    "exportScenes": "Exportera scener",
+    "importScenes": "Importera scener…",
+    "noScenesToExport": "Inga scener att exportera.",
+    "exportedScenes": "Exporterade {{count}} scen{{plural}}",
+    "importedScenesSuccess": "Importerade {{count}} scen{{plural}}{{skipped}}",
+    "skippedScenes": " (hoppade över {{count}})",
+    "openRpStudio": "Öppna RP Studio",
+    "createStCard": "Skapa ST-kort",
+    "startChatWithSelected": "Starta chatt med vald karaktär",
+    "newScenario": "Nytt scenario",
+    "createdLocalDraft": "Skapade lokalt ST-kortsutkast",
+    "selectCharacterFirst": "Markera en karaktär i RP Studio först.",
+    "chatStarted": "Chatt startad",
+    "couldNotStartChat": "Kunde inte starta chatt",
+    "scenarioFor": "Scenario för {{name}}",
+    "createdNewScenario": "Skapade nytt scenario",
+    "openWorkflows": "Öppna arbetsflöden",
+    "openResearchWorkspace": "Öppna forskningsarbetsyta",
+    "newResearchSession": "Ny forskningssession",
+    "exportResearchSessions": "Exportera forskningssessioner",
+    "importResearchSessions": "Importera forskningssessioner…",
+    "createdNewResearchSession": "Skapade ny forskningssession",
+    "noResearchToExport": "Inga forskningssessioner att exportera.",
+    "exportedResearch": "Exporterade {{count}} forskningssession{{plural}}",
+    "importedResearchSuccess": "Importerade {{count}} session{{plural}}{{skipped}}",
+    "openPrivacyDashboard": "Öppna integritetspanel",
+    "refreshStorageInventory": "Uppdatera lagringsinventering",
+    "copySafePrivacySummary": "Kopiera säker integritetssammanfattning",
+    "exportSafePrivacySummary": "Exportera säker integritetssammanfattning",
+    "toggleInspector": "Växla inspektör",
+    "toggleHint": "⌘K för att växla",
+    "navigateHint": "↑↓ för att navigera · Enter för att välja"
   }
 }

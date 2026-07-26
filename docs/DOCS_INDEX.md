@@ -130,6 +130,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [summary_of_work.md](summary_of_work.md) — Active session ledger (recent sessions only).
 - July 17 03:10 deep-scan audit evidence was processed; remediated live status remains in `ROADMAP.md` and `summary_of_work.md`.
 - [audits/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md](audits/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md) — `VF-I18N-REMEDIATION-20260725-01` foundation-phase final report (discrepancy freeze, AST extractor, safe sync tool, sentinel-aware verifier, and obsolete-script lockdown; remaining risks and deferred work itemised).
+- [reports/MINIMAX_M3_I18N_FULL_APP_REMEDIATION_REPORT_2026-07-26.md](reports/MINIMAX_M3_I18N_FULL_APP_REMEDIATION_REPORT_2026-07-26.md) — `MINIMAX-M3-I18N-FULL-APP-REMEDIATION-2026-07-26` full-app-phase final report (Phases 0–9: status-isolation, runtime marker firewall, dynamic-key manifest, hardcoded-string inventory, first-pass machine translation, verifier allowlist expansion, formatter+RTL coverage, alias+layout scaffolding, `isProductionComplete` derivation from status JSON).
 
 ---
 

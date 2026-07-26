@@ -1,31 +1,31 @@
 {
-  "welcomeTitle": "__MISSING__:welcomeTitle",
-  "welcomeSubtitle": "__MISSING__:welcomeSubtitle",
-  "welcomeDescription": "__MISSING__:welcomeDescription",
-  "privacyNote": "__MISSING__:privacyNote",
-  "getStarted": "__MISSING__:getStarted",
-  "createProfile": "__MISSING__:createProfile",
-  "continue": "__MISSING__:continue",
-  "languageSelectorLabel": "__MISSING__:languageSelectorLabel",
-  "systemLanguageOption": "__MISSING__:systemLanguageOption",
-  "selectLanguage": "__MISSING__:selectLanguage",
-  "stepIndicator": "__MISSING__:stepIndicator",
+  "welcomeTitle": "Venice Forge में आपका स्वागत है",
+  "welcomeSubtitle": "निजी स्थानीय वर्कबेंच।",
+  "welcomeDescription": "एक स्थानीय डेस्कटॉप वर्कबेंच जो ऐप डेटा इस डिवाइस पर संग्रहीत करता है और आपके द्वारा कॉन्फ़िगर किए गए दूरस्थ प्रदाताओं को अनुरोध भेजता है।",
+  "privacyNote": "आपका डेटा स्थानीय रहता है। API कुंजियाँ सुरक्षित OS स्टोरेज में संग्रहीत होती हैं।",
+  "getStarted": "शुरू करें",
+  "createProfile": "प्रोफ़ाइल बनाएँ",
+  "continue": "जारी रखें",
+  "languageSelectorLabel": "एप्लिकेशन भाषा",
+  "systemLanguageOption": "सिस्टम भाषा ({{language}})",
+  "selectLanguage": "भाषा चुनें",
+  "stepIndicator": "ऑनबोर्डिंग चरण {{current}} / {{total}}",
   "steps": {
     "welcome": {
-      "title": "__MISSING__:steps.welcome.title",
-      "description": "__MISSING__:steps.welcome.description"
+      "title": "Venice Forge में आपका स्वागत है",
+      "description": "एक स्थानीय डेस्कटॉप वर्कबेंच जो ऐप डेटा इस डिवाइस पर संग्रहीत करता है और आपके द्वारा कॉन्फ़िगर किए गए दूरस्थ प्रदाताओं को अनुरोध भेजता है।"
     },
     "profiles": {
-      "title": "__MISSING__:steps.profiles.title",
-      "description": "__MISSING__:steps.profiles.description"
+      "title": "प्रोफ़ाइल",
+      "description": "अलग-अलग रेंडरर सेटिंग्स और लाइब्रेरी के लिए प्रोफ़ाइल बनाएँ। कुछ डेस्कटॉप वॉल्ट फ़ाइलें और साझा कैश मशीन-स्तर पर रहते हैं।"
     },
     "security": {
-      "title": "__MISSING__:steps.security.title",
-      "description": "__MISSING__:steps.security.description"
+      "title": "डिफ़ॉल्ट रूप से सुरक्षित",
+      "description": "पासवर्ड और रहस्य OS नेटिव कीचेन (macOS) या क्रेडेंशियल मैनेजर (Windows) के माध्यम से एन्क्रिप्टेड होते हैं। कभी प्लेनटेक्स्ट में संग्रहीत नहीं किए जाते।"
     },
     "safety": {
-      "title": "__MISSING__:steps.safety.title",
-      "description": "__MISSING__:steps.safety.description"
+      "title": "फ़ैमिली सेफ़ मोड",
+      "description": "फ़ैमिली सेफ़ मोड को चालू या बंद करने से पहले एक मास्टर पासवर्ड की आवश्यकता होती है। फ़ैमिली सेफ़ मोड समर्थित होने पर प्रदाता safe_mode को भी बाध्य करता है।"
     }
   }
 }

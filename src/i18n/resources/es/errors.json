@@ -1,12 +1,12 @@
 {
-  "networkError": "__MISSING__:networkError",
-  "apiKeyMissing": "__MISSING__:apiKeyMissing",
-  "rateLimit429": "__MISSING__:rateLimit429",
-  "safeModeBlock451": "__MISSING__:safeModeBlock451",
-  "gatewayTimeout504": "__MISSING__:gatewayTimeout504",
-  "modelUnavailable": "__MISSING__:modelUnavailable",
-  "autosaveFailed": "__MISSING__:autosaveFailed",
+  "networkError": "La solicitud de red ha fallado. Compruebe su conexión a internet.",
+  "apiKeyMissing": "Falta la clave de API. Configure su clave de API en Configuración.",
+  "rateLimit429": "Se ha excedido el límite de frecuencia. Espere antes de reintentar.",
+  "safeModeBlock451": "Solicitud bloqueada por el filtro de Modo seguro familiar.",
+  "gatewayTimeout504": "La solicitud ha agotado el tiempo de espera. Inténtelo de nuevo.",
+  "modelUnavailable": "El modelo {{model}} no está disponible actualmente.",
+  "autosaveFailed": "Error de autoguardado: {{error}}",
   "fileReadError": "No se pudo read file.",
-  "invalidFormat": "__MISSING__:invalidFormat",
-  "unknownError": "__MISSING__:unknownError"
+  "invalidFormat": "Formato de archivo no válido.",
+  "unknownError": "Se ha producido un error inesperado."
 }

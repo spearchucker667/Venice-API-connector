@@ -19,13 +19,13 @@
   },
   "languageRegion": {
     "title": "语言与地区",
-    "description": "__MISSING__:languageRegion.description",
+    "description": "自定义应用语言、文本方向和区域格式偏好。",
     "uiLanguageLabel": "界面语言",
     "useSystemLanguage": "使用系统语言",
     "resolvedLocale": "当前区域设置",
     "textDirection": "文本方向",
-    "leftToRight": "__MISSING__:languageRegion.leftToRight",
-    "rightToLeft": "__MISSING__:languageRegion.rightToLeft",
+    "leftToRight": "从左到右 (LTR)",
+    "rightToLeft": "从右到左 (RTL)",
     "formattingPreview": "区域格式预览",
     "dateExample": "日期",
     "timeExample": "时间",
@@ -34,406 +34,406 @@
   },
   "apiKeys": {
     "title": "Venice API 密钥",
-    "keyInputLabel": "__MISSING__:apiKeys.keyInputLabel",
-    "testConnection": "__MISSING__:apiKeys.testConnection",
+    "keyInputLabel": "API 密钥",
+    "testConnection": "测试连接",
     "saveKey": "保存Key",
     "deleteKey": "删除Key",
-    "veniceTitle": "__MISSING__:apiKeys.veniceTitle",
+    "veniceTitle": "Venice.ai 集成",
     "status": {
-      "configured": "__MISSING__:apiKeys.status.configured",
-      "unset": "__MISSING__:apiKeys.status.unset",
-      "optional": "__MISSING__:apiKeys.status.optional"
+      "configured": "已配置",
+      "unset": "未设置",
+      "optional": "可选"
     },
-    "veniceDescription": "__MISSING__:apiKeys.veniceDescription",
-    "jinaTitle": "__MISSING__:apiKeys.jinaTitle",
+    "veniceDescription": "您的 API 密钥使用安全存储加密保存，绝不会暴露给 Web 沙盒。",
+    "jinaTitle": "Jina.ai 集成",
     "jinaDescription": {
-      "prefix": "__MISSING__:apiKeys.jinaDescription.prefix",
-      "electron": "__MISSING__:apiKeys.jinaDescription.electron",
-      "web": "__MISSING__:apiKeys.jinaDescription.web"
+      "prefix": "提供深度网络搜索、抓取和社交资料发现映射功能。",
+      "electron": "Jina API 密钥使用相同的操作系统安全存储保存。",
+      "web": "Jina API 密钥仅在此浏览器会话的内存中保存；如需持久化 Web 配置，请使用服务器环境。"
     },
-    "savedElectron": "__MISSING__:apiKeys.savedElectron",
-    "savedWeb": "__MISSING__:apiKeys.savedWeb",
+    "savedElectron": "Venice API 密钥已安全保存。",
+    "savedWeb": "Venice API 密钥已为此开发会话保存。",
     "saveFailed": "无法save API key.",
     "deleteConfirm": {
       "title": "删除Venice API key?",
-      "electron": "__MISSING__:apiKeys.deleteConfirm.electron",
-      "web": "__MISSING__:apiKeys.deleteConfirm.web"
+      "electron": "这将从操作系统安全存储中移除您的 Venice API 密钥。您需要重新输入才能发起请求。",
+      "web": "这将从当前开发会话中移除 Venice API 密钥。"
     },
-    "deleted": "__MISSING__:apiKeys.deleted",
+    "deleted": "Venice API 密钥已删除。",
     "deleteFailed": "无法delete API key.",
-    "testSuccess": "__MISSING__:apiKeys.testSuccess",
-    "testFailed": "__MISSING__:apiKeys.testFailed",
-    "testError": "__MISSING__:apiKeys.testError"
+    "testSuccess": "连接成功{{status}}。",
+    "testFailed": "连接失败：{{message}}",
+    "testError": "测试连接失败。"
   },
   "safety": {
-    "title": "__MISSING__:safety.title",
-    "localFamilySafeMode": "__MISSING__:safety.localFamilySafeMode",
-    "veniceApiSafeMode": "__MISSING__:safety.veniceApiSafeMode",
-    "statusBanner": "__MISSING__:safety.statusBanner",
-    "familySafeModeTitle": "__MISSING__:safety.familySafeModeTitle",
-    "familySafeModeDescription": "__MISSING__:safety.familySafeModeDescription",
-    "onFamilySafeMode": "__MISSING__:safety.onFamilySafeMode",
-    "offAdultMode": "__MISSING__:safety.offAdultMode",
+    "title": "安全与防护",
+    "localFamilySafeMode": "本地家庭安全模式",
+    "veniceApiSafeMode": "Venice API 安全模式",
+    "statusBanner": "本地过滤器：{{localStatus}} | Venice 提供商过滤：{{veniceStatus}}",
+    "familySafeModeTitle": "家庭安全模式",
+    "familySafeModeDescription": "运行 Venice Forge",
+    "onFamilySafeMode": "开启：家庭安全模式",
+    "offAdultMode": "关闭：成人模式（本地过滤器关闭）",
     "status": {
-      "enabled": "__MISSING__:safety.status.enabled",
-      "disabled": "__MISSING__:safety.status.disabled",
-      "localOffProviderOn": "__MISSING__:safety.status.localOffProviderOn",
-      "bothOff": "__MISSING__:safety.status.bothOff",
-      "filteredLocally": "__MISSING__:safety.status.filteredLocally"
+      "enabled": "启用后，匹配的请求将在调用提供商之前在本地被阻止。",
+      "disabled": "绕过 Venice Forge",
+      "localOffProviderOn": "本地家庭过滤器已关闭，但 Venice API 提供商侧安全模式仍处于开启状态。出站请求包含 safe_mode: true。",
+      "bothOff": "本地家庭过滤器和 Venice API 提供商安全模式均已关闭。出站请求包含 safe_mode: false。",
+      "filteredLocally": "匹配的请求在到达提供商之前会在本地进行过滤。"
     },
-    "effectiveStatus": "__MISSING__:safety.effectiveStatus",
-    "setMasterPassword": "__MISSING__:safety.setMasterPassword",
-    "masterPasswordEnabled": "__MISSING__:safety.masterPasswordEnabled",
-    "veniceApiSafeModeTitle": "__MISSING__:safety.veniceApiSafeModeTitle",
-    "veniceApiSafeModeDescription": "__MISSING__:safety.veniceApiSafeModeDescription",
+    "effectiveStatus": "有效状态：本地过滤器：{{local}} | Venice 提供商过滤：{{provider}}",
+    "setMasterPassword": "设置主密码以锁定家庭安全模式",
+    "masterPasswordEnabled": "主密码已启用",
+    "veniceApiSafeModeTitle": "Venice API 安全模式",
+    "veniceApiSafeModeDescription": "控制发送给 Venice 的提供商侧安全模式参数。此设置独立于家庭安全模式。",
     "errors": {
-      "cannotDisableTitle": "__MISSING__:safety.errors.cannotDisableTitle",
-      "cannotDisableDetail": "__MISSING__:safety.errors.cannotDisableDetail"
+      "cannotDisableTitle": "无法禁用提供商安全模式",
+      "cannotDisableDetail": "必须先关闭家庭安全模式。"
     },
-    "keepCurrent": "__MISSING__:safety.keepCurrent"
+    "keepCurrent": "保持当前安全设置"
   },
   "aboutPanel": {
-    "unofficial": "__MISSING__:aboutPanel.unofficial",
-    "disclaimer": "__MISSING__:aboutPanel.disclaimer",
-    "officialLinks": "__MISSING__:aboutPanel.officialLinks",
-    "termsOfService": "__MISSING__:aboutPanel.termsOfService",
-    "privacyPolicy": "__MISSING__:aboutPanel.privacyPolicy",
-    "apiDocs": "__MISSING__:aboutPanel.apiDocs",
-    "trademarks": "__MISSING__:aboutPanel.trademarks",
-    "resetGate": "__MISSING__:aboutPanel.resetGate",
+    "unofficial": "非官方",
+    "disclaimer": "Venice Forge 是一个第三方桌面客户端，配置为直接与 Venice.ai 推理 API 端点对接。它不隶属于 Venice.ai, Inc.，也未获得其认可、赞助或批准。",
+    "officialLinks": "官方链接",
+    "termsOfService": "服务条款",
+    "privacyPolicy": "隐私政策",
+    "apiDocs": "API 文档",
+    "trademarks": "Venice、Venice.ai 及相关徽标是 Venice.ai, Inc. 的商标。使用这些名称仅用于指明 API 兼容性的标识。",
+    "resetGate": "重置法律确认门：",
     "toasts": {
-      "resetSuccess": "__MISSING__:aboutPanel.toasts.resetSuccess",
-      "resetFailed": "__MISSING__:aboutPanel.toasts.resetFailed"
+      "resetSuccess": "法律确认已重置。将在下次重新加载时显示。",
+      "resetFailed": "无法重置确认。"
     },
-    "resetGateBtn": "__MISSING__:aboutPanel.resetGateBtn"
+    "resetGateBtn": "重置门"
   },
   "audioSpeech": {
-    "cacheCleared": "__MISSING__:audioSpeech.cacheCleared",
+    "cacheCleared": "TTS 缓存已清除",
     "errors": {
-      "clearCache": "__MISSING__:audioSpeech.errors.clearCache"
+      "clearCache": "无法清除 TTS 缓存"
     },
     "title": "音频与语音",
-    "description": "__MISSING__:audioSpeech.description",
-    "interfaceSoundsTitle": "__MISSING__:audioSpeech.interfaceSoundsTitle",
-    "interfaceSoundsDescription": "__MISSING__:audioSpeech.interfaceSoundsDescription",
-    "soundPack": "__MISSING__:audioSpeech.soundPack",
+    "description": "配置界面声音和模型回复的文本转语音。",
+    "interfaceSoundsTitle": "界面声音",
+    "interfaceSoundsDescription": "界面声音使用内置的本地音频，不会联系网络服务。",
+    "soundPack": "音效包",
     "packs": {
-      "soft": "__MISSING__:audioSpeech.packs.soft",
-      "tactile": "__MISSING__:audioSpeech.packs.tactile",
-      "glass": "__MISSING__:audioSpeech.packs.glass",
-      "retro": "__MISSING__:audioSpeech.packs.retro",
-      "minimal": "__MISSING__:audioSpeech.packs.minimal"
+      "soft": "柔和",
+      "tactile": "触感",
+      "glass": "玻璃",
+      "retro": "复古",
+      "minimal": "极简"
     },
-    "volume": "__MISSING__:audioSpeech.volume",
-    "restoreDefaults": "__MISSING__:audioSpeech.restoreDefaults",
-    "chatTtsTitle": "__MISSING__:audioSpeech.chatTtsTitle",
-    "chatTtsDescription": "__MISSING__:audioSpeech.chatTtsDescription",
-    "showControls": "__MISSING__:audioSpeech.showControls",
-    "autoRead": "__MISSING__:audioSpeech.autoRead",
-    "ttsModel": "__MISSING__:audioSpeech.ttsModel",
-    "defaultProviderModel": "__MISSING__:audioSpeech.defaultProviderModel",
-    "saved": "__MISSING__:audioSpeech.saved",
-    "loadingModels": "__MISSING__:audioSpeech.loadingModels",
-    "voice": "__MISSING__:audioSpeech.voice",
-    "defaultVoice": "__MISSING__:audioSpeech.defaultVoice",
-    "speed": "__MISSING__:audioSpeech.speed",
-    "volumeLabel": "__MISSING__:audioSpeech.volumeLabel",
-    "skipCodeBlocks": "__MISSING__:audioSpeech.skipCodeBlocks",
-    "stopOnNewReply": "__MISSING__:audioSpeech.stopOnNewReply",
-    "cacheSpeech": "__MISSING__:audioSpeech.cacheSpeech",
-    "clearing": "__MISSING__:audioSpeech.clearing",
+    "volume": "音量",
+    "restoreDefaults": "恢复默认设置",
+    "chatTtsTitle": "聊天文本转语音",
+    "chatTtsDescription": "文本转语音会将选定的助手回复文本发送至您配置的语音提供商，可能会消耗 API 使用量。默认情况下自动播放处于关闭状态。",
+    "showControls": "在助手回复上显示 TTS 控件",
+    "autoRead": "自动朗读已完成的回复",
+    "ttsModel": "TTS 模型",
+    "defaultProviderModel": "默认提供商模型",
+    "saved": "(已保存)",
+    "loadingModels": "正在加载语音模型…",
+    "voice": "语音",
+    "defaultVoice": "默认语音",
+    "speed": "速度：{{speed}}x",
+    "volumeLabel": "音量：{{volume}}%",
+    "skipCodeBlocks": "跳过代码块",
+    "stopOnNewReply": "新回复开始时停止当前播放",
+    "cacheSpeech": "缓存生成的语音",
+    "clearing": "正在清除…",
     "clearCache": "清除TTS cache"
   },
   "backupSync": {
     "toasts": {
-      "sessionReattached": "__MISSING__:backupSync.toasts.sessionReattached",
+      "sessionReattached": "同步会话已重新连接。",
       "chooseFolderFailed": "无法choose sync folder.",
-      "folderConfigured": "__MISSING__:backupSync.toasts.folderConfigured",
+      "folderConfigured": "已配置加密同步文件夹。",
       "setFolderFailed": "无法set sync folder: {{error}}",
-      "enterPassphrase": "__MISSING__:backupSync.toasts.enterPassphrase",
+      "enterPassphrase": "请输入同步密码短语。",
       "startFailed": "无法start sync.",
-      "syncStartedMedia": "__MISSING__:backupSync.toasts.syncStartedMedia",
-      "syncStartedOptIn": "__MISSING__:backupSync.toasts.syncStartedOptIn",
+      "syncStartedMedia": "同步已开始 — 媒体数据块将被同步。",
+      "syncStartedOptIn": "同步已开始 — 媒体为可选包含。",
       "startFailedReason": "无法start sync: {{error}}",
       "pauseFailed": "无法pause sync.",
-      "syncPaused": "__MISSING__:backupSync.toasts.syncPaused",
+      "syncPaused": "同步已暂停。重新输入密码短语以恢复。",
       "pauseFailedReason": "无法pause sync: {{error}}",
-      "enterPassphraseReattach": "__MISSING__:backupSync.toasts.enterPassphraseReattach",
+      "enterPassphraseReattach": "请输入同步密码短语以重新连接。",
       "reattachFailed": "无法reattach sync session.",
       "reattachFailedReason": "无法reattach sync: {{error}}"
     },
     "title": "备份与同步",
-    "desktopOnly": "__MISSING__:backupSync.desktopOnly",
-    "description": "__MISSING__:backupSync.description",
+    "desktopOnly": "本地优先同步目前仅在桌面应用上可用。",
+    "description": "在您的各设备间安全同步本地数据，无需强制使用中央云账户。",
     "syncFolder": {
-      "title": "__MISSING__:backupSync.syncFolder.title",
-      "description": "__MISSING__:backupSync.syncFolder.description",
-      "none": "__MISSING__:backupSync.syncFolder.none",
-      "change": "__MISSING__:backupSync.syncFolder.change",
+      "title": "同步文件夹",
+      "description": "持续将加密数据同步到文件夹（例如 iCloud Drive、Dropbox）。",
+      "none": "未选择同步文件夹",
+      "change": "更改文件夹",
       "choose": "选择Folder",
-      "includeMedia": "__MISSING__:backupSync.syncFolder.includeMedia",
-      "includeMediaNote": "__MISSING__:backupSync.syncFolder.includeMediaNote",
+      "includeMedia": "在同步数据包中包含媒体数据块",
+      "includeMediaNote": "（图像、文件、RP 资产）",
       "passphrasePlaceholder": "输入Encryption Passphrase",
-      "pause": "__MISSING__:backupSync.syncFolder.pause",
-      "reattach": "__MISSING__:backupSync.syncFolder.reattach",
-      "start": "__MISSING__:backupSync.syncFolder.start"
+      "pause": "暂停同步",
+      "reattach": "重新连接会话",
+      "start": "开始同步"
     },
     "status": {
       "active": "已激活",
       "error": "错误",
-      "paused": "__MISSING__:backupSync.status.paused",
-      "off": "__MISSING__:backupSync.status.off"
+      "paused": "已暂停",
+      "off": "关闭"
     },
     "security": {
-      "encryption": "__MISSING__:backupSync.security.encryption",
-      "noKeys": "__MISSING__:backupSync.security.noKeys"
+      "encryption": "同步数据包在写入此文件夹之前使用 Argon2id 派生的 XChaCha20-Poly1305 加密。",
+      "noKeys": "您的 API 密钥和绝对机器路径绝不会同步。"
     },
     "conflicts": {
-      "title": "__MISSING__:backupSync.conflicts.title",
-      "description": "__MISSING__:backupSync.conflicts.description",
-      "statusError": "__MISSING__:backupSync.conflicts.statusError",
-      "statusDetached": "__MISSING__:backupSync.conflicts.statusDetached",
-      "statusConfigured": "__MISSING__:backupSync.conflicts.statusConfigured",
-      "statusDisabled": "__MISSING__:backupSync.conflicts.statusDisabled",
-      "checking": "__MISSING__:backupSync.conflicts.checking",
-      "noConflicts": "__MISSING__:backupSync.conflicts.noConflicts",
-      "mediaIncluded": "__MISSING__:backupSync.conflicts.mediaIncluded",
-      "mediaExcluded": "__MISSING__:backupSync.conflicts.mediaExcluded",
-      "found": "__MISSING__:backupSync.conflicts.found",
-      "resolutionNote": "__MISSING__:backupSync.conflicts.resolutionNote",
-      "keepOriginalTitle": "__MISSING__:backupSync.conflicts.keepOriginalTitle",
-      "keepOriginal": "__MISSING__:backupSync.conflicts.keepOriginal",
-      "keepConflictTitle": "__MISSING__:backupSync.conflicts.keepConflictTitle",
-      "keepConflict": "__MISSING__:backupSync.conflicts.keepConflict",
-      "keepBothTitle": "__MISSING__:backupSync.conflicts.keepBothTitle",
+      "title": "同步状态与冲突",
+      "description": "监控同步活动并解决数据冲突。",
+      "statusError": "同步错误：{{error}}",
+      "statusDetached": "主进程监视器正在运行，但渲染器会话已分离。重新输入密码短语以重新连接。",
+      "statusConfigured": "同步已配置但未完全激活。输入密码短语并开始同步。",
+      "statusDisabled": "启用同步以监控活动。",
+      "checking": "正在检查冲突...",
+      "noConflicts": "同步处于活动状态。未发现冲突。",
+      "mediaIncluded": " 已包含媒体数据块。",
+      "mediaExcluded": " 媒体数据块已被排除（可选包含）。",
+      "found": "发现 {{count}} 个冲突。请在下方解决：",
+      "resolutionNote": "同步保留了 {{winner}}；冲突的 {{loser}} 修订版本（{{loserTitle}}）将保留，直到您解决冲突。",
+      "keepOriginalTitle": "保留当前在此 ID 处保存的修订版本，并丢弃冲突的副本。",
+      "keepOriginal": "保留 {{winner}} 副本",
+      "keepConflictTitle": "用 {{loser}} 副本替换当前修订版本。",
+      "keepConflict": "使用 {{loser}} 副本",
+      "keepBothTitle": "保留当前修订版本，并将 {{loser}} 副本另存为单独记录。",
       "keepBoth": "保存{{loser}} as copy"
     }
   },
   "configPanel": {
     "toasts": {
-      "reloaded": "__MISSING__:configPanel.toasts.reloaded",
+      "reloaded": "本地配置已重新加载。",
       "reloadFailed": "无法reload config.",
       "openFolderFailed": "无法open config folder.",
-      "templateExported": "__MISSING__:configPanel.toasts.templateExported",
-      "exportCancelled": "__MISSING__:configPanel.toasts.exportCancelled",
+      "templateExported": "模板已导出。",
+      "exportCancelled": "导出已取消。",
       "exportFailed": "无法export config template.",
-      "secureStoreCleared": "__MISSING__:configPanel.toasts.secureStoreCleared",
+      "secureStoreCleared": "安全存储已清除。",
       "secureStoreClearFailed": "无法clear secure store."
     },
     "masterConfig": {
-      "title": "__MISSING__:configPanel.masterConfig.title",
-      "description1": "__MISSING__:configPanel.masterConfig.description1",
-      "description2": "__MISSING__:configPanel.masterConfig.description2",
-      "description3": "__MISSING__:configPanel.masterConfig.description3",
-      "description4": "__MISSING__:configPanel.masterConfig.description4",
-      "configPath": "__MISSING__:configPanel.masterConfig.configPath",
-      "unavailable": "__MISSING__:configPanel.masterConfig.unavailable",
-      "themesPath": "__MISSING__:configPanel.masterConfig.themesPath",
-      "loadedFrom": "__MISSING__:configPanel.masterConfig.loadedFrom",
-      "profile": "__MISSING__:configPanel.masterConfig.profile",
-      "parseError": "__MISSING__:configPanel.masterConfig.parseError",
-      "validationWarnings": "__MISSING__:configPanel.masterConfig.validationWarnings"
+      "title": "本地主配置",
+      "description1": "在磁盘上编辑 ",
+      "description2": " 和 ",
+      "description3": " 以配置 Venice Forge，无需操作 UI。参见 ",
+      "description4": " 以获取完整架构。",
+      "configPath": "配置路径",
+      "unavailable": "（不可用）",
+      "themesPath": "主题路径",
+      "loadedFrom": "加载自",
+      "profile": "档案",
+      "parseError": "解析错误：",
+      "validationWarnings": "验证警告"
     },
     "actions": {
-      "reload": "__MISSING__:configPanel.actions.reload",
-      "openFolder": "__MISSING__:configPanel.actions.openFolder",
-      "exportTemplate": "__MISSING__:configPanel.actions.exportTemplate",
+      "reload": "重新加载配置",
+      "openFolder": "打开配置文件夹",
+      "exportTemplate": "导出清理后的模板",
       "clearSecureStore": "清除Secure Store"
     },
     "apiKeyImport": {
-      "title": "__MISSING__:configPanel.apiKeyImport.title",
-      "description1": "__MISSING__:configPanel.apiKeyImport.description1",
-      "description2": "__MISSING__:configPanel.apiKeyImport.description2",
-      "description3": "__MISSING__:configPanel.apiKeyImport.description3",
-      "veniceKey": "__MISSING__:configPanel.apiKeyImport.veniceKey",
-      "configured": "__MISSING__:configPanel.apiKeyImport.configured",
-      "notConfigured": "__MISSING__:configPanel.apiKeyImport.notConfigured",
-      "imported": "__MISSING__:configPanel.apiKeyImport.imported",
-      "redacted": "__MISSING__:configPanel.apiKeyImport.redacted",
-      "jinaKey": "__MISSING__:configPanel.apiKeyImport.jinaKey",
-      "note": "__MISSING__:configPanel.apiKeyImport.note",
+      "title": "API 密钥导入",
+      "description1": "位于 ",
+      "description2": " 中的明文密钥在启动时导入到操作系统安全存储中，并从文件中删除（除非已设置 ",
+      "description3": "）。",
+      "veniceKey": "Venice 密钥",
+      "configured": "已配置（安全存储）",
+      "notConfigured": "未配置",
+      "imported": "本次运行已导入",
+      "redacted": "明文已删除",
+      "jinaKey": "Jina 密钥",
+      "note": "原始密钥永远不会发送到渲染器。重置安全存储以清除已存储的密钥；然后您可以通过 API 密钥选项卡重新输入它们。",
       "clearConfirm": {
         "title": "清除secure store keys?",
-        "detail": "__MISSING__:configPanel.apiKeyImport.clearConfirm.detail",
+        "detail": "这将从安全存储中删除所有已存储的 API 密钥。此操作无法撤销。",
         "action": "清除keys"
       }
     },
     "effectiveSettings": {
-      "title": "__MISSING__:configPanel.effectiveSettings.title",
-      "description1": "__MISSING__:configPanel.effectiveSettings.description1",
-      "description2": "__MISSING__:configPanel.effectiveSettings.description2",
-      "activeTheme": "__MISSING__:configPanel.effectiveSettings.activeTheme",
-      "defaultChatModel": "__MISSING__:configPanel.effectiveSettings.defaultChatModel",
-      "useUiDefault": "__MISSING__:configPanel.effectiveSettings.useUiDefault",
-      "temperature": "__MISSING__:configPanel.effectiveSettings.temperature",
-      "topP": "__MISSING__:configPanel.effectiveSettings.topP",
-      "maxTokens": "__MISSING__:configPanel.effectiveSettings.maxTokens",
-      "webSearch": "__MISSING__:configPanel.effectiveSettings.webSearch"
+      "title": "有效设置（预览）",
+      "description1": "当前内存中合并配置的只读预览。",
+      "description2": " 源仍然是权威的真实来源 — 在磁盘上编辑它并点击 ",
+      "activeTheme": "活动主题",
+      "defaultChatModel": "默认聊天模型",
+      "useUiDefault": "（使用 UI 默认值）",
+      "temperature": "温度",
+      "topP": "Top-p",
+      "maxTokens": "最大令牌数",
+      "webSearch": "网络搜索"
     }
   },
   "dataStorage": {
     "toasts": {
       "importReadFailed": "无法read backup. Incorrect password or corrupt file.",
-      "importNothingNewProfile": "__MISSING__:dataStorage.toasts.importNothingNewProfile",
-      "importNothingDetail": "__MISSING__:dataStorage.toasts.importNothingDetail",
-      "importCompleteNewProfile": "__MISSING__:dataStorage.toasts.importCompleteNewProfile",
-      "importNothing": "__MISSING__:dataStorage.toasts.importNothing",
-      "importPartial": "__MISSING__:dataStorage.toasts.importPartial",
-      "importPartialDetail": "__MISSING__:dataStorage.toasts.importPartialDetail",
-      "importComplete": "__MISSING__:dataStorage.toasts.importComplete",
-      "replaceFailedRestored": "__MISSING__:dataStorage.toasts.replaceFailedRestored",
-      "replaceFailedRecovery": "__MISSING__:dataStorage.toasts.replaceFailedRecovery",
-      "importFailed": "__MISSING__:dataStorage.toasts.importFailed",
-      "recoveryRestored": "__MISSING__:dataStorage.toasts.recoveryRestored",
-      "recoveryRestoredDetail": "__MISSING__:dataStorage.toasts.recoveryRestoredDetail",
-      "recoveryRestoreFailed": "__MISSING__:dataStorage.toasts.recoveryRestoreFailed",
-      "recoveryRestoreFailedDetail": "__MISSING__:dataStorage.toasts.recoveryRestoreFailedDetail"
+      "importNothingNewProfile": "未向新档案导入任何内容：跳过 {{skipped}} 项",
+      "importNothingDetail": "未应用任何记录；请检查备份",
+      "importCompleteNewProfile": "已向新档案完成导入：导入 {{imported}} 项。正在重新加载...",
+      "importNothing": "未导入任何内容：跳过 {{skipped}} 项",
+      "importPartial": "部分导入：导入 {{imported}} 项，跳过 {{skipped}} 项",
+      "importPartialDetail": "已应用 {{tombstones}} 个墓碑记录。在依赖此备份之前，请检查跳过的数量。",
+      "importComplete": "导入完成：导入 {{imported}} 项，跳过 {{skipped}} 项，应用 {{tombstones}} 个墓碑记录。",
+      "replaceFailedRestored": "替换失败；数据已恢复",
+      "replaceFailedRecovery": "替换失败；需要恢复",
+      "importFailed": "导入失败。",
+      "recoveryRestored": "恢复已完成",
+      "recoveryRestoredDetail": "已恢复先前的档案状态，并将被替换的状态保留为新的恢复备份。",
+      "recoveryRestoreFailed": "恢复还原失败",
+      "recoveryRestoreFailedDetail": "无法还原恢复备份。"
     },
     "manualBackup": {
-      "title": "__MISSING__:dataStorage.manualBackup.title",
-      "description": "__MISSING__:dataStorage.manualBackup.description",
-      "passwordPlaceholder": "__MISSING__:dataStorage.manualBackup.passwordPlaceholder",
-      "includeDrafts": "__MISSING__:dataStorage.manualBackup.includeDrafts",
-      "includeMedia": "__MISSING__:dataStorage.manualBackup.includeMedia",
-      "export": "__MISSING__:dataStorage.manualBackup.export",
-      "import": "__MISSING__:dataStorage.manualBackup.import"
+      "title": "手动备份",
+      "description": "创建本地历史记录、角色卡和工作流的加密便携备份。您可以在任何设备上导入此备份。",
+      "passwordPlaceholder": "备份密码",
+      "includeDrafts": "包含加密的本地 ST Card 草稿（草稿从不同步）",
+      "includeMedia": "在此备份中包含媒体（图像、文件、RP 资产 — 与备份的其余部分一起加密）",
+      "export": "导出备份",
+      "import": "导入备份"
     },
     "recovery": {
-      "title": "__MISSING__:dataStorage.recovery.title",
-      "description": "__MISSING__:dataStorage.recovery.description",
-      "restore": "__MISSING__:dataStorage.recovery.restore"
+      "title": "替换前恢复",
+      "description": "来自 {{date}} 的已验证加密恢复备份可用。在上方输入其备份密码以事务方式恢复它。",
+      "restore": "恢复恢复备份"
     },
     "dangerZone": {
-      "title": "__MISSING__:dataStorage.dangerZone.title",
-      "description": "__MISSING__:dataStorage.dangerZone.description",
+      "title": "危险区域",
+      "description": "这些操作具有破坏性且无法撤销。如果您有重要历史记录，请始终先导出备份。",
       "clearDefaults": "清除App Defaults",
-      "clearIndexedDB": "清除IndexedDB Data"
+      "clearIndexedDB": "清除 IndexedDB 数据"
     }
   },
   "defaultsPanel": {
-    "defaultChatModel": "__MISSING__:defaultsPanel.defaultChatModel",
-    "defaultImageModel": "__MISSING__:defaultsPanel.defaultImageModel",
-    "defaultWebSearch": "__MISSING__:defaultsPanel.defaultWebSearch",
-    "defaultSystemPrompt": "__MISSING__:defaultsPanel.defaultSystemPrompt",
-    "systemPromptPlaceholder": "__MISSING__:defaultsPanel.systemPromptPlaceholder",
-    "veniceSystemPromptToggle": "__MISSING__:defaultsPanel.veniceSystemPromptToggle",
-    "enableCitations": "__MISSING__:defaultsPanel.enableCitations",
+    "defaultChatModel": "默认聊天模型",
+    "defaultImageModel": "默认图像模型",
+    "defaultWebSearch": "默认网络搜索",
+    "defaultSystemPrompt": "默认系统提示",
+    "systemPromptPlaceholder": "可选。留空以避免添加应用编写的系统消息。",
+    "veniceSystemPromptToggle": "Venice 系统提示开关",
+    "enableCitations": "默认启用引用",
     "characterSceneGeneration": {
-      "title": "__MISSING__:defaultsPanel.characterSceneGeneration.title",
-      "description": "__MISSING__:defaultsPanel.characterSceneGeneration.description",
-      "mode": "__MISSING__:defaultsPanel.characterSceneGeneration.mode",
-      "modeAriaLabel": "__MISSING__:defaultsPanel.characterSceneGeneration.modeAriaLabel",
-      "manualOnly": "__MISSING__:defaultsPanel.characterSceneGeneration.manualOnly",
-      "autoManual": "__MISSING__:defaultsPanel.characterSceneGeneration.autoManual"
+      "title": "角色场景生成",
+      "description": "允许角色聊天仅从当前对话创建内联场景图像。受本地速率限制保护。",
+      "mode": "模式",
+      "modeAriaLabel": "角色场景生成模式",
+      "manualOnly": "仅手动",
+      "autoManual": "自动 + 手动"
     }
   },
   "importPlan": {
-    "title": "__MISSING__:importPlan.title",
-    "summary": "__MISSING__:importPlan.summary",
+    "title": "审查导入计划",
+    "summary": "此备份包含跨 {{stores}} 个数据存储的 {{records}} 条记录。",
     "metadata": {
-      "authenticated": "__MISSING__:importPlan.metadata.authenticated",
-      "legacy": "__MISSING__:importPlan.metadata.legacy",
-      "format": "__MISSING__:importPlan.metadata.format",
-      "exportedAt": "__MISSING__:importPlan.metadata.exportedAt",
-      "source": "__MISSING__:importPlan.metadata.source",
-      "profileRef": "__MISSING__:importPlan.metadata.profileRef",
-      "crypto": "__MISSING__:importPlan.metadata.crypto",
-      "counts": "__MISSING__:importPlan.metadata.counts",
-      "sha": "__MISSING__:importPlan.metadata.sha"
+      "authenticated": "已验证的备份元数据",
+      "legacy": "旧版备份元数据",
+      "format": "格式：v{{version}}{{appVersion}}",
+      "exportedAt": "导出时间：{{date}}",
+      "source": "来源：{{runtime}} / {{device}}",
+      "profileRef": "配置文件引用：{{ref}}",
+      "crypto": "加密：{{alg}} / {{kdf}} / 密钥 v{{key}}",
+      "counts": "{{tombstones}} 个墓碑 / {{blobs}} 个嵌入的 blob",
+      "sha": "载荷 SHA-256：{{sha}}"
     },
-    "warningsLabel": "__MISSING__:importPlan.warningsLabel",
+    "warningsLabel": "导入警告",
     "preview": {
-      "title": "__MISSING__:importPlan.preview.title",
-      "recordsCount": "__MISSING__:importPlan.preview.recordsCount",
-      "new": "__MISSING__:importPlan.preview.new",
-      "modified": "__MISSING__:importPlan.preview.modified",
-      "conflicts": "__MISSING__:importPlan.preview.conflicts",
-      "identical": "__MISSING__:importPlan.preview.identical",
-      "noChanges": "__MISSING__:importPlan.preview.noChanges"
+      "title": "数据更改预览",
+      "recordsCount": "{{count}} 条记录",
+      "new": "{{count}} 条新增",
+      "modified": "{{count}} 条已修改",
+      "conflicts": "{{count}} 个冲突",
+      "identical": "{{count}} 条相同",
+      "noChanges": "无更改"
     },
     "mode": {
       "title": "选择Import Mode",
-      "merge": "__MISSING__:importPlan.mode.merge",
-      "mergeDesc": "__MISSING__:importPlan.mode.mergeDesc",
-      "replace": "__MISSING__:importPlan.mode.replace",
-      "replaceDesc": "__MISSING__:importPlan.mode.replaceDesc",
-      "newProfile": "__MISSING__:importPlan.mode.newProfile",
-      "newProfileDesc": "__MISSING__:importPlan.mode.newProfileDesc"
+      "merge": "合并数据",
+      "mergeDesc": "保留现有数据并添加新记录。冲突将与本地版本一起保存。",
+      "replace": "全部替换",
+      "replaceDesc": "清除所有当前本地数据并完全用此备份替换。",
+      "newProfile": "新配置文件",
+      "newProfileDesc": "创建一个新的配置文件工作区并将此备份导入其中。"
     },
     "warnings": {
-      "recoveryEnabled": "__MISSING__:importPlan.warnings.recoveryEnabled",
-      "recoveryEnabledDesc": "__MISSING__:importPlan.warnings.recoveryEnabledDesc",
-      "replaceUnavailable": "__MISSING__:importPlan.warnings.replaceUnavailable",
-      "replaceUnavailableDesc": "__MISSING__:importPlan.warnings.replaceUnavailableDesc"
+      "recoveryEnabled": "已启用自动恢复",
+      "recoveryEnabledDesc": "桌面应用将暂存此备份，创建并验证加密的恢复工件，然后在替换失败时自动回滚。",
+      "replaceUnavailable": "Web 模式下替换不可用",
+      "replaceUnavailableDesc": "使用合并或新配置文件。持久的替换恢复需要 Venice Forge 桌面应用。"
     },
-    "profileName": "__MISSING__:importPlan.profileName",
-    "profileNamePlaceholder": "__MISSING__:importPlan.profileNamePlaceholder",
+    "profileName": "配置文件名称",
+    "profileNamePlaceholder": "例如：工作备份",
     "actions": {
-      "confirm": "__MISSING__:importPlan.actions.confirm"
+      "confirm": "确认导入"
     }
   },
   "masterPassword": {
     "errors": {
-      "mismatch": "__MISSING__:masterPassword.errors.mismatch",
-      "tooShort": "__MISSING__:masterPassword.errors.tooShort",
+      "mismatch": "密码不匹配",
+      "tooShort": "密码太短（最少 {{min}} 个字符）",
       "saveFailed": "无法securely save password",
-      "lockedOut": "__MISSING__:masterPassword.errors.lockedOut",
-      "incorrect": "__MISSING__:masterPassword.errors.incorrect",
+      "lockedOut": " 已锁定。请在 {{seconds}} 秒后重试。",
+      "incorrect": "密码不正确。",
       "verifyFailed": "无法verify password"
     },
-    "titleSet": "__MISSING__:masterPassword.titleSet",
+    "titleSet": "设置主密码",
     "titleEnter": "输入Master Password",
-    "description": "__MISSING__:masterPassword.description",
+    "description": "此本地控制密码用于保护家庭安全模式的更改。应用存储的是加盐验证器，而非密码本身。",
     "labels": {
-      "password": "__MISSING__:masterPassword.labels.password",
-      "confirm": "__MISSING__:masterPassword.labels.confirm"
+      "password": "主密码",
+      "confirm": "确认主密码"
     }
   },
   "profiles": {
     "removePassword": {
-      "title": "__MISSING__:profiles.removePassword.title",
-      "detail": "__MISSING__:profiles.removePassword.detail",
+      "title": "移除配置文件密码？",
+      "detail": "\"{{name}}\" 在切换前不再需要解锁。",
       "action": "移除"
     },
     "errors": {
       "removeFailed": "无法remove profile password",
-      "tooShort": "__MISSING__:profiles.errors.tooShort",
-      "mismatch": "__MISSING__:profiles.errors.mismatch",
+      "tooShort": "密码过短（最少 {{min}} 个字符）",
+      "mismatch": "密码不匹配",
       "saveFailed": "无法save profile password",
-      "incorrect": "__MISSING__:profiles.errors.incorrect",
-      "deleteFailed": "__MISSING__:profiles.errors.deleteFailed"
+      "incorrect": "密码错误",
+      "deleteFailed": "配置文件删除失败。"
     },
-    "title": "__MISSING__:profiles.title",
-    "description": "__MISSING__:profiles.description",
+    "title": "管理配置文件",
+    "description": "每个配置文件维护独立的设置、API 密钥和配置。切换配置文件将清除当前应用状态并重新加载。",
     "badge": {
-      "active": "__MISSING__:profiles.badge.active",
-      "locked": "__MISSING__:profiles.badge.locked"
+      "active": "活跃",
+      "locked": "已锁定"
     },
     "aria": {
-      "removePassword": "__MISSING__:profiles.aria.removePassword",
-      "setPassword": "__MISSING__:profiles.aria.setPassword",
-      "switchTo": "__MISSING__:profiles.aria.switchTo",
+      "removePassword": "移除 {{name}} 的密码",
+      "setPassword": "为 {{name}} 设置密码",
+      "switchTo": "切换到 {{name}}",
       "delete": "删除{{name}}"
     },
     "actions": {
-      "removePassword": "__MISSING__:profiles.actions.removePassword",
-      "setPassword": "__MISSING__:profiles.actions.setPassword",
-      "switchTo": "__MISSING__:profiles.actions.switchTo",
-      "createProfile": "__MISSING__:profiles.actions.createProfile"
+      "removePassword": "移除密码",
+      "setPassword": "设置密码",
+      "switchTo": "切换到",
+      "createProfile": "创建配置文件"
     },
     "deleteProfile": {
       "title": "删除profile?",
-      "detail": "__MISSING__:profiles.deleteProfile.detail",
+      "detail": "\"{{name}}\" 将被移除。其对话保险库、渲染器记录、配置文件范围内的本地设置、API 密钥和密码验证器将被清除。共享的全局缓存将保留。",
       "action": "删除"
     },
-    "newProfilePlaceholder": "__MISSING__:profiles.newProfilePlaceholder",
+    "newProfilePlaceholder": "新配置文件名称",
     "dialog": {
-      "titleSet": "__MISSING__:profiles.dialog.titleSet",
-      "titleUnlock": "__MISSING__:profiles.dialog.titleUnlock",
-      "description": "__MISSING__:profiles.dialog.description",
-      "labelSet": "__MISSING__:profiles.dialog.labelSet",
-      "labelUnlock": "__MISSING__:profiles.dialog.labelUnlock",
-      "labelConfirm": "__MISSING__:profiles.dialog.labelConfirm",
+      "titleSet": "为 {{name}} 设置密码",
+      "titleUnlock": "解锁 {{name}}",
+      "description": "此密码用于保护切换到此本地配置文件。",
+      "labelSet": "配置文件密码",
+      "labelUnlock": "解锁密码",
+      "labelConfirm": "确认配置文件密码",
       "savePassword": "保存Password"
     }
   },
@@ -441,30 +441,30 @@
     "errors": {
       "loadFailed": "无法load provider settings.",
       "saveFailed": "无法save provider settings.",
-      "enableWithoutKey": "__MISSING__:providers.errors.enableWithoutKey"
+      "enableWithoutKey": "没有 API 密钥无法启用提供商。"
     },
     "title": "备用提供商",
-    "description": "__MISSING__:providers.description",
-    "deferredNotice": "__MISSING__:providers.deferredNotice",
+    "description": "为备用提供商配置 API 密钥。这些密钥仅在明确启用且 Venice 模型不可用或您请求特定备用模型时使用。",
+    "deferredNotice": "在此版本中已推迟（无密钥输入、路由或流量）：{{deferred}}。提供商密钥需手动替换或移除；未实现定时密钥轮换。",
     "autoFallback": {
-      "title": "__MISSING__:providers.autoFallback.title",
-      "description": "__MISSING__:providers.autoFallback.description",
-      "enableAria": "__MISSING__:providers.autoFallback.enableAria",
-      "orderingLabel": "__MISSING__:providers.autoFallback.orderingLabel",
-      "orderingPlaceholder": "__MISSING__:providers.autoFallback.orderingPlaceholder",
-      "orderingNotice": "__MISSING__:providers.autoFallback.orderingNotice"
+      "title": "自动备用路由器",
+      "description": "当 Venice 不可用或返回错误时，自动将请求路由到备用提供商。",
+      "enableAria": "启用自动备用",
+      "orderingLabel": "备用顺序（逗号分隔的提供商 ID）",
+      "orderingPlaceholder": "together, groq, anthropic",
+      "orderingNotice": "提供商将按此确切顺序尝试。请确保您已在下方启用它们。可用：{{available}}"
     },
     "badge": {
-      "deferred": "__MISSING__:providers.badge.deferred"
+      "deferred": "已推迟"
     },
     "aria": {
-      "enable": "__MISSING__:providers.aria.enable"
+      "enable": "启用 {{label}}"
     },
     "status": {
-      "keyConfigured": "__MISSING__:providers.status.keyConfigured"
+      "keyConfigured": "API 密钥已配置"
     },
     "actions": {
-      "removeKey": "__MISSING__:providers.actions.removeKey"
+      "removeKey": "移除密钥"
     },
     "inputs": {
       "keyPlaceholder": "输入API Key"
@@ -474,37 +474,37 @@
     "persistSafety": "无法persist safety setting."
   },
   "updates": {
-    "available": "__MISSING__:updates.available",
-    "upToDate": "__MISSING__:updates.upToDate",
-    "downloading": "__MISSING__:updates.downloading",
-    "downloaded": "__MISSING__:updates.downloaded",
-    "error": "__MISSING__:updates.error",
-    "checking": "__MISSING__:updates.checking",
-    "devBuild": "__MISSING__:updates.devBuild",
-    "checkFailed": "__MISSING__:updates.checkFailed",
-    "checkCompleted": "__MISSING__:updates.checkCompleted",
-    "installFailed": "__MISSING__:updates.installFailed"
+    "available": "有可用更新：v{{version}}",
+    "upToDate": "应用已是最新版本。",
+    "downloading": "正在下载更新：{{percent}}%",
+    "downloaded": "更新已下载，可以安装。",
+    "error": "更新错误：{{error}}",
+    "checking": "正在检查更新...",
+    "devBuild": "开发构建 — 更新检查仅在打包的生产构建中运行。",
+    "checkFailed": "更新检查失败：{{error}}",
+    "checkCompleted": "更新检查完成。",
+    "installFailed": "安装失败：{{error}}"
   },
   "jinaKeys": {
-    "savedElectron": "__MISSING__:jinaKeys.savedElectron",
-    "savedWeb": "__MISSING__:jinaKeys.savedWeb",
+    "savedElectron": "Jina API 密钥已安全保存。",
+    "savedWeb": "Jina API 密钥已为此浏览器会话保存。",
     "saveFailed": "无法save Jina API key.",
     "deleteConfirm": {
       "title": "删除Jina API key?",
-      "electron": "__MISSING__:jinaKeys.deleteConfirm.electron",
-      "web": "__MISSING__:jinaKeys.deleteConfirm.web"
+      "electron": "这将从操作系统安全存储中移除您的 Jina API 密钥。",
+      "web": "这将移除此浏览器会话内存中的 Jina API 密钥。"
     },
-    "deleted": "__MISSING__:jinaKeys.deleted",
+    "deleted": "Jina API 密钥已删除。",
     "deleteFailed": "无法delete Jina API key.",
-    "testSuccess": "__MISSING__:jinaKeys.testSuccess",
-    "testFailed": "__MISSING__:jinaKeys.testFailed",
-    "testError": "__MISSING__:jinaKeys.testError"
+    "testSuccess": "Jina 连接成功{{status}}。",
+    "testFailed": "Jina 连接失败：{{message}}",
+    "testError": "Jina 测试连接失败。"
   },
   "header": {
     "title": "配置",
     "description": {
       "electron": "管理 API 端点、默认设置和外观样式。",
-      "web": "__MISSING__:header.description.web"
+      "web": "配置默认提示和样式模板。"
     }
   },
   "tabs": {
@@ -524,11 +524,11 @@
     "audioSpeech": "音频与语音"
   },
   "updatesPanel": {
-    "title": "__MISSING__:updatesPanel.title",
-    "description": "__MISSING__:updatesPanel.description",
-    "status": "__MISSING__:updatesPanel.status",
-    "checking": "__MISSING__:updatesPanel.checking",
-    "checkForUpdates": "__MISSING__:updatesPanel.checkForUpdates",
-    "restartAndInstall": "__MISSING__:updatesPanel.restartAndInstall"
+    "title": "应用更新",
+    "description": "通过 GitHub Releases 安全检查桌面应用更新。",
+    "status": "状态：",
+    "checking": "检查中...",
+    "checkForUpdates": "检查更新",
+    "restartAndInstall": "重启并安装"
   }
 }

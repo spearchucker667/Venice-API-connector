@@ -1,31 +1,31 @@
 {
   "welcomeTitle": "Добро пожаловать в Venice Forge",
-  "welcomeSubtitle": "__MISSING__:welcomeSubtitle",
-  "welcomeDescription": "__MISSING__:welcomeDescription",
-  "privacyNote": "__MISSING__:privacyNote",
-  "getStarted": "__MISSING__:getStarted",
-  "createProfile": "__MISSING__:createProfile",
+  "welcomeSubtitle": "Частная локальная рабочая среда.",
+  "welcomeDescription": "Локальная настольная рабочая среда, которая хранит данные приложения на этом устройстве и отправляет запросы удалённым провайдерам, которых вы настраиваете.",
+  "privacyNote": "Ваши данные остаются локальными. Ключи API хранятся в защищённом хранилище ОС.",
+  "getStarted": "Начать",
+  "createProfile": "Создать профиль",
   "continue": "Продолжить",
-  "languageSelectorLabel": "__MISSING__:languageSelectorLabel",
-  "systemLanguageOption": "__MISSING__:systemLanguageOption",
+  "languageSelectorLabel": "Язык приложения",
+  "systemLanguageOption": "Системный язык ({{language}})",
   "selectLanguage": "Выберите language",
-  "stepIndicator": "__MISSING__:stepIndicator",
+  "stepIndicator": "Шаг приветствия {{current}} из {{total}}",
   "steps": {
     "welcome": {
       "title": "Добро пожаловать в Venice Forge",
-      "description": "__MISSING__:steps.welcome.description"
+      "description": "Локальная настольная рабочая среда, которая хранит данные приложения на этом устройстве и отправляет запросы удалённым провайдерам, которых вы настраиваете."
     },
     "profiles": {
       "title": "Профили",
-      "description": "__MISSING__:steps.profiles.description"
+      "description": "Создавайте профили для отдельных настроек рендерера и библиотек. Некоторые файлы настольного хранилища и общие кэши остаются на уровне машины."
     },
     "security": {
-      "title": "__MISSING__:steps.security.title",
-      "description": "__MISSING__:steps.security.description"
+      "title": "Безопасность по умолчанию",
+      "description": "Пароли и секреты шифруются через встроенную связку ключей ОС (macOS) или Credential Manager (Windows). Никогда не хранятся в открытом виде."
     },
     "safety": {
       "title": "Family Safe режим",
-      "description": "__MISSING__:steps.safety.description"
+      "description": "Для включения или отключения Семейного безопасного режима требуется мастер-пароль. Семейный безопасный режим также принудительно включает safe_mode провайдера там, где это поддерживается."
     }
   }
 }

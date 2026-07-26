@@ -1,14 +1,14 @@
 {
-  "title": "__MISSING__:title",
-  "searchAndScrape": "__MISSING__:searchAndScrape",
-  "provider": "__MISSING__:provider",
-  "veniceProvider": "__MISSING__:veniceProvider",
-  "jinaProvider": "__MISSING__:jinaProvider",
-  "autoProvider": "__MISSING__:autoProvider",
-  "socialDiscovery": "__MISSING__:socialDiscovery",
-  "queryPlaceholder": "__MISSING__:queryPlaceholder",
-  "results": "__MISSING__:results",
-  "sources": "__MISSING__:sources",
-  "timeline": "__MISSING__:timeline",
-  "noResults": "__MISSING__:noResults"
+  "title": "Forskning",
+  "searchAndScrape": "Sök & skrapa",
+  "provider": "Leverantör",
+  "veniceProvider": "Venice-sökning",
+  "jinaProvider": "Jina-sökning",
+  "autoProvider": "Automatisk leverantör",
+  "socialDiscovery": "Social upptäckt",
+  "queryPlaceholder": "Ange forskningsämne eller URL att skrapa...",
+  "results": "Sökresultat",
+  "sources": "Källor",
+  "timeline": "Tidslinje",
+  "noResults": "Inga forskningsresultat hittades för sökningen."
 }

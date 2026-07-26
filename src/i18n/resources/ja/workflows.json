@@ -1,10 +1,10 @@
 {
   "title": "ワークフロー",
-  "playground": "__MISSING__:playground",
-  "templates": "__MISSING__:templates",
-  "nodes": "__MISSING__:nodes",
-  "canvas": "__MISSING__:canvas",
-  "runWorkflow": "__MISSING__:runWorkflow",
-  "exportWorkflow": "__MISSING__:exportWorkflow",
-  "importWorkflow": "__MISSING__:importWorkflow"
+  "playground": "ワークフロープレイグラウンド",
+  "templates": "テンプレート",
+  "nodes": "ノード",
+  "canvas": "ワークフローキャンバス",
+  "runWorkflow": "ワークフローを実行",
+  "exportWorkflow": "ワークフローをエクスポート",
+  "importWorkflow": "ワークフローをインポート"
 }

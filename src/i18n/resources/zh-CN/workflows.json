@@ -1,10 +1,10 @@
 {
   "title": "工作流",
-  "playground": "__MISSING__:playground",
-  "templates": "__MISSING__:templates",
-  "nodes": "__MISSING__:nodes",
-  "canvas": "__MISSING__:canvas",
-  "runWorkflow": "__MISSING__:runWorkflow",
-  "exportWorkflow": "__MISSING__:exportWorkflow",
-  "importWorkflow": "__MISSING__:importWorkflow"
+  "playground": "工作流演练场",
+  "templates": "模板",
+  "nodes": "节点",
+  "canvas": "工作流画布",
+  "runWorkflow": "运行工作流",
+  "exportWorkflow": "导出工作流",
+  "importWorkflow": "导入工作流"
 }

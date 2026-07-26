@@ -19,13 +19,13 @@
   },
   "languageRegion": {
     "title": "言語と地域",
-    "description": "__MISSING__:languageRegion.description",
+    "description": "アプリケーションの言語、テキスト方向、地域の書式設定をカスタマイズします。",
     "uiLanguageLabel": "表示言語",
     "useSystemLanguage": "システム言語を使用",
     "resolvedLocale": "アクティブなロケール",
     "textDirection": "テキスト方向",
-    "leftToRight": "__MISSING__:languageRegion.leftToRight",
-    "rightToLeft": "__MISSING__:languageRegion.rightToLeft",
+    "leftToRight": "左から右 (LTR)",
+    "rightToLeft": "右から左 (RTL)",
     "formattingPreview": "地域フォーマットプレビュー",
     "dateExample": "日付",
     "timeExample": "時刻",
@@ -34,406 +34,406 @@
   },
   "apiKeys": {
     "title": "Venice APIキー",
-    "keyInputLabel": "__MISSING__:apiKeys.keyInputLabel",
-    "testConnection": "__MISSING__:apiKeys.testConnection",
+    "keyInputLabel": "APIキー",
+    "testConnection": "接続テスト",
     "saveKey": "保存：Key",
     "deleteKey": "削除：Key",
-    "veniceTitle": "__MISSING__:apiKeys.veniceTitle",
+    "veniceTitle": "Venice.ai 連携",
     "status": {
-      "configured": "__MISSING__:apiKeys.status.configured",
-      "unset": "__MISSING__:apiKeys.status.unset",
-      "optional": "__MISSING__:apiKeys.status.optional"
+      "configured": "設定済み",
+      "unset": "未設定",
+      "optional": "任意"
     },
-    "veniceDescription": "__MISSING__:apiKeys.veniceDescription",
-    "jinaTitle": "__MISSING__:apiKeys.jinaTitle",
+    "veniceDescription": "APIキーはセキュアストレージの暗号化で保存され、ウェブサンドボックスには公開されません。",
+    "jinaTitle": "Jina.ai 連携",
     "jinaDescription": {
-      "prefix": "__MISSING__:apiKeys.jinaDescription.prefix",
-      "electron": "__MISSING__:apiKeys.jinaDescription.electron",
-      "web": "__MISSING__:apiKeys.jinaDescription.web"
+      "prefix": "ディープウェブ検索、スクレイピング、ソーシャルプロファイル発見マッピング機能を提供します。",
+      "electron": "Jina APIキーも同じOSセキュアストレージに保存されます。",
+      "web": "Jina APIキーはこのブラウザセッションのメモリ内にのみ保持されます。永続的なウェブ設定にはサーバー環境を使用してください。"
     },
-    "savedElectron": "__MISSING__:apiKeys.savedElectron",
-    "savedWeb": "__MISSING__:apiKeys.savedWeb",
+    "savedElectron": "Venice APIキーを安全に保存しました。",
+    "savedWeb": "Venice APIキーをこの開発セッション用に保存しました。",
     "saveFailed": "失敗：save API key.",
     "deleteConfirm": {
       "title": "削除：Venice API key?",
-      "electron": "__MISSING__:apiKeys.deleteConfirm.electron",
-      "web": "__MISSING__:apiKeys.deleteConfirm.web"
+      "electron": "OSセキュアストレージからVenice APIキーが削除されます。リクエストを行うには再入力が必要です。",
+      "web": "現在の開発セッションからVenice APIキーが削除されます。"
     },
-    "deleted": "__MISSING__:apiKeys.deleted",
+    "deleted": "Venice APIキーを削除しました。",
     "deleteFailed": "失敗：delete API key.",
-    "testSuccess": "__MISSING__:apiKeys.testSuccess",
-    "testFailed": "__MISSING__:apiKeys.testFailed",
-    "testError": "__MISSING__:apiKeys.testError"
+    "testSuccess": "接続成功{{status}}。",
+    "testFailed": "接続失敗: {{message}}",
+    "testError": "接続テストに失敗しました。"
   },
   "safety": {
-    "title": "__MISSING__:safety.title",
-    "localFamilySafeMode": "__MISSING__:safety.localFamilySafeMode",
-    "veniceApiSafeMode": "__MISSING__:safety.veniceApiSafeMode",
-    "statusBanner": "__MISSING__:safety.statusBanner",
-    "familySafeModeTitle": "__MISSING__:safety.familySafeModeTitle",
-    "familySafeModeDescription": "__MISSING__:safety.familySafeModeDescription",
-    "onFamilySafeMode": "__MISSING__:safety.onFamilySafeMode",
-    "offAdultMode": "__MISSING__:safety.offAdultMode",
+    "title": "安全性とガード",
+    "localFamilySafeMode": "ローカルファミリーセーフモード",
+    "veniceApiSafeMode": "Venice API セーフモード",
+    "statusBanner": "ローカルフィルター: {{localStatus}} | Veniceプロバイダーフィルタリング: {{veniceStatus}}",
+    "familySafeModeTitle": "ファミリーセーフモード",
+    "familySafeModeDescription": "Venice Forgeを実行",
+    "onFamilySafeMode": "オン: ファミリーセーフモード",
+    "offAdultMode": "オフ: アダルトモード (ローカルフィルターオフ)",
     "status": {
-      "enabled": "__MISSING__:safety.status.enabled",
-      "disabled": "__MISSING__:safety.status.disabled",
-      "localOffProviderOn": "__MISSING__:safety.status.localOffProviderOn",
-      "bothOff": "__MISSING__:safety.status.bothOff",
-      "filteredLocally": "__MISSING__:safety.status.filteredLocally"
+      "enabled": "有効な場合、プロバイダーが呼び出される前に一致するリクエストがローカルでブロックされます。",
+      "disabled": "Venice Forgeをバイパス",
+      "localOffProviderOn": "ローカルファミリーフィルターはオフですが、Venice APIプロバイダー側のセーフモードはオンのままです。送信リクエストには safe_mode: true が含まれます。",
+      "bothOff": "ローカルファミリーフィルターとVenice APIプロバイダーセーフモードの両方がオフです。送信リクエストには safe_mode: false が含まれます。",
+      "filteredLocally": "一致するリクエストはプロバイダーに到達する前にローカルでフィルタリングされます。"
     },
-    "effectiveStatus": "__MISSING__:safety.effectiveStatus",
-    "setMasterPassword": "__MISSING__:safety.setMasterPassword",
-    "masterPasswordEnabled": "__MISSING__:safety.masterPasswordEnabled",
-    "veniceApiSafeModeTitle": "__MISSING__:safety.veniceApiSafeModeTitle",
-    "veniceApiSafeModeDescription": "__MISSING__:safety.veniceApiSafeModeDescription",
+    "effectiveStatus": "有効なステータス: ローカルフィルター: {{local}} | Veniceプロバイダーフィルタリング: {{provider}}",
+    "setMasterPassword": "ファミリーセーフモードをロックするためにマスターパスワードを設定",
+    "masterPasswordEnabled": "マスターパスワードは有効です",
+    "veniceApiSafeModeTitle": "Venice API セーフモード",
+    "veniceApiSafeModeDescription": "Veniceに送信されるプロバイダー側のセーフモードパラメーターを制御します。これはファミリーセーフモードとは別です。",
     "errors": {
-      "cannotDisableTitle": "__MISSING__:safety.errors.cannotDisableTitle",
-      "cannotDisableDetail": "__MISSING__:safety.errors.cannotDisableDetail"
+      "cannotDisableTitle": "プロバイダーセーフモードを無効にできません",
+      "cannotDisableDetail": "まずファミリーセーフモードをオフにする必要があります。"
     },
-    "keepCurrent": "__MISSING__:safety.keepCurrent"
+    "keepCurrent": "現在の安全性を維持"
   },
   "aboutPanel": {
-    "unofficial": "__MISSING__:aboutPanel.unofficial",
-    "disclaimer": "__MISSING__:aboutPanel.disclaimer",
-    "officialLinks": "__MISSING__:aboutPanel.officialLinks",
-    "termsOfService": "__MISSING__:aboutPanel.termsOfService",
-    "privacyPolicy": "__MISSING__:aboutPanel.privacyPolicy",
-    "apiDocs": "__MISSING__:aboutPanel.apiDocs",
-    "trademarks": "__MISSING__:aboutPanel.trademarks",
-    "resetGate": "__MISSING__:aboutPanel.resetGate",
+    "unofficial": "非公式",
+    "disclaimer": "Venice ForgeはVenice.ai推論APIエンドポイントと直接通信するよう設定されたサードパーティのデスクトップクライアントです。Venice.ai, Inc.とは提携、推奨、スポンサー、承認の関係は一切ありません。",
+    "officialLinks": "公式リンク",
+    "termsOfService": "利用規約",
+    "privacyPolicy": "プライバシーポリシー",
+    "apiDocs": "APIドキュメント",
+    "trademarks": "Venice、Venice.ai、および関連するロゴはVenice.ai, Inc.の商標です。これらの名称の使用はAPI互換性を示すための名称使用のみを目的としています。",
+    "resetGate": "法的承認ゲートをリセット:",
     "toasts": {
-      "resetSuccess": "__MISSING__:aboutPanel.toasts.resetSuccess",
-      "resetFailed": "__MISSING__:aboutPanel.toasts.resetFailed"
+      "resetSuccess": "法的承認をリセットしました。次回の再読み込み時に表示されます。",
+      "resetFailed": "承認をリセットできませんでした。"
     },
-    "resetGateBtn": "__MISSING__:aboutPanel.resetGateBtn"
+    "resetGateBtn": "ゲートをリセット"
   },
   "audioSpeech": {
-    "cacheCleared": "__MISSING__:audioSpeech.cacheCleared",
+    "cacheCleared": "TTSキャッシュをクリアしました",
     "errors": {
-      "clearCache": "__MISSING__:audioSpeech.errors.clearCache"
+      "clearCache": "TTSキャッシュをクリアできません"
     },
     "title": "音声とスピーチ",
-    "description": "__MISSING__:audioSpeech.description",
-    "interfaceSoundsTitle": "__MISSING__:audioSpeech.interfaceSoundsTitle",
-    "interfaceSoundsDescription": "__MISSING__:audioSpeech.interfaceSoundsDescription",
-    "soundPack": "__MISSING__:audioSpeech.soundPack",
+    "description": "インターフェースサウンドとモデル返信のテキスト読み上げを設定します。",
+    "interfaceSoundsTitle": "インターフェースサウンド",
+    "interfaceSoundsDescription": "インターフェースサウンドはバンドルされたローカルオーディオを使用し、ネットワークサービスには接続しません。",
+    "soundPack": "サウンドパック",
     "packs": {
-      "soft": "__MISSING__:audioSpeech.packs.soft",
-      "tactile": "__MISSING__:audioSpeech.packs.tactile",
-      "glass": "__MISSING__:audioSpeech.packs.glass",
-      "retro": "__MISSING__:audioSpeech.packs.retro",
-      "minimal": "__MISSING__:audioSpeech.packs.minimal"
+      "soft": "ソフト",
+      "tactile": "タクタイル",
+      "glass": "グラス",
+      "retro": "レトロ",
+      "minimal": "ミニマル"
     },
-    "volume": "__MISSING__:audioSpeech.volume",
-    "restoreDefaults": "__MISSING__:audioSpeech.restoreDefaults",
-    "chatTtsTitle": "__MISSING__:audioSpeech.chatTtsTitle",
-    "chatTtsDescription": "__MISSING__:audioSpeech.chatTtsDescription",
-    "showControls": "__MISSING__:audioSpeech.showControls",
-    "autoRead": "__MISSING__:audioSpeech.autoRead",
-    "ttsModel": "__MISSING__:audioSpeech.ttsModel",
-    "defaultProviderModel": "__MISSING__:audioSpeech.defaultProviderModel",
-    "saved": "__MISSING__:audioSpeech.saved",
-    "loadingModels": "__MISSING__:audioSpeech.loadingModels",
-    "voice": "__MISSING__:audioSpeech.voice",
-    "defaultVoice": "__MISSING__:audioSpeech.defaultVoice",
-    "speed": "__MISSING__:audioSpeech.speed",
-    "volumeLabel": "__MISSING__:audioSpeech.volumeLabel",
-    "skipCodeBlocks": "__MISSING__:audioSpeech.skipCodeBlocks",
-    "stopOnNewReply": "__MISSING__:audioSpeech.stopOnNewReply",
-    "cacheSpeech": "__MISSING__:audioSpeech.cacheSpeech",
-    "clearing": "__MISSING__:audioSpeech.clearing",
-    "clearCache": "__MISSING__:audioSpeech.clearCache"
+    "volume": "音量",
+    "restoreDefaults": "デフォルトに戻す",
+    "chatTtsTitle": "チャットのテキスト読み上げ",
+    "chatTtsDescription": "テキスト読み上げは、選択したアシスタントの返信テキストを設定済みの音声プロバイダーに送信し、API使用量を消費する可能性があります。自動再生はデフォルトでオフになっています。",
+    "showControls": "アシスタントの返信にTTSコントロールを表示",
+    "autoRead": "完了した返信を自動的に読み上げる",
+    "ttsModel": "TTSモデル",
+    "defaultProviderModel": "デフォルトのプロバイダーモデル",
+    "saved": "(保存済み)",
+    "loadingModels": "音声モデルを読み込んでいます…",
+    "voice": "音声",
+    "defaultVoice": "デフォルトの音声",
+    "speed": "速度: {{speed}}x",
+    "volumeLabel": "音量: {{volume}}%",
+    "skipCodeBlocks": "コードブロックをスキップ",
+    "stopOnNewReply": "新しい返信が開始されたら現在の再生を停止",
+    "cacheSpeech": "生成された音声をキャッシュ",
+    "clearing": "クリアしています…",
+    "clearCache": "TTSキャッシュをクリア"
   },
   "backupSync": {
     "toasts": {
-      "sessionReattached": "__MISSING__:backupSync.toasts.sessionReattached",
+      "sessionReattached": "同期セッションを再接続しました。",
       "chooseFolderFailed": "失敗：choose sync folder.",
-      "folderConfigured": "__MISSING__:backupSync.toasts.folderConfigured",
+      "folderConfigured": "暗号化同期フォルダを設定しました。",
       "setFolderFailed": "失敗：set sync folder: {{error}}",
-      "enterPassphrase": "__MISSING__:backupSync.toasts.enterPassphrase",
+      "enterPassphrase": "同期パスフレーズを入力してください。",
       "startFailed": "失敗：start sync.",
-      "syncStartedMedia": "__MISSING__:backupSync.toasts.syncStartedMedia",
-      "syncStartedOptIn": "__MISSING__:backupSync.toasts.syncStartedOptIn",
+      "syncStartedMedia": "同期を開始しました — メディアブロブが同期されます。",
+      "syncStartedOptIn": "同期を開始しました — メディアはオプトインです。",
       "startFailedReason": "失敗：start sync: {{error}}",
       "pauseFailed": "失敗：pause sync.",
-      "syncPaused": "__MISSING__:backupSync.toasts.syncPaused",
+      "syncPaused": "同期を一時停止しました。再開するにはパスフレーズを再入力してください。",
       "pauseFailedReason": "失敗：pause sync: {{error}}",
-      "enterPassphraseReattach": "__MISSING__:backupSync.toasts.enterPassphraseReattach",
+      "enterPassphraseReattach": "再接続するには同期パスフレーズを入力してください。",
       "reattachFailed": "失敗：reattach sync session.",
       "reattachFailedReason": "失敗：reattach sync: {{error}}"
     },
     "title": "バックアップと同期",
-    "desktopOnly": "__MISSING__:backupSync.desktopOnly",
-    "description": "__MISSING__:backupSync.description",
+    "desktopOnly": "ローカルファースト同期は現在デスクトップアプリでのみ利用可能です。",
+    "description": "中央クラウドアカウントを強制することなく、ローカルデータをデバイス間で安全に同期します。",
     "syncFolder": {
-      "title": "__MISSING__:backupSync.syncFolder.title",
-      "description": "__MISSING__:backupSync.syncFolder.description",
-      "none": "__MISSING__:backupSync.syncFolder.none",
-      "change": "__MISSING__:backupSync.syncFolder.change",
+      "title": "同期フォルダ",
+      "description": "暗号化されたデータをフォルダ（例: iCloud Drive、Dropbox）に継続的に同期します。",
+      "none": "同期フォルダが選択されていません",
+      "change": "フォルダを変更",
       "choose": "選択：Folder",
-      "includeMedia": "__MISSING__:backupSync.syncFolder.includeMedia",
-      "includeMediaNote": "__MISSING__:backupSync.syncFolder.includeMediaNote",
+      "includeMedia": "同期パケットにメディアブロブを含める",
+      "includeMediaNote": "（画像、ファイル、RPアセット）",
       "passphrasePlaceholder": "入力：Encryption Passphrase",
-      "pause": "__MISSING__:backupSync.syncFolder.pause",
-      "reattach": "__MISSING__:backupSync.syncFolder.reattach",
-      "start": "__MISSING__:backupSync.syncFolder.start"
+      "pause": "同期を一時停止",
+      "reattach": "セッションを再接続",
+      "start": "同期を開始"
     },
     "status": {
       "active": "アクティブ",
       "error": "エラー",
-      "paused": "__MISSING__:backupSync.status.paused",
-      "off": "__MISSING__:backupSync.status.off"
+      "paused": "一時停止中",
+      "off": "オフ"
     },
     "security": {
-      "encryption": "__MISSING__:backupSync.security.encryption",
-      "noKeys": "__MISSING__:backupSync.security.noKeys"
+      "encryption": "同期パケットはこのフォルダに書き込まれる前に、Argon2id派生のXChaCha20-Poly1305暗号化を使用します。",
+      "noKeys": "APIキーとマシンの絶対パスは同期されません。"
     },
     "conflicts": {
-      "title": "__MISSING__:backupSync.conflicts.title",
-      "description": "__MISSING__:backupSync.conflicts.description",
-      "statusError": "__MISSING__:backupSync.conflicts.statusError",
-      "statusDetached": "__MISSING__:backupSync.conflicts.statusDetached",
-      "statusConfigured": "__MISSING__:backupSync.conflicts.statusConfigured",
-      "statusDisabled": "__MISSING__:backupSync.conflicts.statusDisabled",
-      "checking": "__MISSING__:backupSync.conflicts.checking",
-      "noConflicts": "__MISSING__:backupSync.conflicts.noConflicts",
-      "mediaIncluded": "__MISSING__:backupSync.conflicts.mediaIncluded",
-      "mediaExcluded": "__MISSING__:backupSync.conflicts.mediaExcluded",
-      "found": "__MISSING__:backupSync.conflicts.found",
-      "resolutionNote": "__MISSING__:backupSync.conflicts.resolutionNote",
-      "keepOriginalTitle": "__MISSING__:backupSync.conflicts.keepOriginalTitle",
-      "keepOriginal": "__MISSING__:backupSync.conflicts.keepOriginal",
-      "keepConflictTitle": "__MISSING__:backupSync.conflicts.keepConflictTitle",
-      "keepConflict": "__MISSING__:backupSync.conflicts.keepConflict",
-      "keepBothTitle": "__MISSING__:backupSync.conflicts.keepBothTitle",
+      "title": "同期ステータスと競合",
+      "description": "同期アクティビティを監視し、データの競合を解決します。",
+      "statusError": "同期エラー: {{error}}",
+      "statusDetached": "メインプロセスのウォッチャーは実行中ですが、レンダラーセッションが切断されています。再接続するにはパスフレーズを再入力してください。",
+      "statusConfigured": "同期は設定済みですが、完全にはアクティブではありません。パスフレーズを入力して同期を開始してください。",
+      "statusDisabled": "アクティビティを監視するには同期を有効にしてください。",
+      "checking": "競合を確認しています...",
+      "noConflicts": "同期はアクティブです。競合は見つかりませんでした。",
+      "mediaIncluded": " メディアブロブは含まれています。",
+      "mediaExcluded": " メディアブロブは除外されています（オプトイン）。",
+      "found": "{{count}}件の競合が見つかりました。以下で解決してください:",
+      "resolutionNote": "同期は{{winner}}を保持しました。競合する{{loser}}リビジョン（{{loserTitle}}）は、競合を解決するまで保存されます。",
+      "keepOriginalTitle": "このIDに現在保存されているリビジョンを保持し、競合するコピーを破棄します。",
+      "keepOriginal": "{{winner}}のコピーを保持",
+      "keepConflictTitle": "現在のリビジョンを{{loser}}コピーで置き換えます。",
+      "keepConflict": "{{loser}}コピーを使用",
+      "keepBothTitle": "現在のリビジョンを保持し、{{loser}}コピーを別のレコードとして保存します。",
       "keepBoth": "保存：{{loser}} as copy"
     }
   },
   "configPanel": {
     "toasts": {
-      "reloaded": "__MISSING__:configPanel.toasts.reloaded",
+      "reloaded": "ローカル設定を再読み込みしました。",
       "reloadFailed": "失敗：reload config.",
       "openFolderFailed": "失敗：open config folder.",
-      "templateExported": "__MISSING__:configPanel.toasts.templateExported",
-      "exportCancelled": "__MISSING__:configPanel.toasts.exportCancelled",
+      "templateExported": "テンプレートをエクスポートしました。",
+      "exportCancelled": "エクスポートがキャンセルされました。",
       "exportFailed": "失敗：export config template.",
-      "secureStoreCleared": "__MISSING__:configPanel.toasts.secureStoreCleared",
+      "secureStoreCleared": "セキュアストアをクリアしました。",
       "secureStoreClearFailed": "失敗：clear secure store."
     },
     "masterConfig": {
-      "title": "__MISSING__:configPanel.masterConfig.title",
-      "description1": "__MISSING__:configPanel.masterConfig.description1",
-      "description2": "__MISSING__:configPanel.masterConfig.description2",
-      "description3": "__MISSING__:configPanel.masterConfig.description3",
-      "description4": "__MISSING__:configPanel.masterConfig.description4",
-      "configPath": "__MISSING__:configPanel.masterConfig.configPath",
-      "unavailable": "__MISSING__:configPanel.masterConfig.unavailable",
-      "themesPath": "__MISSING__:configPanel.masterConfig.themesPath",
-      "loadedFrom": "__MISSING__:configPanel.masterConfig.loadedFrom",
-      "profile": "__MISSING__:configPanel.masterConfig.profile",
-      "parseError": "__MISSING__:configPanel.masterConfig.parseError",
-      "validationWarnings": "__MISSING__:configPanel.masterConfig.validationWarnings"
+      "title": "ローカルマスター設定",
+      "description1": "ディスク上の ",
+      "description2": " と ",
+      "description3": " を編集して、UIに触れずにVenice Forgeを設定できます。完全なスキーマは ",
+      "description4": " を参照してください。",
+      "configPath": "設定パス",
+      "unavailable": "(利用不可)",
+      "themesPath": "テーマパス",
+      "loadedFrom": "読み込み元",
+      "profile": "プロファイル",
+      "parseError": "解析エラー:",
+      "validationWarnings": "検証警告"
     },
     "actions": {
-      "reload": "__MISSING__:configPanel.actions.reload",
-      "openFolder": "__MISSING__:configPanel.actions.openFolder",
-      "exportTemplate": "__MISSING__:configPanel.actions.exportTemplate",
-      "clearSecureStore": "__MISSING__:configPanel.actions.clearSecureStore"
+      "reload": "設定を再読み込み",
+      "openFolder": "設定フォルダを開く",
+      "exportTemplate": "サニタイズされたテンプレートをエクスポート",
+      "clearSecureStore": "セキュアストアをクリア"
     },
     "apiKeyImport": {
-      "title": "__MISSING__:configPanel.apiKeyImport.title",
-      "description1": "__MISSING__:configPanel.apiKeyImport.description1",
-      "description2": "__MISSING__:configPanel.apiKeyImport.description2",
-      "description3": "__MISSING__:configPanel.apiKeyImport.description3",
-      "veniceKey": "__MISSING__:configPanel.apiKeyImport.veniceKey",
-      "configured": "__MISSING__:configPanel.apiKeyImport.configured",
-      "notConfigured": "__MISSING__:configPanel.apiKeyImport.notConfigured",
-      "imported": "__MISSING__:configPanel.apiKeyImport.imported",
-      "redacted": "__MISSING__:configPanel.apiKeyImport.redacted",
-      "jinaKey": "__MISSING__:configPanel.apiKeyImport.jinaKey",
-      "note": "__MISSING__:configPanel.apiKeyImport.note",
+      "title": "APIキーインポート",
+      "description1": "プレーンテキストキーは ",
+      "description2": " 内にあり、起動時にOSセキュアストレージにインポートされ、ファイルからは削除されます（",
+      "description3": " が設定されている場合を除く）。",
+      "veniceKey": "Veniceキー",
+      "configured": "設定済み（セキュアストア）",
+      "notConfigured": "未設定",
+      "imported": "今回の実行でインポート済み",
+      "redacted": "プレーンテキスト削除済み",
+      "jinaKey": "Jinaキー",
+      "note": "生のキーはレンダラーに送信されません。セキュアストアをリセットして保存されたキーをクリアできます。その後、APIキータブから再入力できます。",
       "clearConfirm": {
-        "title": "__MISSING__:configPanel.apiKeyImport.clearConfirm.title",
-        "detail": "__MISSING__:configPanel.apiKeyImport.clearConfirm.detail",
-        "action": "__MISSING__:configPanel.apiKeyImport.clearConfirm.action"
+        "title": "セキュアストアのキーをクリアしますか？",
+        "detail": "セキュアストアからすべての保存されたAPIキーが削除されます。この操作は元に戻せません。",
+        "action": "キーをクリア"
       }
     },
     "effectiveSettings": {
-      "title": "__MISSING__:configPanel.effectiveSettings.title",
-      "description1": "__MISSING__:configPanel.effectiveSettings.description1",
-      "description2": "__MISSING__:configPanel.effectiveSettings.description2",
-      "activeTheme": "__MISSING__:configPanel.effectiveSettings.activeTheme",
-      "defaultChatModel": "__MISSING__:configPanel.effectiveSettings.defaultChatModel",
-      "useUiDefault": "__MISSING__:configPanel.effectiveSettings.useUiDefault",
-      "temperature": "__MISSING__:configPanel.effectiveSettings.temperature",
-      "topP": "__MISSING__:configPanel.effectiveSettings.topP",
-      "maxTokens": "__MISSING__:configPanel.effectiveSettings.maxTokens",
-      "webSearch": "__MISSING__:configPanel.effectiveSettings.webSearch"
+      "title": "有効な設定（プレビュー）",
+      "description1": "現在メモリ内にあるマージされた設定の読み取り専用プレビューです。",
+      "description2": " ソースが正規の真実のソースです — ディスク上で編集し、",
+      "activeTheme": "アクティブテーマ",
+      "defaultChatModel": "デフォルトチャットモデル",
+      "useUiDefault": "(UIデフォルトを使用)",
+      "temperature": "温度",
+      "topP": "Top-p",
+      "maxTokens": "最大トークン数",
+      "webSearch": "ウェブ検索"
     }
   },
   "dataStorage": {
     "toasts": {
       "importReadFailed": "失敗：read backup. Incorrect password or corrupt file.",
-      "importNothingNewProfile": "__MISSING__:dataStorage.toasts.importNothingNewProfile",
-      "importNothingDetail": "__MISSING__:dataStorage.toasts.importNothingDetail",
-      "importCompleteNewProfile": "__MISSING__:dataStorage.toasts.importCompleteNewProfile",
-      "importNothing": "__MISSING__:dataStorage.toasts.importNothing",
-      "importPartial": "__MISSING__:dataStorage.toasts.importPartial",
-      "importPartialDetail": "__MISSING__:dataStorage.toasts.importPartialDetail",
-      "importComplete": "__MISSING__:dataStorage.toasts.importComplete",
-      "replaceFailedRestored": "__MISSING__:dataStorage.toasts.replaceFailedRestored",
-      "replaceFailedRecovery": "__MISSING__:dataStorage.toasts.replaceFailedRecovery",
-      "importFailed": "__MISSING__:dataStorage.toasts.importFailed",
-      "recoveryRestored": "__MISSING__:dataStorage.toasts.recoveryRestored",
-      "recoveryRestoredDetail": "__MISSING__:dataStorage.toasts.recoveryRestoredDetail",
-      "recoveryRestoreFailed": "__MISSING__:dataStorage.toasts.recoveryRestoreFailed",
-      "recoveryRestoreFailedDetail": "__MISSING__:dataStorage.toasts.recoveryRestoreFailedDetail"
+      "importNothingNewProfile": "新しいプロファイルに何もインポートされませんでした: {{skipped}}件スキップ",
+      "importNothingDetail": "レコードが適用されませんでした。バックアップを確認してください",
+      "importCompleteNewProfile": "新しいプロファイルへのインポートが完了しました: {{imported}}件インポート。再読み込み中...",
+      "importNothing": "インポートされませんでした: {{skipped}}件スキップ",
+      "importPartial": "部分インポート: {{imported}}件インポート、{{skipped}}件スキップ",
+      "importPartialDetail": "{{tombstones}}件のトゥームストーンが適用されました。このバックアップを信頼する前にスキップ数を確認してください。",
+      "importComplete": "インポート完了: {{imported}}件インポート、{{skipped}}件スキップ、{{tombstones}}件のトゥームストーンが適用されました。",
+      "replaceFailedRestored": "置換失敗、データ復元済み",
+      "replaceFailedRecovery": "置換失敗、復旧が必要です",
+      "importFailed": "インポート失敗。",
+      "recoveryRestored": "復旧完了",
+      "recoveryRestoredDetail": "以前のプロファイル状態が復元され、置換された状態は新しい復旧バックアップとして保持されました。",
+      "recoveryRestoreFailed": "復旧の復元に失敗しました",
+      "recoveryRestoreFailedDetail": "リカバリーバックアップを復元できませんでした。"
     },
     "manualBackup": {
-      "title": "__MISSING__:dataStorage.manualBackup.title",
-      "description": "__MISSING__:dataStorage.manualBackup.description",
-      "passwordPlaceholder": "__MISSING__:dataStorage.manualBackup.passwordPlaceholder",
-      "includeDrafts": "__MISSING__:dataStorage.manualBackup.includeDrafts",
-      "includeMedia": "__MISSING__:dataStorage.manualBackup.includeMedia",
-      "export": "__MISSING__:dataStorage.manualBackup.export",
-      "import": "__MISSING__:dataStorage.manualBackup.import"
+      "title": "手動バックアップ",
+      "description": "ローカル履歴、キャラクターカード、ワークフローの暗号化されたポータブルバックアップを作成します。このバックアップは任意のデバイスでインポートできます。",
+      "passwordPlaceholder": "バックアップパスワード",
+      "includeDrafts": "暗号化されたローカルSTカードの下書きを含む（下書きは同期されません）",
+      "includeMedia": "このバックアップにメディアを含める（画像、ファイル、RPアセット — バックアップの残りと共に暗号化）",
+      "export": "バックアップをエクスポート",
+      "import": "バックアップをインポート"
     },
     "recovery": {
-      "title": "__MISSING__:dataStorage.recovery.title",
-      "description": "__MISSING__:dataStorage.recovery.description",
-      "restore": "__MISSING__:dataStorage.recovery.restore"
+      "title": "置換前リカバリー",
+      "description": "{{date}}の検証済み暗号化リカバリーバックアップが利用可能です。上記のバックアップパスワードを入力して、トランザクション的に復元します。",
+      "restore": "リカバリーバックアップを復元"
     },
     "dangerZone": {
-      "title": "__MISSING__:dataStorage.dangerZone.title",
-      "description": "__MISSING__:dataStorage.dangerZone.description",
-      "clearDefaults": "__MISSING__:dataStorage.dangerZone.clearDefaults",
-      "clearIndexedDB": "__MISSING__:dataStorage.dangerZone.clearIndexedDB"
+      "title": "危険ゾーン",
+      "description": "これらの操作は破壊的であり、元に戻すことはできません。重要な履歴がある場合は、常に最初にバックアップをエクスポートしてください。",
+      "clearDefaults": "アプリのデフォルトをクリア",
+      "clearIndexedDB": "IndexedDBデータをクリア"
     }
   },
   "defaultsPanel": {
-    "defaultChatModel": "__MISSING__:defaultsPanel.defaultChatModel",
-    "defaultImageModel": "__MISSING__:defaultsPanel.defaultImageModel",
-    "defaultWebSearch": "__MISSING__:defaultsPanel.defaultWebSearch",
-    "defaultSystemPrompt": "__MISSING__:defaultsPanel.defaultSystemPrompt",
-    "systemPromptPlaceholder": "__MISSING__:defaultsPanel.systemPromptPlaceholder",
-    "veniceSystemPromptToggle": "__MISSING__:defaultsPanel.veniceSystemPromptToggle",
-    "enableCitations": "__MISSING__:defaultsPanel.enableCitations",
+    "defaultChatModel": "デフォルトチャットモデル",
+    "defaultImageModel": "デフォルト画像モデル",
+    "defaultWebSearch": "デフォルトウェブ検索",
+    "defaultSystemPrompt": "デフォルトシステムプロンプト",
+    "systemPromptPlaceholder": "任意。アプリ作成のシステムメッセージの追加を避けるには空のままにしてください。",
+    "veniceSystemPromptToggle": "Veniceシステムプロンプトトグル",
+    "enableCitations": "デフォルトで引用を有効化",
     "characterSceneGeneration": {
-      "title": "__MISSING__:defaultsPanel.characterSceneGeneration.title",
-      "description": "__MISSING__:defaultsPanel.characterSceneGeneration.description",
-      "mode": "__MISSING__:defaultsPanel.characterSceneGeneration.mode",
-      "modeAriaLabel": "__MISSING__:defaultsPanel.characterSceneGeneration.modeAriaLabel",
-      "manualOnly": "__MISSING__:defaultsPanel.characterSceneGeneration.manualOnly",
-      "autoManual": "__MISSING__:defaultsPanel.characterSceneGeneration.autoManual"
+      "title": "キャラクターシーン生成",
+      "description": "キャラクターチャットが現在の会話のみからインラインシーン画像を作成できるようにします。ローカルレート制限で保護されています。",
+      "mode": "モード",
+      "modeAriaLabel": "キャラクターシーン生成モード",
+      "manualOnly": "手動のみ",
+      "autoManual": "自動 + 手動"
     }
   },
   "importPlan": {
-    "title": "__MISSING__:importPlan.title",
-    "summary": "__MISSING__:importPlan.summary",
+    "title": "インポート計画を確認",
+    "summary": "このバックアップには{{stores}}個のデータストアにわたる{{records}}件のレコードが含まれています。",
     "metadata": {
-      "authenticated": "__MISSING__:importPlan.metadata.authenticated",
-      "legacy": "__MISSING__:importPlan.metadata.legacy",
-      "format": "__MISSING__:importPlan.metadata.format",
-      "exportedAt": "__MISSING__:importPlan.metadata.exportedAt",
-      "source": "__MISSING__:importPlan.metadata.source",
-      "profileRef": "__MISSING__:importPlan.metadata.profileRef",
-      "crypto": "__MISSING__:importPlan.metadata.crypto",
-      "counts": "__MISSING__:importPlan.metadata.counts",
-      "sha": "__MISSING__:importPlan.metadata.sha"
+      "authenticated": "認証済みバックアップメタデータ",
+      "legacy": "レガシーバックアップメタデータ",
+      "format": "形式: v{{version}}{{appVersion}}",
+      "exportedAt": "エクスポート: {{date}}",
+      "source": "ソース: {{runtime}} / {{device}}",
+      "profileRef": "プロファイル参照: {{ref}}",
+      "crypto": "暗号化: {{alg}} / {{kdf}} / key v{{key}}",
+      "counts": "{{tombstones}}個のトゥームストーン / {{blobs}}個の埋め込みBLOB",
+      "sha": "ペイロードSHA-256: {{sha}}"
     },
-    "warningsLabel": "__MISSING__:importPlan.warningsLabel",
+    "warningsLabel": "インポート警告",
     "preview": {
-      "title": "__MISSING__:importPlan.preview.title",
-      "recordsCount": "__MISSING__:importPlan.preview.recordsCount",
-      "new": "__MISSING__:importPlan.preview.new",
-      "modified": "__MISSING__:importPlan.preview.modified",
-      "conflicts": "__MISSING__:importPlan.preview.conflicts",
-      "identical": "__MISSING__:importPlan.preview.identical",
-      "noChanges": "__MISSING__:importPlan.preview.noChanges"
+      "title": "データ変更プレビュー",
+      "recordsCount": "{{count}}件のレコード",
+      "new": "{{count}}件の新規",
+      "modified": "{{count}}件の変更",
+      "conflicts": "{{count}}件の競合",
+      "identical": "{{count}}件の同一",
+      "noChanges": "変更なし"
     },
     "mode": {
       "title": "選択：Import Mode",
-      "merge": "__MISSING__:importPlan.mode.merge",
-      "mergeDesc": "__MISSING__:importPlan.mode.mergeDesc",
-      "replace": "__MISSING__:importPlan.mode.replace",
-      "replaceDesc": "__MISSING__:importPlan.mode.replaceDesc",
-      "newProfile": "__MISSING__:importPlan.mode.newProfile",
-      "newProfileDesc": "__MISSING__:importPlan.mode.newProfileDesc"
+      "merge": "データをマージ",
+      "mergeDesc": "既存のデータを保持し、新しいレコードを追加します。競合はローカルバージョンと共に保存されます。",
+      "replace": "すべて置換",
+      "replaceDesc": "現在のすべてのローカルデータを消去し、このバックアップで完全に置き換えます。",
+      "newProfile": "新規プロファイル",
+      "newProfileDesc": "新しいプロファイルワークスペースを作成し、このバックアップをインポートします。"
     },
     "warnings": {
-      "recoveryEnabled": "__MISSING__:importPlan.warnings.recoveryEnabled",
-      "recoveryEnabledDesc": "__MISSING__:importPlan.warnings.recoveryEnabledDesc",
-      "replaceUnavailable": "__MISSING__:importPlan.warnings.replaceUnavailable",
-      "replaceUnavailableDesc": "__MISSING__:importPlan.warnings.replaceUnavailableDesc"
+      "recoveryEnabled": "自動リカバリー有効",
+      "recoveryEnabledDesc": "デスクトップアプリはこのバックアップをステージングし、暗号化されたリカバリーアーティファクトを作成・検証してから、置換が失敗した場合は自動的にロールバックします。",
+      "replaceUnavailable": "Webモードでは置換は利用不可",
+      "replaceUnavailableDesc": "マージまたは新規プロファイルを使用してください。永続的な置換リカバリーにはVenice Forgeデスクトップアプリが必要です。"
     },
-    "profileName": "__MISSING__:importPlan.profileName",
-    "profileNamePlaceholder": "__MISSING__:importPlan.profileNamePlaceholder",
+    "profileName": "プロファイル名",
+    "profileNamePlaceholder": "例: 仕事用バックアップ",
     "actions": {
-      "confirm": "__MISSING__:importPlan.actions.confirm"
+      "confirm": "インポートを確認"
     }
   },
   "masterPassword": {
     "errors": {
-      "mismatch": "__MISSING__:masterPassword.errors.mismatch",
-      "tooShort": "__MISSING__:masterPassword.errors.tooShort",
+      "mismatch": "パスワードが一致しません",
+      "tooShort": "パスワードが短すぎます（最小{{min}}文字）",
       "saveFailed": "失敗：securely save password",
-      "lockedOut": "__MISSING__:masterPassword.errors.lockedOut",
-      "incorrect": "__MISSING__:masterPassword.errors.incorrect",
+      "lockedOut": " ロックアウトされました。{{seconds}}秒後に再試行してください。",
+      "incorrect": "パスワードが正しくありません。",
       "verifyFailed": "失敗：verify password"
     },
-    "titleSet": "__MISSING__:masterPassword.titleSet",
+    "titleSet": "マスターパスワードを設定",
     "titleEnter": "入力：Master Password",
-    "description": "__MISSING__:masterPassword.description",
+    "description": "このローカル制御パスワードはファミリーセーフモードの変更を保護します。アプリはパスワード自体ではなく、ソルト付き検証子を保存します。",
     "labels": {
-      "password": "__MISSING__:masterPassword.labels.password",
-      "confirm": "__MISSING__:masterPassword.labels.confirm"
+      "password": "マスターパスワード",
+      "confirm": "マスターパスワードを確認"
     }
   },
   "profiles": {
     "removePassword": {
-      "title": "__MISSING__:profiles.removePassword.title",
-      "detail": "__MISSING__:profiles.removePassword.detail",
+      "title": "プロファイルパスワードを削除しますか？",
+      "detail": "\"{{name}}\" の切り替え前にロック解除が不要になります。",
       "action": "削除"
     },
     "errors": {
       "removeFailed": "失敗：remove profile password",
-      "tooShort": "__MISSING__:profiles.errors.tooShort",
-      "mismatch": "__MISSING__:profiles.errors.mismatch",
+      "tooShort": "パスワードが短すぎます（最小{{min}}文字）",
+      "mismatch": "パスワードが一致しません",
       "saveFailed": "失敗：save profile password",
-      "incorrect": "__MISSING__:profiles.errors.incorrect",
-      "deleteFailed": "__MISSING__:profiles.errors.deleteFailed"
+      "incorrect": "パスワードが正しくありません",
+      "deleteFailed": "プロファイルの削除に失敗しました。"
     },
-    "title": "__MISSING__:profiles.title",
-    "description": "__MISSING__:profiles.description",
+    "title": "プロファイルを管理",
+    "description": "各プロファイルは分離された設定、APIキー、構成を維持します。プロファイルを切り替えると、アクティブなアプリケーション状態がクリアされ、再読み込みされます。",
     "badge": {
-      "active": "__MISSING__:profiles.badge.active",
-      "locked": "__MISSING__:profiles.badge.locked"
+      "active": "アクティブ",
+      "locked": "ロック中"
     },
     "aria": {
-      "removePassword": "__MISSING__:profiles.aria.removePassword",
-      "setPassword": "__MISSING__:profiles.aria.setPassword",
-      "switchTo": "__MISSING__:profiles.aria.switchTo",
+      "removePassword": "{{name}}のパスワードを削除",
+      "setPassword": "{{name}}のパスワードを設定",
+      "switchTo": "{{name}}に切り替え",
       "delete": "削除：{{name}}"
     },
     "actions": {
-      "removePassword": "__MISSING__:profiles.actions.removePassword",
-      "setPassword": "__MISSING__:profiles.actions.setPassword",
-      "switchTo": "__MISSING__:profiles.actions.switchTo",
-      "createProfile": "__MISSING__:profiles.actions.createProfile"
+      "removePassword": "パスワードを削除",
+      "setPassword": "パスワードを設定",
+      "switchTo": "切り替え",
+      "createProfile": "プロファイルを作成"
     },
     "deleteProfile": {
       "title": "削除：profile?",
-      "detail": "__MISSING__:profiles.deleteProfile.detail",
+      "detail": "\"{{name}}\" が削除されます。その会話ボールト、レンダラーレコード、プロファイルスコープのローカル設定、APIキー、パスワード検証子が消去されます。共有グローバルキャッシュは保持されます。",
       "action": "削除"
     },
-    "newProfilePlaceholder": "__MISSING__:profiles.newProfilePlaceholder",
+    "newProfilePlaceholder": "新しいプロファイル名",
     "dialog": {
-      "titleSet": "__MISSING__:profiles.dialog.titleSet",
-      "titleUnlock": "__MISSING__:profiles.dialog.titleUnlock",
-      "description": "__MISSING__:profiles.dialog.description",
-      "labelSet": "__MISSING__:profiles.dialog.labelSet",
-      "labelUnlock": "__MISSING__:profiles.dialog.labelUnlock",
-      "labelConfirm": "__MISSING__:profiles.dialog.labelConfirm",
+      "titleSet": "{{name}}のパスワードを設定",
+      "titleUnlock": "{{name}}のロックを解除",
+      "description": "このパスワードはこのローカルプロファイルへの切り替えを保護します。",
+      "labelSet": "プロファイルパスワード",
+      "labelUnlock": "ロック解除パスワード",
+      "labelConfirm": "プロファイルパスワードを確認",
       "savePassword": "保存：Password"
     }
   },
@@ -441,30 +441,30 @@
     "errors": {
       "loadFailed": "失敗：load provider settings.",
       "saveFailed": "失敗：save provider settings.",
-      "enableWithoutKey": "__MISSING__:providers.errors.enableWithoutKey"
+      "enableWithoutKey": "APIキーなしでプロバイダーを有効にできません。"
     },
     "title": "フォールバックプロバイダー",
-    "description": "__MISSING__:providers.description",
-    "deferredNotice": "__MISSING__:providers.deferredNotice",
+    "description": "フォールバックプロバイダーのAPIキーを設定します。これらは明示的に有効化され、Veniceモデルが利用できない場合、または特定のフォールバックモデルを要求した場合にのみ使用されます。",
+    "deferredNotice": "このリリースでは延期されています（キー入力、ルーティング、トラフィックなし）：{{deferred}}。プロバイダーキーは手動で置換または削除されます。スケジュールされたキーローテーションは実装されていません。",
     "autoFallback": {
-      "title": "__MISSING__:providers.autoFallback.title",
-      "description": "__MISSING__:providers.autoFallback.description",
-      "enableAria": "__MISSING__:providers.autoFallback.enableAria",
-      "orderingLabel": "__MISSING__:providers.autoFallback.orderingLabel",
-      "orderingPlaceholder": "__MISSING__:providers.autoFallback.orderingPlaceholder",
-      "orderingNotice": "__MISSING__:providers.autoFallback.orderingNotice"
+      "title": "自動フォールバックルーター",
+      "description": "Veniceが利用できない場合やエラーを返した場合、リクエストを自動的にフォールバックプロバイダーにルーティングします。",
+      "enableAria": "自動フォールバックを有効化",
+      "orderingLabel": "フォールバック順序（カンマ区切りのプロバイダーID）",
+      "orderingPlaceholder": "together, groq, anthropic",
+      "orderingNotice": "プロバイダーはこの正確な順序で試行されます。以下で有効化されていることを確認してください。利用可能：{{available}}"
     },
     "badge": {
-      "deferred": "__MISSING__:providers.badge.deferred"
+      "deferred": "延期"
     },
     "aria": {
-      "enable": "__MISSING__:providers.aria.enable"
+      "enable": "{{label}}を有効化"
     },
     "status": {
-      "keyConfigured": "__MISSING__:providers.status.keyConfigured"
+      "keyConfigured": "APIキー設定済み"
     },
     "actions": {
-      "removeKey": "__MISSING__:providers.actions.removeKey"
+      "removeKey": "キーを削除"
     },
     "inputs": {
       "keyPlaceholder": "入力：API Key"
@@ -474,37 +474,37 @@
     "persistSafety": "失敗：persist safety setting."
   },
   "updates": {
-    "available": "__MISSING__:updates.available",
-    "upToDate": "__MISSING__:updates.upToDate",
-    "downloading": "__MISSING__:updates.downloading",
-    "downloaded": "__MISSING__:updates.downloaded",
-    "error": "__MISSING__:updates.error",
-    "checking": "__MISSING__:updates.checking",
-    "devBuild": "__MISSING__:updates.devBuild",
-    "checkFailed": "__MISSING__:updates.checkFailed",
-    "checkCompleted": "__MISSING__:updates.checkCompleted",
-    "installFailed": "__MISSING__:updates.installFailed"
+    "available": "アップデートが利用可能です：v{{version}}",
+    "upToDate": "アプリは最新です。",
+    "downloading": "アップデートをダウンロード中：{{percent}}%",
+    "downloaded": "アップデートがダウンロードされ、インストールの準備ができました。",
+    "error": "アップデートエラー：{{error}}",
+    "checking": "アップデートを確認中...",
+    "devBuild": "開発ビルド — アップデート確認はパッケージ化された本番ビルドでのみ実行されます。",
+    "checkFailed": "アップデート確認に失敗しました：{{error}}",
+    "checkCompleted": "アップデート確認が完了しました。",
+    "installFailed": "インストールに失敗しました：{{error}}"
   },
   "jinaKeys": {
-    "savedElectron": "__MISSING__:jinaKeys.savedElectron",
-    "savedWeb": "__MISSING__:jinaKeys.savedWeb",
+    "savedElectron": "Jina APIキーが安全に保存されました。",
+    "savedWeb": "Jina APIキーがこのブラウザセッションに保存されました。",
     "saveFailed": "失敗：save Jina API key.",
     "deleteConfirm": {
       "title": "削除：Jina API key?",
-      "electron": "__MISSING__:jinaKeys.deleteConfirm.electron",
-      "web": "__MISSING__:jinaKeys.deleteConfirm.web"
+      "electron": "OSのセキュアストレージからJina APIキーが削除されます。",
+      "web": "このブラウザセッションのメモリ内Jina APIキーが削除されます。"
     },
-    "deleted": "__MISSING__:jinaKeys.deleted",
+    "deleted": "Jina APIキーを削除しました。",
     "deleteFailed": "失敗：delete Jina API key.",
-    "testSuccess": "__MISSING__:jinaKeys.testSuccess",
-    "testFailed": "__MISSING__:jinaKeys.testFailed",
-    "testError": "__MISSING__:jinaKeys.testError"
+    "testSuccess": "Jina接続に成功しました{{status}}。",
+    "testFailed": "Jina接続に失敗しました: {{message}}",
+    "testError": "Jinaテスト接続に失敗しました。"
   },
   "header": {
     "title": "構成",
     "description": {
       "electron": "APIエンドポイント、デフォルト設定、外観スタイルを管理します。",
-      "web": "__MISSING__:header.description.web"
+      "web": "デフォルトのプロンプトとスタイルテンプレートを設定します。"
     }
   },
   "tabs": {
@@ -524,11 +524,11 @@
     "audioSpeech": "音声とスピーチ"
   },
   "updatesPanel": {
-    "title": "__MISSING__:updatesPanel.title",
-    "description": "__MISSING__:updatesPanel.description",
-    "status": "__MISSING__:updatesPanel.status",
-    "checking": "__MISSING__:updatesPanel.checking",
-    "checkForUpdates": "__MISSING__:updatesPanel.checkForUpdates",
-    "restartAndInstall": "__MISSING__:updatesPanel.restartAndInstall"
+    "title": "アプリケーションの更新",
+    "description": "GitHub Releasesを通じてデスクトップアプリケーションの更新を安全に確認します。",
+    "status": "ステータス:",
+    "checking": "確認中...",
+    "checkForUpdates": "更新を確認",
+    "restartAndInstall": "再起動してインストール"
   }
 }

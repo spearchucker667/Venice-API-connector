@@ -15,6 +15,7 @@ import {
   getTextDirection,
   i18n,
   NAMESPACES,
+  normalizeLocaleCode,
   resolveEffectiveLocale,
   resolveSystemLocale,
   resources,
@@ -27,9 +28,9 @@ describe('i18n Core Module', () => {
   });
 
   describe('Locale Registry and Resolution', () => {
-    it('supports 10 required locales', () => {
+    it('supports 12 required locales', () => {
       const keys = Object.keys(SUPPORTED_LOCALES);
-      expect(keys).toEqual(['en-US', 'es', 'fr', 'de', 'pt-BR', 'ru', 'zh-CN', 'ja', 'hi', 'ar']);
+      expect(keys).toEqual(['en-US', 'es', 'fr', 'de', 'pt-BR', 'ru', 'zh-CN', 'ja', 'hi', 'ar', 'ko', 'sv-SE']);
     });
 
     it('identifies Arabic as RTL and all other locales as LTR', () => {
@@ -50,6 +51,37 @@ describe('i18n Core Module', () => {
       expect(resolveSystemLocale(['pt-BR', 'en-US'])).toBe('pt-BR');
       expect(resolveSystemLocale(['ar-SA', 'en'])).toBe('ar');
       expect(resolveSystemLocale(['unknown-lang'])).toBe('en-US');
+    });
+
+    it('normalizes every accepted alias and legacy locale code', () => {
+      expect(normalizeLocaleCode('en')).toBe('en-US');
+      expect(normalizeLocaleCode('en-us')).toBe('en-US');
+      expect(normalizeLocaleCode('zh')).toBe('zh-CN');
+      expect(normalizeLocaleCode('zh-Hans')).toBe('zh-CN');
+      expect(normalizeLocaleCode('zh-cn')).toBe('zh-CN');
+      expect(normalizeLocaleCode('sv')).toBe('sv-SE');
+      expect(normalizeLocaleCode('SE')).toBe('sv-SE');
+      expect(normalizeLocaleCode('sv-se')).toBe('sv-SE');
+      expect(normalizeLocaleCode('pt')).toBe('pt-BR');
+      expect(normalizeLocaleCode('ja')).toBe('ja');
+      expect(normalizeLocaleCode('hi')).toBe('hi');
+      expect(normalizeLocaleCode('ar')).toBe('ar');
+      expect(normalizeLocaleCode('ko')).toBe('ko');
+    });
+
+    it('falls back to undefined when no alias matches', () => {
+      expect(normalizeLocaleCode('xx-YY')).toBeUndefined();
+      expect(normalizeLocaleCode('')).toBeUndefined();
+      expect(normalizeLocaleCode(undefined)).toBeUndefined();
+    });
+
+    it('changeLanguage updates <html lang> + <html dir> for every supported locale', () => {
+      for (const locale of Object.keys(SUPPORTED_LOCALES) as Array<keyof typeof SUPPORTED_LOCALES>) {
+        changeLanguage(locale);
+        expect(i18n.language).toBe(locale);
+        expect(document.documentElement.lang).toBe(locale);
+        expect(document.documentElement.dir).toBe(getTextDirection(locale));
+      }
     });
   });
 

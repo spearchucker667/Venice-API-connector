@@ -1,10 +1,10 @@
 {
-  "title": "Workflows",
-  "playground": "__MISSING__:playground",
-  "templates": "__MISSING__:templates",
-  "nodes": "__MISSING__:nodes",
-  "canvas": "__MISSING__:canvas",
-  "runWorkflow": "__MISSING__:runWorkflow",
-  "exportWorkflow": "__MISSING__:exportWorkflow",
-  "importWorkflow": "__MISSING__:importWorkflow"
+  "title": "वर्कफ़्लो",
+  "playground": "वर्कफ़्लो प्लेग्राउंड",
+  "templates": "टेम्पलेट्स",
+  "nodes": "नोड्स",
+  "canvas": "वर्कफ़्लो कैनवास",
+  "runWorkflow": "वर्कफ़्लो चलाएँ",
+  "exportWorkflow": "वर्कफ़्लो निर्यात करें",
+  "importWorkflow": "वर्कफ़्लो आयात करें"
 }

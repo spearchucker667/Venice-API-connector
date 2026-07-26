@@ -1,262 +1,262 @@
 {
   "project": {
-    "label": "__MISSING__:project.label",
-    "activeProject": "__MISSING__:project.activeProject",
-    "newProjectName": "__MISSING__:project.newProjectName",
-    "untitledProject": "__MISSING__:project.untitledProject",
-    "create": "__MISSING__:project.create",
-    "enterProjectName": "__MISSING__:project.enterProjectName",
-    "created": "__MISSING__:project.created",
-    "createFailed": "__MISSING__:project.createFailed",
-    "new": "__MISSING__:project.new",
-    "allProjects": "__MISSING__:project.allProjects",
-    "switchOpenCurrent": "__MISSING__:project.switchOpenCurrent",
-    "rename": "__MISSING__:project.rename",
-    "renameAction": "__MISSING__:project.renameAction",
-    "renamed": "__MISSING__:project.renamed",
-    "archivePrompt": "__MISSING__:project.archivePrompt",
-    "archiveDetail": "__MISSING__:project.archiveDetail",
-    "archiveAction": "__MISSING__:project.archiveAction",
-    "archived": "__MISSING__:project.archived",
-    "deletePrompt": "__MISSING__:project.deletePrompt",
-    "deleteDetail": "__MISSING__:project.deleteDetail",
-    "deleteAction": "__MISSING__:project.deleteAction",
-    "deleted": "__MISSING__:project.deleted",
-    "deleteError": "__MISSING__:project.deleteError",
-    "encryptionNote": "__MISSING__:project.encryptionNote"
+    "label": "प्रोजेक्ट",
+    "activeProject": "सक्रिय प्रोजेक्ट",
+    "newProjectName": "नया प्रोजेक्ट नाम",
+    "untitledProject": "बिना शीर्षक प्रोजेक्ट",
+    "create": "बनाएं",
+    "enterProjectName": "प्रोजेक्ट नाम दर्ज करें।",
+    "created": "\"{{name}}\" बनाया गया",
+    "createFailed": "प्रोजेक्ट बनाने में विफल",
+    "new": "+ नया",
+    "allProjects": "सभी प्रोजेक्ट",
+    "switchOpenCurrent": "वर्तमान प्रोजेक्ट बदलें / खोलें",
+    "rename": "प्रोजेक्ट का नाम बदलें",
+    "renameAction": "नाम बदलें",
+    "renamed": "प्रोजेक्ट का नाम बदला गया",
+    "archivePrompt": "प्रोजेक्ट आर्काइव करें?",
+    "archiveDetail": "मीडिया और वार्तालाप संदर्भ सुरक्षित रखे जाएंगे।",
+    "archiveAction": "आर्काइव",
+    "archived": "प्रोजेक्ट आर्काइव किया गया",
+    "deletePrompt": "प्रोजेक्ट हटाएं?",
+    "deleteDetail": "मीडिया या वार्तालाप द्वारा संदर्भित प्रोजेक्ट को आर्काइव किया जाना चाहिए।",
+    "deleteAction": "हटाएं",
+    "deleted": "प्रोजेक्ट हटाया गया",
+    "deleteError": "जब मीडिया या वार्तालाप इसे संदर्भित करते हैं तो प्रोजेक्ट हटाया नहीं जा सकता। इसके बजाय आर्काइव करें।",
+    "encryptionNote": "प्रोजेक्ट IDB-एन्क्रिप्टेड हैं • जनित आइटम सक्रिय प्रोजेक्ट का उपयोग करते हैं"
   },
   "chat": {
-    "newChat": "__MISSING__:chat.newChat",
-    "newChatShortcut": "__MISSING__:chat.newChatShortcut",
-    "newChatAction": "__MISSING__:chat.newChatAction",
-    "history": "__MISSING__:chat.history",
-    "collapseHistory": "__MISSING__:chat.collapseHistory",
-    "expandHistory": "__MISSING__:chat.expandHistory",
-    "options": "__MISSING__:chat.options",
-    "searchChats": "__MISSING__:chat.searchChats",
-    "exportActive": "__MISSING__:chat.exportActive",
-    "deleteActive": "__MISSING__:chat.deleteActive",
-    "clearActiveSelection": "__MISSING__:chat.clearActiveSelection",
-    "searchPlaceholder": "__MISSING__:chat.searchPlaceholder",
-    "searchAria": "__MISSING__:chat.searchAria",
-    "searching": "__MISSING__:chat.searching",
-    "showingMatches": "__MISSING__:chat.showingMatches",
-    "noMatches": "__MISSING__:chat.noMatches",
-    "noConversations": "__MISSING__:chat.noConversations",
-    "deletePrompt": "__MISSING__:chat.deletePrompt",
-    "untitled": "__MISSING__:chat.untitled",
-    "deleteAction": "__MISSING__:chat.deleteAction",
-    "exportAsMarkdown": "__MISSING__:chat.exportAsMarkdown",
-    "deleted": "__MISSING__:chat.deleted",
-    "undo": "__MISSING__:chat.undo",
-    "restored": "__MISSING__:chat.restored",
-    "restoreFailed": "__MISSING__:chat.restoreFailed",
-    "restoreUnavailable": "__MISSING__:chat.restoreUnavailable"
+    "newChat": "नई चैट",
+    "newChatShortcut": "नई चैट (⌘N)",
+    "newChatAction": "+ नई चैट",
+    "history": "इतिहास",
+    "collapseHistory": "इतिहास संक्षिप्त करें",
+    "expandHistory": "इतिहास विस्तृत करें",
+    "options": "चैट विकल्प",
+    "searchChats": "चैट खोजें",
+    "exportActive": "सक्रिय चैट निर्यात करें",
+    "deleteActive": "सक्रिय चैट हटाएं",
+    "clearActiveSelection": "सक्रिय चैट चयन साफ़ करें",
+    "searchPlaceholder": "खोजें…",
+    "searchAria": "वार्तालाप खोजें",
+    "searching": "खोज रहे हैं…",
+    "showingMatches": "{{total}} में से पहले {{count}} मिलान दिखाए जा रहे हैं",
+    "noMatches": "कोई मिलान नहीं",
+    "noConversations": "अभी तक कोई वार्तालाप नहीं",
+    "deletePrompt": "चैट हटाएं?",
+    "untitled": "बिना शीर्षक",
+    "deleteAction": "हटाएं",
+    "exportAsMarkdown": "Markdown के रूप में निर्यात करें",
+    "deleted": "वार्तालाप हटाया गया",
+    "undo": "पूर्ववत करें",
+    "restored": "वार्तालाप पुनर्स्थापित",
+    "restoreFailed": "पुनर्स्थापना में विफल",
+    "restoreUnavailable": "वार्तालाप पुनर्स्थापना के लिए अब उपलब्ध नहीं है।"
   },
   "inspector": {
-    "title": "__MISSING__:inspector.title",
-    "description": "__MISSING__:inspector.description",
-    "toggle": "__MISSING__:inspector.toggle",
-    "enabled": "__MISSING__:inspector.enabled",
-    "disabled": "__MISSING__:inspector.disabled",
-    "enabledDetail": "__MISSING__:inspector.enabledDetail",
-    "disabledDetail": "__MISSING__:inspector.disabledDetail",
-    "show": "__MISSING__:inspector.show",
-    "hide": "__MISSING__:inspector.hide"
+    "title": "ट्रैफ़िक निरीक्षक",
+    "description": "मॉडल का असंसाधित आउटपुट और स्थानीय सुरक्षा निर्णय दिखाता है।",
+    "toggle": "ट्रैफ़िक निरीक्षक टॉगल करें",
+    "enabled": "ट्रैफ़िक निरीक्षक सक्षम",
+    "disabled": "ट्रैफ़िक निरीक्षक अक्षम",
+    "enabledDetail": "असंसाधित प्रतिक्रियाएं, सुरक्षा निर्णय, और वयस्क चरित्र नियंत्रण दृश्यमान हैं।",
+    "disabledDetail": "मानक रेंडरिंग पुनर्स्थापित।",
+    "show": "निरीक्षक दिखाएं",
+    "hide": "निरीक्षक छिपाएं"
   },
   "familySafeMode": {
-    "title": "__MISSING__:familySafeMode.title",
-    "on": "__MISSING__:familySafeMode.on",
-    "off": "__MISSING__:familySafeMode.off",
-    "toggle": "__MISSING__:familySafeMode.toggle",
-    "enabledTooltip": "__MISSING__:familySafeMode.enabledTooltip",
-    "disabledTooltip": "__MISSING__:familySafeMode.disabledTooltip",
-    "notSaved": "__MISSING__:familySafeMode.notSaved",
-    "writeFailed": "__MISSING__:familySafeMode.writeFailed",
-    "enabledSuccess": "__MISSING__:familySafeMode.enabledSuccess",
-    "disabledSuccess": "__MISSING__:familySafeMode.disabledSuccess"
+    "title": "परिवार सुरक्षित मोड",
+    "on": "चालू: स्थानीय परिवार फ़िल्टर चलता है।",
+    "off": "बंद: स्थानीय फ़िल्टर बंद (प्रदाता सुरक्षित मोड अलग)।",
+    "toggle": "परिवार सुरक्षित मोड टॉगल करें",
+    "enabledTooltip": "परिवार सुरक्षित मोड सक्षम",
+    "disabledTooltip": "स्थानीय परिवार सुरक्षित मोड अक्षम (प्रदाता सुरक्षित मोड अलग)",
+    "notSaved": "परिवार सुरक्षित मोड सहेजा नहीं गया",
+    "writeFailed": "कॉन्फ़िग लेखन विफल।",
+    "enabledSuccess": "परिवार सुरक्षित मोड सक्षम — स्थानीय परिवार फ़िल्टर हर प्रॉम्प्ट पर चलता है",
+    "disabledSuccess": "वयस्क मोड सक्षम — स्थानीय परिवार फ़िल्टर छोड़ दिया जाता है"
   },
   "keyboardShortcuts": {
-    "switchTab": "__MISSING__:keyboardShortcuts.switchTab"
+    "switchTab": "टैब बदलें"
   },
   "tabs": {
     "chat": {
-      "label": "Chat",
-      "subtitle": "__MISSING__:tabs.chat.subtitle"
+      "label": "चैट",
+      "subtitle": "संवादात्मक AI"
     },
     "character-chats": {
-      "label": "__MISSING__:tabs.character-chats.label",
-      "subtitle": "__MISSING__:tabs.character-chats.subtitle"
+      "label": "चरित्र चैट",
+      "subtitle": "होस्टेड और स्थानीय चरित्रों के साथ बातचीत"
     },
     "history": {
-      "label": "__MISSING__:tabs.history.label",
-      "subtitle": "__MISSING__:tabs.history.subtitle"
+      "label": "इतिहास",
+      "subtitle": "पिछली बातचीत देखें"
     },
     "image": {
-      "label": "__MISSING__:tabs.image.label",
-      "subtitle": "__MISSING__:tabs.image.subtitle"
+      "label": "छवि स्टूडियो",
+      "subtitle": "पाठ से छवियाँ बनाएँ"
     },
     "media": {
-      "label": "__MISSING__:tabs.media.label",
-      "subtitle": "__MISSING__:tabs.media.subtitle"
+      "label": "मीडिया स्टूडियो",
+      "subtitle": "अपनी बनाई गई मीडिया देखें, टैग करें, संपादित करें और निर्यात करें"
     },
     "image-inspector": {
-      "label": "__MISSING__:tabs.image-inspector.label",
-      "subtitle": "__MISSING__:tabs.image-inspector.subtitle"
+      "label": "छवि निरीक्षक",
+      "subtitle": "छवियों का विश्लेषण और पुनर्निर्माण करें"
     },
     "prompts": {
-      "label": "Prompts",
-      "subtitle": "__MISSING__:tabs.prompts.subtitle"
+      "label": "प्रॉम्प्ट",
+      "subtitle": "अपनी प्रॉम्प्ट लाइब्रेरी देखें और प्रबंधित करें"
     },
     "scenes": {
-      "label": "__MISSING__:tabs.scenes.label",
-      "subtitle": "__MISSING__:tabs.scenes.subtitle"
+      "label": "दृश्य रचयिता",
+      "subtitle": "जटिल छवि निर्माण दृश्य बनाएँ"
     },
     "audio": {
-      "label": "__MISSING__:tabs.audio.label",
-      "subtitle": "__MISSING__:tabs.audio.subtitle"
+      "label": "ऑडियो स्टूडियो",
+      "subtitle": "पाठ-से-वाक् और प्रतिलेखन"
     },
     "music": {
-      "label": "__MISSING__:tabs.music.label",
-      "subtitle": "__MISSING__:tabs.music.subtitle"
+      "label": "संगीत स्टूडियो",
+      "subtitle": "संगीत और ध्वनि बनाएँ"
     },
     "video": {
-      "label": "__MISSING__:tabs.video.label",
-      "subtitle": "__MISSING__:tabs.video.subtitle"
+      "label": "वीडियो स्टूडियो",
+      "subtitle": "वीडियो क्लिप बनाएँ"
     },
     "embeddings": {
-      "label": "Embeddings",
-      "subtitle": "__MISSING__:tabs.embeddings.subtitle"
+      "label": "एम्बेडिंग",
+      "subtitle": "पाठ के वेक्टर प्रतिनिधित्व"
     },
     "search": {
-      "label": "__MISSING__:tabs.search.label",
-      "subtitle": "__MISSING__:tabs.search.subtitle"
+      "label": "अनुसंधान",
+      "subtitle": "गहन अनुसंधान और वेब स्क्रैपिंग"
     },
     "characters": {
-      "label": "__MISSING__:tabs.characters.label",
-      "subtitle": "__MISSING__:tabs.characters.subtitle"
+      "label": "चरित्र",
+      "subtitle": "रोलप्ले चरित्र कॉन्फ़िगर करें"
     },
     "character-creator": {
-      "label": "__MISSING__:tabs.character-creator.label",
-      "subtitle": "__MISSING__:tabs.character-creator.subtitle"
+      "label": "चरित्र निर्माता",
+      "subtitle": "एक अस्पष्ट विचार को पूर्ण, संपादन योग्य चरित्र कार्ड में बदलें"
     },
     "rp-studio": {
-      "label": "__MISSING__:tabs.rp-studio.label",
-      "subtitle": "__MISSING__:tabs.rp-studio.subtitle"
+      "label": "RP स्टूडियो",
+      "subtitle": "रोलप्ले चरित्र और परिदृश्य कार्यशाला"
     },
     "workflows": {
-      "label": "__MISSING__:tabs.workflows.label",
-      "subtitle": "__MISSING__:tabs.workflows.subtitle"
+      "label": "वर्कफ़्लो टेम्पलेट",
+      "subtitle": "पुन: उपयोग योग्य स्वचालन श्रृंखला बनाएँ"
     },
     "documents": {
-      "label": "Documents",
-      "subtitle": "__MISSING__:tabs.documents.subtitle"
+      "label": "दस्तावेज़",
+      "subtitle": "प्रबंधित दस्तावेज़ और स्कोप्ड वर्कस्पेस टूल"
     },
     "privacy": {
-      "label": "__MISSING__:tabs.privacy.label",
-      "subtitle": "__MISSING__:tabs.privacy.subtitle"
+      "label": "गोपनीयता",
+      "subtitle": "भंडारण और गोपनीयता सेटिंग्स प्रबंधित करें"
     },
     "playground": {
-      "label": "__MISSING__:tabs.playground.label",
-      "subtitle": "__MISSING__:tabs.playground.subtitle"
+      "label": "प्लेग्राउंड",
+      "subtitle": "चैट करके वर्कफ़्लो बनाएँ"
     },
     "settings": {
-      "label": "__MISSING__:tabs.settings.label",
-      "subtitle": "__MISSING__:tabs.settings.subtitle"
+      "label": "कॉन्फ़िग",
+      "subtitle": "ऐप कॉन्फ़िगरेशन"
     },
     "status": {
-      "label": "Status",
-      "subtitle": "__MISSING__:tabs.status.subtitle"
+      "label": "स्थिति",
+      "subtitle": "ऐप स्थिति और निदान"
     }
   },
   "groups": {
-    "conversation": "__MISSING__:groups.conversation",
-    "generate": "__MISSING__:groups.generate",
-    "build": "__MISSING__:groups.build",
-    "system": "__MISSING__:groups.system",
-    "projectsAndActions": "__MISSING__:groups.projectsAndActions",
-    "mediaStudio": "__MISSING__:groups.mediaStudio",
-    "promptLibrary": "__MISSING__:groups.promptLibrary",
-    "sceneComposer": "__MISSING__:groups.sceneComposer",
-    "rpStudio": "__MISSING__:groups.rpStudio",
-    "researchWorkspace": "__MISSING__:groups.researchWorkspace",
-    "privacyAndStorage": "__MISSING__:groups.privacyAndStorage"
+    "conversation": "बातचीत",
+    "generate": "उत्पन्न करें",
+    "build": "बनाएँ",
+    "system": "सिस्टम",
+    "projectsAndActions": "प्रोजेक्ट और क्रियाएँ",
+    "mediaStudio": "मीडिया स्टूडियो ({{count}} चयनित)",
+    "promptLibrary": "प्रॉम्प्ट लाइब्रेरी",
+    "sceneComposer": "सीन कंपोज़र",
+    "rpStudio": "RP स्टूडियो",
+    "researchWorkspace": "रिसर्च वर्कस्पेस",
+    "privacyAndStorage": "गोपनीयता और स्टोरेज"
   },
   "commandPalette": {
-    "command": "__MISSING__:commandPalette.command",
-    "searchPlaceholder": "__MISSING__:commandPalette.searchPlaceholder",
-    "esc": "__MISSING__:commandPalette.esc",
-    "tabsCanonical": "__MISSING__:commandPalette.tabsCanonical",
-    "noMatchingTabs": "__MISSING__:commandPalette.noMatchingTabs",
-    "newProject": "__MISSING__:commandPalette.newProject",
-    "switchOpenCurrent": "__MISSING__:commandPalette.switchOpenCurrent",
-    "selectAllVisible": "__MISSING__:commandPalette.selectAllVisible",
-    "clearSelection": "__MISSING__:commandPalette.clearSelection",
-    "compareSelected": "__MISSING__:commandPalette.compareSelected",
-    "exportSelected": "__MISSING__:commandPalette.exportSelected",
-    "favoriteSelected": "__MISSING__:commandPalette.favoriteSelected",
-    "addTagSelected": "__MISSING__:commandPalette.addTagSelected",
-    "sendToImage": "__MISSING__:commandPalette.sendToImage",
-    "copyRecipe": "__MISSING__:commandPalette.copyRecipe",
-    "onlyAvailableMediaStudio": "__MISSING__:commandPalette.onlyAvailableMediaStudio",
-    "selectedAllVisible": "__MISSING__:commandPalette.selectedAllVisible",
-    "clearedSelection": "__MISSING__:commandPalette.clearedSelection",
-    "selectCountToCompare": "__MISSING__:commandPalette.selectCountToCompare",
-    "selectOneToExport": "__MISSING__:commandPalette.selectOneToExport",
-    "selectOne": "__MISSING__:commandPalette.selectOne",
-    "openPromptLibrary": "__MISSING__:commandPalette.openPromptLibrary",
-    "newPrompt": "__MISSING__:commandPalette.newPrompt",
-    "useSelectedPrompt": "__MISSING__:commandPalette.useSelectedPrompt",
-    "exportPrompts": "__MISSING__:commandPalette.exportPrompts",
-    "importPrompts": "__MISSING__:commandPalette.importPrompts",
-    "saveCurrentPrompt": "__MISSING__:commandPalette.saveCurrentPrompt",
-    "untitledPrompt": "__MISSING__:commandPalette.untitledPrompt",
-    "emptyDraftPrompt": "__MISSING__:commandPalette.emptyDraftPrompt",
-    "createdNewPrompt": "__MISSING__:commandPalette.createdNewPrompt",
-    "selectPromptFirst": "__MISSING__:commandPalette.selectPromptFirst",
-    "noPromptSelected": "__MISSING__:commandPalette.noPromptSelected",
-    "promptCopied": "__MISSING__:commandPalette.promptCopied",
-    "couldNotCopyPrompt": "__MISSING__:commandPalette.couldNotCopyPrompt",
-    "noPromptsToExport": "__MISSING__:commandPalette.noPromptsToExport",
-    "exportedPrompts": "__MISSING__:commandPalette.exportedPrompts",
-    "importSuccess": "__MISSING__:commandPalette.importSuccess",
-    "importUpToDate": "__MISSING__:commandPalette.importUpToDate",
-    "couldNotImport": "__MISSING__:commandPalette.couldNotImport",
-    "importedCount": "__MISSING__:commandPalette.importedCount",
-    "syncedCount": "__MISSING__:commandPalette.syncedCount",
-    "skippedCount": "__MISSING__:commandPalette.skippedCount",
-    "openSceneComposer": "__MISSING__:commandPalette.openSceneComposer",
-    "exportScenes": "__MISSING__:commandPalette.exportScenes",
-    "importScenes": "__MISSING__:commandPalette.importScenes",
-    "noScenesToExport": "__MISSING__:commandPalette.noScenesToExport",
-    "exportedScenes": "__MISSING__:commandPalette.exportedScenes",
-    "importedScenesSuccess": "__MISSING__:commandPalette.importedScenesSuccess",
-    "skippedScenes": "__MISSING__:commandPalette.skippedScenes",
-    "openRpStudio": "__MISSING__:commandPalette.openRpStudio",
-    "createStCard": "__MISSING__:commandPalette.createStCard",
-    "startChatWithSelected": "__MISSING__:commandPalette.startChatWithSelected",
-    "newScenario": "__MISSING__:commandPalette.newScenario",
-    "createdLocalDraft": "__MISSING__:commandPalette.createdLocalDraft",
-    "selectCharacterFirst": "__MISSING__:commandPalette.selectCharacterFirst",
-    "chatStarted": "__MISSING__:commandPalette.chatStarted",
-    "couldNotStartChat": "__MISSING__:commandPalette.couldNotStartChat",
-    "scenarioFor": "__MISSING__:commandPalette.scenarioFor",
-    "createdNewScenario": "__MISSING__:commandPalette.createdNewScenario",
-    "openWorkflows": "__MISSING__:commandPalette.openWorkflows",
-    "openResearchWorkspace": "__MISSING__:commandPalette.openResearchWorkspace",
-    "newResearchSession": "__MISSING__:commandPalette.newResearchSession",
-    "exportResearchSessions": "__MISSING__:commandPalette.exportResearchSessions",
-    "importResearchSessions": "__MISSING__:commandPalette.importResearchSessions",
-    "createdNewResearchSession": "__MISSING__:commandPalette.createdNewResearchSession",
-    "noResearchToExport": "__MISSING__:commandPalette.noResearchToExport",
-    "exportedResearch": "__MISSING__:commandPalette.exportedResearch",
-    "importedResearchSuccess": "__MISSING__:commandPalette.importedResearchSuccess",
-    "openPrivacyDashboard": "__MISSING__:commandPalette.openPrivacyDashboard",
-    "refreshStorageInventory": "__MISSING__:commandPalette.refreshStorageInventory",
-    "copySafePrivacySummary": "__MISSING__:commandPalette.copySafePrivacySummary",
-    "exportSafePrivacySummary": "__MISSING__:commandPalette.exportSafePrivacySummary",
-    "toggleInspector": "__MISSING__:commandPalette.toggleInspector",
-    "toggleHint": "__MISSING__:commandPalette.toggleHint",
-    "navigateHint": "__MISSING__:commandPalette.navigateHint"
+    "command": "कमांड",
+    "searchPlaceholder": "टैब या क्रियाएँ खोजें… (उदा. इमेज, नया प्रोजेक्ट)",
+    "esc": "ESC",
+    "tabsCanonical": "टैब (कैनोनिकल)",
+    "noMatchingTabs": "कोई मैचिंग टैब नहीं",
+    "newProject": "नया प्रोजेक्ट",
+    "switchOpenCurrent": "वर्तमान प्रोजेक्ट स्विच / खोलें",
+    "selectAllVisible": "सभी दृश्य मीडिया चुनें",
+    "clearSelection": "मीडिया चयन साफ़ करें",
+    "compareSelected": "चयनित मीडिया तुलना करें",
+    "exportSelected": "चयनित मीडिया निर्यात करें",
+    "favoriteSelected": "चयनित मीडिया पसंदीदा बनाएँ",
+    "addTagSelected": "चयनित मीडिया में टैग जोड़ें",
+    "sendToImage": "चयनित को इमेज स्टूडियो में भेजें",
+    "copyRecipe": "चयनित रेसिपी JSON कॉपी करें",
+    "onlyAvailableMediaStudio": "यह कमांड केवल मीडिया स्टूडियो में उपलब्ध है।",
+    "selectedAllVisible": "सभी दृश्य मीडिया चुने गए",
+    "clearedSelection": "मीडिया चयन साफ़ किया गया",
+    "selectCountToCompare": "तुलना के लिए 2 से {{max}} आइटम चुनें।",
+    "selectOneToExport": "निर्यात के लिए कम से कम एक मीडिया आइटम चुनें।",
+    "selectOne": "कम से कम एक मीडिया आइटम चुनें।",
+    "openPromptLibrary": "प्रॉम्प्ट लाइब्रेरी खोलें",
+    "newPrompt": "नया प्रॉम्प्ट",
+    "useSelectedPrompt": "चयनित प्रॉम्प्ट का उपयोग करें (कॉपी)",
+    "exportPrompts": "प्रॉम्प्ट निर्यात करें",
+    "importPrompts": "प्रॉम्प्ट आयात करें…",
+    "saveCurrentPrompt": "वर्तमान प्रॉम्प्ट लाइब्रेरी में सहेजें",
+    "untitledPrompt": "बिना शीर्षक प्रॉम्प्ट",
+    "emptyDraftPrompt": "(खाली ड्राफ्ट — अपने प्रॉम्प्ट से बदलें)",
+    "createdNewPrompt": "नया प्रॉम्प्ट बनाया गया",
+    "selectPromptFirst": "पहले प्रॉम्प्ट लाइब्रेरी में एक प्रॉम्प्ट चुनें।",
+    "noPromptSelected": "कोई प्रॉम्प्ट चयनित नहीं।",
+    "promptCopied": "प्रॉम्प्ट क्लिपबोर्ड पर कॉपी किया गया",
+    "couldNotCopyPrompt": "प्रॉम्प्ट कॉपी नहीं किया जा सका",
+    "noPromptsToExport": "निर्यात के लिए कोई प्रॉम्प्ट नहीं।",
+    "exportedPrompts": "{{count}} प्रॉम्प्ट{{plural}} निर्यात किए गए",
+    "importSuccess": "प्रॉम्प्ट लाइब्रेरी: {{parts}}",
+    "importUpToDate": "प्रॉम्प्ट लाइब्रेरी अद्यतित",
+    "couldNotImport": "आयात नहीं किया जा सका",
+    "importedCount": "{{count}} प्रॉम्प्ट{{plural}} आयात किए गए",
+    "syncedCount": "{{count}} प्रॉम्प्ट{{plural}} सिंक किए गए",
+    "skippedCount": "{{count}} छोड़े गए",
+    "openSceneComposer": "सीन कंपोज़र खोलें",
+    "exportScenes": "सीन निर्यात करें",
+    "importScenes": "सीन आयात करें…",
+    "noScenesToExport": "निर्यात के लिए कोई सीन नहीं।",
+    "exportedScenes": "{{count}} सीन{{plural}} निर्यात किए गए",
+    "importedScenesSuccess": "{{count}} सीन{{plural}} आयात किए गए{{skipped}}",
+    "skippedScenes": " ({{count}} छोड़े गए)",
+    "openRpStudio": "RP स्टूडियो खोलें",
+    "createStCard": "ST कार्ड बनाएँ",
+    "startChatWithSelected": "चयनित चरित्र के साथ चैट शुरू करें",
+    "newScenario": "नया परिदृश्य",
+    "createdLocalDraft": "स्थानीय ST कार्ड ड्राफ्ट बनाया गया",
+    "selectCharacterFirst": "पहले RP स्टूडियो में एक चरित्र चुनें।",
+    "chatStarted": "चैट शुरू हुई",
+    "couldNotStartChat": "चैट शुरू नहीं हो सकी",
+    "scenarioFor": "{{name}} के लिए परिदृश्य",
+    "createdNewScenario": "नया परिदृश्य बनाया गया",
+    "openWorkflows": "वर्कफ़्लो खोलें",
+    "openResearchWorkspace": "अनुसंधान कार्यक्षेत्र खोलें",
+    "newResearchSession": "नया अनुसंधान सत्र",
+    "exportResearchSessions": "अनुसंधान सत्र निर्यात करें",
+    "importResearchSessions": "अनुसंधान सत्र आयात करें…",
+    "createdNewResearchSession": "नया अनुसंधान सत्र बनाया गया",
+    "noResearchToExport": "निर्यात करने के लिए कोई अनुसंधान सत्र नहीं।",
+    "exportedResearch": "{{count}} अनुसंधान सत्र{{plural}} निर्यात किए गए",
+    "importedResearchSuccess": "{{count}} सत्र{{plural}}{{skipped}} आयात किए गए",
+    "openPrivacyDashboard": "गोपनीयता डैशबोर्ड खोलें",
+    "refreshStorageInventory": "भंडारण सूची ताज़ा करें",
+    "copySafePrivacySummary": "सुरक्षित गोपनीयता सारांश कॉपी करें",
+    "exportSafePrivacySummary": "सुरक्षित गोपनीयता सारांश निर्यात करें",
+    "toggleInspector": "निरीक्षक टॉगल करें",
+    "toggleHint": "टॉगल करने के लिए ⌘K",
+    "navigateHint": "नेविगेट करने के लिए ↑↓ · चुनने के लिए Enter"
   }
 }

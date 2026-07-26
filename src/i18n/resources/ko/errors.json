@@ -1,12 +1,12 @@
 {
-  "networkError": "__MISSING__:networkError",
-  "apiKeyMissing": "__MISSING__:apiKeyMissing",
-  "rateLimit429": "__MISSING__:rateLimit429",
-  "safeModeBlock451": "__MISSING__:safeModeBlock451",
-  "gatewayTimeout504": "__MISSING__:gatewayTimeout504",
-  "modelUnavailable": "__MISSING__:modelUnavailable",
-  "autosaveFailed": "__MISSING__:autosaveFailed",
-  "fileReadError": "__MISSING__:fileReadError",
-  "invalidFormat": "__MISSING__:invalidFormat",
-  "unknownError": "__MISSING__:unknownError"
+  "networkError": "네트워크 요청이 실패했습니다. 인터넷 연결을 확인해 주세요.",
+  "apiKeyMissing": "API 키가 없습니다. 설정에서 API 키를 구성해 주세요.",
+  "rateLimit429": "요청 한도를 초과했습니다. 재시도하기 전에 잠시 기다려 주세요.",
+  "safeModeBlock451": "Family Safe Mode 필터에 의해 요청이 차단되었습니다.",
+  "gatewayTimeout504": "요청 시간이 초과되었습니다. 다시 시도해 주세요.",
+  "modelUnavailable": "모델 {{model}}은(는) 현재 사용할 수 없습니다.",
+  "autosaveFailed": "자동 저장 실패: {{error}}",
+  "fileReadError": "파일을 읽지 못했습니다.",
+  "invalidFormat": "잘못된 파일 형식입니다.",
+  "unknownError": "예기치 않은 오류가 발생했습니다."
 }

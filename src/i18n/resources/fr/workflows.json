@@ -1,10 +1,10 @@
 {
   "title": "Flux de travail",
-  "playground": "__MISSING__:playground",
-  "templates": "__MISSING__:templates",
-  "nodes": "__MISSING__:nodes",
-  "canvas": "__MISSING__:canvas",
-  "runWorkflow": "__MISSING__:runWorkflow",
-  "exportWorkflow": "__MISSING__:exportWorkflow",
-  "importWorkflow": "__MISSING__:importWorkflow"
+  "playground": "Espace de jeu de flux de travail",
+  "templates": "Modèles",
+  "nodes": "Nœuds",
+  "canvas": "Canevas de flux de travail",
+  "runWorkflow": "Exécuter le flux de travail",
+  "exportWorkflow": "Exporter le flux de travail",
+  "importWorkflow": "Importer le flux de travail"
 }

@@ -1,14 +1,14 @@
 {
-  "title": "__MISSING__:title",
-  "searchAndScrape": "__MISSING__:searchAndScrape",
-  "provider": "__MISSING__:provider",
-  "veniceProvider": "__MISSING__:veniceProvider",
-  "jinaProvider": "__MISSING__:jinaProvider",
-  "autoProvider": "__MISSING__:autoProvider",
-  "socialDiscovery": "__MISSING__:socialDiscovery",
-  "queryPlaceholder": "__MISSING__:queryPlaceholder",
-  "results": "__MISSING__:results",
-  "sources": "__MISSING__:sources",
-  "timeline": "__MISSING__:timeline",
-  "noResults": "__MISSING__:noResults"
+  "title": "البحث",
+  "searchAndScrape": "البحث والاستخراج",
+  "provider": "المزود",
+  "veniceProvider": "بحث Venice",
+  "jinaProvider": "بحث جينا",
+  "autoProvider": "المزود التلقائي",
+  "socialDiscovery": "الاكتشاف الاجتماعي",
+  "queryPlaceholder": "أدخل موضوع البحث أو URL للاستخراج...",
+  "results": "نتائج البحث",
+  "sources": "المصادر",
+  "timeline": "الجدول الزمني",
+  "noResults": "لم يتم العثور على نتائج بحث للاستعلام."
 }

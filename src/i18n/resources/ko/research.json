@@ -1,14 +1,14 @@
 {
-  "title": "__MISSING__:title",
-  "searchAndScrape": "__MISSING__:searchAndScrape",
-  "provider": "__MISSING__:provider",
-  "veniceProvider": "__MISSING__:veniceProvider",
-  "jinaProvider": "__MISSING__:jinaProvider",
-  "autoProvider": "__MISSING__:autoProvider",
-  "socialDiscovery": "__MISSING__:socialDiscovery",
-  "queryPlaceholder": "__MISSING__:queryPlaceholder",
-  "results": "__MISSING__:results",
-  "sources": "__MISSING__:sources",
-  "timeline": "__MISSING__:timeline",
-  "noResults": "__MISSING__:noResults"
+  "title": "연구",
+  "searchAndScrape": "검색 및 스크래핑",
+  "provider": "제공자",
+  "veniceProvider": "Venice 검색",
+  "jinaProvider": "Jina 검색",
+  "autoProvider": "자동 제공자",
+  "socialDiscovery": "소셜 발견",
+  "queryPlaceholder": "연구 주제 또는 스크래핑할 URL을 입력하세요...",
+  "results": "검색 결과",
+  "sources": "출처",
+  "timeline": "타임라인",
+  "noResults": "해당 쿼리에 대한 연구 결과를 찾을 수 없습니다."
 }

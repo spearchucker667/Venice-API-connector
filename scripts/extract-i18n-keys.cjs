@@ -354,6 +354,16 @@ function getLeafKeys(obj, prefix = '', out = new Set()) {
   return out;
 }
 
+const DYNAMIC_KEY_MANIFEST_PATH = path.join(__dirname, 'dynamic-key-manifest.json');
+
+function loadDynamicKeyManifest() {
+  try {
+    return JSON.parse(fs.readFileSync(DYNAMIC_KEY_MANIFEST_PATH, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
 function runAudit() {
   const canonicalKeysByNs = {};
   for (const ns of NAMESPACES) {
@@ -372,6 +382,45 @@ function runAudit() {
       if (!seenMissing.has(item.fullKey)) {
         seenMissing.add(item.fullKey);
         missingKeys.push(item);
+      }
+    }
+  }
+
+  // Manifest expansion: finite dynamic-key families declared in
+  // `scripts/dynamic-key-manifest.json`. Each declared value is merged into
+  // the used-key set below, after being validated against the canonical
+  // en-US catalog of the relevant namespace.
+  const manifest = loadDynamicKeyManifest();
+  const manifestInflations = [];
+  const manifestMismatches = [];
+  if (manifest && Array.isArray(manifest.families)) {
+    for (const family of manifest.families) {
+      const ns = family.namespace;
+      const nsKeys = canonicalKeysByNs[ns];
+      if (!nsKeys) {
+        manifestMismatches.push(
+          `Manifest family '${family.name}' declared for namespace '${ns}' but that namespace is not a recognised visible namespace.`,
+        );
+        continue;
+      }
+      for (const value of family.values || []) {
+        const fullKey = `${ns}:${value}`;
+        if (!nsKeys.has(value)) {
+          manifestMismatches.push(
+            `Manifest family '${family.name}' declares ${fullKey} but the canonical en-US catalog does not contain it.`,
+          );
+          continue;
+        }
+        if (!usedKeysSet.has(fullKey)) {
+          usedKeysSet.add(fullKey);
+          manifestInflations.push({
+            family: family.name,
+            namespace: ns,
+            key: value,
+            fullKey,
+            source: family.source,
+          });
+        }
       }
     }
   }
@@ -402,6 +451,14 @@ function runAudit() {
     ),
     missingKeys,
     unusedKeys,
+    dynamicKeyManifest: manifest
+      ? {
+          schemaVersion: manifest.schemaVersion || 1,
+          families: (manifest.families || []).length,
+          inflatedKeyCount: manifestInflations.length,
+          mismatches: manifestMismatches,
+        }
+      : null,
   };
 
   fs.writeFileSync(

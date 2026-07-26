@@ -1,10 +1,10 @@
 {
   "title": "Рабочие процессы",
-  "playground": "__MISSING__:playground",
-  "templates": "__MISSING__:templates",
-  "nodes": "__MISSING__:nodes",
-  "canvas": "__MISSING__:canvas",
-  "runWorkflow": "__MISSING__:runWorkflow",
-  "exportWorkflow": "__MISSING__:exportWorkflow",
-  "importWorkflow": "__MISSING__:importWorkflow"
+  "playground": "Песочница рабочих процессов",
+  "templates": "Шаблоны",
+  "nodes": "Узлы",
+  "canvas": "Холст рабочего процесса",
+  "runWorkflow": "Запустить рабочий процесс",
+  "exportWorkflow": "Экспортировать рабочий процесс",
+  "importWorkflow": "Импортировать рабочий процесс"
 }

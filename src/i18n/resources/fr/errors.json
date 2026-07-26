@@ -1,12 +1,12 @@
 {
-  "networkError": "__MISSING__:networkError",
-  "apiKeyMissing": "__MISSING__:apiKeyMissing",
-  "rateLimit429": "__MISSING__:rateLimit429",
-  "safeModeBlock451": "__MISSING__:safeModeBlock451",
-  "gatewayTimeout504": "__MISSING__:gatewayTimeout504",
-  "modelUnavailable": "__MISSING__:modelUnavailable",
-  "autosaveFailed": "__MISSING__:autosaveFailed",
+  "networkError": "Échec de la requête réseau. Veuillez vérifier votre connexion Internet.",
+  "apiKeyMissing": "La clé API est manquante. Veuillez configurer votre clé API dans les Paramètres.",
+  "rateLimit429": "Limite de requêtes dépassée. Veuillez patienter avant de réessayer.",
+  "safeModeBlock451": "Requête bloquée par le filtre Mode Sécurisé Famille.",
+  "gatewayTimeout504": "Délai de la requête expiré. Veuillez réessayer.",
+  "modelUnavailable": "Le modèle {{model}} est actuellement indisponible.",
+  "autosaveFailed": "Échec de la sauvegarde automatique : {{error}}",
   "fileReadError": "Échec de read file.",
-  "invalidFormat": "__MISSING__:invalidFormat",
-  "unknownError": "__MISSING__:unknownError"
+  "invalidFormat": "Format de fichier invalide.",
+  "unknownError": "Une erreur inattendue s'est produite."
 }

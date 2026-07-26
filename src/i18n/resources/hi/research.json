@@ -1,14 +1,14 @@
 {
-  "title": "__MISSING__:title",
-  "searchAndScrape": "__MISSING__:searchAndScrape",
-  "provider": "__MISSING__:provider",
-  "veniceProvider": "__MISSING__:veniceProvider",
-  "jinaProvider": "__MISSING__:jinaProvider",
-  "autoProvider": "__MISSING__:autoProvider",
-  "socialDiscovery": "__MISSING__:socialDiscovery",
-  "queryPlaceholder": "__MISSING__:queryPlaceholder",
-  "results": "__MISSING__:results",
-  "sources": "__MISSING__:sources",
-  "timeline": "__MISSING__:timeline",
-  "noResults": "__MISSING__:noResults"
+  "title": "अनुसंधान",
+  "searchAndScrape": "खोजें और स्क्रैप करें",
+  "provider": "प्रदाता",
+  "veniceProvider": "Venice खोज",
+  "jinaProvider": "जीना खोज",
+  "autoProvider": "स्वतः प्रदाता",
+  "socialDiscovery": "सामाजिक खोज",
+  "queryPlaceholder": "स्क्रैप करने के लिए अनुसंधान विषय या URL दर्ज करें...",
+  "results": "खोज परिणाम",
+  "sources": "स्रोत",
+  "timeline": "समयरेखा",
+  "noResults": "क्वेरी के लिए कोई अनुसंधान परिणाम नहीं मिला।"
 }

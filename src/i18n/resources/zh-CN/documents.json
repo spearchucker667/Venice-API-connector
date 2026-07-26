@@ -1,14 +1,14 @@
 {
   "title": "文档",
-  "workingGroups": "__MISSING__:workingGroups",
-  "managedLibrary": "__MISSING__:managedLibrary",
-  "connectedWorkspace": "__MISSING__:connectedWorkspace",
-  "documentAgent": "__MISSING__:documentAgent",
-  "proposals": "__MISSING__:proposals",
-  "revisions": "__MISSING__:revisions",
-  "createDocument": "__MISSING__:createDocument",
-  "importDocument": "__MISSING__:importDocument",
-  "searchWorkspace": "__MISSING__:searchWorkspace",
-  "fileInspector": "__MISSING__:fileInspector",
-  "noDocuments": "__MISSING__:noDocuments"
+  "workingGroups": "工作组",
+  "managedLibrary": "托管库",
+  "connectedWorkspace": "已连接的工作区",
+  "documentAgent": "文档代理",
+  "proposals": "提案",
+  "revisions": "修订历史",
+  "createDocument": "创建文档",
+  "importDocument": "导入文档",
+  "searchWorkspace": "搜索工作区",
+  "fileInspector": "文件检查器",
+  "noDocuments": "工作组中未找到文档。"
 }

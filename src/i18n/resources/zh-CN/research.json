@@ -1,14 +1,14 @@
 {
   "title": "研究",
-  "searchAndScrape": "__MISSING__:searchAndScrape",
-  "provider": "__MISSING__:provider",
-  "veniceProvider": "__MISSING__:veniceProvider",
-  "jinaProvider": "__MISSING__:jinaProvider",
-  "autoProvider": "__MISSING__:autoProvider",
-  "socialDiscovery": "__MISSING__:socialDiscovery",
+  "searchAndScrape": "搜索与抓取",
+  "provider": "提供商",
+  "veniceProvider": "Venice 搜索",
+  "jinaProvider": "Jina 搜索",
+  "autoProvider": "自动提供商",
+  "socialDiscovery": "社交发现",
   "queryPlaceholder": "输入research topic or URL to scrape...",
-  "results": "__MISSING__:results",
-  "sources": "__MISSING__:sources",
-  "timeline": "__MISSING__:timeline",
-  "noResults": "__MISSING__:noResults"
+  "results": "搜索结果",
+  "sources": "来源",
+  "timeline": "时间线",
+  "noResults": "未找到该查询的研究结果。"
 }

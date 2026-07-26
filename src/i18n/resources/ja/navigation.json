@@ -2,261 +2,261 @@
   "project": {
     "label": "プロジェクト",
     "activeProject": "アクティブなプロジェクト",
-    "newProjectName": "__MISSING__:project.newProjectName",
-    "untitledProject": "__MISSING__:project.untitledProject",
+    "newProjectName": "新しいプロジェクト名",
+    "untitledProject": "無題のプロジェクト",
     "create": "作成",
     "enterProjectName": "入力：a project name.",
-    "created": "__MISSING__:project.created",
+    "created": "\"{{name}}\" を作成しました",
     "createFailed": "失敗：create project",
-    "new": "__MISSING__:project.new",
+    "new": "+ 新規",
     "allProjects": "すべてのプロジェクト",
-    "switchOpenCurrent": "__MISSING__:project.switchOpenCurrent",
-    "rename": "__MISSING__:project.rename",
-    "renameAction": "__MISSING__:project.renameAction",
-    "renamed": "__MISSING__:project.renamed",
-    "archivePrompt": "__MISSING__:project.archivePrompt",
-    "archiveDetail": "__MISSING__:project.archiveDetail",
-    "archiveAction": "__MISSING__:project.archiveAction",
-    "archived": "__MISSING__:project.archived",
+    "switchOpenCurrent": "現在のプロジェクトを切り替え/開く",
+    "rename": "プロジェクトの名前を変更",
+    "renameAction": "名前を変更",
+    "renamed": "プロジェクトの名前を変更しました",
+    "archivePrompt": "プロジェクトをアーカイブしますか？",
+    "archiveDetail": "メディアと会話の参照は保持されます。",
+    "archiveAction": "アーカイブ",
+    "archived": "プロジェクトをアーカイブしました",
     "deletePrompt": "削除：project?",
-    "deleteDetail": "__MISSING__:project.deleteDetail",
+    "deleteDetail": "メディアや会話から参照されているプロジェクトは、代わりにアーカイブする必要があります。",
     "deleteAction": "削除",
-    "deleted": "__MISSING__:project.deleted",
-    "deleteError": "__MISSING__:project.deleteError",
-    "encryptionNote": "__MISSING__:project.encryptionNote"
+    "deleted": "プロジェクトを削除しました",
+    "deleteError": "メディアや会話から参照されているプロジェクトは削除できません。代わりにアーカイブしてください。",
+    "encryptionNote": "プロジェクトはIDB暗号化されています • 生成アイテムはアクティブなプロジェクトを使用します"
   },
   "chat": {
-    "newChat": "__MISSING__:chat.newChat",
-    "newChatShortcut": "__MISSING__:chat.newChatShortcut",
+    "newChat": "新しいチャット",
+    "newChatShortcut": "新しいチャット (⌘N)",
     "newChatAction": "+ 新しいチャット",
-    "history": "__MISSING__:chat.history",
-    "collapseHistory": "__MISSING__:chat.collapseHistory",
-    "expandHistory": "__MISSING__:chat.expandHistory",
-    "options": "__MISSING__:chat.options",
-    "searchChats": "__MISSING__:chat.searchChats",
-    "exportActive": "__MISSING__:chat.exportActive",
+    "history": "履歴",
+    "collapseHistory": "履歴を折りたたむ",
+    "expandHistory": "履歴を展開",
+    "options": "チャットオプション",
+    "searchChats": "チャットを検索",
+    "exportActive": "アクティブなチャットをエクスポート",
     "deleteActive": "削除：active chat",
-    "clearActiveSelection": "__MISSING__:chat.clearActiveSelection",
-    "searchPlaceholder": "__MISSING__:chat.searchPlaceholder",
-    "searchAria": "__MISSING__:chat.searchAria",
-    "searching": "__MISSING__:chat.searching",
-    "showingMatches": "__MISSING__:chat.showingMatches",
-    "noMatches": "__MISSING__:chat.noMatches",
-    "noConversations": "__MISSING__:chat.noConversations",
+    "clearActiveSelection": "アクティブなチャットの選択をクリア",
+    "searchPlaceholder": "検索…",
+    "searchAria": "会話を検索",
+    "searching": "検索中…",
+    "showingMatches": "最初の{{count}}件 / {{total}}件の一致を表示中",
+    "noMatches": "一致なし",
+    "noConversations": "まだ会話がありません",
     "deletePrompt": "チャットを削除しますか？",
-    "untitled": "__MISSING__:chat.untitled",
+    "untitled": "無題",
     "deleteAction": "削除",
     "exportAsMarkdown": "Markdownとしてエクスポート",
-    "deleted": "__MISSING__:chat.deleted",
-    "undo": "__MISSING__:chat.undo",
-    "restored": "__MISSING__:chat.restored",
+    "deleted": "会話を削除しました",
+    "undo": "元に戻す",
+    "restored": "会話を復元しました",
     "restoreFailed": "失敗：restore",
-    "restoreUnavailable": "__MISSING__:chat.restoreUnavailable"
+    "restoreUnavailable": "会話は復元できなくなりました。"
   },
   "inspector": {
-    "title": "__MISSING__:inspector.title",
-    "description": "__MISSING__:inspector.description",
+    "title": "トラフィックインスペクター",
+    "description": "モデルの生の出力とローカルの安全性判定を表示します。",
     "toggle": "トラフィックインスペクター切り替え",
-    "enabled": "__MISSING__:inspector.enabled",
-    "disabled": "__MISSING__:inspector.disabled",
-    "enabledDetail": "__MISSING__:inspector.enabledDetail",
-    "disabledDetail": "__MISSING__:inspector.disabledDetail",
-    "show": "__MISSING__:inspector.show",
-    "hide": "__MISSING__:inspector.hide"
+    "enabled": "トラフィックインスペクターが有効です",
+    "disabled": "トラフィックインスペクターが無効です",
+    "enabledDetail": "生のレスポンス、安全性判定、アダルトキャラクター制御が表示されます。",
+    "disabledDetail": "標準レンダリングに戻しました。",
+    "show": "インスペクターを表示",
+    "hide": "インスペクターを非表示"
   },
   "familySafeMode": {
-    "title": "__MISSING__:familySafeMode.title",
-    "on": "__MISSING__:familySafeMode.on",
-    "off": "__MISSING__:familySafeMode.off",
+    "title": "ファミリーセーフモード",
+    "on": "オン: ローカルファミリーフィルターが実行されます。",
+    "off": "オフ: ローカルフィルターオフ（プロバイダーセーフモードは別設定）。",
     "toggle": "ファミリーセーフモード切り替え",
-    "enabledTooltip": "__MISSING__:familySafeMode.enabledTooltip",
-    "disabledTooltip": "__MISSING__:familySafeMode.disabledTooltip",
-    "notSaved": "__MISSING__:familySafeMode.notSaved",
-    "writeFailed": "__MISSING__:familySafeMode.writeFailed",
-    "enabledSuccess": "__MISSING__:familySafeMode.enabledSuccess",
-    "disabledSuccess": "__MISSING__:familySafeMode.disabledSuccess"
+    "enabledTooltip": "ファミリーセーフモードが有効です",
+    "disabledTooltip": "ローカルファミリーセーフモードが無効です（プロバイダーセーフモードは別設定）",
+    "notSaved": "ファミリーセーフモードは保存されませんでした",
+    "writeFailed": "設定の書き込みに失敗しました。",
+    "enabledSuccess": "ファミリーセーフモードが有効になりました — ローカルファミリーフィルターがすべてのプロンプトで実行されます",
+    "disabledSuccess": "アダルトモードが有効になりました — ローカルファミリーフィルターはスキップされます"
   },
   "keyboardShortcuts": {
-    "switchTab": "__MISSING__:keyboardShortcuts.switchTab"
+    "switchTab": "タブを切り替え"
   },
   "tabs": {
     "chat": {
       "label": "チャット",
-      "subtitle": "__MISSING__:tabs.chat.subtitle"
+      "subtitle": "会話型AI"
     },
     "character-chats": {
-      "label": "__MISSING__:tabs.character-chats.label",
-      "subtitle": "__MISSING__:tabs.character-chats.subtitle"
+      "label": "キャラクターチャット",
+      "subtitle": "ホストされたキャラクターとローカルキャラクターとの会話"
     },
     "history": {
-      "label": "__MISSING__:tabs.history.label",
-      "subtitle": "__MISSING__:tabs.history.subtitle"
+      "label": "履歴",
+      "subtitle": "過去の会話を閲覧"
     },
     "image": {
       "label": "画像スタジオ",
-      "subtitle": "__MISSING__:tabs.image.subtitle"
+      "subtitle": "テキストから画像を生成"
     },
     "media": {
       "label": "メディアスタジオ",
-      "subtitle": "__MISSING__:tabs.media.subtitle"
+      "subtitle": "生成したメディアの閲覧、タグ付け、編集、エクスポート"
     },
     "image-inspector": {
       "label": "画像インスペクター",
-      "subtitle": "__MISSING__:tabs.image-inspector.subtitle"
+      "subtitle": "画像の分析と再構築"
     },
     "prompts": {
       "label": "プロンプト",
-      "subtitle": "__MISSING__:tabs.prompts.subtitle"
+      "subtitle": "プロンプトライブラリの閲覧と管理"
     },
     "scenes": {
       "label": "シーンコンポーザー",
-      "subtitle": "__MISSING__:tabs.scenes.subtitle"
+      "subtitle": "複雑な画像生成シーンの構成"
     },
     "audio": {
       "label": "オーディオスタジオ",
-      "subtitle": "__MISSING__:tabs.audio.subtitle"
+      "subtitle": "音声合成と文字起こし"
     },
     "music": {
       "label": "音楽スタジオ",
-      "subtitle": "__MISSING__:tabs.music.subtitle"
+      "subtitle": "音楽とサウンドの生成"
     },
     "video": {
       "label": "動画スタジオ",
-      "subtitle": "__MISSING__:tabs.video.subtitle"
+      "subtitle": "動画クリップの生成"
     },
     "embeddings": {
       "label": "エンベディング",
-      "subtitle": "__MISSING__:tabs.embeddings.subtitle"
+      "subtitle": "テキストのベクトル表現"
     },
     "search": {
       "label": "リサーチ",
-      "subtitle": "__MISSING__:tabs.search.subtitle"
+      "subtitle": "深い調査とウェブスクレイピング"
     },
     "characters": {
-      "label": "__MISSING__:tabs.characters.label",
-      "subtitle": "__MISSING__:tabs.characters.subtitle"
+      "label": "キャラクター",
+      "subtitle": "ロールプレイキャラクターの設定"
     },
     "character-creator": {
       "label": "キャラクター作成",
-      "subtitle": "__MISSING__:tabs.character-creator.subtitle"
+      "subtitle": "大まかなアイデアを完全な編集可能なキャラクターカードに変換"
     },
     "rp-studio": {
       "label": "RPスタジオ",
-      "subtitle": "__MISSING__:tabs.rp-studio.subtitle"
+      "subtitle": "ロールプレイキャラクターとシナリオのワークショップ"
     },
     "workflows": {
-      "label": "__MISSING__:tabs.workflows.label",
-      "subtitle": "__MISSING__:tabs.workflows.subtitle"
+      "label": "ワークフローテンプレート",
+      "subtitle": "再利用可能な自動化チェーンの構築"
     },
     "documents": {
       "label": "ドキュメント",
-      "subtitle": "__MISSING__:tabs.documents.subtitle"
+      "subtitle": "管理されたドキュメントとスコープ付きワークスペースツール"
     },
     "privacy": {
       "label": "プライバシー",
-      "subtitle": "__MISSING__:tabs.privacy.subtitle"
+      "subtitle": "ストレージとプライバシー設定の管理"
     },
     "playground": {
       "label": "プレイグラウンド",
-      "subtitle": "__MISSING__:tabs.playground.subtitle"
+      "subtitle": "チャットでワークフローを構築"
     },
     "settings": {
       "label": "構成",
-      "subtitle": "__MISSING__:tabs.settings.subtitle"
+      "subtitle": "アプリ設定"
     },
     "status": {
       "label": "ステータス",
-      "subtitle": "__MISSING__:tabs.status.subtitle"
+      "subtitle": "アプリのステータスと診断"
     }
   },
   "groups": {
-    "conversation": "__MISSING__:groups.conversation",
-    "generate": "__MISSING__:groups.generate",
-    "build": "__MISSING__:groups.build",
-    "system": "__MISSING__:groups.system",
-    "projectsAndActions": "__MISSING__:groups.projectsAndActions",
-    "mediaStudio": "__MISSING__:groups.mediaStudio",
-    "promptLibrary": "__MISSING__:groups.promptLibrary",
+    "conversation": "会話",
+    "generate": "生成",
+    "build": "構築",
+    "system": "システム",
+    "projectsAndActions": "プロジェクトとアクション",
+    "mediaStudio": "メディアスタジオ（{{count}}件選択）",
+    "promptLibrary": "プロンプトライブラリ",
     "sceneComposer": "シーンコンポーザー",
     "rpStudio": "RPスタジオ",
-    "researchWorkspace": "__MISSING__:groups.researchWorkspace",
-    "privacyAndStorage": "__MISSING__:groups.privacyAndStorage"
+    "researchWorkspace": "調査ワークスペース",
+    "privacyAndStorage": "プライバシーとストレージ"
   },
   "commandPalette": {
-    "command": "__MISSING__:commandPalette.command",
-    "searchPlaceholder": "__MISSING__:commandPalette.searchPlaceholder",
-    "esc": "__MISSING__:commandPalette.esc",
-    "tabsCanonical": "__MISSING__:commandPalette.tabsCanonical",
-    "noMatchingTabs": "__MISSING__:commandPalette.noMatchingTabs",
-    "newProject": "__MISSING__:commandPalette.newProject",
-    "switchOpenCurrent": "__MISSING__:commandPalette.switchOpenCurrent",
+    "command": "コマンド",
+    "searchPlaceholder": "タブまたはアクションを検索…（例：画像、新規プロジェクト）",
+    "esc": "ESC",
+    "tabsCanonical": "タブ（標準）",
+    "noMatchingTabs": "一致するタブがありません",
+    "newProject": "新規プロジェクト",
+    "switchOpenCurrent": "現在のプロジェクトを切り替え/開く",
     "selectAllVisible": "選択：All Visible Media",
-    "clearSelection": "__MISSING__:commandPalette.clearSelection",
-    "compareSelected": "__MISSING__:commandPalette.compareSelected",
-    "exportSelected": "__MISSING__:commandPalette.exportSelected",
-    "favoriteSelected": "__MISSING__:commandPalette.favoriteSelected",
-    "addTagSelected": "__MISSING__:commandPalette.addTagSelected",
-    "sendToImage": "__MISSING__:commandPalette.sendToImage",
-    "copyRecipe": "__MISSING__:commandPalette.copyRecipe",
-    "onlyAvailableMediaStudio": "__MISSING__:commandPalette.onlyAvailableMediaStudio",
-    "selectedAllVisible": "__MISSING__:commandPalette.selectedAllVisible",
-    "clearedSelection": "__MISSING__:commandPalette.clearedSelection",
+    "clearSelection": "メディアの選択をクリア",
+    "compareSelected": "選択したメディアを比較",
+    "exportSelected": "選択したメディアをエクスポート",
+    "favoriteSelected": "選択したメディアをお気に入りに追加",
+    "addTagSelected": "選択したメディアにタグを追加",
+    "sendToImage": "選択したものを画像スタジオに送信",
+    "copyRecipe": "選択したレシピJSONをコピー",
+    "onlyAvailableMediaStudio": "このコマンドはメディアスタジオでのみ使用できます。",
+    "selectedAllVisible": "表示中のすべてのメディアを選択しました",
+    "clearedSelection": "メディアの選択をクリアしました",
     "selectCountToCompare": "選択：2 to {{max}} items to compare.",
     "selectOneToExport": "選択：at least one media item to export.",
     "selectOne": "選択：at least one media item.",
-    "openPromptLibrary": "__MISSING__:commandPalette.openPromptLibrary",
-    "newPrompt": "__MISSING__:commandPalette.newPrompt",
-    "useSelectedPrompt": "__MISSING__:commandPalette.useSelectedPrompt",
-    "exportPrompts": "__MISSING__:commandPalette.exportPrompts",
-    "importPrompts": "__MISSING__:commandPalette.importPrompts",
+    "openPromptLibrary": "プロンプトライブラリを開く",
+    "newPrompt": "新規プロンプト",
+    "useSelectedPrompt": "選択したプロンプトを使用（コピー）",
+    "exportPrompts": "プロンプトをエクスポート",
+    "importPrompts": "プロンプトをインポート…",
     "saveCurrentPrompt": "保存：Current Prompt to Library",
-    "untitledPrompt": "__MISSING__:commandPalette.untitledPrompt",
-    "emptyDraftPrompt": "__MISSING__:commandPalette.emptyDraftPrompt",
-    "createdNewPrompt": "__MISSING__:commandPalette.createdNewPrompt",
+    "untitledPrompt": "無題のプロンプト",
+    "emptyDraftPrompt": "（空の下書き — プロンプトに置き換えてください）",
+    "createdNewPrompt": "新しいプロンプトを作成しました",
     "selectPromptFirst": "選択：a prompt in the Prompt Library first.",
-    "noPromptSelected": "__MISSING__:commandPalette.noPromptSelected",
-    "promptCopied": "__MISSING__:commandPalette.promptCopied",
-    "couldNotCopyPrompt": "__MISSING__:commandPalette.couldNotCopyPrompt",
-    "noPromptsToExport": "__MISSING__:commandPalette.noPromptsToExport",
-    "exportedPrompts": "__MISSING__:commandPalette.exportedPrompts",
-    "importSuccess": "__MISSING__:commandPalette.importSuccess",
-    "importUpToDate": "__MISSING__:commandPalette.importUpToDate",
-    "couldNotImport": "__MISSING__:commandPalette.couldNotImport",
-    "importedCount": "__MISSING__:commandPalette.importedCount",
-    "syncedCount": "__MISSING__:commandPalette.syncedCount",
-    "skippedCount": "__MISSING__:commandPalette.skippedCount",
-    "openSceneComposer": "__MISSING__:commandPalette.openSceneComposer",
-    "exportScenes": "__MISSING__:commandPalette.exportScenes",
-    "importScenes": "__MISSING__:commandPalette.importScenes",
-    "noScenesToExport": "__MISSING__:commandPalette.noScenesToExport",
-    "exportedScenes": "__MISSING__:commandPalette.exportedScenes",
-    "importedScenesSuccess": "__MISSING__:commandPalette.importedScenesSuccess",
-    "skippedScenes": "__MISSING__:commandPalette.skippedScenes",
-    "openRpStudio": "__MISSING__:commandPalette.openRpStudio",
-    "createStCard": "__MISSING__:commandPalette.createStCard",
-    "startChatWithSelected": "__MISSING__:commandPalette.startChatWithSelected",
-    "newScenario": "__MISSING__:commandPalette.newScenario",
-    "createdLocalDraft": "__MISSING__:commandPalette.createdLocalDraft",
+    "noPromptSelected": "プロンプトが選択されていません。",
+    "promptCopied": "プロンプトをクリップボードにコピーしました",
+    "couldNotCopyPrompt": "プロンプトをコピーできませんでした",
+    "noPromptsToExport": "エクスポートするプロンプトがありません。",
+    "exportedPrompts": "{{count}}件のプロンプトをエクスポートしました{{plural}}",
+    "importSuccess": "プロンプトライブラリ：{{parts}}",
+    "importUpToDate": "プロンプトライブラリは最新です",
+    "couldNotImport": "インポートできませんでした",
+    "importedCount": "{{count}}件のプロンプトをインポートしました{{plural}}",
+    "syncedCount": "{{count}}件のプロンプトを同期しました{{plural}}",
+    "skippedCount": "{{count}}件スキップしました",
+    "openSceneComposer": "シーンコンポーザーを開く",
+    "exportScenes": "シーンをエクスポート",
+    "importScenes": "シーンをインポート…",
+    "noScenesToExport": "エクスポートするシーンがありません。",
+    "exportedScenes": "{{count}}件のシーンをエクスポートしました{{plural}}",
+    "importedScenesSuccess": "{{count}}件のシーンをインポートしました{{plural}}{{skipped}}",
+    "skippedScenes": "（{{count}}件スキップ）",
+    "openRpStudio": "RPスタジオを開く",
+    "createStCard": "STカードを作成",
+    "startChatWithSelected": "選択したキャラクターでチャットを開始",
+    "newScenario": "新規シナリオ",
+    "createdLocalDraft": "ローカルSTカードの下書きを作成しました",
     "selectCharacterFirst": "選択：a character in the RP Studio first.",
-    "chatStarted": "__MISSING__:commandPalette.chatStarted",
-    "couldNotStartChat": "__MISSING__:commandPalette.couldNotStartChat",
-    "scenarioFor": "__MISSING__:commandPalette.scenarioFor",
-    "createdNewScenario": "__MISSING__:commandPalette.createdNewScenario",
-    "openWorkflows": "__MISSING__:commandPalette.openWorkflows",
-    "openResearchWorkspace": "__MISSING__:commandPalette.openResearchWorkspace",
-    "newResearchSession": "__MISSING__:commandPalette.newResearchSession",
-    "exportResearchSessions": "__MISSING__:commandPalette.exportResearchSessions",
-    "importResearchSessions": "__MISSING__:commandPalette.importResearchSessions",
-    "createdNewResearchSession": "__MISSING__:commandPalette.createdNewResearchSession",
-    "noResearchToExport": "__MISSING__:commandPalette.noResearchToExport",
-    "exportedResearch": "__MISSING__:commandPalette.exportedResearch",
-    "importedResearchSuccess": "__MISSING__:commandPalette.importedResearchSuccess",
-    "openPrivacyDashboard": "__MISSING__:commandPalette.openPrivacyDashboard",
-    "refreshStorageInventory": "__MISSING__:commandPalette.refreshStorageInventory",
-    "copySafePrivacySummary": "__MISSING__:commandPalette.copySafePrivacySummary",
-    "exportSafePrivacySummary": "__MISSING__:commandPalette.exportSafePrivacySummary",
-    "toggleInspector": "__MISSING__:commandPalette.toggleInspector",
-    "toggleHint": "__MISSING__:commandPalette.toggleHint",
-    "navigateHint": "__MISSING__:commandPalette.navigateHint"
+    "chatStarted": "チャットを開始しました",
+    "couldNotStartChat": "チャットを開始できませんでした",
+    "scenarioFor": "{{name}}のシナリオ",
+    "createdNewScenario": "新しいシナリオを作成しました",
+    "openWorkflows": "ワークフローを開く",
+    "openResearchWorkspace": "リサーチワークスペースを開く",
+    "newResearchSession": "新規リサーチセッション",
+    "exportResearchSessions": "リサーチセッションをエクスポート",
+    "importResearchSessions": "リサーチセッションをインポート…",
+    "createdNewResearchSession": "新しいリサーチセッションを作成しました",
+    "noResearchToExport": "エクスポートするリサーチセッションがありません。",
+    "exportedResearch": "{{count}}件のリサーチセッションをエクスポートしました{{plural}}",
+    "importedResearchSuccess": "{{count}}件のセッションをインポートしました{{plural}}{{skipped}}",
+    "openPrivacyDashboard": "プライバシーダッシュボードを開く",
+    "refreshStorageInventory": "ストレージインベントリを更新",
+    "copySafePrivacySummary": "安全なプライバシーサマリーをコピー",
+    "exportSafePrivacySummary": "安全なプライバリーサマリーをエクスポート",
+    "toggleInspector": "インスペクターの切り替え",
+    "toggleHint": "⌘Kで切り替え",
+    "navigateHint": "↑↓でナビゲート · Enterで選択"
   }
 }

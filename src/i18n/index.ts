@@ -6,6 +6,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { applyDocumentDirection } from './direction';
 import { setFormatterLocale } from './formatters';
+import { normalizeResources, warnMissingEntries } from './resourceNormalizer';
 import type { LocaleSetting, SupportedLocale, TranslationNamespace } from './locale-types';
 import { DEFAULT_LOCALE, resolveEffectiveLocale } from './locales';
 
@@ -352,13 +353,19 @@ export const resources = {
   },
 };
 
+const normalizedBundle = normalizeResources(resources);
+warnMissingEntries(normalizedBundle.missingEntries);
+
+export const initialMissingCatalogEntries = normalizedBundle.missingEntries;
+const scrubbedResources = normalizedBundle.resources;
+
 const initialLocale = resolveEffectiveLocale('system');
 
 if (!i18n.isInitialized) {
   void i18n
     .use(initReactI18next)
     .init({
-      resources,
+      resources: scrubbedResources,
       lng: initialLocale,
       fallbackLng: DEFAULT_LOCALE,
       defaultNS: 'common',
@@ -372,6 +379,21 @@ if (!i18n.isInitialized) {
 
   applyDocumentDirection(initialLocale);
   setFormatterLocale(initialLocale);
+}
+
+/**
+ * Re-runs the marker/fallback normalisation after a dynamic language pack is
+ * reloaded (e.g. user language change with deferred catalogs).
+ */
+export function reapplyResourceNormalization(
+  bundled: Record<string, Record<string, unknown>>,
+  locale: SupportedLocale,
+): void {
+  const next = normalizeResources(
+    bundled as Record<string, Record<string, Record<string, unknown>>>,
+  );
+  warnMissingEntries(next.missingEntries);
+  void i18n.addResources(locale, 'common', next.resources[locale]?.common ?? {});
 }
 
 /**

@@ -1,14 +1,14 @@
 {
   "title": "リサーチ",
-  "searchAndScrape": "__MISSING__:searchAndScrape",
-  "provider": "__MISSING__:provider",
-  "veniceProvider": "__MISSING__:veniceProvider",
-  "jinaProvider": "__MISSING__:jinaProvider",
-  "autoProvider": "__MISSING__:autoProvider",
-  "socialDiscovery": "__MISSING__:socialDiscovery",
+  "searchAndScrape": "検索とスクレイピング",
+  "provider": "プロバイダー",
+  "veniceProvider": "Venice 検索",
+  "jinaProvider": "Jina 検索",
+  "autoProvider": "自動プロバイダー",
+  "socialDiscovery": "ソーシャルディスカバリー",
   "queryPlaceholder": "入力：research topic or URL to scrape...",
-  "results": "__MISSING__:results",
-  "sources": "__MISSING__:sources",
-  "timeline": "__MISSING__:timeline",
-  "noResults": "__MISSING__:noResults"
+  "results": "検索結果",
+  "sources": "ソース",
+  "timeline": "タイムライン",
+  "noResults": "クエリに対する調査結果が見つかりませんでした。"
 }

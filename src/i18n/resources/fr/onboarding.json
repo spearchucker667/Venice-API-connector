@@ -1,31 +1,31 @@
 {
   "welcomeTitle": "Bienvenue sur Venice Forge",
-  "welcomeSubtitle": "__MISSING__:welcomeSubtitle",
-  "welcomeDescription": "__MISSING__:welcomeDescription",
-  "privacyNote": "__MISSING__:privacyNote",
-  "getStarted": "__MISSING__:getStarted",
-  "createProfile": "__MISSING__:createProfile",
+  "welcomeSubtitle": "L'atelier local privé.",
+  "welcomeDescription": "Un atelier de bureau local qui stocke les données de l'application sur cet appareil et envoie des requêtes aux fournisseurs distants que vous configurez.",
+  "privacyNote": "Vos données restent locales. Les clés API sont stockées dans le stockage sécurisé du système d'exploitation.",
+  "getStarted": "Commencer",
+  "createProfile": "Créer un profil",
   "continue": "Continuer",
-  "languageSelectorLabel": "__MISSING__:languageSelectorLabel",
-  "systemLanguageOption": "__MISSING__:systemLanguageOption",
+  "languageSelectorLabel": "Langue de l'application",
+  "systemLanguageOption": "Langue du système ({{language}})",
   "selectLanguage": "Sélectionner language",
-  "stepIndicator": "__MISSING__:stepIndicator",
+  "stepIndicator": "Étape d'initialisation {{current}} sur {{total}}",
   "steps": {
     "welcome": {
       "title": "Bienvenue sur Venice Forge",
-      "description": "__MISSING__:steps.welcome.description"
+      "description": "Un atelier de bureau local qui stocke les données de l'application sur cet appareil et envoie des requêtes aux fournisseurs distants que vous configurez."
     },
     "profiles": {
       "title": "Profils",
-      "description": "__MISSING__:steps.profiles.description"
+      "description": "Créez des profils pour des paramètres de rendu et des bibliothèques distincts. Certains fichiers de coffre-fort de bureau et caches partagés restent au niveau de la machine."
     },
     "security": {
-      "title": "__MISSING__:steps.security.title",
-      "description": "__MISSING__:steps.security.description"
+      "title": "Sécurisé par défaut",
+      "description": "Les mots de passe et secrets sont chiffrés via le trousseau natif du système d'exploitation (macOS) ou le Gestionnaire d'informations d'identification (Windows). Jamais stockés en texte clair."
     },
     "safety": {
-      "title": "__MISSING__:steps.safety.title",
-      "description": "__MISSING__:steps.safety.description"
+      "title": "Mode de sécurité familiale",
+      "description": "Un mot de passe maître est requis avant que le Mode de sécurité familiale puisse être activé ou désactivé. Le Mode de sécurité familiale force également le safe_mode du fournisseur lorsque pris en charge."
     }
   }
 }

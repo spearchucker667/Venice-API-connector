@@ -1,10 +1,10 @@
 {
-  "title": "Workflows",
-  "playground": "__MISSING__:playground",
-  "templates": "__MISSING__:templates",
-  "nodes": "__MISSING__:nodes",
-  "canvas": "__MISSING__:canvas",
-  "runWorkflow": "__MISSING__:runWorkflow",
-  "exportWorkflow": "__MISSING__:exportWorkflow",
-  "importWorkflow": "__MISSING__:importWorkflow"
+  "title": "워크플로",
+  "playground": "워크플로 플레이그라운드",
+  "templates": "템플릿",
+  "nodes": "노드",
+  "canvas": "워크플로 캔버스",
+  "runWorkflow": "워크플로 실행",
+  "exportWorkflow": "워크플로 내보내기",
+  "importWorkflow": "워크플로 가져오기"
 }

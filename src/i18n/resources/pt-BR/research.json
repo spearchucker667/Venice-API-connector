@@ -1,14 +1,14 @@
 {
-  "title": "__MISSING__:title",
-  "searchAndScrape": "__MISSING__:searchAndScrape",
-  "provider": "__MISSING__:provider",
-  "veniceProvider": "__MISSING__:veniceProvider",
-  "jinaProvider": "__MISSING__:jinaProvider",
-  "autoProvider": "__MISSING__:autoProvider",
-  "socialDiscovery": "__MISSING__:socialDiscovery",
-  "queryPlaceholder": "__MISSING__:queryPlaceholder",
-  "results": "__MISSING__:results",
-  "sources": "__MISSING__:sources",
-  "timeline": "__MISSING__:timeline",
-  "noResults": "__MISSING__:noResults"
+  "title": "Pesquisa",
+  "searchAndScrape": "Buscar e Extrair",
+  "provider": "Provedor",
+  "veniceProvider": "Busca Venice",
+  "jinaProvider": "Busca Jina",
+  "autoProvider": "Provedor Automático",
+  "socialDiscovery": "Descoberta Social",
+  "queryPlaceholder": "Digite o tópico de pesquisa ou URL para extrair...",
+  "results": "Resultados da Busca",
+  "sources": "Fontes",
+  "timeline": "Linha do Tempo",
+  "noResults": "Nenhum resultado de pesquisa encontrado para a consulta."
 }

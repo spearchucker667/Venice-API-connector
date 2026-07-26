@@ -1,11 +1,11 @@
 {
-  "skipToContent": "__MISSING__:skipToContent",
-  "mainNavigation": "__MISSING__:mainNavigation",
-  "dialogTitle": "__MISSING__:dialogTitle",
-  "closeDialog": "__MISSING__:closeDialog",
-  "expanded": "__MISSING__:expanded",
-  "collapsed": "__MISSING__:collapsed",
-  "selected": "__MISSING__:selected",
-  "stepIndicator": "__MISSING__:stepIndicator",
-  "statusNotification": "__MISSING__:statusNotification"
+  "skipToContent": "मुख्य सामग्री पर जाएं",
+  "mainNavigation": "मुख्य नेविगेशन",
+  "dialogTitle": "संवाद विंडो",
+  "closeDialog": "संवाद बंद करें",
+  "expanded": "विस्तृत",
+  "collapsed": "संक्षिप्त",
+  "selected": "चयनित",
+  "stepIndicator": "चरण {{current}} / {{total}}",
+  "statusNotification": "स्थिति अपडेट"
 }

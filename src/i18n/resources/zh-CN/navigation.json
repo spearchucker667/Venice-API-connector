@@ -2,261 +2,261 @@
   "project": {
     "label": "项目",
     "activeProject": "当前项目",
-    "newProjectName": "__MISSING__:project.newProjectName",
-    "untitledProject": "__MISSING__:project.untitledProject",
+    "newProjectName": "新项目名称",
+    "untitledProject": "未命名项目",
     "create": "创建",
     "enterProjectName": "输入a project name.",
-    "created": "__MISSING__:project.created",
+    "created": "已创建 \"{{name}}\"",
     "createFailed": "无法create project",
-    "new": "__MISSING__:project.new",
+    "new": "+ 新建",
     "allProjects": "所有项目",
-    "switchOpenCurrent": "__MISSING__:project.switchOpenCurrent",
-    "rename": "__MISSING__:project.rename",
-    "renameAction": "__MISSING__:project.renameAction",
-    "renamed": "__MISSING__:project.renamed",
-    "archivePrompt": "__MISSING__:project.archivePrompt",
-    "archiveDetail": "__MISSING__:project.archiveDetail",
-    "archiveAction": "__MISSING__:project.archiveAction",
-    "archived": "__MISSING__:project.archived",
+    "switchOpenCurrent": "切换 / 打开当前项目",
+    "rename": "重命名项目",
+    "renameAction": "重命名",
+    "renamed": "项目已重命名",
+    "archivePrompt": "归档项目？",
+    "archiveDetail": "媒体和对话引用将被保留。",
+    "archiveAction": "归档",
+    "archived": "项目已归档",
     "deletePrompt": "删除project?",
-    "deleteDetail": "__MISSING__:project.deleteDetail",
+    "deleteDetail": "被媒体或对话引用的项目必须改为归档。",
     "deleteAction": "删除",
-    "deleted": "__MISSING__:project.deleted",
-    "deleteError": "__MISSING__:project.deleteError",
-    "encryptionNote": "__MISSING__:project.encryptionNote"
+    "deleted": "项目已删除",
+    "deleteError": "当媒体或对话引用项目时无法删除，请改为归档。",
+    "encryptionNote": "项目已通过 IDB 加密 • 生成项使用当前活动项目"
   },
   "chat": {
-    "newChat": "__MISSING__:chat.newChat",
-    "newChatShortcut": "__MISSING__:chat.newChatShortcut",
+    "newChat": "新建聊天",
+    "newChatShortcut": "新建聊天 (⌘N)",
     "newChatAction": "+ 新建聊天",
-    "history": "__MISSING__:chat.history",
-    "collapseHistory": "__MISSING__:chat.collapseHistory",
-    "expandHistory": "__MISSING__:chat.expandHistory",
-    "options": "__MISSING__:chat.options",
-    "searchChats": "__MISSING__:chat.searchChats",
-    "exportActive": "__MISSING__:chat.exportActive",
+    "history": "历史记录",
+    "collapseHistory": "折叠历史记录",
+    "expandHistory": "展开历史记录",
+    "options": "聊天选项",
+    "searchChats": "搜索聊天",
+    "exportActive": "导出当前聊天",
     "deleteActive": "删除active chat",
     "clearActiveSelection": "清除active chat selection",
-    "searchPlaceholder": "__MISSING__:chat.searchPlaceholder",
-    "searchAria": "__MISSING__:chat.searchAria",
-    "searching": "__MISSING__:chat.searching",
-    "showingMatches": "__MISSING__:chat.showingMatches",
-    "noMatches": "__MISSING__:chat.noMatches",
-    "noConversations": "__MISSING__:chat.noConversations",
+    "searchPlaceholder": "搜索…",
+    "searchAria": "搜索对话",
+    "searching": "搜索中…",
+    "showingMatches": "显示前 {{count}} 项，共 {{total}} 项匹配",
+    "noMatches": "无匹配项",
+    "noConversations": "暂无对话",
     "deletePrompt": "删除聊天？",
-    "untitled": "__MISSING__:chat.untitled",
+    "untitled": "未命名",
     "deleteAction": "删除",
     "exportAsMarkdown": "导出为 Markdown",
-    "deleted": "__MISSING__:chat.deleted",
-    "undo": "__MISSING__:chat.undo",
-    "restored": "__MISSING__:chat.restored",
+    "deleted": "对话已删除",
+    "undo": "撤销",
+    "restored": "对话已恢复",
     "restoreFailed": "无法restore",
-    "restoreUnavailable": "__MISSING__:chat.restoreUnavailable"
+    "restoreUnavailable": "对话已无法恢复。"
   },
   "inspector": {
-    "title": "__MISSING__:inspector.title",
-    "description": "__MISSING__:inspector.description",
+    "title": "流量检查器",
+    "description": "显示模型原始输出和本地安全决策。",
     "toggle": "切换流量检查器",
-    "enabled": "__MISSING__:inspector.enabled",
-    "disabled": "__MISSING__:inspector.disabled",
-    "enabledDetail": "__MISSING__:inspector.enabledDetail",
-    "disabledDetail": "__MISSING__:inspector.disabledDetail",
-    "show": "__MISSING__:inspector.show",
-    "hide": "__MISSING__:inspector.hide"
+    "enabled": "流量检查器已启用",
+    "disabled": "流量检查器已禁用",
+    "enabledDetail": "原始响应、安全决策和成人角色控制可见。",
+    "disabledDetail": "已恢复标准渲染。",
+    "show": "显示检查器",
+    "hide": "隐藏检查器"
   },
   "familySafeMode": {
-    "title": "__MISSING__:familySafeMode.title",
-    "on": "__MISSING__:familySafeMode.on",
-    "off": "__MISSING__:familySafeMode.off",
+    "title": "家庭安全模式",
+    "on": "开启：本地家庭过滤器运行。",
+    "off": "关闭：本地过滤器关闭（提供商安全模式独立）。",
     "toggle": "切换家庭安全模式",
-    "enabledTooltip": "__MISSING__:familySafeMode.enabledTooltip",
-    "disabledTooltip": "__MISSING__:familySafeMode.disabledTooltip",
-    "notSaved": "__MISSING__:familySafeMode.notSaved",
-    "writeFailed": "__MISSING__:familySafeMode.writeFailed",
-    "enabledSuccess": "__MISSING__:familySafeMode.enabledSuccess",
-    "disabledSuccess": "__MISSING__:familySafeMode.disabledSuccess"
+    "enabledTooltip": "家庭安全模式已启用",
+    "disabledTooltip": "本地家庭安全模式已禁用（提供商安全模式独立）",
+    "notSaved": "家庭安全模式未保存",
+    "writeFailed": "配置写入失败。",
+    "enabledSuccess": "家庭安全模式已启用 — 本地家庭过滤器对每个提示运行",
+    "disabledSuccess": "成人模式已启用 — 本地家庭过滤器被跳过"
   },
   "keyboardShortcuts": {
-    "switchTab": "__MISSING__:keyboardShortcuts.switchTab"
+    "switchTab": "切换标签页"
   },
   "tabs": {
     "chat": {
       "label": "聊天",
-      "subtitle": "__MISSING__:tabs.chat.subtitle"
+      "subtitle": "对话式 AI"
     },
     "character-chats": {
-      "label": "__MISSING__:tabs.character-chats.label",
-      "subtitle": "__MISSING__:tabs.character-chats.subtitle"
+      "label": "角色聊天",
+      "subtitle": "与托管和本地角色的对话"
     },
     "history": {
-      "label": "__MISSING__:tabs.history.label",
-      "subtitle": "__MISSING__:tabs.history.subtitle"
+      "label": "历史记录",
+      "subtitle": "浏览过往对话"
     },
     "image": {
       "label": "图像工作室",
-      "subtitle": "__MISSING__:tabs.image.subtitle"
+      "subtitle": "从文本生成图像"
     },
     "media": {
       "label": "媒体工作室",
-      "subtitle": "__MISSING__:tabs.media.subtitle"
+      "subtitle": "浏览、标记、编辑和导出生成的媒体"
     },
     "image-inspector": {
       "label": "图像检查器",
-      "subtitle": "__MISSING__:tabs.image-inspector.subtitle"
+      "subtitle": "分析和重建图像"
     },
     "prompts": {
       "label": "提示词",
-      "subtitle": "__MISSING__:tabs.prompts.subtitle"
+      "subtitle": "浏览和管理提示词库"
     },
     "scenes": {
       "label": "场景合成器",
-      "subtitle": "__MISSING__:tabs.scenes.subtitle"
+      "subtitle": "构建复杂的图像生成场景"
     },
     "audio": {
       "label": "音频工作室",
-      "subtitle": "__MISSING__:tabs.audio.subtitle"
+      "subtitle": "文本转语音和转录"
     },
     "music": {
       "label": "音乐工作室",
-      "subtitle": "__MISSING__:tabs.music.subtitle"
+      "subtitle": "生成音乐和声音"
     },
     "video": {
       "label": "视频工作室",
-      "subtitle": "__MISSING__:tabs.video.subtitle"
+      "subtitle": "生成视频片段"
     },
     "embeddings": {
       "label": "嵌入向量",
-      "subtitle": "__MISSING__:tabs.embeddings.subtitle"
+      "subtitle": "文本的向量表示"
     },
     "search": {
       "label": "研究",
-      "subtitle": "__MISSING__:tabs.search.subtitle"
+      "subtitle": "深度研究和网页抓取"
     },
     "characters": {
-      "label": "__MISSING__:tabs.characters.label",
-      "subtitle": "__MISSING__:tabs.characters.subtitle"
+      "label": "角色",
+      "subtitle": "配置角色扮演角色"
     },
     "character-creator": {
       "label": "角色创建器",
-      "subtitle": "__MISSING__:tabs.character-creator.subtitle"
+      "subtitle": "将粗略想法转化为完整可编辑的角色卡"
     },
     "rp-studio": {
       "label": "角色扮演工作室",
-      "subtitle": "__MISSING__:tabs.rp-studio.subtitle"
+      "subtitle": "角色扮演角色和场景工作坊"
     },
     "workflows": {
-      "label": "__MISSING__:tabs.workflows.label",
-      "subtitle": "__MISSING__:tabs.workflows.subtitle"
+      "label": "工作流模板",
+      "subtitle": "构建可重用的自动化链"
     },
     "documents": {
       "label": "文档",
-      "subtitle": "__MISSING__:tabs.documents.subtitle"
+      "subtitle": "托管文档和作用域工作区工具"
     },
     "privacy": {
       "label": "隐私",
-      "subtitle": "__MISSING__:tabs.privacy.subtitle"
+      "subtitle": "管理存储和隐私设置"
     },
     "playground": {
       "label": "演练场",
-      "subtitle": "__MISSING__:tabs.playground.subtitle"
+      "subtitle": "通过聊天构建工作流"
     },
     "settings": {
       "label": "配置",
-      "subtitle": "__MISSING__:tabs.settings.subtitle"
+      "subtitle": "应用配置"
     },
     "status": {
       "label": "状态",
-      "subtitle": "__MISSING__:tabs.status.subtitle"
+      "subtitle": "应用状态和诊断"
     }
   },
   "groups": {
-    "conversation": "__MISSING__:groups.conversation",
-    "generate": "__MISSING__:groups.generate",
-    "build": "__MISSING__:groups.build",
-    "system": "__MISSING__:groups.system",
-    "projectsAndActions": "__MISSING__:groups.projectsAndActions",
-    "mediaStudio": "__MISSING__:groups.mediaStudio",
-    "promptLibrary": "__MISSING__:groups.promptLibrary",
+    "conversation": "对话",
+    "generate": "生成",
+    "build": "构建",
+    "system": "系统",
+    "projectsAndActions": "项目与操作",
+    "mediaStudio": "媒体工作室（已选择 {{count}} 项）",
+    "promptLibrary": "提示词库",
     "sceneComposer": "场景合成器",
     "rpStudio": "角色扮演工作室",
-    "researchWorkspace": "__MISSING__:groups.researchWorkspace",
-    "privacyAndStorage": "__MISSING__:groups.privacyAndStorage"
+    "researchWorkspace": "研究工作区",
+    "privacyAndStorage": "隐私与存储"
   },
   "commandPalette": {
-    "command": "__MISSING__:commandPalette.command",
-    "searchPlaceholder": "__MISSING__:commandPalette.searchPlaceholder",
-    "esc": "__MISSING__:commandPalette.esc",
-    "tabsCanonical": "__MISSING__:commandPalette.tabsCanonical",
-    "noMatchingTabs": "__MISSING__:commandPalette.noMatchingTabs",
-    "newProject": "__MISSING__:commandPalette.newProject",
-    "switchOpenCurrent": "__MISSING__:commandPalette.switchOpenCurrent",
+    "command": "命令",
+    "searchPlaceholder": "搜索标签页或操作…（例如：图像、新建项目）",
+    "esc": "ESC",
+    "tabsCanonical": "标签页（规范）",
+    "noMatchingTabs": "没有匹配的标签页",
+    "newProject": "新建项目",
+    "switchOpenCurrent": "切换 / 打开当前项目",
     "selectAllVisible": "选择All Visible Media",
     "clearSelection": "清除Media Selection",
-    "compareSelected": "__MISSING__:commandPalette.compareSelected",
-    "exportSelected": "__MISSING__:commandPalette.exportSelected",
-    "favoriteSelected": "__MISSING__:commandPalette.favoriteSelected",
-    "addTagSelected": "__MISSING__:commandPalette.addTagSelected",
-    "sendToImage": "__MISSING__:commandPalette.sendToImage",
-    "copyRecipe": "__MISSING__:commandPalette.copyRecipe",
-    "onlyAvailableMediaStudio": "__MISSING__:commandPalette.onlyAvailableMediaStudio",
-    "selectedAllVisible": "__MISSING__:commandPalette.selectedAllVisible",
-    "clearedSelection": "__MISSING__:commandPalette.clearedSelection",
+    "compareSelected": "比较所选媒体",
+    "exportSelected": "导出所选媒体",
+    "favoriteSelected": "收藏所选媒体",
+    "addTagSelected": "为所选媒体添加标签",
+    "sendToImage": "将所选发送到图像工作室",
+    "copyRecipe": "复制所选配方 JSON",
+    "onlyAvailableMediaStudio": "此命令仅在媒体工作室中可用。",
+    "selectedAllVisible": "已选择所有可见媒体",
+    "clearedSelection": "已清除媒体选择",
     "selectCountToCompare": "选择2 to {{max}} items to compare.",
     "selectOneToExport": "选择at least one media item to export.",
     "selectOne": "选择at least one media item.",
-    "openPromptLibrary": "__MISSING__:commandPalette.openPromptLibrary",
-    "newPrompt": "__MISSING__:commandPalette.newPrompt",
-    "useSelectedPrompt": "__MISSING__:commandPalette.useSelectedPrompt",
-    "exportPrompts": "__MISSING__:commandPalette.exportPrompts",
-    "importPrompts": "__MISSING__:commandPalette.importPrompts",
+    "openPromptLibrary": "打开提示词库",
+    "newPrompt": "新建提示词",
+    "useSelectedPrompt": "使用所选提示词（复制）",
+    "exportPrompts": "导出提示词",
+    "importPrompts": "导入提示词…",
     "saveCurrentPrompt": "保存Current Prompt to Library",
-    "untitledPrompt": "__MISSING__:commandPalette.untitledPrompt",
-    "emptyDraftPrompt": "__MISSING__:commandPalette.emptyDraftPrompt",
-    "createdNewPrompt": "__MISSING__:commandPalette.createdNewPrompt",
+    "untitledPrompt": "未命名提示词",
+    "emptyDraftPrompt": "（空草稿 — 替换为您的提示词）",
+    "createdNewPrompt": "已创建新提示词",
     "selectPromptFirst": "选择a prompt in the Prompt Library first.",
-    "noPromptSelected": "__MISSING__:commandPalette.noPromptSelected",
-    "promptCopied": "__MISSING__:commandPalette.promptCopied",
-    "couldNotCopyPrompt": "__MISSING__:commandPalette.couldNotCopyPrompt",
-    "noPromptsToExport": "__MISSING__:commandPalette.noPromptsToExport",
-    "exportedPrompts": "__MISSING__:commandPalette.exportedPrompts",
-    "importSuccess": "__MISSING__:commandPalette.importSuccess",
-    "importUpToDate": "__MISSING__:commandPalette.importUpToDate",
-    "couldNotImport": "__MISSING__:commandPalette.couldNotImport",
-    "importedCount": "__MISSING__:commandPalette.importedCount",
-    "syncedCount": "__MISSING__:commandPalette.syncedCount",
-    "skippedCount": "__MISSING__:commandPalette.skippedCount",
-    "openSceneComposer": "__MISSING__:commandPalette.openSceneComposer",
-    "exportScenes": "__MISSING__:commandPalette.exportScenes",
-    "importScenes": "__MISSING__:commandPalette.importScenes",
-    "noScenesToExport": "__MISSING__:commandPalette.noScenesToExport",
-    "exportedScenes": "__MISSING__:commandPalette.exportedScenes",
-    "importedScenesSuccess": "__MISSING__:commandPalette.importedScenesSuccess",
-    "skippedScenes": "__MISSING__:commandPalette.skippedScenes",
-    "openRpStudio": "__MISSING__:commandPalette.openRpStudio",
-    "createStCard": "__MISSING__:commandPalette.createStCard",
-    "startChatWithSelected": "__MISSING__:commandPalette.startChatWithSelected",
-    "newScenario": "__MISSING__:commandPalette.newScenario",
-    "createdLocalDraft": "__MISSING__:commandPalette.createdLocalDraft",
+    "noPromptSelected": "未选择提示词。",
+    "promptCopied": "提示词已复制到剪贴板",
+    "couldNotCopyPrompt": "无法复制提示词",
+    "noPromptsToExport": "没有可导出的提示词。",
+    "exportedPrompts": "已导出 {{count}} 个提示词{{plural}}",
+    "importSuccess": "提示词库：{{parts}}",
+    "importUpToDate": "提示词库已是最新",
+    "couldNotImport": "无法导入",
+    "importedCount": "已导入 {{count}} 个提示词{{plural}}",
+    "syncedCount": "已同步 {{count}} 个提示词{{plural}}",
+    "skippedCount": "已跳过 {{count}} 个",
+    "openSceneComposer": "打开场景编辑器",
+    "exportScenes": "导出场景",
+    "importScenes": "导入场景…",
+    "noScenesToExport": "没有可导出的场景。",
+    "exportedScenes": "已导出 {{count}} 个场景{{plural}}",
+    "importedScenesSuccess": "已导入 {{count}} 个场景{{plural}}{{skipped}}",
+    "skippedScenes": "（已跳过 {{count}} 个）",
+    "openRpStudio": "打开 RP 工作室",
+    "createStCard": "创建 ST 卡片",
+    "startChatWithSelected": "与所选角色开始聊天",
+    "newScenario": "新建场景剧本",
+    "createdLocalDraft": "已创建本地 ST 卡片草稿",
     "selectCharacterFirst": "选择a character in the RP Studio first.",
-    "chatStarted": "__MISSING__:commandPalette.chatStarted",
-    "couldNotStartChat": "__MISSING__:commandPalette.couldNotStartChat",
-    "scenarioFor": "__MISSING__:commandPalette.scenarioFor",
-    "createdNewScenario": "__MISSING__:commandPalette.createdNewScenario",
-    "openWorkflows": "__MISSING__:commandPalette.openWorkflows",
-    "openResearchWorkspace": "__MISSING__:commandPalette.openResearchWorkspace",
-    "newResearchSession": "__MISSING__:commandPalette.newResearchSession",
-    "exportResearchSessions": "__MISSING__:commandPalette.exportResearchSessions",
-    "importResearchSessions": "__MISSING__:commandPalette.importResearchSessions",
-    "createdNewResearchSession": "__MISSING__:commandPalette.createdNewResearchSession",
-    "noResearchToExport": "__MISSING__:commandPalette.noResearchToExport",
-    "exportedResearch": "__MISSING__:commandPalette.exportedResearch",
-    "importedResearchSuccess": "__MISSING__:commandPalette.importedResearchSuccess",
-    "openPrivacyDashboard": "__MISSING__:commandPalette.openPrivacyDashboard",
-    "refreshStorageInventory": "__MISSING__:commandPalette.refreshStorageInventory",
-    "copySafePrivacySummary": "__MISSING__:commandPalette.copySafePrivacySummary",
-    "exportSafePrivacySummary": "__MISSING__:commandPalette.exportSafePrivacySummary",
-    "toggleInspector": "__MISSING__:commandPalette.toggleInspector",
-    "toggleHint": "__MISSING__:commandPalette.toggleHint",
-    "navigateHint": "__MISSING__:commandPalette.navigateHint"
+    "chatStarted": "聊天已开始",
+    "couldNotStartChat": "无法开始聊天",
+    "scenarioFor": "{{name}} 的场景剧本",
+    "createdNewScenario": "已创建新场景剧本",
+    "openWorkflows": "打开工作流",
+    "openResearchWorkspace": "打开研究工作区",
+    "newResearchSession": "新建研究会话",
+    "exportResearchSessions": "导出研究会话",
+    "importResearchSessions": "导入研究会话…",
+    "createdNewResearchSession": "已创建新研究会话",
+    "noResearchToExport": "没有可导出的研究会话。",
+    "exportedResearch": "已导出 {{count}} 个研究会话{{plural}}",
+    "importedResearchSuccess": "已导入 {{count}} 个会话{{plural}}{{skipped}}",
+    "openPrivacyDashboard": "打开隐私面板",
+    "refreshStorageInventory": "刷新存储清单",
+    "copySafePrivacySummary": "复制安全隐私摘要",
+    "exportSafePrivacySummary": "导出安全隐私摘要",
+    "toggleInspector": "切换检查器",
+    "toggleHint": "按 ⌘K 切换",
+    "navigateHint": "按 ↑↓ 导航 · 按 Enter 选择"
   }
 }

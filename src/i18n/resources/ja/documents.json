@@ -1,14 +1,14 @@
 {
   "title": "ドキュメント",
-  "workingGroups": "__MISSING__:workingGroups",
-  "managedLibrary": "__MISSING__:managedLibrary",
-  "connectedWorkspace": "__MISSING__:connectedWorkspace",
-  "documentAgent": "__MISSING__:documentAgent",
-  "proposals": "__MISSING__:proposals",
-  "revisions": "__MISSING__:revisions",
-  "createDocument": "__MISSING__:createDocument",
-  "importDocument": "__MISSING__:importDocument",
-  "searchWorkspace": "__MISSING__:searchWorkspace",
-  "fileInspector": "__MISSING__:fileInspector",
-  "noDocuments": "__MISSING__:noDocuments"
+  "workingGroups": "ワーキンググループ",
+  "managedLibrary": "管理ライブラリ",
+  "connectedWorkspace": "接続済みワークスペース",
+  "documentAgent": "ドキュメントエージェント",
+  "proposals": "提案",
+  "revisions": "改訂履歴",
+  "createDocument": "ドキュメントを作成",
+  "importDocument": "ドキュメントをインポート",
+  "searchWorkspace": "ワークスペースを検索",
+  "fileInspector": "ファイルインスペクター",
+  "noDocuments": "ワーキンググループにドキュメントが見つかりません。"
 }

@@ -2,155 +2,155 @@
   "project": {
     "label": "Проект",
     "activeProject": "Активный проект",
-    "newProjectName": "__MISSING__:project.newProjectName",
-    "untitledProject": "__MISSING__:project.untitledProject",
+    "newProjectName": "Имя нового проекта",
+    "untitledProject": "Безымянный проект",
     "create": "Создать",
     "enterProjectName": "Введите a project name.",
-    "created": "__MISSING__:project.created",
+    "created": "Создан \"{{name}}\"",
     "createFailed": "Не удалось create project",
-    "new": "__MISSING__:project.new",
+    "new": "+ Новый",
     "allProjects": "Все проекты",
-    "switchOpenCurrent": "__MISSING__:project.switchOpenCurrent",
-    "rename": "__MISSING__:project.rename",
-    "renameAction": "__MISSING__:project.renameAction",
-    "renamed": "__MISSING__:project.renamed",
-    "archivePrompt": "__MISSING__:project.archivePrompt",
-    "archiveDetail": "__MISSING__:project.archiveDetail",
-    "archiveAction": "__MISSING__:project.archiveAction",
-    "archived": "__MISSING__:project.archived",
+    "switchOpenCurrent": "Переключить / открыть текущий проект",
+    "rename": "Переименовать проект",
+    "renameAction": "Переименовать",
+    "renamed": "Проект переименован",
+    "archivePrompt": "Архивировать проект?",
+    "archiveDetail": "Ссылки на медиа и разговоры будут сохранены.",
+    "archiveAction": "Архивировать",
+    "archived": "Проект архивирован",
     "deletePrompt": "Удалить project?",
-    "deleteDetail": "__MISSING__:project.deleteDetail",
+    "deleteDetail": "Проекты, на которые ссылаются медиа или разговоры, должны быть архивированы.",
     "deleteAction": "Удалить",
-    "deleted": "__MISSING__:project.deleted",
-    "deleteError": "__MISSING__:project.deleteError",
-    "encryptionNote": "__MISSING__:project.encryptionNote"
+    "deleted": "Проект удалён",
+    "deleteError": "Проект нельзя удалить, пока на него ссылаются медиа или разговоры. Архивируйте его.",
+    "encryptionNote": "Проекты зашифрованы в IDB • сгенерированные элементы используют активный проект"
   },
   "chat": {
-    "newChat": "__MISSING__:chat.newChat",
-    "newChatShortcut": "__MISSING__:chat.newChatShortcut",
+    "newChat": "Новый чат",
+    "newChatShortcut": "Новый чат (⌘N)",
     "newChatAction": "+ Новый чат",
-    "history": "__MISSING__:chat.history",
-    "collapseHistory": "__MISSING__:chat.collapseHistory",
-    "expandHistory": "__MISSING__:chat.expandHistory",
-    "options": "__MISSING__:chat.options",
-    "searchChats": "__MISSING__:chat.searchChats",
-    "exportActive": "__MISSING__:chat.exportActive",
+    "history": "История",
+    "collapseHistory": "Свернуть историю",
+    "expandHistory": "Развернуть историю",
+    "options": "Параметры чата",
+    "searchChats": "Поиск чатов",
+    "exportActive": "Экспортировать активный чат",
     "deleteActive": "Удалить active chat",
     "clearActiveSelection": "Очистить active chat selection",
-    "searchPlaceholder": "__MISSING__:chat.searchPlaceholder",
-    "searchAria": "__MISSING__:chat.searchAria",
-    "searching": "__MISSING__:chat.searching",
-    "showingMatches": "__MISSING__:chat.showingMatches",
+    "searchPlaceholder": "Поиск…",
+    "searchAria": "Поиск разговоров",
+    "searching": "Поиск…",
+    "showingMatches": "Показаны первые {{count}} из {{total}} совпадений",
     "noMatches": "Нет matches",
     "noConversations": "Нет conversations yet",
     "deletePrompt": "Удалить чат?",
-    "untitled": "__MISSING__:chat.untitled",
+    "untitled": "Безымянный",
     "deleteAction": "Удалить",
     "exportAsMarkdown": "Экспортировать как Markdown",
-    "deleted": "__MISSING__:chat.deleted",
-    "undo": "__MISSING__:chat.undo",
-    "restored": "__MISSING__:chat.restored",
+    "deleted": "Разговор удалён",
+    "undo": "Отменить",
+    "restored": "Разговор восстановлен",
     "restoreFailed": "Не удалось restore",
-    "restoreUnavailable": "__MISSING__:chat.restoreUnavailable"
+    "restoreUnavailable": "Разговор больше недоступен для восстановления."
   },
   "inspector": {
-    "title": "__MISSING__:inspector.title",
-    "description": "__MISSING__:inspector.description",
+    "title": "Инспектор трафика",
+    "description": "Показывает исходный вывод модели и локальные решения безопасности.",
     "toggle": "Переключить инспектор трафика",
-    "enabled": "__MISSING__:inspector.enabled",
-    "disabled": "__MISSING__:inspector.disabled",
-    "enabledDetail": "__MISSING__:inspector.enabledDetail",
-    "disabledDetail": "__MISSING__:inspector.disabledDetail",
-    "show": "__MISSING__:inspector.show",
-    "hide": "__MISSING__:inspector.hide"
+    "enabled": "Инспектор трафика включён",
+    "disabled": "Инспектор трафика выключен",
+    "enabledDetail": "Видны исходные ответы, решения безопасности и элементы управления взрослыми персонажами.",
+    "disabledDetail": "Стандартная отрисовка восстановлена.",
+    "show": "Показать инспектор",
+    "hide": "Скрыть инспектор"
   },
   "familySafeMode": {
     "title": "Family Safe режим",
-    "on": "__MISSING__:familySafeMode.on",
-    "off": "__MISSING__:familySafeMode.off",
+    "on": "ВКЛ: работает локальный семейный фильтр.",
+    "off": "ВЫКЛ: Локальный фильтр выключен (безопасный режим провайдера отдельно).",
     "toggle": "Переключить семейный безопасный режим",
-    "enabledTooltip": "__MISSING__:familySafeMode.enabledTooltip",
-    "disabledTooltip": "__MISSING__:familySafeMode.disabledTooltip",
-    "notSaved": "__MISSING__:familySafeMode.notSaved",
-    "writeFailed": "__MISSING__:familySafeMode.writeFailed",
-    "enabledSuccess": "__MISSING__:familySafeMode.enabledSuccess",
-    "disabledSuccess": "__MISSING__:familySafeMode.disabledSuccess"
+    "enabledTooltip": "Семейный безопасный режим включён",
+    "disabledTooltip": "Локальный семейный безопасный режим выключен (безопасный режим провайдера отдельно)",
+    "notSaved": "Семейный безопасный режим не был сохранён",
+    "writeFailed": "Не удалось записать конфигурацию.",
+    "enabledSuccess": "Семейный безопасный режим включён — локальный семейный фильтр запускается для каждого запроса",
+    "disabledSuccess": "Взрослый режим включён — локальный семейный фильтр пропускается"
   },
   "keyboardShortcuts": {
-    "switchTab": "__MISSING__:keyboardShortcuts.switchTab"
+    "switchTab": "Переключить вкладку"
   },
   "tabs": {
     "chat": {
       "label": "Чат",
-      "subtitle": "__MISSING__:tabs.chat.subtitle"
+      "subtitle": "Диалоговый ИИ"
     },
     "character-chats": {
-      "label": "__MISSING__:tabs.character-chats.label",
-      "subtitle": "__MISSING__:tabs.character-chats.subtitle"
+      "label": "Чаты с персонажами",
+      "subtitle": "Разговоры с размещёнными и локальными персонажами"
     },
     "history": {
-      "label": "__MISSING__:tabs.history.label",
-      "subtitle": "__MISSING__:tabs.history.subtitle"
+      "label": "История",
+      "subtitle": "Просмотр прошлых разговоров"
     },
     "image": {
       "label": "Студия изображений",
-      "subtitle": "__MISSING__:tabs.image.subtitle"
+      "subtitle": "Создание изображений из текста"
     },
     "media": {
       "label": "Медиастудия",
-      "subtitle": "__MISSING__:tabs.media.subtitle"
+      "subtitle": "Просмотр, тегирование, редактирование и экспорт созданных медиа"
     },
     "image-inspector": {
       "label": "Инспектор изображений",
-      "subtitle": "__MISSING__:tabs.image-inspector.subtitle"
+      "subtitle": "Анализ и реконструкция изображений"
     },
     "prompts": {
       "label": "Промпты",
-      "subtitle": "__MISSING__:tabs.prompts.subtitle"
+      "subtitle": "Просмотр и управление библиотекой промптов"
     },
     "scenes": {
       "label": "Компоновщик сцен",
-      "subtitle": "__MISSING__:tabs.scenes.subtitle"
+      "subtitle": "Создание сложных сцен генерации изображений"
     },
     "audio": {
       "label": "Аудиостудия",
-      "subtitle": "__MISSING__:tabs.audio.subtitle"
+      "subtitle": "Синтез речи и транскрипция"
     },
     "music": {
       "label": "Музыкальная студия",
-      "subtitle": "__MISSING__:tabs.music.subtitle"
+      "subtitle": "Создание музыки и звука"
     },
     "video": {
       "label": "Видеостудия",
-      "subtitle": "__MISSING__:tabs.video.subtitle"
+      "subtitle": "Создание видеороликов"
     },
     "embeddings": {
       "label": "Эмбеддинги",
-      "subtitle": "__MISSING__:tabs.embeddings.subtitle"
+      "subtitle": "Векторные представления текста"
     },
     "search": {
       "label": "Исследования",
-      "subtitle": "__MISSING__:tabs.search.subtitle"
+      "subtitle": "Глубокий поиск и веб-скрапинг"
     },
     "characters": {
-      "label": "__MISSING__:tabs.characters.label",
-      "subtitle": "__MISSING__:tabs.characters.subtitle"
+      "label": "Персонажи",
+      "subtitle": "Настройка персонажей для ролевых игр"
     },
     "character-creator": {
       "label": "Создатель персонажей",
-      "subtitle": "__MISSING__:tabs.character-creator.subtitle"
+      "subtitle": "Превратите черновую идею в полную редактируемую карточку персонажа"
     },
     "rp-studio": {
       "label": "Студия ролевых игр",
-      "subtitle": "__MISSING__:tabs.rp-studio.subtitle"
+      "subtitle": "Мастерская персонажей и сценариев для ролевых игр"
     },
     "workflows": {
-      "label": "__MISSING__:tabs.workflows.label",
-      "subtitle": "__MISSING__:tabs.workflows.subtitle"
+      "label": "Шаблоны рабочих процессов",
+      "subtitle": "Создание повторно используемых цепочек автоматизации"
     },
     "documents": {
       "label": "Документы",
-      "subtitle": "__MISSING__:tabs.documents.subtitle"
+      "subtitle": "Управляемые документы и инструменты рабочей области с ограниченной областью действия"
     },
     "privacy": {
       "label": "Конфиденциальность",
@@ -158,105 +158,105 @@
     },
     "playground": {
       "label": "Песочница",
-      "subtitle": "__MISSING__:tabs.playground.subtitle"
+      "subtitle": "Создание рабочих процессов через чат"
     },
     "settings": {
       "label": "Конфигурация",
-      "subtitle": "__MISSING__:tabs.settings.subtitle"
+      "subtitle": "Настройки приложения"
     },
     "status": {
       "label": "Статус",
-      "subtitle": "__MISSING__:tabs.status.subtitle"
+      "subtitle": "Статус приложения и диагностика"
     }
   },
   "groups": {
-    "conversation": "__MISSING__:groups.conversation",
-    "generate": "__MISSING__:groups.generate",
-    "build": "__MISSING__:groups.build",
-    "system": "__MISSING__:groups.system",
-    "projectsAndActions": "__MISSING__:groups.projectsAndActions",
-    "mediaStudio": "__MISSING__:groups.mediaStudio",
-    "promptLibrary": "__MISSING__:groups.promptLibrary",
+    "conversation": "Разговор",
+    "generate": "Генерация",
+    "build": "Сборка",
+    "system": "Система",
+    "projectsAndActions": "Проекты и действия",
+    "mediaStudio": "Медиастудия ({{count}} выбрано)",
+    "promptLibrary": "Библиотека промптов",
     "sceneComposer": "Компоновщик сцен",
     "rpStudio": "Студия ролевых игр",
-    "researchWorkspace": "__MISSING__:groups.researchWorkspace",
-    "privacyAndStorage": "__MISSING__:groups.privacyAndStorage"
+    "researchWorkspace": "Рабочая область для исследований",
+    "privacyAndStorage": "Конфиденциальность и хранилище"
   },
   "commandPalette": {
-    "command": "__MISSING__:commandPalette.command",
-    "searchPlaceholder": "__MISSING__:commandPalette.searchPlaceholder",
-    "esc": "__MISSING__:commandPalette.esc",
-    "tabsCanonical": "__MISSING__:commandPalette.tabsCanonical",
+    "command": "Команда",
+    "searchPlaceholder": "Поиск вкладок или действий… (например, изображение, новый проект)",
+    "esc": "ESC",
+    "tabsCanonical": "Вкладки (канонические)",
     "noMatchingTabs": "Нет matching tabs",
-    "newProject": "__MISSING__:commandPalette.newProject",
-    "switchOpenCurrent": "__MISSING__:commandPalette.switchOpenCurrent",
+    "newProject": "Новый проект",
+    "switchOpenCurrent": "Переключить / открыть текущий проект",
     "selectAllVisible": "Выберите All Visible Media",
     "clearSelection": "Очистить Media Selection",
-    "compareSelected": "__MISSING__:commandPalette.compareSelected",
-    "exportSelected": "__MISSING__:commandPalette.exportSelected",
-    "favoriteSelected": "__MISSING__:commandPalette.favoriteSelected",
-    "addTagSelected": "__MISSING__:commandPalette.addTagSelected",
-    "sendToImage": "__MISSING__:commandPalette.sendToImage",
-    "copyRecipe": "__MISSING__:commandPalette.copyRecipe",
-    "onlyAvailableMediaStudio": "__MISSING__:commandPalette.onlyAvailableMediaStudio",
-    "selectedAllVisible": "__MISSING__:commandPalette.selectedAllVisible",
-    "clearedSelection": "__MISSING__:commandPalette.clearedSelection",
+    "compareSelected": "Сравнить выбранные медиафайлы",
+    "exportSelected": "Экспортировать выбранные медиафайлы",
+    "favoriteSelected": "Добавить выбранные медиафайлы в избранное",
+    "addTagSelected": "Добавить тег к выбранным медиафайлам",
+    "sendToImage": "Отправить выбранные в студию изображений",
+    "copyRecipe": "Копировать выбранный рецепт JSON",
+    "onlyAvailableMediaStudio": "Эта команда доступна только в Медиастудии.",
+    "selectedAllVisible": "Выбраны все видимые медиафайлы",
+    "clearedSelection": "Снят выбор медиафайлов",
     "selectCountToCompare": "Выберите 2 to {{max}} items to compare.",
     "selectOneToExport": "Выберите at least one media item to export.",
     "selectOne": "Выберите at least one media item.",
-    "openPromptLibrary": "__MISSING__:commandPalette.openPromptLibrary",
-    "newPrompt": "__MISSING__:commandPalette.newPrompt",
-    "useSelectedPrompt": "__MISSING__:commandPalette.useSelectedPrompt",
-    "exportPrompts": "__MISSING__:commandPalette.exportPrompts",
-    "importPrompts": "__MISSING__:commandPalette.importPrompts",
+    "openPromptLibrary": "Открыть библиотеку промптов",
+    "newPrompt": "Новый промпт",
+    "useSelectedPrompt": "Использовать выбранный промпт (копировать)",
+    "exportPrompts": "Экспортировать промпты",
+    "importPrompts": "Импортировать промпты…",
     "saveCurrentPrompt": "Сохранить Current Prompt to Library",
-    "untitledPrompt": "__MISSING__:commandPalette.untitledPrompt",
-    "emptyDraftPrompt": "__MISSING__:commandPalette.emptyDraftPrompt",
-    "createdNewPrompt": "__MISSING__:commandPalette.createdNewPrompt",
+    "untitledPrompt": "Безымянный промпт",
+    "emptyDraftPrompt": "(пустой черновик — замените своим промптом)",
+    "createdNewPrompt": "Создан новый промпт",
     "selectPromptFirst": "Выберите a prompt in the Prompt Library first.",
     "noPromptSelected": "Нет prompt selected.",
-    "promptCopied": "__MISSING__:commandPalette.promptCopied",
-    "couldNotCopyPrompt": "__MISSING__:commandPalette.couldNotCopyPrompt",
+    "promptCopied": "Промпт скопирован в буфер обмена",
+    "couldNotCopyPrompt": "Не удалось скопировать промпт",
     "noPromptsToExport": "Нет prompts to export.",
-    "exportedPrompts": "__MISSING__:commandPalette.exportedPrompts",
-    "importSuccess": "__MISSING__:commandPalette.importSuccess",
-    "importUpToDate": "__MISSING__:commandPalette.importUpToDate",
-    "couldNotImport": "__MISSING__:commandPalette.couldNotImport",
-    "importedCount": "__MISSING__:commandPalette.importedCount",
-    "syncedCount": "__MISSING__:commandPalette.syncedCount",
-    "skippedCount": "__MISSING__:commandPalette.skippedCount",
-    "openSceneComposer": "__MISSING__:commandPalette.openSceneComposer",
-    "exportScenes": "__MISSING__:commandPalette.exportScenes",
-    "importScenes": "__MISSING__:commandPalette.importScenes",
+    "exportedPrompts": "Экспортировано {{count}} промпт{{plural}}",
+    "importSuccess": "Библиотека промптов: {{parts}}",
+    "importUpToDate": "Библиотека промптов актуальна",
+    "couldNotImport": "Не удалось импортировать",
+    "importedCount": "импортировано {{count}} промпт{{plural}}",
+    "syncedCount": "синхронизировано {{count}} промпт{{plural}}",
+    "skippedCount": "пропущено {{count}}",
+    "openSceneComposer": "Открыть компоновщик сцен",
+    "exportScenes": "Экспортировать сцены",
+    "importScenes": "Импортировать сцены…",
     "noScenesToExport": "Нет scenes to export.",
-    "exportedScenes": "__MISSING__:commandPalette.exportedScenes",
-    "importedScenesSuccess": "__MISSING__:commandPalette.importedScenesSuccess",
-    "skippedScenes": "__MISSING__:commandPalette.skippedScenes",
-    "openRpStudio": "__MISSING__:commandPalette.openRpStudio",
-    "createStCard": "__MISSING__:commandPalette.createStCard",
-    "startChatWithSelected": "__MISSING__:commandPalette.startChatWithSelected",
-    "newScenario": "__MISSING__:commandPalette.newScenario",
-    "createdLocalDraft": "__MISSING__:commandPalette.createdLocalDraft",
+    "exportedScenes": "Экспортировано {{count}} сцен{{plural}}",
+    "importedScenesSuccess": "Импортировано {{count}} сцен{{plural}}{{skipped}}",
+    "skippedScenes": " (пропущено {{count}})",
+    "openRpStudio": "Открыть RP Studio",
+    "createStCard": "Создать ST Card",
+    "startChatWithSelected": "Начать чат с выбранным персонажем",
+    "newScenario": "Новый сценарий",
+    "createdLocalDraft": "Создан локальный черновик ST Card",
     "selectCharacterFirst": "Выберите a character in the RP Studio first.",
-    "chatStarted": "__MISSING__:commandPalette.chatStarted",
-    "couldNotStartChat": "__MISSING__:commandPalette.couldNotStartChat",
-    "scenarioFor": "__MISSING__:commandPalette.scenarioFor",
-    "createdNewScenario": "__MISSING__:commandPalette.createdNewScenario",
-    "openWorkflows": "__MISSING__:commandPalette.openWorkflows",
-    "openResearchWorkspace": "__MISSING__:commandPalette.openResearchWorkspace",
-    "newResearchSession": "__MISSING__:commandPalette.newResearchSession",
-    "exportResearchSessions": "__MISSING__:commandPalette.exportResearchSessions",
-    "importResearchSessions": "__MISSING__:commandPalette.importResearchSessions",
-    "createdNewResearchSession": "__MISSING__:commandPalette.createdNewResearchSession",
+    "chatStarted": "Чат начат",
+    "couldNotStartChat": "Не удалось начать чат",
+    "scenarioFor": "Сценарий для {{name}}",
+    "createdNewScenario": "Создан новый сценарий",
+    "openWorkflows": "Открыть рабочие процессы",
+    "openResearchWorkspace": "Открыть рабочее пространство исследований",
+    "newResearchSession": "Новая исследовательская сессия",
+    "exportResearchSessions": "Экспортировать исследовательские сессии",
+    "importResearchSessions": "Импортировать исследовательские сессии…",
+    "createdNewResearchSession": "Создана новая исследовательская сессия",
     "noResearchToExport": "Нет research sessions to export.",
-    "exportedResearch": "__MISSING__:commandPalette.exportedResearch",
-    "importedResearchSuccess": "__MISSING__:commandPalette.importedResearchSuccess",
-    "openPrivacyDashboard": "__MISSING__:commandPalette.openPrivacyDashboard",
-    "refreshStorageInventory": "__MISSING__:commandPalette.refreshStorageInventory",
-    "copySafePrivacySummary": "__MISSING__:commandPalette.copySafePrivacySummary",
-    "exportSafePrivacySummary": "__MISSING__:commandPalette.exportSafePrivacySummary",
-    "toggleInspector": "__MISSING__:commandPalette.toggleInspector",
-    "toggleHint": "__MISSING__:commandPalette.toggleHint",
-    "navigateHint": "__MISSING__:commandPalette.navigateHint"
+    "exportedResearch": "Экспортировано {{count}} исследовательских сессий{{plural}}",
+    "importedResearchSuccess": "Импортировано {{count}} сессий{{plural}}{{skipped}}",
+    "openPrivacyDashboard": "Открыть панель конфиденциальности",
+    "refreshStorageInventory": "Обновить инвентаризацию хранилища",
+    "copySafePrivacySummary": "Копировать безопасное резюме конфиденциальности",
+    "exportSafePrivacySummary": "Экспортировать безопасное резюме конфиденциальности",
+    "toggleInspector": "Переключить инспектор",
+    "toggleHint": "⌘K для переключения",
+    "navigateHint": "↑↓ для навигации · Enter для выбора"
   }
 }

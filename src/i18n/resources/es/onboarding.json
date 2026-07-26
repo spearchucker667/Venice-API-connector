@@ -1,31 +1,31 @@
 {
   "welcomeTitle": "Bienvenido a Venice Forge",
-  "welcomeSubtitle": "__MISSING__:welcomeSubtitle",
-  "welcomeDescription": "__MISSING__:welcomeDescription",
-  "privacyNote": "__MISSING__:privacyNote",
-  "getStarted": "__MISSING__:getStarted",
-  "createProfile": "__MISSING__:createProfile",
+  "welcomeSubtitle": "El banco de trabajo local privado.",
+  "welcomeDescription": "Un banco de trabajo de escritorio local que almacena los datos de la aplicación en este dispositivo y envía solicitudes a los proveedores remotos que configures.",
+  "privacyNote": "Tus datos permanecen locales. Las claves de API se almacenan en el almacenamiento seguro del sistema operativo.",
+  "getStarted": "Comenzar",
+  "createProfile": "Crear perfil",
   "continue": "Continuar",
-  "languageSelectorLabel": "__MISSING__:languageSelectorLabel",
-  "systemLanguageOption": "__MISSING__:systemLanguageOption",
+  "languageSelectorLabel": "Idioma de la aplicación",
+  "systemLanguageOption": "Idioma del sistema ({{language}})",
   "selectLanguage": "Seleccionar language",
-  "stepIndicator": "__MISSING__:stepIndicator",
+  "stepIndicator": "Paso de incorporación {{current}} de {{total}}",
   "steps": {
     "welcome": {
       "title": "Bienvenido a Venice Forge",
-      "description": "__MISSING__:steps.welcome.description"
+      "description": "Un banco de trabajo de escritorio local que almacena los datos de la aplicación en este dispositivo y envía solicitudes a los proveedores remotos que configures."
     },
     "profiles": {
       "title": "Perfiles",
-      "description": "__MISSING__:steps.profiles.description"
+      "description": "Crea perfiles para configuraciones de renderizado y bibliotecas separadas. Algunos archivos de bóveda de escritorio y cachés compartidas permanecen a nivel de máquina."
     },
     "security": {
-      "title": "__MISSING__:steps.security.title",
-      "description": "__MISSING__:steps.security.description"
+      "title": "Seguro por defecto",
+      "description": "Las contraseñas y secretos se cifran mediante el llavero nativo del sistema operativo (macOS) o el Administrador de credenciales (Windows). Nunca se almacenan en texto plano."
     },
     "safety": {
-      "title": "__MISSING__:steps.safety.title",
-      "description": "__MISSING__:steps.safety.description"
+      "title": "Modo seguro familiar",
+      "description": "Se requiere una contraseña maestra antes de poder activar o desactivar el Modo seguro familiar. El Modo seguro familiar también fuerza el safe_mode del proveedor cuando es compatible."
     }
   }
 }

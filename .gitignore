@@ -142,3 +142,9 @@ _REPO_EXTRACT_METADATA/
 artifacts/i18n/catalog-sync-report.json
 artifacts/i18n/source-key-inventory.json
 artifacts/i18n/source-key-inventory.md
+artifacts/i18n/hardcoded-strings.json
+artifacts/i18n/hardcoded-strings.md
+artifacts/i18n/translate-state.json
+artifacts/i18n/translate-report.json
+artifacts/i18n/translate-full-run.log
+artifacts/i18n/logs/

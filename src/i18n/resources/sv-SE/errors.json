@@ -1,12 +1,12 @@
 {
-  "networkError": "__MISSING__:networkError",
-  "apiKeyMissing": "__MISSING__:apiKeyMissing",
-  "rateLimit429": "__MISSING__:rateLimit429",
-  "safeModeBlock451": "__MISSING__:safeModeBlock451",
-  "gatewayTimeout504": "__MISSING__:gatewayTimeout504",
-  "modelUnavailable": "__MISSING__:modelUnavailable",
-  "autosaveFailed": "__MISSING__:autosaveFailed",
-  "fileReadError": "__MISSING__:fileReadError",
-  "invalidFormat": "__MISSING__:invalidFormat",
-  "unknownError": "__MISSING__:unknownError"
+  "networkError": "Nätverksbegäran misslyckades. Kontrollera din internetanslutning.",
+  "apiKeyMissing": "API-nyckel saknas. Konfigurera din API-nyckel i Inställningar.",
+  "rateLimit429": "Hastighetsgräns överskriden. Vänta innan du försöker igen.",
+  "safeModeBlock451": "Begäran blockerad av filtret för familjesäkert läge.",
+  "gatewayTimeout504": "Begäran tog för lång tid. Försök igen.",
+  "modelUnavailable": "Modellen {{model}} är för närvarande inte tillgänglig.",
+  "autosaveFailed": "Automatiskt sparande misslyckades: {{error}}",
+  "fileReadError": "Det gick inte att läsa filen.",
+  "invalidFormat": "Ogiltigt filformat.",
+  "unknownError": "Ett oväntat fel inträffade."
 }
