@@ -1,5 +1,5 @@
-# Guía de Contribución — 简体中文
+# 贡献
 
-> [English README](../../../README.md)
+> [英文文档（规范）](../../../README.md)
 
-Consulta las instrucciones completas en la guía principal de contribución del repositorio.
+请参阅英文的 CONTRIBUTING.md 文件了解有关如何贡献的指南。

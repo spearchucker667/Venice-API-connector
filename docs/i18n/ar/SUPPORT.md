@@ -1,5 +1,5 @@
-# Soporte — العربية
+# الدعم
 
-> [English README](../../../README.md)
+> [الوثائق الإنجليزية (الأساسية)](../../../README.md)
 
-Para obtener ayuda o informar de errores, visita nuestro repositorio oficial en GitHub.
+إذا كنت بحاجة إلى دعم، يرجى الرجوع إلى الوثائق الإنجليزية أو فتح مشكلة على GitHub.

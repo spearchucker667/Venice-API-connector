@@ -1,4 +1,5 @@
 import React, { useEffect, useId, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useProfileStore } from '../../stores/profile-store'
 import { DEFAULT_PROFILE_ID } from '../../services/activeProfile'
 import { askDecision } from '../ui/modal-requests'
@@ -13,6 +14,7 @@ type PasswordDialogState =
   | null
 
 export function ProfilePanel() {
+  const { t } = useTranslation(['settings', 'common'])
   const { profiles, activeProfileId, addProfile, requestSwitchProfile, updateProfile, deleteProfile } = useProfileStore()
   const [newProfileName, setNewProfileName] = useState('')
   const [passwordDialog, setPasswordDialog] = useState<PasswordDialogState>(null)
@@ -91,9 +93,9 @@ export function ProfilePanel() {
 
   const handleClearPassword = async (profileId: string, profileName: string) => {
     const confirmed = await askDecision({
-      title: 'Remove profile password?',
-      detail: `"${profileName}" will no longer require unlock before switching.`,
-      actionLabel: 'Remove',
+      title: t('settings:profiles.removePassword.title', 'Remove profile password?'),
+      detail: t('settings:profiles.removePassword.detail', '"{{name}}" will no longer require unlock before switching.', { name: profileName }),
+      actionLabel: t('settings:profiles.removePassword.action', 'Remove'),
       danger: true,
     })
     if (!confirmed) return
@@ -101,7 +103,7 @@ export function ProfilePanel() {
     if (result.ok) {
       updateProfile(profileId, { hasPassword: false })
     } else {
-      setPasswordError(result.error || 'Failed to remove profile password')
+      setPasswordError(result.error || t('settings:profiles.errors.removeFailed', 'Failed to remove profile password'))
     }
   }
 
@@ -112,11 +114,11 @@ export function ProfilePanel() {
 
     if (passwordDialog.mode === 'set') {
       if (password.length < MIN_PROFILE_PASSWORD_LENGTH) {
-        setPasswordError(`Password too short (min ${MIN_PROFILE_PASSWORD_LENGTH} characters)`)
+        setPasswordError(t('settings:profiles.errors.tooShort', 'Password too short (min {{min}} characters)', { min: MIN_PROFILE_PASSWORD_LENGTH }))
         return
       }
       if (password !== confirmPassword) {
-        setPasswordError('Passwords do not match')
+        setPasswordError(t('settings:profiles.errors.mismatch', 'Passwords do not match'))
         setPassword('')
         setConfirmPassword('')
         return
@@ -125,7 +127,7 @@ export function ProfilePanel() {
       setPassword('')
       setConfirmPassword('')
       if (!result.ok) {
-        setPasswordError(result.error || 'Failed to save profile password')
+        setPasswordError(result.error || t('settings:profiles.errors.saveFailed', 'Failed to save profile password'))
         return
       }
       updateProfile(passwordDialog.profileId, { hasPassword: true })
@@ -143,15 +145,15 @@ export function ProfilePanel() {
       return
     }
 
-    setPasswordError(result.error || 'Incorrect password')
+    setPasswordError(result.error || t('settings:profiles.errors.incorrect', 'Incorrect password'))
   }
 
   return (
     <div className="space-y-5">
       <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg space-y-4">
-        <h3 className="text-[14.5px] font-medium text-text-primary">Manage Profiles</h3>
+        <h3 className="text-[14.5px] font-medium text-text-primary">{t('settings:profiles.title', 'Manage Profiles')}</h3>
         <p className="text-[12.5px] text-text-secondary leading-relaxed">
-          Each profile maintains isolated settings, API keys, and configurations. Switching profiles will clear active application state and reload.
+          {t('settings:profiles.description', 'Each profile maintains isolated settings, API keys, and configurations. Switching profiles will clear active application state and reload.')}
         </p>
         
         <ul className="space-y-2 mt-4">
@@ -159,8 +161,8 @@ export function ProfilePanel() {
             <li key={p.id} className="flex items-center justify-between gap-3 p-3 border border-border rounded bg-surface">
               <div className="min-w-0">
                 <span className="text-[13px] font-medium text-text-primary">
-                  {p.name} {p.id === activeProfileId && <span className="ml-2 text-[12px] bg-accent/20 text-accent px-1.5 py-0.5 rounded">ACTIVE</span>}
-                  {p.hasPassword && <span className="ml-2 text-[12px] bg-warning/15 text-warning px-1.5 py-0.5 rounded">LOCKED</span>}
+                  {p.name} {p.id === activeProfileId && <span className="ml-2 text-[12px] bg-accent/20 text-accent px-1.5 py-0.5 rounded">{t('settings:profiles.badge.active', 'ACTIVE')}</span>}
+                  {p.hasPassword && <span className="ml-2 text-[12px] bg-warning/15 text-warning px-1.5 py-0.5 rounded">{t('settings:profiles.badge.locked', 'LOCKED')}</span>}
                 </span>
               </div>
               <div className="flex flex-wrap justify-end gap-2">
@@ -170,18 +172,18 @@ export function ProfilePanel() {
                       type="button"
                       onClick={() => void handleClearPassword(p.id, p.name)}
                       className="text-[12px] text-text-secondary hover:underline px-2 py-1"
-                      aria-label={`Remove password for ${p.name}`}
+                      aria-label={t('settings:profiles.aria.removePassword', 'Remove password for {{name}}', { name: p.name })}
                     >
-                      Remove Password
+                      {t('settings:profiles.actions.removePassword', 'Remove Password')}
                     </button>
                   ) : (
                     <button
                       type="button"
                       onClick={() => openSetPassword(p.id, p.name)}
                       className="text-[12px] text-text-secondary hover:underline px-2 py-1"
-                      aria-label={`Set password for ${p.name}`}
+                      aria-label={t('settings:profiles.aria.setPassword', 'Set password for {{name}}', { name: p.name })}
                     >
-                      Set Password
+                      {t('settings:profiles.actions.setPassword', 'Set Password')}
                     </button>
                   )
                 )}
@@ -190,25 +192,25 @@ export function ProfilePanel() {
                     type="button"
                     onClick={() => handleSwitch(p.id, p.name, p.hasPassword)}
                     className="text-[12px] text-accent hover:underline px-2 py-1"
-                    aria-label={`Switch to ${p.name}`}
+                    aria-label={t('settings:profiles.aria.switchTo', 'Switch to {{name}}', { name: p.name })}
                   >
-                    Switch To
+                    {t('settings:profiles.actions.switchTo', 'Switch To')}
                   </button>
                 )}
                 {p.id !== DEFAULT_PROFILE_ID && (!isElectron() || p.id === activeProfileId) && (
                   <button type="button" onClick={async () => {
                     const confirmed = await askDecision({
-                      title: 'Delete profile?',
-                      detail: `"${p.name}" will be removed. Its Conversation Vault, renderer records, profile-scoped local settings, API keys, and password verifier will be purged. Shared global caches are retained.`,
-                      actionLabel: 'Delete',
+                      title: t('settings:profiles.deleteProfile.title', 'Delete profile?'),
+                      detail: t('settings:profiles.deleteProfile.detail', '"{{name}}" will be removed. Its Conversation Vault, renderer records, profile-scoped local settings, API keys, and password verifier will be purged. Shared global caches are retained.', { name: p.name }),
+                      actionLabel: t('settings:profiles.deleteProfile.action', 'Delete'),
                       danger: true,
                     })
                     if (confirmed) {
                       const result = await deleteProfile(p.id)
-                      setProfileDeleteError(result.ok ? '' : result.error ?? 'Profile deletion failed.')
+                      setProfileDeleteError(result.ok ? '' : result.error ?? t('settings:profiles.errors.deleteFailed', 'Profile deletion failed.'))
                     }
-                  }} className="text-[12px] text-danger hover:underline px-2 py-1" aria-label={`Delete ${p.name}`}>
-                    Delete
+                  }} className="text-[12px] text-danger hover:underline px-2 py-1" aria-label={t('settings:profiles.aria.delete', 'Delete {{name}}', { name: p.name })}>
+                    {t('common:actions.delete', 'Delete')}
                   </button>
                 )}
               </div>
@@ -223,19 +225,19 @@ export function ProfilePanel() {
             type="text"
             value={newProfileName}
             onChange={(e) => setNewProfileName(e.target.value)}
-            placeholder="New Profile Name"
+            placeholder={t('settings:profiles.newProfilePlaceholder', 'New Profile Name')}
             className="flex-1 px-3 py-1.5 bg-surface border border-border rounded text-[13px]"
           />
           <button type="submit" className="px-4 py-1.5 bg-button-primary-bg text-button-primary-fg rounded text-[13px] font-medium">
-            Create Profile
+            {t('settings:profiles.actions.createProfile', 'Create Profile')}
           </button>
         </form>
       </div>
 
       {passwordDialog && (
         <AccessibleDialog
-          title={passwordDialog.mode === 'set' ? `Set Password for ${passwordDialog.profileName}` : `Unlock ${passwordDialog.profileName}`}
-          description="This password protects switching into this local profile."
+          title={passwordDialog.mode === 'set' ? t('settings:profiles.dialog.titleSet', 'Set Password for {{name}}', { name: passwordDialog.profileName }) : t('settings:profiles.dialog.titleUnlock', 'Unlock {{name}}', { name: passwordDialog.profileName })}
+          description={t('settings:profiles.dialog.description', 'This password protects switching into this local profile.')}
           onClose={closePasswordDialog}
           initialFocusRef={passwordInputRef}
           panelRef={passwordDialogRef}
@@ -244,12 +246,12 @@ export function ProfilePanel() {
         >
             <form onSubmit={handlePasswordSubmit} className="flex flex-col gap-3 p-5">
               <label htmlFor={passwordInputId} className="text-[12.5px] text-text-secondary">
-                {passwordDialog.mode === 'set' ? 'Profile password' : 'Unlock password'}
+                {passwordDialog.mode === 'set' ? t('settings:profiles.dialog.labelSet', 'Profile password') : t('settings:profiles.dialog.labelUnlock', 'Unlock password')}
                 <input
                   ref={passwordInputRef}
                   id={passwordInputId}
                   type="password"
-                  aria-label={passwordDialog.mode === 'set' ? 'Profile password' : 'Unlock password'}
+                  aria-label={passwordDialog.mode === 'set' ? t('settings:profiles.dialog.labelSet', 'Profile password') : t('settings:profiles.dialog.labelUnlock', 'Unlock password')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-[13px] text-text-primary"
@@ -258,11 +260,11 @@ export function ProfilePanel() {
               </label>
               {passwordDialog.mode === 'set' && (
                 <label htmlFor={confirmPasswordId} className="text-[12.5px] text-text-secondary">
-                  Confirm profile password
+                  {t('settings:profiles.dialog.labelConfirm', 'Confirm profile password')}
                   <input
                     id={confirmPasswordId}
                     type="password"
-                    aria-label="Confirm profile password"
+                    aria-label={t('settings:profiles.dialog.labelConfirm', 'Confirm profile password')}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     className="mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-[13px] text-text-primary"
@@ -273,10 +275,10 @@ export function ProfilePanel() {
               {passwordError && <p role="alert" className="text-[12.5px] text-danger">{passwordError}</p>}
               <div className="mt-2 flex justify-end gap-2">
                 <button type="button" onClick={closePasswordDialog} className="rounded bg-surface px-4 py-2 text-[13px] text-text-primary">
-                  Cancel
+                  {t('common:actions.cancel', 'Cancel')}
                 </button>
                 <button type="submit" className="rounded bg-button-primary-bg px-4 py-2 text-[13px] font-medium text-button-primary-fg">
-                  {passwordDialog.mode === 'set' ? 'Save Password' : 'Unlock'}
+                  {passwordDialog.mode === 'set' ? t('settings:profiles.dialog.savePassword', 'Save Password') : t('common:actions.unlock', 'Unlock')}
                 </button>
               </div>
             </form>

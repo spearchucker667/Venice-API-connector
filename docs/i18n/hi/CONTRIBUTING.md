@@ -1,5 +1,5 @@
-# Guía de Contribución — हिन्दी
+# योगदान
 
-> [English README](../../../README.md)
+> [अंग्रेजी दस्तावेज़ीकरण (कैनोनिकल)](../../../README.md)
 
-Consulta las instrucciones completas en la guía principal de contribución del repositorio.
+योगदान करने के दिशानिर्देशों के लिए कृपया अंग्रेजी का CONTRIBUTING.md फ़ाइल देखें।

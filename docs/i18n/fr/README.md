@@ -1,23 +1,23 @@
 # Venice Forge — Français
 
-> [English Version](../../../README.md) | [Language Index](../../../README.md#languages)
+> [Documentation en anglais (Canonique)](../../../README.md)
 
-Venice Forge es un cliente de escritorio local y privado para la API de Venice.ai.
+Venice Forge est un client de bureau local et privé pour l'API Venice.ai.
 
-## Características principales
+## Caractéristiques principales
 
-- **Chat privado y multimodelo**: Interfaz de chat de alta privacidad con soporte para modelos de lenguaje y visión.
-- **Creador de personajes y RP Studio**: Herramientas para diseñar e importar tarjetas de personajes V2 PNG y JSON.
-- **Estudio de medios y generación de imágenes**: Creación de imágenes, vídeo y audio con presets de aspecto y herramientas de comparación.
-- **Privacidad y seguridad nativa**: Las claves de API y secretos se cifran en el almacenamiento seguro del sistema operativo.
-- **Multilingüe**: Soporte completo para 10 idiomas de interfaz con formato regional e idioma del sistema automático.
+- **Chat privé et multi-modèles** : Interface de chat haute confidentialité avec prise en charge des modèles de langage et de vision.
+- **Créateur de personnages et RP Studio** : Outils pour concevoir et importer des cartes de personnages V2 PNG et JSON.
+- **Studio multimédia et génération d'images** : Création d'images, de vidéos et d'audio.
+- **Confidentialité et sécurité natives** : Les clés API et les secrets sont cryptés dans le stockage sécurisé du système d'exploitation.
+- **Multilingue** : Prise en charge complète de 10 langues d'interface.
 
-## Enlaces de documentación
+## Liens de documentation
 
-- [Acerca de Venice Forge](ABOUT.md)
-- [Preguntas frecuentes (FAQ)](FAQ.md)
-- [Soporte](SUPPORT.md)
-- [Privacidad](PRIVACY.md)
-- [Seguridad](SECURITY.md)
-- [Contribución](CONTRIBUTING.md)
-- [Documentación en inglés (Canónica)](../../../README.md)
+- [À propos de Venice Forge](ABOUT.md)
+- [Foire aux questions (FAQ)](FAQ.md)
+- [Support](SUPPORT.md)
+- [Confidentialité](PRIVACY.md)
+- [Sécurité](SECURITY.md)
+- [Contribution](CONTRIBUTING.md)
+- [Documentation en anglais (Canonique)](../../../README.md)

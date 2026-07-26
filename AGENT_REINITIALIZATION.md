@@ -2,7 +2,7 @@
 
 > **Canonical Repository Root:** `/Users/super_user/Projects/Venice_Forge`  
 > **GitHub:** `spearchucker667/Venice_Forge`  
-> **Version:** `3.0.0-beta.1`  
+> **Version:** `3.0.0-beta.2`  
 > **Last Re-Initialization:** 2026-07-21 (Anchored to git commit `27aca76`)  
 > **Audience:** Senior Engineers & AI Coding Agents joining the project.
 
@@ -205,4 +205,4 @@ npm run ci                    # Full CI parity: lint + typecheck + test:ci + aud
 
 ## Changelog
 
-- **2026-07-21 (Commit `27aca76`):** Created initial `AGENT_REINITIALIZATION.md` reflecting 3.0.0-beta.1 architecture, multi-turn chat agent loop, managed document agent, media studio power tools, model-aware recipes, theme contracts, and complete verification suite.
+- **2026-07-21 (Commit `27aca76`):** Created initial `AGENT_REINITIALIZATION.md` reflecting 3.0.0-beta.2 architecture, multi-turn chat agent loop, managed document agent, media studio power tools, model-aware recipes, theme contracts, and complete verification suite.

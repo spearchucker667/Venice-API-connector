@@ -1,5 +1,5 @@
-# Seguridad — हिन्दी
+# सुरक्षा
 
-> [English README](../../../README.md)
+> [अंग्रेजी दस्तावेज़ीकरण (कैनोनिकल)](../../../README.md)
 
-Venice Forge cifra los datos confidenciales mediante APIs de almacenamiento seguro nativas del SO.
+सभी API कुंजियाँ और प्रदाता रहस्य स्थानीय रूप से एन्क्रिप्ट किए गए हैं।

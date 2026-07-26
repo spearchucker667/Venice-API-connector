@@ -1,5 +1,5 @@
-# Modelo de Privacidad — हिन्दी
+# गोपनीयता
 
-> [English README](../../../README.md)
+> [अंग्रेजी दस्तावेज़ीकरण (कैनोनिकल)](../../../README.md)
 
-Venice Forge es una aplicación local. Tus datos y conversaciones se guardan en tu dispositivo.
+Venice Forge स्थानीय रूप से चलता है और कोई टेलीमेट्री या उपयोग डेटा एकत्र नहीं करता है।

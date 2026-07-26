@@ -1,4 +1,5 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '../../lib/utils'
 import { useSettingsStore, type Tab } from '../../stores/settings-store'
 import { selectConversationSummaries, useChatStore, type ConversationSummary } from '../../stores/chat-store'
@@ -138,12 +139,7 @@ export function buildConversationSearchText(conversation: Conversation): string 
   ].join('\n').toLowerCase()
 }
 
-const navGroups: NavGroup[] = GROUP_ORDER.map((group) => ({
-  label: TAB_GROUP_LABELS[group],
-  items: TAB_REGISTRY
-    .filter((t) => t.group === group)
-    .map((t) => ({ id: t.id, label: t.label, Icon: TAB_ICONS[t.id] ?? ChatIcon })),
-}))
+// navGroups calculation removed in favour of inline translation map
 
 interface Props {
   mobileOpen?: boolean
@@ -151,6 +147,7 @@ interface Props {
 }
 
 export function Sidebar({ mobileOpen, onMobileClose }: Props) {
+  const { t } = useTranslation('navigation')
   const activeTab = useSettingsStore((s) => s.activeTab)
   const setActiveTab = useSettingsStore((s) => s.setActiveTab)
   const sidebarOpen = useSettingsStore((s) => s.sidebarOpen)
@@ -188,8 +185,8 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
     setRedTeamMode(enabled)
     if (enabled) setShowInspector(true)
     toast.success(
-      enabled ? 'Traffic Inspector enabled' : 'Traffic Inspector disabled',
-      enabled ? 'Raw responses, safety decisions, and adult character controls are visible.' : 'Standard rendering restored.',
+      enabled ? t('inspector.enabled', 'Traffic Inspector enabled') : t('inspector.disabled', 'Traffic Inspector disabled'),
+      enabled ? t('inspector.enabledDetail', 'Raw responses, safety decisions, and adult character controls are visible.') : t('inspector.disabledDetail', 'Standard rendering restored.'),
     )
   }
 
@@ -202,7 +199,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
       })
       if (!result.ok) {
         setLocalFamilySafeModeEnabled(!enabled)
-        toast.error('Family Safe Mode was not saved', result.error || 'Config write failed.')
+        toast.error(t('familySafeMode.notSaved', 'Family Safe Mode was not saved'), result.error || t('familySafeMode.writeFailed', 'Config write failed.'))
         return
       }
       await reloadConfig()
@@ -212,8 +209,8 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
     // Safe Mode; see Settings → Safety for that control.
     toast.success(
       enabled
-        ? 'Family Safe Mode enabled — local family filter runs on every prompt'
-        : 'Adult Mode enabled — local family filter is skipped',
+        ? t('familySafeMode.enabledSuccess', 'Family Safe Mode enabled — local family filter runs on every prompt')
+        : t('familySafeMode.disabledSuccess', 'Adult Mode enabled — local family filter is skipped'),
     )
   }
 
@@ -244,8 +241,8 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
   const handleDelete = async (conv: ConversationSummary) => {
     const durableConversation = useChatStore.getState().conversations.find((candidate) => candidate.id === conv.id)
     await deleteConversation(conv.id)
-    toast.error('Conversation deleted', conv.title || 'Untitled', {
-      label: 'Undo',
+    toast.error(t('chat.deleted', 'Conversation deleted'), conv.title || t('chat.untitled', 'Untitled'), {
+      label: t('chat.undo', 'Undo'),
       onClick: async () => {
         // Persist the undo: re-insert the conversation at the top of the
         // list AND write it back through the same IPC save path so the
@@ -254,11 +251,11 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
         // which would be lost on the next reload because the canonical
         // source of truth is the JSON file under `chat-history/`.
         try {
-          if (!durableConversation) throw new Error('Conversation is no longer available to restore.')
+          if (!durableConversation) throw new Error(t('chat.restoreUnavailable', 'Conversation is no longer available to restore.'))
           await useChatStore.getState().restoreConversation(durableConversation)
-          toast.success('Conversation restored')
+          toast.success(t('chat.restored', 'Conversation restored'))
         } catch (err) {
-          toast.fromError(err, 'Failed to restore')
+          toast.fromError(err, t('chat.restoreFailed', 'Failed to restore'))
         }
       },
     })
@@ -335,28 +332,28 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
       {expanded && (
         <div className="px-3 pt-1 pb-2 soft-separator-y shrink-0">
           <div className="text-[12px] uppercase tracking-[0.08em] text-text-muted font-semibold mb-1.5 px-1 flex items-center justify-between">
-            <span>Project</span>
+            <span>{t('project.label', 'Project')}</span>
             <button
               onClick={async () => {
                 const name = (await askText({
-                  title: 'New project name',
-                  actionLabel: 'Create',
-                  validate: (value) => value.trim() ? null : 'Enter a project name.',
+                  title: t('project.newProjectName', 'New project name'),
+                  actionLabel: t('project.create', 'Create'),
+                  validate: (value) => value.trim() ? null : t('project.enterProjectName', 'Enter a project name.'),
                 }))?.trim()
                 if (!name) return
                 try {
                   const p = await useProjectStore.getState().createProject(name)
                   useProjectStore.getState().setActiveProject(p.id)
-                  toast.success(`Created "${p.name}"`)
+                  toast.success(t('project.created', 'Created "{{name}}"', { name: p.name }))
                 } catch (e: unknown) {
-                  const msg = e && typeof e === 'object' && 'message' in e ? String((e as { message?: unknown }).message) : 'Failed to create project'
+                  const msg = e && typeof e === 'object' && 'message' in e ? String((e as { message?: unknown }).message) : t('project.createFailed', 'Failed to create project')
                   toast.error(msg)
                 }
               }}
               className="text-[12px] normal-case tracking-normal border border-transparent bg-surface-elevated rounded px-1.5 py-0.5 hover:border-text-muted"
-              title="Create new project"
+              title={t('project.new', '+ New')}
             >
-              + New
+              {t('project.new', '+ New')}
             </button>
           </div>
 
@@ -367,10 +364,10 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
               useProjectStore.getState().setActiveProject(id)
             }}
             className="w-full text-[12.5px] rounded-md mesh-input px-2 py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
-            aria-label="Active project"
-            title="Switch active project"
+            aria-label={t('project.activeProject', 'Active project')}
+            title={t('project.label', 'Switch active project')}
           >
-            <option value="">All Projects</option>
+            <option value="">{t('project.allProjects', 'All Projects')}</option>
             {activeProjectList.map((p) => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
@@ -380,9 +377,9 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
             type="button"
             onClick={startNewChat}
             className="mesh-input mt-2 flex w-full items-center justify-center rounded-lg px-3 py-2 text-[13px] font-semibold text-text-primary hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
-            title="New chat (⌘N)"
+            title={t('chat.newChatShortcut', 'New chat (⌘N)')}
           >
-            + New chat
+            {t('chat.newChatAction', '+ New chat')}
           </button>
 
           {activeProjectId && (
@@ -392,78 +389,84 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
                   const current = projects.find((p) => p.id === activeProjectId)
                   if (!current) return
                   const name = (await askText({
-                    title: 'Rename project',
+                    title: t('project.rename', 'Rename project'),
                     initialValue: current.name,
-                    actionLabel: 'Rename',
-                    validate: (value) => value.trim() ? null : 'Enter a project name.',
+                    actionLabel: t('project.renameAction', 'Rename'),
+                    validate: (value) => value.trim() ? null : t('project.enterProjectName', 'Enter a project name.'),
                   }))?.trim()
                   if (!name || name === current.name) return
                   await useProjectStore.getState().renameProject(activeProjectId, name)
-                  toast.success('Project renamed')
+                  toast.success(t('project.renamed', 'Project renamed'))
                 }}
                 className="rounded border border-transparent bg-surface-elevated px-1.5 py-0.5 hover:border-text-muted"
               >
-                Rename
+                {t('project.renameAction', 'Rename')}
               </button>
               <button
                 onClick={async () => {
                   if (!activeProjectId) return
                   const shouldArchive = await askDecision({
-                    title: 'Archive project?',
-                    detail: 'Media and conversation references will be preserved.',
-                    actionLabel: 'Archive',
+                    title: t('project.archivePrompt', 'Archive project?'),
+                    detail: t('project.archiveDetail', 'Media and conversation references will be preserved.'),
+                    actionLabel: t('project.archiveAction', 'Archive'),
                   })
                   if (!shouldArchive) return
                   await useProjectStore.getState().archiveProject(activeProjectId)
-                  toast.success('Project archived')
+                  toast.success(t('project.archived', 'Project archived'))
                 }}
                 className="rounded border border-transparent bg-surface-elevated px-1.5 py-0.5 hover:border-text-muted"
               >
-                Archive
+                {t('project.archiveAction', 'Archive')}
               </button>
               <button
                 onClick={async () => {
                   if (!activeProjectId) return
                   const shouldDelete = await askDecision({
-                    title: 'Delete project?',
-                    detail: 'Projects referenced by media or conversations must be archived instead.',
-                    actionLabel: 'Delete',
+                    title: t('project.deletePrompt', 'Delete project?'),
+                    detail: t('project.deleteDetail', 'Projects referenced by media or conversations must be archived instead.'),
+                    actionLabel: t('project.deleteAction', 'Delete'),
                     danger: true,
                   })
                   if (!shouldDelete) return
                   const ok = await useProjectStore.getState().deleteProject(activeProjectId)
-                  if (ok) toast.success('Project deleted')
-                  else toast.error('Project cannot be deleted while media or conversations reference it. Archive it instead.')
+                  if (ok) toast.success(t('project.deleted', 'Project deleted'))
+                  else toast.error(t('project.deleteError', 'Project cannot be deleted while media or conversations reference it. Archive it instead.'))
                 }}
                 className="rounded border border-transparent bg-surface-elevated px-1.5 py-0.5 hover:border-text-muted text-danger"
               >
-                Delete
+                {t('project.deleteAction', 'Delete')}
               </button>
             </div>
           )}
-          <div className="mt-1 px-1 text-[9px] text-text-muted/60">Projects are IDB-encrypted • generated items use the active project</div>
+          <div className="mt-1 px-1 text-[9px] text-text-muted/60">{t('project.encryptionNote', 'Projects are IDB-encrypted • generated items use the active project')}</div>
         </div>
       )}
 
       {/* Scrollable middle section: nav + history share the remaining height. */}
       <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
         <nav aria-label="Sections" className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-3 py-3">
-          {navGroups.map((group) => (
-            <div key={group.label} className={cn(expanded ? 'px-2' : 'md:px-1.5 px-2')}>
+          {GROUP_ORDER.map((group) => {
+            const groupLabel = t(`groups.${group}`, { defaultValue: TAB_GROUP_LABELS[group] })
+            const items = TAB_REGISTRY.filter((t) => t.group === group)
+            return (
+            <div key={group} className={cn(expanded ? 'px-2' : 'md:px-1.5 px-2')}>
               {expanded && (
                 <div className="px-2 pb-1.5 text-[12px] uppercase tracking-[0.1em] text-text-muted font-semibold">
-                  {group.label}
+                  {groupLabel}
                 </div>
               )}
               <div className="flex flex-col gap-px">
-                {group.items.map(({ id, label, Icon }) => {
+                {items.map((tab) => {
+                  const id = tab.id
                   const isActive = activeTab === id
+                  const tabLabel = t(`tabs.${id}.label`, { defaultValue: tab.label })
+                  const Icon = TAB_ICONS[id] ?? ChatIcon
                   return (
                     <button
                       key={id}
                       onClick={() => { setActiveTab(id); onMobileClose?.() }}
                       aria-current={isActive ? 'page' : undefined}
-                      title={!expanded ? label : undefined}
+                      title={!expanded ? tabLabel : undefined}
                       className={cn(
                         'relative flex items-center gap-2.5 rounded-lg text-[14px] transition-all duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 cursor-pointer',
                         expanded ? 'px-2.5 py-2' : 'md:px-0 md:py-2 md:justify-center px-2.5 py-2',
@@ -476,13 +479,14 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-accent" />
                       )}
                       <Icon />
-                      {expanded && <span className="font-medium">{label}</span>}
+                      {expanded && <span className="font-medium">{tabLabel}</span>}
                     </button>
                   )
                 })}
               </div>
             </div>
-          ))}
+            )
+          })}
         </nav>
 
         {expanded && activeTab === 'chat' && (
@@ -493,11 +497,11 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
                 onClick={() => setHistoryExpanded((open) => !open)}
                 aria-expanded={historyExpanded}
                 aria-controls="chat-history-list"
-                aria-label={historyExpanded ? "Collapse History" : "Expand History"}
-                title={historyExpanded ? "Collapse History" : "Expand History"}
+                aria-label={historyExpanded ? t('chat.collapseHistory', 'Collapse History') : t('chat.expandHistory', 'Expand History')}
+                title={historyExpanded ? t('chat.collapseHistory', 'Collapse History') : t('chat.expandHistory', 'Expand History')}
                 className="flex items-center gap-1.5 text-[12px] font-semibold text-text-muted uppercase tracking-[0.1em] hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent rounded px-1 -ml-1 cursor-pointer"
               >
-                History
+                {t('chat.history', 'History')}
                 <svg
                   width="12"
                   height="12"
@@ -516,32 +520,32 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
               <button
                 type="button"
                 onClick={() => setChatOptionsOpen((open) => !open)}
-                aria-label="Chat options"
+                aria-label={t('chat.options', 'Chat options')}
                 aria-haspopup="menu"
                 aria-expanded={chatOptionsOpen}
                 className="mesh-input text-text-secondary hover:text-text-primary p-1.5 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent cursor-pointer"
-                title="Chat options"
+                title={t('chat.options', 'Chat options')}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden><circle cx="5" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="19" cy="12" r="1.5" /></svg>
               </button>
               {chatOptionsOpen && (
-                <div role="menu" aria-label="Chat options" className="mesh-panel absolute right-3 top-10 z-50 min-w-48 rounded-xl p-1.5 text-[12.5px] shadow-xl">
-                  <button role="menuitem" className="menu-action" onClick={startNewChat}>New chat</button>
-                  <button role="menuitem" className="menu-action" onClick={() => { setChatOptionsOpen(false); searchInputRef.current?.focus() }}>Search chats</button>
-                  <button role="menuitem" className="menu-action" disabled={!activeConversation} onClick={() => { if (activeConversation) exportConversation(activeConversation); setChatOptionsOpen(false) }}>Export active chat</button>
+                <div role="menu" aria-label={t('chat.options', 'Chat options')} className="mesh-panel absolute right-3 top-10 z-50 min-w-48 rounded-xl p-1.5 text-[12.5px] shadow-xl">
+                  <button role="menuitem" className="menu-action" onClick={startNewChat}>{t('chat.newChat', 'New chat')}</button>
+                  <button role="menuitem" className="menu-action" onClick={() => { setChatOptionsOpen(false); searchInputRef.current?.focus() }}>{t('chat.searchChats', 'Search chats')}</button>
+                  <button role="menuitem" className="menu-action" disabled={!activeConversation} onClick={() => { if (activeConversation) exportConversation(activeConversation); setChatOptionsOpen(false) }}>{t('chat.exportActive', 'Export active chat')}</button>
                   <button role="menuitem" className="menu-action text-danger" disabled={!activeConversation} onClick={async () => {
                     if (activeConversation) {
                       const shouldDelete = await askDecision({
-                        title: 'Delete chat?',
-                        detail: activeConversation.title || 'Untitled',
-                        actionLabel: 'Delete',
+                        title: t('chat.deletePrompt', 'Delete chat?'),
+                        detail: activeConversation.title || t('chat.untitled', 'Untitled'),
+                        actionLabel: t('chat.deleteAction', 'Delete'),
                         danger: true,
                       })
                       if (shouldDelete) void handleDelete(activeConversation)
                     }
                     setChatOptionsOpen(false)
-                  }}>Delete active chat</button>
-                  <button role="menuitem" className="menu-action" disabled={!activeConversationId} onClick={() => { setActiveConversation(null); setChatOptionsOpen(false) }}>Clear active chat selection</button>
+                  }}>{t('chat.deleteActive', 'Delete active chat')}</button>
+                  <button role="menuitem" className="menu-action" disabled={!activeConversationId} onClick={() => { setActiveConversation(null); setChatOptionsOpen(false) }}>{t('chat.clearActiveSelection', 'Clear active chat selection')}</button>
                 </div>
               )}
             </div>
@@ -552,23 +556,23 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
                       ref={searchInputRef}
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
-                      placeholder="Search…"
-                      aria-label="Search conversations"
+                      placeholder={t('chat.searchPlaceholder', 'Search…')}
+                      aria-label={t('chat.searchAria', 'Search conversations')}
                       className="mesh-input w-full rounded-md px-2.5 py-1 text-[13px] text-text-primary outline-none focus:border-accent placeholder:text-text-muted"
                     />
                     {deferredSearch !== search && (
-                      <div role="status" className="pt-1 text-[12px] text-text-muted">Searching…</div>
+                      <div role="status" className="pt-1 text-[12px] text-text-muted">{t('chat.searching', 'Searching…')}</div>
                     )}
                     {deferredSearch.trim() && searchResult.totalMatches > filtered.length && (
                       <div role="status" className="pt-1 text-[12px] text-text-muted">
-                        Showing first {filtered.length} of {searchResult.totalMatches} matches
+                        {t('chat.showingMatches', 'Showing first {{count}} of {{total}} matches', { count: filtered.length, total: searchResult.totalMatches })}
                       </div>
                     )}
                 </div>
                 <div className="flex-1 overflow-y-auto px-2 pb-3 min-h-0" role="list">
                   {filtered.length === 0 ? (
                     <div className="px-2 py-6 text-[13px] text-text-muted text-center">
-                      {deferredSearch ? 'No matches' : 'No conversations yet'}
+                      {deferredSearch ? t('chat.noMatches', 'No matches') : t('chat.noConversations', 'No conversations yet')}
                     </div>
                   ) : (
                     filtered.map((conv) => (
@@ -594,9 +598,9 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
           {/* Traffic Inspector controls */}
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <span className="text-[12px] font-semibold uppercase tracking-wider text-text-muted leading-none">Traffic Inspector</span>
+              <span className="text-[12px] font-semibold uppercase tracking-wider text-text-muted leading-none">{t('inspector.title', 'Traffic Inspector')}</span>
               <p className="text-[12px] leading-snug text-text-muted mt-0.5 [@media(max-height:800px)]:hidden">
-                Shows raw model output and local safety decisions.
+                {t('inspector.description', 'Shows raw model output and local safety decisions.')}
               </p>
             </div>
             <button
@@ -608,7 +612,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
                 "w-8 h-4 rounded-full transition-colors relative cursor-pointer shrink-0",
                 redTeamMode ? "bg-accent" : "bg-border"
               )}
-              aria-label="Toggle Traffic Inspector"
+              aria-label={t('inspector.toggle', 'Toggle Traffic Inspector')}
             >
               <div className={cn(
                 "w-3.5 h-3.5 rounded-full bg-surface-elevated shadow-sm absolute top-[1px] transition-all",
@@ -619,9 +623,9 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
 
           <div className="flex items-center justify-between gap-3 pt-2">
             <div className="min-w-0">
-              <span className="text-[12px] font-semibold uppercase tracking-wider text-text-muted leading-none">Family Safe Mode</span>
+              <span className="text-[12px] font-semibold uppercase tracking-wider text-text-muted leading-none">{t('familySafeMode.title', 'Family Safe Mode')}</span>
               <p className="text-[12px] leading-snug text-text-muted mt-0.5 [@media(max-height:800px)]:hidden">
-                {localFamilySafeModeEnabled ? 'ON: local family filter runs.' : 'OFF: Local filter OFF (Provider Safe Mode separate).'}
+                {localFamilySafeModeEnabled ? t('familySafeMode.on', 'ON: local family filter runs.') : t('familySafeMode.off', 'OFF: Local filter OFF (Provider Safe Mode separate).')}
               </p>
             </div>
             <button
@@ -633,8 +637,8 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
                 "w-8 h-4 rounded-full transition-colors relative cursor-pointer shrink-0",
                 localFamilySafeModeEnabled ? "bg-accent" : "bg-border"
               )}
-              aria-label="Toggle Family Safe Mode"
-              title={localFamilySafeModeEnabled ? "Family Safe Mode enabled" : "Local Family Safe Mode disabled (Provider Safe Mode separate)"}
+              aria-label={t('familySafeMode.toggle', 'Toggle Family Safe Mode')}
+              title={localFamilySafeModeEnabled ? t('familySafeMode.enabledTooltip', 'Family Safe Mode enabled') : t('familySafeMode.disabledTooltip', 'Local Family Safe Mode disabled (Provider Safe Mode separate)')}
             >
               <div className={cn(
                 "w-3.5 h-3.5 rounded-full bg-surface-elevated shadow-sm absolute top-[1px] transition-all",
@@ -653,11 +657,11 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
             </svg>
-            <span>{showInspector ? 'Hide Inspector' : 'Show Inspector'}</span>
+            <span>{showInspector ? t('inspector.hide', 'Hide Inspector') : t('inspector.show', 'Show Inspector')}</span>
           </button>
           <div className="pt-2 text-[12px] text-text-secondary flex flex-col gap-1 shrink-0 [@media(max-height:800px)]:hidden">
-            <div className="flex justify-between items-center leading-none"><span>New chat</span><kbd className="font-mono text-text-muted">⌘N</kbd></div>
-            <div className="flex justify-between items-center leading-none"><span>Switch tab</span><kbd className="font-mono text-text-muted">⌘1-8</kbd></div>
+            <div className="flex justify-between items-center leading-none"><span>{t('chat.newChat', 'New chat')}</span><kbd className="font-mono text-text-muted">⌘N</kbd></div>
+            <div className="flex justify-between items-center leading-none"><span>{t('keyboardShortcuts.switchTab', 'Switch tab')}</span><kbd className="font-mono text-text-muted">⌘1-8</kbd></div>
           </div>
         </div>
       )}
@@ -672,6 +676,7 @@ function ConversationRow({ conv, isActive, onSelect, onDelete, onExport }: {
   onDelete: () => void
   onExport: () => void
 }) {
+  const { t } = useTranslation('navigation')
   const [confirming, setConfirming] = useState(false)
   const confirmTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -719,8 +724,8 @@ function ConversationRow({ conv, isActive, onSelect, onDelete, onExport }: {
       <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
         <button
           onClick={(e) => { e.stopPropagation(); onExport() }}
-          aria-label={`Export ${conv.title}`}
-          title="Export as Markdown"
+          aria-label={t('chat.exportAsMarkdown', 'Export as Markdown')}
+          title={t('chat.exportAsMarkdown', 'Export as Markdown')}
           className="text-text-secondary hover:text-text-primary p-1 rounded focus-visible:outline focus-visible:outline-1 focus-visible:outline-accent cursor-pointer"
         >
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
@@ -731,13 +736,13 @@ function ConversationRow({ conv, isActive, onSelect, onDelete, onExport }: {
             aria-label="Confirm delete"
             className="text-danger hover:underline px-1.5 text-[12px] font-semibold rounded cursor-pointer"
           >
-            Delete?
+            {t('chat.deletePrompt', 'Delete?')}
           </button>
         ) : (
           <button
             onClick={(e) => { e.stopPropagation(); startConfirm() }}
-            aria-label={`Delete ${conv.title}`}
-            title="Delete"
+            aria-label={t('chat.deleteAction', 'Delete')}
+            title={t('chat.deleteAction', 'Delete')}
             className="text-text-secondary hover:text-danger p-1 rounded focus-visible:outline focus-visible:outline-1 focus-visible:outline-accent cursor-pointer"
           >
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">

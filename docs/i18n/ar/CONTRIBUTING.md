@@ -1,5 +1,5 @@
-# Guía de Contribución — العربية
+# المساهمة
 
-> [English README](../../../README.md)
+> [الوثائق الإنجليزية (الأساسية)](../../../README.md)
 
-Consulta las instrucciones completas en la guía principal de contribución del repositorio.
+يرجى الرجوع إلى ملف CONTRIBUTING.md باللغة الإنجليزية للحصول على إرشادات حول كيفية المساهمة.

@@ -1,5 +1,5 @@
-# Seguridad — Français
+# Sécurité
 
-> [English README](../../../README.md)
+> [Documentation en anglais (Canonique)](../../../README.md)
 
-Venice Forge cifra los datos confidenciales mediante APIs de almacenamiento seguro nativas del SO.
+Toutes les clés API et les secrets des fournisseurs sont cryptés localement.

@@ -1,23 +1,23 @@
 # Venice Forge — हिन्दी
 
-> [English Version](../../../README.md) | [Language Index](../../../README.md#languages)
+> [अंग्रेजी दस्तावेज़ीकरण (कैनोनिकल)](../../../README.md)
 
-Venice Forge es un cliente de escritorio local y privado para la API de Venice.ai.
+वेनिस फोर्ज (Venice Forge) Venice.ai API के लिए एक स्थानीय, निजी डेस्कटॉप क्लाइंट है।
 
-## Características principales
+## मुख्य विशेषताएं
 
-- **Chat privado y multimodelo**: Interfaz de chat de alta privacidad con soporte para modelos de lenguaje y visión.
-- **Creador de personajes y RP Studio**: Herramientas para diseñar e importar tarjetas de personajes V2 PNG y JSON.
-- **Estudio de medios y generación de imágenes**: Creación de imágenes, vídeo y audio con presets de aspecto y herramientas de comparación.
-- **Privacidad y seguridad nativa**: Las claves de API y secretos se cifran en el almacenamiento seguro del sistema operativo.
-- **Multilingüe**: Soporte completo para 10 idiomas de interfaz con formato regional e idioma del sistema automático.
+- **निजी मल्टी-मॉडल चैट**: भाषा और दृष्टि मॉडल के समर्थन के साथ उच्च-गोपनीयता चैट इंटरफ़ेस।
+- **कैरेक्टर बिल्डर और आरपी स्टूडियो**: V2 PNG और JSON कैरेक्टर कार्ड डिजाइन और आयात करने के टूल।
+- **मीडिया स्टूडियो और इमेज जेनरेशन**: चित्र, वीडियो और ऑडियो निर्माण।
+- **स्थानीय गोपनीयता और सुरक्षा**: API कुंजियाँ और रहस्य OS के सुरक्षित स्टोरेज में एन्क्रिप्टेड हैं।
+- **बहुभाषी**: 10 इंटरफ़ेस भाषाओं के लिए पूर्ण समर्थन।
 
-## Enlaces de documentación
+## दस्तावेज़ीकरण लिंक
 
-- [Acerca de Venice Forge](ABOUT.md)
-- [Preguntas frecuentes (FAQ)](FAQ.md)
-- [Soporte](SUPPORT.md)
-- [Privacidad](PRIVACY.md)
-- [Seguridad](SECURITY.md)
-- [Contribución](CONTRIBUTING.md)
-- [Documentación en inglés (Canónica)](../../../README.md)
+- [Venice Forge के बारे में](ABOUT.md)
+- [अक्सर पूछे जाने वाले प्रश्न (FAQ)](FAQ.md)
+- [सहायता](SUPPORT.md)
+- [गोपनीयता](PRIVACY.md)
+- [सुरक्षा](SECURITY.md)
+- [योगदान](CONTRIBUTING.md)
+- [अंग्रेजी दस्तावेज़ीकरण (कैनोनिकल)](../../../README.md)

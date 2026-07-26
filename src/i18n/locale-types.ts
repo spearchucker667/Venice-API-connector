@@ -12,7 +12,9 @@ export type SupportedLocale =
   | 'zh-CN'
   | 'ja'
   | 'hi'
-  | 'ar';
+  | 'ar'
+  | 'ko'
+  | 'sv-SE';
 
 export type TextDirection = 'ltr' | 'rtl';
 
@@ -37,7 +39,8 @@ export type TranslationNamespace =
   | 'characters'
   | 'workflows'
   | 'errors'
-  | 'accessibility';
+  | 'accessibility'
+  | 'navigation';
 
 export interface LocaleSettings {
   uiLocale: LocaleSetting;

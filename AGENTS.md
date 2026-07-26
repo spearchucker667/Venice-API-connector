@@ -3,7 +3,7 @@
 > **Canonical local repository root:** `/Users/super_user/Projects/Venice_Forge`
 > **GitHub:** `spearchucker667/Venice_Forge`
 > **Expected branch:** `main`
-> **Version:** 3.0.0-beta.1
+> **Version:** 3.0.0-beta.2
 >
 > The absolute path is a local bootstrap constraint only. Never copy it into CI, portable exports, diagnostics, permanent reports, or user-facing documentation. Verify the declared version against `package.json` during release work.
 

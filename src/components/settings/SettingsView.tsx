@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../stores/auth-store";
 import { useChatStore } from "../../stores/chat-store";
 import { useSettingsStore } from "../../stores/settings-store";
@@ -29,6 +30,7 @@ import type { PendingConfirm } from "./types";
 import { IMAGE_EDIT_MODEL_IDS } from "../../constants/venice";
 
 export function SettingsView() {
+  const { t } = useTranslation(['settings', 'common']);
   const { isConfigured: veniceConfigured, setApiKey, clearApiKey } = useAuthStore();
   const {
     selectedModels,
@@ -125,7 +127,7 @@ export function SettingsView() {
       if (!result.ok) {
         if (key === "local_family_safe_mode_enabled") setLocalFamilySafeModeEnabled(previousFamily);
         else setVeniceApiSafeMode(previousVenice);
-        toast.error(result.error || "Failed to persist safety setting.");
+        toast.error(result.error || t('settings:errors.persistSafety', "Failed to persist safety setting."));
         return;
       }
       await reloadConfig();
@@ -156,27 +158,27 @@ export function SettingsView() {
     const unsubs = [
       desktopUpdates.onUpdateAvailable((info: UpdateInfo) => {
         updateEventSeenRef.current = true;
-        setUpdateStatus(`Update available: v${info?.version || "new"}`);
+        setUpdateStatus(t('settings:updates.available', 'Update available: v{{version}}', { version: info?.version || "new" }));
         setIsUpdateChecking(false);
       }),
       desktopUpdates.onUpdateNotAvailable(() => {
         updateEventSeenRef.current = true;
-        setUpdateStatus("App is up to date.");
+        setUpdateStatus(t('settings:updates.upToDate', 'App is up to date.'));
         setIsUpdateChecking(false);
       }),
       desktopUpdates.onDownloadProgress((progress: ProgressInfo) => {
         updateEventSeenRef.current = true;
-        setUpdateStatus(`Downloading update: ${Math.round(progress?.percent || 0)}%`);
+        setUpdateStatus(t('settings:updates.downloading', 'Downloading update: {{percent}}%', { percent: Math.round(progress?.percent || 0) }));
       }),
       desktopUpdates.onUpdateDownloaded(() => {
         updateEventSeenRef.current = true;
-        setUpdateStatus("Update downloaded and ready to install.");
+        setUpdateStatus(t('settings:updates.downloaded', 'Update downloaded and ready to install.'));
         setUpdateDownloaded(true);
         setIsUpdateChecking(false);
       }),
       desktopUpdates.onUpdateError((err: string) => {
         updateEventSeenRef.current = true;
-        setUpdateStatus(`Update error: ${err}`);
+        setUpdateStatus(t('settings:updates.error', 'Update error: {{error}}', { error: err }));
         setIsUpdateChecking(false);
       }),
     ];
@@ -187,21 +189,21 @@ export function SettingsView() {
   async function checkForUpdates() {
     setIsUpdateChecking(true);
     updateEventSeenRef.current = false;
-    setUpdateStatus("Checking for updates...");
+    setUpdateStatus(t('settings:updates.checking', "Checking for updates..."));
     try {
       const res = await desktopUpdates.checkForUpdates();
       if (!res.ok) {
         const raw = res.error ?? "Unknown error";
         const msg = raw.startsWith("Error: ") ? raw.slice(7) : raw;
         setUpdateStatus(msg === "Update checks are only available in production builds."
-          ? "Development build — update checks run only in packaged production builds."
-          : `Update check failed: ${msg}`);
+          ? t('settings:updates.devBuild', "Development build — update checks run only in packaged production builds.")
+          : t('settings:updates.checkFailed', "Update check failed: {{error}}", { error: msg }));
       } else if (!updateEventSeenRef.current) {
-        setUpdateStatus("Update check completed.");
+        setUpdateStatus(t('settings:updates.checkCompleted', "Update check completed."));
       }
     } catch (err: unknown) {
       const message = redactErrorMessage(err);
-      setUpdateStatus(`Update check failed: ${message}`);
+      setUpdateStatus(t('settings:updates.checkFailed', "Update check failed: {{error}}", { error: message }));
     } finally {
       setIsUpdateChecking(false);
     }
@@ -212,7 +214,7 @@ export function SettingsView() {
       await desktopUpdates.installUpdate();
     } catch (err: unknown) {
       const message = redactErrorMessage(err);
-      setUpdateStatus(`Install failed: ${message}`);
+      setUpdateStatus(t('settings:updates.installFailed', "Install failed: {{error}}", { error: message }));
     }
   }
 
@@ -222,24 +224,24 @@ export function SettingsView() {
     try {
       await setApiKey(apiKeyInput.trim());
       setApiKeyInput("");
-      toast.success(isElectron() ? "Venice API key saved securely." : "Venice API key saved for this development session.");
+      toast.success(isElectron() ? t('settings:apiKeys.savedElectron', "Venice API key saved securely.") : t('settings:apiKeys.savedWeb', "Venice API key saved for this development session."));
     } catch (err) {
-      toast.error("Failed to save API key.", redactErrorMessage(err));
+      toast.error(t('settings:apiKeys.saveFailed', "Failed to save API key."), redactErrorMessage(err));
     }
   }
 
   async function handleDeleteApiKey() {
     setPendingConfirm({
-      message: "Delete Venice API key?",
+      message: t('settings:apiKeys.deleteConfirm.title', "Delete Venice API key?"),
       detail: isElectron()
-        ? "This will remove your Venice API key from OS secure storage. You will need to re-enter it to make requests."
-        : "This will remove the Venice API key from the current development session.",
+        ? t('settings:apiKeys.deleteConfirm.electron', "This will remove your Venice API key from OS secure storage. You will need to re-enter it to make requests.")
+        : t('settings:apiKeys.deleteConfirm.web', "This will remove the Venice API key from the current development session."),
       onConfirm: async () => {
         try {
           await clearApiKey();
-          toast.success("Venice API key deleted.");
+          toast.success(t('settings:apiKeys.deleted', "Venice API key deleted."));
         } catch (err) {
-          toast.error("Failed to delete API key.", redactErrorMessage(err));
+          toast.error(t('settings:apiKeys.deleteFailed', "Failed to delete API key."), redactErrorMessage(err));
         }
       },
     });
@@ -250,12 +252,12 @@ export function SettingsView() {
     try {
       const result = await desktopApiKey.test();
       if (result.ok) {
-        toast.success(`Connection successful${result.status ? ` (HTTP ${result.status})` : ""}.`);
+        toast.success(t('settings:apiKeys.testSuccess', 'Connection successful{{status}}.', { status: result.status ? ` (HTTP ${result.status})` : "" }));
       } else {
-        toast.error(`Connection failed: ${result.message}`);
+        toast.error(t('settings:apiKeys.testFailed', 'Connection failed: {{message}}', { message: result.message }));
       }
     } catch (err) {
-      toast.error("Test connection failed.", redactErrorMessage(err));
+      toast.error(t('settings:apiKeys.testError', "Test connection failed."), redactErrorMessage(err));
     } finally {
       setApiKeyTesting(false);
     }
@@ -267,25 +269,25 @@ export function SettingsView() {
       await desktopJinaApiKey.set(jinaKeyInput.trim());
       setJinaKeyInput("");
       setJinaKeyConfigured(true);
-      toast.success(isElectron() ? "Jina API key saved securely." : "Jina API key saved for this browser session.");
+      toast.success(isElectron() ? t('settings:jinaKeys.savedElectron', "Jina API key saved securely.") : t('settings:jinaKeys.savedWeb', "Jina API key saved for this browser session."));
     } catch (err) {
-      toast.error("Failed to save Jina API key.", redactErrorMessage(err));
+      toast.error(t('settings:jinaKeys.saveFailed', "Failed to save Jina API key."), redactErrorMessage(err));
     }
   }
 
   async function handleDeleteJinaKey() {
     setPendingConfirm({
-      message: "Delete Jina API key?",
+      message: t('settings:jinaKeys.deleteConfirm.title', "Delete Jina API key?"),
       detail: isElectron()
-        ? "This will remove your Jina API key from OS secure storage."
-        : "This will remove the in-memory Jina API key for this browser session.",
+        ? t('settings:jinaKeys.deleteConfirm.electron', "This will remove your Jina API key from OS secure storage.")
+        : t('settings:jinaKeys.deleteConfirm.web', "This will remove the in-memory Jina API key for this browser session."),
       onConfirm: async () => {
         try {
           await desktopJinaApiKey.delete();
           setJinaKeyConfigured(false);
-          toast.success("Jina API key deleted.");
+          toast.success(t('settings:jinaKeys.deleted', "Jina API key deleted."));
         } catch (err) {
-          toast.error("Failed to delete Jina API key.", redactErrorMessage(err));
+          toast.error(t('settings:jinaKeys.deleteFailed', "Failed to delete Jina API key."), redactErrorMessage(err));
         }
       },
     });
@@ -296,12 +298,12 @@ export function SettingsView() {
     try {
       const result = await desktopJinaApiKey.test();
       if (result.ok) {
-        toast.success(`Jina connection successful${result.status ? ` (HTTP ${result.status})` : ""}.`);
+        toast.success(t('settings:jinaKeys.testSuccess', 'Jina connection successful{{status}}.', { status: result.status ? ` (HTTP ${result.status})` : "" }));
       } else {
-        toast.error(`Jina connection failed: ${result.message}`);
+        toast.error(t('settings:jinaKeys.testFailed', 'Jina connection failed: {{message}}', { message: result.message }));
       }
     } catch (err) {
-      toast.error("Jina test connection failed.", redactErrorMessage(err));
+      toast.error(t('settings:jinaKeys.testError', "Jina test connection failed."), redactErrorMessage(err));
     } finally {
       setJinaKeyTesting(false);
     }
@@ -320,9 +322,9 @@ export function SettingsView() {
       <div className="flex-none p-5 border-b border-border/50 bg-surface">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-[17px] font-semibold text-text-primary">Config</h2>
+            <h2 className="text-[17px] font-semibold text-text-primary">{t('settings:header.title', 'Config')}</h2>
             <p className="text-[12.5px] text-text-muted mt-0.5">
-              {isElectron() ? "Manage API endpoints, defaults, and appearance styles." : "Configure default prompts and styling templates."}
+              {isElectron() ? t('settings:header.description.electron', 'Manage API endpoints, defaults, and appearance styles.') : t('settings:header.description.web', 'Configure default prompts and styling templates.')}
             </p>
           </div>
         </div>
@@ -334,62 +336,62 @@ export function SettingsView() {
           <button onClick={() => setActiveSection("language")} className={sectionButtonClass("language")}>
             <div className="flex items-center gap-2.5">
               <GlobeIcon className="w-4 h-4 opacity-75" />
-              <span className="font-medium">Language & Region</span>
+              <span className="font-medium">{t('settings:tabs.languageRegion', 'Language & Region')}</span>
             </div>
           </button>
           <button onClick={() => setActiveSection("profiles")} className={sectionButtonClass("profiles")}>
-            Profiles
+            {t('settings:tabs.profiles', 'Profiles')}
           </button>
           <button onClick={() => setActiveSection("api-keys")} className={sectionButtonClass("api-keys")}>
             <div className="flex items-center gap-2.5">
               <KeyIcon className="w-4 h-4 opacity-75" />
-              <span className="font-medium">Venice API Key</span>
+              <span className="font-medium">{t('settings:tabs.apiKeys', 'Venice API Key')}</span>
             </div>
           </button>
 
           <button onClick={() => setActiveSection("providers")} className={sectionButtonClass("providers")}>
             <div className="flex items-center gap-2.5">
               <CloudIcon className="w-4 h-4 opacity-75" />
-              <span className="font-medium">Fallback Providers</span>
+              <span className="font-medium">{t('settings:tabs.providers', 'Fallback Providers')}</span>
             </div>
           </button>
 
           <button onClick={() => setActiveSection("defaults")} className={sectionButtonClass("defaults")}>
-            Defaults & Behavior
+            {t('settings:tabs.defaults', 'Defaults & Behavior')}
           </button>
           <button onClick={() => setActiveSection("safety")} className={sectionButtonClass("safety")}>
-            Safety
+            {t('settings:tabs.safety', 'Safety')}
           </button>
           {isElectron() && (
             <button onClick={() => setActiveSection("vault")} className={sectionButtonClass("vault")}>
-              Conversation Vault
+              {t('settings:tabs.vault', 'Conversation Vault')}
             </button>
           )}
           <button onClick={() => setActiveSection("appearance")} className={sectionButtonClass("appearance")}>
-            Appearance
+            {t('settings:tabs.appearance', 'Appearance')}
           </button>
           <button onClick={() => setActiveSection("data")} className={sectionButtonClass("data")}>
-            Data & Storage
+            {t('settings:tabs.data', 'Data & Storage')}
           </button>
           <button onClick={() => setActiveSection("backup-sync")} className={sectionButtonClass("backup-sync")}>
-            Backup & Sync
+            {t('settings:tabs.backupSync', 'Backup & Sync')}
           </button>
           <button onClick={() => setActiveSection("about")} className={sectionButtonClass("about")}>
-            About & Legal
+            {t('settings:tabs.about', 'About & Legal')}
           </button>
           {isElectron() && (
             <button onClick={() => setActiveSection("updates")} className={sectionButtonClass("updates")}>
-              Updates
+              {t('settings:tabs.updates', 'Updates')}
               {updateDownloaded && <span className="ml-2 inline-flex w-1.5 h-1.5 rounded-full bg-success"></span>}
             </button>
           )}
           {isElectron() && (
             <button onClick={() => setActiveSection("config")} className={sectionButtonClass("config")}>
-              Local Config
+              {t('settings:tabs.config', 'Local Config')}
             </button>
           )}
           <button onClick={() => setActiveSection("audio-speech")} className={sectionButtonClass("audio-speech")}>
-            Audio & Speech
+            {t('settings:tabs.audioSpeech', 'Audio & Speech')}
           </button>
         </div>
 
@@ -492,11 +494,11 @@ export function SettingsView() {
         open={!!pendingConfirm}
         message={pendingConfirm?.message || ""}
         detail={pendingConfirm?.detail}
-        confirmLabel="Import all"
-        cancelLabel="Cancel"
+        confirmLabel={t('common:actions.importAll', 'Import all')}
+        cancelLabel={t('common:actions.cancel', 'Cancel')}
         tertiaryAction={
           applySafetyTertiaryRef.current
-            ? { label: "Keep current safety", onClick: () => applySafetyTertiaryRef.current?.() }
+            ? { label: t('settings:safety.keepCurrent', 'Keep current safety'), onClick: () => applySafetyTertiaryRef.current?.() }
             : undefined
         }
         onConfirm={async () => {

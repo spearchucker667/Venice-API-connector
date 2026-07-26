@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ModelSelect } from "../ModelSelect";
 import { PillGroup } from "../ui/shared";
 import type { VeniceParameters } from "../../types/venice";
@@ -34,11 +35,12 @@ export function DefaultsPanel({
   characterSceneGenerationMode,
   setCharacterSceneGenerationMode,
 }: DefaultsPanelProps): React.ReactElement {
+  const { t } = useTranslation(['settings', 'common']);
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="text-[12.5px] text-text-secondary block mb-1.5 font-medium">Default Chat Model</label>
+          <label className="text-[12.5px] text-text-secondary block mb-1.5 font-medium">{t('settings:defaultsPanel.defaultChatModel', 'Default Chat Model')}</label>
           <ModelSelect
             value={currentChatModel}
             models={textModels || []}
@@ -46,7 +48,7 @@ export function DefaultsPanel({
           />
         </div>
         <div>
-          <label className="text-[12.5px] text-text-secondary block mb-1.5 font-medium">Default Image Model</label>
+          <label className="text-[12.5px] text-text-secondary block mb-1.5 font-medium">{t('settings:defaultsPanel.defaultImageModel', 'Default Image Model')}</label>
           <ModelSelect
             value={currentImageModel}
             models={imageModels || []}
@@ -57,7 +59,7 @@ export function DefaultsPanel({
 
       <div className="border-t border-border/50 pt-5 space-y-4">
         <div>
-          <label className="text-[12.5px] text-text-secondary block mb-1.5 font-medium">Default Web Search</label>
+          <label className="text-[12.5px] text-text-secondary block mb-1.5 font-medium">{t('settings:defaultsPanel.defaultWebSearch', 'Default Web Search')}</label>
           <select
             value={veniceParams.enable_web_search || "off"}
             onChange={(e) =>
@@ -65,18 +67,18 @@ export function DefaultsPanel({
             }
             className="w-full bg-surface border border-border rounded-lg px-3.5 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-all cursor-pointer"
           >
-            <option value="off">Off</option>
-            <option value="on">On</option>
-            <option value="auto">Auto</option>
+            <option value="off">{t('common:status.off', 'Off')}</option>
+            <option value="on">{t('common:status.on', 'On')}</option>
+            <option value="auto">{t('common:status.auto', 'Auto')}</option>
           </select>
         </div>
 
         <div>
-          <label className="text-[12.5px] text-text-secondary block mb-1.5 font-medium">Default System Prompt</label>
+          <label className="text-[12.5px] text-text-secondary block mb-1.5 font-medium">{t('settings:defaultsPanel.defaultSystemPrompt', 'Default System Prompt')}</label>
           <textarea
             value={systemPrompt}
             onChange={(e) => setSystemPrompt(e.target.value)}
-            placeholder="Optional. Leave empty to avoid adding an app-authored system message."
+            placeholder={t('settings:defaultsPanel.systemPromptPlaceholder', 'Optional. Leave empty to avoid adding an app-authored system message.')}
             rows={4}
             className="w-full bg-surface border border-border rounded-lg px-3.5 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-all placeholder:text-text-muted/50 resize-none"
           />
@@ -90,7 +92,7 @@ export function DefaultsPanel({
               onChange={(e) => setVeniceParams({ include_venice_system_prompt: e.target.checked })}
               className="rounded border-border bg-surface text-accent focus:ring-offset-0 focus:ring-0 w-4 h-4 cursor-pointer"
             />
-            <span className="text-[13.5px] text-text-primary">Venice System Prompt Toggle</span>
+            <span className="text-[13.5px] text-text-primary">{t('settings:defaultsPanel.veniceSystemPromptToggle', 'Venice System Prompt Toggle')}</span>
           </label>
 
           <label className="flex items-center gap-3 cursor-pointer select-none">
@@ -100,16 +102,16 @@ export function DefaultsPanel({
               onChange={(e) => setVeniceParams({ enable_web_citations: e.target.checked })}
               className="rounded border-border bg-surface text-accent focus:ring-offset-0 focus:ring-0 w-4 h-4 cursor-pointer"
             />
-            <span className="text-[13.5px] text-text-primary">Enable Citations by Default</span>
+            <span className="text-[13.5px] text-text-primary">{t('settings:defaultsPanel.enableCitations', 'Enable Citations by Default')}</span>
           </label>
         </div>
 
         <div className="flex flex-col gap-3.5 p-4 rounded-xl border border-border bg-surface-elevated">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h3 className="text-[14.5px] font-medium text-text-primary">Character Scene Generation</h3>
+              <h3 className="text-[14.5px] font-medium text-text-primary">{t('settings:defaultsPanel.characterSceneGeneration.title', 'Character Scene Generation')}</h3>
               <p className="mt-1 text-[12.5px] text-text-secondary leading-relaxed">
-                Allow character chats to create inline scene images from the current conversation only. Protected by local rate limits.
+                {t('settings:defaultsPanel.characterSceneGeneration.description', 'Allow character chats to create inline scene images from the current conversation only. Protected by local rate limits.')}
               </p>
             </div>
             <label className="flex items-center gap-2 cursor-pointer shrink-0">
@@ -120,18 +122,18 @@ export function DefaultsPanel({
                 className="h-4 w-4 rounded border-border bg-surface text-accent cursor-pointer"
               />
               <span className="text-[12.5px] font-medium text-text-primary">
-                {characterSceneGenerationEnabled ? "On" : "Off"}
+                {characterSceneGenerationEnabled ? t('common:status.on', 'On') : t('common:status.off', 'Off')}
               </span>
             </label>
           </div>
           {characterSceneGenerationEnabled && (
             <div className="pt-2 border-t border-border/50">
-              <label className="text-[12.5px] text-text-secondary block mb-2 font-medium">Mode</label>
+              <label className="text-[12.5px] text-text-secondary block mb-2 font-medium">{t('settings:defaultsPanel.characterSceneGeneration.mode', 'Mode')}</label>
               <PillGroup
-                ariaLabel="Character scene generation mode"
+                ariaLabel={t('settings:defaultsPanel.characterSceneGeneration.modeAriaLabel', 'Character scene generation mode')}
                 options={[
-                  { value: "manual", label: "Manual only" },
-                  { value: "auto", label: "Automatic + manual" },
+                  { value: "manual", label: t('settings:defaultsPanel.characterSceneGeneration.manualOnly', 'Manual only') },
+                  { value: "auto", label: t('settings:defaultsPanel.characterSceneGeneration.autoManual', 'Automatic + manual') },
                 ]}
                 value={characterSceneGenerationMode}
                 onChange={(v) => setCharacterSceneGenerationMode(v as "manual" | "auto")}

@@ -488,7 +488,7 @@ describe("CommandPalette — Phase 2H Storage / Privacy commands", () => {
     const copySafeSummary = vi.spyOn(useStoragePrivacyStore.getState(), 'copySafeSummary').mockResolvedValue(undefined)
     render(<CommandPalette open onClose={vi.fn()} onToggle={vi.fn()} />)
     await act(async () => {
-      fireEvent.click(screen.getByTestId("command-palette-copy-privacy-summary"))
+      fireEvent.click(screen.getByTestId("command-palette-copy-safe-privacy-summary"))
     });
     expect(copySafeSummary).toHaveBeenCalled()
   })
@@ -497,8 +497,8 @@ describe("CommandPalette — Phase 2H Storage / Privacy commands", () => {
     const exportSafeSummary = vi.spyOn(useStoragePrivacyStore.getState(), 'exportSafeSummary').mockReturnValue(undefined)
     render(<CommandPalette open onClose={vi.fn()} onToggle={vi.fn()} />)
     act(() => {
-      fireEvent.click(screen.getByTestId("command-palette-export-privacy-summary"))
-    })
+      fireEvent.click(screen.getByTestId("command-palette-export-safe-privacy-summary"))
+    });
     expect(exportSafeSummary).toHaveBeenCalled()
   })
 })

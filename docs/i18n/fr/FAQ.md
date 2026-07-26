@@ -1,6 +1,6 @@
-# Preguntas frecuentes (FAQ) — Français
+# Foire aux questions (FAQ)
 
-> [English README](../../../README.md)
+> [Documentation en anglais (Canonique)](../../../README.md)
 
-### ¿Dónde se guardan mis claves de API?
-Las claves de API se guardan en el almacenamiento seguro nativo del sistema operativo (Keychain en macOS, Credential Manager en Windows).
+### Où sont enregistrées mes clés API ?
+Les clés API sont enregistrées dans le stockage sécurisé natif du système d'exploitation (Keychain sur macOS, Credential Manager sur Windows).

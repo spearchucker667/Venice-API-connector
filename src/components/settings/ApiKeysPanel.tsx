@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { isElectron } from "../../services/desktopBridge";
 
 export interface ApiKeysPanelProps {
@@ -34,12 +35,13 @@ export function ApiKeysPanel({
   onDeleteJinaKey,
   onTestJinaKey,
 }: ApiKeysPanelProps): React.ReactElement {
+  const { t } = useTranslation(['settings', 'common']);
   return (
     <div className="space-y-6">
       {/* Venice key */}
       <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-[14.5px] font-medium text-text-primary">Venice.ai Integration</h3>
+          <h3 className="text-[14.5px] font-medium text-text-primary">{t('settings:apiKeys.veniceTitle', 'Venice.ai Integration')}</h3>
           <span
             className={`text-[12px] px-2 py-0.5 rounded font-medium ${
               veniceConfigured
@@ -47,11 +49,11 @@ export function ApiKeysPanel({
                 : "bg-warning/10 text-warning border border-warning/20"
             }`}
           >
-            {veniceConfigured ? "Configured" : "Unset"}
+            {veniceConfigured ? t('settings:apiKeys.status.configured', 'Configured') : t('settings:apiKeys.status.unset', 'Unset')}
           </span>
         </div>
         <p className="text-[12.5px] text-text-secondary leading-relaxed">
-          Your API key is saved using secure storage encryption and is never exposed to the web sandbox.
+          {t('settings:apiKeys.veniceDescription', 'Your API key is saved using secure storage encryption and is never exposed to the web sandbox.')}
         </p>
         <div className="space-y-3">
           {!veniceConfigured ? (
@@ -69,7 +71,7 @@ export function ApiKeysPanel({
                 disabled={!apiKeyInput.trim()}
                 className="px-4 py-1.5 rounded-lg text-[13px] font-medium bg-accent text-accent-fg hover:bg-accent-hover disabled:opacity-40 transition-colors cursor-pointer"
               >
-                Save Key
+                {t('common:actions.saveKey', 'Save Key')}
               </button>
             </div>
           ) : (
@@ -85,13 +87,13 @@ export function ApiKeysPanel({
                 disabled={apiKeyTesting}
                 className="px-3.5 py-1.5 rounded-lg text-[13px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors disabled:opacity-50 cursor-pointer"
               >
-                {apiKeyTesting ? "Testing..." : "Test Key"}
+                {apiKeyTesting ? t('common:actions.testing', 'Testing...') : t('common:actions.testKey', 'Test Key')}
               </button>
               <button
                 onClick={onDeleteApiKey}
                 className="px-3.5 py-1.5 rounded-lg text-[13px] font-medium bg-danger/10 border border-danger/20 text-danger hover:bg-danger/25 transition-colors cursor-pointer"
               >
-                Delete
+                {t('common:actions.delete', 'Delete')}
               </button>
             </div>
           )}
@@ -101,7 +103,7 @@ export function ApiKeysPanel({
       {/* Jina key */}
       <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-[14.5px] font-medium text-text-primary">Jina.ai Integration</h3>
+          <h3 className="text-[14.5px] font-medium text-text-primary">{t('settings:apiKeys.jinaTitle', 'Jina.ai Integration')}</h3>
           <span
             className={`text-[12px] px-2 py-0.5 rounded font-medium ${
               jinaKeyConfigured
@@ -109,14 +111,14 @@ export function ApiKeysPanel({
                 : "bg-surface border border-border text-text-muted"
             }`}
           >
-            {jinaKeyConfigured ? "Configured" : "Optional"}
+            {jinaKeyConfigured ? t('settings:apiKeys.status.configured', 'Configured') : t('settings:apiKeys.status.optional', 'Optional')}
           </span>
         </div>
         <p className="text-[12.5px] text-text-secondary leading-relaxed">
-          Provides deep web searching, scraping, and social profile discovery mapping capabilities.{" "}
+          {t('settings:apiKeys.jinaDescription.prefix', 'Provides deep web searching, scraping, and social profile discovery mapping capabilities.')}{" "}
           {isElectron()
-            ? "Jina API keys are saved with the same OS secure storage."
-            : "Jina API keys are kept only in memory for this browser session; use the server environment for persistent web configuration."}
+            ? t('settings:apiKeys.jinaDescription.electron', "Jina API keys are saved with the same OS secure storage.")
+            : t('settings:apiKeys.jinaDescription.web', "Jina API keys are kept only in memory for this browser session; use the server environment for persistent web configuration.")}
         </p>
         <div className="space-y-3">
           {!jinaKeyConfigured ? (
@@ -134,7 +136,7 @@ export function ApiKeysPanel({
                 disabled={!jinaKeyInput.trim()}
                 className="px-4 py-1.5 rounded-lg text-[13px] font-medium bg-accent text-accent-fg hover:bg-accent-hover disabled:opacity-40 transition-colors cursor-pointer"
               >
-                Save Key
+                {t('common:actions.saveKey', 'Save Key')}
               </button>
             </div>
           ) : (
@@ -150,13 +152,13 @@ export function ApiKeysPanel({
                 disabled={jinaKeyTesting}
                 className="px-3.5 py-1.5 rounded-lg text-[13px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors disabled:opacity-50 cursor-pointer"
               >
-                {jinaKeyTesting ? "Testing..." : "Test Key"}
+                {jinaKeyTesting ? t('common:actions.testing', 'Testing...') : t('common:actions.testKey', 'Test Key')}
               </button>
               <button
                 onClick={onDeleteJinaKey}
                 className="px-3.5 py-1.5 rounded-lg text-[13px] font-medium bg-danger/10 border border-danger/20 text-danger hover:bg-danger/25 transition-colors cursor-pointer"
               >
-                Delete
+                {t('common:actions.delete', 'Delete')}
               </button>
             </div>
           )}

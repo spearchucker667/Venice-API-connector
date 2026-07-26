@@ -1,6 +1,6 @@
-# Preguntas frecuentes (FAQ) — 简体中文
+# 常见问题解答 (FAQ)
 
-> [English README](../../../README.md)
+> [英文文档（规范）](../../../README.md)
 
-### ¿Dónde se guardan mis claves de API?
-Las claves de API se guardan en el almacenamiento seguro nativo del sistema operativo (Keychain en macOS, Credential Manager en Windows).
+### 我的 API 密钥保存在哪里？
+API 密钥保存在操作系统的原生安全存储中（macOS 上的 Keychain，Windows 上的凭据管理器）。

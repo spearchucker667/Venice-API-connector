@@ -1,23 +1,23 @@
 # Venice Forge — Deutsch
 
-> [English Version](../../../README.md) | [Language Index](../../../README.md#languages)
+> [Englische Dokumentation (Kanonisch)](../../../README.md)
 
-Venice Forge es un cliente de escritorio local y privado para la API de Venice.ai.
+Venice Forge ist ein lokaler, privater Desktop-Client für die Venice.ai API.
 
-## Características principales
+## Hauptfunktionen
 
-- **Chat privado y multimodelo**: Interfaz de chat de alta privacidad con soporte para modelos de lenguaje y visión.
-- **Creador de personajes y RP Studio**: Herramientas para diseñar e importar tarjetas de personajes V2 PNG y JSON.
-- **Estudio de medios y generación de imágenes**: Creación de imágenes, vídeo y audio con presets de aspecto y herramientas de comparación.
-- **Privacidad y seguridad nativa**: Las claves de API y secretos se cifran en el almacenamiento seguro del sistema operativo.
-- **Multilingüe**: Soporte completo para 10 idiomas de interfaz con formato regional e idioma del sistema automático.
+- **Privater Multi-Modell-Chat**: Hochgradig privater Chat mit Unterstützung für Sprach- und Vision-Modelle.
+- **Charakter-Builder & RP Studio**: Werkzeuge zum Entwerfen und Importieren von V2 PNG- und JSON-Charakterkarten.
+- **Medienstudio & Bilderzeugung**: Erstellung von Bildern, Videos und Audio.
+- **Native Privatsphäre & Sicherheit**: API-Schlüssel und Geheimnisse werden im sicheren Speicher des Betriebssystems verschlüsselt.
+- **Mehrsprachig**: Volle Unterstützung für 10 Oberflächensprachen.
 
-## Enlaces de documentación
+## Dokumentationslinks
 
-- [Acerca de Venice Forge](ABOUT.md)
-- [Preguntas frecuentes (FAQ)](FAQ.md)
-- [Soporte](SUPPORT.md)
-- [Privacidad](PRIVACY.md)
-- [Seguridad](SECURITY.md)
-- [Contribución](CONTRIBUTING.md)
-- [Documentación en inglés (Canónica)](../../../README.md)
+- [Über Venice Forge](ABOUT.md)
+- [Häufig gestellte Fragen (FAQ)](FAQ.md)
+- [Support](SUPPORT.md)
+- [Datenschutz](PRIVACY.md)
+- [Sicherheit](SECURITY.md)
+- [Mitwirken](CONTRIBUTING.md)
+- [Englische Dokumentation (Kanonisch)](../../../README.md)

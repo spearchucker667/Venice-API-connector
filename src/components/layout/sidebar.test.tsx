@@ -327,7 +327,7 @@ describe('Sidebar controls', () => {
     })
 
     const { unmount } = render(<Sidebar />)
-    fireEvent.click(screen.getByRole('button', { name: 'Delete Delete me' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }))
 
     // Confirm state is shown; timeout is scheduled.
     expect(screen.getByRole('button', { name: 'Confirm delete' })).toBeInTheDocument()

@@ -77,6 +77,20 @@ export const SUPPORTED_LOCALES: Record<SupportedLocale, LocaleMetadata> = {
     dir: 'rtl',
     isProductionComplete: true,
   },
+  ko: {
+    code: 'ko',
+    nativeName: '한국어',
+    englishName: 'Korean',
+    dir: 'ltr',
+    isProductionComplete: true,
+  },
+  'sv-SE': {
+    code: 'sv-SE',
+    nativeName: 'Svenska',
+    englishName: 'Swedish',
+    dir: 'ltr',
+    isProductionComplete: true,
+  },
 };
 
 export const SUPPORTED_LOCALE_CODES: SupportedLocale[] = Object.keys(

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../../stores/auth-store'
 import { useSettingsStore } from '../../stores/settings-store'
 import {
@@ -21,6 +22,7 @@ const ALL_FEATURES = ['chat', 'image', 'video', 'audio', 'embeddings', 'vision']
 
 
 export function ProvidersPanel() {
+  const { t } = useTranslation(['settings', 'common'])
   const { configuredProviders, setProviderApiKey, clearProviderApiKey } = useAuthStore()
   const { enabledProviders, setEnabledProvider, autoFallbackEnabled, setAutoFallbackEnabled, fallbackOrdering, setFallbackOrdering } = useSettingsStore()
 
@@ -38,7 +40,7 @@ export function ProvidersPanel() {
       if (cancelled) return
       setFallbackInput(settings.fallbackOrdering.join(', '))
     }).catch((error: unknown) => {
-      if (!cancelled) setRouterError(error instanceof Error ? error.message : 'Failed to load provider settings.')
+      if (!cancelled) setRouterError(error instanceof Error ? error.message : t('settings:providers.errors.loadFailed', 'Failed to load provider settings.'))
     })
     return () => { cancelled = true }
   }, [])
@@ -51,7 +53,7 @@ export function ProvidersPanel() {
     if (!isElectron()) return true
     const result = await desktopProviderSettings.update(update)
     if (!result.ok) {
-      setRouterError(result.error || 'Failed to save provider settings.')
+      setRouterError(result.error || t('settings:providers.errors.saveFailed', 'Failed to save provider settings.'))
       return false
     }
     setRouterError('')
@@ -100,7 +102,7 @@ export function ProvidersPanel() {
 
   const handleToggleEnable = async (providerId: string, enabled: boolean) => {
     if (enabled && !configuredProviders[providerId]) {
-      setErrorMsg(prev => ({ ...prev, [providerId]: 'Cannot enable provider without an API key.' }))
+      setErrorMsg(prev => ({ ...prev, [providerId]: t('settings:providers.errors.enableWithoutKey', 'Cannot enable provider without an API key.') }))
       return
     }
     setErrorMsg(prev => ({ ...prev, [providerId]: '' }))
@@ -118,21 +120,21 @@ export function ProvidersPanel() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h2 className="text-xl font-semibold">Fallback Providers</h2>
+        <h2 className="text-xl font-semibold">{t('settings:providers.title', 'Fallback Providers')}</h2>
         <p className="text-sm text-[var(--color-text-secondary)]">
-          Configure API keys for fallback providers. These will only be used if explicitly enabled and when Venice models are unavailable or you request a specific fallback model.
+          {t('settings:providers.description', 'Configure API keys for fallback providers. These will only be used if explicitly enabled and when Venice models are unavailable or you request a specific fallback model.')}
         </p>
         <p className="text-xs text-[var(--color-text-muted)]">
-          Deferred in this release (no key entry, routing, or traffic): {DEFERRED_PROVIDER_IDS.join(', ')}. Provider keys are replaced or removed manually; scheduled key rotation is not implemented.
+          {t('settings:providers.deferredNotice', 'Deferred in this release (no key entry, routing, or traffic): {{deferred}}. Provider keys are replaced or removed manually; scheduled key rotation is not implemented.', { deferred: DEFERRED_PROVIDER_IDS.join(', ') })}
         </p>
       </div>
 
       <div className="p-4 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-secondary)] space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-medium">Automatic Fallback Router</h3>
+            <h3 className="font-medium">{t('settings:providers.autoFallback.title', 'Automatic Fallback Router')}</h3>
             <p className="text-xs text-[var(--color-text-secondary)]">
-              Automatically route requests to fallback providers if Venice is unavailable or returns an error.
+              {t('settings:providers.autoFallback.description', 'Automatically route requests to fallback providers if Venice is unavailable or returns an error.')}
             </p>
           </div>
           <button
@@ -149,7 +151,7 @@ export function ProvidersPanel() {
               autoFallbackEnabled ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-bg-tertiary)]'
             }`}
           >
-            <span className="sr-only">Enable Automatic Fallback</span>
+            <span className="sr-only">{t('settings:providers.autoFallback.enableAria', 'Enable Automatic Fallback')}</span>
             <span
               aria-hidden="true"
               className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out /* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */ ${
@@ -160,11 +162,11 @@ export function ProvidersPanel() {
         </div>
         {autoFallbackEnabled && (
           <div>
-            <label className="block text-sm font-medium mb-1">Fallback Ordering (comma-separated provider IDs)</label>
+            <label className="block text-sm font-medium mb-1">{t('settings:providers.autoFallback.orderingLabel', 'Fallback Ordering (comma-separated provider IDs)')}</label>
             <input
               type="text"
               className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
-              placeholder="together, groq, anthropic"
+              placeholder={t('settings:providers.autoFallback.orderingPlaceholder', 'together, groq, anthropic')}
               value={fallbackInput}
               onChange={(e) => {
                 setFallbackInput(e.target.value);
@@ -174,7 +176,7 @@ export function ProvidersPanel() {
               onBlur={() => { void persistRoutingSettings({ fallbackOrdering }) }}
             />
             <p className="text-xs text-[var(--color-text-muted)] mt-1">
-              Providers will be tried in this exact order. Ensure you have enabled them below. Available: {AVAILABLE_FALLBACK_PROVIDER_IDS.join(', ')}
+              {t('settings:providers.autoFallback.orderingNotice', 'Providers will be tried in this exact order. Ensure you have enabled them below. Available: {{available}}', { available: AVAILABLE_FALLBACK_PROVIDER_IDS.join(', ') })}
             </p>
           </div>
         )}
@@ -197,7 +199,7 @@ export function ProvidersPanel() {
                     {provider.label}
                     {isUnavailable && (
                       <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 uppercase tracking-wider font-semibold">
-                        Deferred
+                        {t('settings:providers.badge.deferred', 'Deferred')}
                       </span>
                     )}
                   </h3>
@@ -215,7 +217,7 @@ export function ProvidersPanel() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-medium text-[var(--color-text-secondary)]">
-                    {isEnabled ? 'Enabled' : 'Disabled'}
+                    {isEnabled ? t('common:status.enabled', 'Enabled') : t('common:status.disabled', 'Disabled')}
                   </span>
                   <button
                     type="button"
@@ -227,7 +229,7 @@ export function ProvidersPanel() {
                       isEnabled ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-bg-tertiary)]'
                     } ${(!isConfigured || isUnavailable) ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    <span className="sr-only">Enable {provider.label}</span>
+                    <span className="sr-only">{t('settings:providers.aria.enable', 'Enable {{label}}', { label: provider.label })}</span>
                     <span
                       aria-hidden="true"
                       className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out /* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */ ${
@@ -249,21 +251,21 @@ export function ProvidersPanel() {
                   <>
                     <div className="text-sm text-[var(--color-success)] flex items-center gap-1.5 flex-1">
                       <div className="w-2 h-2 rounded-full bg-[var(--color-success)]" />
-                      API Key Configured
+                      {t('settings:providers.status.keyConfigured', 'API Key Configured')}
                     </div>
                     <button
                       className="px-3 py-1.5 text-sm rounded border border-[var(--color-border)] hover:bg-[var(--color-bg-hover)] disabled:opacity-50"
                       onClick={() => handleClearKey(provider.id)}
                       disabled={saving}
                     >
-                      Remove Key
+                      {t('settings:providers.actions.removeKey', 'Remove Key')}
                     </button>
                   </>
                 ) : (
                   <>
                     <input
                       type="password"
-                      placeholder="Enter API Key"
+                      placeholder={t('settings:providers.inputs.keyPlaceholder', 'Enter API Key')}
                       value={keyInputs[provider.id] || ''}
                       onChange={(e) => handleKeyChange(provider.id, e.target.value)}
                       className="flex-1 px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
@@ -273,7 +275,7 @@ export function ProvidersPanel() {
                       onClick={() => handleSaveKey(provider.id)}
                       disabled={saving || !(keyInputs[provider.id]?.trim()) || isUnavailable}
                     >
-                      {saving ? 'Saving...' : 'Save'}
+                      {saving ? t('common:actions.saving', 'Saving...') : t('common:actions.save', 'Save')}
                     </PrimaryButton>
                   </>
                 )}

@@ -1,5 +1,5 @@
-# Soporte — Español
+# Soporte
 
-> [English README](../../../README.md)
+> [Documentación en inglés (Canónica)](../../../README.md)
 
-Para obtener ayuda o informar de errores, visita nuestro repositorio oficial en GitHub.
+Si necesita soporte, consulte la documentación en inglés o abra un issue en GitHub.

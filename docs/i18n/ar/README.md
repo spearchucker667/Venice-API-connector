@@ -1,23 +1,23 @@
 # Venice Forge — العربية
 
-> [English Version](../../../README.md) | [Language Index](../../../README.md#languages)
+> [الوثائق الإنجليزية (الأساسية)](../../../README.md)
 
-Venice Forge es un cliente de escritorio local y privado para la API de Venice.ai.
+Venice Forge هو عميل سطح مكتب محلي وخاص لـ API Venice.ai.
 
-## Características principales
+## الميزات الرئيسية
 
-- **Chat privado y multimodelo**: Interfaz de chat de alta privacidad con soporte para modelos de lenguaje y visión.
-- **Creador de personajes y RP Studio**: Herramientas para diseñar e importar tarjetas de personajes V2 PNG y JSON.
-- **Estudio de medios y generación de imágenes**: Creación de imágenes, vídeo y audio con presets de aspecto y herramientas de comparación.
-- **Privacidad y seguridad nativa**: Las claves de API y secretos se cifran en el almacenamiento seguro del sistema operativo.
-- **Multilingüe**: Soporte completo para 10 idiomas de interfaz con formato regional e idioma del sistema automático.
+- **دردشة خاصة متعددة النماذج**: واجهة دردشة عالية الخصوصية تدعم نماذج اللغة والرؤية.
+- **منشئ الشخصيات واستوديو RP**: أدوات لتصميم واستيراد بطاقات الشخصيات V2 PNG و JSON.
+- **استوديو الوسائط وتوليد الصور**: إنشاء الصور والفيديو والصوت.
+- **الخصوصية والأمان الأصليان**: يتم تشفير مفاتيح API والأسرار في التخزين الآمن لنظام التشغيل.
+- **متعدد اللغات**: دعم كامل لـ 10 لغات للواجهة.
 
-## Enlaces de documentación
+## روابط الوثائق
 
-- [Acerca de Venice Forge](ABOUT.md)
-- [Preguntas frecuentes (FAQ)](FAQ.md)
-- [Soporte](SUPPORT.md)
-- [Privacidad](PRIVACY.md)
-- [Seguridad](SECURITY.md)
-- [Contribución](CONTRIBUTING.md)
-- [Documentación en inglés (Canónica)](../../../README.md)
+- [حول Venice Forge](ABOUT.md)
+- [الأسئلة الشائعة (FAQ)](FAQ.md)
+- [الدعم](SUPPORT.md)
+- [الخصوصية](PRIVACY.md)
+- [الأمان](SECURITY.md)
+- [المساهمة](CONTRIBUTING.md)
+- [الوثائق الإنجليزية (الأساسية)](../../../README.md)

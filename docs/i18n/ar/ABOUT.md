@@ -1,5 +1,5 @@
-# Acerca de Venice Forge (العربية)
+# حول Venice Forge
 
-> [English README](../../../README.md)
+> [الوثائق الإنجليزية (الأساسية)](../../../README.md)
 
-Venice Forge es una aplicación de escritorio local diseñada para la interacción con modelos de IA de Venice.ai preservando la privacidad del usuario.
+Venice Forge هو تطبيق سطح مكتب محلي مصمم للتفاعل مع نماذج الذكاء الاصطناعي من Venice.ai مع الحفاظ على خصوصية المستخدم.

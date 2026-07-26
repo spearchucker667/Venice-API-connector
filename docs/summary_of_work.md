@@ -4,6 +4,12 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-07-25 (UI Localization Remediation Completed)
+
+**Scope:** Fixed failing UI regression tests in `sidebar.test.tsx` and `CommandPalette.test.tsx` by updating element selectors to use appropriate test IDs and localized labels. Ensured all localization scripts, including `verify-i18n.cjs` and documentation generation, execute successfully across all 12 locales. Full UI, CI, and layout tests have passed successfully.
+
+### Prior Session Summary (Multilingual UI, Prompt-Language, and Documentation Support) [demoted from "Latest Session Summary"]
+
 **Date:** 2026-07-25 (Multilingual UI, Prompt-Language, and Documentation Support)
 
 **Scope:** Implemented application-wide localization and internationalization for Venice Forge supporting 10 initial locales (`en-US`, `es`, `fr`, `de`, `pt-BR`, `ru`, `zh-CN`, `ja`, `hi`, `ar`) with instant switching, global persistence, `<html lang>` and `<html dir>` synchronization, Arabic RTL support, locale-aware formatters, AI prompt-language audit, localized documentation, and automated verification scripts.

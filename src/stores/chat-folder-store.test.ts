@@ -113,7 +113,7 @@ const importPreview: FolderImportPreview = {
   tombstones: 0,
   missingBlobs: 0,
   includedBlobs: 1,
-  sourceAppVersion: "3.0.0-beta.1",
+  sourceAppVersion: "3.0.0-beta.2",
   sourceProfileId: "default",
   backupCreatedAt: "2026-07-10T12:34:56Z",
 };

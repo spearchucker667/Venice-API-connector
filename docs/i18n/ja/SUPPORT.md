@@ -1,5 +1,5 @@
-# Soporte — 日本語
+# サポート
 
-> [English README](../../../README.md)
+> [英語ドキュメント（正規）](../../../README.md)
 
-Para obtener ayuda o informar de errores, visita nuestro repositorio oficial en GitHub.
+サポートが必要な場合は、英語のドキュメントを参照するか、GitHub で issue を開いてください。

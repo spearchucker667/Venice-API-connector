@@ -1,5 +1,5 @@
-# Guía de Contribución — Français
+# Contribution
 
-> [English README](../../../README.md)
+> [Documentation en anglais (Canonique)](../../../README.md)
 
-Consulta las instrucciones completas en la guía principal de contribución del repositorio.
+Veuillez consulter le fichier CONTRIBUTING.md en anglais pour les directives de contribution.

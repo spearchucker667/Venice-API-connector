@@ -17,7 +17,7 @@
     <img alt="CI" src="https://github.com/spearchucker667/Venice_Forge/actions/workflows/ci.yml/badge.svg" />
   </a>
   <a href="https://github.com/spearchucker667/Venice_Forge/releases">
-    <img alt="Release" src="https://img.shields.io/badge/release-v3.0.0--beta.1-blue.svg" />
+    <img alt="Release" src="https://img.shields.io/badge/release-v3.0.0--beta.2-blue.svg" />
   </a>
   <a href="https://github.com/spearchucker667/Venice_Forge/releases">
     <img alt="Windows" src="https://img.shields.io/badge/platform-Windows-0078d4?logo=windows11" />
@@ -81,6 +81,7 @@ By prioritizing local data ownership, Venice Forge runs all storage operations l
 
 ## Feature Highlights
 
+- **Multi-Language Support:** Full localization in 12 languages (including Arabic RTL support) with instant switching and global persistence.
 - **Local-First Backup & Sync:** Manually export/import encrypted `.vfbackup` archives, or use a background sync folder (e.g. iCloud, Dropbox) with automated end-to-end encrypted packet syncing and robust conflict resolution.
 - **Streaming AI Conversations:** Experience highly responsive model outputs with full Markdown, LaTeX math rendering, prompt limits enforcement, and attachment context.
 - **Projects & Workspaces:** Organize your chat histories, generation parameters, and media assets into logical local projects.

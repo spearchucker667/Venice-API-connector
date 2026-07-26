@@ -1,5 +1,5 @@
-# Guía de Contribución — Русский
+# Участие
 
-> [English README](../../../README.md)
+> [Английская документация (каноническая)](../../../README.md)
 
-Consulta las instrucciones completas en la guía principal de contribución del repositorio.
+Пожалуйста, обратитесь к английскому файлу CONTRIBUTING.md за рекомендациями по участию.

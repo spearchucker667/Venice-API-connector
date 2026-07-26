@@ -1,5 +1,5 @@
-# Acerca de Venice Forge (Português (Brasil))
+# Sobre o Venice Forge
 
-> [English README](../../../README.md)
+> [Documentação em Inglês (Canônica)](../../../README.md)
 
-Venice Forge es una aplicación de escritorio local diseñada para la interacción con modelos de IA de Venice.ai preservando la privacidad del usuario.
+Venice Forge é um aplicativo de desktop local projetado para interagir com os modelos de IA da Venice.ai, preservando a privacidade do usuário.

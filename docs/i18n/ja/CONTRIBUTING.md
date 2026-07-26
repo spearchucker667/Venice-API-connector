@@ -1,5 +1,5 @@
-# Guía de Contribución — 日本語
+# 貢献
 
-> [English README](../../../README.md)
+> [英語ドキュメント（正規）](../../../README.md)
 
-Consulta las instrucciones completas en la guía principal de contribución del repositorio.
+貢献方法のガイドラインについては、英語の CONTRIBUTING.md ファイルを参照してください。

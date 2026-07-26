@@ -1,5 +1,5 @@
-# Modelo de Privacidad — 日本語
+# プライバシー
 
-> [English README](../../../README.md)
+> [英語ドキュメント（正規）](../../../README.md)
 
-Venice Forge es una aplicación local. Tus datos y conversaciones se guardan en tu dispositivo.
+Venice Forge はローカルで実行され、テレメトリや使用データを収集しません。

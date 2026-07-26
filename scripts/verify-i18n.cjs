@@ -11,7 +11,7 @@ const RESOURCES_DIR = path.join(ROOT_DIR, 'src', 'i18n', 'resources');
 const DOCS_I18N_DIR = path.join(ROOT_DIR, 'docs', 'i18n');
 const STATUS_METADATA_PATH = path.join(DOCS_I18N_DIR, 'translation-status.json');
 
-const EXPECTED_LOCALES = ['en-US', 'es', 'fr', 'de', 'pt-BR', 'ru', 'zh-CN', 'ja', 'hi', 'ar'];
+const EXPECTED_LOCALES = ['en-US', 'es', 'fr', 'de', 'pt-BR', 'ru', 'zh-CN', 'ja', 'hi', 'ar', 'ko', 'sv-SE'];
 const EXPECTED_NAMESPACES = [
   'common',
   'onboarding',
@@ -24,6 +24,7 @@ const EXPECTED_NAMESPACES = [
   'workflows',
   'errors',
   'accessibility',
+  'navigation',
 ];
 
 const REQUIRED_DOCS = [

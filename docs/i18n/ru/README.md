@@ -1,23 +1,23 @@
 # Venice Forge — Русский
 
-> [English Version](../../../README.md) | [Language Index](../../../README.md#languages)
+> [Английская документация (каноническая)](../../../README.md)
 
-Venice Forge es un cliente de escritorio local y privado para la API de Venice.ai.
+Venice Forge — это локальный, приватный настольный клиент для API Venice.ai.
 
-## Características principales
+## Основные функции
 
-- **Chat privado y multimodelo**: Interfaz de chat de alta privacidad con soporte para modelos de lenguaje y visión.
-- **Creador de personajes y RP Studio**: Herramientas para diseñar e importar tarjetas de personajes V2 PNG y JSON.
-- **Estudio de medios y generación de imágenes**: Creación de imágenes, vídeo y audio con presets de aspecto y herramientas de comparación.
-- **Privacidad y seguridad nativa**: Las claves de API y secretos se cifran en el almacenamiento seguro del sistema operativo.
-- **Multilingüe**: Soporte completo para 10 idiomas de interfaz con formato regional e idioma del sistema automático.
+- **Приватный мультимодельный чат**: Интерфейс чата с высокой конфиденциальностью, поддерживающий языковые и визуальные модели.
+- **Конструктор персонажей и RP Studio**: Инструменты для создания и импорта карточек персонажей V2 PNG и JSON.
+- **Медиа-студия и генерация изображений**: Создание изображений, видео и аудио.
+- **Встроенная конфиденциальность и безопасность**: Ключи API и секреты зашифрованы в безопасном хранилище ОС.
+- **Многоязычность**: Полная поддержка 10 языков интерфейса.
 
-## Enlaces de documentación
+## Ссылки на документацию
 
-- [Acerca de Venice Forge](ABOUT.md)
-- [Preguntas frecuentes (FAQ)](FAQ.md)
-- [Soporte](SUPPORT.md)
-- [Privacidad](PRIVACY.md)
-- [Seguridad](SECURITY.md)
-- [Contribución](CONTRIBUTING.md)
-- [Documentación en inglés (Canónica)](../../../README.md)
+- [О Venice Forge](ABOUT.md)
+- [Часто задаваемые вопросы (FAQ)](FAQ.md)
+- [Поддержка](SUPPORT.md)
+- [Конфиденциальность](PRIVACY.md)
+- [Безопасность](SECURITY.md)
+- [Участие](CONTRIBUTING.md)
+- [Английская документация (каноническая)](../../../README.md)

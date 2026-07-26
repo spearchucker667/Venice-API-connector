@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export interface UpdatesPanelProps {
   updateStatus: string;
@@ -15,17 +16,18 @@ export function UpdatesPanel({
   onCheckForUpdates,
   onInstallUpdate,
 }: UpdatesPanelProps): React.ReactElement {
+  const { t } = useTranslation(['settings', 'common']);
   return (
     <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg space-y-4">
-      <h3 className="text-[14.5px] font-medium text-text-primary font-semibold">Application Updates</h3>
+      <h3 className="text-[14.5px] font-medium text-text-primary font-semibold">{t('settings:updatesPanel.title', 'Application Updates')}</h3>
       <p className="text-[12.5px] text-text-secondary leading-relaxed">
-        Check for desktop application updates securely via GitHub Releases.
+        {t('settings:updatesPanel.description', 'Check for desktop application updates securely via GitHub Releases.')}
       </p>
       <div className="space-y-4">
         <div className="text-[13px] text-text-secondary">
-          <span className="text-text-muted mr-2">Status:</span>
+          <span className="text-text-muted mr-2">{t('settings:updatesPanel.status', 'Status:')}</span>
           <span className="font-mono bg-surface border border-border rounded px-2 py-0.5 text-text-primary">
-            {updateStatus || "Idle"}
+            {updateStatus || t('common:status.idle', 'Idle')}
           </span>
         </div>
         <div className="flex flex-wrap gap-2.5">
@@ -34,14 +36,14 @@ export function UpdatesPanel({
             disabled={isUpdateChecking || updateDownloaded}
             className="px-4 py-1.5 rounded-lg text-[13px] font-medium bg-surface border border-border text-text-primary hover:bg-surface-elevated transition-colors disabled:opacity-50 cursor-pointer"
           >
-            {isUpdateChecking ? "Checking..." : "Check for updates"}
+            {isUpdateChecking ? t('settings:updatesPanel.checking', 'Checking...') : t('settings:updatesPanel.checkForUpdates', 'Check for updates')}
           </button>
           {updateDownloaded && (
             <button
               onClick={onInstallUpdate}
               className="px-4 py-1.5 rounded-lg text-[13px] font-medium bg-success text-accent-fg hover:opacity-90 transition-colors cursor-pointer"
             >
-              Restart and Install
+              {t('settings:updatesPanel.restartAndInstall', 'Restart and Install')}
             </button>
           )}
         </div>

@@ -1,23 +1,23 @@
 # Venice Forge — 日本語
 
-> [English Version](../../../README.md) | [Language Index](../../../README.md#languages)
+> [英語ドキュメント（正規）](../../../README.md)
 
-Venice Forge es un cliente de escritorio local y privado para la API de Venice.ai.
+Venice Forge は、Venice.ai API 用のローカルでプライベートなデスクトップクライアントです。
 
-## Características principales
+## 主な機能
 
-- **Chat privado y multimodelo**: Interfaz de chat de alta privacidad con soporte para modelos de lenguaje y visión.
-- **Creador de personajes y RP Studio**: Herramientas para diseñar e importar tarjetas de personajes V2 PNG y JSON.
-- **Estudio de medios y generación de imágenes**: Creación de imágenes, vídeo y audio con presets de aspecto y herramientas de comparación.
-- **Privacidad y seguridad nativa**: Las claves de API y secretos se cifran en el almacenamiento seguro del sistema operativo.
-- **Multilingüe**: Soporte completo para 10 idiomas de interfaz con formato regional e idioma del sistema automático.
+- **プライベートマルチモデルチャット**: 言語およびビジョンモデルをサポートする高プライバシーチャットインターフェース。
+- **キャラクタービルダー＆RP Studio**: V2 PNG および JSON キャラクターカードを設計・インポートするツール。
+- **メディアスタジオ＆画像生成**: 画像、動画、オーディオの作成。
+- **ネイティブなプライバシーとセキュリティ**: API キーとシークレットは OS のセキュアストレージに暗号化されます。
+- **多言語**: 10 のインターフェース言語を完全にサポート。
 
-## Enlaces de documentación
+## ドキュメントリンク
 
-- [Acerca de Venice Forge](ABOUT.md)
-- [Preguntas frecuentes (FAQ)](FAQ.md)
-- [Soporte](SUPPORT.md)
-- [Privacidad](PRIVACY.md)
-- [Seguridad](SECURITY.md)
-- [Contribución](CONTRIBUTING.md)
-- [Documentación en inglés (Canónica)](../../../README.md)
+- [Venice Forge について](ABOUT.md)
+- [よくある質問 (FAQ)](FAQ.md)
+- [サポート](SUPPORT.md)
+- [プライバシー](PRIVACY.md)
+- [セキュリティ](SECURITY.md)
+- [貢献](CONTRIBUTING.md)
+- [英語ドキュメント（正規）](../../../README.md)

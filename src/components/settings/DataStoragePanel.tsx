@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ImportPlanModal } from "./ImportPlanModal";
 import { toast } from "../../stores/toast-store";
 import { desktopFiles, isElectron } from "../../services/desktopBridge";
@@ -30,6 +31,7 @@ export function DataStoragePanel({
   clearLocalSettings,
   clearAllHistory,
 }: DataStoragePanelProps): React.ReactElement {
+  const { t } = useTranslation(['settings', 'common']);
   const [password, setPassword] = React.useState("");
   const [importPlanOpen, setImportPlanOpen] = React.useState(false);
   const [importPlan, setImportPlan] = React.useState<ImportPlanModel | null>(null);
@@ -75,7 +77,7 @@ export function DataStoragePanel({
       setImportPlan(preview);
       setImportPlanOpen(true);
     } catch {
-      toast.error("Failed to read backup. Incorrect password or corrupt file.");
+      toast.error(t('settings:dataStorage.toasts.importReadFailed', "Failed to read backup. Incorrect password or corrupt file."));
     }
   };
 
@@ -107,11 +109,11 @@ export function DataStoragePanel({
         // warning so a partial backup import never reads as "all green".
         if (summary.recordsImported === 0 && summary.recordsSkipped > 0) {
           toast.warn(
-            `Nothing imported into new profile: ${summary.recordsSkipped} skipped`,
-            "No records applied; check the backup's manifest and target profile.",
+            t('settings:dataStorage.toasts.importNothingNewProfile', 'Nothing imported into new profile: {{skipped}} skipped', { skipped: summary.recordsSkipped }),
+            t('settings:dataStorage.toasts.importNothingDetail', "No records applied; check the backup's manifest and target profile."),
           );
         } else {
-          toast.success(`Import complete into new profile: ${summary.recordsImported} imported. Reloading...`);
+          toast.success(t('settings:dataStorage.toasts.importCompleteNewProfile', 'Import complete into new profile: {{imported}} imported. Reloading...', { imported: summary.recordsImported }));
         }
         
           // Give the toast a moment to render before reloading
@@ -145,16 +147,16 @@ export function DataStoragePanel({
       // warning so a partial backup import never reads as "all green".
       if (summary.recordsImported === 0 && summary.recordsSkipped > 0) {
         toast.warn(
-          `Nothing imported: ${summary.recordsSkipped} skipped`,
-          "No records applied; check the backup's manifest and target profile.",
+          t('settings:dataStorage.toasts.importNothing', 'Nothing imported: {{skipped}} skipped', { skipped: summary.recordsSkipped }),
+          t('settings:dataStorage.toasts.importNothingDetail', "No records applied; check the backup's manifest and target profile."),
         );
       } else if (summary.recordsImported > 0 && summary.recordsSkipped > 0) {
         toast.warn(
-          `Partial import: ${summary.recordsImported} imported, ${summary.recordsSkipped} skipped`,
-          `${summary.tombstonesApplied} tombstones applied. Inspect the skipped count before relying on this backup.`,
+          t('settings:dataStorage.toasts.importPartial', 'Partial import: {{imported}} imported, {{skipped}} skipped', { imported: summary.recordsImported, skipped: summary.recordsSkipped }),
+          t('settings:dataStorage.toasts.importPartialDetail', '{{tombstones}} tombstones applied. Inspect the skipped count before relying on this backup.', { tombstones: summary.tombstonesApplied }),
         );
       } else {
-        toast.success(`Import complete: ${summary.recordsImported} imported, ${summary.recordsSkipped} skipped, ${summary.tombstonesApplied} tombstones applied.`);
+        toast.success(t('settings:dataStorage.toasts.importComplete', 'Import complete: {{imported}} imported, {{skipped}} skipped, {{tombstones}} tombstones applied.', { imported: summary.recordsImported, skipped: summary.recordsSkipped, tombstones: summary.tombstonesApplied }));
       }
       window.dispatchEvent(new Event("venice:backup-imported"));
       const convs = await listConversations();
@@ -162,12 +164,12 @@ export function DataStoragePanel({
     } catch (error: unknown) {
       if (error instanceof ReplaceImportError) {
         toast.error(
-          error.rolledBack ? "Replace failed; data restored" : "Replace failed; recovery required",
+          error.rolledBack ? t('settings:dataStorage.toasts.replaceFailedRestored', "Replace failed; data restored") : t('settings:dataStorage.toasts.replaceFailedRecovery', "Replace failed; recovery required"),
           error.message,
         );
         await refreshRecovery();
       } else {
-        toast.error("Import failed.");
+        toast.error(t('settings:dataStorage.toasts.importFailed', "Import failed."));
       }
     } finally {
       setManifestToImport(null);
@@ -183,9 +185,9 @@ export function DataStoragePanel({
       setRecovery(result.recovery);
       window.dispatchEvent(new Event("venice:backup-imported"));
       useChatStore.getState().setConversations(await listConversations());
-      toast.success("Recovery restored", "The prior profile state was restored and the replaced state was retained as a new recovery backup.");
+      toast.success(t('settings:dataStorage.toasts.recoveryRestored', "Recovery restored"), t('settings:dataStorage.toasts.recoveryRestoredDetail', "The prior profile state was restored and the replaced state was retained as a new recovery backup."));
     } catch (error: unknown) {
-      toast.error("Recovery restore failed", error instanceof Error ? error.message : "The recovery backup could not be restored.");
+      toast.error(t('settings:dataStorage.toasts.recoveryRestoreFailed', "Recovery restore failed"), error instanceof Error ? error.message : t('settings:dataStorage.toasts.recoveryRestoreFailedDetail', "The recovery backup could not be restored."));
       await refreshRecovery();
     } finally {
       setRestoringRecovery(false);
@@ -195,19 +197,19 @@ export function DataStoragePanel({
   return (
     <div className="space-y-5">
       <div className="rounded-xl border border-border/50 bg-surface p-5 shadow-sm space-y-4">
-        <h3 className="text-[14.5px] font-medium text-text-primary">Manual Backup</h3>
+        <h3 className="text-[14.5px] font-medium text-text-primary">{t('settings:dataStorage.manualBackup.title', 'Manual Backup')}</h3>
         <p className="text-[12.5px] text-text-secondary leading-relaxed">
-          Create an encrypted, portable backup of your local history, character cards, and workflows. You can import this backup on any device.
+          {t('settings:dataStorage.manualBackup.description', 'Create an encrypted, portable backup of your local history, character cards, and workflows. You can import this backup on any device.')}
         </p>
         <div className="flex flex-col gap-3">
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Backup Password"
+            placeholder={t('settings:dataStorage.manualBackup.passwordPlaceholder', 'Backup Password')}
             className="w-64 px-3 py-1.5 rounded-lg border border-border bg-surface text-[13px] text-text-primary focus:outline-none focus:border-accent"
           />
-          <label className="flex items-center gap-2 text-[12.5px] text-text-secondary"><input type="checkbox" checked={includeCharacterCardDrafts} onChange={(event) => setIncludeCharacterCardDrafts(event.target.checked)} /> Include encrypted local ST Card drafts (drafts never sync)</label>
+          <label className="flex items-center gap-2 text-[12.5px] text-text-secondary"><input type="checkbox" checked={includeCharacterCardDrafts} onChange={(event) => setIncludeCharacterCardDrafts(event.target.checked)} /> {t('settings:dataStorage.manualBackup.includeDrafts', 'Include encrypted local ST Card drafts (drafts never sync)')}</label>
           <label className="flex items-center gap-2 text-[12.5px] text-text-secondary">
             <input
               type="checkbox"
@@ -215,7 +217,7 @@ export function DataStoragePanel({
               checked={includeMedia}
               onChange={(event) => setIncludeMedia(event.target.checked)}
             />
-            Include media in this backup (images, files, RP assets — encrypted with the rest of the backup)
+            {t('settings:dataStorage.manualBackup.includeMedia', 'Include media in this backup (images, files, RP assets — encrypted with the rest of the backup)')}
           </label>
           <div className="flex flex-wrap gap-2.5">
             <button
@@ -223,14 +225,14 @@ export function DataStoragePanel({
               disabled={!password}
               className="px-4 py-1.5 rounded-lg text-[13px] font-medium bg-accent text-accent-foreground hover:bg-accent-light transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Export Backup
+              {t('settings:dataStorage.manualBackup.export', 'Export Backup')}
             </button>
             <button
               onClick={handleImportStart}
               disabled={!password}
               className="px-4 py-1.5 rounded-lg text-[13px] font-medium bg-surface border border-border text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Import Backup
+              {t('settings:dataStorage.manualBackup.import', 'Import Backup')}
             </button>
           </div>
         </div>
@@ -238,37 +240,37 @@ export function DataStoragePanel({
 
       {recovery && (
         <div className="rounded-xl border border-warning/20 bg-warning/[0.04] p-5 shadow-sm space-y-3">
-          <h3 className="text-[14.5px] font-medium text-text-primary">Pre-Replace Recovery</h3>
+          <h3 className="text-[14.5px] font-medium text-text-primary">{t('settings:dataStorage.recovery.title', 'Pre-Replace Recovery')}</h3>
           <p className="text-[12.5px] text-text-secondary leading-relaxed">
-            A verified encrypted recovery backup from {new Date(recovery.createdAt).toLocaleString()} is available. Enter its backup password above to restore it transactionally.
+            {t('settings:dataStorage.recovery.description', 'A verified encrypted recovery backup from {{date}} is available. Enter its backup password above to restore it transactionally.', { date: new Date(recovery.createdAt).toLocaleString() })}
           </p>
           <button
             onClick={handleRestoreRecovery}
             disabled={!password || restoringRecovery}
             className="px-4 py-1.5 rounded-lg text-[13px] font-medium bg-warning/15 border border-warning/25 text-warning hover:bg-warning/25 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {restoringRecovery ? "Restoring…" : "Restore Recovery Backup"}
+            {restoringRecovery ? t('common:status.restoring', 'Restoring…') : t('settings:dataStorage.recovery.restore', 'Restore Recovery Backup')}
           </button>
         </div>
       )}
 
       <div className="rounded-xl border border-danger/10 bg-danger/[0.02] p-5 shadow-lg space-y-4">
-        <h3 className="text-[14.5px] font-medium text-danger">Danger Zone</h3>
+        <h3 className="text-[14.5px] font-medium text-danger">{t('settings:dataStorage.dangerZone.title', 'Danger Zone')}</h3>
         <p className="text-[12.5px] text-text-secondary leading-relaxed">
-          These operations are destructive and cannot be undone. Always export a backup first if you have important history.
+          {t('settings:dataStorage.dangerZone.description', 'These operations are destructive and cannot be undone. Always export a backup first if you have important history.')}
         </p>
         <div className="flex flex-wrap gap-2.5">
           <button
             onClick={clearLocalSettings}
             className="px-4 py-1.5 rounded-lg text-[13px] font-medium bg-surface border border-border text-text-primary hover:bg-danger/10 hover:text-danger hover:border-danger/25 transition-colors cursor-pointer"
           >
-            Clear App Defaults
+            {t('settings:dataStorage.dangerZone.clearDefaults', 'Clear App Defaults')}
           </button>
           <button
             onClick={clearAllHistory}
             className="px-4 py-1.5 rounded-lg text-[13px] font-medium bg-danger/10 border border-danger/20 text-danger hover:bg-danger/20 transition-colors cursor-pointer"
           >
-            Clear IndexedDB Data
+            {t('settings:dataStorage.dangerZone.clearIndexedDB', 'Clear IndexedDB Data')}
           </button>
         </div>
       </div>

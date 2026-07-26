@@ -1,6 +1,6 @@
-# Preguntas frecuentes (FAQ) — हिन्दी
+# अक्सर पूछे जाने वाले प्रश्न (FAQ)
 
-> [English README](../../../README.md)
+> [अंग्रेजी दस्तावेज़ीकरण (कैनोनिकल)](../../../README.md)
 
-### ¿Dónde se guardan mis claves de API?
-Las claves de API se guardan en el almacenamiento seguro nativo del sistema operativo (Keychain en macOS, Credential Manager en Windows).
+### मेरी API कुंजियाँ कहाँ सहेजी जाती हैं?
+API कुंजियाँ ऑपरेटिंग सिस्टम के सुरक्षित स्टोरेज (macOS पर Keychain, Windows पर क्रेडेंशियल मैनेजर) में सहेजी जाती हैं।

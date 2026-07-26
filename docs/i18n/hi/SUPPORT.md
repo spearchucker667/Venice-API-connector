@@ -1,5 +1,5 @@
-# Soporte — हिन्दी
+# सहायता
 
-> [English README](../../../README.md)
+> [अंग्रेजी दस्तावेज़ीकरण (कैनोनिकल)](../../../README.md)
 
-Para obtener ayuda o informar de errores, visita nuestro repositorio oficial en GitHub.
+यदि आपको सहायता की आवश्यकता है, तो कृपया अंग्रेजी दस्तावेज़ देखें या GitHub पर एक समस्या (issue) खोलें।

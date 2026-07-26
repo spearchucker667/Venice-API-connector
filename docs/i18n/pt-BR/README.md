@@ -1,23 +1,23 @@
 # Venice Forge — Português (Brasil)
 
-> [English Version](../../../README.md) | [Language Index](../../../README.md#languages)
+> [Documentação em Inglês (Canônica)](../../../README.md)
 
-Venice Forge es un cliente de escritorio local y privado para la API de Venice.ai.
+Venice Forge é um cliente de desktop local e privado para a API Venice.ai.
 
-## Características principales
+## Recursos Principais
 
-- **Chat privado y multimodelo**: Interfaz de chat de alta privacidad con soporte para modelos de lenguaje y visión.
-- **Creador de personajes y RP Studio**: Herramientas para diseñar e importar tarjetas de personajes V2 PNG y JSON.
-- **Estudio de medios y generación de imágenes**: Creación de imágenes, vídeo y audio con presets de aspecto y herramientas de comparación.
-- **Privacidad y seguridad nativa**: Las claves de API y secretos se cifran en el almacenamiento seguro del sistema operativo.
-- **Multilingüe**: Soporte completo para 10 idiomas de interfaz con formato regional e idioma del sistema automático.
+- **Chat Privado e Multimodelo**: Interface de chat de alta privacidade com suporte para modelos de linguagem e visão.
+- **Criador de Personagens e RP Studio**: Ferramentas para projetar e importar cartões de personagens V2 PNG e JSON.
+- **Estúdio de Mídia e Geração de Imagens**: Criação de imagens, vídeo e áudio.
+- **Privacidade e Segurança Nativas**: Chaves de API e segredos são criptografados no armazenamento seguro do sistema operacional.
+- **Multilíngue**: Suporte completo para 10 idiomas de interface.
 
-## Enlaces de documentación
+## Links de Documentação
 
-- [Acerca de Venice Forge](ABOUT.md)
-- [Preguntas frecuentes (FAQ)](FAQ.md)
-- [Soporte](SUPPORT.md)
-- [Privacidad](PRIVACY.md)
-- [Seguridad](SECURITY.md)
-- [Contribución](CONTRIBUTING.md)
-- [Documentación en inglés (Canónica)](../../../README.md)
+- [Sobre o Venice Forge](ABOUT.md)
+- [Perguntas Frequentes (FAQ)](FAQ.md)
+- [Suporte](SUPPORT.md)
+- [Privacidade](PRIVACY.md)
+- [Segurança](SECURITY.md)
+- [Contribuição](CONTRIBUTING.md)
+- [Documentação em Inglês (Canônica)](../../../README.md)

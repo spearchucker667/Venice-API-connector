@@ -12,55 +12,83 @@
       "name": "Español",
       "uiCoveragePercent": 100,
       "docsCoveragePercent": 100,
-      "reviewStatus": "complete"
+      "reviewStatus": "complete",
+      "docs": "translated",
+      "lastUpdated": "2026-07-26T06:23:12.221Z"
     },
     "fr": {
       "name": "Français",
       "uiCoveragePercent": 100,
       "docsCoveragePercent": 100,
-      "reviewStatus": "complete"
+      "reviewStatus": "complete",
+      "docs": "translated",
+      "lastUpdated": "2026-07-26T06:23:12.222Z"
     },
     "de": {
       "name": "Deutsch",
       "uiCoveragePercent": 100,
       "docsCoveragePercent": 100,
-      "reviewStatus": "complete"
+      "reviewStatus": "complete",
+      "docs": "translated",
+      "lastUpdated": "2026-07-26T06:23:12.222Z"
     },
     "pt-BR": {
       "name": "Português (Brasil)",
       "uiCoveragePercent": 100,
       "docsCoveragePercent": 100,
-      "reviewStatus": "complete"
+      "reviewStatus": "complete",
+      "docs": "translated",
+      "lastUpdated": "2026-07-26T06:23:12.222Z"
     },
     "ru": {
       "name": "Русский",
       "uiCoveragePercent": 100,
       "docsCoveragePercent": 100,
-      "reviewStatus": "complete"
+      "reviewStatus": "complete",
+      "docs": "translated",
+      "lastUpdated": "2026-07-26T06:23:12.222Z"
     },
     "zh-CN": {
       "name": "简体中文",
       "uiCoveragePercent": 100,
       "docsCoveragePercent": 100,
-      "reviewStatus": "complete"
+      "reviewStatus": "complete",
+      "docs": "translated",
+      "lastUpdated": "2026-07-26T06:23:12.222Z"
     },
     "ja": {
       "name": "日本語",
       "uiCoveragePercent": 100,
       "docsCoveragePercent": 100,
-      "reviewStatus": "complete"
+      "reviewStatus": "complete",
+      "docs": "translated",
+      "lastUpdated": "2026-07-26T06:23:12.222Z"
     },
     "hi": {
       "name": "हिन्दी",
       "uiCoveragePercent": 100,
       "docsCoveragePercent": 100,
-      "reviewStatus": "complete"
+      "reviewStatus": "complete",
+      "docs": "translated",
+      "lastUpdated": "2026-07-26T06:23:12.222Z"
     },
     "ar": {
       "name": "العربية",
       "uiCoveragePercent": 100,
       "docsCoveragePercent": 100,
-      "reviewStatus": "complete"
+      "reviewStatus": "complete",
+      "docs": "translated",
+      "lastUpdated": "2026-07-26T06:23:12.222Z"
+    },
+    "ko": {
+      "ui": "in-progress",
+      "docs": "translated",
+      "lastUpdated": "2026-07-26T06:23:12.222Z"
+    },
+    "sv-SE": {
+      "ui": "in-progress",
+      "docs": "translated",
+      "lastUpdated": "2026-07-26T06:23:12.222Z"
     }
   }
 }

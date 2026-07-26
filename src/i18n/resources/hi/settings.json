@@ -2,7 +2,7 @@
   "title": "Config & Settings",
   "subtitle": "Manage API endpoints, defaults, and appearance styles.",
   "sections": {
-    "languageRegion": "भाषा और क्षेत्र",
+    "languageRegion": "Language & Region",
     "profiles": "Profiles",
     "apiKeys": "Venice API Key",
     "providers": "Fallback Providers",
@@ -18,10 +18,10 @@
     "audioSpeech": "Audio & Speech"
   },
   "languageRegion": {
-    "title": "भाषा और क्षेत्र",
+    "title": "Language & Region",
     "description": "Customize application language, text direction, and regional formatting preferences.",
-    "uiLanguageLabel": "इंटरफ़ेस भाषा",
-    "useSystemLanguage": "सिस्टम भाषा का उपयोग करें",
+    "uiLanguageLabel": "Interface Language",
+    "useSystemLanguage": "Use system language",
     "resolvedLocale": "Active Locale",
     "textDirection": "Text Direction",
     "leftToRight": "Left-to-Right (LTR)",

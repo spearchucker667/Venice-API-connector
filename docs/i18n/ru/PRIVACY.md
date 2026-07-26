@@ -1,5 +1,5 @@
-# Modelo de Privacidad — Русский
+# Конфиденциальность
 
-> [English README](../../../README.md)
+> [Английская документация (каноническая)](../../../README.md)
 
-Venice Forge es una aplicación local. Tus datos y conversaciones se guardan en tu dispositivo.
+Venice Forge работает локально и не собирает телеметрию или данные об использовании.

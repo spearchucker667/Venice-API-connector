@@ -1,4 +1,5 @@
 import React, { useId, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { desktopMasterPassword } from '../../services/desktopBridge'
 import { useProfileStore } from '../../stores/profile-store'
 import { AccessibleDialog } from '../ui/AccessibleDialog'
@@ -13,6 +14,7 @@ interface MasterPasswordDialogProps {
 const MIN_PASSWORD_LENGTH = 4 // length floor on user-typed unlock password
 
 export function MasterPasswordDialog({ isOpen, onClose, onSuccess, mode }: MasterPasswordDialogProps) {
+  const { t } = useTranslation(['settings', 'common'])
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
@@ -30,11 +32,11 @@ export function MasterPasswordDialog({ isOpen, onClose, onSuccess, mode }: Maste
 
     if (mode === 'setup') {
       if (password !== confirm) {
-        setError('Passwords do not match')
+        setError(t('settings:masterPassword.errors.mismatch', 'Passwords do not match'))
         return
       }
       if (password.length < MIN_PASSWORD_LENGTH) {
-        setError(`Password too short (min ${MIN_PASSWORD_LENGTH} characters)`)
+        setError(t('settings:masterPassword.errors.tooShort', 'Password too short (min {{min}} characters)', { min: MIN_PASSWORD_LENGTH }))
         return
       }
       try {
@@ -47,10 +49,10 @@ export function MasterPasswordDialog({ isOpen, onClose, onSuccess, mode }: Maste
           setConfirm('')
           onSuccess()
         } else {
-          setError(res.error || 'Failed to securely save password')
+          setError(res.error || t('settings:masterPassword.errors.saveFailed', 'Failed to securely save password'))
         }
       } catch {
-        setError('Failed to securely save password')
+        setError(t('settings:masterPassword.errors.saveFailed', 'Failed to securely save password'))
       }
       return
     }
@@ -64,19 +66,19 @@ export function MasterPasswordDialog({ isOpen, onClose, onSuccess, mode }: Maste
         onSuccess()
       } else {
         const lockoutMsg = res.lockedOutSeconds && res.lockedOutSeconds > 0
-          ? ` Locked out. Try again in ${res.lockedOutSeconds}s.`
+          ? t('settings:masterPassword.errors.lockedOut', ' Locked out. Try again in {{seconds}}s.', { seconds: res.lockedOutSeconds })
           : ''
-        setError(`Incorrect password.${lockoutMsg}`)
+        setError(t('settings:masterPassword.errors.incorrect', 'Incorrect password.') + lockoutMsg)
       }
     } catch {
-      setError('Failed to verify password')
+      setError(t('settings:masterPassword.errors.verifyFailed', 'Failed to verify password'))
     }
   }
 
   return (
     <AccessibleDialog
-      title={mode === 'setup' ? 'Set Master Password' : 'Enter Master Password'}
-      description="This local control password protects Family Safe Mode changes. The app stores a salted verifier, not the password itself."
+      title={mode === 'setup' ? t('settings:masterPassword.titleSet', 'Set Master Password') : t('settings:masterPassword.titleEnter', 'Enter Master Password')}
+      description={t('settings:masterPassword.description', "This local control password protects Family Safe Mode changes. The app stores a salted verifier, not the password itself.")}
       onClose={onClose}
       initialFocusRef={passwordRef}
       panelRef={dialogRef}
@@ -84,7 +86,7 @@ export function MasterPasswordDialog({ isOpen, onClose, onSuccess, mode }: Maste
       zIndexClassName="z-[999]"
     >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
-          <label htmlFor={passwordId} className="text-sm font-medium text-text-secondary">Master password</label>
+          <label htmlFor={passwordId} className="text-sm font-medium text-text-secondary">{t('settings:masterPassword.labels.password', 'Master password')}</label>
           <input
             ref={passwordRef}
             id={passwordId}
@@ -98,15 +100,15 @@ export function MasterPasswordDialog({ isOpen, onClose, onSuccess, mode }: Maste
           />
           {mode === 'setup' && (
             <div className="flex flex-col gap-2">
-              <label htmlFor={confirmId} className="text-sm font-medium text-text-secondary">Confirm master password</label>
+              <label htmlFor={confirmId} className="text-sm font-medium text-text-secondary">{t('settings:masterPassword.labels.confirm', 'Confirm master password')}</label>
               <input id={confirmId} type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} className="w-full px-3 py-2 bg-surface border border-border rounded" autoComplete="new-password" />
             </div>
           )}
           {error && <p id={`${passwordId}-error`} role="alert" className="text-danger text-sm">{error}</p>}
           <div className="flex justify-end gap-3 mt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 bg-surface text-text-primary rounded">Cancel</button>
+            <button type="button" onClick={onClose} className="px-4 py-2 bg-surface text-text-primary rounded">{t('common:actions.cancel', 'Cancel')}</button>
             <button type="submit" className="px-4 py-2 bg-button-primary-bg text-button-primary-fg rounded">
-              {mode === 'setup' ? 'Save' : 'Unlock'}
+              {mode === 'setup' ? t('common:actions.save', 'Save') : t('common:actions.unlock', 'Unlock')}
             </button>
           </div>
         </form>

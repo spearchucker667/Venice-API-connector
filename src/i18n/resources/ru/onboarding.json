@@ -1,18 +1,18 @@
 {
-  "welcomeTitle": "Добро пожаловать в Venice Forge",
-  "welcomeSubtitle": "Частный локальный рабочий стол.",
+  "welcomeTitle": "Welcome to Venice Forge",
+  "welcomeSubtitle": "The private local workbench.",
   "welcomeDescription": "A local desktop workbench that stores app data on this device and sends requests to the remote providers you configure.",
   "privacyNote": "Your data remains local. API keys are stored in secure OS storage.",
   "getStarted": "Get Started",
   "createProfile": "Create Profile",
-  "continue": "Продолжить",
+  "continue": "Continue",
   "languageSelectorLabel": "Application Language",
   "systemLanguageOption": "System language ({{language}})",
   "selectLanguage": "Select language",
   "stepIndicator": "Onboarding step {{current}} of {{total}}",
   "steps": {
     "welcome": {
-      "title": "Добро пожаловать в Venice Forge",
+      "title": "Welcome to Venice Forge",
       "description": "A local desktop workbench that stores app data on this device and sends requests to the remote providers you configure."
     },
     "profiles": {

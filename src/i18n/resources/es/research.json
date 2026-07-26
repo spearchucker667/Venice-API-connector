@@ -1,14 +1,14 @@
 {
-  "title": "Investigación",
-  "searchAndScrape": "Buscar y extraer",
-  "provider": "Proveedor",
-  "veniceProvider": "Búsqueda Venice",
-  "jinaProvider": "Búsqueda Jina",
-  "autoProvider": "Proveedor automático",
-  "socialDiscovery": "Descubrimiento social",
-  "queryPlaceholder": "Ingresa un tema de investigación o URL para extraer...",
-  "results": "Resultados de búsqueda",
-  "sources": "Fuentes",
-  "timeline": "Línea de tiempo",
-  "noResults": "No se encontraron resultados de investigación para la consulta."
+  "title": "Research",
+  "searchAndScrape": "Search & Scrape",
+  "provider": "Provider",
+  "veniceProvider": "Venice Search",
+  "jinaProvider": "Jina Search",
+  "autoProvider": "Auto Provider",
+  "socialDiscovery": "Social Discovery",
+  "queryPlaceholder": "Enter research topic or URL to scrape...",
+  "results": "Search Results",
+  "sources": "Sources",
+  "timeline": "Timeline",
+  "noResults": "No research results found for query."
 }

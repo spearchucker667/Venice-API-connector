@@ -1,5 +1,5 @@
-# Soporte — 简体中文
+# 技术支持
 
-> [English README](../../../README.md)
+> [英文文档（规范）](../../../README.md)
 
-Para obtener ayuda o informar de errores, visita nuestro repositorio oficial en GitHub.
+如果您需要支持，请参阅英文文档或在 GitHub 上提交 issue。

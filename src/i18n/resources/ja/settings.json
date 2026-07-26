@@ -2,7 +2,7 @@
   "title": "Config & Settings",
   "subtitle": "Manage API endpoints, defaults, and appearance styles.",
   "sections": {
-    "languageRegion": "言語と地域",
+    "languageRegion": "Language & Region",
     "profiles": "Profiles",
     "apiKeys": "Venice API Key",
     "providers": "Fallback Providers",
@@ -18,10 +18,10 @@
     "audioSpeech": "Audio & Speech"
   },
   "languageRegion": {
-    "title": "言語と地域",
+    "title": "Language & Region",
     "description": "Customize application language, text direction, and regional formatting preferences.",
-    "uiLanguageLabel": "表示言語",
-    "useSystemLanguage": "システム言語を使用",
+    "uiLanguageLabel": "Interface Language",
+    "useSystemLanguage": "Use system language",
     "resolvedLocale": "Active Locale",
     "textDirection": "Text Direction",
     "leftToRight": "Left-to-Right (LTR)",

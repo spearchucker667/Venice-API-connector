@@ -1,5 +1,5 @@
-# Guía de Contribución — Deutsch
+# Mitwirken
 
-> [English README](../../../README.md)
+> [Englische Dokumentation (Kanonisch)](../../../README.md)
 
-Consulta las instrucciones completas en la guía principal de contribución del repositorio.
+Bitte lesen Sie die englische CONTRIBUTING.md-Datei für Richtlinien zur Mitwirkung.
