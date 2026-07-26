@@ -28,6 +28,7 @@ import {
 import type { AppStatusItem, AppStatusSnapshot } from "../../types/status";
 import { STATUS_SEVERITIES } from "../../types/status";
 import { isElectron } from "../../services/desktopBridge";
+import { Trans } from 'react-i18next';
 
 /** Ordered list of categories shown in the cluster. The order is
  *  stable so the user can build muscle memory for the location. */
@@ -90,8 +91,7 @@ export function HeaderStatusCluster({ status: statusOverride, compact = false }:
         title={worst.item.summary}
       >
         <span aria-hidden className="h-2 w-2 rounded-full bg-accent" />
-        Status
-      </button>
+        <Trans i18nKey="common:surface.componentsStatusHeaderstatuscluster.action.status" /></button>
     </div>
   )
 }

@@ -71,5 +71,1917 @@
   "isWebEnabled": "true",
   "stable-audio": "q1",
   "video-model": "q2",
-  "promptLibrary": "lib-1"
+  "promptLibrary": "lib-1",
+  "surface": {
+    "app": {
+      "text": {
+        "skipToMainContent": "メインコンテンツへスキップ",
+        "loadingWorkflows": "ワークフローをロード中…",
+        "loadingPlayground": "プレイグラウンドをロード中…",
+        "loadingRpStudio": "RP スタジオをロード中…",
+        "loadingHistory": "履歴をロード中…",
+        "loadingImageStudio": "Image Studio をロード中…",
+        "loadingImageInspector": "Image Inspector をロード中…",
+        "loadingAudio": "オーディオをロード中…",
+        "loadingMusic": "音楽をロード中…",
+        "loadingVideo": "ビデオをロード中…",
+        "loadingEmbeddings": "埋め込みをロード中…",
+        "loadingStatus": "ステータスをロード中…",
+        "loadingCharacters": "キャラクターをロード中…",
+        "loadingCharacterCreator": "Character Creator をロード中…",
+        "loadingSettings": "設定をロード中…",
+        "loadingSearch": "検索をロード中…",
+        "loadingMediaStudio": "メディア スタジオをロード中…",
+        "loadingPromptLibrary": "プロンプトライブラリをロード中…",
+        "loadingScenes": "シーンをロード中…",
+        "loadingStorage": "ストレージをロード中…",
+        "loadingDocuments": "ドキュメントをロード中…"
+      }
+    },
+    "componentsCharactersview": {
+      "action": {
+        "chat": "チャット",
+        "refresh": "更新",
+        "edit": "編集",
+        "close": "閉じる",
+        "createStCard": "STカードを作成",
+        "select": "選択",
+        "details": "詳細",
+        "duplicateLocally": "ローカルで複製",
+        "startChat": "チャットの開始",
+        "duplicate": "複製",
+        "exportStCardJson": "ST カードのエクスポート JSON",
+        "deleteLocalCharacter": "ローカル キャラクターの削除",
+        "importStCard": "ST カードをインポート",
+        "drafts": "ドラフト"
+      },
+      "heading": {
+        "characters": "キャラクター",
+        "local": "ローカル",
+        "featured": "注目",
+        "adult": "成人向け",
+        "hosted": "ホストされています"
+      },
+      "label": {
+        "model": "モデル",
+        "sort": "並べ替え"
+      },
+      "text": {
+        "featured": "注目の",
+        "model": "モデル:",
+        "ratings": "評価",
+        "imports": "インポート",
+        "venice": "ヴェニス ↗",
+        "needsValidation": "検証が必要",
+        "includeAdultCharacters": "成人向け文字を含む",
+        "webEnabledOnly": "Web 対応のみ",
+        "loadingCharacters": "文字を読み込み中…",
+        "noCharactersFoundTryClearingTheSearch": "文字が見つかりません。検索ボックスをクリアするか、成人向けキャラクターを有効にしてみてください。"
+      },
+      "description": {
+        "browseHostedAndLocallyAuthoredCharactersIn": "ホストされているキャラクターとローカルで作成されたキャラクターを 1 つのハブで参照します。"
+      }
+    },
+    "componentsStatusview": {
+      "heading": {
+        "status": "ステータス",
+        "runtime": "ランタイム",
+        "storage": "ストレージ",
+        "safetyGuardAudit": "安全ガード監査",
+        "lastRequest": "最後のリクエスト"
+      },
+      "description": {
+        "aggregatedRuntimeInfoForTheCurrentBuild": "現在のビルドの集約されたランタイム情報。",
+        "toInspectDetailedConsoleOutput": "を開いて、詳細なコンソール出力を調べます。",
+        "statusProvidesTransportStorageAuditAndRequest": "ステータスは、トランスポート、ストレージ、監査、およびリクエストの診断を提供します。機能固有のコントロールには、専用の [ライブラリ]、[リサーチ]、[設定]、および [ワークフロー] タブを使用します。"
+      },
+      "text": {
+        "logsFolder": "ログ フォルダー",
+        "bySeverity": "重大度別:",
+        "lastError": "最後のエラー:",
+        "noRequestsYetLastErrorBelowIf": "まだリクエストがありません (最後のエラーがある場合は以下にあります)"
+      }
+    },
+    "componentsThememaker": {
+      "action": {
+        "cancel": "キャンセル",
+        "createNewTheme": "+ 新しいテーマの作成",
+        "importTheme": "テーマのインポート…",
+        "exportTheme": "テーマのエクスポート",
+        "darkMode": "ダーク モード",
+        "lightMode": "ライト モード",
+        "saveTheme": "テーマの保存",
+        "deleteTheme": "テーマの削除",
+        "restoreDefaultTheme": "デフォルトのテーマを復元",
+        "replaceExisting": "既存の置換",
+        "importAsCopy": "コピーとしてインポート",
+        "importApply": "インポートと適用"
+      },
+      "heading": {
+        "themeSystemEditor": "テーマ システムとエディタ",
+        "importThemePreview": "テーマ プレビューをインポート"
+      },
+      "description": {
+        "configureThemeColorsBorderContrastFocusRings": "Venice Forge 全体でテーマの色、境界線のコントラスト、フォーカス リング、およびアクション ボタンのスタイルを構成します。",
+        "reviewThemeMetadataAndPreviewLayoutBefore": "ワークスペースに適用する前に、テーマのメタデータとプレビュー レイアウトを確認してください。"
+      },
+      "label": {
+        "selectActiveTheme": "アクティブなテーマの選択"
+      },
+      "text": {
+        "unsavedDraftChanges": "未保存の下書き変更",
+        "invalid": "無効です",
+        "liveThemePreview": "ライブ テーマ プレビュー",
+        "showingLivePreviewOfActiveDraft": "アクティブなドラフトのライブ プレビューを表示しています",
+        "themeName": "テーマ名:",
+        "mode": "モード:",
+        "aCustomThemeNamedLdquo": "「",
+        "rdquoAlreadyExistsInYourWorkspace": "」という名前のカスタム テーマがワークスペースにすでに存在します。",
+        "importedLayoutPreview": "インポートされたレイアウトのプレビュー"
+      }
+    },
+    "componentsThemepreview": {
+      "text": {
+        "status": "ステータス",
+        "forge": "鍛造",
+        "activeItem": "アクティブなアイテム",
+        "inactiveItem": "非アクティブなアイテム",
+        "selectedItem": "選択されたアイテム",
+        "primaryButton": "プライマリ ボタン",
+        "secondary": "セカンダリ",
+        "inputField": "入力フィールド…",
+        "focusedControl": "フォーカスされたコントロール",
+        "alertMessageBoundary": "警告メッセージ境界",
+        "contrastWarnings": "コントラスト警告:"
+      }
+    },
+    "componentsAudioAudioView": {
+      "text": {
+        "voice": "音声",
+        "download": "ダウンロード",
+        "text": "テキスト",
+        "format": "形式",
+        "speed": "速度",
+        "generateSpeech": "音声の生成",
+        "transcribe": "文字起こし",
+        "output": "出力",
+        "pressGenerateToSynthesizeSpeech": "押す音声を合成するために生成",
+        "transcript": "トランスクリプト",
+        "transcriptAppearsHere": "トランスクリプトがここに表示されます"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatordrafteditor": {
+      "label": {
+        "creatorNotes": "クリエイターノート",
+        "postHistoryInstructions": "履歴後指示",
+        "characterName": "キャラクター名 *",
+        "tagsCommaSeparated": "タグ (カンマ区切り)",
+        "fullIdentityBackground": "完全なアイデンティティと背景",
+        "personalitySpeechStyle": "性格とスピーチスタイル",
+        "scenarioContext": "シナリオコンテキスト",
+        "firstMessagePrimaryGreeting": "最初のメッセージ (主要な挨拶) *",
+        "alternateGreetings": "代替挨拶",
+        "exampleDialogue": "対話例",
+        "systemPromptOverride": "システム プロンプト オーバーライド",
+        "avatarControls": "アバター コントロール",
+        "visualAvatarPrompt": "ビジュアル アバター プロンプト",
+        "naturalLanguageRequest": "自然言語リクエスト"
+      },
+      "text": {
+        "enabled": "有効",
+        "draftRev": "ドラフト改訂",
+        "saveDraft": "ドラフト保存",
+        "validate": "検証",
+        "approveCreateCharacter": "キャラクターの承認と作成",
+        "assumptions": "前提条件:",
+        "aiRegenerate": "AI 再生成",
+        "addAlternateGreeting": "代替挨拶の追加",
+        "advancedPromptingInstructionsDirectlyModifySystemPrompt": "高度なプロンプト命令は、モデル実行中のシステム プロンプト ステアリングを直接変更します。作成前によく確認してください。",
+        "noAvatarSelected": "アバターが選択されていません",
+        "chooseImageFile": "画像ファイルの選択",
+        "generateAvatar": "アバターの生成",
+        "addLoreEntry": "伝承エントリの追加",
+        "noEmbeddedLoreEntriesYetAddKeywords": "まだ伝承エントリが埋め込まれていません。キーワードと背景の詳細​​を追加して、深みのあるキャラクターの世界を構築します。",
+        "draftId": "ドラフト ID:",
+        "revisionNumber": "リビジョン番号:",
+        "creatorModel": "作成者モデル:",
+        "specification": "仕様:",
+        "aiAssistedRevisions": "AI 支援リビジョン"
+      },
+      "heading": {
+        "embeddedLorebookWorldInfo": "埋め込まれた伝承書と世界情報"
+      },
+      "description": {
+        "manageWorldLoreEntriesEmbeddedInsideThis": "このキャラクター カード内に埋め込まれた世界の伝承エントリを管理V2ドラフト。"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorerror": {
+      "text": {
+        "copy": "コピー",
+        "diagnosticMessage": "診断メッセージ",
+        "returnToDraft": "ドラフトに戻る",
+        "retryOperation": "操作を再試行します"
+      },
+      "heading": {
+        "characterCreatorError": "キャラクター作成者エラー"
+      },
+      "description": {
+        "anErrorOccurredDuringGenerationOrCard": "生成またはカード処理中にエラーが発生しました。現在のドラフトとアイデアは保存されています。"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorlocalpickermodal": {
+      "action": {
+        "cancel": "キャンセル"
+      },
+      "heading": {
+        "selectLocalCharacterToEdit": "編集するローカル キャラクターを選択してください"
+      },
+      "description": {
+        "chooseACharacterFromYourLocalLibrary": "Character Creator でドラフトとして開くキャラクターをローカル ライブラリから選択してください。"
+      },
+      "text": {
+        "editDraft": "ドラフトの編集 →"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorprocesspanel": {
+      "text": {
+        "active": "アクティブ",
+        "aiDesignProcess": "AI 設計プロセス",
+        "designDirectionSummary": "設計の方向性と概要",
+        "interpretation": "解釈:",
+        "initializingAiProcessPipeline": "AI プロセス パイプラインを初期化中…",
+        "cancelGeneration": "生成のキャンセル"
+      },
+      "description": {
+        "thisLogShowsUserFacingDesignDecisions": "このログには、個人的な隠れた推論ではなく、ユーザー向けの設計決定と検証イベントが表示されます。"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorwelcome": {
+      "heading": {
+        "characterCreator": "キャラクター作成"
+      },
+      "text": {
+        "create": "作成",
+        "delete": "削除",
+        "creatorModel": "クリエイター モデル:",
+        "immutable": "(不変)",
+        "optionalDesignConstraintsContext": "オプションのデザイン制約とコンテキスト",
+        "allGeneratedContentRemainsADraftUntil": "生成されたすべてのコンテンツは、承認されるまで下書きのままです。",
+        "createDraft": "ドラフト作成",
+        "importExistingCard": "既存カードのインポート",
+        "editLocalCharacter": "ご当地キャラクター編集",
+        "describe": "説明",
+        "review": "レビュー",
+        "recentUnfinishedDrafts": "最近の未完成のドラフト",
+        "rev": "Rev",
+        "duplicate": "複製"
+      },
+      "description": {
+        "turnARoughIdeaIntoAComplete": "大まかなアイデアを完全な編集可能なキャラクター カードに変えます。",
+        "startWithASentenceADetailedConcept": "文章、詳細なコンセプト、または既存のキャラクターの原型から始めます。作成者は、検査、書き直し、保存、またはエクスポートできる完全なドラフトを作成します。承認するまでキャラクター ライブラリには何も追加されません。",
+        "enterAnythingFromAOneLineConcept": "一行コンセプトから詳細なキャラクター概要まで入力します。",
+        "inspectAndEditTheIdentityPersonalityScenario": "アイデンティティ、性格、シナリオ、挨拶、会話例、行動指示を検証し、編集します。",
+        "approveTheFinalDraftToAddThe": "最終ドラフトを承認して、キャラクターをローカル ライブラリに追加するか、互換性のあるカードをエクスポートします。"
+      },
+      "label": {
+        "characterConcept": "キャラクター コンセプト",
+        "tone": "トーン",
+        "relationshipToUser": "ユーザーとの関係",
+        "contentRating": "コンテンツ レーティング"
+      },
+      "option": {
+        "adultUncensored": "アダルト 無修正"
+      },
+      "action": {
+        "open": "開く"
+      }
+    },
+    "componentsChatCharacterchatsview": {
+      "heading": {
+        "characterChats": "キャラクターチャット",
+        "startALocalCharacterChat": "ご当地キャラクターチャットを開始",
+        "noCharacterChatsYet": "キャラクター チャットはまだありません"
+      },
+      "action": {
+        "edit": "編集",
+        "close": "閉じる",
+        "chat": "チャット",
+        "newStCard": "新しい ST カード",
+        "browseHosted": "ホストを参照",
+        "startChat": "チャットを開始",
+        "browseCharacters": "キャラクターを参照します",
+        "createLocalCharacter": "ローカル キャラクターを作成します",
+        "browseHostedCharacters": "ホスト キャラクターの参照 ↗",
+        "createNewStCard": "+ 新しい ST カードの作成"
+      },
+      "description": {
+        "hostedAndLocalCharacterConversations": "ホストおよびローカルのキャラクター会話",
+        "noCharacterChatsMatchThisSearch": "この検索に一致するキャラクター チャットはありません。",
+        "selectAnyOfYourLocallyCreatedCharacters": "ローカルで作成したキャラクターのいずれかを選択すると、専用の会話が開始されます。",
+        "noLocalCharactersMatch": "一致するローカル キャラクターはありません",
+        "chooseAHostedOrLocalCharacterTo": "専用キャラクターの会話を開始するには、ホストまたはローカル キャラクターを選択してください。"
+      },
+      "text": {
+        "searchCharacterChats": "キャラクター チャットの検索",
+        "localCharacters": "ご当地キャラクター",
+        "available": "利用可能",
+        "chat": "チャット →"
+      },
+      "label": {
+        "localCharacters": "ローカル キャラクター ("
+      }
+    },
+    "componentsChatCharacterscenecard": {
+      "action": {
+        "retry": "再試行",
+        "cancel": "キャンセル",
+        "openInMediaStudio": "Media Studio で開く",
+        "copyPrompt": "プロンプトのコピー",
+        "regenerate": "再生成"
+      },
+      "description": {
+        "scenePrompt": "シーン プロンプト"
+      }
+    },
+    "componentsChatHistoryview": {
+      "action": {
+        "newChat": "新規チャット",
+        "cancel": "キャンセル",
+        "rename": "名前を変更",
+        "delete": "削除",
+        "export": "エクスポート",
+        "import": "インポート",
+        "clearSelection": "選択をクリア",
+        "deleteSelected": "選択を削除 (",
+        "newFolder": "新しいフォルダー",
+        "startNewConversation": "新しい会話を開始してください",
+        "openPrivacyGate": "プライバシー ゲートを開く",
+        "enablePrivacyGate": "プライバシー ゲートを有効にする"
+      },
+      "option": {
+        "characterChats": "キャラクターチャット",
+        "allChats": "すべてのチャット",
+        "standardChats": "標準チャット",
+        "selectDestinationFolder": "宛先フォルダーを選択...",
+        "unfiledNoFolder": "未ファイル (フォルダーなし)"
+      },
+      "text": {
+        "unfiled": "未分類",
+        "selected": "選択済み",
+        "total": "合計)",
+        "moveTo": "移動先:",
+        "chooseOneChatTypeToMoveInto": "フォルダーに移動するチャット タイプを 1 つ選択します。",
+        "ago": "前",
+        "noConversationsInThisFolder": "このフォルダーには会話がありません。",
+        "noUnfiledConversations": "未保存の会話はありません。"
+      },
+      "heading": {
+        "chatHistory": "チャット履歴",
+        "noConversationsFound": "会話が見つかりません"
+      },
+      "description": {
+        "manageAndRevisitYourPastConversations": "過去の会話の管理と再訪",
+        "tryADifferentSearchTermOrStart": "別の検索語を試すか、新しいチャットを開始してください"
+      }
+    },
+    "componentsChatChatView": {
+      "action": {
+        "cancel": "キャンセル",
+        "remove": "削除",
+        "clear": "消去",
+        "shuffle": "シャッフル",
+        "confirmSend": "確認して送信",
+        "disableMemoryForThisMessage": "このメッセージのメモリを無効にする",
+        "saveContextText": "コンテキスト テキストを保存",
+        "forgetFact": "事実を忘れる",
+        "chatContext": "⚙ チャット コンテキスト ·",
+        "requireMemoryPreviewBeforeNextSend": "次の送信前にメモリ プレビューが必要です。"
+      },
+      "option": {
+        "disabled": "無効",
+        "inheritFromDefaultSettings": "デフォルト設定から継承",
+        "overrideUseChatSettings": "上書き (チャット設定を使用)"
+      },
+      "text": {
+        "howCanIHelpToday": "今日はどのようにサポートできますか?",
+        "tryOneOfThese": "これらのいずれかを試してください",
+        "startAConversationWith": "会話を開始します",
+        "matchedLocalMemoryContext": "ローカル メモリ コンテキストが一致しました",
+        "facts": "事実、",
+        "summariesMatched": "概要が一致しました）",
+        "previousThread": "前のスレッド:",
+        "allMatchedContextHasBeenRemoved": "一致したコンテキストはすべて削除されました。",
+        "context": "コンテキスト",
+        "chatContext": "チャット コンテキスト",
+        "includeMemoryRetrievalForThisChat": "このチャットのメモリ取得を含める",
+        "includePriorConversationContext": "以前の会話コンテキストを含める",
+        "selected": "選択済み",
+        "chattingAs": "このメッセージに添付された"
+      },
+      "label": {
+        "systemPromptMode": "システム プロンプト モード"
+      },
+      "description": {
+        "onlySelectedLocalConversationsAreIncludedIn": "選択されたローカル会話のみが次のモデル リクエストに含まれ、Venice API に送信されます。 API キー、ベアラー トークン、およびローカル ファイル パスは編集されます。長いコンテンツは境界内に収まるように切り詰められます。会話履歴は、診断や安全なエクスポートには決して含まれません。"
+      }
+    },
+    "componentsChatMessageBubble": {
+      "action": {
+        "cancel": "キャンセル",
+        "save": "保存",
+        "thinking": "思考"
+      },
+      "text": {
+        "attachedToThisMessage": "としてチャット",
+        "truncated": "切り捨てられた",
+        "vision": "ビジョン",
+        "safety": "安全性:",
+        "code": "コード:",
+        "signals": "信号:",
+        "toolUsed": "使用したツール:",
+        "resultFrom": "結果"
+      }
+    },
+    "componentsChatVeniceParams": {
+      "action": {
+        "newChat": "新規チャット",
+        "settings": "設定"
+      },
+      "label": {
+        "appSystemPrompt": "アプリ システム プロンプト"
+      },
+      "option": {
+        "loadingLibrary": "ライブラリの読み込み中...",
+        "errorLoadingLibrary": "ライブラリの読み込みエラー",
+        "loadFromLibrary": "ライブラリからの読み込み..."
+      },
+      "text": {
+        "approachingSystemPromptSizeLimit": "システム プロンプトのサイズ制限に近づいています ("
+      }
+    },
+    "componentsDocumentsDocumentagentview": {
+      "option": {
+        "off": "オフ",
+        "readAttachmentsOnly": "添付ファイルの読み取りのみ",
+        "limitedDocuments": "制限付きドキュメント",
+        "manageSelectedWorkspace": "選択したワークスペースの管理",
+        "markdownMd": "マークダウン (.md)",
+        "textTxt": "テキスト (.txt)",
+        "jsonJson": "JSON (.json)",
+        "csvCsv": "CSV (.csv)",
+        "htmlHtml": "HTML (.html)",
+        "wordDocx": "Word (.docx)",
+        "pdfPdf": "PDF (.pdf)"
+      },
+      "action": {
+        "managedLibrary": "管理ライブラリ",
+        "connectedWorkspace": "接続済みワークスペース",
+        "preview": "プレビュー",
+        "source": "ソース",
+        "history": "履歴 ("
+      },
+      "text": {
+        "search": "検索",
+        "cancel": "キャンセル",
+        "createDocument": "ドキュメントを作成",
+        "sessionGrant": "セッション許可 ·",
+        "revoke": "取り消し",
+        "selectWorkspaceDirectory": "ワークスペース ディレクトリの選択…",
+        "documentAgentToolsRequireTheHardenedElectron": "Document Agent ツールには強化された Electron が必要です。デスクトップ ブリッジ。",
+        "workingGroup": "ワーキング グループ",
+        "group": "+ グループ",
+        "document": "+ ドキュメント",
+        "revision": "リビジョン:",
+        "export": "エクスポート…",
+        "prepareEditProposal": "編集提案の準備",
+        "by": "·",
+        "restoreAsNewRevision": "作成 新しいリビジョンとして復元",
+        "before": "前",
+        "after": "後",
+        "reject": "拒否",
+        "approveExactChange": "正確な変更を承認",
+        "itemS": "項目",
+        "searchMatches": "検索一致 (",
+        "read": "読み取り",
+        "createGroup": "グループの作成"
+      },
+      "heading": {
+        "agentAccessGrantControls": "エージェント アクセスと許可制御",
+        "documents": "ドキュメント (",
+        "immutableRevisionLineage": "不変リビジョン リネージュ",
+        "reviewProposal": "提案をレビュー",
+        "grantedWorkspaceDirectory": "付与されたワークスペース ディレクトリ",
+        "createManagedDocument": "管理ドキュメントの作成",
+        "createWorkingGroup": "ワーキンググループの作成"
+      },
+      "description": {
+        "limitedDocumentsIsTheSafeDefaultWorkspace": "制限付きドキュメントが安全なデフォルトです。ワークスペース アクセスは、ユーザーが許可した 1 つのディレクトリに制限されており、シェル、Git、ネットワーク、キーチェーン、または OS コントロール",
+        "noManagedDocumentsInThisWorkingGroup": "このワーキング グループには管理されているドキュメントがありません。",
+        "boundToHash": "ハッシュにバインド",
+        "againstBaseRevision": "… 基本リビジョンに対して。",
+        "noDocumentSelected": "ドキュメントが選択されていません",
+        "selectADocumentFromTheLeftPanel": "左側のパネルからドキュメントを選択するか、新しいドキュメントを作成して編集を開始します。",
+        "noWorkspaceFilesFound": "ワークスペース ファイルが見つかりません。",
+        "noWorkspaceGranted": "ワークスペースが付与されません",
+        "selectAWorkspaceDirectoryUnderAgentAccess": "ファイルを参照するには、上記のエージェント アクセスでワークスペース ディレクトリを選択します。",
+        "selectAFileFromTheWorkspaceList": "ワークスペース リストからファイルを選択して、その内容を表示します。"
+      },
+      "label": {
+        "accessPreset": "プリセットへのアクセス",
+        "format": "形式",
+        "initialContent": "初期コンテンツ",
+        "workingGroupName": "ワーキング グループ名"
+      }
+    },
+    "componentsEmbeddingsEmbeddingsView": {
+      "action": {
+        "copy": "コピー"
+      },
+      "text": {
+        "inputText": "テキストの入力",
+        "generateEmbeddings": "埋め込みの生成",
+        "vector": "ベクトル (",
+        "dimensions": "次元)",
+        "embeddingVectorsAppearHere": "埋め込みベクトルがここに表示されます"
+      }
+    },
+    "componentsGalleryCompareView": {
+      "action": {
+        "close": "閉じる"
+      },
+      "text": {
+        "compare": "比較",
+        "items": "項目"
+      },
+      "description": {
+        "select2To": "比較する 2 ～",
+        "itemsToCompare": "項目を選択します。 (",
+        "selected": "が選択されています)"
+      },
+      "column": {
+        "field": "フィールド"
+      }
+    },
+    "componentsGalleryGalleryView": {
+      "heading": {
+        "mediaStudio": "メディアスタジオ"
+      },
+      "action": {
+        "close": "閉じる",
+        "apply": "適用",
+        "imageStudio": "画像スタジオ",
+        "chat": "チャット",
+        "videoStudio": "動画スタジオ",
+        "seed": "シード",
+        "compare": "比較 (",
+        "lineage": "リネージュ",
+        "imageTools": "画像ツール",
+        "prompt": "プロンプト",
+        "negative": "ネガティブ"
+      },
+      "description": {
+        "browseTagEditAndExportYourGenerated": "生成されたメディアを参照、タグ付け、編集、エクスポートします。",
+        "noMatchingMedia": "一致するメディアがありません"
+      },
+      "text": {
+        "item": "項目",
+        "loaded": "ロード済み",
+        "selected": "選択済み",
+        "loadingMediaStudio": "Media Studio を読み込み中…",
+        "itemsSelected": "項目が選択されています。",
+        "sendTo": "送信先:",
+        "copy": "コピー:"
+      },
+      "label": {
+        "quickTag": "クイックタグ:"
+      }
+    },
+    "componentsGalleryMediaCard": {
+      "text": {
+        "video": "動画",
+        "audio": "オーディオ",
+        "favorite": "お気に入り",
+        "image": "画像",
+        "seed": "シード:",
+        "more": "詳細"
+      }
+    },
+    "galleryMediaDetailDialog": {
+      "action": {
+        "delete": "削除",
+        "closeEsc": "閉じる (Esc)"
+      },
+      "text": {
+        "previewUnavailable": "プレビューは利用できません",
+        "seed": "シード:",
+        "source": "ソース:",
+        "style": "スタイル:",
+        "steps": "ステップ:",
+        "cfg": "CFG:。"
+      },
+      "heading": {
+        "filmstrip": "フィルムストリップ"
+      }
+    },
+    "componentsGalleryMediaInspector": {
+      "action": {
+        "close": "閉じる",
+        "createStCard": "STカードを作成",
+        "upscale": "アップスケール",
+        "edit": "編集",
+        "apply": "適用",
+        "cancel": "キャンセル",
+        "add": "追加",
+        "clear": "消去",
+        "useSettings": "設定を使用",
+        "useRecipe": "レシピの使用",
+        "regenerate": "再生成",
+        "sameSeed": "同じシード",
+        "downloadMedia": "メディアのダウンロード",
+        "copyPrompt": "プロンプトのコピー",
+        "copyNegative": "ネガティブのコピー",
+        "copySeed": "シードのコピー",
+        "copyMetadata": "メタデータのコピー",
+        "saveRecipe": "レシピの保存",
+        "copyRecipe": "レシピのコピー",
+        "exportRecipe": "レシピのエクスポート",
+        "applyToImageStudio": "Image Studio に適用",
+        "remixAmpGenerate": "リミックスと生成",
+        "saveRemix": "リミックスの保存",
+        "saveNote": "メモを保存",
+        "clearParentLink": "親リンクをクリア"
+      },
+      "text": {
+        "delete": "削除",
+        "seed": "シード",
+        "steps": "ステップ数",
+        "view": "表示",
+        "parameters": "パラメータ",
+        "source": "ソース",
+        "style": "スタイル",
+        "cfg": "CFG",
+        "aspect": "アスペクト",
+        "recipeCompatibility": "レシピ互換性",
+        "enhancedPrompt": "拡張プロンプト",
+        "originalPrompt": "オリジナルプロンプト",
+        "remixPrompt": "リミックスプロンプト",
+        "actions": "アクション",
+        "modelCapabilities": "モデル機能",
+        "upscale": "アップスケール",
+        "edit": "編集",
+        "video": "ビデオ",
+        "vision": "ビジョン",
+        "tags": "タグ",
+        "parentid": "親 ID="
+      },
+      "heading": {
+        "inspector": "インスペクター",
+        "prompt": "プロンプト",
+        "parent": "親",
+        "children": "子 (",
+        "missingReferences": "参照がありません"
+      },
+      "description": {
+        "originalLdquo": "オリジナル: 「",
+        "rdquo": "」",
+        "promptViaInternalLlm": "内部 LLM 経由のプロンプト…",
+        "theseEndpointsAreRecognisedForTheSource": "これらのエンドポイントは、ソース モデルに対して認識されます。このアイテムに対して同じ操作を再実行すると、それらが使用されます。",
+        "noTagsYet": "タグはまだありません。"
+      }
+    },
+    "componentsGalleryMediaToolbar": {
+      "text": {
+        "refresh": "更新",
+        "project": "プロジェクト",
+        "sort": "並べ替え",
+        "item": "項目",
+        "selected": "選択済み"
+      },
+      "action": {
+        "clear": "消去",
+        "compare": "比較",
+        "export": "エクスポート",
+        "apply": "適用",
+        "delete": "削除",
+        "selectAll": "すべて選択",
+        "addTag": "タグを追加",
+        "unstar": "スターを解除"
+      }
+    },
+    "componentsGenerationGenerationloadingindicator": {
+      "action": {
+        "cancel": "キャンセル"
+      }
+    },
+    "componentsImageInspectorImageinspectorview": {
+      "heading": {
+        "imageInspector": "画像インスペクター",
+        "analysisSummary": "分析概要",
+        "replicationPrompt": "レプリケーションプロンプト",
+        "subjects": "対象者",
+        "imageBasedSourceSearch": "画像ベースのソース検索"
+      },
+      "action": {
+        "openFile": "ファイルを開きます",
+        "cancelAnalysis": "分析キャンセル",
+        "analyzeImage": "画像分析"
+      },
+      "text": {
+        "noRecentImages": "最近の画像はありません。",
+        "openAFileToStartInspecting": "ファイルを開いて検査を開始します。",
+        "middot": "·",
+        "selectOrUploadAnImageToInspect": "検査する画像を選択またはアップロードしてください",
+        "visionModel": "ビジョン モデル",
+        "noVisionCapableModelsAvailableInCatalog": "カタログにはビジョン対応モデルがありません。",
+        "analysisDepth": "分析深さ",
+        "promptTarget": "プロンプトターゲット",
+        "specificInstructionsOptional": "特定の指示 (オプション)",
+        "negative": "ネガティブ:",
+        "directSourceImageMatchingIsUnavailableWith": "設定された Google および Brave 契約では、ソース画像の直接一致は利用できません。現在の API は、検査された画像バイトではなく、テキスト クエリを受け入れます。ここではクエリ生成検索が無効になっているため、結果が逆イメージ一致として誤って表示されることはありません。",
+        "legacyTextQueryResults": "従来のテキストクエリ結果 (",
+        "imageAnalysisFailed": "画像分析に失敗しました",
+        "analysisResultsWillAppearHere": "分析結果がここに表示されます。"
+      }
+    },
+    "componentsImageImageTools": {
+      "text": {
+        "model": "モデル",
+        "sourceImage": "ソース画像",
+        "editPrompt": "編集プロンプト",
+        "scale": "スケール",
+        "sourceAdherence": "ソース準拠",
+        "veniceUpscalingDoesNotAcceptAText": "Venice アップスケーリングはテキスト プロンプトを受け入れません。プロンプトによる変更の場合は、「編集」に切り替えます。",
+        "result": "結果"
+      },
+      "action": {
+        "download": "ダウンロード",
+        "openEdit": "編集を開く",
+        "saveToMediaStudio": "Media Studio に保存"
+      },
+      "description": {
+        "bytes": "バイト",
+        "clickToUploadImage": "クリックして画像をアップロード",
+        "higherValuesStayCloserToTheSource": "値が大きいほどソースに近くなります。値を低くすると、アップスケーラーがより多くのテクスチャとディテールを追加できるようになります。"
+      }
+    },
+    "componentsImageImageView": {
+      "action": {
+        "cancel": "キャンセル",
+        "clear": "消去",
+        "createStCard": "STカードを作成",
+        "saveToLibrary": "ライブラリに保存",
+        "useEnhancedPrompt": "拡張プロンプトを使用",
+        "keepOriginal": "オリジナルを保持",
+        "switchTo": "切り替え",
+        "append": "追加",
+        "replace": "置換",
+        "randomize": "ランダム化"
+      },
+      "text": {
+        "aspectRatio": "アスペクト比",
+        "resolution": "解像度",
+        "seed": "シード",
+        "steps": "ステップ数",
+        "prompt": "プロンプト",
+        "enhancedPromptPreview": "拡張プロンプト プレビュー",
+        "applyTemplate": "テンプレートを適用:",
+        "positive": "肯定的:",
+        "negative": "否定的:",
+        "doesNotSupportNegativePromptsTheTemplate": "は否定的なプロンプトをサポートしません。テンプレートは保留状態のままで、現在のプロンプトの状態は変更されません。",
+        "negativePrompt": "ネガティブ プロンプト",
+        "quality": "品質",
+        "style": "スタイル",
+        "variants": "バリアント"
+      },
+      "option": {
+        "addTemplate": "テンプレートの追加..."
+      },
+      "label": {
+        "useFixedSeed": "固定シードの使用"
+      }
+    },
+    "layoutApiKeyDialog": {
+      "action": {
+        "cancel": "キャンセル",
+        "disconnect": "でキーを取得します 切断"
+      },
+      "heading": {
+        "connectToVenice": "ヴェニスに接続"
+      },
+      "label": {
+        "veniceApiKey": "ヴェニスAPI キー"
+      },
+      "description": {
+        "getAKeyAt": "でキーを取得します"
+      }
+    },
+    "componentsLayoutInspectorPane": {
+      "text": {
+        "trafficInspector": "トラフィックインスペクター",
+        "status": "ステータス:",
+        "error": "エラー",
+        "noRequestsCapturedYet": "リクエストはまだキャプチャされていません。",
+        "sendChatOrGenerateImagesToInspect": "チャットを送信するか、トラフィックを検査するための画像を生成します。",
+        "guard": "ガード:",
+        "time": "時間:",
+        "method": "方法:",
+        "transport": "トランスポート:",
+        "outcome": "結果:",
+        "guard4ba3843": "ガード:",
+        "preview": "プレビュー:",
+        "latency": "レイテンシ:",
+        "errorClass": "エラー クラス:",
+        "localSafetyEvaluation": "ローカル安全性評価",
+        "mode": "モード:",
+        "familySafeModeRendererEvaluated": "ファミリー セーフ モード (レンダラ評価済み)",
+        "result": "結果:",
+        "reasonCode": "理由コード:",
+        "adultModeLocalFilterSkipped": "アダルト モード (ローカル フィルターはスキップされました)",
+        "electronMainProcessAuthoritative": "Electron メイン プロセス権限",
+        "theLocalFamilySafeGuardIsEnforced": "ローカルのファミリー セーフ ガードはメイン プロセスによって強制されます。監査ログを開いて正規の決定を調べます。",
+        "action": "アクション:",
+        "signals": "シグナル:",
+        "sourceQuot": "] ソース: \"",
+        "quotSeverity": "\" (重大度:",
+        "confidence": "、信頼度:",
+        "requestHeaders": "リクエスト ヘッダー",
+        "requestBody": "リクエスト本文",
+        "responseBody": "レスポンス本文",
+        "selectARequestToViewDetails": "詳細を表示するにはリクエストを選択してください",
+        "noActiveConversationOpenAChatTo": "アクティブな会話がありません。プロンプト レイヤーを検査するにはチャットを開いてください。",
+        "active": "アクティブ:",
+        "source": "ソース:"
+      }
+    },
+    "componentsMusicMusicView": {
+      "text": {
+        "model": "モデル",
+        "voice": "音声",
+        "download": "ダウンロード",
+        "prompt": "プロンプト",
+        "lyrics": "歌詞",
+        "duration": "持続時間",
+        "instrumentalOnly": "インストゥルメンタルのみ",
+        "instrumental": "インストゥルメンタル",
+        "customDuration": "カスタムデュレーション",
+        "output": "出力",
+        "pressGenerateToCreateYourTrack": "生成を押してトラックを作成します"
+      },
+      "description": {
+        "duration": "持続時間:"
+      },
+      "option": {
+        "seconds": "秒"
+      },
+      "action": {
+        "reset": "リセット",
+        "generateAnother": "別の生成"
+      }
+    },
+    "playgroundAgentModelPicker": {
+      "text": {
+        "noMatches": "一致なし",
+        "rec": "録音",
+        "recommended": "推奨",
+        "tools": "ツール",
+        "reasoning": "推理",
+        "vision": "ビジョン",
+        "web": "ウェブ",
+        "uncensored": "無修正"
+      }
+    },
+    "componentsPlaygroundPlaygroundView": {
+      "text": {
+        "playground": "プレイグラウンド",
+        "agent": "エージェント",
+        "n": "n ·",
+        "running": "実行中…",
+        "openInWorkflows": "ワークフローで開く",
+        "open": "開く"
+      },
+      "action": {
+        "clear": "消去",
+        "run": "実行"
+      },
+      "option": {
+        "editSavedWorkflow": "保存されたワークフローの編集…"
+      }
+    },
+    "componentsPlaygroundPreviewNode": {
+      "text": {
+        "done": "完了",
+        "error": "エラー",
+        "running": "実行中…"
+      }
+    },
+    "componentsPrivacyStorageprivacydashboard": {
+      "action": {
+        "retry": "再試行",
+        "copySafeSummary": "コピー セーフの概要",
+        "exportJson": "JSON のエクスポート",
+        "review": "レビュー"
+      },
+      "column": {
+        "status": "ステータス",
+        "prompts": "プロンプト",
+        "history": "履歴",
+        "store": "ストア",
+        "items": "アイテム",
+        "flags": "フラグ",
+        "surface": "表面",
+        "mediaBlobs": "メディア BLOB",
+        "pathsAmpKeys": "パスとキー"
+      },
+      "heading": {
+        "failedToLoadStorageInventory": "ストレージ インベントリのロードに失敗しました",
+        "storagePrivacy": "ストレージとプライバシー",
+        "detailedInventory": "詳細なインベントリ",
+        "referenceIssues": "参照問題",
+        "maintenancePlan": "メンテナンス プラン",
+        "privacyExclusions": "プライバシーの除外"
+      },
+      "description": {
+        "analyzingLocalStorage": "ローカル ストレージを分析しています...",
+        "inspectAndManageLocalDataBoundaries": "ローカル データ境界を検査して管理します。",
+        "differentSurfacesHaveDifferentRedactionBoundariesInspect": "サーフェスが異なれば、編集境界も異なります。輸出の決定に依存する前に、以下の真理値表を調べてください。",
+        "promptsAndHistoryAppearInEncryptedBackups": "暗号化されたバックアップと同期フォルダーは両方ともユーザー指定のパスフレーズでエンドツーエンド暗号化されるため、プロンプトと履歴がこれらに表示されます。メディア BLOB (画像、ファイル、RP アセット) には、[バックアップと同期] パネルで明示的なオプトインの切り替えが必要です (デフォルトでは除外されています)。 API キー、ベアラー トークン、および絶対ローカル パスは、エクスポート、同期、または診断概要に書き込まれることはありません。"
+      },
+      "text": {
+        "encrypted": "暗号化",
+        "archived": "アーカイブ済み",
+        "secrets": "シークレット",
+        "userContent": "ユーザー コンテンツ",
+        "sensitive": "機密性の高い",
+        "noStorageHealthIssuesDetected": "ストレージの健全性の問題は検出されませんでした。",
+        "source": "ソース:",
+        "target": "ターゲット:",
+        "destructive": "破壊的",
+        "dryRun": "ドライラン",
+        "alwaysRedacted": "常に編集される",
+        "included": "含まれる",
+        "optInOnly": "オプトインのみ",
+        "keysNeverExported": "キーがエクスポートされない",
+        "keysNeverSynced": "キーが同期されない"
+      },
+      "cell": {
+        "safePrivacySummary": "安全なプライバシーの概要",
+        "safeDiagnosticsJson": "安全な診断 JSON",
+        "encryptedBackup": "暗号化されたバックアップ",
+        "syncFolder": "同期フォルダー"
+      }
+    },
+    "componentsPromptsPromptcreatemodal": {
+      "option": {
+        "project": "プロジェクト",
+        "global": "グローバル",
+        "selectAProject": "プロジェクトを選択"
+      },
+      "action": {
+        "cancel": "キャンセル",
+        "createPrompt": "プロンプトの作成"
+      },
+      "label": {
+        "title": "タイトル *",
+        "kind": "種類 *",
+        "scope": "スコープ *",
+        "project": "プロジェクト *",
+        "tags": "タグ",
+        "content": "コンテンツ *",
+        "negativeContent": "ネガティブ コンテンツ"
+      },
+      "description": {
+        "commaSeparatedUpTo64TagsAnd": "カンマ区切り。タグは最大 64 個、タグごとに 64 文字まで。"
+      }
+    },
+    "componentsPromptsPromptlibraryview": {
+      "heading": {
+        "promptLibrary": "プロンプトライブラリ"
+      },
+      "action": {
+        "archive": "アーカイブ",
+        "copy": "コピー",
+        "delete": "削除",
+        "cancel": "キャンセル",
+        "new": "新規",
+        "favorites": "★ お気に入り",
+        "useInImageStudio": "Image Studio での使用",
+        "useInChat": "チャットでの使用",
+        "createWorkflow": "ワークフローの作成",
+        "history": "履歴 (",
+        "useThisVersion": "使用このバージョン"
+      },
+      "description": {
+        "loading": "読み込み中…",
+        "noSavedPromptsYet": "保存されたプロンプトはまだありません。",
+        "clickThe": "上の",
+        "buttonAboveToCreateYourFirstPrompt": "ボタンをクリックして、最初のプロンプトを作成します。"
+      },
+      "text": {
+        "new": "新規",
+        "version": "バージョン",
+        "created": "· 作成されました",
+        "updated": "· 更新されました",
+        "current": "現在"
+      },
+      "label": {
+        "content": "コンテンツ",
+        "negativeContent": "ネガティブなコンテンツ"
+      }
+    },
+    "componentsResearchResearchworkspaceview": {
+      "heading": {
+        "research": "リサーチ",
+        "sources": "ソース (",
+        "addFinding": "調査結果の追加",
+        "findings": "調査結果 ("
+      },
+      "action": {
+        "newResearchSession": "新規リサーチセッション",
+        "createWorkflow": "ワークフローの作成",
+        "saveSummary": "概要の保存",
+        "saveFinding": "検索結果の保存"
+      },
+      "text": {
+        "sources": "ソース •",
+        "findings": "調査結果"
+      },
+      "description": {
+        "research": "調査",
+        "selectAResearchSessionOrCreateA": "リサーチ セッションを選択するか、新しいセッションを作成して開始します。"
+      },
+      "label": {
+        "searchQuery": "検索クエリ",
+        "scrapeUrl": "URL のスクレイピング",
+        "findingTitle": "調査結果のタイトル",
+        "findingContent": "コンテンツの検索"
+      }
+    },
+    "componentsRpStudioAssetgallery": {
+      "action": {
+        "deletef6fdbe4": "削除",
+        "delete": "削除しますか?"
+      },
+      "text": {
+        "loadingAssets": "アセットを読み込み中…",
+        "noImage": "画像なし",
+        "model": "モデル:",
+        "seed": "シード:",
+        "negative": "否定的:",
+        "created": "作成済み:",
+        "closePreview": "プレビューを閉じる",
+        "clickAnAssetToPreview": "プレビューするアセットをクリックします。"
+      }
+    },
+    "componentsRpStudioCharacterbookeditor": {
+      "text": {
+        "remove": "削除",
+        "bookName": "ブック名",
+        "description": "説明",
+        "scanDepth": "スキャン深度",
+        "tokenBudget": "トークン バジェット",
+        "entries": "エントリ (",
+        "addEntry": "エントリの追加",
+        "entry": "エントリ",
+        "name": "名前",
+        "primaryKeysCommaSeparated": "主キー (カンマ区切り)",
+        "secondaryKeys": "二次キー",
+        "comment": "コメント",
+        "content": "内容",
+        "insertionPosition": "挿入位置",
+        "insertionOrder": "挿入順序",
+        "priority": "優先度",
+        "moveUp": "上に移動",
+        "moveDown": "下に移動"
+      },
+      "description": {
+        "enterAValidJsonObject": "有効な JSON オブジェクトを入力してください。"
+      },
+      "label": {
+        "recursiveScanning": "再帰スキャン"
+      },
+      "option": {
+        "beforeCharacter": "文字の前",
+        "afterCharacter": "文字の後"
+      }
+    },
+    "componentsRpStudioCharactereditor": {
+      "text": {
+        "delete": "削除",
+        "save": "保存",
+        "add": "追加",
+        "scenario": "シナリオ",
+        "next": "次へ",
+        "webSearch": "ウェブ検索",
+        "temperature": "温度",
+        "view": "表示",
+        "cancel": "キャンセル",
+        "close": "閉じる",
+        "characterNotFound": "文字​​が見つかりません。",
+        "estimatedTokens": "推定トークン:",
+        "rawEstimate": "生の推定値",
+        "outputReserve": "· 出力予約",
+        "editWithCharacterCreator": "キャラクタークリエイターで編集する",
+        "characterVersion": "キャラクターバージョン",
+        "importSource": "インポート元",
+        "name": "名前",
+        "author": "著者",
+        "adultContent18": "成人向けコンテンツ (18 歳以上)",
+        "description": "説明",
+        "creatorNotes": "作成者ノート",
+        "tags": "タグ",
+        "personality": "性格",
+        "systemPrompt": "システム プロンプト",
+        "approachingSystemPromptSizeLimit": "システム プロンプトのサイズ制限に近づいています (",
+        "postHistoryInstructions": "履歴後の指示",
+        "instructions": "指示",
+        "firstMessagePrimaryGreeting": "最初のメッセージ (主挨拶)",
+        "alternateGreetings": "代替挨拶",
+        "addGreeting": "グリーティングの追加",
+        "greetingPreview": "グリーティングのプレビュー",
+        "previous": "前へ",
+        "exampleDialogues": "ダイアログの例",
+        "updateRawPreview": "生のプレビューを更新",
+        "addExample": "例の追加",
+        "noExamplesAddAFewShotExchange": "いいえ例として、数ショットのやり取りを追加して音声を固定します。",
+        "speakerRequired": "スピーカーが必要",
+        "rawExampleDialogue": "生のダイアログ例",
+        "v2ExtensionData": "V2 拡張データ",
+        "characterBook": "キャラクターブック",
+        "createEmbeddedBook": "埋め込みブックの作成",
+        "removeEmbeddedBook": "埋め込みブックの削除",
+        "attachExistingLorebook": "既存の伝承ブックを添付",
+        "importEmbeddedAsLinked": "リンクされたものとして埋め込みをインポート",
+        "syncIntoEmbedded": "埋め込みに同期",
+        "detachPreserveEmbedded": "切り離し (埋め込みを保持)",
+        "defaultModel": "デフォルト モデル",
+        "specialSettings": "特別設定",
+        "urlScrapingProvider": "URL スクレイピング プロバイダー",
+        "enableThoughts": "思考を有効にする",
+        "topP": "トップ P",
+        "sourcedContextFiles": "ソース ファイルおよびコンテキスト ファイル",
+        "noSourcedOrContextFilesUploaded": "ソース ファイルまたはコンテキスト ファイルがアップロードされていません。",
+        "reApply": "再適用",
+        "disposableTestChat": "使い捨てテスト チャット",
+        "promptOrderTrace": "プロンプト オーダー トレース",
+        "testUserMessage": "ユーザー メッセージのテスト",
+        "unsavedModelResponse": "保存されていないモデル応答",
+        "saveAsRealConversation": "実際の会話として保存",
+        "resetTest": "テストのリセット",
+        "cardGenerationModel": "カード生成モデル",
+        "visionAnalysisModel": "ビジョン分析モデル",
+        "localImageAsset": "ローカル画像アセット",
+        "textConcept": "テキスト概念",
+        "visionCapableProvider": "ビジョン対応 · プロバイダー",
+        "contextTokensRequestImage": "コンテキスト トークン· リクエスト画像 ~",
+        "textGenerationProfile": "テキスト生成プロファイル",
+        "contentRating": "コンテンツ レーティング",
+        "detailLevel": "詳細レベル",
+        "customGenerationDirection": "カスタム生成方向",
+        "visualAnalysis": "ビジュアル分析:",
+        "generatedV2Draft": "生成された V2 ドラフト:",
+        "applyToLocalDraft": "ローカル ドラフトに適用",
+        "reject": "拒否",
+        "generateFieldProposal": "フィールド提案の生成",
+        "before": "前",
+        "after": "後",
+        "applyProposal": "プロポーザルの適用",
+        "aiRefinementAssistant": "AI リファインメントアシスタント",
+        "before842beb5": "前:",
+        "after13f2d65": "後:",
+        "applySelected": "選択したものを適用",
+        "selectAll": "すべてを選択",
+        "cardValidation": "カードの検証",
+        "formatValidAndRecommendedFieldsComplete": "フォーマット有効フィールドと推奨フィールドが完了しました。",
+        "stCardExport": "ST カードのエクスポート",
+        "exportV2Json": "V2 のエクスポート JSON",
+        "exportV2Png": "V2 のエクスポート PNG",
+        "exportPrivacyReducedJson": "プライバシーを低減した JSON のエクスポート",
+        "validation": "検証",
+        "roundTripVerified": "ラウンドトリップ検証",
+        "output": "出力",
+        "bytes": "バイト",
+        "v2Fields": "V2 フィールド",
+        "extensions": "拡張機能",
+        "embeddedLoreEntries": "埋め込まれた伝承エントリ",
+        "droppedLocalOnlyFields": "ローカル専用フィールドの削除",
+        "warnings": "警告",
+        "versionHistory": "バージョン履歴",
+        "saveVersion": "バージョンを保存",
+        "current": "(現在)",
+        "noVersionsSavedSaveAVersionTo": "保存されたバージョンはありません。変更を追跡するためにバージョンを保存します。",
+        "versionComparison": "バージョン比較",
+        "saved": "保存済み",
+        "current4fc0e2b": "現在の",
+        "workflow": "ワークフロー",
+        "scene": "シーン:",
+        "prompt": "プロンプト:",
+        "reApplyTo": "再適用",
+        "savingCharacter": "キャラクターの保存…"
+      },
+      "action": {
+        "remove": "削除",
+        "compare": "比較",
+        "chat": "チャット",
+        "allSteps": "すべてのステップ",
+        "avatar": "アバター",
+        "setPrimary": "プライマリの設定",
+        "duplicate": "複製",
+        "down": "下へ",
+        "restore": "復元",
+        "saveToPromptLibrary": "プロンプトライブラリに保存",
+        "startRpChat": "RP チャットを開始",
+        "createScenarioFromCharacter": "キャラクターからシナリオを作成",
+        "createWorkflow": "ワークフローを作成",
+        "previous": "← 前へ (",
+        "viewAllSteps": "すべての手順を表示",
+        "next": "次へ:"
+      },
+      "option": {
+        "off": "オフ",
+        "generate": "生成",
+        "chooseLorebook": "伝承ブックを選択…",
+        "useChatDefault": "チャットのデフォルトを使用",
+        "brave": "勇敢",
+        "google": "Google",
+        "noCompatibleLiveModel": "互換性のあるライブ モデルなし",
+        "vision": "· ビジョン ·",
+        "context": "コンテキスト",
+        "chooseMediaStudioImage": "Media Studio 画像の選択…",
+        "general": "一般",
+        "mature": "成人向け",
+        "adult": "アダルト",
+        "attachScene": "シーンを添付…",
+        "attachPrompt": "プロンプトを添付…"
+      },
+      "label": {
+        "loadFileTxtMd": "ファイル（.txt、.md）をロード",
+        "uploadFileMax5mb": "ファイルのアップロード (最大 5MB)"
+      },
+      "description": {
+        "localCharacterStoredInVeniceForgeNot": "ローカル文字 — Venice Forge に保存され、Venice.ai ではホストされません",
+        "embeddedDataIsPortableInV2Exports": "埋め込みデータは V2 エクスポートで移植できます。リンクされた伝承本はローカルに残り、要求した場合にのみ埋め込みコピーに同期されます。",
+        "filesLoadedIntoPersonalitySystemPromptInstructions": "パーソナリティ、システム プロンプト、指示にロードされたファイル、または一般的なコンテキストとして添付されたファイルは、このキャラクター カード内に直接保存されます。",
+        "runsOneUnsavedTurnTheResponseNever": "未保存のターンを 1 回実行します。応答によってこのカードが変化したり、自動的に対話例になることはありません。",
+        "estimatedSystemPrompt": "推定システム プロンプト:",
+        "tokensActivatedLorebookSections": "トークン · アクティブ化された伝承ブック セクション:",
+        "analysisAndGeneratedCardsRemainProposalsYour": "分析および生成されたカードは提案のままです。現在のドラフトは、明示的に適用するまで保存されます。",
+        "producesAnAllowlistedProposalOnlyNothingChanges": "ホワイトリストに登録されたプロポーザルのみを生成します。適用するまでは何も変わりません。"
+      },
+      "heading": {
+        "1SourceAvatar": "1. ソースとアバター",
+        "2Identity": "2. アイデンティティ",
+        "3Persona": "3. ペルソナ",
+        "4PromptBehavior": "4. プロンプトの動作",
+        "5Greetings": "5. 挨拶",
+        "6ExampleDialogue": "6. ダイアログの例",
+        "7CharacterBookExtensions": "7. キャラクターブックと拡張機能",
+        "8ModelAndContext": "8. モデルとコンテキスト",
+        "9TestAiRefinement": "9. テストと AI の改良",
+        "aiDraftGeneration": "AI ドラフト生成",
+        "10ExportWorkflow": "10. エクスポートとワークフロー"
+      },
+      "item": {
+        "tokens": "トークン"
+      }
+    },
+    "componentsRpStudioCharacterlibrary": {
+      "text": {
+        "characterCreator": "キャラクター作成",
+        "createStCard": "STカードを作成",
+        "close": "閉じる",
+        "delete": "削除",
+        "cancel": "キャンセル",
+        "buildCharacter": "キャラクターのビルド",
+        "drafts": "ドラフト (",
+        "importCard": "カードのインポート",
+        "characterImportChangedAnExistingCard": "キャラクターのインポートにより既存のカードが変更されました。",
+        "undoImport": "インポートの取り消し",
+        "updated": "更新されました。",
+        "resume": "再開",
+        "loadingCharacters": "キャラクターをロードしています…",
+        "createYourFirstCharacter": "最初のキャラクターを作成します",
+        "name": "名前",
+        "format": "形式",
+        "creator": "作成者",
+        "greetings": "挨拶",
+        "loreEntries": "伝承エントリ",
+        "extensions": "拡張機能",
+        "characterBook": "キャラクターブック",
+        "aMatchingCardAlreadyExistsChooseAn": "一致するカードがすでに存在します。明示的な解決策を選択してください。何も黙って上書きされることはありません。",
+        "fieldsToMerge": "結合するフィールド",
+        "keepExisting": "既存を保持します",
+        "mergeFields": "フィールドを結合します",
+        "replace": "置換します",
+        "createCopy": "コピーを作成します"
+      },
+      "action": {
+        "chat": "チャット",
+        "edit": "編集",
+        "delete": "削除しますか?",
+        "exportJson": "JSON をエクスポート",
+        "exportPng": "PNG をエクスポート"
+      },
+      "description": {
+        "localCharactersAreStoredInVeniceForge": "ローカル キャラクターは Venice Forge にのみ保存されます。 Venice.ai。",
+        "draftsAreEncryptedLocallyExcludedFromSync": "ドラフトはローカルで暗号化され、同期から除外されます。",
+        "noRecoverableDrafts": "回復可能なドラフトはありません。",
+        "nothingIsSavedUntilYouConfirmThis": "このプレビューを確認するまでは何も保存されません。"
+      },
+      "heading": {
+        "localStCardDrafts": "ローカル ST カードのドラフト",
+        "reviewCharacterImport": "キャラクターのインポートを確認します"
+      },
+      "option": {
+        "embeddedLinkedRecommended": "埋め込み + リンク (推奨)",
+        "linkedOnly": "リンクのみ",
+        "embeddedOnly": "埋め込みのみ",
+        "doNotImportBook": "ブックをインポートしない"
+      },
+      "label": {
+        "setAsFavorite": "お気に入りに設定する",
+        "startRpChatAfterImport": "インポート後にRPチャットを開始する"
+      }
+    },
+    "componentsRpStudioLorebookmanager": {
+      "action": {
+        "edit": "編集",
+        "delete": "削除しますか?"
+      },
+      "text": {
+        "save": "保存",
+        "newLorebook": "新しい伝承本",
+        "loading": "読み込み中…",
+        "lorebookNotFound": "ロアブックが見つかりません。",
+        "name": "名前",
+        "tagsCommaSeparated": "タグ (カンマ区切り)",
+        "description": "説明",
+        "entries": "エントリ",
+        "addEntry": "エントリの追加",
+        "noEntriesYet": "エントリはまだありません。"
+      },
+      "label": {
+        "enabled": "有効",
+        "always": "常に",
+        "wholeWords": "単語全体"
+      }
+    },
+    "componentsRpStudioPersonamanager": {
+      "text": {
+        "active": "アクティブ",
+        "save": "保存",
+        "add": "追加",
+        "newPersona": "新しいペルソナ",
+        "loadingPersonas": "ペルソナを読み込み中…",
+        "personaNotFound": "ペルソナが見つかりません。",
+        "personaImage": "ペルソナ画像",
+        "removeImage": "画像の削除",
+        "name": "名前",
+        "referenceThirdPerson": "参照 (三人称)",
+        "description": "説明",
+        "tags": "タグ"
+      },
+      "action": {
+        "edit": "編集",
+        "delete": "削除しますか?"
+      },
+      "label": {
+        "loadFromFileTxtMd": "ファイル (.txt、.md) からロード"
+      }
+    },
+    "componentsRpStudioPromptdebugdrawer": {
+      "text": {
+        "close": "閉じる",
+        "chars": "文字 ·",
+        "excluded": "除外:",
+        "noRecentMessages": "最近のメッセージはありません。"
+      },
+      "heading": {
+        "promptTrace": "プロンプト トレース"
+      }
+    },
+    "componentsRpStudioRpchatlist": {
+      "text": {
+        "cancel": "キャンセル",
+        "create": "作成",
+        "model": "モデル",
+        "characters": "キャラクター",
+        "newRpChat": "新しい RP チャット",
+        "loadingChats": "チャットを読み込み中…",
+        "startYourFirstRp": "最初の RP を開始します",
+        "title": "タイトル",
+        "openingGreeting": "開始挨拶",
+        "noCharactersYetCreateOneInThe": "まだキャラクターがありません — [キャラクター] タブで作成します。",
+        "personaOptional": "ペルソナ (オプション)",
+        "lorebooks": "ロアブック",
+        "scenarioOverride": "シナリオ オーバーライド"
+      },
+      "action": {
+        "open": "開きます",
+        "delete": "削除しますか?"
+      },
+      "heading": {
+        "newRpChat": "新しい RP チャット"
+      },
+      "option": {
+        "usePrimaryGreeting": "主挨拶を使用",
+        "alternateGreeting": "代替挨拶",
+        "randomGreeting": "ランダム挨拶",
+        "startWithoutGreeting": "挨拶なしで開始",
+        "noPersona": "ペルソナなし"
+      }
+    },
+    "componentsRpStudioRpstudioview": {
+      "text": {
+        "rpStudio": "RPスタジオ",
+        "localConfigIsStillLoadingRpStudio": "ローカル設定がまだロード中です。安全設定スナップショットがハイドレートされるまで、RP Studio の保存コントロールは一時的に利用できなくなります。",
+        "loadingStCardStudio": "ST Card Studio を読み込み中…"
+      }
+    },
+    "componentsRpStudioScenegenerator": {
+      "text": {
+        "chat": "チャット",
+        "seed": "シード",
+        "imageModel": "画像モデル",
+        "prompt": "プロンプト",
+        "extracted": "抽出:",
+        "negativePrompt": "否定的なプロンプト",
+        "generateScene": "シーンの生成",
+        "recentScenes": "最近のシーン",
+        "noScenesYet": "シーンはまだありません。",
+        "noImage": "画像なし"
+      },
+      "option": {
+        "selectAChat": "チャットを選択…"
+      }
+    },
+    "componentsScenesScenecomposerview": {
+      "heading": {
+        "sceneComposer": "シーンコンポーザー",
+        "components": "コンポーネント ("
+      },
+      "option": {
+        "project": "プロジェクト",
+        "allScopes": "すべてのスコープ",
+        "global": "グローバル",
+        "newest": "最新",
+        "oldest": "最も古い",
+        "title": "タイトル",
+        "favorite": "お気に入り"
+      },
+      "action": {
+        "archive": "アーカイブ",
+        "remove": "削除",
+        "delete": "削除",
+        "cancel": "キャンセル",
+        "new": "新規",
+        "favorites": "★ お気に入り",
+        "restore": "復元",
+        "saveMetadata": "メタデータの保存",
+        "add": "+ 追加)",
+        "saveNewVersion": "新しいバージョンを保存します。",
+        "useInImageStudio": "Image Studio で使用します。",
+        "copyRecipe": "レシピをコピー",
+        "createWorkflow": "ワークフローを作成",
+        "history": "履歴 (",
+        "useThisVersion": "このバージョンを使用"
+      },
+      "description": {
+        "loading": "読み込み中…",
+        "noComponentsYetClickAddToBegin": "まだコンポーネントがありません。"
+      },
+      "text": {
+        "version": "バージョン",
+        "component": "コンポーネント",
+        "created": "· 作成されました",
+        "updated": "· 更新されました",
+        "current": "現在"
+      },
+      "label": {
+        "defaults": "デフォルト:"
+      }
+    },
+    "componentsSearchProfilediscoverytab": {
+      "action": {
+        "cancel": "キャンセル"
+      },
+      "heading": {
+        "publicProfileDiscovery": "パブリック プロファイルの検出",
+        "discoveredProfileCandidates": "検出されたプロファイル候補"
+      },
+      "description": {
+        "aggregatesSocialProfileMappingsFromPublicDatabases": "Venice Web 統合を使用してパブリック データベース (GitHub、Twitter、LinkedIn など) からソーシャル プロファイル マッピングを集約します。"
+      },
+      "label": {
+        "platformsToSearch": "検索するプラットフォーム"
+      },
+      "text": {
+        "candidates": "候補",
+        "confidence": "信頼性"
+      }
+    },
+    "componentsSearchScrapetab": {
+      "action": {
+        "copy": "コピー"
+      },
+      "heading": {
+        "webScrape": "Web スクレイピング"
+      },
+      "option": {
+        "veniceWebScrape": "Venice Web スクレイピング",
+        "jinaReader": "ジナリーダー"
+      }
+    },
+    "componentsSearchSearchscrapeview": {
+      "heading": {
+        "research": "リサーチ"
+      },
+      "description": {
+        "searchScrapeCollectEvidenceAndSynthesizeFindings": "検索、収集、証拠の収集、および合成発見。"
+      }
+    },
+    "componentsSearchSearchtab": {
+      "heading": {
+        "webSearch": "ウェブ検索"
+      },
+      "option": {
+        "jinaSearch": "Jina 検索",
+        "braveSearchVenice": "Brave Search (ヴェニス)",
+        "googleSearchVenice": "Google 検索 (ヴェニス)"
+      },
+      "action": {
+        "scrapeWithVenice": "ヴェニスでスクレイピング",
+        "readWithJina": "ジナと読む",
+        "saveToSession": "セッションに保存"
+      },
+      "text": {
+        "noSearchResultsYet": "検索結果はまだありません。"
+      }
+    },
+    "componentsStatusDiagnosticsdrawer": {
+      "action": {
+        "close": "閉じる",
+        "openPrivacyDashboard": "プライバシーダッシュボードを開く",
+        "copySafeDiagnostics": "コピー セーフ診断",
+        "openStatus": "オープン ステータス",
+        "openConfig": "オープン構成",
+        "jumpToModel": "モデルにジャンプ"
+      },
+      "heading": {
+        "diagnostics": "診断"
+      },
+      "description": {
+        "appHealthModelCatalogStorageSafetyAnd": "アプリの健全性、モデル カタログ、ストレージ、安全性、プロバイダーの状態。",
+        "lastRefresh": "最終更新:",
+        "lastRefreshError": "最終更新エラー:",
+        "webModeFilesystemRevealsAndTheSystem": "Web モード: ファイル システム、リビール、およびシステム シェルは使用できません。一部のデスクトップ専用機能 (オーディオ ルーティング、ローカル YAML 構成) は無効になっています。",
+        "phase2cShipsReadOnlyDiagnosticsDestructive": "フェーズ 2C には読み取り専用の診断が同梱されています。破壊的修復 (キーのリセット、ストレージのクリア、すべてのデータの削除) は対象外であり、専用のタブに表示されます。"
+      },
+      "text": {
+        "copiedAt": "にコピーされました",
+        "includeRedactedPromptExcerptsInSafeDiagnostics": "でコピーされました。編集されたプロンプトの抜粋がセーフ診断に含まれます。",
+        "truncated80CharsAndSecretStrippedPrompt": "プロンプト ライブラリから切り捨てられ (≤80 文字)、シークレットが削除されたプロンプト スニペット。デフォルトではオフです。"
+      }
+    },
+    "componentsStatusHeaderstatuscluster": {
+      "action": {
+        "status": "ステータス"
+      }
+    },
+    "componentsStatusTaskcenterdrawer": {
+      "action": {
+        "cancel": "キャンセル",
+        "retry": "再試行",
+        "clear": "消去",
+        "open": "開く"
+      },
+      "heading": {
+        "taskCenter": "タスク センター",
+        "generation": "世代"
+      },
+      "description": {
+        "recentBackgroundGenerations": "最近のバックグラウンド生成",
+        "noRecentTasks": "最近のタスクはありません。"
+      },
+      "text": {
+        "cancellationUnavailable": "キャンセルできません"
+      }
+    },
+    "componentsUiShared": {
+      "text": {
+        "working": "処理中…"
+      },
+      "action": {
+        "shuffle": "シャッフル"
+      }
+    },
+    "componentsVideoVideoView": {
+      "text": {
+        "model": "モデル",
+        "resolution": "解像度",
+        "generationMode": "生成モード",
+        "prompt": "プロンプト",
+        "negativePrompt": "否定的なプロンプト",
+        "referenceImage": "参考画像",
+        "duration": "継続時間",
+        "aspect": "アスペクト",
+        "generateAudio": "オーディオを生成",
+        "output": "出力",
+        "generatedVideosAppearHere": "生成されたビデオがここに表示されます",
+        "averageGenerationTime30s2min": "平均生成時間: 30 秒～2 分"
+      },
+      "action": {
+        "download": "ダウンロード",
+        "textToVideo": "テキストからビデオへ",
+        "imageToVideo": "画像からビデオへ",
+        "reset": "リセット",
+        "generateAnother": "別の生成"
+      },
+      "description": {
+        "clickToAddImage": "クリックして画像を追加"
+      }
+    },
+    "componentsWorkflowsWorkflowtemplatesview": {
+      "heading": {
+        "workflows": "ワークフロー",
+        "steps": "ステップ数",
+        "compilePreview": "コンパイル プレビュー",
+        "runPlan": "実行計画"
+      },
+      "label": {
+        "import": "インポート",
+        "workflowTitle": "ワークフロー タイトル",
+        "workflowTags": "ワークフロー タグ",
+        "version": "バージョン:"
+      },
+      "action": {
+        "export": "エクスポート",
+        "archive": "アーカイブ",
+        "delete": "削除",
+        "remove": "削除",
+        "new": "新規",
+        "addNewVersion": "新しいバージョンの追加",
+        "addStep": "ステップの追加"
+      },
+      "text": {
+        "noWorkflowsFound": "ワークフローが見つかりません。",
+        "selectOrCreateAWorkflowToBegin": "開始するワークフローを選択または作成します。",
+        "workflowIsValid": "ワークフローは有効です。",
+        "workflowHasErrors": "ワークフローにエラーがあります。",
+        "noRunnableActions": "実行可能なアクションはありません。"
+      }
+    },
+    "componentsDiagnosticspreview": {
+      "text": {
+        "noRequestsYet": "リクエストはまだありません",
+        "cfRay": "CF-RAY"
+      }
+    },
+    "componentsErrorboundary": {
+      "heading": {
+        "somethingWentWrong": "問題が発生しました。"
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "アプリで予期しないエラーが発生したため、このビューをレンダリングできませんでした。作業は安全です。回復するには、再試行するか、リロードしてください。"
+      },
+      "action": {
+        "tryAgain": "再試行",
+        "reloadApplication": "アプリケーションのリロード"
+      }
+    },
+    "componentsModelselect": {
+      "text": {
+        "highFidelity": "高忠実度",
+        "standard": "標準",
+        "anon": "あのん",
+        "private": "プライベート"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorcompleted": {
+      "heading": {
+        "characterCreated": "キャラクターが作成されました"
+      },
+      "description": {
+        "hasBeenSavedToYourLocalCharacter": "」がローカルのキャラクター ライブラリに保存されました。"
+      },
+      "text": {
+        "startChat": "チャットを開始",
+        "viewCharacter": "キャラクターを表示",
+        "continueEditing": "編集を続行",
+        "exportCard": "カードをエクスポート",
+        "createAnother": "別のカードを作成"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorgenerating": {
+      "heading": {
+        "generatingCharacterDraft": "キャラクター ドラフトを生成しています"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorready": {
+      "text": {
+        "charaCardV2": "char_card_v2",
+        "errorsMustResolve": "エラー (解決する必要があります)",
+        "warningsOptional": "警告 (オプション)",
+        "returnToDraft": "ドラフトに戻る",
+        "saveAsCopy": "コピーとして保存"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorview": {
+      "text": {
+        "autosaveFailed": "自動保存に失敗しました:"
+      },
+      "action": {
+        "retrySave": "保存を再試行します"
+      },
+      "description": {
+        "savingCharacterToLocalLibrary": "キャラクターをローカル ライブラリに保存..."
+      }
+    },
+    "componentsChatChatInput": {
+      "action": {
+        "stop": "停止する"
+      }
+    },
+    "componentsDocumentsDocumentrenderer": {
+      "text": {
+        "documentIsEmpty": "ドキュメントが空です。",
+        "pageBreak": "改ページ"
+      }
+    },
+    "componentsGalleryLineageViewer": {
+      "text": {
+        "cycleDetectedInTheLineageChainShowing": "系統チェーンでサイクルが検出されました — 切り詰められたビューを表示します。",
+        "someLineageReferencesAreMissingFromThe": "ロードされたセットから一部の系統参照が欠落しています。",
+        "cycle": "サイクル:",
+        "missing": "(欠落)"
+      },
+      "description": {
+        "noLineageRecorded": "系統が記録されていません。"
+      }
+    },
+    "componentsGalleryRecipeComparison": {
+      "text": {
+        "recipeComparison": "レシピ比較"
+      },
+      "column": {
+        "field": "フィールド",
+        "original": "オリジナル",
+        "sanitized": "サニタイズ済み"
+      }
+    },
+    "galleryRecipeCompatibilityCard": {
+      "text": {
+        "thisItemHasNoRecipeToCompare": "このアイテムには現行モデルと比較するレシピがありません。",
+        "for": "の",
+        "unsupportedField": "はサポートされていないフィールドです"
+      },
+      "action": {
+        "useWith": "一緒に使用します",
+        "useOriginal": "オリジナルを使用します"
+      }
+    },
+    "componentsLayoutHeader": {
+      "text": {
+        "tasks": "タスク"
+      }
+    },
+    "componentsLayoutMemoryPanel": {
+      "heading": {
+        "legacyConversationsDetected": "従来の会話が検出されました",
+        "encryptedConversationVault": "暗号化された会話ボールト",
+        "maintenanceOperations": "メンテナンス操作",
+        "curatedFacts": "厳選された事実 ("
+      },
+      "description": {
+        "weFoundUnencryptedConversationRecordsFromA": "以前のインストールから暗号化されていない会話レコードが見つかりました。今すぐ新しい安全なコンテナーに移行してください。",
+        "configureMemoryParametersAndLocalIndexingStructures": "メモリ パラメーターとローカル インデックス構造を構成します。 Vault レコードとインデックスは保存時に完全に暗号化されます。",
+        "allowsTheVaultToAnalyzeAndExtract": "Vault が新しいスレッドから事実を分析して抽出できるようにします。",
+        "pullsRelevantHistoryFactsDynamicallyToHelp": "今後のプロンプトを支援するために、関連する履歴事実を動的に取得します。",
+        "displaysAPreviewBoxAboveTheChat": "チャット入力の上にプレビュー ボックスを表示して、ファクトのプルーニングを可能にします。",
+        "transmitsSummaryMaterialToVeniceModelFor": "事実発見を改善するために、要約資料を Venice モデルに送信します。",
+        "lastIndexedAt": "最終インデックス付け場所:",
+        "theseAreTheKeyFactsExtractedLocally": "これらは、会話履歴からローカルに抽出された重要な事実です。"
+      },
+      "action": {
+        "openFolder": "フォルダーを開く",
+        "openVaultFolder": "Vault フォルダーを開く",
+        "forget": "忘れる"
+      },
+      "label": {
+        "enableConversationRecording": "会話の録音を有効にする",
+        "enableMemoryRetrieval": "メモリ取得を有効にする",
+        "showPulledContextBeforeSending": "送信前にプルされたコンテキストを表示します。",
+        "useAiSummaries": "AI 要約を使用する"
+      },
+      "text": {
+        "noFactsStoredYet": "まだ事実は保存されていません。",
+        "source": "出典:",
+        "confidence": "• 信頼度:"
+      }
+    },
+    "componentsPlaygroundPlaygroundChat": {
+      "text": {
+        "whatShouldIBuild": "何を作ればいいですか？",
+        "describeAWorkflowInPlainLanguageI": "ワークフローをわかりやすい言葉で説明します。リアルタイムでキャンバス上に組み立てていきます。",
+        "noMessage": "(メッセージなし)",
+        "patch": "パッチ",
+        "applied": "適用されました"
+      },
+      "action": {
+        "stop": "停止",
+        "send": "送信"
+      }
+    },
+    "componentsPlaygroundWorkflowPreview": {
+      "description": {
+        "noWorkflowYet": "ワークフローはまだありません",
+        "tellTheAgentWhatYouWantTo": "エージェントに何を構築したいかを伝えます。エージェントはここでリアルタイムでパイプラインを組み立てます。"
+      }
+    },
+    "componentsRpStudioRpchatview": {
+      "heading": {
+        "chatNotFound": "チャットが見つかりません"
+      },
+      "description": {
+        "theConversationYouReLookingForDoesn": "探している会話は存在しないか、削除されました。"
+      },
+      "text": {
+        "scene": "シーン",
+        "inspector": "インスペクター",
+        "startTheRoleplayBySendingAMessage": "メッセージを送信してロールプレイを開始します。",
+        "thinking": "考え中…",
+        "speaker": "スピーカー:",
+        "send": "送信"
+      },
+      "action": {
+        "narrator": "ナレーター"
+      }
+    },
+    "componentsSearchAiresearchtab": {
+      "heading": {
+        "deepAiResearchAgent": "深層AI研究エージェント"
+      },
+      "description": {
+        "executesARecursiveWebSearchLoopScrapes": "再帰的な Web 検索ループを実行し、複数のソースを収集し、引用を解析し、包括的な最終応答を合成します。"
+      },
+      "option": {
+        "jinaAiSearchReader": "Jina AI 検索とリーダー",
+        "autoDefaultFromConfig": "自動 (構成からのデフォルト)",
+        "braveSearch": "ブレイブサーチ",
+        "googleSearch": "Google 検索",
+        "retrieveSynthesizeUsesVeniceModel": "取得と合成 (Venice モデルを使用)",
+        "retrieveOnlyNoAiSynthesis": "取得のみ (AI 合成なし)"
+      },
+      "text": {
+        "budgetControls": "予算管理",
+        "retrievedEvidenceSources": "取得された証拠ソース"
+      },
+      "action": {
+        "copyAnswer": "回答をコピー",
+        "copyEvidenceSources": "証拠ソースをコピー"
+      }
+    },
+    "componentsSearchResearchproviderstatus": {
+      "action": {
+        "addKey": "キーの追加"
+      }
+    },
+    "componentsSearchTextparsertab": {
+      "heading": {
+        "documentTextParser": "ドキュメント テキスト パーサー"
+      },
+      "description": {
+        "extractRawTextFromPdfDocxXlsx": "PDF、DOCX、XLSX、または TXT ドキュメントから生のテキストを抽出します。"
+      }
+    },
+    "componentsSettingsAboutpanel": {
+      "text": {
+        "beta": "· ベータ版"
+      }
+    },
+    "componentsSettingsConfigpanel": {
+      "text": {
+        "configYaml": "config.yaml",
+        "themesYaml": "Strategies.yaml",
+        "secretsKeepPlaintextKeysTrue": "Secrets.keep_plaintext_keys: true"
+      }
+    },
+    "componentsUiErrorBoundary": {
+      "text": {
+        "somethingWentWrong": "問題が発生しました",
+        "showDetails": "詳細を表示"
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "アプリで予期しないエラーが発生したため、このビューをレンダリングできませんでした。作業は安全です。リフレッシュして回復してください。"
+      },
+      "action": {
+        "tryAgain": "再試行",
+        "reloadPage": "ページをリロード"
+      }
+    },
+    "componentsUiSelect": {
+      "text": {
+        "noResults": "結果なし"
+      }
+    }
+  }
 }

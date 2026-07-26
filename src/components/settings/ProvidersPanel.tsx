@@ -43,7 +43,7 @@ export function ProvidersPanel() {
       if (!cancelled) setRouterError(error instanceof Error ? error.message : t('settings:providers.errors.loadFailed', 'Failed to load provider settings.'))
     })
     return () => { cancelled = true }
-  }, [])
+  }, [t])
 
   const persistRoutingSettings = async (update: {
     enabledProviders?: Record<string, boolean>
@@ -125,7 +125,7 @@ export function ProvidersPanel() {
           {t('settings:providers.description', 'Configure API keys for fallback providers. These will only be used if explicitly enabled and when Venice models are unavailable or you request a specific fallback model.')}
         </p>
         <p className="text-xs text-[var(--color-text-muted)]">
-          {t('settings:providers.deferredNotice', 'Deferred in this release (no key entry, routing, or traffic): {{deferred}}. Provider keys are replaced or removed manually; scheduled key rotation is not implemented.', { deferred: DEFERRED_PROVIDER_IDS.join(', ') })}
+          {t('settings:providers.deferredNotice', { defaultValue: 'Deferred in this release (no key entry, routing, or traffic): {{deferred}}. Provider keys are replaced or removed manually; scheduled key rotation is not implemented.', deferred: DEFERRED_PROVIDER_IDS.join(', ') })}
         </p>
       </div>
 
@@ -176,7 +176,7 @@ export function ProvidersPanel() {
               onBlur={() => { void persistRoutingSettings({ fallbackOrdering }) }}
             />
             <p className="text-xs text-[var(--color-text-muted)] mt-1">
-              {t('settings:providers.autoFallback.orderingNotice', 'Providers will be tried in this exact order. Ensure you have enabled them below. Available: {{available}}', { available: AVAILABLE_FALLBACK_PROVIDER_IDS.join(', ') })}
+              {t('settings:providers.autoFallback.orderingNotice', { defaultValue: 'Providers will be tried in this exact order. Ensure you have enabled them below. Available: {{available}}', available: AVAILABLE_FALLBACK_PROVIDER_IDS.join(', ') })}
             </p>
           </div>
         )}
@@ -229,7 +229,7 @@ export function ProvidersPanel() {
                       isEnabled ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-bg-tertiary)]'
                     } ${(!isConfigured || isUnavailable) ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    <span className="sr-only">{t('settings:providers.aria.enable', 'Enable {{label}}', { label: provider.label })}</span>
+                    <span className="sr-only">{t('settings:providers.aria.enable', { defaultValue: 'Enable {{label}}', label: provider.label })}</span>
                     <span
                       aria-hidden="true"
                       className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out /* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */ ${

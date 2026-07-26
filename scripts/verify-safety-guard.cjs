@@ -162,8 +162,11 @@ function scanForViolations(root) {
           }
         }
 
-        // Look for explicit safety bypasses
-        if (/disable.*safety|bypass.*guard|setContentGuardBypass|DEV_DISABLE|VENICE_FORGE_DEV_DISABLE_SAFETY_GUARD/.test(content)) {
+        // Only inspect executable code. Product copy such as "Cannot disable
+        // Provider Safe Mode" and comments describing bypass prevention are
+        // not evidence of a bypass and must not block the gate.
+        const executable = stripCommentsAndLiterals(content);
+        if (containsSafetyBypassCode(executable)) {
           failures.push(`File ${fullPath} contains a pattern that looks like a safety bypass toggle`);
         }
       }
@@ -172,6 +175,58 @@ function scanForViolations(root) {
 
   walk(root);
   return failures;
+}
+
+function stripCommentsAndLiterals(source) {
+  let output = '';
+  let state = 'code';
+  let quote = '';
+  for (let i = 0; i < source.length; i += 1) {
+    const char = source[i];
+    const next = source[i + 1];
+    if (state === 'code') {
+      if (char === '/' && next === '/') {
+        output += '  ';
+        i += 1;
+        state = 'line-comment';
+      } else if (char === '/' && next === '*') {
+        output += '  ';
+        i += 1;
+        state = 'block-comment';
+      } else if (char === "'" || char === '"' || char === '`') {
+        quote = char;
+        output += ' ';
+        state = 'literal';
+      } else {
+        output += char;
+      }
+    } else if (state === 'line-comment') {
+      output += char === '\n' ? '\n' : ' ';
+      if (char === '\n') state = 'code';
+    } else if (state === 'block-comment') {
+      if (char === '*' && next === '/') {
+        output += '  ';
+        i += 1;
+        state = 'code';
+      } else {
+        output += char === '\n' ? '\n' : ' ';
+      }
+    } else if (char === '\\') {
+      output += '  ';
+      i += 1;
+    } else if (char === quote) {
+      output += ' ';
+      state = 'code';
+    } else {
+      output += char === '\n' ? '\n' : ' ';
+    }
+  }
+  return output;
+}
+
+function containsSafetyBypassCode(source) {
+  return /\b(?:setContentGuardBypass|DEV_DISABLE|VENICE_FORGE_DEV_DISABLE_SAFETY_GUARD)\b/.test(source)
+    || /\b(?:disableSafety|bypassGuard|safetyBypass)\b\s*(?:=|\()/i.test(source);
 }
 
 /**
@@ -189,7 +244,13 @@ function verifySafetyGuard(root) {
   };
 }
 
-module.exports = { runEnforcementChecks, scanForViolations, verifySafetyGuard };
+module.exports = {
+  containsSafetyBypassCode,
+  runEnforcementChecks,
+  scanForViolations,
+  stripCommentsAndLiterals,
+  verifySafetyGuard,
+};
 
 if (require.main === module) {
   const result = verifySafetyGuard(repoRoot);

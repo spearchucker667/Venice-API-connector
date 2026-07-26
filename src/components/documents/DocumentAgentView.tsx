@@ -11,6 +11,7 @@ import { desktopDocumentAgent, isElectron } from '../../services/desktopBridge'
 import { Card, ErrorText, GhostButton, PrimaryButton, TextArea } from '../ui/shared'
 import { DocumentRenderer } from './DocumentRenderer'
 import { documentSourceToBlocks, blocksToDocumentSource } from '../../agent/documents/document-source'
+import { Trans } from 'react-i18next';
 
 interface ProposalView {
   pendingApproval: PendingApproval
@@ -38,22 +39,22 @@ function DocumentAccessControl({ preset, onPresetChange, workspaceGrant, onChoos
   return (
     <Card className="p-4 space-y-3">
       <div>
-        <h2 className="text-[14px] font-semibold text-foreground">Agent Access & Grant Controls</h2>
-        <p className="text-[12px] text-foreground-muted mt-1">Limited Documents is the safe default. Workspace access is restricted to one user-granted directory and never includes shell, Git, network, keychain, or OS control.</p>
+        <h2 className="text-[14px] font-semibold text-foreground"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.heading.agentAccessGrantControls" /></h2>
+        <p className="text-[12px] text-foreground-muted mt-1"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.description.limitedDocumentsIsTheSafeDefaultWorkspace" /></p>
       </div>
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <div className="w-full sm:w-64 space-y-1">
-          <label className="block text-[12px] text-foreground-muted" htmlFor="document-agent-access">Access preset</label>
+          <label className="block text-[12px] text-foreground-muted" htmlFor="document-agent-access"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.label.accessPreset" /></label>
           <select
             id="document-agent-access"
             value={preset}
             onChange={(event) => onPresetChange(event.target.value as AgentPermissionPreset)}
             className="w-full rounded-lg border border-border bg-input-bg px-3 py-1.5 text-[13px] text-input-fg"
           >
-            <option value="off">Off</option>
-            <option value="read_attachments">Read attachments only</option>
-            <option value="limited_documents">Limited Documents</option>
-            <option value="workspace_with_approval">Manage selected workspace</option>
+            <option value="off"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.off" /></option>
+            <option value="read_attachments"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.readAttachmentsOnly" /></option>
+            <option value="limited_documents"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.limitedDocuments" /></option>
+            <option value="workspace_with_approval"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.manageSelectedWorkspace" /></option>
           </select>
         </div>
 
@@ -63,12 +64,12 @@ function DocumentAccessControl({ preset, onPresetChange, workspaceGrant, onChoos
               <div className="flex items-center justify-between gap-3 w-full">
                 <div>
                   <div className="text-[13px] font-medium text-foreground">{workspaceGrant.displayName}</div>
-                  <div className="text-[11px] text-foreground-muted">Session grant · {workspaceGrant.allowedExtensions.join(', ')}</div>
+                  <div className="text-[11px] text-foreground-muted"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.sessionGrant" /> {workspaceGrant.allowedExtensions.join(', ')}</div>
                 </div>
-                <GhostButton onClick={onRevoke}>Revoke</GhostButton>
+                <GhostButton onClick={onRevoke}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.revoke" /></GhostButton>
               </div>
             ) : (
-              <GhostButton onClick={onChooseWorkspace}>Select workspace directory…</GhostButton>
+              <GhostButton onClick={onChooseWorkspace}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.selectWorkspaceDirectory" /></GhostButton>
             )}
           </div>
         )}
@@ -294,7 +295,7 @@ export function DocumentAgentView() {
 
   const filteredDocs = useMemo(() => filterDocumentsByQuery(documents, docSearchQuery), [documents, docSearchQuery])
 
-  if (!isElectron()) return <div className="p-6"><ErrorText>Document Agent tools require the hardened Electron desktop bridge.</ErrorText></div>
+  if (!isElectron()) return <div className="p-6"><ErrorText><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.documentAgentToolsRequireTheHardenedElectron" /></ErrorText></div>
 
   return (
     <div className="h-full flex flex-col overflow-hidden bg-surface-base p-5 space-y-4">
@@ -311,7 +312,7 @@ export function DocumentAgentView() {
         {/* Working Group Selector */}
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
-            <span className="text-[11px] font-semibold text-foreground-muted uppercase tracking-wider">Working Group</span>
+            <span className="text-[11px] font-semibold text-foreground-muted uppercase tracking-wider"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.workingGroup" /></span>
             <div className="flex items-center gap-2">
               <select
                 value={projectId || ''}
@@ -322,7 +323,7 @@ export function DocumentAgentView() {
                   <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
               </select>
-              <GhostButton onClick={() => setShowNewGroupModal(true)}>+ Group</GhostButton>
+              <GhostButton onClick={() => setShowNewGroupModal(true)}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.group" /></GhostButton>
             </div>
           </div>
         </div>
@@ -333,14 +334,12 @@ export function DocumentAgentView() {
             onClick={() => setActiveEnvironment('managed')}
             className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors ${activeEnvironment === 'managed' ? 'bg-surface text-foreground shadow-sm' : 'text-foreground-muted hover:text-foreground'}`}
           >
-            Managed Library
-          </button>
+            <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.action.managedLibrary" /></button>
           <button
             onClick={() => setActiveEnvironment('workspace')}
             className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors ${activeEnvironment === 'workspace' ? 'bg-surface text-foreground shadow-sm' : 'text-foreground-muted hover:text-foreground'}`}
           >
-            Connected Workspace
-          </button>
+            <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.action.connectedWorkspace" /></button>
         </div>
       </div>
 
@@ -352,8 +351,8 @@ export function DocumentAgentView() {
           {/* Left Panel: Managed Documents List */}
           <Card className="p-4 space-y-3 flex flex-col min-h-0">
             <div className="flex items-center justify-between">
-              <h2 className="text-[14px] font-semibold text-foreground">Documents ({filteredDocs.length})</h2>
-              <PrimaryButton onClick={() => setShowNewDocModal(true)}>+ Document</PrimaryButton>
+              <h2 className="text-[14px] font-semibold text-foreground"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.heading.documents" />{filteredDocs.length})</h2>
+              <PrimaryButton onClick={() => setShowNewDocModal(true)}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.document" /></PrimaryButton>
             </div>
 
             <input
@@ -381,7 +380,7 @@ export function DocumentAgentView() {
                 </button>
               ))}
               {filteredDocs.length === 0 && (
-                <p className="text-[12px] text-foreground-muted italic py-4 text-center">No managed documents in this working group.</p>
+                <p className="text-[12px] text-foreground-muted italic py-4 text-center"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.description.noManagedDocumentsInThisWorkingGroup" /></p>
               )}
             </div>
           </Card>
@@ -399,7 +398,7 @@ export function DocumentAgentView() {
                         {selected.format}
                       </span>
                     </div>
-                    <div className="text-[11px] font-mono text-foreground-muted mt-0.5">Revision: {selected.revisionId.slice(0, 10)}…</div>
+                    <div className="text-[11px] font-mono text-foreground-muted mt-0.5"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.revision" /> {selected.revisionId.slice(0, 10)}…</div>
                   </div>
 
                   {/* Mode Switcher & Export */}
@@ -409,25 +408,22 @@ export function DocumentAgentView() {
                         onClick={() => setEditorTab('preview')}
                         className={`px-2.5 py-1 rounded transition-colors ${editorTab === 'preview' ? 'bg-surface font-medium text-foreground' : 'text-foreground-muted hover:text-foreground'}`}
                       >
-                        Preview
-                      </button>
+                        <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.action.preview" /></button>
                       <button
                         onClick={() => setEditorTab('source')}
                         className={`px-2.5 py-1 rounded transition-colors ${editorTab === 'source' ? 'bg-surface font-medium text-foreground' : 'text-foreground-muted hover:text-foreground'}`}
                       >
-                        Source
-                      </button>
+                        <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.action.source" /></button>
                       <button
                         onClick={() => setEditorTab('revisions')}
                         className={`px-2.5 py-1 rounded transition-colors ${editorTab === 'revisions' ? 'bg-surface font-medium text-foreground' : 'text-foreground-muted hover:text-foreground'}`}
                       >
-                        History ({revisions.length})
+                        <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.action.history" />{revisions.length})
                       </button>
                     </div>
 
                     <GhostButton onClick={() => { void bridge.documents.export({ documentId: selected.documentId, revisionId: selected.revisionId, format: selected.format, suggestedFileName: selected.displayName }) }}>
-                      Export…
-                    </GhostButton>
+                      <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.export" /></GhostButton>
                   </div>
                 </div>
 
@@ -447,24 +443,24 @@ export function DocumentAgentView() {
                       rows={12}
                     />
                     <div className="flex justify-end gap-2 flex-shrink-0">
-                      <GhostButton onClick={() => { void prepareEdit() }}>Prepare edit proposal</GhostButton>
+                      <GhostButton onClick={() => { void prepareEdit() }}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.prepareEditProposal" /></GhostButton>
                     </div>
                   </div>
                 )}
 
                 {editorTab === 'revisions' && (
                   <div className="flex-1 overflow-y-auto space-y-2 min-h-0 pr-1">
-                    <h3 className="text-[12px] font-semibold uppercase tracking-wide text-foreground-muted">Immutable Revision Lineage</h3>
+                    <h3 className="text-[12px] font-semibold uppercase tracking-wide text-foreground-muted"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.heading.immutableRevisionLineage" /></h3>
                     {revisions.map((rev) => (
                       <div key={rev.id} className="flex items-center justify-between gap-3 rounded-lg border border-border p-3 bg-surface-elevated/20">
                         <div>
                           <div className="text-[13px] font-medium text-foreground">{rev.summary}</div>
                           <div className="text-[11px] text-foreground-muted mt-0.5 font-mono">
-                            {new Date(rev.createdAt).toLocaleString()} · By {rev.createdBy}
+                            {new Date(rev.createdAt).toLocaleString()} <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.by" /> {rev.createdBy}
                           </div>
                         </div>
                         {rev.id !== selected.revisionId && (
-                          <GhostButton onClick={() => { void prepareRestore(rev.id) }}>Restore as new revision</GhostButton>
+                          <GhostButton onClick={() => { void prepareRestore(rev.id) }}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.restoreAsNewRevision" /></GhostButton>
                         )}
                       </div>
                     ))}
@@ -475,22 +471,22 @@ export function DocumentAgentView() {
                 {proposal && (
                   <div className="rounded-xl border border-border-strong bg-surface-elevated p-4 space-y-3 flex-shrink-0 mt-2" role="region" aria-label="Document change proposal">
                     <div>
-                      <h3 className="text-[13px] font-semibold text-foreground">Review Proposal</h3>
-                      <p className="text-[12px] text-foreground-muted">Bound to hash {proposal.pendingApproval.proposalHash.slice(0, 12)}… against base revision.</p>
+                      <h3 className="text-[13px] font-semibold text-foreground"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.heading.reviewProposal" /></h3>
+                      <p className="text-[12px] text-foreground-muted"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.description.boundToHash" /> {proposal.pendingApproval.proposalHash.slice(0, 12)}<Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.description.againstBaseRevision" /></p>
                     </div>
                     <div className="grid gap-2 md:grid-cols-2">
                       <div>
-                        <div className="text-[11px] font-semibold text-danger uppercase tracking-wider mb-1">Before</div>
+                        <div className="text-[11px] font-semibold text-danger uppercase tracking-wider mb-1"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.before" /></div>
                         <pre className="overflow-auto rounded-lg bg-surface-muted p-3 text-[12px] text-foreground max-h-[160px]">{proposal.preview.before.map(blockText).join('\n\n')}</pre>
                       </div>
                       <div>
-                        <div className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider mb-1">After</div>
+                        <div className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider mb-1"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.after" /></div>
                         <pre className="overflow-auto rounded-lg bg-surface-muted p-3 text-[12px] text-foreground max-h-[160px]">{proposal.preview.after.map(blockText).join('\n\n')}</pre>
                       </div>
                     </div>
                     <div className="flex justify-end gap-2">
-                      <GhostButton onClick={() => { void decide('reject') }}>Reject</GhostButton>
-                      <PrimaryButton onClick={() => { void decide('approve') }}>Approve exact change</PrimaryButton>
+                      <GhostButton onClick={() => { void decide('reject') }}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.reject" /></GhostButton>
+                      <PrimaryButton onClick={() => { void decide('approve') }}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.approveExactChange" /></PrimaryButton>
                     </div>
                   </div>
                 )}
@@ -498,8 +494,8 @@ export function DocumentAgentView() {
             ) : (
               <div className="flex-1 flex items-center justify-center text-center p-6 text-foreground-muted">
                 <div>
-                  <p className="text-[14px] font-medium">No Document Selected</p>
-                  <p className="text-[12px] mt-1">Select a document from the left panel or create a new one to begin editing.</p>
+                  <p className="text-[14px] font-medium"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.description.noDocumentSelected" /></p>
+                  <p className="text-[12px] mt-1"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.description.selectADocumentFromTheLeftPanel" /></p>
                 </div>
               </div>
             )}
@@ -510,15 +506,15 @@ export function DocumentAgentView() {
         <div className="flex-1 grid gap-4 grid-cols-1 lg:grid-cols-[340px_minmax(0,1fr)] min-h-0 overflow-hidden">
           <Card className="p-4 space-y-3 flex flex-col min-h-0">
             <div className="flex items-center justify-between">
-              <h2 className="text-[14px] font-semibold text-foreground">Granted Workspace Directory</h2>
-              <span className="text-[11px] text-foreground-muted">{workspaceFiles.length} item(s)</span>
+              <h2 className="text-[14px] font-semibold text-foreground"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.heading.grantedWorkspaceDirectory" /></h2>
+              <span className="text-[11px] text-foreground-muted">{workspaceFiles.length} <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.itemS" /></span>
             </div>
 
             {workspaceGrant ? (
               <>
                 <div className="rounded-lg border border-border bg-surface-muted p-3 space-y-1">
                   <div className="text-[13px] font-medium text-foreground">{workspaceGrant.displayName}</div>
-                  <div className="text-[11px] text-foreground-muted">Session grant · {workspaceGrant.allowedExtensions.join(', ')}</div>
+                  <div className="text-[11px] text-foreground-muted"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.sessionGrant" /> {workspaceGrant.allowedExtensions.join(', ')}</div>
                 </div>
 
                 <div className="flex gap-2">
@@ -529,12 +525,12 @@ export function DocumentAgentView() {
                     placeholder="Search workspace text…"
                     className="flex-1 rounded-lg border border-border bg-input-bg px-2.5 py-1.5 text-[12px] text-input-fg outline-none focus:border-accent"
                   />
-                  <GhostButton onClick={() => { void searchWorkspace() }}>Search</GhostButton>
+                  <GhostButton onClick={() => { void searchWorkspace() }}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.search" /></GhostButton>
                 </div>
 
                 {workspaceSearchResults.length > 0 && (
                   <div className="space-y-1.5 max-h-[140px] overflow-y-auto rounded-lg border border-border bg-surface-muted p-2">
-                    <div className="text-[11px] font-semibold text-foreground-muted">Search matches ({workspaceSearchResults.length})</div>
+                    <div className="text-[11px] font-semibold text-foreground-muted"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.searchMatches" />{workspaceSearchResults.length})</div>
                     {workspaceSearchResults.map((res, i) => (
                       <button
                         key={i}
@@ -557,17 +553,17 @@ export function DocumentAgentView() {
                       className="w-full text-left text-[12px] text-foreground py-1.5 px-2 rounded hover:bg-surface-muted flex items-center justify-between transition-colors"
                     >
                       <span className="truncate">{file.type === 'directory' ? '📁 ' : '📄 '}{file.relativePath}</span>
-                      {file.type !== 'directory' && <span className="text-[10px] text-foreground-muted">Read</span>}
+                      {file.type !== 'directory' && <span className="text-[10px] text-foreground-muted"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.read" /></span>}
                     </button>
                   ))}
-                  {workspaceFiles.length === 0 && <p className="text-[12px] text-foreground-muted">No workspace files found.</p>}
+                  {workspaceFiles.length === 0 && <p className="text-[12px] text-foreground-muted"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.description.noWorkspaceFilesFound" /></p>}
                 </div>
               </>
             ) : (
               <div className="flex-1 flex items-center justify-center text-center p-6 text-foreground-muted">
                 <div>
-                  <p className="text-[13px] font-medium">No Workspace Granted</p>
-                  <p className="text-[12px] mt-1">Select a workspace directory under Agent Access above to browse files.</p>
+                  <p className="text-[13px] font-medium"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.description.noWorkspaceGranted" /></p>
+                  <p className="text-[12px] mt-1"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.description.selectAWorkspaceDirectoryUnderAgentAccess" /></p>
                 </div>
               </div>
             )}
@@ -581,7 +577,7 @@ export function DocumentAgentView() {
               </pre>
             ) : (
               <div className="flex-1 flex items-center justify-center text-center p-6 text-foreground-muted">
-                <p className="text-[13px]">Select a file from the workspace list to view its contents.</p>
+                <p className="text-[13px]"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.description.selectAFileFromTheWorkspaceList" /></p>
               </div>
             )}
           </Card>
@@ -592,7 +588,7 @@ export function DocumentAgentView() {
       {showNewDocModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"> {/* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */}
           <div className="bg-surface-elevated border border-border rounded-xl p-5 w-full max-w-md space-y-4 shadow-xl">
-            <h3 className="text-[16px] font-semibold text-foreground">Create Managed Document</h3>
+            <h3 className="text-[16px] font-semibold text-foreground"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.heading.createManagedDocument" /></h3>
             <div className="space-y-3">
               <div>
                 <label className="block text-[12px] text-foreground-muted mb-1">Document Name / Path</label>
@@ -604,23 +600,23 @@ export function DocumentAgentView() {
                 />
               </div>
               <div>
-                <label className="block text-[12px] text-foreground-muted mb-1">Format</label>
+                <label className="block text-[12px] text-foreground-muted mb-1"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.label.format" /></label>
                 <select
                   value={newDocFormat}
                   onChange={(e) => setNewDocFormat(e.target.value as DocumentFormat)}
                   className="w-full rounded-lg border border-border bg-input-bg px-3 py-2 text-[13px] text-input-fg"
                 >
-                  <option value="md">Markdown (.md)</option>
-                  <option value="txt">Text (.txt)</option>
-                  <option value="json">JSON (.json)</option>
-                  <option value="csv">CSV (.csv)</option>
-                  <option value="html">HTML (.html)</option>
-                  <option value="docx">Word (.docx)</option>
-                  <option value="pdf">PDF (.pdf)</option>
+                  <option value="md"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.markdownMd" /></option>
+                  <option value="txt"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.textTxt" /></option>
+                  <option value="json"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.jsonJson" /></option>
+                  <option value="csv"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.csvCsv" /></option>
+                  <option value="html"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.htmlHtml" /></option>
+                  <option value="docx"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.wordDocx" /></option>
+                  <option value="pdf"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.pdfPdf" /></option>
                 </select>
               </div>
               <div>
-                <label className="block text-[12px] text-foreground-muted mb-1">Initial Content</label>
+                <label className="block text-[12px] text-foreground-muted mb-1"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.label.initialContent" /></label>
                 <TextArea
                   value={newDocContent}
                   onChange={setNewDocContent}
@@ -630,8 +626,8 @@ export function DocumentAgentView() {
               </div>
             </div>
             <div className="flex justify-end gap-2">
-              <GhostButton onClick={() => setShowNewDocModal(false)}>Cancel</GhostButton>
-              <PrimaryButton onClick={() => { void createDocument() }}>Create Document</PrimaryButton>
+              <GhostButton onClick={() => setShowNewDocModal(false)}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.cancel" /></GhostButton>
+              <PrimaryButton onClick={() => { void createDocument() }}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.createDocument" /></PrimaryButton>
             </div>
           </div>
         </div>
@@ -641,9 +637,9 @@ export function DocumentAgentView() {
       {showNewGroupModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"> {/* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */}
           <div className="bg-surface-elevated border border-border rounded-xl p-5 w-full max-w-sm space-y-4 shadow-xl">
-            <h3 className="text-[16px] font-semibold text-foreground">Create Working Group</h3>
+            <h3 className="text-[16px] font-semibold text-foreground"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.heading.createWorkingGroup" /></h3>
             <div>
-              <label className="block text-[12px] text-foreground-muted mb-1">Working Group Name</label>
+              <label className="block text-[12px] text-foreground-muted mb-1"><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.label.workingGroupName" /></label>
               <input
                 value={newGroupName}
                 onChange={(e) => setNewGroupName(e.target.value)}
@@ -652,8 +648,8 @@ export function DocumentAgentView() {
               />
             </div>
             <div className="flex justify-end gap-2">
-              <GhostButton onClick={() => setShowNewGroupModal(false)}>Cancel</GhostButton>
-              <PrimaryButton onClick={() => { void handleCreateGroup() }}>Create Group</PrimaryButton>
+              <GhostButton onClick={() => setShowNewGroupModal(false)}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.cancel" /></GhostButton>
+              <PrimaryButton onClick={() => { void handleCreateGroup() }}><Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.createGroup" /></PrimaryButton>
             </div>
           </div>
         </div>

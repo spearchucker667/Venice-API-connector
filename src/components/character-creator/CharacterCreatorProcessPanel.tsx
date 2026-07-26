@@ -20,6 +20,7 @@ import type {
   CharacterCreatorProcessSummary,
 } from "../../types/character-creator";
 import { toast } from "../../stores/toast-store";
+import { Trans } from 'react-i18next';
 
 interface Props {
   events: CharacterCreatorProcessEvent[];
@@ -107,17 +108,15 @@ export function CharacterCreatorProcessPanel({
       <div className="flex items-center justify-between gap-3 pb-3 border-b border-border/50">
         <div>
           <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
-            <span>AI Design Process</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorprocesspanel.text.aiDesignProcess" /></span>
             {isGenerating && (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent/15 text-accent font-semibold flex items-center gap-1">
                 <Loader2 className="w-3 h-3 animate-spin" />
-                Active
-              </span>
+                <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorprocesspanel.text.active" /></span>
             )}
           </h3>
           <p className="text-[11px] text-text-muted mt-0.5">
-            This log shows user-facing design decisions and validation events, not private hidden reasoning.
-          </p>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorprocesspanel.description.thisLogShowsUserFacingDesignDecisions" /></p>
         </div>
 
         {(processSummary || designSummary || events.length > 0) && !isGenerating && (
@@ -141,11 +140,10 @@ export function CharacterCreatorProcessPanel({
       {processSummary && (
         <div className="my-4 p-3.5 rounded-xl bg-accent/5 border border-accent/20 flex flex-col gap-2">
           <div className="text-xs font-semibold text-accent uppercase tracking-wider">
-            Design Direction & Summary
-          </div>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorprocesspanel.text.designDirectionSummary" /></div>
           {processSummary.concept_interpretation && (
             <p className="text-xs text-text-secondary leading-relaxed">
-              <strong className="text-text-primary">Interpretation:</strong>{" "}
+              <strong className="text-text-primary"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorprocesspanel.text.interpretation" /></strong>{" "}
               {processSummary.concept_interpretation}
             </p>
           )}
@@ -166,8 +164,7 @@ export function CharacterCreatorProcessPanel({
       <div className="flex flex-col gap-2 mt-3 max-h-[320px] overflow-y-auto pr-1">
         {events.length === 0 ? (
           <div className="text-xs text-text-muted italic py-4 text-center">
-            Initializing AI process pipeline…
-          </div>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorprocesspanel.text.initializingAiProcessPipeline" /></div>
         ) : (
           events.map((ev) => {
             const isExpanded = expandedEventIds.has(ev.id);
@@ -248,7 +245,7 @@ export function CharacterCreatorProcessPanel({
             className="px-3.5 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-rose-400 hover:text-rose-300 flex items-center gap-1.5 transition-colors"
           >
             <XCircle className="w-3.5 h-3.5" />
-            <span>Cancel Generation</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorprocesspanel.text.cancelGeneration" /></span>
           </button>
         </div>
       )}

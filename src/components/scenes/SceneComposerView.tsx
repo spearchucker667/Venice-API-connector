@@ -30,6 +30,7 @@ import { buildSceneReferencePlan } from "../../services/sceneReferencePlanner";
 import { buildSceneReferenceEntities } from "../../services/sceneReferenceResolver";
 import { useCharacterCardStore } from "../../stores/character-card-store";
 import { usePersonaStore } from "../../stores/persona-store";
+import { Trans } from 'react-i18next';
 
 const COMPONENT_KIND_OPTIONS: Array<{ value: SceneComponentKind; label: string }> = [
   { value: "subject", label: "Subject" },
@@ -123,7 +124,7 @@ export function SceneComposerView() {
       >
         <div className="px-3 py-2 border-b border-border/50 space-y-2">
           <div className="flex items-center gap-2">
-            <h2 className="text-[14px] font-semibold">Scene Composer</h2>
+            <h2 className="text-[14px] font-semibold"><Trans i18nKey="common:surface.componentsScenesScenecomposerview.heading.sceneComposer" /></h2>
             <button
               type="button"
               onClick={async () => {
@@ -133,8 +134,7 @@ export function SceneComposerView() {
               className="ml-auto rounded-md border border-border px-2 py-1 text-[12px] hover:border-accent hover:text-accent"
               data-testid="scene-composer-new"
             >
-              New
-            </button>
+              <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.new" /></button>
           </div>
           <input
             value={query}
@@ -150,9 +150,9 @@ export function SceneComposerView() {
               className="rounded-md border border-border bg-background px-1.5 py-0.5 text-[12px]"
               data-testid="scene-composer-scope-filter"
             >
-              <option value="all">All scopes</option>
-              <option value="global">Global</option>
-              <option value="project">Project</option>
+              <option value="all"><Trans i18nKey="common:surface.componentsScenesScenecomposerview.option.allScopes" /></option>
+              <option value="global"><Trans i18nKey="common:surface.componentsScenesScenecomposerview.option.global" /></option>
+              <option value="project"><Trans i18nKey="common:surface.componentsScenesScenecomposerview.option.project" /></option>
             </select>
             <select
               value={sort}
@@ -160,10 +160,10 @@ export function SceneComposerView() {
               className="rounded-md border border-border bg-background px-1.5 py-0.5 text-[12px]"
               data-testid="scene-composer-sort"
             >
-              <option value="newest">Newest</option>
-              <option value="oldest">Oldest</option>
-              <option value="title">Title</option>
-              <option value="favorite">Favorite</option>
+              <option value="newest"><Trans i18nKey="common:surface.componentsScenesScenecomposerview.option.newest" /></option>
+              <option value="oldest"><Trans i18nKey="common:surface.componentsScenesScenecomposerview.option.oldest" /></option>
+              <option value="title"><Trans i18nKey="common:surface.componentsScenesScenecomposerview.option.title" /></option>
+              <option value="favorite"><Trans i18nKey="common:surface.componentsScenesScenecomposerview.option.favorite" /></option>
             </select>
             <button
               type="button"
@@ -176,8 +176,7 @@ export function SceneComposerView() {
               }`}
               data-testid="scene-composer-favorites-filter"
             >
-              ★ Favorites
-            </button>
+              <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.favorites" /></button>
             <button
               type="button"
               onClick={() => setShowArchived((v) => !v)}
@@ -189,13 +188,12 @@ export function SceneComposerView() {
               }`}
               data-testid="scene-composer-archive-filter"
             >
-              Archive
-            </button>
+              <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.archive" /></button>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto" data-testid="scene-composer-list">
           {!hydrated ? (
-            <p className="p-3 text-text-muted text-[12px]">Loading…</p>
+            <p className="p-3 text-text-muted text-[12px]"><Trans i18nKey="common:surface.componentsScenesScenecomposerview.description.loading" /></p>
           ) : filtered.length === 0 ? (
             <div className="p-3 text-text-muted text-[12px]" data-testid="scene-composer-empty">
               {scenes.length === 0
@@ -227,9 +225,8 @@ export function SceneComposerView() {
                     </div>
                     <div className="text-[12px] text-text-muted mt-0.5 truncate">
                       {s.scope === "project" ? "Project" : "Global"} ·{" "}
-                      {s.versions.length} version{s.versions.length === 1 ? "" : "s"} ·{" "}
-                      {s.versions[0]?.components.length ?? 0} component
-                      {(s.versions[0]?.components.length ?? 0) === 1 ? "" : "s"}
+                      {s.versions.length} <Trans i18nKey="common:surface.componentsScenesScenecomposerview.text.version" />{s.versions.length === 1 ? "" : "s"} ·{" "}
+                      {s.versions[0]?.components.length ?? 0} <Trans i18nKey="common:surface.componentsScenesScenecomposerview.text.component" />{(s.versions[0]?.components.length ?? 0) === 1 ? "" : "s"}
                     </div>
                     {s.tags.length > 0 && (
                       <div className="text-[12px] text-text-muted mt-0.5 truncate">
@@ -365,8 +362,7 @@ function SceneReferencePanel({ sceneDescription, modelId }: { sceneDescription: 
                   className="ml-auto rounded border border-border px-1.5 py-0.5 text-[12px] hover:border-red-400 hover:text-red-300"
                   data-testid={`scene-reference-remove-${ref.entityId}`}
                 >
-                  Remove
-                </button>
+                  <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.remove" /></button>
               </li>
             );
           })}
@@ -385,7 +381,7 @@ function SceneReferencePanel({ sceneDescription, modelId }: { sceneDescription: 
                 className="text-[12px] rounded border border-border px-1.5 py-0.5 hover:border-accent hover:text-accent"
                 data-testid={`scene-reference-restore-${id}`}
               >
-                Restore {entity?.name ?? id}
+                <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.restore" /> {entity?.name ?? id}
               </button>
             );
           })}
@@ -646,8 +642,8 @@ function SceneDetail(props: SceneDetailProps) {
               ? `Project: ${projects.find((p) => p.id === item.projectId)?.name ?? "(unknown)"}`
               : "Global"}
           </span>
-          <span>· Created {new Date(item.createdAt).toLocaleString()}</span>
-          <span>· Updated {new Date(item.updatedAt).toLocaleString()}</span>
+          <span><Trans i18nKey="common:surface.componentsScenesScenecomposerview.text.created" /> {new Date(item.createdAt).toLocaleString()}</span>
+          <span><Trans i18nKey="common:surface.componentsScenesScenecomposerview.text.updated" /> {new Date(item.updatedAt).toLocaleString()}</span>
         </div>
         <input
           value={description}
@@ -670,11 +666,10 @@ function SceneDetail(props: SceneDetailProps) {
             className="rounded-md border border-accent text-accent px-2 py-0.5 text-[12px]"
             data-testid="scene-composer-save-metadata"
           >
-            Save metadata
-          </button>
+            <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.saveMetadata" /></button>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <label className="text-[12px] text-text-muted">Defaults:</label>
+          <label className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsScenesScenecomposerview.label.defaults" /></label>
           <input
             value={defaultModel}
             onChange={(e) => setDefaultModel(e.target.value)}
@@ -717,7 +712,7 @@ function SceneDetail(props: SceneDetailProps) {
         <div data-testid="scene-composer-components">
           <div className="flex items-center gap-2 mb-2">
             <h3 className="text-[12px] font-semibold uppercase tracking-wide text-text-muted">
-              Components ({components.length})
+              <Trans i18nKey="common:surface.componentsScenesScenecomposerview.heading.components" />{components.length})
             </h3>
             <button
               type="button"
@@ -725,13 +720,11 @@ function SceneDetail(props: SceneDetailProps) {
               className="rounded-md border border-border px-2 py-1.5 min-h-[32px] text-[12px] hover:border-accent hover:text-accent"
               data-testid="scene-composer-add-component"
             >
-              + Add
-            </button>
+              <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.add" /></button>
           </div>
           {components.length === 0 ? (
             <p className="text-[12px] text-text-muted" data-testid="scene-composer-no-components">
-              No components yet. Click "+ Add" to begin composing.
-            </p>
+              <Trans i18nKey="common:surface.componentsScenesScenecomposerview.description.noComponentsYetClickAddToBegin" /></p>
           ) : (
             <div className="space-y-2">
               {components.map((c) => (
@@ -801,39 +794,35 @@ function SceneDetail(props: SceneDetailProps) {
             className="rounded-md border border-accent text-accent px-2 py-1 text-[12px]"
             data-testid="scene-composer-save-version"
           >
-            Save new version
-          </button>
+            <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.saveNewVersion" /></button>
           <button
             type="button"
             onClick={handleSendToImageStudio}
             className="rounded-md border border-border px-2 py-1 text-[12px] hover:border-accent hover:text-accent"
             data-testid="scene-composer-use-image"
           >
-            Use in Image Studio
-          </button>
+            <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.useInImageStudio" /></button>
           <button
             type="button"
             onClick={handleCopyRecipe}
             className="rounded-md border border-border px-2 py-1 text-[12px]"
             data-testid="scene-composer-copy-recipe"
           >
-            Copy recipe
-          </button>
+            <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.copyRecipe" /></button>
           <button
             type="button"
             onClick={onCreateWorkflow}
             className="rounded-md border border-border px-2 py-1 text-[12px]"
             data-testid="scene-composer-create-workflow"
           >
-            Create Workflow
-          </button>
+            <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.createWorkflow" /></button>
           <button
             type="button"
             onClick={() => setShowVersionHistory((v) => !v)}
             className="rounded-md border border-border px-2 py-1 text-[12px]"
             data-testid="scene-composer-toggle-history"
           >
-            {showVersionHistory ? "Hide" : "Show"} history ({item.versions.length})
+            {showVersionHistory ? "Hide" : "Show"} <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.history" />{item.versions.length})
           </button>
           {confirmDelete ? (
             <div className="flex items-center gap-2">
@@ -851,8 +840,7 @@ function SceneDetail(props: SceneDetailProps) {
                 className="rounded-md border border-red-500/60 text-red-300 px-2 py-1 text-[12px] disabled:opacity-50"
                 data-testid="scene-composer-delete"
               >
-                Delete
-              </button>
+                <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.delete" /></button>
               <button
                 type="button"
                 onClick={() => {
@@ -861,8 +849,7 @@ function SceneDetail(props: SceneDetailProps) {
                 }}
                 className="rounded-md border border-border px-2 py-1 text-[12px]"
               >
-                Cancel
-              </button>
+                <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.cancel" /></button>
             </div>
           ) : (
             <button
@@ -871,8 +858,7 @@ function SceneDetail(props: SceneDetailProps) {
               className="rounded-md border border-red-500/40 text-red-300 px-2 py-1 text-[12px]"
               data-testid="scene-composer-delete-arm"
             >
-              Delete
-            </button>
+              <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.delete" /></button>
           )}
         </div>
 
@@ -896,7 +882,7 @@ function SceneDetail(props: SceneDetailProps) {
                       {new Date(v.createdAt).toLocaleString()}
                     </span>
                     {v.id === item.currentVersionId && (
-                      <span className="text-accent text-[12px]">CURRENT</span>
+                      <span className="text-accent text-[12px]"><Trans i18nKey="common:surface.componentsScenesScenecomposerview.text.current" /></span>
                     )}
                     <button
                       type="button"
@@ -905,12 +891,10 @@ function SceneDetail(props: SceneDetailProps) {
                       className="ml-auto rounded-md border border-border px-2 py-0.5 text-[12px] disabled:opacity-50"
                       data-testid={`scene-composer-use-version-${v.version}`}
                     >
-                      Use this version
-                    </button>
+                      <Trans i18nKey="common:surface.componentsScenesScenecomposerview.action.useThisVersion" /></button>
                   </div>
                   <div className="text-[12px] text-text-muted mt-0.5">
-                    {v.components.length} component
-                    {v.components.length === 1 ? "" : "s"}
+                    {v.components.length} <Trans i18nKey="common:surface.componentsScenesScenecomposerview.text.component" />{v.components.length === 1 ? "" : "s"}
                     {v.mediaRefs.length > 0 && ` · ${v.mediaRefs.length} media ref${v.mediaRefs.length === 1 ? "" : "s"}`}
                     {v.promptRefs.length > 0 && ` · ${v.promptRefs.length} prompt ref${v.promptRefs.length === 1 ? "" : "s"}`}
                   </div>

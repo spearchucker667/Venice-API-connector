@@ -17,6 +17,7 @@ import { useImageWorkspaceStore } from '../../stores/image-workspace-store'
 import { isSupportedImageFile, readImageAttachment } from '../../services/attachmentService'
 import { inspectImageInput } from '../../services/media-request-adapter'
 import { GenerationLoadingIndicator } from '../generation/GenerationLoadingIndicator'
+import { Trans } from 'react-i18next';
 
 type Tool = 'edit' | 'upscale' | 'remove-bg'
 
@@ -240,7 +241,7 @@ export function ImageTools() {
 
         {/* Image upload */}
         <div>
-          <Label>Source image</Label>
+          <Label><Trans i18nKey="common:surface.componentsImageImageTools.text.sourceImage" /></Label>
           {imageData ? (
             <div className="relative group">
               <img src={imageData} alt="Source" className="w-full rounded-lg border border-border" />
@@ -255,8 +256,7 @@ export function ImageTools() {
               <span className="text-[13px] text-text-muted mt-1 block truncate">{imageName}</span>
               {sourceDiagnostics?.width && sourceDiagnostics.height && (
                 <p className="mt-1 text-[12px] text-text-muted" aria-label="Source image diagnostics">
-                  {sourceDiagnostics.mimeType?.replace('image/', '').toUpperCase()} · {sourceDiagnostics.width}×{sourceDiagnostics.height} · {sourceDiagnostics.byteCount?.toLocaleString()} bytes
-                  {sourceDiagnostics.projectedWidth && sourceDiagnostics.projectedHeight
+                  {sourceDiagnostics.mimeType?.replace('image/', '').toUpperCase()} · {sourceDiagnostics.width}×{sourceDiagnostics.height} · {sourceDiagnostics.byteCount?.toLocaleString()} <Trans i18nKey="common:surface.componentsImageImageTools.description.bytes" />{sourceDiagnostics.projectedWidth && sourceDiagnostics.projectedHeight
                     ? ` · output ${sourceDiagnostics.projectedWidth}×${sourceDiagnostics.projectedHeight}`
                     : ''}
                   {' · '}{sourceDiagnostics.requestKeys.join(', ')}
@@ -273,7 +273,7 @@ export function ImageTools() {
               className="w-full border border-dashed border-border hover:border-accent rounded-lg py-8 text-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
             >
               <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleFileSelect(e.target.files[0]) }} />
-              <p className="text-[14px] text-text-muted">Click to upload image</p>
+              <p className="text-[14px] text-text-muted"><Trans i18nKey="common:surface.componentsImageImageTools.description.clickToUploadImage" /></p>
             </button>
           )}
         </div>
@@ -281,8 +281,8 @@ export function ImageTools() {
         {/* Tool-specific controls */}
         {tool === 'edit' && (
           <>
-            <div><Label htmlFor={editPromptId}>Edit prompt</Label><TextArea id={editPromptId} value={editPrompt} onChange={setEditPrompt} placeholder="Change the background to a sunset beach..." rows={3} /></div>
-            <div><Label htmlFor={editModelId}>Model</Label><ModelSelect id={editModelId} value={editModel} onChange={setEditModel} models={filteredImageModels} ariaLabel="Edit model" getLabel={(model) => model.model_spec?.name || model.name || model.id} /></div>
+            <div><Label htmlFor={editPromptId}><Trans i18nKey="common:surface.componentsImageImageTools.text.editPrompt" /></Label><TextArea id={editPromptId} value={editPrompt} onChange={setEditPrompt} placeholder="Change the background to a sunset beach..." rows={3} /></div>
+            <div><Label htmlFor={editModelId}><Trans i18nKey="common:surface.componentsImageImageTools.text.model" /></Label><ModelSelect id={editModelId} value={editModel} onChange={setEditModel} models={filteredImageModels} ariaLabel="Edit model" getLabel={(model) => model.model_spec?.name || model.name || model.id} /></div>
           </>
         )}
 
@@ -290,7 +290,7 @@ export function ImageTools() {
           <>
             <div>
               <div className="flex items-center justify-between mb-1">
-                <Label>Scale</Label>
+                <Label><Trans i18nKey="common:surface.componentsImageImageTools.text.scale" /></Label>
                 <span className="text-[13px] text-text-muted font-mono">{scale}x</span>
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -301,17 +301,15 @@ export function ImageTools() {
             </div>
             <div>
               <div className="flex items-center justify-between mb-1">
-                <Label>Source adherence</Label>
+                <Label><Trans i18nKey="common:surface.componentsImageImageTools.text.sourceAdherence" /></Label>
                 <span className="text-[13px] text-text-muted font-mono">{upscaleAdherence}%</span>
               </div>
               <input aria-label="Upscale source adherence" type="range" min={0} max={100} step={5} value={upscaleAdherence} onChange={(e) => setUpscaleAdherence(Math.min(100, Math.max(0, Number(e.target.value))))} className="w-full" />
               <p className="mt-1 text-[12px] text-text-muted">
-                Higher values stay closer to the source; lower values allow the upscaler to add more texture and detail.
-              </p>
+                <Trans i18nKey="common:surface.componentsImageImageTools.description.higherValuesStayCloserToTheSource" /></p>
             </div>
             <div className="rounded-md border border-border bg-surface px-3 py-2 text-[12px] text-text-muted">
-              Venice upscaling does not accept a text prompt. For prompt-directed changes, switch to Edit.
-              <button type="button" onClick={() => setTool('edit')} className="ml-2 text-accent underline underline-offset-2">Open Edit</button>
+              <Trans i18nKey="common:surface.componentsImageImageTools.text.veniceUpscalingDoesNotAcceptAText" /><button type="button" onClick={() => setTool('edit')} className="ml-2 text-accent underline underline-offset-2"><Trans i18nKey="common:surface.componentsImageImageTools.action.openEdit" /></button>
             </div>
           </>
         )}
@@ -338,16 +336,14 @@ export function ImageTools() {
         ) : resultUrl ? (
           <div className="animate-fade-in flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <Label>Result</Label>
+              <Label><Trans i18nKey="common:surface.componentsImageImageTools.text.result" /></Label>
               <div className="flex items-center gap-3">
                 <button onClick={() => void handleSaveToMedia()} className="text-[14px] text-accent hover:opacity-85 transition-opacity flex items-center gap-1.5" title="Save to Media Studio">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
-                  Save to Media Studio
-                </button>
+                  <Trans i18nKey="common:surface.componentsImageImageTools.action.saveToMediaStudio" /></button>
                 <button onClick={downloadResult} className="text-[14px] text-text-muted hover:text-text-muted transition-colors flex items-center gap-1.5">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
-                  Download
-                </button>
+                  <Trans i18nKey="common:surface.componentsImageImageTools.action.download" /></button>
               </div>
             </div>
             <img src={resultUrl} alt="Result" className={cn('w-full rounded-lg border border-border', tool === 'remove-bg' && 'bg-[repeating-conic-gradient(var(--surface-muted)_0%_25%,var(--surface-elevated)_0%_50%)_0_0/20px_20px]')} />

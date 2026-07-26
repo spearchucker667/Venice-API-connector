@@ -38,6 +38,7 @@ import type {
   AppStatusSnapshot,
   StatusSeverity,
 } from "../../types/status";
+import { Trans } from 'react-i18next';
 
 const SECTION_ORDER: Array<{ key: keyof AppStatusSnapshot; label: string }> = [
   { key: "diagnostics", label: "Overview" },
@@ -234,11 +235,9 @@ export function DiagnosticsDrawer() {
         <header className="flex items-center justify-between gap-2">
           <div>
             <h2 className="text-[14px] font-semibold text-text-primary">
-              Diagnostics
-            </h2>
+              <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.heading.diagnostics" /></h2>
             <p className="text-[12px] text-text-muted mt-0.5">
-              App health, model catalog, storage, safety, and provider state.
-            </p>
+              <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.appHealthModelCatalogStorageSafetyAnd" /></p>
           </div>
           <button
             type="button"
@@ -247,8 +246,7 @@ export function DiagnosticsDrawer() {
             data-testid="diagnostics-close"
             className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
           >
-            Close
-          </button>
+            <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.close" /></button>
         </header>
 
         <div className="flex flex-wrap items-center gap-1.5">
@@ -267,10 +265,9 @@ export function DiagnosticsDrawer() {
             data-testid="diagnostics-copy-safe"
             className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
           >
-            Copy Safe Diagnostics
-          </button>
+            <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.copySafeDiagnostics" /></button>
           {lastCopyedAt(lastCopyAt) && (
-            <span className="text-[12px] text-text-muted">copied at {lastCopyedAt(lastCopyAt)}</span>
+            <span className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.text.copiedAt" /> {lastCopyedAt(lastCopyAt)}</span>
           )}
         </div>
 
@@ -295,16 +292,13 @@ export function DiagnosticsDrawer() {
             className="mt-0.5"
           />
           <span>
-            Include redacted prompt excerpts in safe diagnostics
-            <span className="block text-[11px] text-text-muted">
-              Truncated (≤80 chars) and secret-stripped prompt snippets from the
-              Prompt Library. Off by default.
-            </span>
+            <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.text.includeRedactedPromptExcerptsInSafeDiagnostics" /><span className="block text-[11px] text-text-muted">
+              <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.text.truncated80CharsAndSecretStrippedPrompt" /></span>
           </span>
         </label>
 
         {lastRefreshedAt && (
-          <p className="text-[12px] text-text-muted">last refresh: {lastRefreshedAt}</p>
+          <p className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.lastRefresh" /> {lastRefreshedAt}</p>
         )}
 
         {sections.map(({ key, label, item }) => {
@@ -355,7 +349,7 @@ export function DiagnosticsDrawer() {
                   </button>
                   {modelsError && (
                     <p className="text-[12px] text-danger break-words">
-                      Last refresh error: {modelsError}
+                      <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.lastRefreshError" /> {modelsError}
                     </p>
                   )}
                 </div>
@@ -371,8 +365,7 @@ export function DiagnosticsDrawer() {
                   data-testid="diagnostics-action-storage"
                   className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                 >
-                  Open Status
-                </button>
+                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openStatus" /></button>
               )}
               {key === "storage" && label === "Privacy" && (
                 <button
@@ -384,8 +377,7 @@ export function DiagnosticsDrawer() {
                   data-testid="diagnostics-action-privacy"
                   className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                 >
-                  Open Privacy Dashboard
-                </button>
+                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openPrivacyDashboard" /></button>
               )}
               {key === "project" && (
                 <button
@@ -414,8 +406,7 @@ export function DiagnosticsDrawer() {
                   data-testid="diagnostics-action-safety"
                   className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                 >
-                  Open Config
-                </button>
+                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openConfig" /></button>
               )}
               {key === "provider" && item.actionTargetTabId && (
                 <button
@@ -428,31 +419,23 @@ export function DiagnosticsDrawer() {
                   data-testid="diagnostics-action-provider"
                   className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                 >
-                  Open Config
-                </button>
+                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openConfig" /></button>
               )}
               {key === "desktop" && !isElectron() && (
                 <p className="text-[12px] text-text-muted">
-                  Web mode: filesystem, reveals, and the system shell are
-                  unavailable. Some desktop-only features (audio routing,
-                  local YAML config) are disabled.
-                </p>
+                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.webModeFilesystemRevealsAndTheSystem" /></p>
               )}
               {key === "diagnostics" && label === "Repair" && (
                 <div className="space-y-1.5">
                   <p className="text-[12px] text-text-muted">
-                    Phase 2C ships read-only diagnostics. Destructive
-                    repairs (reset keys, clear storage, delete all data)
-                    are out of scope and live in their dedicated tabs.
-                  </p>
+                    <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.phase2cShipsReadOnlyDiagnosticsDestructive" /></p>
                   <button
                     type="button"
                     onClick={() => setFocusedSection("model")}
                     data-testid="diagnostics-action-jump-model"
                     className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                   >
-                    Jump to Model
-                  </button>
+                    <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.jumpToModel" /></button>
                 </div>
               )}
             </Section>

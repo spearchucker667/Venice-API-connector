@@ -42,6 +42,7 @@ import type { CharacterCardExportReport } from "../../types/character-card-files
 import { compileRpPrompt } from "../../services/rpPromptCompiler";
 import { veniceFetch } from "../../services/veniceClient/fetch";
 import { useChatStore } from "../../stores/chat-store";
+import { Trans } from 'react-i18next';
 
 /** Module-scoped WeakMap mapping each example object (by identity) to a stable
  *  client-side React key. Lives outside the component so keys survive remounts
@@ -74,8 +75,7 @@ function FieldFileLoader({
         <line x1="12" y1="18" x2="12" y2="12" />
         <polyline points="9 15 12 12 15 15" />
       </svg>
-      Load file (.txt, .md)
-      <input
+      <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.label.loadFileTxtMd" /><input
         type="file"
         className="hidden"
         accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown"
@@ -201,8 +201,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
   if (!draft) {
     return (
       <div className="flex items-center justify-center h-full text-text-muted text-[13px]">
-        Character not found.
-      </div>
+        <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.characterNotFound" /></div>
     );
   }
 
@@ -643,8 +642,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         <div className="min-w-0 flex-1">
           <h2 className="text-[15px] font-semibold text-text-primary truncate">{draft.name || "Untitled"}</h2>
           <p className="text-[12px] text-text-muted truncate">
-            Local character — stored in Venice Forge, not hosted on Venice.ai
-          </p>
+            <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.description.localCharacterStoredInVeniceForgeNot" /></p>
         </div>
         <div className="ml-auto flex items-center gap-2">
           {tokenBudget && (
@@ -653,8 +651,8 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               data-testid="character-token-budget"
               aria-label={`Estimated tokens ${tokenBudget.compiled.count.toLocaleString()} of ${tokenBudget.inputBudget.toLocaleString()}`}
             >
-              <div>Estimated tokens: {tokenBudget.compiled.count.toLocaleString()} / {tokenBudget.inputBudget.toLocaleString()}</div>
-              <div>Raw estimate {tokenBudget.raw.count.toLocaleString()} · output reserve {tokenBudget.reservedOutputTokens.toLocaleString()}</div>
+              <div><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.estimatedTokens" /> {tokenBudget.compiled.count.toLocaleString()} / {tokenBudget.inputBudget.toLocaleString()}</div>
+              <div><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.rawEstimate" /> {tokenBudget.raw.count.toLocaleString()} <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.outputReserve" /> {tokenBudget.reservedOutputTokens.toLocaleString()}</div>
             </div>
           )}
           <GhostButton onClick={() => {
@@ -663,9 +661,8 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               localCharacterId: draft.id,
             });
           }}>
-            Edit with Character Creator
-          </GhostButton>
-          <GhostButton onClick={handleDelete}>Delete</GhostButton>
+            <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.editWithCharacterCreator" /></GhostButton>
+          <GhostButton onClick={handleDelete}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.delete" /></GhostButton>
           <GhostButton onClick={() => void handleArchive()}>
             {draft.archivedAt ? "Unarchive" : "Archive"}
           </GhostButton>
@@ -676,8 +673,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
             disabled={disabled || tokenBudget?.overLimit === true}
             ariaLabel={disabled ? "Save (waiting for config to load)" : tokenBudget?.overLimit ? "Save (character exceeds token budget)" : "Save"}
           >
-            Save
-          </PrimaryButton>
+            <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.save" /></PrimaryButton>
         </div>
       </div>
 
@@ -695,8 +691,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
             onClick={() => setActiveStudioStep("all")}
             className={`shrink-0 rounded-md border px-2 py-1 text-[11px] ${activeStudioStep === "all" ? "border-accent bg-accent/10 text-accent" : "border-border text-text-muted"}`}
           >
-            All Steps
-          </button>
+            <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.allSteps" /></button>
           {studioSteps.map((step, index) => <button key={step} type="button" aria-current={activeStudioStep === index ? "step" : undefined} onClick={() => setActiveStudioStep(index)} className={`shrink-0 rounded-md border px-2 py-1 text-[11px] ${activeStudioStep === index ? "border-accent bg-accent/10 text-accent" : "border-border text-text-muted"}`}>{index + 1}. {step}</button>)}
         </nav>
         <p className="text-[12px] text-text-muted">
@@ -709,7 +704,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         {/* Step 1: Source */}
         {isStepVisible(0) && (
           <section className="space-y-4 rounded-xl border border-border bg-surface/50 p-4">
-            <h3 className="text-[13px] font-semibold text-text-primary">1. Source & Avatar</h3>
+            <h3 className="text-[13px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.heading.1SourceAvatar" /></h3>
             <div className="flex gap-4 items-start">
               <div className="shrink-0">
                 <div className="w-24 h-24 rounded-xl overflow-hidden border border-border bg-surface-elevated flex items-center justify-center text-text-muted text-3xl font-semibold">
@@ -735,25 +730,23 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                   onClick={() => fileInputRef.current?.click()}
                   className="mt-2 w-24 text-[12px] py-1 rounded-md border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors"
                 >
-                  {draft.avatar ? "Replace" : "Upload"} avatar
-                </button>
+                  {draft.avatar ? "Replace" : "Upload"} <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.avatar" /></button>
                 {draft.avatar && (
                   <button
                     type="button"
                     onClick={() => update("avatar", undefined)}
                     className="mt-1 w-24 text-[12px] py-1 rounded-md text-text-muted hover:text-rose-300 transition-colors"
                   >
-                    Remove
-                  </button>
+                    <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.remove" /></button>
                 )}
               </div>
               <div className="flex-1 space-y-3 min-w-0">
                 <div>
-                  <Label htmlFor="card-version">Character version</Label>
+                  <Label htmlFor="card-version"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.characterVersion" /></Label>
                   <input id="card-version" value={draft.characterVersion ?? ""} onChange={(e) => update("characterVersion", e.target.value)} maxLength={64} className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary outline-none focus:border-accent" />
                 </div>
                 <div>
-                  <Label>Import source</Label>
+                  <Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.importSource" /></Label>
                   <div className="rounded-lg border border-border bg-surface px-3 py-2 text-[13px] text-text-secondary">{draft.sourceFormat ?? "Venice Forge local"}</div>
                 </div>
               </div>
@@ -764,10 +757,10 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         {/* Step 2: Identity */}
         {isStepVisible(1) && (
           <section className="space-y-4 rounded-xl border border-border bg-surface/50 p-4">
-            <h3 className="text-[13px] font-semibold text-text-primary">2. Identity</h3>
+            <h3 className="text-[13px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.heading.2Identity" /></h3>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <Label htmlFor="card-name">Name</Label>
+                <Label htmlFor="card-name"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.name" /></Label>
                 <input
                   id="card-name"
                   value={draft.name}
@@ -777,7 +770,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                 />
               </div>
               <div>
-                <Label htmlFor="card-author">Author</Label>
+                <Label htmlFor="card-author"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.author" /></Label>
                 <input
                   id="card-author"
                   value={draft.author ?? ""}
@@ -796,12 +789,11 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                 onChange={(e) => update("adult", e.target.checked)}
                 className="accent-rose-400"
               />
-              <Label htmlFor="card-adult">Adult content (18+)</Label>
+              <Label htmlFor="card-adult"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.adultContent18" /></Label>
             </div>
             <div>
               <Label htmlFor="card-desc" hint={`${draft.description.length}/${CARD_FIELD_MAX}`}>
-                Description
-              </Label>
+                <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.description" /></Label>
               <TextArea
                 value={draft.description}
                 onChange={(v) => update("description", v)}
@@ -812,13 +804,12 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               />
             </div>
             <div>
-              <Label htmlFor="card-creator-notes" hint="Display-only — never included in model prompts">Creator notes</Label>
+              <Label htmlFor="card-creator-notes" hint="Display-only — never included in model prompts"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.creatorNotes" /></Label>
               <TextArea id="card-creator-notes" value={draft.creatorNotes ?? ""} onChange={(value) => update("creatorNotes", value)} rows={3} maxLength={CARD_FIELD_MAX} ariaLabel="Creator notes" />
             </div>
             <div>
               <Label htmlFor="card-tags" hint={`${draft.tags.length}/${MAX_TAGS}`}>
-                Tags
-              </Label>
+                <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.tags" /></Label>
               <div className="flex gap-2">
                 <input
                   id="card-tags"
@@ -835,8 +826,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                   className="flex-1 bg-surface border border-border rounded-lg px-3 py-1.5 text-[13.5px] text-text-primary outline-none focus:border-accent transition-colors placeholder:text-text-muted"
                 />
                 <GhostButton onClick={addTag} disabled={!tagInput.trim()}>
-                  Add
-                </GhostButton>
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.add" /></GhostButton>
               </div>
               {draft.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-2">
@@ -860,10 +850,10 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         {/* Step 3: Persona */}
         {isStepVisible(2) && (
           <section className="space-y-4 rounded-xl border border-border bg-surface/50 p-4">
-            <h3 className="text-[13px] font-semibold text-text-primary">3. Persona</h3>
+            <h3 className="text-[13px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.heading.3Persona" /></h3>
             <div>
               <div className="flex items-center justify-between mb-1">
-                <Label htmlFor="card-personality">Personality</Label>
+                <Label htmlFor="card-personality"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.personality" /></Label>
                 <FieldFileLoader targetField="personality" onSelectFile={handleInstructionFileSelect} />
               </div>
               <TextArea id="card-personality" value={draft.personality ?? ""} onChange={(value) => update("personality", value)} rows={4} maxLength={CARD_FIELD_MAX} ariaLabel="Personality" />
@@ -871,8 +861,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <Label htmlFor="card-scenario" hint="optional">
-                  Scenario
-                </Label>
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.scenario" /></Label>
                 <FieldFileLoader targetField="scenario" onSelectFile={handleInstructionFileSelect} />
               </div>
               <TextArea
@@ -890,12 +879,11 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         {/* Step 4: Prompt Behavior */}
         {isStepVisible(3) && (
           <section className="space-y-4 rounded-xl border border-border bg-surface/50 p-4">
-            <h3 className="text-[13px] font-semibold text-text-primary">4. Prompt Behavior</h3>
+            <h3 className="text-[13px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.heading.4PromptBehavior" /></h3>
             <div>
               <div className="flex items-center justify-between mb-1">
                 <Label htmlFor="card-system" hint={`${countPromptCharacters(draft.systemPrompt)}/${getUserSystemPromptLimit()}`}>
-                  System prompt
-                </Label>
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.systemPrompt" /></Label>
                 <FieldFileLoader targetField="systemPrompt" onSelectFile={handleInstructionFileSelect} />
               </div>
               <TextArea
@@ -912,13 +900,13 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               />
               {countPromptCharacters(draft.systemPrompt) >= USER_SYSTEM_PROMPT_LIMITS.warningCharacters && (
                 <div className="text-[12px] text-amber-500 mt-1">
-                  Approaching system prompt size limit ({countPromptCharacters(draft.systemPrompt)}/{getUserSystemPromptLimit()}).
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.approachingSystemPromptSizeLimit" />{countPromptCharacters(draft.systemPrompt)}/{getUserSystemPromptLimit()}).
                 </div>
               )}
             </div>
             <div>
               <div className="flex items-center justify-between mb-1">
-                <Label htmlFor="card-post-history">Post-history instructions</Label>
+                <Label htmlFor="card-post-history"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.postHistoryInstructions" /></Label>
                 <FieldFileLoader targetField="postHistoryInstructions" onSelectFile={handleInstructionFileSelect} />
               </div>
               <TextArea id="card-post-history" value={draft.postHistoryInstructions ?? ""} onChange={(value) => update("postHistoryInstructions", value)} rows={3} maxLength={CARD_FIELD_MAX} ariaLabel="Post-history instructions" />
@@ -926,8 +914,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <Label htmlFor="card-instructions" hint={`${(draft.instructions ?? "").length}/${CARD_FIELD_MAX}`}>
-                  Instructions
-                </Label>
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.instructions" /></Label>
                 <FieldFileLoader targetField="instructions" onSelectFile={handleInstructionFileSelect} />
               </div>
               <TextArea
@@ -946,11 +933,10 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         {/* Step 5: Greetings */}
         {isStepVisible(4) && (
           <section className="space-y-4 rounded-xl border border-border bg-surface/50 p-4">
-            <h3 className="text-[13px] font-semibold text-text-primary">5. Greetings</h3>
+            <h3 className="text-[13px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.heading.5Greetings" /></h3>
             <div>
               <Label htmlFor="card-first-message" hint="optional">
-                First message (Primary Greeting)
-              </Label>
+                <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.firstMessagePrimaryGreeting" /></Label>
               <TextArea
                 id="card-first-message"
                 value={draft.firstMessage ?? ""}
@@ -962,18 +948,18 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               />
             </div>
             <div>
-              <div className="flex items-center justify-between"><Label>Alternate greetings</Label><GhostButton onClick={() => update("alternateGreetings", [...(draft.alternateGreetings ?? []), ""])}>Add greeting</GhostButton></div>
-              <div className="mt-2 rounded-lg border border-border bg-surface-elevated p-3" aria-live="polite"><div className="mb-1 text-[11px] uppercase text-text-muted">Greeting preview {Math.min(greetingPreviewIndex + 1, 1 + (draft.alternateGreetings?.length ?? 0))} / {1 + (draft.alternateGreetings?.length ?? 0)}</div><p className="whitespace-pre-wrap text-[13px] text-text-primary">{[draft.firstMessage ?? "", ...(draft.alternateGreetings ?? [])][greetingPreviewIndex] || "No greeting text"}</p><div className="mt-2 flex gap-2"><GhostButton disabled={greetingPreviewIndex === 0} onClick={() => setGreetingPreviewIndex((index) => Math.max(0, index - 1))}>Previous</GhostButton><GhostButton disabled={greetingPreviewIndex >= (draft.alternateGreetings?.length ?? 0)} onClick={() => setGreetingPreviewIndex((index) => Math.min(draft.alternateGreetings?.length ?? 0, index + 1))}>Next</GhostButton></div></div>
+              <div className="flex items-center justify-between"><Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.alternateGreetings" /></Label><GhostButton onClick={() => update("alternateGreetings", [...(draft.alternateGreetings ?? []), ""])}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.addGreeting" /></GhostButton></div>
+              <div className="mt-2 rounded-lg border border-border bg-surface-elevated p-3" aria-live="polite"><div className="mb-1 text-[11px] uppercase text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.greetingPreview" /> {Math.min(greetingPreviewIndex + 1, 1 + (draft.alternateGreetings?.length ?? 0))} / {1 + (draft.alternateGreetings?.length ?? 0)}</div><p className="whitespace-pre-wrap text-[13px] text-text-primary">{[draft.firstMessage ?? "", ...(draft.alternateGreetings ?? [])][greetingPreviewIndex] || "No greeting text"}</p><div className="mt-2 flex gap-2"><GhostButton disabled={greetingPreviewIndex === 0} onClick={() => setGreetingPreviewIndex((index) => Math.max(0, index - 1))}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.previous" /></GhostButton><GhostButton disabled={greetingPreviewIndex >= (draft.alternateGreetings?.length ?? 0)} onClick={() => setGreetingPreviewIndex((index) => Math.min(draft.alternateGreetings?.length ?? 0, index + 1))}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.next" /></GhostButton></div></div>
               <div className="mt-2 space-y-2">
                 {(draft.alternateGreetings ?? []).map((greeting, index) => (
                   <div key={index} className="flex gap-2">
                     <textarea value={greeting} onChange={(event) => update("alternateGreetings", (draft.alternateGreetings ?? []).map((value, itemIndex) => itemIndex === index ? event.target.value : value))} aria-label={`Alternate greeting ${index + 1}`} rows={2} maxLength={CARD_FIELD_MAX} className="flex-1 resize-y rounded-lg border border-border bg-surface px-3 py-2 text-[13px] text-text-primary" />
                     <div className="flex flex-col gap-1">
-                      <button type="button" onClick={() => update("firstMessage", greeting)} className="text-[11px] rounded border border-border px-2 py-1 text-text-secondary">Set primary</button>
-                      <button type="button" onClick={() => update("alternateGreetings", [...(draft.alternateGreetings ?? []).slice(0, index + 1), greeting, ...(draft.alternateGreetings ?? []).slice(index + 1)])} className="text-[11px] rounded border border-border px-2 py-1 text-text-secondary">Duplicate</button>
+                      <button type="button" onClick={() => update("firstMessage", greeting)} className="text-[11px] rounded border border-border px-2 py-1 text-text-secondary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.setPrimary" /></button>
+                      <button type="button" onClick={() => update("alternateGreetings", [...(draft.alternateGreetings ?? []).slice(0, index + 1), greeting, ...(draft.alternateGreetings ?? []).slice(index + 1)])} className="text-[11px] rounded border border-border px-2 py-1 text-text-secondary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.duplicate" /></button>
                       <button type="button" disabled={index === 0} onClick={() => { const next = [...(draft.alternateGreetings ?? [])]; [next[index - 1], next[index]] = [next[index], next[index - 1]]; update("alternateGreetings", next); }} className="text-[11px] rounded border border-border px-2 py-1 text-text-secondary disabled:opacity-40">Up</button>
-                      <button type="button" disabled={index === (draft.alternateGreetings?.length ?? 0) - 1} onClick={() => { const next = [...(draft.alternateGreetings ?? [])]; [next[index + 1], next[index]] = [next[index], next[index + 1]]; update("alternateGreetings", next); }} className="text-[11px] rounded border border-border px-2 py-1 text-text-secondary disabled:opacity-40">Down</button>
-                      <button type="button" onClick={() => update("alternateGreetings", (draft.alternateGreetings ?? []).filter((_, itemIndex) => itemIndex !== index))} className="text-[11px] rounded border border-border px-2 py-1 text-error">Remove</button>
+                      <button type="button" disabled={index === (draft.alternateGreetings?.length ?? 0) - 1} onClick={() => { const next = [...(draft.alternateGreetings ?? [])]; [next[index + 1], next[index]] = [next[index], next[index + 1]]; update("alternateGreetings", next); }} className="text-[11px] rounded border border-border px-2 py-1 text-text-secondary disabled:opacity-40"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.down" /></button>
+                      <button type="button" onClick={() => update("alternateGreetings", (draft.alternateGreetings ?? []).filter((_, itemIndex) => itemIndex !== index))} className="text-[11px] rounded border border-border px-2 py-1 text-error"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.remove" /></button>
                     </div>
                   </div>
                 ))}
@@ -985,14 +971,14 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         {/* Step 6: Example Dialogue */}
         {isStepVisible(5) && (
           <section className="space-y-4 rounded-xl border border-border bg-surface/50 p-4">
-            <h3 className="text-[13px] font-semibold text-text-primary">6. Example Dialogue</h3>
+            <h3 className="text-[13px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.heading.6ExampleDialogue" /></h3>
             <div>
               <div className="flex items-center justify-between mb-2">
-                <Label>Example dialogues</Label>
-                <div className="flex gap-2"><GhostButton disabled={draft.exampleDialogues.length === 0} onClick={() => update("rawExampleDialogue", draft.exampleDialogues.map((example) => `${/^(user|you)$/i.test(example.speaker.trim()) ? "{{user}}" : "{{char}}"}: ${example.text}`).join("\n"))}>Update raw preview</GhostButton><GhostButton onClick={addExample}>Add example</GhostButton></div>
+                <Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.exampleDialogues" /></Label>
+                <div className="flex gap-2"><GhostButton disabled={draft.exampleDialogues.length === 0} onClick={() => update("rawExampleDialogue", draft.exampleDialogues.map((example) => `${/^(user|you)$/i.test(example.speaker.trim()) ? "{{user}}" : "{{char}}"}: ${example.text}`).join("\n"))}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.updateRawPreview" /></GhostButton><GhostButton onClick={addExample}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.addExample" /></GhostButton></div>
               </div>
               {draft.exampleDialogues.length === 0 ? (
-                <div className="text-[12px] text-text-muted italic">No examples. Add a few-shot exchange to lock in voice.</div>
+                <div className="text-[12px] text-text-muted italic"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.noExamplesAddAFewShotExchange" /></div>
               ) : (
                 <div className="space-y-2">
                   {draft.exampleDialogues.map((d, i) => (
@@ -1004,7 +990,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                         placeholder="Speaker"
                         maxLength={200}
                         className="w-full bg-surface border border-border rounded-md px-2 py-1 text-[12.5px] text-text-primary outline-none focus:border-accent transition-colors placeholder:text-text-muted"
-                      />{!d.speaker.trim() && <span className="mt-1 block text-[10px] text-warning" role="alert">Speaker required</span>}</div>
+                      />{!d.speaker.trim() && <span className="mt-1 block text-[10px] text-warning" role="alert"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.speakerRequired" /></span>}</div>
                       <textarea
                         value={d.text}
                         onChange={(e) => updateExample(i, "text", e.target.value)}
@@ -1031,7 +1017,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               )}
             </div>
             <div>
-              <Label htmlFor="card-raw-examples" hint="Lossless SillyTavern mes_example compatibility text">Raw example dialogue</Label>
+              <Label htmlFor="card-raw-examples" hint="Lossless SillyTavern mes_example compatibility text"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.rawExampleDialogue" /></Label>
               <TextArea id="card-raw-examples" value={draft.rawExampleDialogue ?? ""} onChange={(value) => update("rawExampleDialogue", value)} rows={5} maxLength={CARD_FIELD_MAX} ariaLabel="Raw example dialogue" />
             </div>
           </section>
@@ -1040,32 +1026,32 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         {/* Step 7: Character Book */}
         {isStepVisible(6) && (
           <section className="space-y-4 rounded-xl border border-border bg-surface/50 p-4">
-            <h3 className="text-[13px] font-semibold text-text-primary">7. Character Book & Extensions</h3>
+            <h3 className="text-[13px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.heading.7CharacterBookExtensions" /></h3>
             <div className="space-y-2">
-              <Label htmlFor="card-extensions">V2 extension data</Label>
+              <Label htmlFor="card-extensions"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.v2ExtensionData" /></Label>
               <textarea id="card-extensions" value={extensionText} onChange={(event) => setExtensionText(event.target.value)} onBlur={() => { try { const parsed = JSON.parse(extensionText) as unknown; if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error(); update("tavernExtensions", parsed as CharacterCardV1["tavernExtensions"]); setError(null); } catch { setError("Extension data must be a valid JSON object."); } }} rows={6} spellCheck={false} className="w-full resize-y rounded-lg border border-border bg-surface px-3 py-2 font-mono text-[12px] text-text-primary" />
               <p className="text-[12px] text-text-muted">Unknown safe namespaces are preserved. Unsafe keys and over-limit values are rejected during persistence/export.</p>
             </div>
             <div className="space-y-3 rounded-lg border border-border bg-surface-elevated p-3 text-[13px] text-text-secondary">
-              <div className="flex flex-wrap items-center justify-between gap-2"><Label>Character book</Label><div className="flex gap-2">{!draft.embeddedCharacterBook ? <GhostButton onClick={() => update("embeddedCharacterBook", { name: `${draft.name || "Character"} lore`, extensions: {}, entries: [] })}>Create embedded book</GhostButton> : <GhostButton onClick={() => update("embeddedCharacterBook", undefined)}>Remove embedded book</GhostButton>}</div></div>
-              <p className="text-[12px] text-text-muted">Embedded data is portable in V2 exports. Linked lorebooks remain local and are synchronized into the embedded copy only when you request it.</p>
+              <div className="flex flex-wrap items-center justify-between gap-2"><Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.characterBook" /></Label><div className="flex gap-2">{!draft.embeddedCharacterBook ? <GhostButton onClick={() => update("embeddedCharacterBook", { name: `${draft.name || "Character"} lore`, extensions: {}, entries: [] })}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.createEmbeddedBook" /></GhostButton> : <GhostButton onClick={() => update("embeddedCharacterBook", undefined)}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.removeEmbeddedBook" /></GhostButton>}</div></div>
+              <p className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.description.embeddedDataIsPortableInV2Exports" /></p>
               <div className="flex flex-wrap items-end gap-2">
-                <label className="min-w-56 flex-1"><span className="mb-1 block text-[12px] text-text-muted">Attach existing lorebook</span><select defaultValue="" onChange={(event) => {
+                <label className="min-w-56 flex-1"><span className="mb-1 block text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.attachExistingLorebook" /></span><select defaultValue="" onChange={(event) => {
                   const lorebook = lorebooks.find((item) => item.id === event.target.value);
                   if (!lorebook) return;
                   update("metadata", { ...(draft.metadata ?? {}), linkedLorebookIds: Array.from(new Set([...linkedLorebookIds, lorebook.id])) });
                   if (!draft.embeddedCharacterBook) update("embeddedCharacterBook", mapLorebookV1ToCharacterBookV2(lorebook));
                   event.target.value = "";
-                }} className="w-full rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary"><option value="">Choose lorebook…</option>{lorebooks.filter((book) => !linkedLorebookIds.includes(book.id)).map((book) => <option key={book.id} value={book.id}>{book.name}</option>)}</select></label>
+                }} className="w-full rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary"><option value=""><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.chooseLorebook" /></option>{lorebooks.filter((book) => !linkedLorebookIds.includes(book.id)).map((book) => <option key={book.id} value={book.id}>{book.name}</option>)}</select></label>
                 {draft.embeddedCharacterBook && <GhostButton onClick={async () => {
                   const id = `cardbook-${draft.id}`.slice(0, 128);
                   const saved = await saveLorebook(mapCharacterBookV2ToLorebookV1(draft.embeddedCharacterBook!, { id, characterId: draft.id }));
                   if (saved) update("metadata", { ...(draft.metadata ?? {}), linkedLorebookIds: Array.from(new Set([...linkedLorebookIds, saved.id])) });
-                }}>Import embedded as linked</GhostButton>}
+                }}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.importEmbeddedAsLinked" /></GhostButton>}
               </div>
               {linkedLorebookIds.length > 0 && <div className="space-y-2">{linkedLorebookIds.map((id) => {
                 const lorebook = lorebooks.find((item) => item.id === id);
-                return <div key={id} className="flex flex-wrap items-center justify-between gap-2 rounded border border-border bg-surface px-2 py-1.5"><span>{lorebook?.name ?? id}</span><div className="flex gap-2">{lorebook && <GhostButton onClick={() => update("embeddedCharacterBook", mapLorebookV1ToCharacterBookV2(lorebook))}>Sync into embedded</GhostButton>}<GhostButton onClick={() => update("metadata", { ...(draft.metadata ?? {}), linkedLorebookIds: linkedLorebookIds.filter((linkedId) => linkedId !== id) })}>Detach (preserve embedded)</GhostButton></div></div>;
+                return <div key={id} className="flex flex-wrap items-center justify-between gap-2 rounded border border-border bg-surface px-2 py-1.5"><span>{lorebook?.name ?? id}</span><div className="flex gap-2">{lorebook && <GhostButton onClick={() => update("embeddedCharacterBook", mapLorebookV1ToCharacterBookV2(lorebook))}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.syncIntoEmbedded" /></GhostButton>}<GhostButton onClick={() => update("metadata", { ...(draft.metadata ?? {}), linkedLorebookIds: linkedLorebookIds.filter((linkedId) => linkedId !== id) })}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.detachPreserveEmbedded" /></GhostButton></div></div>;
               })}</div>}
               {draft.embeddedCharacterBook && <CharacterBookEditor book={draft.embeddedCharacterBook} onChange={(book) => update("embeddedCharacterBook", book)} />}
             </div>
@@ -1075,18 +1061,17 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         {/* Step 8: Model and Context */}
         {isStepVisible(7) && (
           <section className="space-y-4 rounded-xl border border-border bg-surface/50 p-4">
-            <h3 className="text-[13px] font-semibold text-text-primary">8. Model and Context</h3>
+            <h3 className="text-[13px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.heading.8ModelAndContext" /></h3>
             <div>
               <Label htmlFor="card-model" hint="optional">
-                Default model
-              </Label>
+                <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.defaultModel" /></Label>
               <select
                 id="card-model"
                 value={draft.modelId ?? ""}
                 onChange={(e) => update("modelId", e.target.value || undefined)}
                 className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-colors"
               >
-                <option value="">Use chat default</option>
+                <option value=""><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.useChatDefault" /></option>
                 {FALLBACK_MODELS.text.map((m) => (
                   <option key={m.id} value={m.id}>
                     {m.name}
@@ -1095,37 +1080,37 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               </select>
             </div>
             <div className="space-y-4 pt-2 border-t border-border/50">
-              <Label>Special Settings</Label>
+              <Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.specialSettings" /></Label>
               <div className="grid grid-cols-2 gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" checked={!!draft.webSearch} onChange={e => update("webSearch", e.target.checked)} className="rounded border-border bg-surface text-accent focus:ring-accent" />
-                  <span className="text-[12px] text-text-primary">Web Search</span>
+                  <span className="text-[12px] text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.webSearch" /></span>
                 </label>
                 <label className="flex flex-col gap-1 cursor-pointer">
-                  <span className="text-[12px] text-text-primary">URL Scraping Provider</span>
+                  <span className="text-[12px] text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.urlScrapingProvider" /></span>
                   <select
                     value={draft.urlScrapingProvider ?? "off"}
                     onChange={(e) => update("urlScrapingProvider", e.target.value as "off" | "brave" | "google")}
                     className="bg-surface border border-border rounded-md px-2 py-1 text-[12.5px] text-text-primary outline-none focus:border-accent"
                     aria-label="URL scraping provider"
                   >
-                    <option value="off">Off</option>
-                    <option value="brave">Brave</option>
-                    <option value="google">Google</option>
+                    <option value="off"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.off" /></option>
+                    <option value="brave"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.brave" /></option>
+                    <option value="google"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.google" /></option>
                   </select>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" checked={draft.enableThoughts ?? true} onChange={e => update("enableThoughts", e.target.checked)} className="rounded border-border bg-surface text-accent focus:ring-accent" />
-                  <span className="text-[12px] text-text-primary">Enable Thoughts</span>
+                  <span className="text-[12px] text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.enableThoughts" /></span>
                 </label>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label hint="Temperature">Temperature</Label>
+                  <Label hint="Temperature"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.temperature" /></Label>
                   <input type="number" step="0.1" min="0" max="2" value={draft.temperature ?? 0.7} onChange={e => update("temperature", parseFloat(e.target.value))} className="w-full bg-surface border border-border rounded-md px-2 py-1 text-[12.5px] text-text-primary outline-none focus:border-accent" />
                 </div>
                 <div>
-                  <Label hint="Top P">Top P</Label>
+                  <Label hint="Top P"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.topP" /></Label>
                   <input type="number" step="0.05" min="0" max="1" value={draft.topP ?? 0.9} onChange={e => update("topP", parseFloat(e.target.value))} className="w-full bg-surface border border-border rounded-md px-2 py-1 text-[12.5px] text-text-primary outline-none focus:border-accent" />
                 </div>
               </div>
@@ -1133,16 +1118,15 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
             <div className="space-y-2 pt-2 border-t border-border/50">
               <div className="flex items-center justify-between mb-2">
                 <div>
-                  <Label>Sourced & Context Files</Label>
-                  <p className="text-[11.5px] text-text-muted">Files loaded into personality, system prompt, instructions, or attached as general context are stored directly inside this character card.</p>
+                  <Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.sourcedContextFiles" /></Label>
+                  <p className="text-[11.5px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.description.filesLoadedIntoPersonalitySystemPromptInstructions" /></p>
                 </div>
                 <label className="text-[12px] px-2.5 py-1 rounded-md border border-border bg-surface-elevated text-text-secondary hover:text-text-primary hover:border-accent/40 cursor-pointer transition-colors shrink-0">
-                  Upload File (Max 5MB)
-                  <input type="file" className="hidden" onChange={handleContextFileUpload} accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown" />
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.label.uploadFileMax5mb" /><input type="file" className="hidden" onChange={handleContextFileUpload} accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown" />
                 </label>
               </div>
               {(!draft.contextFiles || draft.contextFiles.length === 0) ? (
-                <div className="text-[12px] text-text-muted italic">No sourced or context files uploaded.</div>
+                <div className="text-[12px] text-text-muted italic"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.noSourcedOrContextFilesUploaded" /></div>
               ) : (
                 <div className="space-y-2">
                   {draft.contextFiles.map((f) => (
@@ -1162,12 +1146,10 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
                         <GhostButton onClick={() => setViewingContextFile(f)}>
-                          View
-                        </GhostButton>
+                          <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.view" /></GhostButton>
                         {f.targetField && f.targetField !== "general" && (
                           <GhostButton onClick={() => handleReapplySourcedFile(f)}>
-                            Re-apply
-                          </GhostButton>
+                            <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.reApply" /></GhostButton>
                         )}
                         <button type="button" onClick={() => removeContextFile(f.id)} aria-label={`Remove file ${f.name}`} className="text-text-muted hover:text-rose-300 p-1">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
@@ -1184,11 +1166,11 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         {/* Step 9: Test */}
         {isStepVisible(8) && (
           <section className="space-y-4 rounded-xl border border-border bg-surface/50 p-4">
-            <h3 className="text-[13px] font-semibold text-text-primary">9. Test & AI Refinement</h3>
+            <h3 className="text-[13px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.heading.9TestAiRefinement" /></h3>
             <div className="space-y-2">
-              <Label>Disposable test chat</Label>
-              <p className="text-[12px] text-text-muted">Runs one unsaved turn. The response never mutates this card or becomes example dialogue automatically.</p>
-              <div className="grid gap-3 sm:grid-cols-2"><div><Label>Prompt-order trace</Label><ol className="max-h-40 overflow-y-auto rounded border border-border bg-surface p-2 text-[11px] text-text-secondary">{testCompilation.sections.filter((section) => section.included).map((section) => <li key={section.id}>{section.kind} · ~{section.tokens} tokens</li>)}</ol><p className="mt-1 text-[11px] text-text-muted">Estimated system prompt: {testCompilation.totalSystemTokens.toLocaleString()} tokens · activated lorebook sections: {testCompilation.sections.filter((section) => section.kind === "lorebook-entry" && section.included).length}</p></div><div><Label>Test user message</Label><TextArea value={testMessage} onChange={setTestMessage} rows={3} ariaLabel="Disposable test user message" /><PrimaryButton disabled={testingCard || !testMessage.trim() || !(draft.modelId || generationModel)} onClick={async () => {
+              <Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.disposableTestChat" /></Label>
+              <p className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.description.runsOneUnsavedTurnTheResponseNever" /></p>
+              <div className="grid gap-3 sm:grid-cols-2"><div><Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.promptOrderTrace" /></Label><ol className="max-h-40 overflow-y-auto rounded border border-border bg-surface p-2 text-[11px] text-text-secondary">{testCompilation.sections.filter((section) => section.included).map((section) => <li key={section.id}>{section.kind} · ~{section.tokens} <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.item.tokens" /></li>)}</ol><p className="mt-1 text-[11px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.description.estimatedSystemPrompt" /> {testCompilation.totalSystemTokens.toLocaleString()} <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.description.tokensActivatedLorebookSections" /> {testCompilation.sections.filter((section) => section.kind === "lorebook-entry" && section.included).length}</p></div><div><Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.testUserMessage" /></Label><TextArea value={testMessage} onChange={setTestMessage} rows={3} ariaLabel="Disposable test user message" /><PrimaryButton disabled={testingCard || !testMessage.trim() || !(draft.modelId || generationModel)} onClick={async () => {
                 setTestingCard(true); setError(null); setTestResponse("");
                 try {
                   const result = await veniceFetch("/chat/completions", { method: "POST", body: { model: draft.modelId || generationModel, messages: [
@@ -1206,7 +1188,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                 } catch (cause) { setError(cause instanceof Error ? cause.message : "Test chat failed."); }
                 finally { setTestingCard(false); }
               }}>{testingCard ? "Testing…" : "Run disposable test"}</PrimaryButton></div></div>
-              {testResponse && <div className="rounded border border-border bg-surface p-3 text-[13px] text-text-primary"><div className="mb-1 text-[11px] uppercase text-text-muted">Unsaved model response</div>{testResponse}<div className="mt-2 flex flex-wrap gap-2"><PrimaryButton onClick={async () => {
+              {testResponse && <div className="rounded border border-border bg-surface p-3 text-[13px] text-text-primary"><div className="mb-1 text-[11px] uppercase text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.unsavedModelResponse" /></div>{testResponse}<div className="mt-2 flex flex-wrap gap-2"><PrimaryButton onClick={async () => {
                 const saved = await upsert(draft);
                 if (!saved) { setError("Save the card before promoting this test chat."); return; }
                 const model = draft.modelId || generationModel || FALLBACK_MODELS.text[0]?.id || "venice-uncensored";
@@ -1216,18 +1198,18 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                 chat.addMessage(conversationId, { role: "assistant", content: testResponse, metadata: { source: "st-card-disposable-test" } });
                 setActiveTab("character-chats");
                 toast.success("Test chat saved", "The disposable turn was promoted to a real local conversation.");
-              }}>Save as real conversation</PrimaryButton><GhostButton onClick={() => setTestResponse("")}>Reset test</GhostButton></div></div>}
+              }}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.saveAsRealConversation" /></PrimaryButton><GhostButton onClick={() => setTestResponse("")}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.resetTest" /></GhostButton></div></div>}
             </div>
             <div className="space-y-3 rounded-lg border border-border bg-surface-elevated p-3" aria-labelledby="card-generation-title">
-              <div className="flex items-center justify-between gap-2"><div><h3 id="card-generation-title" className="text-[14px] font-semibold text-text-primary">AI draft generation</h3><p className="text-[12px] text-text-muted">Analysis and generated cards remain proposals. Your current draft is preserved until you explicitly apply one.</p></div>{generationStatus !== "idle" && <GhostButton onClick={() => generationAbortRef.current?.abort()}>Cancel</GhostButton>}</div>
+              <div className="flex items-center justify-between gap-2"><div><h3 id="card-generation-title" className="text-[14px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.heading.aiDraftGeneration" /></h3><p className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.description.analysisAndGeneratedCardsRemainProposalsYour" /></p></div>{generationStatus !== "idle" && <GhostButton onClick={() => generationAbortRef.current?.abort()}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.cancel" /></GhostButton>}</div>
               <div className="grid gap-3 sm:grid-cols-2">
-                <label><span className="mb-1 block text-[12px] text-text-muted">Card-generation model</span><select value={generationModel} onChange={(event) => setGenerationModel(event.target.value)} className="w-full rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary">{liveTextModels.map((model) => <option key={model.id} value={model.id}>{model.model_spec?.name ?? model.id}</option>)}</select></label>
-                <label><span className="mb-1 block text-[12px] text-text-muted">Vision-analysis model</span><select value={visionModel} onChange={(event) => setVisionModel(event.target.value)} className="w-full rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary"><option value="">No compatible live model</option>{getVisionCapableCharacterModels(liveTextModels).map((model) => <option key={model.id} value={model.id}>{model.model_spec?.name ?? model.id} · vision · {(model.model_spec?.availableContextTokens ?? 0).toLocaleString()} context</option>)}</select></label>
-                <label><span className="mb-1 block text-[12px] text-text-muted">Local image asset</span><select value={selectedSourceMediaId} onChange={(event) => setSelectedSourceMediaId(event.target.value)} className="w-full rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary"><option value="">Choose Media Studio image…</option>{mediaItems.filter((item) => item.mediaType === "image").map((item) => <option key={item.id} value={item.id}>{item.note || item.prompt || item.id}</option>)}</select></label>
-                <label><span className="mb-1 block text-[12px] text-text-muted">Text concept</span><input value={generationConcept} onChange={(event) => setGenerationConcept(event.target.value)} placeholder="Genre, setting, role, personality, relationship…" className="w-full rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary" /></label>
+                <label><span className="mb-1 block text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.cardGenerationModel" /></span><select value={generationModel} onChange={(event) => setGenerationModel(event.target.value)} className="w-full rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary">{liveTextModels.map((model) => <option key={model.id} value={model.id}>{model.model_spec?.name ?? model.id}</option>)}</select></label>
+                <label><span className="mb-1 block text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.visionAnalysisModel" /></span><select value={visionModel} onChange={(event) => setVisionModel(event.target.value)} className="w-full rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary"><option value=""><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.noCompatibleLiveModel" /></option>{getVisionCapableCharacterModels(liveTextModels).map((model) => <option key={model.id} value={model.id}>{model.model_spec?.name ?? model.id} <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.vision" /> {(model.model_spec?.availableContextTokens ?? 0).toLocaleString()} <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.context" /></option>)}</select></label>
+                <label><span className="mb-1 block text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.localImageAsset" /></span><select value={selectedSourceMediaId} onChange={(event) => setSelectedSourceMediaId(event.target.value)} className="w-full rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary"><option value=""><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.chooseMediaStudioImage" /></option>{mediaItems.filter((item) => item.mediaType === "image").map((item) => <option key={item.id} value={item.id}>{item.note || item.prompt || item.id}</option>)}</select></label>
+                <label><span className="mb-1 block text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.textConcept" /></span><input value={generationConcept} onChange={(event) => setGenerationConcept(event.target.value)} placeholder="Genre, setting, role, personality, relationship…" className="w-full rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary" /></label>
               </div>
-              {selectedVisionModel && <div className="rounded border border-border bg-surface p-2 text-[11px] text-text-muted" aria-label="Vision model capability summary">Vision capable · provider {selectedVisionModel.owned_by || "unknown"} · {(selectedVisionModel.model_spec?.availableContextTokens ?? 0).toLocaleString()} context tokens · request image ~{Math.ceil((selectedGenerationMedia?.image.length ?? 0) / 1024).toLocaleString()} KiB · private/anonymous status not published by the live model catalog</div>}
-              <details className="rounded border border-border bg-surface p-2"><summary className="cursor-pointer text-[12px] text-text-secondary">Text generation profile</summary><div className="mt-3 grid gap-2 sm:grid-cols-3">{([['genre', 'Genre'], ['setting', 'Setting'], ['role', 'Character role'], ['personalityDirection', 'Personality direction'], ['dialogueStyle', 'Dialogue style'], ['relationshipToUser', 'Relationship to user'], ['desiredConflict', 'Desired conflict'], ['language', 'Language']] as const).map(([key, label]) => <label key={key}><span className="mb-1 block text-[11px] text-text-muted">{label}</span><input value={generationOptions[key]} onChange={(event) => setGenerationOptions((options) => ({ ...options, [key]: event.target.value }))} className="w-full rounded border border-border bg-surface-elevated px-2 py-1 text-[12px]" /></label>)}<label><span className="mb-1 block text-[11px] text-text-muted">Content rating</span><select value={generationOptions.contentRating} onChange={(event) => setGenerationOptions((options) => ({ ...options, contentRating: event.target.value as typeof options.contentRating }))} className="w-full rounded border border-border bg-surface-elevated px-2 py-1 text-[12px]"><option value="general">General</option><option value="mature">Mature</option><option value="adult">Adult</option></select></label><label><span className="mb-1 block text-[11px] text-text-muted">Detail level</span><select value={generationOptions.detailLevel} onChange={(event) => setGenerationOptions((options) => ({ ...options, detailLevel: event.target.value as typeof options.detailLevel }))} className="w-full rounded border border-border bg-surface-elevated px-2 py-1 text-[12px]">{['concise', 'detailed', 'narrative', 'roleplay-heavy', 'lore-heavy', 'custom'].map((value) => <option key={value}>{value}</option>)}</select></label>{generationOptions.detailLevel === "custom" && <label className="sm:col-span-3"><span className="mb-1 block text-[11px] text-text-muted">Custom generation direction</span><input value={generationOptions.customDirection} onChange={(event) => setGenerationOptions((options) => ({ ...options, customDirection: event.target.value }))} className="w-full rounded border border-border bg-surface-elevated px-2 py-1 text-[12px]" /></label>}</div></details>
+              {selectedVisionModel && <div className="rounded border border-border bg-surface p-2 text-[11px] text-text-muted" aria-label="Vision model capability summary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.visionCapableProvider" /> {selectedVisionModel.owned_by || "unknown"} · {(selectedVisionModel.model_spec?.availableContextTokens ?? 0).toLocaleString()} <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.contextTokensRequestImage" />{Math.ceil((selectedGenerationMedia?.image.length ?? 0) / 1024).toLocaleString()} KiB · private/anonymous status not published by the live model catalog</div>}
+              <details className="rounded border border-border bg-surface p-2"><summary className="cursor-pointer text-[12px] text-text-secondary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.textGenerationProfile" /></summary><div className="mt-3 grid gap-2 sm:grid-cols-3">{([['genre', 'Genre'], ['setting', 'Setting'], ['role', 'Character role'], ['personalityDirection', 'Personality direction'], ['dialogueStyle', 'Dialogue style'], ['relationshipToUser', 'Relationship to user'], ['desiredConflict', 'Desired conflict'], ['language', 'Language']] as const).map(([key, label]) => <label key={key}><span className="mb-1 block text-[11px] text-text-muted">{label}</span><input value={generationOptions[key]} onChange={(event) => setGenerationOptions((options) => ({ ...options, [key]: event.target.value }))} className="w-full rounded border border-border bg-surface-elevated px-2 py-1 text-[12px]" /></label>)}<label><span className="mb-1 block text-[11px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.contentRating" /></span><select value={generationOptions.contentRating} onChange={(event) => setGenerationOptions((options) => ({ ...options, contentRating: event.target.value as typeof options.contentRating }))} className="w-full rounded border border-border bg-surface-elevated px-2 py-1 text-[12px]"><option value="general"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.general" /></option><option value="mature"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.mature" /></option><option value="adult"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.adult" /></option></select></label><label><span className="mb-1 block text-[11px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.detailLevel" /></span><select value={generationOptions.detailLevel} onChange={(event) => setGenerationOptions((options) => ({ ...options, detailLevel: event.target.value as typeof options.detailLevel }))} className="w-full rounded border border-border bg-surface-elevated px-2 py-1 text-[12px]">{['concise', 'detailed', 'narrative', 'roleplay-heavy', 'lore-heavy', 'custom'].map((value) => <option key={value}>{value}</option>)}</select></label>{generationOptions.detailLevel === "custom" && <label className="sm:col-span-3"><span className="mb-1 block text-[11px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.customGenerationDirection" /></span><input value={generationOptions.customDirection} onChange={(event) => setGenerationOptions((options) => ({ ...options, customDirection: event.target.value }))} className="w-full rounded border border-border bg-surface-elevated px-2 py-1 text-[12px]" /></label>}</div></details>
               <div className="flex flex-wrap gap-2">
                 <GhostButton disabled={!selectedSourceMediaId || !visionModel || generationStatus !== "idle"} onClick={async () => {
                   const controller = new AbortController(); generationAbortRef.current = controller; setGenerationStatus("analyzing"); setError(null);
@@ -1242,20 +1224,20 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                   finally { generationAbortRef.current = null; setGenerationStatus("idle"); }
                 }}>{generationStatus === "generating" ? "Generating…" : analysisDraft ? "Synthesize from image + text" : "Generate from text"}</PrimaryButton>
               </div>
-              {analysisDraft && <div className="rounded border border-border bg-surface p-2 text-[12px] text-text-secondary"><strong className="text-text-primary">Visual analysis:</strong> {analysisDraft.visualDescription || "No direct description"}{analysisDraft.warnings.length > 0 && <div className="mt-1 text-warning">{analysisDraft.warnings.join(" · ")}</div>}</div>}
-              {generatedDraft && <div className="space-y-2 rounded border border-accent/40 bg-surface p-3"><div className="text-[13px] font-medium text-text-primary">Generated V2 draft: {generatedDraft.name || "Untitled"}</div><p className="text-[12px] text-text-secondary">{generatedDraft.description || "No description"}</p><div className="flex gap-2"><PrimaryButton onClick={() => { setDraft({ ...generatedDraft, id: draft.id, avatar: draft.avatar, createdAt: draft.createdAt, updatedAt: Date.now(), versions: draft.versions, metadata: draft.metadata }); setExtensionText(JSON.stringify(generatedDraft.tavernExtensions ?? {}, null, 2)); setGeneratedDraft(null); }}>Apply to local draft</PrimaryButton><GhostButton onClick={() => setGeneratedDraft(null)}>Reject</GhostButton></div></div>}
-              <div className="pt-3 soft-separator-y"><div className="grid gap-2 sm:grid-cols-[1fr_auto]"><select value={fieldTarget} onChange={(event) => setFieldTarget(event.target.value as typeof fieldTarget)} className="rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary">{["name", "description", "personality", "scenario", "firstMessage", "systemPrompt", "postHistoryInstructions", "rawExampleDialogue"].map((field) => <option key={field} value={field}>Generate {field}</option>)}</select><GhostButton disabled={!generationModel || generationStatus !== "idle"} onClick={async () => {
+              {analysisDraft && <div className="rounded border border-border bg-surface p-2 text-[12px] text-text-secondary"><strong className="text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.visualAnalysis" /></strong> {analysisDraft.visualDescription || "No direct description"}{analysisDraft.warnings.length > 0 && <div className="mt-1 text-warning">{analysisDraft.warnings.join(" · ")}</div>}</div>}
+              {generatedDraft && <div className="space-y-2 rounded border border-accent/40 bg-surface p-3"><div className="text-[13px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.generatedV2Draft" /> {generatedDraft.name || "Untitled"}</div><p className="text-[12px] text-text-secondary">{generatedDraft.description || "No description"}</p><div className="flex gap-2"><PrimaryButton onClick={() => { setDraft({ ...generatedDraft, id: draft.id, avatar: draft.avatar, createdAt: draft.createdAt, updatedAt: Date.now(), versions: draft.versions, metadata: draft.metadata }); setExtensionText(JSON.stringify(generatedDraft.tavernExtensions ?? {}, null, 2)); setGeneratedDraft(null); }}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.applyToLocalDraft" /></PrimaryButton><GhostButton onClick={() => setGeneratedDraft(null)}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.reject" /></GhostButton></div></div>}
+              <div className="pt-3 soft-separator-y"><div className="grid gap-2 sm:grid-cols-[1fr_auto]"><select value={fieldTarget} onChange={(event) => setFieldTarget(event.target.value as typeof fieldTarget)} className="rounded border border-border bg-surface px-2 py-1.5 text-[13px] text-text-primary">{["name", "description", "personality", "scenario", "firstMessage", "systemPrompt", "postHistoryInstructions", "rawExampleDialogue"].map((field) => <option key={field} value={field}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.generate" /> {field}</option>)}</select><GhostButton disabled={!generationModel || generationStatus !== "idle"} onClick={async () => {
                     const controller = new AbortController(); generationAbortRef.current = controller; setGenerationStatus("generating"); setError(null);
                     try { setFieldProposal(await generateCharacterFieldProposal({ card: draft, field: fieldTarget, modelId: generationModel, signal: controller.signal })); }
                     catch (cause) { if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : "Field generation failed."); }
                     finally { generationAbortRef.current = null; setGenerationStatus("idle"); }
-                  }}>Generate field proposal</GhostButton></div>
-                {fieldProposal && <div className="mt-2 grid gap-2 rounded border border-border bg-surface p-2 text-[12px] sm:grid-cols-2"><div><span className="text-text-muted">Before</span><p>{fieldProposal.before}</p></div><div><span className="text-text-muted">After</span><p>{fieldProposal.after}</p></div><p className="sm:col-span-2 text-text-muted">{fieldProposal.reason}</p><div className="flex gap-2 sm:col-span-2"><PrimaryButton onClick={async () => { await addVersion(draft.id, `Before AI field proposal: ${fieldProposal.field}`); update(fieldProposal.field, fieldProposal.after); setFieldProposal(null); }}>Apply proposal</PrimaryButton><GhostButton onClick={() => setFieldProposal(null)}>Reject</GhostButton></div></div>}
+                  }}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.generateFieldProposal" /></GhostButton></div>
+                {fieldProposal && <div className="mt-2 grid gap-2 rounded border border-border bg-surface p-2 text-[12px] sm:grid-cols-2"><div><span className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.before" /></span><p>{fieldProposal.before}</p></div><div><span className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.after" /></span><p>{fieldProposal.after}</p></div><p className="sm:col-span-2 text-text-muted">{fieldProposal.reason}</p><div className="flex gap-2 sm:col-span-2"><PrimaryButton onClick={async () => { await addVersion(draft.id, `Before AI field proposal: ${fieldProposal.field}`); update(fieldProposal.field, fieldProposal.after); setFieldProposal(null); }}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.applyProposal" /></PrimaryButton><GhostButton onClick={() => setFieldProposal(null)}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.reject" /></GhostButton></div></div>}
               </div>
             </div>
             <div className="space-y-3 pt-3 border-t border-border/50">
-              <Label>AI refinement assistant</Label>
-              <p className="text-[12px] text-text-muted">Produces an allowlisted proposal only. Nothing changes until you apply it.</p>
+              <Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.aiRefinementAssistant" /></Label>
+              <p className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.description.producesAnAllowlistedProposalOnlyNothingChanges" /></p>
               <div className="grid gap-2 sm:grid-cols-2">
                 <select value={refinementAction} onChange={(event) => setRefinementAction(event.target.value)} className="rounded-lg border border-border bg-surface px-3 py-2 text-[13px] text-text-primary">
                   {["Review consistency", "Find contradictions", "Improve greeting", "Improve personality", "Improve scenario", "Improve dialogue style", "Generate missing fields", "Reduce token usage", "Change tone", "Change genre", "Make safer", "Make more detailed"].map((action) => <option key={action}>{action}</option>)}
@@ -1271,23 +1253,23 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                   setProposal(nextProposal); setSelectedProposalOperations(new Set(nextProposal.operations.map((_, index) => index)));
                 } catch (cause) { if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : "AI refinement failed."); }
                 finally { refinementAbortRef.current = null; setRefining(false); }
-              }}>{refining ? "Generating proposal…" : "Generate proposal"}</PrimaryButton>{refining && <GhostButton onClick={() => refinementAbortRef.current?.abort()}>Cancel</GhostButton>}</div>
+              }}>{refining ? "Generating proposal…" : "Generate proposal"}</PrimaryButton>{refining && <GhostButton onClick={() => refinementAbortRef.current?.abort()}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.cancel" /></GhostButton>}</div>
               {proposal && <div className="space-y-2 rounded-lg border border-border bg-surface-elevated p-3">
                 <div className="text-[13px] font-medium text-text-primary">{proposal.summary}</div>
                 {proposal.operations.map((operation, index) => <div key={index} className="rounded border border-border bg-surface p-2 text-[12px]">
                   <label className="flex items-center gap-2 font-mono text-text-secondary"><input type="checkbox" checked={selectedProposalOperations.has(index)} onChange={(event) => setSelectedProposalOperations((selected) => { const next = new Set(selected); if (event.target.checked) next.add(index); else next.delete(index); return next; })} />{operation.op} {operation.path}</label>
-                  {operation.op === "replace" && <div className="mt-1 grid gap-1 sm:grid-cols-2"><div><span className="text-text-muted">Before:</span> {String((draft as unknown as Record<string, unknown>)[operation.path] ?? "")}</div><div><span className="text-text-muted">After:</span> {String(operation.value)}</div></div>}
+                  {operation.op === "replace" && <div className="mt-1 grid gap-1 sm:grid-cols-2"><div><span className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.before842beb5" /></span> {String((draft as unknown as Record<string, unknown>)[operation.path] ?? "")}</div><div><span className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.after13f2d65" /></span> {String(operation.value)}</div></div>}
                   {operation.reason && <div className="mt-1 text-text-muted">{operation.reason}</div>}
                 </div>)}
-                <div className="flex flex-wrap gap-2"><PrimaryButton disabled={selectedProposalOperations.size === 0} onClick={async () => { await addVersion(draft.id, `Before AI refinement: ${proposal.summary}`); setDraft(applyCharacterCardProposal(draft, proposal, selectedProposalOperations)); setProposal(null); }}>Apply selected</PrimaryButton><GhostButton onClick={() => setSelectedProposalOperations(new Set(proposal.operations.map((_, index) => index)))}>Select all</GhostButton><GhostButton onClick={() => setProposal(null)}>Reject</GhostButton></div>
+                <div className="flex flex-wrap gap-2"><PrimaryButton disabled={selectedProposalOperations.size === 0} onClick={async () => { await addVersion(draft.id, `Before AI refinement: ${proposal.summary}`); setDraft(applyCharacterCardProposal(draft, proposal, selectedProposalOperations)); setProposal(null); }}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.applySelected" /></PrimaryButton><GhostButton onClick={() => setSelectedProposalOperations(new Set(proposal.operations.map((_, index) => index)))}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.selectAll" /></GhostButton><GhostButton onClick={() => setProposal(null)}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.reject" /></GhostButton></div>
               </div>}
             </div>
             <div className="space-y-2 pt-3 border-t border-border/50">
-              <Label>Card Validation</Label>
+              <Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.cardValidation" /></Label>
               {(() => {
                 const issues = validateCharacterCardAuthoring(draft);
                 if (issues.length === 0) {
-                  return <div className="text-[12px] text-success">Format valid and recommended fields complete.</div>;
+                  return <div className="text-[12px] text-success"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.formatValidAndRecommendedFieldsComplete" /></div>;
                 }
                 return (
                   <div className="space-y-1">
@@ -1313,20 +1295,20 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
         {/* Step 10: Export */}
         {isStepVisible(9) && (
           <section className="space-y-4 rounded-xl border border-border bg-surface/50 p-4">
-            <h3 className="text-[13px] font-semibold text-text-primary">10. Export & Workflow</h3>
+            <h3 className="text-[13px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.heading.10ExportWorkflow" /></h3>
             <div className="space-y-2">
-              <Label>ST Card export</Label>
+              <Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.stCardExport" /></Label>
               <div className="flex flex-wrap gap-2">
-                <GhostButton onClick={async () => { const result = await desktopCharacterCards.exportJson({ cardId: draft.id, profile: "standard" }); if (!result.ok) setError(result.error ?? "JSON export failed."); else if (result.report) setExportReport(result.report); }}>Export V2 JSON</GhostButton>
-                <GhostButton disabled={!draft.avatar && !sourceMedia} onClick={async () => { const result = await desktopCharacterCards.exportPng({ cardId: draft.id, profile: "standard" }); if (!result.ok) setError(result.error ?? "PNG export failed."); else if (result.report) setExportReport(result.report); }}>Export V2 PNG</GhostButton>
-                <GhostButton onClick={async () => { const result = await desktopCharacterCards.exportJson({ cardId: draft.id, profile: "privacy-reduced" }); if (!result.ok) setError(result.error ?? "Privacy-reduced export failed."); else if (result.report) setExportReport(result.report); }}>Export privacy-reduced JSON</GhostButton>
+                <GhostButton onClick={async () => { const result = await desktopCharacterCards.exportJson({ cardId: draft.id, profile: "standard" }); if (!result.ok) setError(result.error ?? "JSON export failed."); else if (result.report) setExportReport(result.report); }}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.exportV2Json" /></GhostButton>
+                <GhostButton disabled={!draft.avatar && !sourceMedia} onClick={async () => { const result = await desktopCharacterCards.exportPng({ cardId: draft.id, profile: "standard" }); if (!result.ok) setError(result.error ?? "PNG export failed."); else if (result.report) setExportReport(result.report); }}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.exportV2Png" /></GhostButton>
+                <GhostButton onClick={async () => { const result = await desktopCharacterCards.exportJson({ cardId: draft.id, profile: "privacy-reduced" }); if (!result.ok) setError(result.error ?? "Privacy-reduced export failed."); else if (result.report) setExportReport(result.report); }}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.exportPrivacyReducedJson" /></GhostButton>
               </div>
-              {exportReport && <dl className="grid gap-x-3 gap-y-1 rounded border border-border bg-surface p-3 text-[12px] sm:grid-cols-[auto_1fr]" aria-label="ST Card export report"><dt className="text-text-muted">Validation</dt><dd className="text-success">Round-trip verified</dd><dt className="text-text-muted">Output</dt><dd>{exportReport.format.toUpperCase()} · {exportReport.outputBytes.toLocaleString()} bytes{exportReport.image ? ` · ${exportReport.image.width}×${exportReport.image.height}` : ""}</dd><dt className="text-text-muted">V2 fields</dt><dd>{exportReport.validV2Fields.join(", ")}</dd><dt className="text-text-muted">Extensions</dt><dd>{exportReport.extensionNamespaces.join(", ") || "None"}</dd><dt className="text-text-muted">Embedded lore entries</dt><dd>{exportReport.embeddedLorebookCount}</dd><dt className="text-text-muted">Dropped local-only fields</dt><dd>{exportReport.droppedInternalFields.join(", ") || "None"}</dd>{exportReport.warnings.length > 0 && <><dt className="text-warning">Warnings</dt><dd>{exportReport.warnings.join(" ")}</dd></>}</dl>}
+              {exportReport && <dl className="grid gap-x-3 gap-y-1 rounded border border-border bg-surface p-3 text-[12px] sm:grid-cols-[auto_1fr]" aria-label="ST Card export report"><dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.validation" /></dt><dd className="text-success"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.roundTripVerified" /></dd><dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.output" /></dt><dd>{exportReport.format.toUpperCase()} · {exportReport.outputBytes.toLocaleString()} <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.bytes" />{exportReport.image ? ` · ${exportReport.image.width}×${exportReport.image.height}` : ""}</dd><dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.v2Fields" /></dt><dd>{exportReport.validV2Fields.join(", ")}</dd><dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.extensions" /></dt><dd>{exportReport.extensionNamespaces.join(", ") || "None"}</dd><dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.embeddedLoreEntries" /></dt><dd>{exportReport.embeddedLorebookCount}</dd><dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.droppedLocalOnlyFields" /></dt><dd>{exportReport.droppedInternalFields.join(", ") || "None"}</dd>{exportReport.warnings.length > 0 && <><dt className="text-warning"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.warnings" /></dt><dd>{exportReport.warnings.join(" ")}</dd></>}</dl>}
             </div>
             <div className="space-y-2 pt-3 border-t border-border/50">
               <div className="flex items-center justify-between">
-                <Label>Version history</Label>
-                <GhostButton onClick={() => void handleSaveVersion()}>Save version</GhostButton>
+                <Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.versionHistory" /></Label>
+                <GhostButton onClick={() => void handleSaveVersion()}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.saveVersion" /></GhostButton>
               </div>
               {draft.versions && draft.versions.length > 0 ? (
                 <div className="space-y-1">
@@ -1347,35 +1329,33 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                           <span className="text-text-muted ml-2">— {v.reason}</span>
                         ) : null}
                         {v.id === draft.currentVersionId ? (
-                          <span className="text-accent ml-2">(current)</span>
+                          <span className="text-accent ml-2"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.current" /></span>
                         ) : null}
                       </div>
                       {v.id !== draft.currentVersionId && (
-                        <div className="flex gap-1"><button type="button" onClick={() => setComparisonVersionId(v.id)} className="text-[12px] px-2 py-0.5 rounded text-text-secondary hover:text-accent hover:bg-accent/10 transition-colors">Compare</button><button
+                        <div className="flex gap-1"><button type="button" onClick={() => setComparisonVersionId(v.id)} className="text-[12px] px-2 py-0.5 rounded text-text-secondary hover:text-accent hover:bg-accent/10 transition-colors"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.compare" /></button><button
                           type="button"
                           onClick={() => void handleRestoreVersion(v.id)}
                           className="text-[12px] px-2 py-0.5 rounded text-text-secondary hover:text-accent hover:bg-accent/10 transition-colors"
                         >
-                          Restore
-                        </button></div>
+                          <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.restore" /></button></div>
                       )}
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="text-[12px] text-text-muted italic">
-                  No versions saved. Save a version to track changes.
-                </div>
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.noVersionsSavedSaveAVersionTo" /></div>
               )}
               {comparisonVersionId && (() => {
                 const version = draft.versions?.find((item) => item.id === comparisonVersionId);
                 if (!version) return null;
                 const fields = ["name", "description", "personality", "scenario", "firstMessage", "systemPrompt", "postHistoryInstructions", "rawExampleDialogue", "characterVersion"] as const;
-                return <div className="rounded-lg border border-border bg-surface p-3" aria-label="Character version comparison"><div className="mb-2 flex items-center justify-between"><strong className="text-[13px] text-text-primary">Version comparison</strong><GhostButton onClick={() => setComparisonVersionId(null)}>Close</GhostButton></div><div className="space-y-2">{fields.filter((field) => String(version.snapshot[field] ?? "") !== String(draft[field] ?? "")).map((field) => <div key={field} className="grid gap-2 text-[12px] sm:grid-cols-[8rem_1fr_1fr]"><span className="font-mono text-text-muted">{field}</span><span className="rounded border border-border p-2"><span className="block text-[10px] uppercase text-text-muted">Saved</span>{String(version.snapshot[field] ?? "")}</span><span className="rounded border border-border p-2"><span className="block text-[10px] uppercase text-text-muted">Current</span>{String(draft[field] ?? "")}</span></div>)}</div></div>;
+                return <div className="rounded-lg border border-border bg-surface p-3" aria-label="Character version comparison"><div className="mb-2 flex items-center justify-between"><strong className="text-[13px] text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.versionComparison" /></strong><GhostButton onClick={() => setComparisonVersionId(null)}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.close" /></GhostButton></div><div className="space-y-2">{fields.filter((field) => String(version.snapshot[field] ?? "") !== String(draft[field] ?? "")).map((field) => <div key={field} className="grid gap-2 text-[12px] sm:grid-cols-[8rem_1fr_1fr]"><span className="font-mono text-text-muted">{field}</span><span className="rounded border border-border p-2"><span className="block text-[10px] uppercase text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.saved" /></span>{String(version.snapshot[field] ?? "")}</span><span className="rounded border border-border p-2"><span className="block text-[10px] uppercase text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.current4fc0e2b" /></span>{String(draft[field] ?? "")}</span></div>)}</div></div>;
               })()}
             </div>
             <div className="space-y-2 pt-3 border-t border-border/50" data-testid="character-editor-workflow">
-              <Label>Workflow</Label>
+              <Label><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.workflow" /></Label>
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
@@ -1384,8 +1364,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                   data-testid="character-editor-save-to-prompt-library"
                   className="text-[12px] px-2.5 py-1.5 rounded-md border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Save to Prompt Library
-                </button>
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.saveToPromptLibrary" /></button>
                 <select
                   value=""
                   onChange={(e) => {
@@ -1398,7 +1377,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                   data-testid="character-editor-attach-scene"
                   className="text-[12px] px-2 py-1.5 rounded-md border border-border bg-surface text-text-secondary hover:bg-surface-elevated hover:text-text-primary transition-colors disabled:opacity-50"
                 >
-                  <option value="">Attach scene…</option>
+                  <option value=""><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.attachScene" /></option>
                   {scenes.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.title}
@@ -1417,7 +1396,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                   data-testid="character-editor-attach-prompt"
                   className="text-[12px] px-2 py-1.5 rounded-md border border-border bg-surface text-text-secondary hover:bg-surface-elevated hover:text-text-primary transition-colors disabled:opacity-50"
                 >
-                  <option value="">Attach prompt…</option>
+                  <option value=""><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.option.attachPrompt" /></option>
                   {prompts
                     .filter((p) => !p.archivedAt)
                     .map((p) => (
@@ -1433,8 +1412,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                   data-testid="character-editor-chat"
                   className="text-[12px] px-2.5 py-1.5 rounded-md border border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Chat
-                </button>
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.chat" /></button>
                 <button
                   type="button"
                   onClick={() => void handleStartChat()}
@@ -1442,8 +1420,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                   data-testid="character-editor-start-chat"
                   className="text-[12px] px-2.5 py-1.5 rounded-md border border-accent/30 text-accent hover:bg-accent/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Start RP chat
-                </button>
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.startRpChat" /></button>
                 <button
                   type="button"
                   onClick={() => void handleCreateScenarioFromCharacter()}
@@ -1451,8 +1428,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                   data-testid="character-editor-create-scenario"
                   className="text-[12px] px-2.5 py-1.5 rounded-md border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Create scenario from character
-                </button>
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.createScenarioFromCharacter" /></button>
                 <button
                   type="button"
                   onClick={() => void handleCreateWorkflow()}
@@ -1460,18 +1436,17 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
                   data-testid="character-editor-create-workflow"
                   className="text-[12px] px-2.5 py-1.5 rounded-md border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Create workflow
-                </button>
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.createWorkflow" /></button>
               </div>
               {(typeof draft.metadata?.attachedSceneId === "string" ||
                 typeof draft.metadata?.attachedPromptId === "string") && (
                 <div className="text-[12px] text-text-muted mt-1" data-testid="character-editor-workflow-summary">
                   {draft.metadata?.attachedSceneId ? (
-                    <span>Scene: {String(draft.metadata.attachedSceneId).slice(0, 32)}</span>
+                    <span><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.scene" /> {String(draft.metadata.attachedSceneId).slice(0, 32)}</span>
                   ) : null}
                   {draft.metadata?.attachedSceneId && draft.metadata?.attachedPromptId ? " · " : null}
                   {draft.metadata?.attachedPromptId ? (
-                    <span>Prompt: {String(draft.metadata.attachedPromptId).slice(0, 32)}</span>
+                    <span><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.prompt" /> {String(draft.metadata.attachedPromptId).slice(0, 32)}</span>
                   ) : null}
                 </div>
               )}
@@ -1487,22 +1462,21 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               onClick={() => setActiveStudioStep((prev) => (typeof prev === "number" && prev > 0 ? prev - 1 : prev))}
               className="text-[12px] px-3 py-1.5 rounded-md border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              ← Previous ({activeStudioStep > 0 ? studioSteps[activeStudioStep - 1] : ""})
+              <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.previous" />{activeStudioStep > 0 ? studioSteps[activeStudioStep - 1] : ""})
             </button>
             <button
               type="button"
               onClick={() => setActiveStudioStep("all")}
               className="text-[12px] px-3 py-1.5 rounded-md border border-border text-text-muted hover:text-text-primary hover:bg-surface-elevated transition-colors"
             >
-              View All Steps
-            </button>
+              <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.viewAllSteps" /></button>
             <button
               type="button"
               disabled={activeStudioStep === studioSteps.length - 1}
               onClick={() => setActiveStudioStep((prev) => (typeof prev === "number" && prev < studioSteps.length - 1 ? prev + 1 : prev))}
               className="text-[12px] px-3 py-1.5 rounded-md border border-accent/40 bg-accent/10 text-accent hover:bg-accent/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Next: {activeStudioStep < studioSteps.length - 1 ? studioSteps[activeStudioStep + 1] : ""} →
+              <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.action.next" /> {activeStudioStep < studioSteps.length - 1 ? studioSteps[activeStudioStep + 1] : ""} →
             </button>
           </div>
         )}
@@ -1536,10 +1510,10 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
             <div className="flex items-center justify-end px-4 py-3 border-t border-border/50 bg-surface gap-2">
               {viewingContextFile.targetField && viewingContextFile.targetField !== "general" && (
                 <PrimaryButton size="sm" onClick={() => { handleReapplySourcedFile(viewingContextFile); setViewingContextFile(null); }}>
-                  Re-apply to {viewingContextFile.targetField}
+                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.reApplyTo" /> {viewingContextFile.targetField}
                 </PrimaryButton>
               )}
-              <GhostButton onClick={() => setViewingContextFile(null)}>Close</GhostButton>
+              <GhostButton onClick={() => setViewingContextFile(null)}><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.close" /></GhostButton>
             </div>
           </div>
         </div>
@@ -1548,7 +1522,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
       {saving && (
         <div role="status" aria-label="Saving character" aria-live="polite" className="absolute inset-0 flex items-center justify-center gap-2 bg-black/30 pointer-events-none"> {/* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */}
           <Spinner className="text-text-muted" />
-          <span className="text-sm text-text-primary">Saving character…</span>
+          <span className="text-sm text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.savingCharacter" /></span>
         </div>
       )}
     </div>

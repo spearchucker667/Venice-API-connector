@@ -71,5 +71,1917 @@
   "isWebEnabled": "true",
   "stable-audio": "q1",
   "video-model": "q2",
-  "promptLibrary": "lib-1"
+  "promptLibrary": "lib-1",
+  "surface": {
+    "app": {
+      "text": {
+        "skipToMainContent": "Aller au contenu principal",
+        "loadingWorkflows": "Chargement des flux de travail…",
+        "loadingPlayground": "Chargement de Playground…",
+        "loadingRpStudio": "Chargement de RP Studio…",
+        "loadingHistory": "Chargement de l'historique…",
+        "loadingImageStudio": "Chargement d'Image Studio…",
+        "loadingImageInspector": "Chargement d'Image Inspector…",
+        "loadingAudio": "Chargement de l'audio…",
+        "loadingMusic": "Chargement de musique…",
+        "loadingVideo": "Chargement de la vidéo…",
+        "loadingEmbeddings": "Chargement des intégrations…",
+        "loadingStatus": "Chargement de l'état…",
+        "loadingCharacters": "Chargement des personnages…",
+        "loadingCharacterCreator": "Chargement du créateur de personnages…",
+        "loadingSettings": "Chargement des paramètres…",
+        "loadingSearch": "Chargement de la recherche…",
+        "loadingMediaStudio": "Chargement du studio multimédia…",
+        "loadingPromptLibrary": "Chargement de la bibliothèque d'invites…",
+        "loadingScenes": "Chargement des scènes…",
+        "loadingStorage": "Chargement du stockage…",
+        "loadingDocuments": "Chargement des documents…"
+      }
+    },
+    "componentsCharactersview": {
+      "action": {
+        "chat": "Discussion",
+        "refresh": "Actualiser",
+        "edit": "Modifier",
+        "close": "Fermer",
+        "createStCard": "Créer une carte ST",
+        "select": "Sélectionnez",
+        "details": "Détails",
+        "duplicateLocally": "Dupliquer localement",
+        "startChat": "Démarrer le chat",
+        "duplicate": "Dupliquer",
+        "exportStCardJson": "Exporter la carte ST JSON",
+        "deleteLocalCharacter": "Supprimer le caractère local",
+        "importStCard": "Importer la carte ST",
+        "drafts": "Brouillons"
+      },
+      "heading": {
+        "characters": "Personnages",
+        "local": "Local",
+        "featured": "En vedette",
+        "adult": "Adulte",
+        "hosted": "Hébergé"
+      },
+      "label": {
+        "model": "Modèle",
+        "sort": "Trier"
+      },
+      "text": {
+        "featured": "En vedette",
+        "model": "Modèle :",
+        "ratings": "évaluations",
+        "imports": "importations",
+        "venice": "Venise ↗",
+        "needsValidation": "Validation nécessaire",
+        "includeAdultCharacters": "Inclure les personnages adultes",
+        "webEnabledOnly": "Web uniquement",
+        "loadingCharacters": "Chargement des caractères…",
+        "noCharactersFoundTryClearingTheSearch": "Aucun caractère trouvé. Essayez de décocher le champ de recherche ou d'activer les caractères adultes."
+      },
+      "description": {
+        "browseHostedAndLocallyAuthoredCharactersIn": "Parcourir les personnages hébergés et créés localement dans un seul hub."
+      }
+    },
+    "componentsStatusview": {
+      "heading": {
+        "status": "Statut",
+        "runtime": "Exécution",
+        "storage": "Stockage",
+        "safetyGuardAudit": "Audit des agents de sécurité",
+        "lastRequest": "Dernière demande"
+      },
+      "description": {
+        "aggregatedRuntimeInfoForTheCurrentBuild": "Informations d'exécution agrégées pour la version actuelle. Ouvrez le dossier de journaux",
+        "toInspectDetailedConsoleOutput": "pour inspecter la sortie détaillée de la console.",
+        "statusProvidesTransportStorageAuditAndRequest": "L'état fournit des diagnostics de transport, de stockage, d'audit et de demande. Utilisez les onglets dédiés Bibliothèque, Recherche, Paramètres et Flux de travail pour les contrôles spécifiques aux fonctionnalités."
+      },
+      "text": {
+        "logsFolder": "dossier des journaux",
+        "bySeverity": "Par gravité :",
+        "lastError": "Dernière erreur :",
+        "noRequestsYetLastErrorBelowIf": "aucune demande pour l'instant (dernière erreur ci-dessous le cas échéant)"
+      }
+    },
+    "componentsThememaker": {
+      "action": {
+        "cancel": "Annuler",
+        "createNewTheme": "+ Créer un nouveau thème",
+        "importTheme": "Importer le thème…",
+        "exportTheme": "Exporter le thème",
+        "darkMode": "Mode sombre",
+        "lightMode": "Mode clair",
+        "saveTheme": "Enregistrer le thème",
+        "deleteTheme": "Supprimer le thème",
+        "restoreDefaultTheme": "Restaurer le thème par défaut",
+        "replaceExisting": "Remplacer l'existant",
+        "importAsCopy": "Importer en tant que copie",
+        "importApply": "Importer et appliquer"
+      },
+      "heading": {
+        "themeSystemEditor": "Système et éditeur de thèmes",
+        "importThemePreview": "Aperçu du thème importé"
+      },
+      "description": {
+        "configureThemeColorsBorderContrastFocusRings": "Configurez les couleurs du thème, le contraste des bordures, les bagues de mise au point et les styles de boutons d'action sur Venice Forge.",
+        "reviewThemeMetadataAndPreviewLayoutBefore": "Vérifiez les métadonnées du thème et prévisualisez la mise en page avant de l'appliquer à votre espace de travail."
+      },
+      "label": {
+        "selectActiveTheme": "Sélectionner le thème actif"
+      },
+      "text": {
+        "unsavedDraftChanges": "Modifications préliminaires non enregistrées",
+        "invalid": "Invalide",
+        "liveThemePreview": "Aperçu du thème en direct",
+        "showingLivePreviewOfActiveDraft": "Affichage de l'aperçu en direct du brouillon actif",
+        "themeName": "Nom du thème :",
+        "mode": "Mode :",
+        "aCustomThemeNamedLdquo": "Un thème personnalisé nommé «",
+        "rdquoAlreadyExistsInYourWorkspace": "» existe déjà dans votre espace de travail.",
+        "importedLayoutPreview": "Aperçu de la mise en page importée"
+      }
+    },
+    "componentsThemepreview": {
+      "text": {
+        "status": "Statut",
+        "forge": "Forger",
+        "activeItem": "Élément actif",
+        "inactiveItem": "Élément inactif",
+        "selectedItem": "Élément sélectionné",
+        "primaryButton": "Bouton principal",
+        "secondary": "Secondaire",
+        "inputField": "Champ de saisie…",
+        "focusedControl": "Contrôle ciblé",
+        "alertMessageBoundary": "Limite du message d'alerte",
+        "contrastWarnings": "Avertissements de contraste :"
+      }
+    },
+    "componentsAudioAudioView": {
+      "text": {
+        "voice": "Voix",
+        "download": "Télécharger",
+        "text": "Texte",
+        "format": "Formater",
+        "speed": "Vitesse",
+        "generateSpeech": "Générer la parole",
+        "transcribe": "Transcrire",
+        "output": "Sortie",
+        "pressGenerateToSynthesizeSpeech": "Appuyer sur Générer pour synthétiser la parole",
+        "transcript": "Transcription",
+        "transcriptAppearsHere": "La transcription apparaît ici"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatordrafteditor": {
+      "label": {
+        "creatorNotes": "Notes du créateur",
+        "postHistoryInstructions": "Instructions post-historique",
+        "characterName": "Nom du personnage *",
+        "tagsCommaSeparated": "Balises (séparées par des virgules)",
+        "fullIdentityBackground": "Identité complète et arrière-plan",
+        "personalitySpeechStyle": "Personnalité et style de parole",
+        "scenarioContext": "Contexte du scénario",
+        "firstMessagePrimaryGreeting": "Premier message (message d'accueil principal) *",
+        "alternateGreetings": "Salutations alternatives",
+        "exampleDialogue": "Exemple de dialogue",
+        "systemPromptOverride": "Remplacer l'invite système",
+        "avatarControls": "Commandes d'avatar",
+        "visualAvatarPrompt": "Invite d'avatar visuel",
+        "naturalLanguageRequest": "Demande en langage naturel"
+      },
+      "text": {
+        "enabled": "Activé",
+        "draftRev": "Brouillon de révision",
+        "saveDraft": "Enregistrer le brouillon",
+        "validate": "Valider",
+        "approveCreateCharacter": "Approuver et créer un personnage",
+        "assumptions": "Hypothèses :",
+        "aiRegenerate": "Régénération de l'IA",
+        "addAlternateGreeting": "Ajouter Message d'accueil alternatif",
+        "advancedPromptingInstructionsDirectlyModifySystemPrompt": "Les instructions d'invite avancées modifient directement le pilotage des invites du système pendant l'exécution du modèle. Inspectez soigneusement avant la création.",
+        "noAvatarSelected": "Aucun avatar sélectionné",
+        "chooseImageFile": "Choisir un fichier image",
+        "generateAvatar": "Générer un avatar",
+        "addLoreEntry": "Ajouter une entrée de savoir",
+        "noEmbeddedLoreEntriesYetAddKeywords": "Aucune entrée de savoir intégrée pour le moment. Ajoutez des mots-clés et des détails de fond pour une construction approfondie du monde des personnages.",
+        "draftId": "ID de brouillon :",
+        "revisionNumber": "Numéro de révision :",
+        "creatorModel": "Modèle de créateur :",
+        "specification": "Spécification :",
+        "aiAssistedRevisions": "Révisions assistées par l'IA"
+      },
+      "heading": {
+        "embeddedLorebookWorldInfo": "Livre d'histoire et informations mondiales intégrés"
+      },
+      "description": {
+        "manageWorldLoreEntriesEmbeddedInsideThis": "Gérer les entrées d'histoire du monde intégrées dans cette ébauche de carte de personnage V2."
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorerror": {
+      "text": {
+        "copy": "Copier",
+        "diagnosticMessage": "Message de diagnostic",
+        "returnToDraft": "Revenir au brouillon",
+        "retryOperation": "Réessayer l'opération"
+      },
+      "heading": {
+        "characterCreatorError": "Erreur du créateur de personnage"
+      },
+      "description": {
+        "anErrorOccurredDuringGenerationOrCard": "Une erreur s'est produite lors de la génération ou du traitement de la carte. Votre brouillon et votre idée actuels ont été conservés."
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorlocalpickermodal": {
+      "action": {
+        "cancel": "Annuler"
+      },
+      "heading": {
+        "selectLocalCharacterToEdit": "Sélectionner un personnage local à modifier"
+      },
+      "description": {
+        "chooseACharacterFromYourLocalLibrary": "Choisissez un personnage de votre bibliothèque locale à ouvrir en tant que brouillon dans Character Creator."
+      },
+      "text": {
+        "editDraft": "Modifier le brouillon →"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorprocesspanel": {
+      "text": {
+        "active": "Actif",
+        "aiDesignProcess": "Processus de conception AI",
+        "designDirectionSummary": "Direction de conception et résumé",
+        "interpretation": "Interprétation :",
+        "initializingAiProcessPipeline": "Initialisation du pipeline de processus AI…",
+        "cancelGeneration": "Annuler la génération"
+      },
+      "description": {
+        "thisLogShowsUserFacingDesignDecisions": "Ce journal affiche les décisions de conception et les événements de validation destinés à l'utilisateur, et non le raisonnement privé caché."
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorwelcome": {
+      "heading": {
+        "characterCreator": "Créateur de personnages"
+      },
+      "text": {
+        "create": "Créer",
+        "delete": "Supprimer",
+        "creatorModel": "Modèle de créateur :",
+        "immutable": "(Immuable)",
+        "optionalDesignConstraintsContext": "Contraintes de conception et contexte facultatifs",
+        "allGeneratedContentRemainsADraftUntil": "Tout le contenu généré reste un brouillon jusqu'à ce que vous l'approuviez.",
+        "createDraft": "Créer un brouillon",
+        "importExistingCard": "Importer une carte existante",
+        "editLocalCharacter": "Modifier un personnage local",
+        "describe": "Décrire",
+        "review": "Révision",
+        "recentUnfinishedDrafts": "Brouillons récents inachevés",
+        "rev": "Rév.",
+        "duplicate": "Dupliquer"
+      },
+      "description": {
+        "turnARoughIdeaIntoAComplete": "Transformez une idée approximative en une carte de personnage complète et modifiable.",
+        "startWithASentenceADetailedConcept": "Commencez par une phrase, un concept détaillé ou un archétype de personnage existant. Le créateur créera un brouillon complet que vous pourrez inspecter, réécrire, enregistrer ou exporter. Rien n'est ajouté à votre bibliothèque de personnages jusqu'à ce que vous l'approuviez.",
+        "enterAnythingFromAOneLineConcept": "Saisissez n'importe quoi, du concept d'une ligne au contour détaillé du personnage.",
+        "inspectAndEditTheIdentityPersonalityScenario": "Inspectez et modifiez l'identité, la personnalité, le scénario, le message d'accueil, les exemples de dialogue et les instructions comportementales.",
+        "approveTheFinalDraftToAddThe": "Approuvez le brouillon final pour ajouter le personnage à votre bibliothèque locale ou exporter une carte compatible."
+      },
+      "label": {
+        "characterConcept": "Concept de personnage",
+        "tone": "Ton",
+        "relationshipToUser": "Relation avec l'utilisateur",
+        "contentRating": "Évaluation du contenu"
+      },
+      "option": {
+        "adultUncensored": "Adulte non censuré"
+      },
+      "action": {
+        "open": "Ouvrir"
+      }
+    },
+    "componentsChatCharacterchatsview": {
+      "heading": {
+        "characterChats": "Conversations avec personnages",
+        "startALocalCharacterChat": "Démarrer une conversation avec un personnage local",
+        "noCharacterChatsYet": "Aucun chat de personnage pour l'instant"
+      },
+      "action": {
+        "edit": "Modifier",
+        "close": "Fermer",
+        "chat": "Discussion",
+        "newStCard": "Nouvelle carte ST",
+        "browseHosted": "Parcourir hébergé",
+        "startChat": "Démarrer le chat",
+        "browseCharacters": "Parcourir les personnages",
+        "createLocalCharacter": "Créer un personnage local",
+        "browseHostedCharacters": "Parcourir les personnages hébergés ↗",
+        "createNewStCard": "+ Créer une nouvelle carte ST"
+      },
+      "description": {
+        "hostedAndLocalCharacterConversations": "Conversations de personnages hébergées et locales",
+        "noCharacterChatsMatchThisSearch": "Aucun chat de personnages ne correspond à cette recherche.",
+        "selectAnyOfYourLocallyCreatedCharacters": "Sélectionnez l'un de vos personnages créés localement pour lancer une conversation dédiée.",
+        "noLocalCharactersMatch": "Aucun caractère local ne correspond à \"",
+        "chooseAHostedOrLocalCharacterTo": "Choisissez un personnage hébergé ou local pour commencer une conversation de personnage dédiée."
+      },
+      "text": {
+        "searchCharacterChats": "Rechercher des chats de personnages",
+        "localCharacters": "Personnages locaux",
+        "available": "disponibles",
+        "chat": "Discuter →"
+      },
+      "label": {
+        "localCharacters": "Personnages locaux ("
+      }
+    },
+    "componentsChatCharacterscenecard": {
+      "action": {
+        "retry": "Réessayer",
+        "cancel": "Annuler",
+        "openInMediaStudio": "Ouvrir dans Media Studio",
+        "copyPrompt": "Invite de copie",
+        "regenerate": "Régénérer"
+      },
+      "description": {
+        "scenePrompt": "Invite de scène"
+      }
+    },
+    "componentsChatHistoryview": {
+      "action": {
+        "newChat": "Nouvelle conversation",
+        "cancel": "Annuler",
+        "rename": "Renommer",
+        "delete": "Supprimer",
+        "export": "Exporter",
+        "import": "Importer",
+        "clearSelection": "Effacer la sélection",
+        "deleteSelected": "Supprimer la sélection (",
+        "newFolder": "Nouveau dossier",
+        "startNewConversation": "Démarrer une nouvelle conversation",
+        "openPrivacyGate": "Ouvrir Privacy Gate",
+        "enablePrivacyGate": "Activer Privacy Gate"
+      },
+      "option": {
+        "characterChats": "Conversations avec personnages",
+        "allChats": "Toutes les discussions",
+        "standardChats": "Discussions standard",
+        "selectDestinationFolder": "Sélectionnez le dossier de destination...",
+        "unfiledNoFolder": "Non classé (Aucun dossier)"
+      },
+      "text": {
+        "unfiled": "Non classés",
+        "selected": "sélectionnées",
+        "total": "total)",
+        "moveTo": "Déplacer vers :",
+        "chooseOneChatTypeToMoveInto": "Choisissez un type de discussion à déplacer. dans un dossier.",
+        "ago": "il y a",
+        "noConversationsInThisFolder": "Aucune conversation dans ce dossier.",
+        "noUnfiledConversations": "Aucune conversation non classée."
+      },
+      "heading": {
+        "chatHistory": "Historique des discussions",
+        "noConversationsFound": "Aucune conversation trouvée"
+      },
+      "description": {
+        "manageAndRevisitYourPastConversations": "Gérez et revisitez vos conversations passées",
+        "tryADifferentSearchTermOrStart": "Essayez un terme de recherche différent ou démarrez une nouvelle conversation"
+      }
+    },
+    "componentsChatChatView": {
+      "action": {
+        "cancel": "Annuler",
+        "remove": "Retirer",
+        "clear": "Effacer",
+        "shuffle": "Mélangez",
+        "confirmSend": "Confirmer et envoyer",
+        "disableMemoryForThisMessage": "Désactiver la mémoire pour ce message",
+        "saveContextText": "Enregistrer le texte contextuel",
+        "forgetFact": "Oublier le fait",
+        "chatContext": "⚙ Contexte de conversation ·",
+        "requireMemoryPreviewBeforeNextSend": "Exiger un aperçu de la mémoire avant la prochaine conversation envoyer"
+      },
+      "option": {
+        "disabled": "Désactivé",
+        "inheritFromDefaultSettings": "Hériter des paramètres par défaut",
+        "overrideUseChatSettings": "Remplacer (utiliser les paramètres de discussion)"
+      },
+      "text": {
+        "howCanIHelpToday": "Comment puis-je vous aider aujourd'hui ?",
+        "tryOneOfThese": "Essayez l'un de ces",
+        "startAConversationWith": "Démarrez une conversation avec",
+        "matchedLocalMemoryContext": "Faits correspondant au contexte de mémoire locale",
+        "facts": ",",
+        "summariesMatched": "résumés correspondants)",
+        "previousThread": "Sujet précédent :",
+        "allMatchedContextHasBeenRemoved": "Tous les contextes correspondants ont été supprimés.",
+        "context": "Contexte",
+        "chatContext": "Contexte de discussion",
+        "includeMemoryRetrievalForThisChat": "Inclure la récupération de mémoire pour cette conversation",
+        "includePriorConversationContext": "Inclure le contexte de conversation précédent",
+        "selected": "sélectionné",
+        "chattingAs": "Chat comme"
+      },
+      "label": {
+        "systemPromptMode": "Mode d'invite système"
+      },
+      "description": {
+        "onlySelectedLocalConversationsAreIncludedIn": "Seules les conversations locales sélectionnées sont incluses dans la demande de modèle suivante et envoyées au Venice API. Les clés API, les jetons du porteur et les chemins de fichiers locaux sont expurgés ; le contenu long est tronqué pour rester dans les limites. L’historique des conversations n’est jamais inclus dans les diagnostics ou les exportations sécurisées."
+      }
+    },
+    "componentsChatMessageBubble": {
+      "action": {
+        "cancel": "Annuler",
+        "save": "Enregistrer",
+        "thinking": "Réflexion"
+      },
+      "text": {
+        "attachedToThisMessage": "joint à ce message",
+        "truncated": "tronqué",
+        "vision": "vision",
+        "safety": "Sécurité :",
+        "code": "Code :",
+        "signals": "Signaux :",
+        "toolUsed": "Outil utilisé :",
+        "resultFrom": "Résultat de"
+      }
+    },
+    "componentsChatVeniceParams": {
+      "action": {
+        "newChat": "Nouvelle conversation",
+        "settings": "Paramètres"
+      },
+      "label": {
+        "appSystemPrompt": "Invite système de l'application"
+      },
+      "option": {
+        "loadingLibrary": "Chargement de la bibliothèque...",
+        "errorLoadingLibrary": "Erreur lors du chargement de la bibliothèque",
+        "loadFromLibrary": "Chargement à partir de la bibliothèque..."
+      },
+      "text": {
+        "approachingSystemPromptSizeLimit": "La taille limite de l'invite système approche ("
+      }
+    },
+    "componentsDocumentsDocumentagentview": {
+      "option": {
+        "off": "Désactivé",
+        "readAttachmentsOnly": "Lire les pièces jointes uniquement",
+        "limitedDocuments": "Documents limités",
+        "manageSelectedWorkspace": "Gérer l'espace de travail sélectionné",
+        "markdownMd": "Markdown (.md)",
+        "textTxt": "Texte (.txt)",
+        "jsonJson": "JSON (.json)",
+        "csvCsv": "CSV. (.csv)",
+        "htmlHtml": "HTML (.html)",
+        "wordDocx": "Mot (.docx)",
+        "pdfPdf": "PDF (.pdf)"
+      },
+      "action": {
+        "managedLibrary": "Bibliothèque gérée",
+        "connectedWorkspace": "Espace de travail connecté",
+        "preview": "Aperçu",
+        "source": "Source",
+        "history": "Historique ("
+      },
+      "text": {
+        "search": "Rechercher",
+        "cancel": "Annuler",
+        "createDocument": "Créer un document",
+        "sessionGrant": "Octroi de session ·",
+        "revoke": "Révoquer",
+        "selectWorkspaceDirectory": "Sélectionner le répertoire de l'espace de travail…",
+        "documentAgentToolsRequireTheHardenedElectron": "Les outils de l'agent de document nécessitent le pont de bureau Electron renforcé.",
+        "workingGroup": "Groupe de travail",
+        "group": "+ Groupe",
+        "document": "+ Document",
+        "revision": "Révision :",
+        "export": "Exporter…",
+        "prepareEditProposal": "Préparer la proposition de modification",
+        "by": "· Par",
+        "restoreAsNewRevision": "Restaurer en tant que nouvelle révision",
+        "before": "Avant",
+        "after": "Après",
+        "reject": "Rejeter",
+        "approveExactChange": "Approuver la modification exacte",
+        "itemS": "articles)",
+        "searchMatches": "Rechercher des correspondances (",
+        "read": "Lire",
+        "createGroup": "Créer un groupe"
+      },
+      "heading": {
+        "agentAccessGrantControls": "Contrôles d'accès et d'octroi de l'agent",
+        "documents": "Documents (",
+        "immutableRevisionLineage": "Lignée de révision immuable",
+        "reviewProposal": "Réviser la proposition",
+        "grantedWorkspaceDirectory": "Élément(s) du répertoire d'espace de travail autorisé",
+        "createManagedDocument": "Créer un document géré",
+        "createWorkingGroup": "Créer un groupe de travail"
+      },
+      "description": {
+        "limitedDocumentsIsTheSafeDefaultWorkspace": "Les documents limités sont la valeur par défaut sûre. L'accès à l'espace de travail est limité à un répertoire accordé par l'utilisateur et n'inclut jamais le shell, Git, le réseau, le trousseau ou Contrôle OS",
+        "noManagedDocumentsInThisWorkingGroup": "Aucun document géré dans ce groupe de travail.",
+        "boundToHash": "Lié au hachage",
+        "againstBaseRevision": "… par rapport à la révision de base",
+        "noDocumentSelected": "Non. Document sélectionné",
+        "selectADocumentFromTheLeftPanel": "Sélectionnez un document dans le panneau de gauche ou créez-en un nouveau pour commencer à le modifier.",
+        "noWorkspaceFilesFound": "Aucun fichier d'espace de travail trouvé.",
+        "noWorkspaceGranted": "Aucun espace de travail accordé",
+        "selectAWorkspaceDirectoryUnderAgentAccess": "Sélectionnez un répertoire d'espace de travail sous Accès agent ci-dessus pour parcourir.",
+        "selectAFileFromTheWorkspaceList": "Sélectionnez un fichier dans la liste des espaces de travail pour afficher son contenu."
+      },
+      "label": {
+        "accessPreset": "Préréglage d'accès",
+        "format": "Formater",
+        "initialContent": "Contenu initial",
+        "workingGroupName": "Nom du groupe de travail"
+      }
+    },
+    "componentsEmbeddingsEmbeddingsView": {
+      "action": {
+        "copy": "Copier"
+      },
+      "text": {
+        "inputText": "Texte de saisie",
+        "generateEmbeddings": "Générer des intégrations",
+        "vector": "Vecteur (dimensions",
+        "dimensions": ")",
+        "embeddingVectorsAppearHere": "Les vecteurs d'intégration apparaissent ici"
+      }
+    },
+    "componentsGalleryCompareView": {
+      "action": {
+        "close": "Fermer"
+      },
+      "text": {
+        "compare": "Comparer",
+        "items": "éléments"
+      },
+      "description": {
+        "select2To": "Sélectionnez 2 à",
+        "itemsToCompare": "éléments à comparer. (",
+        "selected": "sélectionné)"
+      },
+      "column": {
+        "field": "Champ"
+      }
+    },
+    "componentsGalleryGalleryView": {
+      "heading": {
+        "mediaStudio": "Studio média"
+      },
+      "action": {
+        "close": "Fermer",
+        "apply": "Appliquer",
+        "imageStudio": "Studio d'images",
+        "chat": "Discussion",
+        "videoStudio": "Studio vidéo",
+        "seed": "Graine",
+        "compare": "Comparer (",
+        "lineage": "Lignée",
+        "imageTools": "Outils d'images",
+        "prompt": "Invite",
+        "negative": "Négatif"
+      },
+      "description": {
+        "browseTagEditAndExportYourGenerated": "Parcourez, étiquetez, modifiez et exportez vos médias générés.",
+        "noMatchingMedia": "Aucun élément multimédia correspondant"
+      },
+      "text": {
+        "item": "élément",
+        "loaded": "chargé",
+        "selected": "sélectionné",
+        "loadingMediaStudio": "Chargement de Media Studio…",
+        "itemsSelected": "sélectionné.",
+        "sendTo": "Envoyer à :",
+        "copy": "Copier :"
+      },
+      "label": {
+        "quickTag": "Balise rapide :"
+      }
+    },
+    "componentsGalleryMediaCard": {
+      "text": {
+        "video": "Vidéo",
+        "favorite": "Favoris",
+        "audio": "Audio",
+        "image": "Image",
+        "seed": "graine :",
+        "more": "plus"
+      }
+    },
+    "galleryMediaDetailDialog": {
+      "action": {
+        "delete": "Supprimer",
+        "closeEsc": "Fermer (Esc)"
+      },
+      "text": {
+        "previewUnavailable": "Aperçu indisponible",
+        "seed": "Graine :",
+        "source": "Source :",
+        "style": "Style :",
+        "steps": "Étapes :",
+        "cfg": "CFG :"
+      },
+      "heading": {
+        "filmstrip": "Pellicule"
+      }
+    },
+    "componentsGalleryMediaInspector": {
+      "action": {
+        "close": "Fermer",
+        "createStCard": "Créer une carte ST",
+        "upscale": "Agrandir",
+        "edit": "Modifier",
+        "apply": "Appliquer",
+        "cancel": "Annuler",
+        "add": "Ajouter",
+        "clear": "Effacer",
+        "useSettings": "Utiliser les paramètres",
+        "useRecipe": "Utiliser la recette",
+        "regenerate": "Régénérer",
+        "sameSeed": "Même graine",
+        "downloadMedia": "Télécharger le support",
+        "copyPrompt": "Copier l'invite",
+        "copyNegative": "Copier le négatif",
+        "copySeed": "Copier la graine",
+        "copyMetadata": "Copier les métadonnées",
+        "saveRecipe": "Enregistrer la recette",
+        "copyRecipe": "Copier la recette",
+        "exportRecipe": "Exporter la recette",
+        "applyToImageStudio": "Appliquer à Image Studio",
+        "remixAmpGenerate": "Remixer et générer",
+        "saveRemix": "Enregistrer le remix",
+        "saveNote": "Enregistrer la note",
+        "clearParentLink": "Effacer le lien parent"
+      },
+      "text": {
+        "delete": "Supprimer",
+        "seed": "Graine",
+        "steps": "Étapes",
+        "view": "Afficher",
+        "parameters": "Paramètres",
+        "source": "Source",
+        "style": "Style",
+        "cfg": "CFG",
+        "aspect": "Aspect",
+        "recipeCompatibility": "Compatibilité des recettes",
+        "enhancedPrompt": "Invite améliorée",
+        "originalPrompt": "Invite d'origine",
+        "remixPrompt": "Invite de remix",
+        "actions": "Actions",
+        "modelCapabilities": "Capacités du modèle",
+        "upscale": "Upscale",
+        "edit": "Modifier",
+        "video": "Vidéo",
+        "vision": "Vision",
+        "tags": "Balises",
+        "parentid": "IDparent="
+      },
+      "heading": {
+        "inspector": "Inspecteur",
+        "prompt": "invite",
+        "parent": "Parent",
+        "children": "Enfants (",
+        "missingReferences": "Références manquantes"
+      },
+      "description": {
+        "originalLdquo": "Original : «",
+        "rdquo": "»",
+        "promptViaInternalLlm": "Invite via LLM interne…",
+        "theseEndpointsAreRecognisedForTheSource": "Ces points de terminaison sont reconnus pour le modèle source. Réexécuter la même opération sur cet élément les utilisera.",
+        "noTagsYet": "Aucune balise pour l'instant."
+      }
+    },
+    "componentsGalleryMediaToolbar": {
+      "text": {
+        "refresh": "Actualiser",
+        "project": "Projet",
+        "sort": "Trier",
+        "item": "élément",
+        "selected": "sélectionné"
+      },
+      "action": {
+        "clear": "Effacer",
+        "compare": "Comparer",
+        "export": "Exporter",
+        "apply": "Appliquer",
+        "delete": "Supprimer",
+        "selectAll": "Tout sélectionner",
+        "addTag": "Ajouter une balise",
+        "unstar": "Supprimer la star"
+      }
+    },
+    "componentsGenerationGenerationloadingindicator": {
+      "action": {
+        "cancel": "Annuler"
+      }
+    },
+    "componentsImageInspectorImageinspectorview": {
+      "heading": {
+        "imageInspector": "Inspecteur d'images",
+        "analysisSummary": "Résumé de l'analyse",
+        "replicationPrompt": "Invite de réplication",
+        "subjects": "Sujets",
+        "imageBasedSourceSearch": "Recherche de source basée sur l'image"
+      },
+      "action": {
+        "openFile": "Ouvrir le fichier",
+        "cancelAnalysis": "Annuler l'analyse",
+        "analyzeImage": "Analyser l'image"
+      },
+      "text": {
+        "noRecentImages": "Aucune image récente.",
+        "openAFileToStartInspecting": "Ouvrez un fichier pour commencer l'inspection.",
+        "middot": "·",
+        "selectOrUploadAnImageToInspect": "Sélectionnez ou téléchargez une image à inspecter",
+        "visionModel": "Modèle de vision",
+        "noVisionCapableModelsAvailableInCatalog": "Aucun modèle compatible avec la vision n'est disponible dans le catalogue.",
+        "analysisDepth": "Profondeur d'analyse",
+        "promptTarget": "Inviter la cible",
+        "specificInstructionsOptional": "Instructions spécifiques (facultatif)",
+        "negative": "Négatif :",
+        "directSourceImageMatchingIsUnavailableWith": "La correspondance directe source-image n'est pas disponible avec les contrats Google et Brave configurés. Leurs API actuelles acceptent les requêtes de texte, pas les octets d'image inspectés. La recherche générée par requête a été désactivée ici afin que les résultats ne soient pas représentés à tort comme des correspondances d'images inversées.",
+        "legacyTextQueryResults": "Résultats de la requête de texte héritée (",
+        "imageAnalysisFailed": "Échec de l'analyse de l'image",
+        "analysisResultsWillAppearHere": "Les résultats de l'analyse apparaîtront ici."
+      }
+    },
+    "componentsImageImageTools": {
+      "text": {
+        "model": "Modèle",
+        "sourceImage": "Image source",
+        "editPrompt": "Invite de modification",
+        "scale": "Échelle",
+        "sourceAdherence": "Adhérence à la source",
+        "veniceUpscalingDoesNotAcceptAText": "La mise à l'échelle de Venise n'accepte pas les invites textuelles. Pour les modifications dirigées par une invite, passez à Modifier.",
+        "result": "Résultat"
+      },
+      "action": {
+        "download": "Télécharger",
+        "openEdit": "Ouvrir l'édition",
+        "saveToMediaStudio": "Enregistrer dans Media Studio"
+      },
+      "description": {
+        "bytes": "octets",
+        "clickToUploadImage": "Cliquez pour télécharger l'image",
+        "higherValuesStayCloserToTheSource": "Les valeurs plus élevées restent plus proches de la source ; des valeurs inférieures permettent à l'upscaler d'ajouter plus de texture et de détails."
+      }
+    },
+    "componentsImageImageView": {
+      "action": {
+        "cancel": "Annuler",
+        "clear": "Effacer",
+        "createStCard": "Créer une carte ST",
+        "saveToLibrary": "Enregistrer dans la bibliothèque",
+        "useEnhancedPrompt": "Utiliser l'invite améliorée",
+        "keepOriginal": "Conserver l'original",
+        "switchTo": "Passer à",
+        "append": "Ajouter",
+        "replace": "Remplacer",
+        "randomize": "Randomiser"
+      },
+      "text": {
+        "aspectRatio": "Format d'image",
+        "resolution": "Résolution",
+        "seed": "Graine",
+        "steps": "Étapes",
+        "prompt": "Invite",
+        "enhancedPromptPreview": "Aperçu de l'invite amélioré",
+        "applyTemplate": "Appliquer le modèle :",
+        "positive": "Positif :",
+        "negative": "Négatif :",
+        "doesNotSupportNegativePromptsTheTemplate": "ne prend pas en charge les invites négatives. Le modèle reste en attente et l'état actuel de votre invite n'a pas changé.",
+        "negativePrompt": "Invite négative",
+        "quality": "Qualité",
+        "style": "Style",
+        "variants": "Variantes"
+      },
+      "option": {
+        "addTemplate": "Ajouter un modèle..."
+      },
+      "label": {
+        "useFixedSeed": "Utiliser une valeur de départ fixe"
+      }
+    },
+    "layoutApiKeyDialog": {
+      "action": {
+        "cancel": "Annuler",
+        "disconnect": "Déconnectez-vous"
+      },
+      "heading": {
+        "connectToVenice": "Se connecter à Venise"
+      },
+      "label": {
+        "veniceApiKey": "Venise Clé API"
+      },
+      "description": {
+        "getAKeyAt": "Obtenez une clé à"
+      }
+    },
+    "componentsLayoutInspectorPane": {
+      "text": {
+        "trafficInspector": "Inspecteur de trafic",
+        "status": "Statut :",
+        "error": "Erreur",
+        "noRequestsCapturedYet": "Aucune demande capturée pour le moment",
+        "sendChatOrGenerateImagesToInspect": "Envoyez une discussion ou générez des images pour inspecter le trafic.",
+        "guard": "garde :",
+        "time": "Temps :",
+        "method": "Méthode :",
+        "transport": "Transport :",
+        "outcome": "Résultat :",
+        "guard4ba3843": "Garde :",
+        "preview": "Aperçu :",
+        "latency": "Latence :",
+        "errorClass": "Classe d'erreur :",
+        "localSafetyEvaluation": "Évaluation de sécurité locale",
+        "mode": "Mode :",
+        "familySafeModeRendererEvaluated": "Mode sans échec familial (évalué par le moteur de rendu)",
+        "result": "Résultat :",
+        "reasonCode": "Code de raison :",
+        "adultModeLocalFilterSkipped": "Mode adulte (filtre local ignoré)",
+        "electronMainProcessAuthoritative": "Processus principal électronique faisant autorité",
+        "theLocalFamilySafeGuardIsEnforced": "La protection de sécurité familiale locale est appliquée par le processus principal. Ouvrez le journal d'audit pour inspecter la décision canonique.",
+        "action": "Action :",
+        "signals": "Signaux :",
+        "sourceQuot": "] source : «",
+        "quotSeverity": "» (gravité :",
+        "confidence": ", confiance :",
+        "requestHeaders": "En-têtes de demande",
+        "requestBody": "Corps de la demande",
+        "responseBody": "Corps de la réponse",
+        "selectARequestToViewDetails": "Sélectionnez une demande pour afficher les détails",
+        "noActiveConversationOpenAChatTo": "Aucune conversation active. Ouvrez une discussion pour inspecter les couches d'invites",
+        "active": "Actif :",
+        "source": "Source :"
+      }
+    },
+    "componentsMusicMusicView": {
+      "text": {
+        "model": "Modèle",
+        "voice": "Voix",
+        "download": "Télécharger",
+        "prompt": "Invite",
+        "lyrics": "Paroles",
+        "duration": "Durée",
+        "instrumentalOnly": "Instrumental uniquement",
+        "instrumental": "Instrumental",
+        "customDuration": "Durée personnalisée",
+        "output": "Sortie",
+        "pressGenerateToCreateYourTrack": "Appuyez sur Générer pour créer votre piste"
+      },
+      "description": {
+        "duration": "Durée :"
+      },
+      "option": {
+        "seconds": "secondes"
+      },
+      "action": {
+        "reset": "Réinitialiser",
+        "generateAnother": "Générer une autre"
+      }
+    },
+    "playgroundAgentModelPicker": {
+      "text": {
+        "noMatches": "Aucun résultat",
+        "rec": "Rec",
+        "recommended": "Recommandé",
+        "tools": "Outils",
+        "reasoning": "Raisonnement",
+        "vision": "Vision",
+        "web": "Web",
+        "uncensored": "Non censuré"
+      }
+    },
+    "componentsPlaygroundPlaygroundView": {
+      "text": {
+        "playground": "Espace d'expérimentation",
+        "agent": "Agent",
+        "n": "n·",
+        "running": "En cours d'exécution…",
+        "openInWorkflows": "Ouvrir dans les workflows",
+        "open": "Ouvert"
+      },
+      "action": {
+        "clear": "Effacer",
+        "run": "Exécuter"
+      },
+      "option": {
+        "editSavedWorkflow": "Modifier le workflow enregistré…"
+      }
+    },
+    "componentsPlaygroundPreviewNode": {
+      "text": {
+        "done": "Terminé",
+        "error": "Erreur",
+        "running": "En cours d'exécution…"
+      }
+    },
+    "componentsPrivacyStorageprivacydashboard": {
+      "action": {
+        "retry": "Réessayer",
+        "copySafeSummary": "Copier le résumé sécurisé",
+        "exportJson": "Exporter JSON",
+        "review": "Révision"
+      },
+      "column": {
+        "status": "Statut",
+        "prompts": "Invites",
+        "history": "Historique",
+        "store": "Magasin",
+        "items": "Articles",
+        "flags": "Indicateurs",
+        "surface": "Surfaces",
+        "mediaBlobs": "Objets blob multimédias",
+        "pathsAmpKeys": "Chemins et clés"
+      },
+      "heading": {
+        "failedToLoadStorageInventory": "Échec du chargement de l'inventaire de stockage.",
+        "storagePrivacy": "Stockage et confidentialité",
+        "detailedInventory": "Inventaire détaillé",
+        "referenceIssues": "Problèmes de référence",
+        "maintenancePlan": "Plan de maintenance",
+        "privacyExclusions": "Exclusions de confidentialité"
+      },
+      "description": {
+        "analyzingLocalStorage": "Analyse du stockage local...",
+        "inspectAndManageLocalDataBoundaries": "Inspectez et gérez les limites des données locales.",
+        "differentSurfacesHaveDifferentRedactionBoundariesInspect": "Différentes surfaces ont des limites de rédaction différentes. Inspectez la table de vérité ci-dessous avant de vous y fier pour prendre des décisions d’exportation.",
+        "promptsAndHistoryAppearInEncryptedBackups": "Les invites et l'historique apparaissent dans les sauvegardes chiffrées et dans le dossier de synchronisation, car les deux sont chiffrés de bout en bout avec une phrase secrète fournie par l'utilisateur. Les blobs multimédias (images, fichiers, actifs RP) nécessitent une bascule d'activation explicite dans le panneau Sauvegarde et synchronisation – exclus par défaut. Les clés API, les jetons de support et les chemins locaux absolus ne sont jamais écrits dans les résumés d'exportation, de synchronisation ou de diagnostic."
+      },
+      "text": {
+        "encrypted": "CRYPTÉ",
+        "archived": "archivés",
+        "secrets": "Secrets",
+        "userContent": "Contenu utilisateur",
+        "sensitive": "Sensible",
+        "noStorageHealthIssuesDetected": "Aucun problème d'intégrité du stockage détecté.",
+        "source": "Source :",
+        "target": "Cible :",
+        "destructive": "Destructif",
+        "dryRun": "Essai",
+        "alwaysRedacted": "Toujours rédigé",
+        "included": "Inclus",
+        "optInOnly": "Opt-in uniquement",
+        "keysNeverExported": "Clés jamais exportées",
+        "keysNeverSynced": "Clés jamais synchronisées"
+      },
+      "cell": {
+        "safePrivacySummary": "Résumé de confidentialité sécurisé",
+        "safeDiagnosticsJson": "Diagnostics sécurisés JSON",
+        "encryptedBackup": "Sauvegarde cryptée",
+        "syncFolder": "Dossier de synchronisation"
+      }
+    },
+    "componentsPromptsPromptcreatemodal": {
+      "option": {
+        "project": "Projet",
+        "global": "Mondial. Version",
+        "selectAProject": "Sélectionnez un projet"
+      },
+      "action": {
+        "cancel": "Annuler",
+        "createPrompt": "Invite de création"
+      },
+      "label": {
+        "title": "Titre *",
+        "kind": "Genre *",
+        "scope": "Portée *",
+        "project": "Projet *",
+        "tags": "Balises",
+        "content": "Contenu *",
+        "negativeContent": "Contenu négatif"
+      },
+      "description": {
+        "commaSeparatedUpTo64TagsAnd": "Séparées par des virgules ; jusqu'à 64 balises et 64 caractères par balise."
+      }
+    },
+    "componentsPromptsPromptlibraryview": {
+      "heading": {
+        "promptLibrary": "Bibliothèque de prompts"
+      },
+      "action": {
+        "archive": "Archiver",
+        "copy": "Copier",
+        "delete": "Supprimer",
+        "cancel": "Annuler",
+        "new": "Nouveau",
+        "favorites": "★ Favoris",
+        "useInImageStudio": "Utilisation dans Image Studio",
+        "useInChat": "Utilisation dans Chat",
+        "createWorkflow": "Créer un flux de travail",
+        "history": "Historique (",
+        "useThisVersion": "Utilisation cette version"
+      },
+      "description": {
+        "loading": "Chargement…",
+        "noSavedPromptsYet": "Aucune invite enregistrée pour le moment.",
+        "clickThe": "Cliquez sur le bouton",
+        "buttonAboveToCreateYourFirstPrompt": "ci-dessus pour créer votre première invite."
+      },
+      "text": {
+        "new": "Nouveau",
+        "version": "version",
+        "created": "· Créé",
+        "updated": "· Mis à jour",
+        "current": "ACTUEL"
+      },
+      "label": {
+        "content": "Contenu",
+        "negativeContent": "Contenu négatif"
+      }
+    },
+    "componentsResearchResearchworkspaceview": {
+      "heading": {
+        "research": "Recherche",
+        "sources": "Sources (",
+        "addFinding": "Ajouter une conclusion",
+        "findings": "Résultats ("
+      },
+      "action": {
+        "newResearchSession": "Nouvelle session de recherche",
+        "createWorkflow": "Créer un flux de travail",
+        "saveSummary": "Enregistrer le résumé",
+        "saveFinding": "Enregistrer la recherche"
+      },
+      "text": {
+        "sources": "sources •",
+        "findings": "résultats"
+      },
+      "description": {
+        "research": "recherche",
+        "selectAResearchSessionOrCreateA": "Sélectionnez une session de recherche ou créez-en une nouvelle pour commencer."
+      },
+      "label": {
+        "searchQuery": "Requête de recherche",
+        "scrapeUrl": "Supprimer URL",
+        "findingTitle": "Titre de la recherche",
+        "findingContent": "Recherche de contenu"
+      }
+    },
+    "componentsRpStudioAssetgallery": {
+      "action": {
+        "deletef6fdbe4": "Supprimer",
+        "delete": "Supprimer ?"
+      },
+      "text": {
+        "loadingAssets": "Chargement des ressources…",
+        "noImage": "Aucune image",
+        "model": "Modèle :",
+        "seed": "Graine :",
+        "negative": "Négatif :",
+        "created": "Créé :",
+        "closePreview": "Fermer l'aperçu",
+        "clickAnAssetToPreview": "Cliquez sur un actif pour prévisualiser"
+      }
+    },
+    "componentsRpStudioCharacterbookeditor": {
+      "text": {
+        "remove": "Retirer",
+        "bookName": "Nom du livre",
+        "description": "Description",
+        "scanDepth": "Profondeur d'analyse",
+        "tokenBudget": "Budget du jeton",
+        "entries": ". Entrées (",
+        "addEntry": "Ajouter une entrée",
+        "entry": "Entrée",
+        "name": "Nom",
+        "primaryKeysCommaSeparated": "Clés primaires (séparées par des virgules)",
+        "secondaryKeys": "Clés secondaires",
+        "comment": "Commentaire",
+        "content": "Contenu",
+        "insertionPosition": "Position d'insertion",
+        "insertionOrder": "Ordre d'insertion",
+        "priority": "Priorité",
+        "moveUp": "Monter",
+        "moveDown": "Descendre"
+      },
+      "description": {
+        "enterAValidJsonObject": "Entrez un objet JSON valide."
+      },
+      "label": {
+        "recursiveScanning": "Analyse récursive"
+      },
+      "option": {
+        "beforeCharacter": "Avant le caractère",
+        "afterCharacter": "Après le caractère"
+      }
+    },
+    "componentsRpStudioCharactereditor": {
+      "text": {
+        "delete": "Supprimer",
+        "save": "Enregistrer",
+        "add": "Ajouter",
+        "scenario": "Scénario",
+        "next": "Suivant",
+        "webSearch": "Recherche Web",
+        "temperature": "Température",
+        "view": "Afficher",
+        "cancel": "Annuler",
+        "close": "Fermer",
+        "characterNotFound": "Caractère introuvable",
+        "estimatedTokens": "Jetons estimés :",
+        "rawEstimate": "Estimation brute",
+        "outputReserve": "· réserve de sortie",
+        "editWithCharacterCreator": "Modifier avec Character Creator",
+        "characterVersion": "Version du personnage",
+        "importSource": "Source d'importation",
+        "name": "Nom",
+        "author": "Auteur",
+        "adultContent18": "Contenu pour adultes (18+)",
+        "description": "Description",
+        "creatorNotes": "Notes du créateur",
+        "tags": "Balises",
+        "personality": "Personnalité",
+        "systemPrompt": "Invite système",
+        "approachingSystemPromptSizeLimit": "Taille limite de l'invite système proche (",
+        "postHistoryInstructions": "Instructions post-historique",
+        "instructions": "Instructions",
+        "firstMessagePrimaryGreeting": "Premier message (message d'accueil principal)",
+        "alternateGreetings": "Messages d'accueil alternatifs",
+        "addGreeting": "Ajouter un message d'accueil",
+        "greetingPreview": "Aperçu du message d'accueil",
+        "previous": "Précédent",
+        "exampleDialogues": "Exemples de dialogues",
+        "updateRawPreview": "Mettre à jour l'aperçu brut",
+        "addExample": "Ajouter un exemple",
+        "noExamplesAddAFewShotExchange": "Aucun exemple Ajouter un échange de quelques coups pour verrouiller la voix.",
+        "speakerRequired": "Haut-parleur requis.",
+        "rawExampleDialogue": "Exemple de dialogue brut",
+        "v2ExtensionData": "Données d'extension V2",
+        "characterBook": "Livre de personnages",
+        "createEmbeddedBook": "Créer un livre intégré",
+        "removeEmbeddedBook": "Supprimer le livre intégré",
+        "attachExistingLorebook": "Joindre un livre d'histoire existant",
+        "importEmbeddedAsLinked": "Importer intégré comme lié",
+        "syncIntoEmbedded": "Synchroniser dans intégré",
+        "detachPreserveEmbedded": "Détacher (conserver l'incorporé)",
+        "defaultModel": "Modèle par défaut",
+        "specialSettings": "Paramètres spéciaux",
+        "urlScrapingProvider": "URL Fournisseur de scraping",
+        "enableThoughts": "Activer les pensées",
+        "topP": "Haut P",
+        "sourcedContextFiles": "Fichiers sources et contextuels",
+        "noSourcedOrContextFilesUploaded": "Aucun fichier source ou contextuel téléchargé.",
+        "reApply": "Réappliquer",
+        "disposableTestChat": "Chat de test jetable.",
+        "promptOrderTrace": "Trace de commande rapide",
+        "testUserMessage": "Message de l'utilisateur de test",
+        "unsavedModelResponse": "Réponse du modèle non enregistrée",
+        "saveAsRealConversation": "Enregistrer en tant que conversation réelle",
+        "resetTest": "Réinitialiser le test",
+        "cardGenerationModel": "Modèle de génération de carte",
+        "visionAnalysisModel": "Modèle d'analyse de vision",
+        "localImageAsset": "Actif d'image locale",
+        "textConcept": "Concept de texte",
+        "visionCapableProvider": "Vision capable · fournisseur",
+        "contextTokensRequestImage": "jetons de contexte · demander une image ~",
+        "textGenerationProfile": "Profil de génération de texte",
+        "contentRating": "Évaluation du contenu",
+        "detailLevel": "Niveau de détail",
+        "customGenerationDirection": "Direction de génération personnalisée",
+        "visualAnalysis": "Analyse visuelle :",
+        "generatedV2Draft": "Brouillon V2 généré :",
+        "applyToLocalDraft": "Appliquer au brouillon local",
+        "reject": "Rejeter",
+        "generateFieldProposal": "Générer une proposition de champ",
+        "before": "Avant",
+        "after": "Après",
+        "applyProposal": "Appliquer la proposition",
+        "aiRefinementAssistant": "Assistant d'affinement de l'IA",
+        "before842beb5": "Avant :",
+        "after13f2d65": "Après :",
+        "applySelected": "Appliquer la sélection",
+        "selectAll": "Tout sélectionner",
+        "cardValidation": "Validation de la carte",
+        "formatValidAndRecommendedFieldsComplete": "Format valide et champs recommandés complétés.",
+        "stCardExport": "Exportation de carte ST",
+        "exportV2Json": "Exportation V2 JSON",
+        "exportV2Png": "Exportation V2 PNG",
+        "exportPrivacyReducedJson": "Exportation avec confidentialité réduite JSON",
+        "validation": "Validation",
+        "roundTripVerified": "Vérification aller-retour",
+        "output": "Sortie",
+        "bytes": "octets",
+        "v2Fields": "Champs V2",
+        "extensions": "Extensions",
+        "embeddedLoreEntries": "Entrées de connaissances intégrées",
+        "droppedLocalOnlyFields": "Champs locaux uniquement supprimés",
+        "warnings": "Avertissements",
+        "versionHistory": "Historique des versions",
+        "saveVersion": "Enregistrer la version",
+        "current": "(actuelle)",
+        "noVersionsSavedSaveAVersionTo": "Aucune version enregistrée. Enregistrez une version pour suivre les modifications.",
+        "versionComparison": "Comparaison des versions",
+        "saved": "Enregistré",
+        "current4fc0e2b": "Actuel",
+        "workflow": "Flux de travail",
+        "scene": "Scène :",
+        "prompt": "Invite :",
+        "reApplyTo": "Réappliquer à",
+        "savingCharacter": "Enregistrement du personnage…"
+      },
+      "action": {
+        "remove": "Retirer",
+        "compare": "Comparer",
+        "chat": "Discussion",
+        "allSteps": "Toutes les étapes",
+        "avatar": "avatar",
+        "setPrimary": "Définir le paramètre principal",
+        "duplicate": "Dupliquer",
+        "down": "Vers le bas",
+        "restore": "Restaurer",
+        "saveToPromptLibrary": "Enregistrer dans la bibliothèque d'invites",
+        "startRpChat": "Démarrer le chat RP",
+        "createScenarioFromCharacter": "Créer un scénario à partir du personnage",
+        "createWorkflow": "Créer un workflow",
+        "previous": "← Précédent (",
+        "viewAllSteps": "Afficher toutes les étapes",
+        "next": "Suivant :"
+      },
+      "option": {
+        "off": "Désactivé",
+        "generate": "Générer",
+        "chooseLorebook": "Choisir un livre d'histoire…",
+        "useChatDefault": "Utiliser le chat par défaut",
+        "brave": "Courageux",
+        "google": "Google",
+        "noCompatibleLiveModel": "Aucun modèle vivant compatible",
+        "vision": "· vision ·",
+        "context": "contexte",
+        "chooseMediaStudioImage": "Choisir l'image Media Studio…",
+        "general": "Général",
+        "mature": "Adulte",
+        "adult": "Adulte",
+        "attachScene": "Joindre la scène…",
+        "attachPrompt": "Joindre l'invite…"
+      },
+      "label": {
+        "loadFileTxtMd": "Charger le fichier (.txt, .md)",
+        "uploadFileMax5mb": "Fichier de téléchargement (Max. 5 Mo)"
+      },
+      "description": {
+        "localCharacterStoredInVeniceForgeNot": "Caractère local — stocké dans Venice Forge, non hébergé sur Venice.ai",
+        "embeddedDataIsPortableInV2Exports": "Les données intégrées sont portables dans les exportations V2. Les livres d'histoire liés restent locaux et sont synchronisés dans la copie intégrée uniquement lorsque vous le demandez.",
+        "filesLoadedIntoPersonalitySystemPromptInstructions": "Les fichiers chargés dans la personnalité, l'invite système, les instructions ou joints en tant que contexte général sont stockés directement dans cette carte de personnage",
+        "runsOneUnsavedTurnTheResponseNever": "Exécute un tour non enregistré. La réponse ne mute jamais cette carte ni ne devient automatiquement un exemple de dialogue.",
+        "estimatedSystemPrompt": "Invite système estimée :",
+        "tokensActivatedLorebookSections": "jetons · sections du livre d'histoire activées :",
+        "analysisAndGeneratedCardsRemainProposalsYour": "L'analyse et les fiches générées restent des propositions. Votre brouillon actuel est conservé jusqu'à ce que vous en appliquiez un explicitement.",
+        "producesAnAllowlistedProposalOnlyNothingChanges": "Produit uniquement une proposition sur liste autorisée. Rien ne change jusqu'à ce que vous l'appliquiez."
+      },
+      "heading": {
+        "1SourceAvatar": "1. Source et avatar",
+        "2Identity": "2. Identité",
+        "3Persona": "3. Personnage",
+        "4PromptBehavior": "4. Comportement de l'invite",
+        "5Greetings": "5. Messages d'accueil",
+        "6ExampleDialogue": "6. Exemple de dialogue",
+        "7CharacterBookExtensions": "7. Livre de personnages et extensions",
+        "8ModelAndContext": "8. Modèle et contexte",
+        "9TestAiRefinement": "9. Test et raffinement de l'IA",
+        "aiDraftGeneration": "Génération de brouillon IA",
+        "10ExportWorkflow": "10. Exportation et flux de travail"
+      },
+      "item": {
+        "tokens": "jetons"
+      }
+    },
+    "componentsRpStudioCharacterlibrary": {
+      "text": {
+        "characterCreator": "Créateur de personnages",
+        "createStCard": "Créer une carte ST",
+        "close": "Fermer",
+        "delete": "Supprimer",
+        "cancel": "Annuler",
+        "buildCharacter": "Créer un personnage",
+        "drafts": "Brouillons (",
+        "importCard": "Importer une carte",
+        "characterImportChangedAnExistingCard": "L'importation d'un personnage a modifié une carte existante.",
+        "undoImport": "Annuler l'importation",
+        "updated": "Mis à jour.",
+        "resume": "Reprendre",
+        "loadingCharacters": "Chargement des personnages…",
+        "createYourFirstCharacter": "Créez votre premier personnage",
+        "name": "Nom",
+        "format": "Formater",
+        "creator": "Créateur",
+        "greetings": "Salutations",
+        "loreEntries": "Entrées d'histoire",
+        "extensions": "Extensions",
+        "characterBook": "Livre de personnages",
+        "aMatchingCardAlreadyExistsChooseAn": "Une carte correspondante existe déjà. Choisissez une résolution explicite ; rien n'est écrasé silencieusement.",
+        "fieldsToMerge": "Champs à fusionner",
+        "keepExisting": "Conserver l'existant",
+        "mergeFields": "Fusionner les champs",
+        "replace": "Remplacer",
+        "createCopy": "Créer une copie"
+      },
+      "action": {
+        "chat": "Discussion",
+        "edit": "Modifier",
+        "delete": "Supprimer ?",
+        "exportJson": "Exporter JSON",
+        "exportPng": "Exporter PNG"
+      },
+      "description": {
+        "localCharactersAreStoredInVeniceForge": "Les caractères locaux sont stockés uniquement dans Venice Forge. Ils ne sont pas hébergés sur Venice.ai.",
+        "draftsAreEncryptedLocallyExcludedFromSync": "Les brouillons sont cryptés localement, exclus de la synchronisation et n'apparaissent pas comme personnages actifs tant qu'ils ne sont pas enregistrés.",
+        "noRecoverableDrafts": "Aucun brouillon récupérable",
+        "nothingIsSavedUntilYouConfirmThis": "Rien n'est enregistré tant que vous n'avez pas confirmé cet aperçu."
+      },
+      "heading": {
+        "localStCardDrafts": "Brouillons de cartes ST locaux",
+        "reviewCharacterImport": "Vérifier l'importation du personnage"
+      },
+      "option": {
+        "embeddedLinkedRecommended": "Intégré + lié (recommandé)",
+        "linkedOnly": "Lié uniquement",
+        "embeddedOnly": "Intégré uniquement",
+        "doNotImportBook": "Ne pas importer le livre"
+      },
+      "label": {
+        "setAsFavorite": "Définir comme favori",
+        "startRpChatAfterImport": "Démarrer le chat RP après l'importation"
+      }
+    },
+    "componentsRpStudioLorebookmanager": {
+      "action": {
+        "edit": "Modifier",
+        "delete": "Supprimer ?"
+      },
+      "text": {
+        "save": "Enregistrer",
+        "newLorebook": "Nouveau livre d'histoire",
+        "loading": "Chargement…",
+        "lorebookNotFound": "Livre d'histoire introuvable.",
+        "name": "Nom",
+        "tagsCommaSeparated": "Balises (séparées par des virgules)",
+        "description": "Description",
+        "entries": "Entrées",
+        "addEntry": "Ajouter une entrée",
+        "noEntriesYet": "Aucune entrée pour l'instant."
+      },
+      "label": {
+        "enabled": "activé",
+        "always": "toujours",
+        "wholeWords": "mots entiers"
+      }
+    },
+    "componentsRpStudioPersonamanager": {
+      "text": {
+        "active": "Actif",
+        "save": "Enregistrer",
+        "add": "Ajouter",
+        "newPersona": "Nouveau personnage",
+        "loadingPersonas": "Chargement des personnages…",
+        "personaNotFound": "Personnalité introuvable.",
+        "personaImage": "Image personnelle",
+        "removeImage": "Supprimer l'image",
+        "name": "Nom",
+        "referenceThirdPerson": "Référence (troisième personne)",
+        "description": "Description",
+        "tags": "Balises"
+      },
+      "action": {
+        "edit": "Modifier",
+        "delete": "Supprimer ?"
+      },
+      "label": {
+        "loadFromFileTxtMd": "Charger à partir d'un fichier (.txt, .md)"
+      }
+    },
+    "componentsRpStudioPromptdebugdrawer": {
+      "text": {
+        "close": "Fermer",
+        "chars": "caractères ·",
+        "excluded": "exclus :",
+        "noRecentMessages": "Aucun message récent."
+      },
+      "heading": {
+        "promptTrace": "Trace d'invite"
+      }
+    },
+    "componentsRpStudioRpchatlist": {
+      "text": {
+        "cancel": "Annuler",
+        "create": "Créer",
+        "model": "Modèle",
+        "characters": "Personnages",
+        "newRpChat": "Nouveau chat RP",
+        "loadingChats": "Chargement des chats…",
+        "startYourFirstRp": "Démarrez votre premier RP",
+        "title": "Titre",
+        "openingGreeting": "Message d'accueil d'ouverture",
+        "noCharactersYetCreateOneInThe": "Aucun caractère pour l'instant — créez-en un dans l'onglet Caractères.",
+        "personaOptional": "Persona (facultatif)",
+        "lorebooks": "Livres d'histoire",
+        "scenarioOverride": "Remplacement du scénario"
+      },
+      "action": {
+        "open": "Ouvrir",
+        "delete": "Supprimer ?"
+      },
+      "heading": {
+        "newRpChat": "Nouveau chat RP"
+      },
+      "option": {
+        "usePrimaryGreeting": "Utiliser le message d'accueil principal",
+        "alternateGreeting": "Message d'accueil alternatif",
+        "randomGreeting": "Message d'accueil aléatoire",
+        "startWithoutGreeting": "Démarrer sans message d'accueil",
+        "noPersona": "Aucun personnage"
+      }
+    },
+    "componentsRpStudioRpstudioview": {
+      "text": {
+        "rpStudio": "Studio RP",
+        "localConfigIsStillLoadingRpStudio": "La configuration locale est toujours en cours de chargement. Les contrôles de sauvegarde de RP Studio sont temporairement indisponibles jusqu'à ce que l'instantané des paramètres de sécurité soit hydraté.",
+        "loadingStCardStudio": "Chargement de ST Card Studio…"
+      }
+    },
+    "componentsRpStudioScenegenerator": {
+      "text": {
+        "chat": "Discussion",
+        "seed": "Graine",
+        "imageModel": "Modèle d'image",
+        "prompt": "Invite",
+        "extracted": "Extrait :",
+        "negativePrompt": "Invite négative",
+        "generateScene": "Générer une scène",
+        "recentScenes": "Scènes récentes",
+        "noScenesYet": "Aucune scène pour l'instant.",
+        "noImage": "aucune image"
+      },
+      "option": {
+        "selectAChat": "Sélectionnez une conversation…"
+      }
+    },
+    "componentsScenesScenecomposerview": {
+      "heading": {
+        "sceneComposer": "Compositeur de scènes",
+        "components": "Composants ("
+      },
+      "option": {
+        "project": "Projet",
+        "allScopes": "Tous les oscilloscopes",
+        "global": "Mondial. Version",
+        "newest": "Le plus récent",
+        "oldest": "Le plus ancien",
+        "title": "Titre",
+        "favorite": "Favoris"
+      },
+      "action": {
+        "archive": "Archiver",
+        "remove": "Retirer",
+        "delete": "Supprimer",
+        "cancel": "Annuler",
+        "new": "Nouveau",
+        "favorites": "★ Favoris",
+        "restore": "Restaurer",
+        "saveMetadata": "Enregistrer les métadonnées",
+        "add": "+ Ajouter",
+        "saveNewVersion": "Enregistrer la nouvelle version",
+        "useInImageStudio": "Utiliser dans Image Studio",
+        "copyRecipe": "Copier la recette",
+        "createWorkflow": "Créer l'historique du workflow",
+        "history": "(",
+        "useThisVersion": "Utiliser cette version"
+      },
+      "description": {
+        "loading": "Chargement…",
+        "noComponentsYetClickAddToBegin": "Aucun composant pour l'instant Cliquez sur \"+ Ajouter\" pour commencer la composition."
+      },
+      "text": {
+        "version": "version",
+        "component": "composant",
+        "created": "· Créé",
+        "updated": "· Mise à jour",
+        "current": "ACTUEL"
+      },
+      "label": {
+        "defaults": "Valeurs par défaut :"
+      }
+    },
+    "componentsSearchProfilediscoverytab": {
+      "action": {
+        "cancel": "Annuler"
+      },
+      "heading": {
+        "publicProfileDiscovery": "Découverte de profils publics",
+        "discoveredProfileCandidates": "Profil découvert des candidats"
+      },
+      "description": {
+        "aggregatesSocialProfileMappingsFromPublicDatabases": "Agrége les mappages de profils sociaux à partir de bases de données publiques (GitHub, Twitter, LinkedIn, etc.) à l'aide de l'intégration Web de Venise."
+      },
+      "label": {
+        "platformsToSearch": "Plateformes de recherche"
+      },
+      "text": {
+        "candidates": "Candidats",
+        "confidence": "confiance"
+      }
+    },
+    "componentsSearchScrapetab": {
+      "action": {
+        "copy": "Copier"
+      },
+      "heading": {
+        "webScrape": "Gratte-Web"
+      },
+      "option": {
+        "veniceWebScrape": "Venise Web Scrape",
+        "jinaReader": "Lecteur Jina"
+      }
+    },
+    "componentsSearchSearchscrapeview": {
+      "heading": {
+        "research": "Recherche"
+      },
+      "description": {
+        "searchScrapeCollectEvidenceAndSynthesizeFindings": "Rechercher, gratter, collecter des preuves et synthétiser les résultats."
+      }
+    },
+    "componentsSearchSearchtab": {
+      "heading": {
+        "webSearch": "Recherche Web"
+      },
+      "option": {
+        "jinaSearch": "Recherche Jina",
+        "braveSearchVenice": "Brave Search (Venise)",
+        "googleSearchVenice": "Recherche Google (Venise)"
+      },
+      "action": {
+        "scrapeWithVenice": "Grattez avec Venise",
+        "readWithJina": "Lire avec Jina",
+        "saveToSession": "Enregistrer dans la session"
+      },
+      "text": {
+        "noSearchResultsYet": "Aucun résultat de recherche pour l'instant."
+      }
+    },
+    "componentsStatusDiagnosticsdrawer": {
+      "action": {
+        "close": "Fermer",
+        "openPrivacyDashboard": "Ouvrir le tableau de bord de confidentialité",
+        "copySafeDiagnostics": "Copier les diagnostics sécurisés",
+        "openStatus": "État d'ouverture",
+        "openConfig": "Config ouverte",
+        "jumpToModel": "Aller au modèle"
+      },
+      "heading": {
+        "diagnostics": "Diagnostic"
+      },
+      "description": {
+        "appHealthModelCatalogStorageSafetyAnd": "Santé de l'application, catalogue de modèles, stockage, sécurité et état du fournisseur.",
+        "lastRefresh": "dernière actualisation :",
+        "lastRefreshError": "Erreur de dernière actualisation :",
+        "webModeFilesystemRevealsAndTheSystem": "Mode Web : le système de fichiers, les révélations et le shell système ne sont pas disponibles. Certaines fonctionnalités réservées au bureau (routage audio, configuration locale YAML) sont désactivées.",
+        "phase2cShipsReadOnlyDiagnosticsDestructive": "Phase 2C est livré avec des diagnostics en lecture seule. Les réparations destructives (réinitialisation des clés, effacement du stockage, suppression de toutes les données) sont hors de portée et se trouvent dans leurs onglets dédiés."
+      },
+      "text": {
+        "copiedAt": "copié dans",
+        "includeRedactedPromptExcerptsInSafeDiagnostics": "Inclure des extraits d'invite expurgés dans les diagnostics sécurisés.",
+        "truncated80CharsAndSecretStrippedPrompt": "Extraits d'invite tronqués (≤ 80 caractères) et supprimés en secret de la bibliothèque d'invites. Désactivé par défaut."
+      }
+    },
+    "componentsStatusHeaderstatuscluster": {
+      "action": {
+        "status": "Statut"
+      }
+    },
+    "componentsStatusTaskcenterdrawer": {
+      "action": {
+        "cancel": "Annuler",
+        "retry": "Réessayer",
+        "clear": "Effacer",
+        "open": "Ouvrir"
+      },
+      "heading": {
+        "taskCenter": "Centre de tâches",
+        "generation": "génération"
+      },
+      "description": {
+        "recentBackgroundGenerations": "Générations d'arrière-plan récentes",
+        "noRecentTasks": "Aucune tâche récente."
+      },
+      "text": {
+        "cancellationUnavailable": "Annulation indisponible"
+      }
+    },
+    "componentsUiShared": {
+      "text": {
+        "working": "En cours…"
+      },
+      "action": {
+        "shuffle": "Lecture aléatoire"
+      }
+    },
+    "componentsVideoVideoView": {
+      "text": {
+        "model": "Modèle",
+        "resolution": "Résolution",
+        "generationMode": "Mode de génération",
+        "prompt": "Invite",
+        "negativePrompt": "Invite négative",
+        "referenceImage": "Image de référence",
+        "duration": "Durée",
+        "aspect": "Aspect",
+        "generateAudio": "Générer de l'audio",
+        "output": "Sortie",
+        "generatedVideosAppearHere": "Les vidéos générées apparaissent ici",
+        "averageGenerationTime30s2min": "Temps de génération moyen : 30 s à 2 min"
+      },
+      "action": {
+        "download": "Télécharger",
+        "textToVideo": "Texte en vidéo",
+        "imageToVideo": "Image en vidéo",
+        "reset": "Réinitialiser",
+        "generateAnother": "Générer une autre"
+      },
+      "description": {
+        "clickToAddImage": "Cliquez pour ajouter une image"
+      }
+    },
+    "componentsWorkflowsWorkflowtemplatesview": {
+      "heading": {
+        "workflows": "Flux de travail",
+        "steps": "Étapes",
+        "compilePreview": "Aperçu de la compilation",
+        "runPlan": "Plan d'exécution"
+      },
+      "label": {
+        "import": "Importer",
+        "workflowTitle": "Titre du flux de travail",
+        "workflowTags": "Balises du flux de travail",
+        "version": "Version :"
+      },
+      "action": {
+        "export": "Exporter",
+        "archive": "Archiver",
+        "delete": "Supprimer",
+        "remove": "Retirer",
+        "new": "Nouveau",
+        "addNewVersion": "Ajouter une nouvelle version",
+        "addStep": "Ajouter une étape"
+      },
+      "text": {
+        "noWorkflowsFound": "Aucun flux de travail trouvé.",
+        "selectOrCreateAWorkflowToBegin": "Sélectionnez ou créez un flux de travail pour commencer.",
+        "workflowIsValid": "Le flux de travail est valide.",
+        "workflowHasErrors": "Le workflow comporte des erreurs.",
+        "noRunnableActions": "Aucune action exécutable."
+      }
+    },
+    "componentsDiagnosticspreview": {
+      "text": {
+        "noRequestsYet": "aucune demande pour l'instant",
+        "cfRay": "CF-RAY"
+      }
+    },
+    "componentsErrorboundary": {
+      "heading": {
+        "somethingWentWrong": "Une erreur s'est produite."
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "L'application a rencontré une erreur inattendue et n'a pas pu afficher cette vue. Votre travail est en sécurité : réessayez ou rechargez pour récupérer."
+      },
+      "action": {
+        "tryAgain": "Réessayez",
+        "reloadApplication": "Recharger l'application"
+      }
+    },
+    "componentsModelselect": {
+      "text": {
+        "highFidelity": "Haute fidélité",
+        "standard": "Norme",
+        "anon": "Anon",
+        "private": "Privé"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorcompleted": {
+      "heading": {
+        "characterCreated": "Personnage créé"
+      },
+      "description": {
+        "hasBeenSavedToYourLocalCharacter": "\" a été enregistré dans votre bibliothèque de personnages locale."
+      },
+      "text": {
+        "startChat": "Démarrer la conversation",
+        "viewCharacter": "Afficher le personnage",
+        "continueEditing": "Continuer l'édition",
+        "exportCard": "Exporter la carte",
+        "createAnother": "Créer un autre"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorgenerating": {
+      "heading": {
+        "generatingCharacterDraft": "Générer un brouillon de personnage"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorready": {
+      "text": {
+        "charaCardV2": "chara_card_v2",
+        "errorsMustResolve": "Erreurs (à résoudre)",
+        "warningsOptional": "Avertissements (facultatif)",
+        "returnToDraft": "Revenir au brouillon",
+        "saveAsCopy": "Enregistrer en tant que copie"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorview": {
+      "text": {
+        "autosaveFailed": "Échec de l'enregistrement automatique :"
+      },
+      "action": {
+        "retrySave": "Réessayer l'enregistrement"
+      },
+      "description": {
+        "savingCharacterToLocalLibrary": "Sauvegarde du personnage dans la bibliothèque locale..."
+      }
+    },
+    "componentsChatChatInput": {
+      "action": {
+        "stop": "Arrêter"
+      }
+    },
+    "componentsDocumentsDocumentrenderer": {
+      "text": {
+        "documentIsEmpty": "Le document est vide.",
+        "pageBreak": "Saut de page"
+      }
+    },
+    "componentsGalleryLineageViewer": {
+      "text": {
+        "cycleDetectedInTheLineageChainShowing": "Cycle détecté dans la chaîne de lignée — affichant une vue tronquée.",
+        "someLineageReferencesAreMissingFromThe": "Certaines références de lignée sont manquantes dans l'ensemble chargé. Cycle",
+        "cycle": ":",
+        "missing": "(manquant)"
+      },
+      "description": {
+        "noLineageRecorded": "Aucune lignée enregistrée."
+      }
+    },
+    "componentsGalleryRecipeComparison": {
+      "text": {
+        "recipeComparison": "Comparaison de recettes"
+      },
+      "column": {
+        "field": "Champ",
+        "original": "Originale",
+        "sanitized": "Désinfecté"
+      }
+    },
+    "galleryRecipeCompatibilityCard": {
+      "text": {
+        "thisItemHasNoRecipeToCompare": "Cet article n'a pas de recette à comparer au modèle actuel",
+        "for": "pour.",
+        "unsupportedField": "champ non pris en charge"
+      },
+      "action": {
+        "useWith": "Utiliser avec",
+        "useOriginal": "Utiliser l'original"
+      }
+    },
+    "componentsLayoutHeader": {
+      "text": {
+        "tasks": "Tâches"
+      }
+    },
+    "componentsLayoutMemoryPanel": {
+      "heading": {
+        "legacyConversationsDetected": "Conversations héritées détectées",
+        "encryptedConversationVault": "Coffre-fort de conversations chiffré",
+        "maintenanceOperations": "Opérations de maintenance",
+        "curatedFacts": "Faits organisés ("
+      },
+      "description": {
+        "weFoundUnencryptedConversationRecordsFromA": "Nous avons trouvé des enregistrements de conversation non cryptés provenant d'une installation précédente. Migrez-les maintenant vers le nouveau coffre-fort sécurisé.",
+        "configureMemoryParametersAndLocalIndexingStructures": "Configurez les paramètres de mémoire et les structures d'indexation locales. Les enregistrements du coffre-fort et l'index sont entièrement chiffrés au repos.",
+        "allowsTheVaultToAnalyzeAndExtract": "Permet au coffre-fort d'analyser et d'extraire des faits à partir de nouveaux threads.",
+        "pullsRelevantHistoryFactsDynamicallyToHelp": "Extrait dynamiquement les faits historiques pertinents pour faciliter les invites futures.",
+        "displaysAPreviewBoxAboveTheChat": "Affiche une boîte d'aperçu au-dessus de l'entrée du chat permettant l'élagage des faits.",
+        "transmitsSummaryMaterialToVeniceModelFor": "Transmet les résumés au modèle de Venise pour une meilleure découverte des faits.",
+        "lastIndexedAt": "Dernier indexé à :",
+        "theseAreTheKeyFactsExtractedLocally": "Ce sont les faits clés extraits localement de l'historique de vos conversations."
+      },
+      "action": {
+        "openFolder": "Dossier ouvert",
+        "openVaultFolder": "Ouvrir le dossier Vault",
+        "forget": "Oublier"
+      },
+      "label": {
+        "enableConversationRecording": "Activer l'enregistrement des conversations.",
+        "enableMemoryRetrieval": "Activer la récupération de la mémoire.",
+        "showPulledContextBeforeSending": "Afficher le contexte extrait avant l'envoi.",
+        "useAiSummaries": "Utiliser les résumés IA."
+      },
+      "text": {
+        "noFactsStoredYet": "Aucun fait n'a encore été stocké.",
+        "source": "Source :",
+        "confidence": "• Confiance :"
+      }
+    },
+    "componentsPlaygroundPlaygroundChat": {
+      "text": {
+        "whatShouldIBuild": "Que dois-je créer ?",
+        "describeAWorkflowInPlainLanguageI": "Décrire un flux de travail en langage simple. Je l'assemblerai sur la toile en temps réel.",
+        "noMessage": "(pas de message)",
+        "patch": "correctif",
+        "applied": "appliqué"
+      },
+      "action": {
+        "stop": "Arrêter",
+        "send": "Envoyer"
+      }
+    },
+    "componentsPlaygroundWorkflowPreview": {
+      "description": {
+        "noWorkflowYet": "Aucun workflow pour l'instant.",
+        "tellTheAgentWhatYouWantTo": "Dites à l'agent ce que vous souhaitez créer : il assemblera le pipeline ici en temps réel."
+      }
+    },
+    "componentsRpStudioRpchatview": {
+      "heading": {
+        "chatNotFound": "Chat introuvable"
+      },
+      "description": {
+        "theConversationYouReLookingForDoesn": "La conversation que vous recherchez n'existe pas ou a été supprimée."
+      },
+      "text": {
+        "scene": "Scène",
+        "inspector": "Inspecteur",
+        "startTheRoleplayBySendingAMessage": "Démarrez le jeu de rôle en envoyant un message.",
+        "thinking": "Réflexion…",
+        "speaker": "Intervenant :",
+        "send": "Envoyer"
+      },
+      "action": {
+        "narrator": "Narrateur"
+      }
+    },
+    "componentsSearchAiresearchtab": {
+      "heading": {
+        "deepAiResearchAgent": "Deep AI Research Agent."
+      },
+      "description": {
+        "executesARecursiveWebSearchLoopScrapes": "Exécute une boucle de recherche Web récursive, récupère plusieurs sources, analyse les citations et synthétise une réponse finale complète."
+      },
+      "option": {
+        "jinaAiSearchReader": "Recherche et lecteur Jina AI",
+        "autoDefaultFromConfig": "Auto (par défaut de la configuration)",
+        "braveSearch": "Recherche courageuse",
+        "googleSearch": "Recherche Google",
+        "retrieveSynthesizeUsesVeniceModel": "Récupérer et synthétiser (utilise le modèle de Venise).",
+        "retrieveOnlyNoAiSynthesis": "Récupération uniquement (pas de synthèse IA)"
+      },
+      "text": {
+        "budgetControls": "Contrôles budgétaires",
+        "retrievedEvidenceSources": "Sources de preuves récupérées"
+      },
+      "action": {
+        "copyAnswer": "Copier la réponse",
+        "copyEvidenceSources": "Copier les sources de preuves"
+      }
+    },
+    "componentsSearchResearchproviderstatus": {
+      "action": {
+        "addKey": "Ajouter une clé"
+      }
+    },
+    "componentsSearchTextparsertab": {
+      "heading": {
+        "documentTextParser": "Analyseur de texte de document"
+      },
+      "description": {
+        "extractRawTextFromPdfDocxXlsx": "Extrayez le texte brut de documents PDF, DOCX, XLSX ou TXT."
+      }
+    },
+    "componentsSettingsAboutpanel": {
+      "text": {
+        "beta": "· Bêta"
+      }
+    },
+    "componentsSettingsConfigpanel": {
+      "text": {
+        "configYaml": "config.yaml",
+        "themesYaml": "thèmes.yaml",
+        "secretsKeepPlaintextKeysTrue": "secrets.keep_plaintext_keys : true"
+      }
+    },
+    "componentsUiErrorBoundary": {
+      "text": {
+        "somethingWentWrong": "Un problème s'est produit",
+        "showDetails": "Afficher les détails"
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "L'application a rencontré une erreur inattendue et n'a pas pu afficher cette vue. Votre travail est en sécurité : actualisez-le pour récupérer."
+      },
+      "action": {
+        "tryAgain": "Réessayer",
+        "reloadPage": "Recharger la page"
+      }
+    },
+    "componentsUiSelect": {
+      "text": {
+        "noResults": "Aucun résultat"
+      }
+    }
+  }
 }

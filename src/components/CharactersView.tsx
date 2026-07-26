@@ -28,6 +28,7 @@ import { validateCharacterCardAuthoring } from '../types/character-card-spec'
 import { askDecision } from './ui/modal-requests'
 import { AccessibleDialog } from './ui/AccessibleDialog'
 import { toast } from '../stores/toast-store'
+import { Trans } from 'react-i18next';
 
 const SORT_OPTIONS: Array<{ value: CharacterSortBy; label: string }> = [
   { value: "featured", label: "Featured" },
@@ -117,13 +118,12 @@ function CharacterCard({
             )}
             {character.featured && (
               <span className="text-[12px] px-1.5 py-0.5 rounded bg-accent/15 text-accent border border-accent/30 font-semibold uppercase tracking-wider">
-                Featured
-              </span>
+                <Trans i18nKey="common:surface.componentsCharactersview.text.featured" /></span>
             )}
           </div>
           <div className="text-[12px] text-text-muted font-mono">/{character.slug}</div>
           {character.modelId && (
-            <div className="text-[12px] text-text-secondary mt-1">Model: <span className="font-mono">{character.modelId}</span></div>
+            <div className="text-[12px] text-text-secondary mt-1"><Trans i18nKey="common:surface.componentsCharactersview.text.model" /> <span className="font-mono">{character.modelId}</span></div>
           )}
         </div>
       </div>
@@ -150,10 +150,10 @@ function CharacterCard({
             <span title="Average rating">★ {character.stats.averageRating.toFixed(2)}</span>
           )}
           {character.stats?.ratingCount !== undefined && (
-            <span title="Rating count">{character.stats.ratingCount.toLocaleString()} ratings</span>
+            <span title="Rating count">{character.stats.ratingCount.toLocaleString()} <Trans i18nKey="common:surface.componentsCharactersview.text.ratings" /></span>
           )}
           {character.stats?.imports !== undefined && (
-            <span title="Total imports">{character.stats.imports.toLocaleString()} imports</span>
+            <span title="Total imports">{character.stats.imports.toLocaleString()} <Trans i18nKey="common:surface.componentsCharactersview.text.imports" /></span>
           )}
         </div>
       )}
@@ -164,15 +164,13 @@ function CharacterCard({
           className="flex-1 px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-accent text-accent-fg hover:bg-accent-hover transition-colors cursor-pointer"
           data-testid="character-chat-button"
         >
-          Chat
-        </button>
+          <Trans i18nKey="common:surface.componentsCharactersview.action.chat" /></button>
         <button
           type="button"
           onClick={() => onSelect(character)}
           className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:border-accent/40 transition-colors cursor-pointer"
         >
-          Select
-        </button>
+          <Trans i18nKey="common:surface.componentsCharactersview.action.select" /></button>
         {character.shareUrl && (
           <a
             href={character.shareUrl}
@@ -181,16 +179,15 @@ function CharacterCard({
             className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:border-accent/40 transition-colors cursor-pointer"
             title="Open on Venice"
           >
-            Venice ↗
-          </a>
+            <Trans i18nKey="common:surface.componentsCharactersview.text.venice" /></a>
         )}
       </div>
       {(onFavorite || onDetails || onRefresh || onDuplicate) && (
         <div className="grid grid-cols-2 gap-2 text-[12px]">
           {onFavorite && <button type="button" onClick={() => onFavorite(character)} className="rounded border border-border px-2 py-1.5 text-text-secondary">{isFavorite ? 'Unfavorite' : 'Favorite'}</button>}
-          {onDetails && <button type="button" onClick={() => onDetails(character)} className="rounded border border-border px-2 py-1.5 text-text-secondary">Details</button>}
-          {onRefresh && <button type="button" onClick={() => onRefresh(character)} className="rounded border border-border px-2 py-1.5 text-text-secondary">Refresh</button>}
-          {onDuplicate && <button type="button" onClick={() => onDuplicate(character)} className="rounded border border-border px-2 py-1.5 text-text-secondary">Duplicate locally</button>}
+          {onDetails && <button type="button" onClick={() => onDetails(character)} className="rounded border border-border px-2 py-1.5 text-text-secondary"><Trans i18nKey="common:surface.componentsCharactersview.action.details" /></button>}
+          {onRefresh && <button type="button" onClick={() => onRefresh(character)} className="rounded border border-border px-2 py-1.5 text-text-secondary"><Trans i18nKey="common:surface.componentsCharactersview.action.refresh" /></button>}
+          {onDuplicate && <button type="button" onClick={() => onDuplicate(character)} className="rounded border border-border px-2 py-1.5 text-text-secondary"><Trans i18nKey="common:surface.componentsCharactersview.action.duplicateLocally" /></button>}
         </div>
       )}
     </article>
@@ -383,16 +380,16 @@ export function CharactersView() {
     const meta = { id: card.id, localCharacterId: card.id, name: card.name, photoUrl: avatarDataUri(card.avatar), modelId: card.modelId }
     return (
       <article key={card.id} className="rounded-xl border border-border p-4 mesh-surface-elevated">
-        <div className="flex gap-3"><CharacterAvatar character={meta} cacheKey={`hub-local-${card.id}`} size="lg" /><div className="min-w-0"><h3 className="truncate font-semibold text-text-primary">{card.name}</h3><div className="flex flex-wrap gap-1"><span className="text-[11px] uppercase text-accent">{card.sourceFormat === 'tavern-v1-json' ? 'V1 Imported' : card.sourceFormat === 'card-v2-json' ? 'V2 JSON' : card.sourceFormat === 'card-v2-png' ? 'V2 PNG' : 'VF Native'}</span>{validateCharacterCardAuthoring(card).length > 0 && <span className="text-[11px] uppercase text-warning">Needs Validation</span>}</div></div></div>
+        <div className="flex gap-3"><CharacterAvatar character={meta} cacheKey={`hub-local-${card.id}`} size="lg" /><div className="min-w-0"><h3 className="truncate font-semibold text-text-primary">{card.name}</h3><div className="flex flex-wrap gap-1"><span className="text-[11px] uppercase text-accent">{card.sourceFormat === 'tavern-v1-json' ? 'V1 Imported' : card.sourceFormat === 'card-v2-json' ? 'V2 JSON' : card.sourceFormat === 'card-v2-png' ? 'V2 PNG' : 'VF Native'}</span>{validateCharacterCardAuthoring(card).length > 0 && <span className="text-[11px] uppercase text-warning"><Trans i18nKey="common:surface.componentsCharactersview.text.needsValidation" /></span>}</div></div></div>
         <p className="mt-3 line-clamp-3 text-[12.5px] text-text-secondary">{card.description || 'No description'}</p>
         <div className="mt-2 flex flex-wrap gap-1">{card.tags.slice(0, 4).map((tag) => <span key={tag} className="rounded bg-surface px-2 py-0.5 text-[11px] text-text-muted">{tag}</span>)}</div>
         <div className="mt-3 grid grid-cols-2 gap-2 text-[12px]">
-          <button type="button" onClick={() => void startNormalChatForCharacter(card.id)} className="rounded bg-accent px-2 py-1.5 text-accent-fg">Start chat</button>
-          <button type="button" onClick={() => setActiveTab('rp-studio')} className="rounded border border-border px-2 py-1.5 text-text-secondary">Edit</button>
-          <button type="button" onClick={() => void upsertLocalCard({ ...card, id: crypto.randomUUID(), name: `${card.name} Copy`, createdAt: Date.now(), updatedAt: Date.now() })} className="rounded border border-border px-2 py-1.5 text-text-secondary">Duplicate</button>
+          <button type="button" onClick={() => void startNormalChatForCharacter(card.id)} className="rounded bg-accent px-2 py-1.5 text-accent-fg"><Trans i18nKey="common:surface.componentsCharactersview.action.startChat" /></button>
+          <button type="button" onClick={() => setActiveTab('rp-studio')} className="rounded border border-border px-2 py-1.5 text-text-secondary"><Trans i18nKey="common:surface.componentsCharactersview.action.edit" /></button>
+          <button type="button" onClick={() => void upsertLocalCard({ ...card, id: crypto.randomUUID(), name: `${card.name} Copy`, createdAt: Date.now(), updatedAt: Date.now() })} className="rounded border border-border px-2 py-1.5 text-text-secondary"><Trans i18nKey="common:surface.componentsCharactersview.action.duplicate" /></button>
           <button type="button" onClick={() => void upsertLocalCard({ ...card, metadata: { ...card.metadata, favorite: card.metadata?.favorite !== true }, updatedAt: Date.now() })} className="rounded border border-border px-2 py-1.5 text-text-secondary">{card.metadata?.favorite === true ? 'Unfavorite' : 'Favorite'}</button>
-          <button type="button" onClick={async () => { const result = await desktopCharacterCards.exportJson({ cardId: card.id, profile: 'standard' }); if (!result.ok) toast.error(result.error ?? 'Export failed') }} className="col-span-2 rounded border border-border px-2 py-1.5 text-text-secondary">Export ST Card JSON</button>
-          <button type="button" onClick={async () => { if (await askDecision({ title: `Delete ${card.name}?`, detail: 'This removes the locally owned character card.', actionLabel: 'Delete', danger: true })) await removeLocalCard(card.id) }} className="col-span-2 rounded border border-danger/40 px-2 py-1.5 text-danger">Delete local character</button>
+          <button type="button" onClick={async () => { const result = await desktopCharacterCards.exportJson({ cardId: card.id, profile: 'standard' }); if (!result.ok) toast.error(result.error ?? 'Export failed') }} className="col-span-2 rounded border border-border px-2 py-1.5 text-text-secondary"><Trans i18nKey="common:surface.componentsCharactersview.action.exportStCardJson" /></button>
+          <button type="button" onClick={async () => { if (await askDecision({ title: `Delete ${card.name}?`, detail: 'This removes the locally owned character card.', actionLabel: 'Delete', danger: true })) await removeLocalCard(card.id) }} className="col-span-2 rounded border border-danger/40 px-2 py-1.5 text-danger"><Trans i18nKey="common:surface.componentsCharactersview.action.deleteLocalCharacter" /></button>
         </div>
       </article>
     )
@@ -404,15 +401,15 @@ export function CharactersView() {
       description={`Hosted Venice character /${hostedDetail.slug}`}
       panelRef={detailPanelRef}
       onClose={() => setHostedDetail(null)}
-      headerAction={<button type="button" onClick={() => setHostedDetail(null)} className="rounded border border-border px-2 py-1 text-text-secondary" aria-label="Close character details">Close</button>}
+      headerAction={<button type="button" onClick={() => setHostedDetail(null)} className="rounded border border-border px-2 py-1 text-text-secondary" aria-label="Close character details"><Trans i18nKey="common:surface.componentsCharactersview.action.close" /></button>}
     >
       <div className="space-y-4 overflow-y-auto p-5 text-sm text-text-secondary">
         <div className="flex items-center gap-3"><Avatar character={hostedDetail} /><div><p className="font-semibold text-text-primary">{hostedDetail.name}</p><p>{hostedDetail.author || 'Unknown author'}</p></div></div>
         <p>{hostedDetail.description || 'No description provided.'}</p>
         <div className="flex flex-wrap gap-2">
           <button type="button" onClick={() => toggleHostedFavorite(hostedDetail)} className="rounded border border-border px-3 py-1.5">{favoriteHostedCharacterSlugs.includes(hostedDetail.slug) ? 'Unfavorite' : 'Favorite'}</button>
-          <button type="button" onClick={() => void refreshHostedCharacter(hostedDetail)} className="rounded border border-border px-3 py-1.5">Refresh</button>
-          <button type="button" onClick={() => void duplicateHostedCharacter(hostedDetail)} className="rounded border border-border px-3 py-1.5">Duplicate locally</button>
+          <button type="button" onClick={() => void refreshHostedCharacter(hostedDetail)} className="rounded border border-border px-3 py-1.5"><Trans i18nKey="common:surface.componentsCharactersview.action.refresh" /></button>
+          <button type="button" onClick={() => void duplicateHostedCharacter(hostedDetail)} className="rounded border border-border px-3 py-1.5"><Trans i18nKey="common:surface.componentsCharactersview.action.duplicateLocally" /></button>
         </div>
       </div>
     </AccessibleDialog>
@@ -436,15 +433,13 @@ export function CharactersView() {
         <header>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-[17px] font-semibold text-text-primary">Characters</h2>
+              <h2 className="text-[17px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsCharactersview.heading.characters" /></h2>
               <p className="text-[12.5px] text-text-muted mt-0.5">
-                Browse hosted and locally authored characters in one hub.
-              </p>
+                <Trans i18nKey="common:surface.componentsCharactersview.description.browseHostedAndLocallyAuthoredCharactersIn" /></p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <label className="text-[12px] uppercase tracking-wider text-text-muted font-semibold">
-                Sort
-              </label>
+                <Trans i18nKey="common:surface.componentsCharactersview.label.sort" /></label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as CharacterSortBy)}
@@ -468,8 +463,7 @@ export function CharactersView() {
                 ))}
               </select>
               <label className="text-[12px] uppercase tracking-wider text-text-muted font-semibold">
-                Model
-              </label>
+                <Trans i18nKey="common:surface.componentsCharactersview.label.model" /></label>
               <select
                 value={selectedModel ?? ""}
                 onChange={(e) => setSelectedModel(e.target.value || null)}
@@ -489,9 +483,9 @@ export function CharactersView() {
         {hubNav}
 
         <div className="flex flex-wrap items-center gap-2 pt-2">
-          <button type="button" onClick={async () => { await createBlankCharacterCardDraft(); setActiveTab('rp-studio') }} className="rounded bg-accent px-3 py-1.5 text-[12px] text-accent-fg font-medium">Create ST Card</button>
-          <button type="button" onClick={() => { setActiveTab('rp-studio'); toast.info('Use Import card in the Character Library to review the mandatory preview.') }} className="rounded border border-border px-3 py-1.5 text-[12px] text-text-secondary">Import ST Card</button>
-          <button type="button" onClick={() => { setActiveTab('rp-studio'); toast.info('Open Drafts in the Character Library.') }} className="rounded border border-border px-3 py-1.5 text-[12px] text-text-secondary">Drafts</button>
+          <button type="button" onClick={async () => { await createBlankCharacterCardDraft(); setActiveTab('rp-studio') }} className="rounded bg-accent px-3 py-1.5 text-[12px] text-accent-fg font-medium"><Trans i18nKey="common:surface.componentsCharactersview.action.createStCard" /></button>
+          <button type="button" onClick={() => { setActiveTab('rp-studio'); toast.info('Use Import card in the Character Library to review the mandatory preview.') }} className="rounded border border-border px-3 py-1.5 text-[12px] text-text-secondary"><Trans i18nKey="common:surface.componentsCharactersview.action.importStCard" /></button>
+          <button type="button" onClick={() => { setActiveTab('rp-studio'); toast.info('Open Drafts in the Character Library.') }} className="rounded border border-border px-3 py-1.5 text-[12px] text-text-secondary"><Trans i18nKey="common:surface.componentsCharactersview.action.drafts" /></button>
         </div>
 
         <div className="flex flex-col gap-3 pt-3 soft-separator-y">
@@ -512,7 +506,7 @@ export function CharactersView() {
                 data-testid="character-include-adult"
                 className="rounded border-border bg-surface-elevated text-accent focus:ring-offset-0 focus:ring-0 w-4 h-4 cursor-pointer"
               />
-              <span>Include adult characters</span>
+              <span><Trans i18nKey="common:surface.componentsCharactersview.text.includeAdultCharacters" /></span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer select-none">
               <input
@@ -521,7 +515,7 @@ export function CharactersView() {
                 onChange={(e) => setWebEnabledOnly(e.target.checked)}
                 className="rounded border-border bg-surface-elevated text-accent focus:ring-offset-0 focus:ring-0 w-4 h-4 cursor-pointer"
               />
-              <span>Web-enabled only</span>
+              <span><Trans i18nKey="common:surface.componentsCharactersview.text.webEnabledOnly" /></span>
             </label>
           </div>
         </div>
@@ -535,14 +529,13 @@ export function CharactersView() {
         )}
 
         {isLoading && results.length === 0 && localCards.length === 0 && (
-          <div className="text-center py-12 text-[13px] text-text-muted">Loading characters…</div>
+          <div className="text-center py-12 text-[13px] text-text-muted"><Trans i18nKey="common:surface.componentsCharactersview.text.loadingCharacters" /></div>
         )}
 
         {showLocal && visibleLocalCards.length > 0 && (
           <section className="mb-6">
             <h3 className="text-[12px] uppercase tracking-[0.1em] text-text-muted font-semibold mb-3">
-              Local
-            </h3>
+              <Trans i18nKey="common:surface.componentsCharactersview.heading.local" /></h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {visibleLocalCards.map(renderLocalCard)}
             </div>
@@ -554,8 +547,7 @@ export function CharactersView() {
             {grouped.standard.length > 0 && (
               <section className="mb-6">
                 <h3 className="text-[12px] uppercase tracking-[0.1em] text-text-muted font-semibold mb-3">
-                  Characters
-                </h3>
+                  <Trans i18nKey="common:surface.componentsCharactersview.heading.characters" /></h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {grouped.standard.map(renderHostedCard)}
                 </div>
@@ -565,8 +557,7 @@ export function CharactersView() {
             {grouped.featured.length > 0 && (
               <section className="mb-6">
                 <h3 className="text-[12px] uppercase tracking-[0.1em] text-text-muted font-semibold mb-3">
-                  Featured
-                </h3>
+                  <Trans i18nKey="common:surface.componentsCharactersview.heading.featured" /></h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {grouped.featured.map(renderHostedCard)}
                 </div>
@@ -576,8 +567,7 @@ export function CharactersView() {
             {grouped.adult.length > 0 && (
               <section className="mb-6">
                 <h3 className="text-[12px] uppercase tracking-[0.1em] text-text-muted font-semibold mb-3">
-                  Adult
-                </h3>
+                  <Trans i18nKey="common:surface.componentsCharactersview.heading.adult" /></h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {grouped.adult.map(renderHostedCard)}
                 </div>
@@ -589,8 +579,7 @@ export function CharactersView() {
         {showHosted && hubSection !== 'hosted' && visibleHostedCards.length > 0 && (
           <section className="mb-6">
             <h3 className="text-[12px] uppercase tracking-[0.1em] text-text-muted font-semibold mb-3">
-              Hosted
-            </h3>
+              <Trans i18nKey="common:surface.componentsCharactersview.heading.hosted" /></h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {visibleHostedCards.map(renderHostedCard)}
             </div>
@@ -599,8 +588,7 @@ export function CharactersView() {
 
         {!isLoading && visibleLocalCards.length === 0 && hostedList.length === 0 && !error && (
           <div className="text-center py-12 text-[13px] text-text-muted">
-            No characters found. Try clearing the search box or enabling adult characters.
-          </div>
+            <Trans i18nKey="common:surface.componentsCharactersview.text.noCharactersFoundTryClearingTheSearch" /></div>
         )}
 
         {hasMore && hubSection === 'hosted' && results.length > 0 && (

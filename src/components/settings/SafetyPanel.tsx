@@ -61,7 +61,7 @@ export function SafetyPanel({
 
         <div className="rounded-lg bg-surface-base p-3 border border-border text-[12px] space-y-1">
           <div className="font-medium text-text-primary">
-            {t('settings:safety.effectiveStatus', 'Effective Status: Local filter: {{local}} | Venice provider filtering: {{provider}}', { local: localFamilySafeModeEnabled ? 'ON' : 'OFF', provider: veniceApiSafeMode ? 'ON' : 'OFF' })}
+            {t('settings:safety.effectiveStatus', { defaultValue: 'Effective Status: Local filter: {{local}} | Venice provider filtering: {{provider}}', local: localFamilySafeModeEnabled ? 'ON' : 'OFF', provider: veniceApiSafeMode ? 'ON' : 'OFF' })}
           </div>
           <div className="text-text-muted">
             {!localFamilySafeModeEnabled && veniceApiSafeMode

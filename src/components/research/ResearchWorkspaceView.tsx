@@ -26,6 +26,7 @@ import { askDecision, askText } from '../ui/modal-requests';
 import { processFileAttachment } from '../../services/ingestion/attachmentAssembler';
 import { redactErrorMessage } from '../../shared/redaction';
 import { Meteocon } from '../ui/Meteocon';
+import { Trans } from 'react-i18next';
 
 // Icons using Meteocons
 const SearchIcon = () => <Meteocon name="compass" size={16} />;
@@ -282,8 +283,7 @@ export const ResearchWorkspaceView: React.FC = () => {
         <div className="p-4 border-b border-border/50 flex justify-between items-center">
           {!sessionSidebarCollapsed && (
             <h2 className="font-bold text-text-primary flex items-center gap-2">
-              <Meteocon name="compass" size={18} /> Research
-            </h2>
+              <Meteocon name="compass" size={18} /> <Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.heading.research" /></h2>
           )}
           <div className="flex items-center gap-1">
             {!sessionSidebarCollapsed && (
@@ -304,7 +304,7 @@ export const ResearchWorkspaceView: React.FC = () => {
             <div key={s.id} className={`flex items-start border-b border-border/50 transition-colors hover:bg-surface-elevated ${activeSessionId === s.id ? 'border-l-4 border-l-accent bg-surface-elevated' : 'border-l-4 border-l-transparent'}`}>
               <button type="button" role="option" aria-selected={activeSessionId === s.id} aria-current={activeSessionId === s.id ? 'true' : undefined} onClick={() => setActiveSession(s.id)} className="min-w-0 flex-1 p-3 text-left">
                 <span className={`block truncate text-text-primary ${activeSessionId === s.id ? 'font-bold' : 'font-medium'}`}>{s.title}</span>
-                <span className="mt-1 block text-xs text-text-muted">{s.sources.length} sources • {s.findings.length} findings</span>
+                <span className="mt-1 block text-xs text-text-muted">{s.sources.length} <Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.text.sources" /> {s.findings.length} <Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.text.findings" /></span>
               </button>
               <div className="p-2">
                 <button
@@ -329,15 +329,13 @@ export const ResearchWorkspaceView: React.FC = () => {
             <div className="p-4 border-b border-border/50 flex justify-between items-center bg-surface-elevated">
               <div>
                 <h1 className="text-xl font-bold text-text-primary">{activeSession.title}</h1>
-                <p className="text-xs text-text-muted">{activeSession.scope} research</p>
+                <p className="text-xs text-text-muted">{activeSession.scope} <Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.description.research" /></p>
               </div>
               <div className="flex gap-2">
                 <button onClick={handleCreateWorkflow} className="px-3 py-1 bg-surface border border-border hover:bg-surface-elevated text-text-primary rounded text-sm transition-colors">
-                  Create Workflow
-                </button>
+                  <Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.action.createWorkflow" /></button>
                 <button onClick={handleSaveToLibrary} className="px-3 py-1 bg-accent text-accent-fg hover:bg-accent-hover rounded text-sm transition-colors">
-                  Save Summary
-                </button>
+                  <Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.action.saveSummary" /></button>
                 <button
                   type="button"
                   onClick={() => archiveSession(activeSession.id)}
@@ -366,7 +364,7 @@ export const ResearchWorkspaceView: React.FC = () => {
                   <div className="flex-1 flex flex-col border-r border-border/50 overflow-hidden">
                 <div className="p-4 space-y-4 border-b border-border/50">
                   <form onSubmit={handleSearch} className="flex gap-2">
-                    <label htmlFor="research-search-query" className="sr-only">Search query</label>
+                    <label htmlFor="research-search-query" className="sr-only"><Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.label.searchQuery" /></label>
                     <input 
                       id="research-search-query"
                       value={searchQuery}
@@ -384,7 +382,7 @@ export const ResearchWorkspaceView: React.FC = () => {
                     </button>
                   </form>
                   <form onSubmit={handleScrape} className="flex gap-2">
-                    <label htmlFor="research-scrape-url" className="sr-only">Scrape URL</label>
+                    <label htmlFor="research-scrape-url" className="sr-only"><Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.label.scrapeUrl" /></label>
                     <input 
                       id="research-scrape-url"
                       value={scrapeUrl}
@@ -423,7 +421,7 @@ export const ResearchWorkspaceView: React.FC = () => {
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  <h3 className="font-bold text-sm uppercase text-text-muted">Sources ({activeSession.sources.length})</h3>
+                  <h3 className="font-bold text-sm uppercase text-text-muted"><Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.heading.sources" />{activeSession.sources.length})</h3>
                   {activeSession.sources.map(src => (
                     <div key={src.id} className="bg-surface-elevated border border-border rounded p-3 relative group">
                       <button
@@ -449,12 +447,11 @@ export const ResearchWorkspaceView: React.FC = () => {
               {/* Right Column - Findings */}
               <div className="w-96 flex flex-col bg-surface overflow-hidden">
                 <div className="p-4 border-b border-border/50">
-                  <h3 className="font-bold text-sm uppercase text-text-muted mb-4">Add Finding</h3>
+                  <h3 className="font-bold text-sm uppercase text-text-muted mb-4"><Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.heading.addFinding" /></h3>
                   <div className="space-y-3">
                     <div className="space-y-1">
                       <label htmlFor="research-finding-title" className="text-xs font-medium text-text-secondary">
-                        Finding title
-                      </label>
+                        <Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.label.findingTitle" /></label>
                       <input
                         id="research-finding-title"
                         value={findingTitle}
@@ -465,8 +462,7 @@ export const ResearchWorkspaceView: React.FC = () => {
                     </div>
                     <div className="space-y-1">
                       <label htmlFor="research-finding-content" className="text-xs font-medium text-text-secondary">
-                        Finding content
-                      </label>
+                        <Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.label.findingContent" /></label>
                       <textarea
                         id="research-finding-content"
                         value={findingContent}
@@ -480,13 +476,12 @@ export const ResearchWorkspaceView: React.FC = () => {
                       onClick={handleAddFinding}
                       className="w-full py-2 bg-accent text-accent-fg hover:bg-accent-hover rounded text-sm font-bold transition-colors"
                     >
-                      Save Finding
-                    </button>
+                      <Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.action.saveFinding" /></button>
                   </div>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  <h3 className="font-bold text-sm uppercase text-text-muted">Findings ({activeSession.findings.length})</h3>
+                  <h3 className="font-bold text-sm uppercase text-text-muted"><Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.heading.findings" />{activeSession.findings.length})</h3>
                   {activeSession.findings.map(f => (
                     <div key={f.id} className="bg-surface-elevated border border-border rounded p-3 group">
                       <div className="flex justify-between items-start mb-2">
@@ -513,13 +508,12 @@ export const ResearchWorkspaceView: React.FC = () => {
         ) : (
           <div className="flex-1 flex items-center justify-center text-text-muted flex-col gap-4">
             <Meteocon name="compass" size={64} className="text-text-muted" />
-            <p>Select a research session or create a new one to begin.</p>
+            <p><Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.description.selectAResearchSessionOrCreateA" /></p>
             <button 
               onClick={handleCreateSession}
               className="px-6 py-2 bg-accent text-accent-fg hover:bg-accent-hover rounded font-bold transition-colors"
             >
-              New Research Session
-            </button>
+              <Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.action.newResearchSession" /></button>
           </div>
         )}
       </div>

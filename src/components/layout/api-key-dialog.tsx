@@ -3,6 +3,7 @@ import { useAuthStore } from '../../stores/auth-store'
 import { VeniceLogo } from '../ui/logo'
 import { toast } from '../../stores/toast-store'
 import { isElectron } from '../../services/desktopBridge'
+import { Trans } from 'react-i18next';
 
 export function ApiKeyDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { apiKey, isConfigured, setApiKey, clearApiKey } = useAuthStore()
@@ -61,15 +62,14 @@ export function ApiKeyDialog({ open, onClose }: { open: boolean; onClose: () => 
           <VeniceLogo size={26} />
           <div>
             <h2 id={titleId} className="text-[17px] font-semibold text-text-primary">
-              Connect to Venice
-            </h2>
+              <Trans i18nKey="common:surface.layoutApiKeyDialog.heading.connectToVenice" /></h2>
             <p className="text-[13px] text-text-secondary">
               {isElectron() ? 'Stored securely in OS Keychain/Credential Manager.' : 'Held in memory for this local development session only.'}
             </p>
           </div>
         </div>
 
-        <label htmlFor="apikey-input" className="sr-only">Venice API key</label>
+        <label htmlFor="apikey-input" className="sr-only"><Trans i18nKey="common:surface.layoutApiKeyDialog.label.veniceApiKey" /></label>
         <input
           id="apikey-input"
           type="password"
@@ -82,7 +82,7 @@ export function ApiKeyDialog({ open, onClose }: { open: boolean; onClose: () => 
           onKeyDown={(e) => { if (e.key === 'Enter') handleConnect() }}
         />
         <p className="text-[13px] text-text-muted mt-2">
-          Get a key at{' '}
+          <Trans i18nKey="common:surface.layoutApiKeyDialog.description.getAKeyAt" />{' '}
           <a
             href="https://venice.ai/settings/api"
             target="_blank"
@@ -103,12 +103,10 @@ export function ApiKeyDialog({ open, onClose }: { open: boolean; onClose: () => 
               disabled={busy}
               className="px-3 py-1.5 text-[14px] text-text-secondary hover:text-danger cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Disconnect
-            </button>
+              <Trans i18nKey="common:surface.layoutApiKeyDialog.action.disconnect" /></button>
           )}
           <button onClick={onClose} className="px-3 py-1.5 text-[14px] text-text-secondary hover:text-text-primary cursor-pointer transition-colors">
-            Cancel
-          </button>
+            <Trans i18nKey="common:surface.layoutApiKeyDialog.action.cancel" /></button>
           <button
             onClick={handleConnect}
             disabled={busy || !value.trim()}

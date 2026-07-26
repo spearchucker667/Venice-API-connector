@@ -2,7 +2,7 @@
 
 > **HISTORICAL SNAPSHOT — NOT CURRENT STATE.** This report is retained as dated implementation evidence and does not override the live tree.
 
-> **Status:** Implementation closure evidence for the 2026-07-12 remediation and 2026-07-13 follow-through. The canonical open-task authority remains [`../ROADMAP.md`](../ROADMAP.md), and command evidence remains [`../summary_of_work.md`](../summary_of_work.md).
+> **Status:** Implementation closure evidence for the 2026-07-12 remediation and 2026-07-13 follow-through. The canonical open-task authority remains [`../ROADMAP.md`](../../ROADMAP.md), and command evidence remains [`../summary_of_work.md`](../../summary_of_work.md).
 
 ## Repository State
 
@@ -10,7 +10,7 @@
 - Branch: `main`
 - Initial worktree: clean
 - Toolchain: Node `v22.13.1`, npm `10.9.2`
-- API authority inspected: [`../reference/Venice_swagger_api.yaml`](../reference/Venice_swagger_api.yaml)
+- API authority inspected: [`../reference/Venice_swagger_api.yaml`](../../reference/Venice_swagger_api.yaml)
 
 ## Verified Root Causes
 

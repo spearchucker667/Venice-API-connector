@@ -71,5 +71,1917 @@
   "isWebEnabled": "true",
   "stable-audio": "q1",
   "video-model": "q2",
-  "promptLibrary": "lib-1"
+  "promptLibrary": "lib-1",
+  "surface": {
+    "app": {
+      "text": {
+        "skipToMainContent": "跳转到主内容",
+        "loadingWorkflows": "正在加载工作流程...",
+        "loadingPlayground": "正在加载游乐场...",
+        "loadingRpStudio": "正在加载 RP studio...",
+        "loadingHistory": "正在加载历史记录...",
+        "loadingImageStudio": "正在加载 Image Studio...",
+        "loadingImageInspector": "正在加载图像检查器...",
+        "loadingAudio": "正在加载音频...",
+        "loadingMusic": "正在加载音乐...",
+        "loadingVideo": "正在加载视频...",
+        "loadingEmbeddings": "加载嵌入…",
+        "loadingStatus": "加载状态…",
+        "loadingCharacters": "加载角色…",
+        "loadingCharacterCreator": "加载角色创建…",
+        "loadingSettings": "加载设置…",
+        "loadingSearch": "加载搜索…",
+        "loadingMediaStudio": "加载媒体工作室…",
+        "loadingPromptLibrary": "加载提示库…",
+        "loadingScenes": "加载场景…",
+        "loadingStorage": "正在加载存储...",
+        "loadingDocuments": "正在加载文档..."
+      }
+    },
+    "componentsCharactersview": {
+      "action": {
+        "chat": "聊天",
+        "refresh": "刷新",
+        "edit": "编辑",
+        "close": "关闭",
+        "createStCard": "创建 ST 卡片",
+        "select": "选择",
+        "details": "详细信息",
+        "duplicateLocally": "本地复制",
+        "startChat": "开始聊天",
+        "duplicate": "复制",
+        "exportStCardJson": "导出 ST 卡 JSON",
+        "deleteLocalCharacter": "删除本地角色",
+        "importStCard": "导入 ST 卡",
+        "drafts": "草稿"
+      },
+      "heading": {
+        "characters": "角色",
+        "local": "本地",
+        "featured": "精选",
+        "adult": "成人",
+        "hosted": "托管"
+      },
+      "label": {
+        "model": "模型",
+        "sort": "排序"
+      },
+      "text": {
+        "featured": "精选",
+        "model": "型号：",
+        "ratings": "评级",
+        "imports": "导入",
+        "venice": "威尼斯 ↗",
+        "needsValidation": "需要验证",
+        "includeAdultCharacters": "包括成人角色",
+        "webEnabledOnly": "仅支持网络",
+        "loadingCharacters": "正在加载角色…",
+        "noCharactersFoundTryClearingTheSearch": "未找到字符。尝试清除搜索框或启用成人字符。"
+      },
+      "description": {
+        "browseHostedAndLocallyAuthoredCharactersIn": "在一个中心浏览托管和本地创作的角色。"
+      }
+    },
+    "componentsStatusview": {
+      "heading": {
+        "status": "状态",
+        "runtime": "运行时",
+        "storage": "存储",
+        "safetyGuardAudit": "安全防护审核",
+        "lastRequest": "最后请求"
+      },
+      "description": {
+        "aggregatedRuntimeInfoForTheCurrentBuild": "当前构建的聚合运行时信息。打开",
+        "toInspectDetailedConsoleOutput": "以检查详细的控制台输出。",
+        "statusProvidesTransportStorageAuditAndRequest": "状态提供传输、存储、审核和请求诊断。使用专用的库、研究、设置和工作流程选项卡进行特定功能的控制。"
+      },
+      "text": {
+        "logsFolder": "日志文件夹",
+        "bySeverity": "按严重性：",
+        "lastError": "最后一个错误：",
+        "noRequestsYetLastErrorBelowIf": "尚无请求（下面的最后一个错误（如果有））"
+      }
+    },
+    "componentsThememaker": {
+      "action": {
+        "cancel": "取消",
+        "createNewTheme": "+ 创建新主题",
+        "importTheme": "导入主题...",
+        "exportTheme": "导出主题",
+        "darkMode": "深色模式",
+        "lightMode": "浅色模式",
+        "saveTheme": "保存主题",
+        "deleteTheme": "删除主题",
+        "restoreDefaultTheme": "恢复默认主题",
+        "replaceExisting": "替换现有",
+        "importAsCopy": "作为副本导入",
+        "importApply": "导入并应用"
+      },
+      "heading": {
+        "themeSystemEditor": "主题系统和编辑器",
+        "importThemePreview": "导入主题预览"
+      },
+      "description": {
+        "configureThemeColorsBorderContrastFocusRings": "在 Venice Forge 上配置主题颜色、边框对比度、对焦环和操作按钮样式。",
+        "reviewThemeMetadataAndPreviewLayoutBefore": "在应用于工作区之前检查主题元数据和预览布局。"
+      },
+      "label": {
+        "selectActiveTheme": "选择活动主题"
+      },
+      "text": {
+        "unsavedDraftChanges": "未保存的草稿更改",
+        "invalid": "无效",
+        "liveThemePreview": "实时主题预览",
+        "showingLivePreviewOfActiveDraft": "显示活动草稿的实时预览",
+        "themeName": "主题名称：",
+        "mode": "模式：",
+        "aCustomThemeNamedLdquo": "您的工作区中已存在名为“",
+        "rdquoAlreadyExistsInYourWorkspace": "”的自定义主题。",
+        "importedLayoutPreview": "导入的布局预览"
+      }
+    },
+    "componentsThemepreview": {
+      "text": {
+        "status": "状态",
+        "forge": "伪造",
+        "activeItem": "活动项目",
+        "inactiveItem": "非活动项目",
+        "selectedItem": "选定项目",
+        "primaryButton": "主按钮",
+        "secondary": "辅助",
+        "inputField": "输入字段…",
+        "focusedControl": "聚焦控制",
+        "alertMessageBoundary": "警报消息边界",
+        "contrastWarnings": "对比度警告："
+      }
+    },
+    "componentsAudioAudioView": {
+      "text": {
+        "voice": "语音",
+        "download": "下载",
+        "text": "文本",
+        "format": "格式",
+        "speed": "速度",
+        "generateSpeech": "生成语音",
+        "transcribe": "转录",
+        "output": "输出",
+        "pressGenerateToSynthesizeSpeech": "按“生成”合成语音",
+        "transcript": "文字记录",
+        "transcriptAppearsHere": "文字文字显示在此处"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatordrafteditor": {
+      "label": {
+        "creatorNotes": "创作者备注",
+        "postHistoryInstructions": "历史后指令",
+        "characterName": "角色名称 *",
+        "tagsCommaSeparated": "标签（逗号分隔）",
+        "fullIdentityBackground": "完整身份和背景",
+        "personalitySpeechStyle": "个性和言语风格",
+        "scenarioContext": "场景上下文",
+        "firstMessagePrimaryGreeting": "第一条消息（主要问候语）*",
+        "alternateGreetings": "备用问候语",
+        "exampleDialogue": "示例对话",
+        "systemPromptOverride": "系统提示覆盖",
+        "avatarControls": "头像控件",
+        "visualAvatarPrompt": "视觉头像提示",
+        "naturalLanguageRequest": "自然语言请求"
+      },
+      "text": {
+        "enabled": "已启用",
+        "draftRev": "草稿修订版",
+        "saveDraft": "保存草稿",
+        "validate": "验证",
+        "approveCreateCharacter": "批准并创建角色",
+        "assumptions": "假设：",
+        "aiRegenerate": "AI 重新生成",
+        "addAlternateGreeting": "添加备用问候语",
+        "advancedPromptingInstructionsDirectlyModifySystemPrompt": "高级提示指令在模型执行期间直接修改系统提示转向。创建前仔细检查。",
+        "noAvatarSelected": "未选择头像",
+        "chooseImageFile": "选择图像文件",
+        "generateAvatar": "生成头像",
+        "addLoreEntry": "添加传说条目",
+        "noEmbeddedLoreEntriesYetAddKeywords": "尚未嵌入传说条目。添加关键字和背景详细信息以构建深刻的角色世界。",
+        "draftId": "草稿 ID：",
+        "revisionNumber": "修订号：",
+        "creatorModel": "创建者型号：",
+        "specification": "规范：",
+        "aiAssistedRevisions": "AI 辅助修订"
+      },
+      "heading": {
+        "embeddedLorebookWorldInfo": "嵌入式传说书和世界信息"
+      },
+      "description": {
+        "manageWorldLoreEntriesEmbeddedInsideThis": "管理此角色卡 V2 草稿中嵌入的世界传说条目。"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorerror": {
+      "text": {
+        "copy": "复制",
+        "diagnosticMessage": "诊断消息",
+        "returnToDraft": "返回草稿",
+        "retryOperation": "重试操作"
+      },
+      "heading": {
+        "characterCreatorError": "角色创建者错误"
+      },
+      "description": {
+        "anErrorOccurredDuringGenerationOrCard": "生成或卡片处理期间发生错误。您当前的草稿和想法已被保留。"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorlocalpickermodal": {
+      "action": {
+        "cancel": "取消"
+      },
+      "heading": {
+        "selectLocalCharacterToEdit": "选择本地角色进行编辑"
+      },
+      "description": {
+        "chooseACharacterFromYourLocalLibrary": "从本地库中选择一个角色，以在角色创建器中作为草稿打开。"
+      },
+      "text": {
+        "editDraft": "编辑草稿 →"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorprocesspanel": {
+      "text": {
+        "active": "已激活",
+        "aiDesignProcess": "AI 设计流程",
+        "designDirectionSummary": "设计方向与总结",
+        "interpretation": "解读：",
+        "initializingAiProcessPipeline": "初始化 AI 流程管道…",
+        "cancelGeneration": "取消生成"
+      },
+      "description": {
+        "thisLogShowsUserFacingDesignDecisions": "此日志显示面向用户的设计决策和验证事件，而不是私人隐藏的推理。"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorwelcome": {
+      "heading": {
+        "characterCreator": "角色创建器"
+      },
+      "text": {
+        "create": "创建",
+        "delete": "删除",
+        "creatorModel": "创建者模型：",
+        "immutable": "（不可变）",
+        "optionalDesignConstraintsContext": "可选的设计约束和背景",
+        "allGeneratedContentRemainsADraftUntil": "在您批准之前，所有生成的内容仍然是草稿。",
+        "createDraft": "创建草稿",
+        "importExistingCard": "导入现有卡片",
+        "editLocalCharacter": "编辑本地字符",
+        "describe": "描述",
+        "review": "审阅",
+        "recentUnfinishedDrafts": "最近未完成的草稿",
+        "rev": "修订版",
+        "duplicate": "重复"
+      },
+      "description": {
+        "turnARoughIdeaIntoAComplete": "将粗略的想法变成完整的、可编辑的角色卡。",
+        "startWithASentenceADetailedConcept": "从一个句子、一个详细的概念或一个现有的角色原型开始。创建者将构建一个完整的草稿，您可以检查、重写、保存或导出。在您批准之前，不会将任何内容添加到您的字符库中。",
+        "enterAnythingFromAOneLineConcept": "输入从一行概念到详细字符轮廓的任何内容。",
+        "inspectAndEditTheIdentityPersonalityScenario": "检查并编辑身份、个性、场景、问候语、对话示例和行为指令。",
+        "approveTheFinalDraftToAddThe": "批准最终草案以将角色添加到本地库或导出兼容卡。"
+      },
+      "label": {
+        "characterConcept": "角色概念",
+        "tone": "语气",
+        "relationshipToUser": "与用户的关系",
+        "contentRating": "内容分级"
+      },
+      "option": {
+        "adultUncensored": "成人未经审查"
+      },
+      "action": {
+        "open": "打开"
+      }
+    },
+    "componentsChatCharacterchatsview": {
+      "heading": {
+        "characterChats": "角色聊天",
+        "startALocalCharacterChat": "开始本地角色聊天",
+        "noCharacterChatsYet": "尚无角色聊天"
+      },
+      "action": {
+        "edit": "编辑",
+        "close": "关闭",
+        "chat": "聊天",
+        "newStCard": "新 ST 卡",
+        "browseHosted": "浏览托管",
+        "startChat": "开始聊天",
+        "browseCharacters": "浏览角色",
+        "createLocalCharacter": "创建本地角色",
+        "browseHostedCharacters": "浏览托管角色 ↗",
+        "createNewStCard": "+ 创建新的 ST 卡"
+      },
+      "description": {
+        "hostedAndLocalCharacterConversations": "托管和本地角色对话",
+        "noCharacterChatsMatchThisSearch": "没有与此搜索匹配的角色聊天。",
+        "selectAnyOfYourLocallyCreatedCharacters": "选择任何本地创建的角色来启动专用对话。",
+        "noLocalCharactersMatch": "没有本地角色匹配“",
+        "chooseAHostedOrLocalCharacterTo": "选择托管或本地角色开始专用角色对话。"
+      },
+      "text": {
+        "searchCharacterChats": "搜索角色聊天",
+        "localCharacters": "本地角色",
+        "available": "可用",
+        "chat": "聊天 →"
+      },
+      "label": {
+        "localCharacters": "本地角色 ("
+      }
+    },
+    "componentsChatCharacterscenecard": {
+      "action": {
+        "retry": "重试",
+        "cancel": "取消",
+        "openInMediaStudio": "在 Media Studio 中打开",
+        "copyPrompt": "复制提示",
+        "regenerate": "重新生成"
+      },
+      "description": {
+        "scenePrompt": "场景提示"
+      }
+    },
+    "componentsChatHistoryview": {
+      "action": {
+        "newChat": "新对话",
+        "cancel": "取消",
+        "rename": "重命名",
+        "delete": "删除",
+        "export": "导出",
+        "import": "导入",
+        "clearSelection": "清除选择",
+        "deleteSelected": "删除所选内容 (",
+        "newFolder": "新建文件夹",
+        "startNewConversation": "开始新的对话",
+        "openPrivacyGate": "打开隐私门",
+        "enablePrivacyGate": "启用隐私门"
+      },
+      "option": {
+        "characterChats": "角色聊天",
+        "allChats": "所有聊天",
+        "standardChats": "标准聊天",
+        "selectDestinationFolder": "选择目标文件夹...",
+        "unfiledNoFolder": "未归档（无文件夹）"
+      },
+      "text": {
+        "unfiled": "未分类",
+        "selected": "已选择",
+        "total": "总计",
+        "moveTo": "移至：",
+        "chooseOneChatTypeToMoveInto": "选择一个聊天键入以移至文件夹。",
+        "ago": "之前",
+        "noConversationsInThisFolder": "此文件夹中没有对话。",
+        "noUnfiledConversations": "没有未归档的对话。"
+      },
+      "heading": {
+        "chatHistory": "聊天记录",
+        "noConversationsFound": "未找到对话"
+      },
+      "description": {
+        "manageAndRevisitYourPastConversations": "管理并重新访问您过去的对话",
+        "tryADifferentSearchTermOrStart": "尝试不同的搜索词或开始新的聊天"
+      }
+    },
+    "componentsChatChatView": {
+      "action": {
+        "cancel": "取消",
+        "remove": "移除",
+        "clear": "清除",
+        "shuffle": "随机播放",
+        "confirmSend": "确认并发送",
+        "disableMemoryForThisMessage": "禁用此消息的内存",
+        "saveContextText": "保存上下文文本",
+        "forgetFact": "忘记事实",
+        "chatContext": "⚙ 聊天上下文 ·",
+        "requireMemoryPreviewBeforeNextSend": "在下一个对话之前需要内存预览发送"
+      },
+      "option": {
+        "disabled": "已禁用",
+        "inheritFromDefaultSettings": "从默认设置继承",
+        "overrideUseChatSettings": "覆盖（使用聊天设置）"
+      },
+      "text": {
+        "howCanIHelpToday": "今天我能提供什么帮助吗？",
+        "tryOneOfThese": "尝试其中一项",
+        "startAConversationWith": "与",
+        "matchedLocalMemoryContext": "匹配的本地内存上下文",
+        "facts": "事实开始对话，",
+        "summariesMatched": "摘要匹配）",
+        "previousThread": "上一个线程：",
+        "allMatchedContextHasBeenRemoved": "所有匹配的上下文已被删除。",
+        "context": "上下文",
+        "chatContext": "聊天上下文",
+        "includeMemoryRetrievalForThisChat": "包括本次聊天的内存检索",
+        "includePriorConversationContext": "包括之前的对话上下文",
+        "selected": "选择了",
+        "chattingAs": "作为此消息所附的"
+      },
+      "label": {
+        "systemPromptMode": "系统提示模式"
+      },
+      "description": {
+        "onlySelectedLocalConversationsAreIncludedIn": "仅选定的本地对话包含在下一个模型请求中并发送到 Venice API。 API 密钥、不记名令牌和本地文件路径已被编辑；长内容会被截断以保持在范围内。对话历史记录永远不会包含在诊断或安全导出中。"
+      }
+    },
+    "componentsChatMessageBubble": {
+      "action": {
+        "cancel": "取消",
+        "save": "保存",
+        "thinking": "思考"
+      },
+      "text": {
+        "attachedToThisMessage": "进行聊天",
+        "truncated": "被截断",
+        "vision": "视觉",
+        "safety": "安全性：",
+        "code": "代码：",
+        "signals": "信号：",
+        "toolUsed": "使用的工具：",
+        "resultFrom": "结果"
+      }
+    },
+    "componentsChatVeniceParams": {
+      "action": {
+        "newChat": "新对话",
+        "settings": "设置"
+      },
+      "label": {
+        "appSystemPrompt": "应用程序系统提示"
+      },
+      "option": {
+        "loadingLibrary": "正在加载库...",
+        "errorLoadingLibrary": "加载库时出错",
+        "loadFromLibrary": "从库加载..."
+      },
+      "text": {
+        "approachingSystemPromptSizeLimit": "接近系统提示大小限制（"
+      }
+    },
+    "componentsDocumentsDocumentagentview": {
+      "option": {
+        "off": "关闭",
+        "readAttachmentsOnly": "仅读取附件",
+        "limitedDocuments": "有限文档",
+        "manageSelectedWorkspace": "管理选定的工作区",
+        "markdownMd": "降价 (.md)",
+        "textTxt": "文本 (.txt)",
+        "jsonJson": "JSON (.json)",
+        "csvCsv": "CSV (.csv)",
+        "htmlHtml": "HTML (.html)",
+        "wordDocx": "Word (.docx)",
+        "pdfPdf": "PDF (.pdf)"
+      },
+      "action": {
+        "managedLibrary": "托管库",
+        "connectedWorkspace": "已连接的工作区",
+        "preview": "预览",
+        "source": "来源",
+        "history": "历史记录 ("
+      },
+      "text": {
+        "search": "搜索",
+        "cancel": "取消",
+        "createDocument": "创建文档",
+        "sessionGrant": "会话授权 ·",
+        "revoke": "撤销",
+        "selectWorkspaceDirectory": "选择工作区目录...",
+        "documentAgentToolsRequireTheHardenedElectron": "文档代理工具需要强化的 Electron 桌面桥。",
+        "workingGroup": "工作组",
+        "group": "+ 组",
+        "document": "+ 文档",
+        "revision": "修订版：",
+        "export": "导出…",
+        "prepareEditProposal": "准备编辑提案",
+        "by": "· 由",
+        "restoreAsNewRevision": "恢复为新修订版",
+        "before": "之前",
+        "after": "之后",
+        "reject": "拒绝",
+        "approveExactChange": "批准确切的更改",
+        "itemS": "项目",
+        "searchMatches": "搜索匹配项 (",
+        "read": "读取",
+        "createGroup": "创建组"
+      },
+      "heading": {
+        "agentAccessGrantControls": "代理访问和授予控制",
+        "documents": "文档 (",
+        "immutableRevisionLineage": "不可变修订版谱系",
+        "reviewProposal": "审查提案",
+        "grantedWorkspaceDirectory": "已授予工作空间目录",
+        "createManagedDocument": "创建托管文档",
+        "createWorkingGroup": "创建工作组"
+      },
+      "description": {
+        "limitedDocumentsIsTheSafeDefaultWorkspace": "有限文档是安全的默认设置。工作区访问仅限于一个用户授予的目录，并且从不包括 shell、Git、网络、钥匙串或 OS 控件",
+        "noManagedDocumentsInThisWorkingGroup": "此工作组中没有托管文档。",
+        "boundToHash": "绑定到哈希",
+        "againstBaseRevision": "…反对基本修订。",
+        "noDocumentSelected": "未选择任何文档",
+        "selectADocumentFromTheLeftPanel": "从左侧面板中选择一个文档或创建一个新文档以开始编辑。",
+        "noWorkspaceFilesFound": "未找到工作空间文件。",
+        "noWorkspaceGranted": "未授予工作空间",
+        "selectAWorkspaceDirectoryUnderAgentAccess": "在上面的“代理访问”下选择一个工作空间目录以浏览文件。",
+        "selectAFileFromTheWorkspaceList": "从工作空间列表中选择一个文件以查看其内容。"
+      },
+      "label": {
+        "accessPreset": "访问预设",
+        "format": "格式",
+        "initialContent": "初始内容",
+        "workingGroupName": "工作组名称"
+      }
+    },
+    "componentsEmbeddingsEmbeddingsView": {
+      "action": {
+        "copy": "复制"
+      },
+      "text": {
+        "inputText": "输入文本",
+        "generateEmbeddings": "生成嵌入",
+        "vector": "矢量（",
+        "dimensions": "尺寸）",
+        "embeddingVectorsAppearHere": "嵌入矢量出现在此处"
+      }
+    },
+    "componentsGalleryCompareView": {
+      "action": {
+        "close": "关闭"
+      },
+      "text": {
+        "compare": "对比",
+        "items": "项目"
+      },
+      "description": {
+        "select2To": "选择 2 到",
+        "itemsToCompare": "项进行比较。 （已选择",
+        "selected": "）"
+      },
+      "column": {
+        "field": "字段"
+      }
+    },
+    "componentsGalleryGalleryView": {
+      "heading": {
+        "mediaStudio": "媒体工作室"
+      },
+      "action": {
+        "close": "关闭",
+        "apply": "应用",
+        "imageStudio": "图像工作室",
+        "chat": "聊天",
+        "videoStudio": "视频工作室",
+        "seed": "种子",
+        "compare": "比较 (",
+        "lineage": "谱系",
+        "imageTools": "图像工具",
+        "prompt": "提示",
+        "negative": "否定"
+      },
+      "description": {
+        "browseTagEditAndExportYourGenerated": "浏览、标记、编辑和导出生成的媒体。",
+        "noMatchingMedia": "未选择匹配的媒体"
+      },
+      "text": {
+        "item": "项目",
+        "loaded": "已加载",
+        "selected": "已选择",
+        "loadingMediaStudio": "正在加载 Media Studio...",
+        "itemsSelected": "项目。",
+        "sendTo": "发送至：",
+        "copy": "复制："
+      },
+      "label": {
+        "quickTag": "快速标签："
+      }
+    },
+    "componentsGalleryMediaCard": {
+      "text": {
+        "video": "视频",
+        "audio": "音频",
+        "favorite": "最喜欢的",
+        "image": "图片",
+        "seed": "种子：",
+        "more": "更多"
+      }
+    },
+    "galleryMediaDetailDialog": {
+      "action": {
+        "delete": "删除",
+        "closeEsc": "关闭 (Esc)"
+      },
+      "text": {
+        "previewUnavailable": "预览不可用",
+        "seed": "种子：",
+        "source": "源：",
+        "style": "样式：",
+        "steps": "步骤：",
+        "cfg": "CFG："
+      },
+      "heading": {
+        "filmstrip": "幻灯片"
+      }
+    },
+    "componentsGalleryMediaInspector": {
+      "action": {
+        "close": "关闭",
+        "createStCard": "创建 ST 卡片",
+        "upscale": "放大",
+        "edit": "编辑",
+        "apply": "应用",
+        "cancel": "取消",
+        "add": "添加",
+        "clear": "清除",
+        "useSettings": "使用设置",
+        "useRecipe": "使用配方",
+        "regenerate": "重新生成",
+        "sameSeed": "相同种子",
+        "downloadMedia": "下载媒体",
+        "copyPrompt": "复制提示",
+        "copyNegative": "复制负片",
+        "copySeed": "复制种子",
+        "copyMetadata": "复制元数据",
+        "saveRecipe": "保存配方",
+        "copyRecipe": "复制配方",
+        "exportRecipe": "导出配方",
+        "applyToImageStudio": "应用到 Image Studio",
+        "remixAmpGenerate": "重新混合并生成",
+        "saveRemix": "通过内部 LLM 保存混音",
+        "saveNote": "保存注释",
+        "clearParentLink": "清除父链接"
+      },
+      "text": {
+        "delete": "删除",
+        "seed": "种子",
+        "steps": "步数",
+        "view": "查看",
+        "parameters": "参数",
+        "source": "源",
+        "style": "样式",
+        "cfg": "CFG",
+        "aspect": "外观",
+        "recipeCompatibility": "配方兼容性",
+        "enhancedPrompt": "增强提示",
+        "originalPrompt": "原始提示",
+        "remixPrompt": "重新混合提示",
+        "actions": "操作",
+        "modelCapabilities": "模型功能",
+        "upscale": "高档",
+        "edit": "编辑",
+        "video": "视频",
+        "vision": "视觉",
+        "tags": "标签",
+        "parentid": "ParentId="
+      },
+      "heading": {
+        "inspector": "检查器",
+        "prompt": "提示",
+        "parent": "父项",
+        "children": "子项 (",
+        "missingReferences": "缺少引用"
+      },
+      "description": {
+        "originalLdquo": "原件：“",
+        "rdquo": "”",
+        "promptViaInternalLlm": "提示…",
+        "theseEndpointsAreRecognisedForTheSource": "这些端点可被源模型识别。对此项目重新运行相同的操作将使用它们。",
+        "noTagsYet": "还没有标签。"
+      }
+    },
+    "componentsGalleryMediaToolbar": {
+      "text": {
+        "refresh": "刷新",
+        "project": "项目",
+        "sort": "对",
+        "item": "项目进行排序",
+        "selected": "已选择"
+      },
+      "action": {
+        "clear": "清除",
+        "compare": "对比",
+        "export": "导出",
+        "apply": "应用",
+        "delete": "删除",
+        "selectAll": "全选",
+        "addTag": "添加标签",
+        "unstar": "取消星号"
+      }
+    },
+    "componentsGenerationGenerationloadingindicator": {
+      "action": {
+        "cancel": "取消"
+      }
+    },
+    "componentsImageInspectorImageinspectorview": {
+      "heading": {
+        "imageInspector": "图像检查器",
+        "analysisSummary": "分析摘要",
+        "replicationPrompt": "复制提示",
+        "subjects": "主题",
+        "imageBasedSourceSearch": "基于图像的源搜索"
+      },
+      "action": {
+        "openFile": "打开文件。",
+        "cancelAnalysis": "取消分析",
+        "analyzeImage": "分析图像"
+      },
+      "text": {
+        "noRecentImages": "没有最近的图像。",
+        "openAFileToStartInspecting": "打开文件开始检查",
+        "middot": "·",
+        "selectOrUploadAnImageToInspect": "选择或上传图像以检查",
+        "visionModel": "视觉模型",
+        "noVisionCapableModelsAvailableInCatalog": "目录中没有可用的视觉模型。",
+        "analysisDepth": "分析深度",
+        "promptTarget": "提示目标",
+        "specificInstructionsOptional": "具体说明。 （可选）",
+        "negative": "否定：",
+        "directSourceImageMatchingIsUnavailableWith": "配置的 Google 和 Brave 合约不支持直接源图像匹配。检查的图像字节已在此处禁用，因此结果不会被错误地表示为反向图像匹配。",
+        "legacyTextQueryResults": "旧版文本查询结果（",
+        "imageAnalysisFailed": "图像分析失败",
+        "analysisResultsWillAppearHere": "分析结果将显示在此处。"
+      }
+    },
+    "componentsImageImageTools": {
+      "text": {
+        "model": "模型",
+        "sourceImage": "源图像",
+        "editPrompt": "编辑提示",
+        "scale": "量表",
+        "sourceAdherence": "来源依从性",
+        "veniceUpscalingDoesNotAcceptAText": "Venice 升级不接受文本提示。对于提示引导的更改，请切换到“编辑”。",
+        "result": "结果"
+      },
+      "action": {
+        "download": "下载",
+        "openEdit": "打开编辑",
+        "saveToMediaStudio": "保存到 Media Studio"
+      },
+      "description": {
+        "bytes": "字节",
+        "clickToUploadImage": "单击以上传图像",
+        "higherValuesStayCloserToTheSource": "值越高，离源越近；较低的值允许放大器添加更多纹理和细节。"
+      }
+    },
+    "componentsImageImageView": {
+      "action": {
+        "cancel": "取消",
+        "clear": "清除",
+        "createStCard": "创建 ST 卡片",
+        "saveToLibrary": "保存到库",
+        "useEnhancedPrompt": "使用增强提示",
+        "keepOriginal": "保留原始内容",
+        "switchTo": "切换到",
+        "append": "追加",
+        "replace": "替换",
+        "randomize": "随机化"
+      },
+      "text": {
+        "aspectRatio": "宽高比",
+        "resolution": "分辨率",
+        "seed": "种子",
+        "steps": "步数",
+        "prompt": "提示",
+        "enhancedPromptPreview": "增强提示预览",
+        "applyTemplate": "应用模板：",
+        "positive": "正向：",
+        "negative": "负向：",
+        "doesNotSupportNegativePromptsTheTemplate": "不支持负向提示。该模板仍处于待处理状态，并且您当前的提示状态未更改。",
+        "negativePrompt": "否定提示",
+        "quality": "质量",
+        "style": "样式",
+        "variants": "变体"
+      },
+      "option": {
+        "addTemplate": "添加模板..."
+      },
+      "label": {
+        "useFixedSeed": "使用固定种子"
+      }
+    },
+    "layoutApiKeyDialog": {
+      "action": {
+        "cancel": "取消",
+        "disconnect": "断开连接"
+      },
+      "heading": {
+        "connectToVenice": "连接到威尼斯"
+      },
+      "label": {
+        "veniceApiKey": "威尼斯API 钥匙"
+      },
+      "description": {
+        "getAKeyAt": "在"
+      }
+    },
+    "componentsLayoutInspectorPane": {
+      "text": {
+        "trafficInspector": "流量检查器",
+        "status": "状态：",
+        "error": "错误",
+        "noRequestsCapturedYet": "尚未捕获任何请求",
+        "sendChatOrGenerateImagesToInspect": "发送聊天或生成图像以检查流量。",
+        "guard": "防护：",
+        "time": "时间：",
+        "method": "方法：",
+        "transport": "传输：",
+        "outcome": "结果：",
+        "guard4ba3843": "防护：",
+        "preview": "预览：",
+        "latency": "延迟：",
+        "errorClass": "错误类别：",
+        "localSafetyEvaluation": "本地安全评估",
+        "mode": "模式：",
+        "familySafeModeRendererEvaluated": "家庭安全模式（渲染器评估）",
+        "result": "结果：",
+        "reasonCode": "原因代码：",
+        "adultModeLocalFilterSkipped": "成人模式（跳过本地过滤器）",
+        "electronMainProcessAuthoritative": "电子主进程权威",
+        "theLocalFamilySafeGuardIsEnforced": "本地家庭安全防护由主进程强制执行。打开审核日志以检查规范决策。",
+        "action": "操作：",
+        "signals": "信号：",
+        "sourceQuot": "] 来源：“",
+        "quotSeverity": "“（严重性：",
+        "confidence": "，置信度：",
+        "requestHeaders": "请求标头",
+        "requestBody": "请求正文",
+        "responseBody": "响应正文",
+        "selectARequestToViewDetails": "选择请求以查看详细信息",
+        "noActiveConversationOpenAChatTo": "没有活动对话。打开聊天以检查提示层。",
+        "active": "活动：",
+        "source": "来源："
+      }
+    },
+    "componentsMusicMusicView": {
+      "text": {
+        "model": "模型",
+        "voice": "语音",
+        "download": "下载",
+        "prompt": "提示",
+        "lyrics": "歌词",
+        "duration": "持续时间",
+        "instrumentalOnly": "仅乐器",
+        "instrumental": "乐器",
+        "customDuration": "自定义持续时间",
+        "output": "输出",
+        "pressGenerateToCreateYourTrack": "按“生成”来创建曲目"
+      },
+      "description": {
+        "duration": "持续时间："
+      },
+      "option": {
+        "seconds": "秒"
+      },
+      "action": {
+        "reset": "重置",
+        "generateAnother": "生成另一个"
+      }
+    },
+    "playgroundAgentModelPicker": {
+      "text": {
+        "noMatches": "无匹配项",
+        "rec": "录制",
+        "recommended": "推荐",
+        "tools": "工具",
+        "reasoning": "推理",
+        "vision": "视觉",
+        "web": "网络",
+        "uncensored": "未经审查"
+      }
+    },
+    "componentsPlaygroundPlaygroundView": {
+      "text": {
+        "playground": "演练场",
+        "agent": "代理",
+        "n": "n·",
+        "running": "正在运行…",
+        "openInWorkflows": "在工作流程中打开",
+        "open": "打开"
+      },
+      "action": {
+        "clear": "清除",
+        "run": "运行"
+      },
+      "option": {
+        "editSavedWorkflow": "编辑保存的工作流程…"
+      }
+    },
+    "componentsPlaygroundPreviewNode": {
+      "text": {
+        "done": "完成",
+        "error": "错误",
+        "running": "正在运行..."
+      }
+    },
+    "componentsPrivacyStorageprivacydashboard": {
+      "action": {
+        "retry": "重试",
+        "copySafeSummary": "复制安全摘要",
+        "exportJson": "导出 JSON",
+        "review": "审查"
+      },
+      "column": {
+        "status": "状态",
+        "prompts": "提示词",
+        "history": "历史记录",
+        "store": "存储",
+        "items": "项目",
+        "flags": "标志",
+        "surface": "表面",
+        "mediaBlobs": "媒体 Blob",
+        "pathsAmpKeys": "路径和密钥"
+      },
+      "heading": {
+        "failedToLoadStorageInventory": "无法加载存储清单",
+        "storagePrivacy": "存储和隐私",
+        "detailedInventory": "详细库存",
+        "referenceIssues": "参考问题",
+        "maintenancePlan": "维护计划",
+        "privacyExclusions": "隐私排除"
+      },
+      "description": {
+        "analyzingLocalStorage": "正在分析本地存储...",
+        "inspectAndManageLocalDataBoundaries": "检查和管理本地数据边界。",
+        "differentSurfacesHaveDifferentRedactionBoundariesInspect": "不同的表面有不同的编辑边界。在依据下面的真值表做出出口决策之前，请先检查它。",
+        "promptsAndHistoryAppearInEncryptedBackups": "提示和历史记录显示在加密备份和同步文件夹中，因为两者均已使用用户提供的密码进行端到端加密。媒体 blob（图像、文件、RP 资产）需要在“备份和同步”面板中明确选择加入切换 - 默认情况下排除。 API 密钥、承载令牌和绝对本地路径永远不会写入任何导出、同步或诊断摘要中。"
+      },
+      "text": {
+        "encrypted": "加密",
+        "archived": "已存档",
+        "secrets": "机密",
+        "userContent": "用户内容",
+        "sensitive": "敏感",
+        "noStorageHealthIssuesDetected": "未检测到存储运行状况问题。",
+        "source": "来源：",
+        "target": "目标：",
+        "destructive": "破坏性",
+        "dryRun": "试运行",
+        "alwaysRedacted": "始终经过编辑",
+        "included": "包含",
+        "optInOnly": "仅选择加入",
+        "keysNeverExported": "密钥从未导出",
+        "keysNeverSynced": "密钥从未同步"
+      },
+      "cell": {
+        "safePrivacySummary": "安全隐私摘要",
+        "safeDiagnosticsJson": "安全诊断 JSON",
+        "encryptedBackup": "加密备份",
+        "syncFolder": "同步文件夹"
+      }
+    },
+    "componentsPromptsPromptcreatemodal": {
+      "option": {
+        "project": "项目",
+        "global": "全球",
+        "selectAProject": "选择项目"
+      },
+      "action": {
+        "cancel": "取消",
+        "createPrompt": "创建提示"
+      },
+      "label": {
+        "title": "标题 *",
+        "kind": "种类 *",
+        "scope": "范围 *",
+        "project": "项目 *",
+        "tags": "标签",
+        "content": "内容 *",
+        "negativeContent": "负面内容"
+      },
+      "description": {
+        "commaSeparatedUpTo64TagsAnd": "逗号分隔；最多 64 个标签，每个标签 64 个字符。"
+      }
+    },
+    "componentsPromptsPromptlibraryview": {
+      "heading": {
+        "promptLibrary": "提示词库"
+      },
+      "action": {
+        "archive": "归档",
+        "copy": "复制",
+        "delete": "删除",
+        "cancel": "取消",
+        "new": "新建",
+        "favorites": "★ 收藏夹",
+        "useInImageStudio": "在 Image Studio 中使用",
+        "useInChat": "在聊天中使用",
+        "createWorkflow": "创建工作流程",
+        "history": "历史记录 (",
+        "useThisVersion": "使用此版本"
+      },
+      "description": {
+        "loading": "正在加载…",
+        "noSavedPromptsYet": "尚未保存提示。",
+        "clickThe": "单击上面的",
+        "buttonAboveToCreateYourFirstPrompt": "按钮来创建您的第一个提示。"
+      },
+      "text": {
+        "new": "新建",
+        "version": "版本",
+        "created": "· 创建",
+        "updated": "· 更新",
+        "current": "当前"
+      },
+      "label": {
+        "content": "内容",
+        "negativeContent": "负面内容"
+      }
+    },
+    "componentsResearchResearchworkspaceview": {
+      "heading": {
+        "research": "研究",
+        "sources": "来源 (",
+        "addFinding": "添加查找结果",
+        "findings": "结果 ("
+      },
+      "action": {
+        "newResearchSession": "新建研究会话",
+        "createWorkflow": "创建工作流程",
+        "saveSummary": "保存摘要",
+        "saveFinding": "保存发现"
+      },
+      "text": {
+        "sources": "来源 •",
+        "findings": "结果"
+      },
+      "description": {
+        "research": "研究",
+        "selectAResearchSessionOrCreateA": "选择一个研究会话或创建一个新的开始。"
+      },
+      "label": {
+        "searchQuery": "搜索查询",
+        "scrapeUrl": "抓取 URL",
+        "findingTitle": "查找标题",
+        "findingContent": "查找内容"
+      }
+    },
+    "componentsRpStudioAssetgallery": {
+      "action": {
+        "deletef6fdbe4": "删除",
+        "delete": "删除吗？"
+      },
+      "text": {
+        "loadingAssets": "正在加载资源…",
+        "noImage": "无图像",
+        "model": "型号：",
+        "seed": "种子：",
+        "negative": "阴性：",
+        "created": "已创建：",
+        "closePreview": "关闭预览",
+        "clickAnAssetToPreview": "单击要预览的资产"
+      }
+    },
+    "componentsRpStudioCharacterbookeditor": {
+      "text": {
+        "remove": "移除",
+        "bookName": "书籍名称",
+        "description": "描述",
+        "scanDepth": "扫描深度",
+        "tokenBudget": "令牌预算",
+        "entries": "条目 (",
+        "addEntry": "添加条目",
+        "entry": "条目",
+        "name": "名称",
+        "primaryKeysCommaSeparated": "主键（逗号分隔）",
+        "secondaryKeys": "辅助键",
+        "comment": "注释",
+        "content": "内容",
+        "insertionPosition": "插入位置",
+        "insertionOrder": "插入顺序",
+        "priority": "优先级",
+        "moveUp": "上移",
+        "moveDown": "下移"
+      },
+      "description": {
+        "enterAValidJsonObject": "输入有效的 JSON 对象"
+      },
+      "label": {
+        "recursiveScanning": "递归扫描。"
+      },
+      "option": {
+        "beforeCharacter": "字符之前",
+        "afterCharacter": "字符之后"
+      }
+    },
+    "componentsRpStudioCharactereditor": {
+      "text": {
+        "delete": "删除",
+        "save": "保存",
+        "add": "添加",
+        "scenario": "场景",
+        "next": "下一步",
+        "webSearch": "网络搜索",
+        "temperature": "温度",
+        "view": "查看",
+        "cancel": "取消",
+        "close": "关闭",
+        "characterNotFound": "未找到字符",
+        "estimatedTokens": "估计代币：",
+        "rawEstimate": "原始估计",
+        "outputReserve": "· 输出储备",
+        "editWithCharacterCreator": "使用角色创建者编辑",
+        "characterVersion": "角色版本",
+        "importSource": "导入来源",
+        "name": "姓名",
+        "author": "作者",
+        "adultContent18": "成人内容 (18+)",
+        "description": "说明",
+        "creatorNotes": "创建者备注",
+        "tags": "标签",
+        "personality": "个性",
+        "systemPrompt": "系统提示",
+        "approachingSystemPromptSizeLimit": "接近系统提示大小限制 (",
+        "postHistoryInstructions": "历史记录说明",
+        "instructions": "说明",
+        "firstMessagePrimaryGreeting": "第一条消息（主要问候语）",
+        "alternateGreetings": "备用问候语",
+        "addGreeting": "添加问候语",
+        "greetingPreview": "问候语预览",
+        "previous": "上一个",
+        "exampleDialogues": "示例对话",
+        "updateRawPreview": "更新原始预览",
+        "addExample": "添加示例",
+        "noExamplesAddAFewShotExchange": "无示例。",
+        "speakerRequired": "需要演讲者",
+        "rawExampleDialogue": "原始示例对话",
+        "v2ExtensionData": "V2 扩展数据",
+        "characterBook": "角色书",
+        "createEmbeddedBook": "创建嵌入书",
+        "removeEmbeddedBook": "删除嵌入书",
+        "attachExistingLorebook": "附加现有知识手册",
+        "importEmbeddedAsLinked": "作为链接导入嵌入内容",
+        "syncIntoEmbedded": "同步到嵌入内容",
+        "detachPreserveEmbedded": "分离（保留嵌入内容）",
+        "defaultModel": "默认模型",
+        "specialSettings": "特殊设置",
+        "urlScrapingProvider": "URL 抓取提供程序",
+        "enableThoughts": "启用思想",
+        "topP": "Top P",
+        "sourcedContextFiles": "源文件和上下文文件",
+        "noSourcedOrContextFilesUploaded": "未上传源文件或上下文文件",
+        "reApply": "重新应用",
+        "disposableTestChat": "一次性测试聊天。",
+        "promptOrderTrace": "提示订单跟踪",
+        "testUserMessage": "测试用户消息",
+        "unsavedModelResponse": "未保存的模型响应",
+        "saveAsRealConversation": "另存为真实对话",
+        "resetTest": "重置测试",
+        "cardGenerationModel": "卡片生成模型",
+        "visionAnalysisModel": "视觉分析模型",
+        "localImageAsset": "本地图像资产",
+        "textConcept": "文本概念",
+        "visionCapableProvider": "视觉能力 · 提供者",
+        "contextTokensRequestImage": "上下文令牌 · 请求图像 ~",
+        "textGenerationProfile": "文本生成配置文件",
+        "contentRating": "内容分级",
+        "detailLevel": "详细级别",
+        "customGenerationDirection": "自定义生成方向",
+        "visualAnalysis": "视觉分析：",
+        "generatedV2Draft": "生成的 V2 草稿：",
+        "applyToLocalDraft": "应用于本地草稿",
+        "reject": "拒绝",
+        "generateFieldProposal": "生成字段提案",
+        "before": "之前",
+        "after": "之后",
+        "applyProposal": "应用提案",
+        "aiRefinementAssistant": "AI 细化助手",
+        "before842beb5": "之前：",
+        "after13f2d65": "之后：",
+        "applySelected": "应用所选内容",
+        "selectAll": "选择全部",
+        "cardValidation": "卡验证",
+        "formatValidAndRecommendedFieldsComplete": "格式有效且建议的字段已完成。",
+        "stCardExport": "ST 卡导出",
+        "exportV2Json": "导出 V2 JSON",
+        "exportV2Png": "导出 V2 PNG",
+        "exportPrivacyReducedJson": "导出隐私减少的 JSON",
+        "validation": "验证",
+        "roundTripVerified": "往返验证",
+        "output": "输出",
+        "bytes": "字节",
+        "v2Fields": "V2 字段",
+        "extensions": "扩展",
+        "embeddedLoreEntries": "嵌入式知识条目",
+        "droppedLocalOnlyFields": "删除的仅限本地字段",
+        "warnings": "警告",
+        "versionHistory": "版本历史记录",
+        "saveVersion": "保存版本",
+        "current": "（当前）",
+        "noVersionsSavedSaveAVersionTo": "未保存版本。保存版本以跟踪更改。",
+        "versionComparison": "版本比较",
+        "saved": "已保存",
+        "current4fc0e2b": "当前",
+        "workflow": "工作流程",
+        "scene": "场景：",
+        "prompt": "提示：",
+        "reApplyTo": "重新申请",
+        "savingCharacter": "保存角色…"
+      },
+      "action": {
+        "remove": "移除",
+        "compare": "对比",
+        "chat": "聊天",
+        "allSteps": "所有步骤",
+        "avatar": "头像",
+        "setPrimary": "设置主要",
+        "duplicate": "复制",
+        "down": "向下",
+        "restore": "恢复",
+        "saveToPromptLibrary": "保存到提示库",
+        "startRpChat": "开始 RP 聊天",
+        "createScenarioFromCharacter": "从角色创建场景",
+        "createWorkflow": "创建工作流程",
+        "previous": "← 上一个 (",
+        "viewAllSteps": "查看所有步骤",
+        "next": "下一个："
+      },
+      "option": {
+        "off": "关闭",
+        "generate": "生成",
+        "chooseLorebook": "选择知识手册...",
+        "useChatDefault": "使用聊天默认值",
+        "brave": "勇敢",
+        "google": "Google",
+        "noCompatibleLiveModel": "没有兼容的实时模型",
+        "vision": "· 视觉 ·",
+        "context": "上下文",
+        "chooseMediaStudioImage": "选择 Media Studio 图像…",
+        "general": "一般",
+        "mature": "成熟",
+        "adult": "成人",
+        "attachScene": "附加场景…",
+        "attachPrompt": "附加提示…"
+      },
+      "label": {
+        "loadFileTxtMd": "加载文件（.txt、.md）",
+        "uploadFileMax5mb": "上传文件（最大 5MB）"
+      },
+      "description": {
+        "localCharacterStoredInVeniceForgeNot": "本地字符 — 存储在 Venice Forge 中，不在 Venice.ai 上托管。",
+        "embeddedDataIsPortableInV2Exports": "嵌入数据在 V2 导出中是可移植的。链接的知识簿保留在本地，并且仅在您请求时同步到嵌入副本中。",
+        "filesLoadedIntoPersonalitySystemPromptInstructions": "加载到个性、系统提示、说明或作为一般上下文附加的文件直接存储在此角色卡内。",
+        "runsOneUnsavedTurnTheResponseNever": "运行一回合未保存的回合。响应永远不会改变这张卡或自动成为示例对话。",
+        "estimatedSystemPrompt": "估计系统提示：",
+        "tokensActivatedLorebookSections": "令牌 · 激活的知识手册部分：",
+        "analysisAndGeneratedCardsRemainProposalsYour": "分析和生成的卡片仍然是提案。您当前的草稿将被保留，直到您明确应用草稿为止。",
+        "producesAnAllowlistedProposalOnlyNothingChanges": "仅生成列入许可名单的提案。在您应用它之前，什么都不会改变。"
+      },
+      "heading": {
+        "1SourceAvatar": "1. 来源和头像",
+        "2Identity": "2. 身份",
+        "3Persona": "3. 角色",
+        "4PromptBehavior": "4.提示行为",
+        "5Greetings": "5. 问候语",
+        "6ExampleDialogue": "6. 示例对话",
+        "7CharacterBookExtensions": "7. 角色书和扩展",
+        "8ModelAndContext": "8. 模型和上下文",
+        "9TestAiRefinement": "9. 测试和 AI 细化",
+        "aiDraftGeneration": "AI 草稿生成",
+        "10ExportWorkflow": "10. 导出和工作流程"
+      },
+      "item": {
+        "tokens": "令牌"
+      }
+    },
+    "componentsRpStudioCharacterlibrary": {
+      "text": {
+        "characterCreator": "角色创建器",
+        "createStCard": "创建 ST 卡片",
+        "close": "关闭",
+        "delete": "删除",
+        "cancel": "取消",
+        "buildCharacter": "构建角色",
+        "drafts": "草稿（",
+        "importCard": "导入卡",
+        "characterImportChangedAnExistingCard": "角色导入更改了现有卡。",
+        "undoImport": "撤消导入",
+        "updated": "已更新。",
+        "resume": "继续",
+        "loadingCharacters": "正在加载角色...",
+        "createYourFirstCharacter": "创建您的第一个角色",
+        "name": "名称",
+        "format": "格式",
+        "creator": "创建者",
+        "greetings": "问候语",
+        "loreEntries": "故事条目",
+        "extensions": "扩展",
+        "characterBook": "字符集",
+        "aMatchingCardAlreadyExistsChooseAn": "匹配的卡片已存在。选择明确的解决方案；没有什么会被默默地覆盖。",
+        "fieldsToMerge": "要合并的字段",
+        "keepExisting": "保留现有",
+        "mergeFields": "合并字段",
+        "replace": "替换",
+        "createCopy": "创建副本"
+      },
+      "action": {
+        "chat": "聊天",
+        "edit": "编辑",
+        "delete": "删除？",
+        "exportJson": "导出 JSON",
+        "exportPng": "导出 PNG"
+      },
+      "description": {
+        "localCharactersAreStoredInVeniceForge": "本地角色仅存储在 Venice Forge 中。它们不在 Venice.ai 上托管。",
+        "draftsAreEncryptedLocallyExcludedFromSync": "草稿在本地加密，从同步中排除，并且在保存之前不会显示为活动角色。",
+        "noRecoverableDrafts": "否",
+        "nothingIsSavedUntilYouConfirmThis": "在确认此预览之前，不会保存任何内容。"
+      },
+      "heading": {
+        "localStCardDrafts": "本地 ST 卡草稿",
+        "reviewCharacterImport": "检查角色导入"
+      },
+      "option": {
+        "embeddedLinkedRecommended": "嵌入 + 链接（推荐）",
+        "linkedOnly": "仅链接",
+        "embeddedOnly": "仅嵌入",
+        "doNotImportBook": "执行不导入书籍"
+      },
+      "label": {
+        "setAsFavorite": "设置为收藏",
+        "startRpChatAfterImport": "导入后开始 RP 聊天"
+      }
+    },
+    "componentsRpStudioLorebookmanager": {
+      "action": {
+        "edit": "编辑",
+        "delete": "删除？"
+      },
+      "text": {
+        "save": "保存",
+        "newLorebook": "新知识手册",
+        "loading": "正在加载…",
+        "lorebookNotFound": "未找到传说书。",
+        "name": "名称",
+        "tagsCommaSeparated": "标签（逗号分隔）",
+        "description": "说明",
+        "entries": "条目",
+        "addEntry": "添加条目",
+        "noEntriesYet": "尚无条目。"
+      },
+      "label": {
+        "enabled": "启用",
+        "always": "始终",
+        "wholeWords": "整个单词"
+      }
+    },
+    "componentsRpStudioPersonamanager": {
+      "text": {
+        "active": "已激活",
+        "save": "保存",
+        "add": "添加",
+        "newPersona": "新角色",
+        "loadingPersonas": "正在加载角色...",
+        "personaNotFound": "未找到角色。",
+        "personaImage": "角色图像",
+        "removeImage": "删除图像",
+        "name": "名称",
+        "referenceThirdPerson": "参考（第三人称）",
+        "description": "描述",
+        "tags": "标签"
+      },
+      "action": {
+        "edit": "编辑",
+        "delete": "删除？"
+      },
+      "label": {
+        "loadFromFileTxtMd": "从文件加载（.txt、.md）"
+      }
+    },
+    "componentsRpStudioPromptdebugdrawer": {
+      "text": {
+        "close": "关闭",
+        "chars": "字符 ·",
+        "excluded": "排除：",
+        "noRecentMessages": "没有最近的消息。"
+      },
+      "heading": {
+        "promptTrace": "提示跟踪"
+      }
+    },
+    "componentsRpStudioRpchatlist": {
+      "text": {
+        "cancel": "取消",
+        "create": "创建",
+        "model": "模型",
+        "characters": "角色",
+        "newRpChat": "新 RP 聊天",
+        "loadingChats": "正在加载聊天…",
+        "startYourFirstRp": "开始你的第一个 RP",
+        "title": "标题",
+        "openingGreeting": "开始问候语",
+        "noCharactersYetCreateOneInThe": "尚无字符 - 在“字符”选项卡中创建一个字符。",
+        "personaOptional": "角色（可选）",
+        "lorebooks": "传说书",
+        "scenarioOverride": "场景覆盖"
+      },
+      "action": {
+        "open": "打开",
+        "delete": "删除？"
+      },
+      "heading": {
+        "newRpChat": "新 RP 聊天"
+      },
+      "option": {
+        "usePrimaryGreeting": "使用主要问候语",
+        "alternateGreeting": "备用问候语",
+        "randomGreeting": "随机问候语",
+        "startWithoutGreeting": "不带问候语开始",
+        "noPersona": "无角色"
+      }
+    },
+    "componentsRpStudioRpstudioview": {
+      "text": {
+        "rpStudio": "角色扮演工作室",
+        "localConfigIsStillLoadingRpStudio": "本地配置仍在加载。在安全设置快照水化之前，RP Studio 保存控件暂时不可用。",
+        "loadingStCardStudio": "正在加载ST Card Studio…"
+      }
+    },
+    "componentsRpStudioScenegenerator": {
+      "text": {
+        "chat": "聊天",
+        "seed": "种子",
+        "imageModel": "图像模型",
+        "prompt": "提示",
+        "extracted": "提取：",
+        "negativePrompt": "负提示",
+        "generateScene": "生成场景",
+        "recentScenes": "最近的场景",
+        "noScenesYet": "还没有场景。",
+        "noImage": "无图像"
+      },
+      "option": {
+        "selectAChat": "选择聊天…"
+      }
+    },
+    "componentsScenesScenecomposerview": {
+      "heading": {
+        "sceneComposer": "场景合成器",
+        "components": "组件 ("
+      },
+      "option": {
+        "project": "项目",
+        "allScopes": "所有范围",
+        "global": "全球",
+        "newest": "最新",
+        "oldest": "最旧",
+        "title": "标题",
+        "favorite": "收藏夹"
+      },
+      "action": {
+        "archive": "归档",
+        "remove": "移除",
+        "delete": "删除",
+        "cancel": "取消",
+        "new": "新",
+        "favorites": "★ 收藏夹",
+        "restore": "恢复",
+        "saveMetadata": "保存元数据",
+        "add": "+ 添加",
+        "saveNewVersion": "保存新版本",
+        "useInImageStudio": "在 Image Studio 中使用",
+        "copyRecipe": "复制配方",
+        "createWorkflow": "创建工作流程",
+        "history": "历史记录 (",
+        "useThisVersion": "使用此版本"
+      },
+      "description": {
+        "loading": "正在加载…",
+        "noComponentsYetClickAddToBegin": "尚无组件。"
+      },
+      "text": {
+        "version": "版本",
+        "component": "组件",
+        "created": "· 已创建",
+        "updated": "· 已更新",
+        "current": "当前"
+      },
+      "label": {
+        "defaults": "默认值："
+      }
+    },
+    "componentsSearchProfilediscoverytab": {
+      "action": {
+        "cancel": "取消"
+      },
+      "heading": {
+        "publicProfileDiscovery": "公共档案发现",
+        "discoveredProfileCandidates": "发现候选人资料"
+      },
+      "description": {
+        "aggregatesSocialProfileMappingsFromPublicDatabases": "使用 Venice Web 集成聚合来自公共数据库（GitHub、Twitter、LinkedIn 等）的社交档案映射。"
+      },
+      "label": {
+        "platformsToSearch": "搜索平台"
+      },
+      "text": {
+        "candidates": "候选人",
+        "confidence": "信心"
+      }
+    },
+    "componentsSearchScrapetab": {
+      "action": {
+        "copy": "复制"
+      },
+      "heading": {
+        "webScrape": "网页抓取"
+      },
+      "option": {
+        "veniceWebScrape": "威尼斯网页抓取",
+        "jinaReader": "Jina 读者"
+      }
+    },
+    "componentsSearchSearchscrapeview": {
+      "heading": {
+        "research": "研究"
+      },
+      "description": {
+        "searchScrapeCollectEvidenceAndSynthesizeFindings": "搜索、抓取、收集证据并综合结果。"
+      }
+    },
+    "componentsSearchSearchtab": {
+      "heading": {
+        "webSearch": "网络搜索"
+      },
+      "option": {
+        "jinaSearch": "Jina 搜索",
+        "braveSearchVenice": "Brave Search（威尼斯）",
+        "googleSearchVenice": "Google 搜索（威尼斯）"
+      },
+      "action": {
+        "scrapeWithVenice": "与威尼斯刮擦",
+        "readWithJina": "与 Jina 一起阅读",
+        "saveToSession": "保存到会话"
+      },
+      "text": {
+        "noSearchResultsYet": "尚无搜索结果"
+      }
+    },
+    "componentsStatusDiagnosticsdrawer": {
+      "action": {
+        "close": "关闭",
+        "openPrivacyDashboard": "打开隐私面板",
+        "copySafeDiagnostics": "复制安全诊断",
+        "openStatus": "打开状态",
+        "openConfig": "打开配置",
+        "jumpToModel": "跳转到模型"
+      },
+      "heading": {
+        "diagnostics": "诊断"
+      },
+      "description": {
+        "appHealthModelCatalogStorageSafetyAnd": "应用程序运行状况、模型目录、存储、安全性和提供程序状态。",
+        "lastRefresh": "上次刷新：",
+        "lastRefreshError": "上次刷新错误：",
+        "webModeFilesystemRevealsAndTheSystem": "Web 模式：文件系统、显示和系统 shell 不可用。某些仅限桌面的功能（音频路由、本地 YAML 配置）被禁用。",
+        "phase2cShipsReadOnlyDiagnosticsDestructive": "第 2C 阶段提供只读诊断。破坏性修复（重置密钥、清除存储、删除所有数据）超出范围并存在于其专用选项卡中。"
+      },
+      "text": {
+        "copiedAt": "复制于",
+        "includeRedactedPromptExcerptsInSafeDiagnostics": "在安全诊断中包含经过编辑的提示摘录",
+        "truncated80CharsAndSecretStrippedPrompt": "从提示库中截断（≤ 80 个字符）和秘密删除的提示片段。默认关闭。"
+      }
+    },
+    "componentsStatusHeaderstatuscluster": {
+      "action": {
+        "status": "状态"
+      }
+    },
+    "componentsStatusTaskcenterdrawer": {
+      "action": {
+        "cancel": "取消",
+        "retry": "重试",
+        "clear": "清除",
+        "open": "打开"
+      },
+      "heading": {
+        "taskCenter": "任务中心",
+        "generation": "生成"
+      },
+      "description": {
+        "recentBackgroundGenerations": "最近的后台生成",
+        "noRecentTasks": "没有最近的任务。"
+      },
+      "text": {
+        "cancellationUnavailable": "取消不可用"
+      }
+    },
+    "componentsUiShared": {
+      "text": {
+        "working": "工作中…"
+      },
+      "action": {
+        "shuffle": "随机播放"
+      }
+    },
+    "componentsVideoVideoView": {
+      "text": {
+        "model": "模型",
+        "resolution": "分辨率",
+        "generationMode": "生成模式",
+        "prompt": "提示",
+        "negativePrompt": "否定提示",
+        "referenceImage": "参考图像",
+        "duration": "持续时间",
+        "aspect": "宽高比",
+        "generateAudio": "生成音频",
+        "output": "输出",
+        "generatedVideosAppearHere": "生成的视频出现在此处",
+        "averageGenerationTime30s2min": "平均生成时间：30 秒–2 分钟"
+      },
+      "action": {
+        "download": "下载",
+        "textToVideo": "文本转视频",
+        "imageToVideo": "图像转视频",
+        "reset": "重置",
+        "generateAnother": "生成另一个"
+      },
+      "description": {
+        "clickToAddImage": "单击添加图像"
+      }
+    },
+    "componentsWorkflowsWorkflowtemplatesview": {
+      "heading": {
+        "workflows": "工作流",
+        "steps": "步数",
+        "compilePreview": "编译预览",
+        "runPlan": "运行计划"
+      },
+      "label": {
+        "import": "导入",
+        "workflowTitle": "工作流程标题",
+        "workflowTags": "工作流程标签",
+        "version": "版本："
+      },
+      "action": {
+        "export": "导出",
+        "archive": "归档",
+        "delete": "删除",
+        "remove": "移除",
+        "new": "新",
+        "addNewVersion": "添加新版本",
+        "addStep": "添加步骤"
+      },
+      "text": {
+        "noWorkflowsFound": "未找到工作流程。",
+        "selectOrCreateAWorkflowToBegin": "选择或创建要开始的工作流程。",
+        "workflowIsValid": "工作流程有效。",
+        "workflowHasErrors": "工作流程有错误。",
+        "noRunnableActions": "没有可运行的操作。"
+      }
+    },
+    "componentsDiagnosticspreview": {
+      "text": {
+        "noRequestsYet": "尚无请求",
+        "cfRay": "CF-RAY"
+      }
+    },
+    "componentsErrorboundary": {
+      "heading": {
+        "somethingWentWrong": "出了点问题。"
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "应用程序遇到意外错误，无法渲染此视图。您的工作是安全的 - 重试或重新加载以恢复。"
+      },
+      "action": {
+        "tryAgain": "再试一次",
+        "reloadApplication": "重新加载应用程序"
+      }
+    },
+    "componentsModelselect": {
+      "text": {
+        "highFidelity": "高保真度",
+        "standard": "标准",
+        "anon": "匿名",
+        "private": "私有"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorcompleted": {
+      "heading": {
+        "characterCreated": "角色已创建"
+      },
+      "description": {
+        "hasBeenSavedToYourLocalCharacter": "” 已保存到本地字符库。"
+      },
+      "text": {
+        "startChat": "开始聊天",
+        "viewCharacter": "查看角色",
+        "continueEditing": "继续编辑",
+        "exportCard": "导出卡片",
+        "createAnother": "创建另一个"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorgenerating": {
+      "heading": {
+        "generatingCharacterDraft": "生成角色草稿"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorready": {
+      "text": {
+        "charaCardV2": "chara_card_v2",
+        "errorsMustResolve": "错误（必须解决）",
+        "warningsOptional": "警告（可选）",
+        "returnToDraft": "返回草稿",
+        "saveAsCopy": "另存为副本"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorview": {
+      "text": {
+        "autosaveFailed": "自动保存失败："
+      },
+      "action": {
+        "retrySave": "重试保存"
+      },
+      "description": {
+        "savingCharacterToLocalLibrary": "将角色保存到本地库..."
+      }
+    },
+    "componentsChatChatInput": {
+      "action": {
+        "stop": "停止"
+      }
+    },
+    "componentsDocumentsDocumentrenderer": {
+      "text": {
+        "documentIsEmpty": "文档为空。",
+        "pageBreak": "分页符"
+      }
+    },
+    "componentsGalleryLineageViewer": {
+      "text": {
+        "cycleDetectedInTheLineageChainShowing": "在谱系链中检测到循环 — 显示截断的视图。",
+        "someLineageReferencesAreMissingFromThe": "加载的集中缺少一些沿袭引用。",
+        "cycle": "周期：",
+        "missing": "（缺失）"
+      },
+      "description": {
+        "noLineageRecorded": "没有记录沿袭。"
+      }
+    },
+    "componentsGalleryRecipeComparison": {
+      "text": {
+        "recipeComparison": "配方比较"
+      },
+      "column": {
+        "field": "字段",
+        "original": "原始",
+        "sanitized": "已消毒"
+      }
+    },
+    "galleryRecipeCompatibilityCard": {
+      "text": {
+        "thisItemHasNoRecipeToCompare": "对于",
+        "for": "不支持的字段，此项目没有可与当前型号",
+        "unsupportedField": "进行比较的配方"
+      },
+      "action": {
+        "useWith": "与",
+        "useOriginal": "使用原始"
+      }
+    },
+    "componentsLayoutHeader": {
+      "text": {
+        "tasks": "获取钥匙"
+      }
+    },
+    "componentsLayoutMemoryPanel": {
+      "heading": {
+        "legacyConversationsDetected": "检测到旧版对话",
+        "encryptedConversationVault": "加密对话库",
+        "maintenanceOperations": "维护操作",
+        "curatedFacts": "精选事实（"
+      },
+      "description": {
+        "weFoundUnencryptedConversationRecordsFromA": "我们发现以前安装的未加密对话记录。立即将它们迁移到新的安全保管库。",
+        "configureMemoryParametersAndLocalIndexingStructures": "配置内存参数和本地索引结构。保管库记录和索引在静态时完全加密。",
+        "allowsTheVaultToAnalyzeAndExtract": "允许 Vault 从新线程中分析和提取事实。",
+        "pullsRelevantHistoryFactsDynamicallyToHelp": "动态提取相关历史事实以帮助将来的提示。",
+        "displaysAPreviewBoxAboveTheChat": "在聊天输入上方显示一个预览框，允许事实修剪。",
+        "transmitsSummaryMaterialToVeniceModelFor": "将摘要材料传输到 Venice 模型，以便更好地发现事实。",
+        "lastIndexedAt": "上次索引位置：",
+        "theseAreTheKeyFactsExtractedLocally": "这些是从您的对话历史记录中本地提取的关键事实。"
+      },
+      "action": {
+        "openFolder": "打开文件夹",
+        "openVaultFolder": "打开保管库文件夹",
+        "forget": "忘记"
+      },
+      "label": {
+        "enableConversationRecording": "启用对话记录",
+        "enableMemoryRetrieval": "启用内存检索",
+        "showPulledContextBeforeSending": "在发送之前显示拉取的上下文",
+        "useAiSummaries": "使用 AI 摘要"
+      },
+      "text": {
+        "noFactsStoredYet": "尚未存储任何事实。",
+        "source": "来源：",
+        "confidence": "• 置信度："
+      }
+    },
+    "componentsPlaygroundPlaygroundChat": {
+      "text": {
+        "whatShouldIBuild": "我应该构建什么？",
+        "describeAWorkflowInPlainLanguageI": "我将用简单的语言描述一个工作流程。",
+        "noMessage": "（无消息）",
+        "patch": "修补程序",
+        "applied": "应用"
+      },
+      "action": {
+        "stop": "停止",
+        "send": "发送"
+      }
+    },
+    "componentsPlaygroundWorkflowPreview": {
+      "description": {
+        "noWorkflowYet": "尚无工作流程",
+        "tellTheAgentWhatYouWantTo": "告诉代理您想要构建什么 - 它将在这里实时组装管道。"
+      }
+    },
+    "componentsRpStudioRpchatview": {
+      "heading": {
+        "chatNotFound": "未找到聊天"
+      },
+      "description": {
+        "theConversationYouReLookingForDoesn": "您要查找的对话不存在或已被删除。"
+      },
+      "text": {
+        "scene": "场景",
+        "inspector": "检查员",
+        "startTheRoleplayBySendingAMessage": "通过发送消息开始角色扮演。",
+        "thinking": "思考…",
+        "speaker": "演讲者：",
+        "send": "发送"
+      },
+      "action": {
+        "narrator": "讲述人"
+      }
+    },
+    "componentsSearchAiresearchtab": {
+      "heading": {
+        "deepAiResearchAgent": "深度人工智能研究代理"
+      },
+      "description": {
+        "executesARecursiveWebSearchLoopScrapes": "执行递归网络搜索循环，抓取多个来源，解析引文，并合成全面的最终响应"
+      },
+      "option": {
+        "jinaAiSearchReader": "Jina AI 搜索和阅读器",
+        "autoDefaultFromConfig": "自动（配置中的默认值）",
+        "braveSearch": "Brave 搜索",
+        "googleSearch": "Google 搜索",
+        "retrieveSynthesizeUsesVeniceModel": "检索和合成（使用 Venice 模型）。",
+        "retrieveOnlyNoAiSynthesis": "仅检索（无 AI 合成）"
+      },
+      "text": {
+        "budgetControls": "预算控制",
+        "retrievedEvidenceSources": "检索的证据来源"
+      },
+      "action": {
+        "copyAnswer": "复制答案",
+        "copyEvidenceSources": "复制证据来源"
+      }
+    },
+    "componentsSearchResearchproviderstatus": {
+      "action": {
+        "addKey": "添加密钥"
+      }
+    },
+    "componentsSearchTextparsertab": {
+      "heading": {
+        "documentTextParser": "文档文本解析器"
+      },
+      "description": {
+        "extractRawTextFromPdfDocxXlsx": "从 PDF、DOCX、XLSX 或 TXT 中提取原始文本"
+      }
+    },
+    "componentsSettingsAboutpanel": {
+      "text": {
+        "beta": "· 测试版"
+      }
+    },
+    "componentsSettingsConfigpanel": {
+      "text": {
+        "configYaml": "配置.yaml",
+        "themesYaml": "theme.yaml",
+        "secretsKeepPlaintextKeysTrue": "Secrets.keep_plaintext_keys: true"
+      }
+    },
+    "componentsUiErrorBoundary": {
+      "text": {
+        "somethingWentWrong": "出现问题",
+        "showDetails": "显示详细信息"
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "应用程序遇到意外错误，无法呈现此视图。您的工作是安全的 — 刷新即可恢复。"
+      },
+      "action": {
+        "tryAgain": "重试",
+        "reloadPage": "重新加载页面"
+      }
+    },
+    "componentsUiSelect": {
+      "text": {
+        "noResults": "无结果"
+      }
+    }
+  }
 }

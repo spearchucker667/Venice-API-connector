@@ -94,7 +94,7 @@ describe("verify-i18n status-file isolation", () => {
     });
     expect(fs.existsSync(tmpStatus)).toBe(true);
     const status = JSON.parse(fs.readFileSync(tmpStatus, "utf8"));
-    expect(status.schemaVersion).toBe(2);
+    expect(status.schemaVersion).toBe(3);
     expect(Object.keys(status.locales).sort()).toEqual(["en-US", "es"]);
   });
 

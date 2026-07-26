@@ -1,8 +1,8 @@
 # Venice Forge Chat Folders, Agent Media, Documents, and Video — Final Implementation Report
 
 > **Status:** Implementation closure evidence for the 2026-07-19 work order.
-> The authoritative task ledger remains [`../ROADMAP.md`](../ROADMAP.md) and command
-> evidence remains [`../summary_of_work.md`](../summary_of_work.md). This report
+> The authoritative task ledger remains [`../ROADMAP.md`](../../ROADMAP.md) and command
+> evidence remains [`../summary_of_work.md`](../../summary_of_work.md). This report
 > records the per-phase root-cause/corresponding-fix/proof triplets required by
 > `docs/work-orders/VENICE_FORGE_CHAT_FOLDERS_MEDIA_DOCUMENTS_2026-07-19.md` §"Final
 > Implementation Report", lines 765–800.

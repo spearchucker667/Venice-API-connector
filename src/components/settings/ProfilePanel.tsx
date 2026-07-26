@@ -94,7 +94,7 @@ export function ProfilePanel() {
   const handleClearPassword = async (profileId: string, profileName: string) => {
     const confirmed = await askDecision({
       title: t('settings:profiles.removePassword.title', 'Remove profile password?'),
-      detail: t('settings:profiles.removePassword.detail', '"{{name}}" will no longer require unlock before switching.', { name: profileName }),
+      detail: t('settings:profiles.removePassword.detail', { defaultValue: '"{{name}}" will no longer require unlock before switching.', name: profileName }),
       actionLabel: t('settings:profiles.removePassword.action', 'Remove'),
       danger: true,
     })
@@ -114,7 +114,7 @@ export function ProfilePanel() {
 
     if (passwordDialog.mode === 'set') {
       if (password.length < MIN_PROFILE_PASSWORD_LENGTH) {
-        setPasswordError(t('settings:profiles.errors.tooShort', 'Password too short (min {{min}} characters)', { min: MIN_PROFILE_PASSWORD_LENGTH }))
+        setPasswordError(t('settings:profiles.errors.tooShort', { defaultValue: 'Password too short (min {{min}} characters)', min: MIN_PROFILE_PASSWORD_LENGTH }))
         return
       }
       if (password !== confirmPassword) {
@@ -172,7 +172,7 @@ export function ProfilePanel() {
                       type="button"
                       onClick={() => void handleClearPassword(p.id, p.name)}
                       className="text-[12px] text-text-secondary hover:underline px-2 py-1"
-                      aria-label={t('settings:profiles.aria.removePassword', 'Remove password for {{name}}', { name: p.name })}
+                      aria-label={t('settings:profiles.aria.removePassword', { defaultValue: 'Remove password for {{name}}', name: p.name })}
                     >
                       {t('settings:profiles.actions.removePassword', 'Remove Password')}
                     </button>
@@ -181,7 +181,7 @@ export function ProfilePanel() {
                       type="button"
                       onClick={() => openSetPassword(p.id, p.name)}
                       className="text-[12px] text-text-secondary hover:underline px-2 py-1"
-                      aria-label={t('settings:profiles.aria.setPassword', 'Set password for {{name}}', { name: p.name })}
+                      aria-label={t('settings:profiles.aria.setPassword', { defaultValue: 'Set password for {{name}}', name: p.name })}
                     >
                       {t('settings:profiles.actions.setPassword', 'Set Password')}
                     </button>
@@ -192,7 +192,7 @@ export function ProfilePanel() {
                     type="button"
                     onClick={() => handleSwitch(p.id, p.name, p.hasPassword)}
                     className="text-[12px] text-accent hover:underline px-2 py-1"
-                    aria-label={t('settings:profiles.aria.switchTo', 'Switch to {{name}}', { name: p.name })}
+                    aria-label={t('settings:profiles.aria.switchTo', { defaultValue: 'Switch to {{name}}', name: p.name })}
                   >
                     {t('settings:profiles.actions.switchTo', 'Switch To')}
                   </button>
@@ -201,7 +201,7 @@ export function ProfilePanel() {
                   <button type="button" onClick={async () => {
                     const confirmed = await askDecision({
                       title: t('settings:profiles.deleteProfile.title', 'Delete profile?'),
-                      detail: t('settings:profiles.deleteProfile.detail', '"{{name}}" will be removed. Its Conversation Vault, renderer records, profile-scoped local settings, API keys, and password verifier will be purged. Shared global caches are retained.', { name: p.name }),
+                      detail: t('settings:profiles.deleteProfile.detail', { defaultValue: '"{{name}}" will be removed. Its Conversation Vault, renderer records, profile-scoped local settings, API keys, and password verifier will be purged. Shared global caches are retained.', name: p.name }),
                       actionLabel: t('settings:profiles.deleteProfile.action', 'Delete'),
                       danger: true,
                     })
@@ -209,7 +209,7 @@ export function ProfilePanel() {
                       const result = await deleteProfile(p.id)
                       setProfileDeleteError(result.ok ? '' : result.error ?? t('settings:profiles.errors.deleteFailed', 'Profile deletion failed.'))
                     }
-                  }} className="text-[12px] text-danger hover:underline px-2 py-1" aria-label={t('settings:profiles.aria.delete', 'Delete {{name}}', { name: p.name })}>
+                  }} className="text-[12px] text-danger hover:underline px-2 py-1" aria-label={t('settings:profiles.aria.delete', { defaultValue: 'Delete {{name}}', name: p.name })}>
                     {t('common:actions.delete', 'Delete')}
                   </button>
                 )}
@@ -236,7 +236,7 @@ export function ProfilePanel() {
 
       {passwordDialog && (
         <AccessibleDialog
-          title={passwordDialog.mode === 'set' ? t('settings:profiles.dialog.titleSet', 'Set Password for {{name}}', { name: passwordDialog.profileName }) : t('settings:profiles.dialog.titleUnlock', 'Unlock {{name}}', { name: passwordDialog.profileName })}
+          title={passwordDialog.mode === 'set' ? t('settings:profiles.dialog.titleSet', { defaultValue: 'Set Password for {{name}}', name: passwordDialog.profileName }) : t('settings:profiles.dialog.titleUnlock', { defaultValue: 'Unlock {{name}}', name: passwordDialog.profileName })}
           description={t('settings:profiles.dialog.description', 'This password protects switching into this local profile.')}
           onClose={closePasswordDialog}
           initialFocusRef={passwordInputRef}

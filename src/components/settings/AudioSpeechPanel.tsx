@@ -192,7 +192,7 @@ export function AudioSpeechPanel() {
 
           <div>
             <label className="block text-xs font-medium text-text-secondary mb-1.5">
-              {t('settings:audioSpeech.speed', 'Speed: {{speed}}x', { speed: chatTts.speed.toFixed(1) })}
+              {t('settings:audioSpeech.speed', { defaultValue: 'Speed: {{speed}}x', speed: chatTts.speed.toFixed(1) })}
             </label>
             <input
               type="range"
@@ -207,7 +207,7 @@ export function AudioSpeechPanel() {
 
           <div>
             <label className="block text-xs font-medium text-text-secondary mb-1.5">
-              {t('settings:audioSpeech.volumeLabel', 'Volume: {{volume}}%', { volume: Math.round(chatTts.volume * 100) })}
+              {t('settings:audioSpeech.volumeLabel', { defaultValue: 'Volume: {{volume}}%', volume: Math.round(chatTts.volume * 100) })}
             </label>
             <input
               type="range"

@@ -1,4 +1,5 @@
 import React from "react";
+import { Trans } from 'react-i18next';
 
 const SUPPORTED_DOCUMENT_ACCEPT = [
   ".pdf",
@@ -83,12 +84,11 @@ export function TextParserTab({
 }) {
   return (
     <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg space-y-4">
-      <h3 className="text-[14.5px] font-medium text-text-primary">Document Text Parser</h3>
+      <h3 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsSearchTextparsertab.heading.documentTextParser" /></h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="space-y-4">
           <p className="text-[12.5px] text-text-secondary leading-relaxed">
-            Extract raw text from PDF, DOCX, XLSX, or TXT documents.
-          </p>
+            <Trans i18nKey="common:surface.componentsSearchTextparsertab.description.extractRawTextFromPdfDocxXlsx" /></p>
           <input
             type="file"
             accept={SUPPORTED_DOCUMENT_ACCEPT}

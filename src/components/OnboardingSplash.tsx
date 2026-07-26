@@ -128,9 +128,7 @@ export function OnboardingSplash() {
                 className="w-full px-3 py-2 bg-surface border border-border rounded-lg text-sm text-text-primary focus:ring-2 focus:ring-accent focus:border-accent"
               >
                 <option value="system">
-                  {t('onboarding:systemLanguageOption', 'System language ({{language}})', {
-                    language: SUPPORTED_LOCALES[resolveEffectiveLocale('system')]?.nativeName,
-                  })}
+                  {t('onboarding:systemLanguageOption', { defaultValue: 'System language ({{language}})', language: SUPPORTED_LOCALES[resolveEffectiveLocale('system')]?.nativeName, })}
                 </option>
                 {SUPPORTED_LOCALE_CODES.map((code) => (
                   <option key={code} value={code}>
@@ -144,10 +142,8 @@ export function OnboardingSplash() {
           <div
             className="flex items-center gap-2 mb-6"
             role="group"
-            aria-label={t('onboarding:stepIndicator', 'Onboarding step {{current}} of {{total}}', {
-              current: step + 1,
-              total: steps.length,
-            })}
+            aria-label={t('onboarding:stepIndicator', { defaultValue: 'Onboarding step {{current}} of {{total}}', current: step + 1,
+              total: steps.length, })}
           >
             {steps.map((_, i) => (
               <span

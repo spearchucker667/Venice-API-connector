@@ -16,6 +16,7 @@ import { formatModelLabelWithCost } from '../../utils/pricing'
 import { desktopFiles, isElectron } from '../../services/desktopBridge'
 import { GenerationLoadingIndicator } from '../generation/GenerationLoadingIndicator'
 import { ManagedVideoPlayer } from '../media/ManagedVideoPlayer'
+import { Trans } from 'react-i18next';
 
 export function VideoView() {
   const promptId = useId()
@@ -197,7 +198,7 @@ export function VideoView() {
     <>
         {/* Model selector */}
         <div>
-          <Label htmlFor={modelId}>Model</Label>
+          <Label htmlFor={modelId}><Trans i18nKey="common:surface.componentsVideoVideoView.text.model" /></Label>
           <Select
             id={modelId}
             value={currentGroupName}
@@ -211,7 +212,7 @@ export function VideoView() {
         {/* Generation mode: text or image */}
         {(hasTextMode || hasImageMode) && (
           <div className="flex flex-col gap-2">
-            <Label>Generation Mode</Label>
+            <Label><Trans i18nKey="common:surface.componentsVideoVideoView.text.generationMode" /></Label>
             <div className="flex gap-px bg-surface-elevated rounded-lg p-0.5 border border-border">
               {hasTextMode && (
                 <button
@@ -222,8 +223,7 @@ export function VideoView() {
                     mode === 'text' ? 'bg-accent text-accent-fg' : 'text-text-muted hover:text-text-muted',
                   )}
                 >
-                  Text to Video
-                </button>
+                  <Trans i18nKey="common:surface.componentsVideoVideoView.action.textToVideo" /></button>
               )}
               {hasImageMode && (
                 <button
@@ -234,27 +234,26 @@ export function VideoView() {
                     mode === 'image' ? 'bg-accent text-accent-fg' : 'text-text-muted hover:text-text-muted',
                   )}
                 >
-                  Image to Video
-                </button>
+                  <Trans i18nKey="common:surface.componentsVideoVideoView.action.imageToVideo" /></button>
               )}
             </div>
           </div>
         )}
 
         <div>
-          <Label htmlFor={promptId}>Prompt</Label>
+          <Label htmlFor={promptId}><Trans i18nKey="common:surface.componentsVideoVideoView.text.prompt" /></Label>
           <TextArea id={promptId} value={prompt} onChange={setPrompt} placeholder="A cinematic drone shot over misty mountains at sunrise..." rows={4} />
         </div>
 
         <div>
-          <Label htmlFor={negativePromptId}>Negative prompt</Label>
+          <Label htmlFor={negativePromptId}><Trans i18nKey="common:surface.componentsVideoVideoView.text.negativePrompt" /></Label>
           <TextArea id={negativePromptId} value={negativePrompt} onChange={setNegativePrompt} placeholder="low quality, blurry..." rows={2} />
         </div>
 
         {/* Image upload for image-to-video */}
         {mode === 'image' && (
           <div>
-            <Label>Reference image</Label>
+            <Label><Trans i18nKey="common:surface.componentsVideoVideoView.text.referenceImage" /></Label>
             {imageUrl ? (
               <div className="relative group">
                 <img src={imageUrl} alt="Reference" className="w-full rounded-lg border border-border" />
@@ -278,7 +277,7 @@ export function VideoView() {
                   if (typeof input.showPicker === 'function') input.showPicker()
                   else input.click()
                 }} aria-label="Choose reference image" className="block w-full cursor-pointer border border-dashed border-border hover:border-accent rounded-lg py-5 text-center transition-colors">
-                  <p className="text-[14px] text-text-muted">Click to add image</p>
+                  <p className="text-[14px] text-text-muted"><Trans i18nKey="common:surface.componentsVideoVideoView.description.clickToAddImage" /></p>
                 </button>
               </>
             )}
@@ -288,7 +287,7 @@ export function VideoView() {
         {/* Duration */}
         {durationOpts.length > 0 && (
           <div>
-            <Label>Duration</Label>
+            <Label><Trans i18nKey="common:surface.componentsVideoVideoView.text.duration" /></Label>
             {durationOpts.length <= 5 ? (
               <PillGroup options={durationOpts} value={effectiveDuration} onChange={setDuration} ariaLabel="Video duration" />
             ) : (
@@ -305,13 +304,13 @@ export function VideoView() {
         <div className="grid grid-cols-2 gap-3">
           {resolutionOpts.length > 0 && (
             <div>
-              <Label htmlFor={resolutionId}>Resolution</Label>
+              <Label htmlFor={resolutionId}><Trans i18nKey="common:surface.componentsVideoVideoView.text.resolution" /></Label>
               <Select id={resolutionId} value={effectiveResolution} onChange={setResolution} options={resolutionOpts} />
             </div>
           )}
           {aspectOpts.length > 0 && (
             <div>
-              <Label htmlFor={aspectId}>Aspect</Label>
+              <Label htmlFor={aspectId}><Trans i18nKey="common:surface.componentsVideoVideoView.text.aspect" /></Label>
               <Select id={aspectId} value={effectiveAspect} onChange={setAspect} options={aspectOpts} />
             </div>
           )}
@@ -320,7 +319,7 @@ export function VideoView() {
         {/* Audio toggle */}
         {constraints?.audio && constraints.audio_configurable && (
           <div className="flex items-center justify-between">
-            <Label>Generate audio</Label>
+            <Label><Trans i18nKey="common:surface.componentsVideoVideoView.text.generateAudio" /></Label>
             <button
               type="button"
               role="switch"
@@ -359,7 +358,7 @@ export function VideoView() {
       {error && (
         <div className="flex items-center justify-between gap-2">
           <ErrorText>{error}</ErrorText>
-          <button type="button" aria-label="Reset video generation form" onClick={reset} className="text-[13px] text-text-secondary hover:text-text-primary underline underline-offset-2 shrink-0 transition-colors">Reset</button>
+          <button type="button" aria-label="Reset video generation form" onClick={reset} className="text-[13px] text-text-secondary hover:text-text-primary underline underline-offset-2 shrink-0 transition-colors"><Trans i18nKey="common:surface.componentsVideoVideoView.action.reset" /></button>
         </div>
       )}
     </>
@@ -370,7 +369,7 @@ export function VideoView() {
         {videoUrl ? (
           <div className="animate-fade-in flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <Label>Output</Label>
+              <Label><Trans i18nKey="common:surface.componentsVideoVideoView.text.output" /></Label>
               <div className="flex items-center gap-3">
                 {(() => {
                   const alreadySaved = Boolean(resultMediaId || (queueId && (savedQueueIdsRef.current.has(queueId) || useMediaStore.getState().items.some((media) => media.queueId === queueId))))
@@ -450,12 +449,11 @@ export function VideoView() {
                   }
                 })()} className="text-[14px] text-text-muted hover:text-text-muted transition-colors flex items-center gap-1.5">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
-                  Download
-                </button>
+                  <Trans i18nKey="common:surface.componentsVideoVideoView.action.download" /></button>
               </div>
             </div>
             <ManagedVideoPlayer src={videoUrl} className="w-full rounded-lg bg-overlay border border-border" />
-            <button type="button" aria-label="Generate another video" onClick={reset} className="self-start text-[14px] text-text-muted hover:text-text-muted transition-colors">Generate another</button>
+            <button type="button" aria-label="Generate another video" onClick={reset} className="self-start text-[14px] text-text-muted hover:text-text-muted transition-colors"><Trans i18nKey="common:surface.componentsVideoVideoView.action.generateAnother" /></button>
           </div>
         ) : isProcessing ? (
           <div className="flex flex-1 items-center justify-center" aria-live="polite">
@@ -470,8 +468,8 @@ export function VideoView() {
         ) : (
           <div className="flex items-center justify-center flex-1 text-text-muted text-[15px]">
             <div className="flex flex-col items-center gap-2">
-              <span>Generated videos appear here</span>
-              <span className="text-[12px] text-text-muted">Average generation time: 30s–2min</span>
+              <span><Trans i18nKey="common:surface.componentsVideoVideoView.text.generatedVideosAppearHere" /></span>
+              <span className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsVideoVideoView.text.averageGenerationTime30s2min" /></span>
             </div>
           </div>
         )}

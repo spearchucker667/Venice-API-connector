@@ -63,9 +63,9 @@ for (const required of [
   }
 }
 
-const reportsReadme = read("docs/reports/README.md");
+const reportsReadme = read("docs/reports/historical/README.md");
 if (!reportsReadme.includes("docs/reports/historical/") || !reportsReadme.includes("Do not add audit reports at the repository root")) {
-  fail("docs/reports/README.md must explain historical reports and root-report prohibition.");
+  fail("docs/reports/historical/README.md must explain historical reports and root-report prohibition.");
 }
 
 const rootReportPatterns = [

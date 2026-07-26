@@ -30,7 +30,7 @@ export function ImportPlanModal({
         <div className="p-5 border-b border-border/50">
           <h2 className="text-[17px] font-semibold text-text-primary">{t('settings:importPlan.title', 'Review Import Plan')}</h2>
           <p className="text-[13px] text-text-secondary mt-1">
-            {t('settings:importPlan.summary', 'This backup contains {{records}} records across {{stores}} data stores.', { records: plan.totalRecords.toLocaleString(), stores: plan.stores.length })}
+            {t('settings:importPlan.summary', { defaultValue: 'This backup contains {{records}} records across {{stores}} data stores.', records: plan.totalRecords.toLocaleString(), stores: plan.stores.length })}
           </p>
         </div>
 
@@ -46,13 +46,13 @@ export function ImportPlanModal({
                 </h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[12px] text-text-secondary bg-surface border border-border/50 rounded-lg p-3">
-                <span>{t('settings:importPlan.metadata.format', 'Format: v{{version}}{{appVersion}}', { version: plan.manifest.version, appVersion: plan.manifest.appVersion ? ` / app ${plan.manifest.appVersion}` : "" })}</span>
-                <span>{t('settings:importPlan.metadata.exportedAt', 'Exported: {{date}}', { date: new Date(plan.manifest.exportedAt).toLocaleString() })}</span>
-                {plan.manifest.sourceRuntime && <span>{t('settings:importPlan.metadata.source', 'Source: {{runtime}} / {{device}}', { runtime: plan.manifest.sourceRuntime, device: plan.manifest.sourceDeviceRef })}</span>}
-                {plan.manifest.sourceProfileRef && <span>{t('settings:importPlan.metadata.profileRef', 'Profile ref: {{ref}}', { ref: plan.manifest.sourceProfileRef })}</span>}
-                {plan.manifest.algorithm && <span>{t('settings:importPlan.metadata.crypto', 'Crypto: {{alg}} / {{kdf}} / key v{{key}}', { alg: plan.manifest.algorithm, kdf: plan.manifest.kdf, key: plan.manifest.keyVersion })}</span>}
-                <span>{t('settings:importPlan.metadata.counts', '{{tombstones}} tombstones / {{blobs}} embedded blobs', { tombstones: plan.manifest.tombstoneCount, blobs: plan.manifest.embeddedBlobCount })}</span>
-                {plan.manifest.payloadSha256 && <span className="sm:col-span-2 break-all">{t('settings:importPlan.metadata.sha', 'Payload SHA-256: {{sha}}', { sha: plan.manifest.payloadSha256 })}</span>}
+                <span>{t('settings:importPlan.metadata.format', { defaultValue: 'Format: v{{version}}{{appVersion}}', version: plan.manifest.version, appVersion: plan.manifest.appVersion ? ` / app ${plan.manifest.appVersion}` : "" })}</span>
+                <span>{t('settings:importPlan.metadata.exportedAt', { defaultValue: 'Exported: {{date}}', date: new Date(plan.manifest.exportedAt).toLocaleString() })}</span>
+                {plan.manifest.sourceRuntime && <span>{t('settings:importPlan.metadata.source', { defaultValue: 'Source: {{runtime}} / {{device}}', runtime: plan.manifest.sourceRuntime, device: plan.manifest.sourceDeviceRef })}</span>}
+                {plan.manifest.sourceProfileRef && <span>{t('settings:importPlan.metadata.profileRef', { defaultValue: 'Profile ref: {{ref}}', ref: plan.manifest.sourceProfileRef })}</span>}
+                {plan.manifest.algorithm && <span>{t('settings:importPlan.metadata.crypto', { defaultValue: 'Crypto: {{alg}} / {{kdf}} / key v{{key}}', alg: plan.manifest.algorithm, kdf: plan.manifest.kdf, key: plan.manifest.keyVersion })}</span>}
+                <span>{t('settings:importPlan.metadata.counts', { defaultValue: '{{tombstones}} tombstones / {{blobs}} embedded blobs', tombstones: plan.manifest.tombstoneCount, blobs: plan.manifest.embeddedBlobCount })}</span>
+                {plan.manifest.payloadSha256 && <span className="sm:col-span-2 break-all">{t('settings:importPlan.metadata.sha', { defaultValue: 'Payload SHA-256: {{sha}}', sha: plan.manifest.payloadSha256 })}</span>}
               </div>
               {plan.warnings?.length > 0 && (
                 <div className="space-y-2" aria-label={t('settings:importPlan.warningsLabel', 'Import warnings')}>
@@ -78,13 +78,13 @@ export function ImportPlanModal({
                 <div key={store.storeName} className="flex flex-col bg-surface border border-border/50 rounded-lg p-3">
                   <div className="flex justify-between mb-1">
                     <span className="text-[13px] font-medium text-text-primary">{store.storeName}</span>
-                    <span className="text-[12px] font-semibold text-text-secondary">{t('settings:importPlan.preview.recordsCount', '{{count}} records', { count: store.records })}</span>
+                    <span className="text-[12px] font-semibold text-text-secondary">{t('settings:importPlan.preview.recordsCount', { defaultValue: '{{count}} records', count: store.records })}</span>
                   </div>
                   <div className="flex gap-4 text-[12px] text-text-secondary mt-1">
-                    {store.newRecords > 0 && <span className="text-success">{t('settings:importPlan.preview.new', '{{count}} new', { count: store.newRecords })}</span>}
-                    {store.modifiedRecords > 0 && <span className="text-warning">{t('settings:importPlan.preview.modified', '{{count}} modified', { count: store.modifiedRecords })}</span>}
-                    {store.conflicts > 0 && <span className="text-danger">{t('settings:importPlan.preview.conflicts', '{{count}} conflicts', { count: store.conflicts })}</span>}
-                    {store.identical > 0 && <span className="text-text-muted">{t('settings:importPlan.preview.identical', '{{count}} identical', { count: store.identical })}</span>}
+                    {store.newRecords > 0 && <span className="text-success">{t('settings:importPlan.preview.new', { defaultValue: '{{count}} new', count: store.newRecords })}</span>}
+                    {store.modifiedRecords > 0 && <span className="text-warning">{t('settings:importPlan.preview.modified', { defaultValue: '{{count}} modified', count: store.modifiedRecords })}</span>}
+                    {store.conflicts > 0 && <span className="text-danger">{t('settings:importPlan.preview.conflicts', { defaultValue: '{{count}} conflicts', count: store.conflicts })}</span>}
+                    {store.identical > 0 && <span className="text-text-muted">{t('settings:importPlan.preview.identical', { defaultValue: '{{count}} identical', count: store.identical })}</span>}
                     {store.newRecords === 0 && store.modifiedRecords === 0 && store.conflicts === 0 && store.identical === 0 && <span>{t('settings:importPlan.preview.noChanges', 'No changes')}</span>}
                   </div>
                 </div>

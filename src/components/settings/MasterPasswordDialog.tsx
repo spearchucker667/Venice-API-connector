@@ -36,7 +36,7 @@ export function MasterPasswordDialog({ isOpen, onClose, onSuccess, mode }: Maste
         return
       }
       if (password.length < MIN_PASSWORD_LENGTH) {
-        setError(t('settings:masterPassword.errors.tooShort', 'Password too short (min {{min}} characters)', { min: MIN_PASSWORD_LENGTH }))
+        setError(t('settings:masterPassword.errors.tooShort', { defaultValue: 'Password too short (min {{min}} characters)', min: MIN_PASSWORD_LENGTH }))
         return
       }
       try {
@@ -66,7 +66,7 @@ export function MasterPasswordDialog({ isOpen, onClose, onSuccess, mode }: Maste
         onSuccess()
       } else {
         const lockoutMsg = res.lockedOutSeconds && res.lockedOutSeconds > 0
-          ? t('settings:masterPassword.errors.lockedOut', ' Locked out. Try again in {{seconds}}s.', { seconds: res.lockedOutSeconds })
+          ? t('settings:masterPassword.errors.lockedOut', { defaultValue: ' Locked out. Try again in {{seconds}}s.', seconds: res.lockedOutSeconds })
           : ''
         setError(t('settings:masterPassword.errors.incorrect', 'Incorrect password.') + lockoutMsg)
       }

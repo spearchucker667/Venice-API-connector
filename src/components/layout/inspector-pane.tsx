@@ -8,6 +8,7 @@ import {
   matchesInspectorFilter,
   type InspectorLogFilter,
 } from '../../services/inspectorTelemetry'
+import { Trans } from 'react-i18next';
 
 const FILTER_CHIPS: Array<{ id: InspectorLogFilter; label: string }> = [
   { id: 'all', label: 'All' },
@@ -200,8 +201,7 @@ export function InspectorPane() {
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
           </svg>
           <span className="text-[14px] font-semibold text-text-primary">
-            Traffic Inspector
-          </span>
+            <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.trafficInspector" /></span>
         </div>
         <div className="flex items-center gap-1">
           <button
@@ -307,10 +307,9 @@ export function InspectorPane() {
         <div className="w-[180px] soft-separator-x overflow-y-auto flex flex-col shrink-0">
           {filteredLogs.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center p-4 text-[12px] text-text-muted text-center">
-              <span>No requests captured yet</span>
+              <span><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.noRequestsCapturedYet" /></span>
               <span className="text-[12px] mt-1 opacity-60">
-                Send chat or generate images to inspect traffic.
-              </span>
+                <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.sendChatOrGenerateImagesToInspect" /></span>
             </div>
           ) : (
             filteredLogs.map((log) => {
@@ -359,7 +358,7 @@ export function InspectorPane() {
                   </div>
                   {log.guardOutcome ? (
                     <span className="text-[12px] text-text-muted font-mono select-none">
-                      guard: {log.guardOutcome}
+                      <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.guard" /> {log.guardOutcome}
                     </span>
                   ) : null}
                 </button>
@@ -373,7 +372,7 @@ export function InspectorPane() {
             <div className="space-y-4 text-[12px] min-w-0">
               <div className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono select-all text-[12px] space-y-0.5">
                 <div>
-                  <span className="text-text-muted font-bold">Time:</span>{' '}
+                  <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.time" /></span>{' '}
                   {new Date(selectedLog.timestamp).toLocaleTimeString()}
                 </div>
                 <div>
@@ -381,44 +380,44 @@ export function InspectorPane() {
                   {selectedLog.endpoint}
                 </div>
                 <div>
-                  <span className="text-text-muted font-bold">Method:</span>{' '}
+                  <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.method" /></span>{' '}
                   {selectedLog.method}
                 </div>
                 <div>
-                  <span className="text-text-muted font-bold">Transport:</span>{' '}
+                  <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.transport" /></span>{' '}
                   {selectedLog.transport}
                 </div>
                 <div>
-                  <span className="text-text-muted font-bold">Status:</span>{' '}
+                  <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.status" /></span>{' '}
                   {selectedLog.status || 'Pending...'}
                 </div>
                 {selectedLog.callOutcome ? (
                   <div>
-                    <span className="text-text-muted font-bold">Outcome:</span>{' '}
+                    <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.outcome" /></span>{' '}
                     {selectedLog.callOutcome}
                   </div>
                 ) : null}
                 {selectedLog.guardOutcome ? (
                   <div>
-                    <span className="text-text-muted font-bold">Guard:</span>{' '}
+                    <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.guard4ba3843" /></span>{' '}
                     {selectedLog.guardOutcome}
                   </div>
                 ) : null}
                 {selectedLog.previewDurationMs !== undefined ? (
                   <div>
-                    <span className="text-text-muted font-bold">Preview:</span>{' '}
+                    <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.preview" /></span>{' '}
                     {selectedLog.previewDurationMs}ms
                   </div>
                 ) : null}
                 {selectedLog.durationMs !== undefined ? (
                   <div>
-                    <span className="text-text-muted font-bold">Latency:</span>{' '}
+                    <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.latency" /></span>{' '}
                     {selectedLog.durationMs}ms
                   </div>
                 ) : null}
                 {selectedLog.errorClass && selectedLog.errorClass !== 'none' ? (
                   <div>
-                    <span className="text-text-muted font-bold">Error class:</span>{' '}
+                    <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.errorClass" /></span>{' '}
                     {selectedLog.errorClass}
                   </div>
                 ) : null}
@@ -438,7 +437,7 @@ export function InspectorPane() {
                     >
                       <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" />
                     </svg>
-                    <span>Local Safety Evaluation</span>
+                    <span><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.localSafetyEvaluation" /></span>
                   </div>
                   <div className="font-mono text-[12px] space-y-0.5 select-text">
                     {(() => {
@@ -449,13 +448,12 @@ export function InspectorPane() {
                         return (
                           <>
                             <div>
-                              <span className="text-text-muted">Mode:</span>{' '}
+                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.mode" /></span>{' '}
                               <span className="text-accent font-bold">
-                                Family Safe Mode (renderer-evaluated)
-                              </span>
+                                <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.familySafeModeRendererEvaluated" /></span>
                             </div>
                             <div>
-                              <span className="text-text-muted">Result:</span>{' '}
+                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.result" /></span>{' '}
                               <span
                                 className={
                                   allowed ? 'text-accent font-bold' : 'text-danger font-bold'
@@ -466,7 +464,7 @@ export function InspectorPane() {
                             </div>
                             {d.reasonCode ? (
                               <div>
-                                <span className="text-text-muted">Reason Code:</span>{' '}
+                                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.reasonCode" /></span>{' '}
                                 {String(d.reasonCode)}
                               </div>
                             ) : null}
@@ -477,13 +475,12 @@ export function InspectorPane() {
                         return (
                           <>
                             <div>
-                              <span className="text-text-muted">Mode:</span>{' '}
+                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.mode" /></span>{' '}
                               <span className="text-warning font-bold">
-                                Adult Mode (local filter skipped)
-                              </span>
+                                <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.adultModeLocalFilterSkipped" /></span>
                             </div>
                             <div>
-                              <span className="text-text-muted">Reason Code:</span>{' '}
+                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.reasonCode" /></span>{' '}
                               {String(d.reasonCode ?? 'LOCAL_FAMILY_SAFE_MODE_DISABLED')}
                             </div>
                           </>
@@ -493,15 +490,12 @@ export function InspectorPane() {
                         return (
                           <>
                             <div>
-                              <span className="text-text-muted">Mode:</span>{' '}
+                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.mode" /></span>{' '}
                               <span className="text-text-secondary font-bold">
-                                Electron main-process authoritative
-                              </span>
+                                <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.electronMainProcessAuthoritative" /></span>
                             </div>
                             <div className="text-text-muted">
-                              The local family-safe guard is enforced by the main process.
-                              Open the audit log to inspect the canonical decision.
-                            </div>
+                              <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.theLocalFamilySafeGuardIsEnforced" /></div>
                           </>
                         )
                       }
@@ -520,7 +514,7 @@ export function InspectorPane() {
                       return (
                         <>
                           <div>
-                            <span className="text-text-muted">Result:</span>{' '}
+                            <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.result" /></span>{' '}
                             <span
                               className={
                                 allow ? 'text-accent font-bold' : 'text-danger font-bold'
@@ -531,23 +525,23 @@ export function InspectorPane() {
                           </div>
                           {legacy.action ? (
                             <div>
-                              <span className="text-text-muted">Action:</span> {legacy.action}
+                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.action" /></span> {legacy.action}
                             </div>
                           ) : null}
                           {legacy.reasonCode ? (
                             <div>
-                              <span className="text-text-muted">Reason Code:</span>{' '}
+                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.reasonCode" /></span>{' '}
                               {legacy.reasonCode}
                             </div>
                           ) : null}
                           {legacy.signals && legacy.signals.length > 0 ? (
                             <div>
-                              <span className="text-text-muted">Signals:</span>
+                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.signals" /></span>
                               <div className="pl-2 flex flex-col gap-0.5 mt-0.5 text-text-secondary">
                                 {legacy.signals.map((s, idx) => (
                                   <div key={idx}>
-                                    • [{s.category}] source: &quot;{s.source}&quot; (severity:{' '}
-                                    {s.severity}, confidence: {s.confidence})
+                                    • [{s.category}<Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.sourceQuot" />{s.source}<Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.quotSeverity" />{' '}
+                                    {s.severity}<Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.confidence" /> {s.confidence})
                                   </div>
                                 ))}
                               </div>
@@ -562,8 +556,7 @@ export function InspectorPane() {
 
               <div className="space-y-1">
                 <span className="font-semibold text-text-secondary select-none">
-                  Request Headers
-                </span>
+                  <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.requestHeaders" /></span>
                 <pre className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono text-[12px] overflow-x-auto select-all max-h-36">
                   {JSON.stringify(selectedLog.requestHeaders, null, 2)}
                 </pre>
@@ -571,8 +564,7 @@ export function InspectorPane() {
 
               <div className="space-y-1">
                 <span className="font-semibold text-text-secondary select-none">
-                  Request Body
-                </span>
+                  <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.requestBody" /></span>
                 <pre className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono text-[12px] overflow-x-auto select-all max-h-48">
                   {selectedLog.requestBody
                     ? JSON.stringify(selectedLog.requestBody, null, 2)
@@ -582,7 +574,7 @@ export function InspectorPane() {
 
               {selectedLog.error ? (
                 <div className="space-y-1">
-                  <span className="font-semibold text-danger select-none">Error</span>
+                  <span className="font-semibold text-danger select-none"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.error" /></span>
                   <pre className="p-2 bg-danger/5 border border-danger/20 rounded-md font-mono text-[12px] overflow-x-auto text-danger select-all max-h-48 whitespace-pre-wrap">
                     {selectedLog.error}
                   </pre>
@@ -590,8 +582,7 @@ export function InspectorPane() {
               ) : (
                 <div className="space-y-1">
                   <span className="font-semibold text-text-secondary select-none">
-                    Response Body
-                  </span>
+                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.responseBody" /></span>
                   <pre className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono text-[12px] overflow-x-auto select-all max-h-60">
                     {selectedLog.responseBody
                       ? JSON.stringify(selectedLog.responseBody, null, 2)
@@ -602,8 +593,7 @@ export function InspectorPane() {
             </div>
           ) : (
             <div className="flex-1 flex items-center justify-center text-text-muted select-none">
-              Select a request to view details
-            </div>
+              <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.selectARequestToViewDetails" /></div>
           )}
         </div>
       </div>
@@ -612,12 +602,11 @@ export function InspectorPane() {
         <div className="flex-1 overflow-y-auto p-3 space-y-3">
           {!activeConversation ? (
             <div className="text-[12px] text-text-muted text-center py-8">
-              No active conversation. Open a chat to inspect prompt layers.
-            </div>
+              <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.noActiveConversationOpenAChatTo" /></div>
           ) : (
             <>
               <div className="text-[11px] text-text-muted/60 uppercase tracking-wider font-semibold mb-2">
-                Active: {activeConversation.title || 'Untitled'}
+                <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.active" /> {activeConversation.title || 'Untitled'}
               </div>
               {systemPromptLayers.map((layer, i) => (
                 <div
@@ -641,7 +630,7 @@ export function InspectorPane() {
                   <pre className="text-[11px] text-text-muted whitespace-pre-wrap break-words font-mono leading-relaxed max-h-[200px] overflow-y-auto bg-surface/50 rounded p-2">
                     {layer.content}
                   </pre>
-                  <div className="text-[10px] text-text-muted/50">Source: {layer.source}</div>
+                  <div className="text-[10px] text-text-muted/50"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.source" /> {layer.source}</div>
                 </div>
               ))}
             </>

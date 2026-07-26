@@ -8,6 +8,7 @@ import { GenerationView } from '../ui/generation-view'
 import { getPromptStartersForCategory } from '../../services/promptStarterService'
 import { redactErrorMessage } from '../../shared/redaction'
 import { copyText } from '../../stores/media-send-to'
+import { Trans } from 'react-i18next';
 
 const PREVIEW_COUNT = 100
 
@@ -34,10 +35,9 @@ export function EmbeddingsView() {
 
   const controls = (
     <>
-      <div><Label htmlFor={inputId}>Input text</Label><TextArea id={inputId} value={input} onChange={setInput} placeholder="Enter text to embed…" rows={6} /></div>
+      <div><Label htmlFor={inputId}><Trans i18nKey="common:surface.componentsEmbeddingsEmbeddingsView.text.inputText" /></Label><TextArea id={inputId} value={input} onChange={setInput} placeholder="Enter text to embed…" rows={6} /></div>
       <PrimaryButton onClick={() => { mutation.mutate({ model, input: input.trim() }); setExpanded(false) }} disabled={!input.trim() || !hasVeniceKey} loading={mutation.isPending} size="lg">
-        Generate Embeddings
-      </PrimaryButton>
+        <Trans i18nKey="common:surface.componentsEmbeddingsEmbeddingsView.text.generateEmbeddings" /></PrimaryButton>
       {mutation.error && <ErrorText>{redactErrorMessage(mutation.error)}</ErrorText>}
     </>
   )
@@ -61,8 +61,8 @@ export function EmbeddingsView() {
             </div>
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <Label>Vector ({dims} dimensions)</Label>
-                <button onClick={handleCopyVector} className="text-[13px] text-text-muted hover:text-text-muted transition-colors">Copy</button>
+                <Label><Trans i18nKey="common:surface.componentsEmbeddingsEmbeddingsView.text.vector" />{dims} <Trans i18nKey="common:surface.componentsEmbeddingsEmbeddingsView.text.dimensions" /></Label>
+                <button onClick={handleCopyVector} className="text-[13px] text-text-muted hover:text-text-muted transition-colors"><Trans i18nKey="common:surface.componentsEmbeddingsEmbeddingsView.action.copy" /></button>
               </div>
               <div className="bg-surface-elevated border border-border rounded-lg p-4 max-h-[calc(100vh-240px)] overflow-y-auto">
                 <code className="text-[14px] text-text-muted font-mono break-all leading-loose">
@@ -86,7 +86,7 @@ export function EmbeddingsView() {
             </div>
           </div>
         ) : (
-          <EmptyState>Embedding vectors appear here</EmptyState>
+          <EmptyState><Trans i18nKey="common:surface.componentsEmbeddingsEmbeddingsView.text.embeddingVectorsAppearHere" /></EmptyState>
         )}
     </div>
   )

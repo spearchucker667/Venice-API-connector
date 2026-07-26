@@ -1,8 +1,9 @@
 import type { DocumentBlock } from '../../agent/contracts/documents'
+import { Trans } from 'react-i18next';
 
 export function DocumentRenderer({ blocks }: { blocks: DocumentBlock[] }) {
   if (!blocks || blocks.length === 0) {
-    return <div className="text-[13px] text-foreground-muted italic py-4">Document is empty.</div>
+    return <div className="text-[13px] text-foreground-muted italic py-4"><Trans i18nKey="common:surface.componentsDocumentsDocumentrenderer.text.documentIsEmpty" /></div>
   }
 
   return (
@@ -89,8 +90,7 @@ export function DocumentRenderer({ blocks }: { blocks: DocumentBlock[] }) {
             return (
               <div key={block.id} className="my-6 border-b border-dashed border-border/80 text-center relative">
                 <span className="bg-surface px-2 text-[11px] text-foreground-muted uppercase tracking-widest absolute -top-2.5 left-1/2 -translate-x-1/2">
-                  Page Break
-                </span>
+                  <Trans i18nKey="common:surface.componentsDocumentsDocumentrenderer.text.pageBreak" /></span>
               </div>
             )
           default:

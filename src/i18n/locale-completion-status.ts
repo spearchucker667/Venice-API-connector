@@ -16,7 +16,8 @@ export interface LocaleCompletionRow {
   sentinelLeaves: number;
   missingMarkerLeaves: number;
   identicalUnapprovedLeaves: number;
-  reviewStatus: 'complete' | 'in-progress' | 'pending-translation' | 'unknown';
+  reviewStatus: 'source-language' | 'complete' | 'in-progress' | 'first-pass-machine' | 'not-started' | 'unknown';
+  catalogStatus: 'complete' | 'in-progress' | 'pending-translation' | 'unknown';
   coveragePercent: number;
   isProductionComplete: boolean;
 }
@@ -25,145 +26,157 @@ export const LOCALE_COMPLETION: Record<SupportedLocale, LocaleCompletionRow> = {
   'en-US': {
   "languageTag": "en-US",
   "nativeName": "English (US)",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "source-language",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
   "isProductionComplete": true
 },
   'es': {
   "languageTag": "es",
   "nativeName": "Español",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "first-pass-machine",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
-  "isProductionComplete": true
+  "isProductionComplete": false
 },
   'fr': {
   "languageTag": "fr",
   "nativeName": "Français",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "first-pass-machine",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
-  "isProductionComplete": true
+  "isProductionComplete": false
 },
   'de': {
   "languageTag": "de",
   "nativeName": "Deutsch",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "first-pass-machine",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
-  "isProductionComplete": true
+  "isProductionComplete": false
 },
   'pt-BR': {
   "languageTag": "pt-BR",
   "nativeName": "Português (Brasil)",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "first-pass-machine",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
-  "isProductionComplete": true
+  "isProductionComplete": false
 },
   'ru': {
   "languageTag": "ru",
   "nativeName": "Русский",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "first-pass-machine",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
-  "isProductionComplete": true
+  "isProductionComplete": false
 },
   'zh-CN': {
   "languageTag": "zh-CN",
   "nativeName": "简体中文",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "first-pass-machine",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
-  "isProductionComplete": true
+  "isProductionComplete": false
 },
   'ja': {
   "languageTag": "ja",
   "nativeName": "日本語",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "first-pass-machine",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
-  "isProductionComplete": true
+  "isProductionComplete": false
 },
   'hi': {
   "languageTag": "hi",
   "nativeName": "हिन्दी",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "first-pass-machine",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
-  "isProductionComplete": true
+  "isProductionComplete": false
 },
   'ar': {
   "languageTag": "ar",
   "nativeName": "العربية",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "first-pass-machine",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
-  "isProductionComplete": true
+  "isProductionComplete": false
 },
   'ko': {
   "languageTag": "ko",
   "nativeName": "한국어",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "first-pass-machine",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
-  "isProductionComplete": true
+  "isProductionComplete": false
 },
   'sv-SE': {
   "languageTag": "sv-SE",
   "nativeName": "Svenska",
-  "canonicalKeyTotal": 795,
-  "translatedKeyTotal": 795,
+  "canonicalKeyTotal": 2037,
+  "translatedKeyTotal": 2037,
   "sentinelLeaves": 0,
   "missingMarkerLeaves": 0,
   "identicalUnapprovedLeaves": 0,
-  "reviewStatus": "complete",
+  "reviewStatus": "first-pass-machine",
+  "catalogStatus": "complete",
   "coveragePercent": 100,
-  "isProductionComplete": true
+  "isProductionComplete": false
 },
 };

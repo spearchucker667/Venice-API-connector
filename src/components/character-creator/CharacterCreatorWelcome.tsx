@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Sparkles, FolderOpen, FileUp, Edit3, ChevronDown, ChevronUp, Copy, Trash2 } from "lucide-react";
 import type { CharacterCreatorDraftSummary, OptionalDraftContext } from "../../types/character-creator";
 import { CharacterCreatorMascot } from "./CharacterCreatorMascot";
+import { Trans } from 'react-i18next';
 
 interface Props {
   onCreateDraft: (idea: string, context?: OptionalDraftContext) => void;
@@ -46,25 +47,20 @@ export function CharacterCreatorWelcome({
           <CharacterCreatorMascot size="lg" />
         </div>
         <h1 className="text-2xl md:text-3xl font-bold text-text-primary tracking-tight">
-          Character Creator
-        </h1>
+          <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.heading.characterCreator" /></h1>
         <p className="text-sm md:text-base text-text-secondary font-medium max-w-xl">
-          Turn a rough idea into a complete, editable character card.
-        </p>
+          <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.description.turnARoughIdeaIntoAComplete" /></p>
         <p className="text-xs md:text-sm text-text-muted max-w-2xl leading-relaxed mt-1">
-          Start with a sentence, a detailed concept, or an existing character archetype. The creator will build a complete draft that you can inspect, rewrite, save, or export. Nothing is added to your character library until you approve it.
-        </p>
+          <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.description.startWithASentenceADetailedConcept" /></p>
         <div className="mt-1 px-3 py-1 rounded-full bg-surface-elevated border border-border text-[11px] font-mono text-text-muted">
-          Creator model: <span className="text-accent font-semibold">GLM 5.2</span> (Immutable)
-        </div>
+          <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.creatorModel" /> <span className="text-accent font-semibold">GLM 5.2</span> <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.immutable" /></div>
       </div>
 
       {/* Idea Intake Form */}
       <form onSubmit={handleStart} className="w-full flex flex-col gap-4 mb-10 bg-surface/50 p-6 rounded-2xl border border-border/60 shadow-sm">
         <div className="flex flex-col gap-2">
           <label htmlFor="character-idea-input" className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
-            Character Concept
-          </label>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.label.characterConcept" /></label>
           <textarea
             id="character-idea-input"
             value={idea}
@@ -83,7 +79,7 @@ export function CharacterCreatorWelcome({
             className="flex items-center gap-2 text-xs text-text-secondary hover:text-text-primary font-medium"
           >
             {showAdvancedContext ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            <span>Optional Design Constraints & Context</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.optionalDesignConstraintsContext" /></span>
           </button>
 
           {showAdvancedContext && (
@@ -99,7 +95,7 @@ export function CharacterCreatorWelcome({
                 />
               </div>
               <div>
-                <label className="text-[11px] text-text-muted font-medium">Tone</label>
+                <label className="text-[11px] text-text-muted font-medium"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.label.tone" /></label>
                 <input
                   type="text"
                   placeholder="e.g. Gritty, melancholic, satirical"
@@ -109,7 +105,7 @@ export function CharacterCreatorWelcome({
                 />
               </div>
               <div>
-                <label className="text-[11px] text-text-muted font-medium">Relationship to User</label>
+                <label className="text-[11px] text-text-muted font-medium"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.label.relationshipToUser" /></label>
                 <input
                   type="text"
                   placeholder="e.g. Reluctant ally, mysterious informant"
@@ -119,7 +115,7 @@ export function CharacterCreatorWelcome({
                 />
               </div>
               <div>
-                <label className="text-[11px] text-text-muted font-medium">Content Rating</label>
+                <label className="text-[11px] text-text-muted font-medium"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.label.contentRating" /></label>
                 <select
                   value={context.contentRating || "general"}
                   onChange={(e) => setContext({ ...context, contentRating: e.target.value })}
@@ -127,7 +123,7 @@ export function CharacterCreatorWelcome({
                 >
                   <option value="general">General / PG</option>
                   <option value="mature">Mature / Dark Themes</option>
-                  <option value="adult">Adult Uncensored</option>
+                  <option value="adult"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.option.adultUncensored" /></option>
                 </select>
               </div>
             </div>
@@ -137,15 +133,14 @@ export function CharacterCreatorWelcome({
         {/* Action Row */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-2">
           <div className="text-[11px] text-text-muted italic">
-            All generated content remains a draft until you approve it.
-          </div>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.allGeneratedContentRemainsADraftUntil" /></div>
           <button
             type="submit"
             disabled={!idea.trim() || isGenerating}
             className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-accent text-accent-contrast font-medium text-sm flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-50 transition-opacity"
           >
             <Sparkles className="w-4 h-4" />
-            <span>Create Draft</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.createDraft" /></span>
           </button>
         </div>
       </form>
@@ -158,7 +153,7 @@ export function CharacterCreatorWelcome({
           className="px-4 py-2 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-primary flex items-center gap-2 transition-colors"
         >
           <FileUp className="w-4 h-4 text-accent" />
-          <span>Import Existing Card</span>
+          <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.importExistingCard" /></span>
         </button>
         <button
           type="button"
@@ -166,7 +161,7 @@ export function CharacterCreatorWelcome({
           className="px-4 py-2 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-primary flex items-center gap-2 transition-colors"
         >
           <Edit3 className="w-4 h-4 text-accent" />
-          <span>Edit Local Character</span>
+          <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.editLocalCharacter" /></span>
         </button>
       </div>
 
@@ -175,29 +170,26 @@ export function CharacterCreatorWelcome({
         <div className="p-4 rounded-xl bg-surface/30 border border-border/40 flex flex-col gap-2">
           <div className="flex items-center gap-2 text-xs font-bold text-accent">
             <span className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center text-[10px]">1</span>
-            <span>Describe</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.describe" /></span>
           </div>
           <p className="text-xs text-text-secondary leading-relaxed">
-            Enter anything from a one-line concept to a detailed character outline.
-          </p>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.description.enterAnythingFromAOneLineConcept" /></p>
         </div>
         <div className="p-4 rounded-xl bg-surface/30 border border-border/40 flex flex-col gap-2">
           <div className="flex items-center gap-2 text-xs font-bold text-accent">
             <span className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center text-[10px]">2</span>
-            <span>Review</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.review" /></span>
           </div>
           <p className="text-xs text-text-secondary leading-relaxed">
-            Inspect and edit the identity, personality, scenario, greeting, dialogue examples, and behavioral instructions.
-          </p>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.description.inspectAndEditTheIdentityPersonalityScenario" /></p>
         </div>
         <div className="p-4 rounded-xl bg-surface/30 border border-border/40 flex flex-col gap-2">
           <div className="flex items-center gap-2 text-xs font-bold text-accent">
             <span className="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center text-[10px]">3</span>
-            <span>Create</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.create" /></span>
           </div>
           <p className="text-xs text-text-secondary leading-relaxed">
-            Approve the final draft to add the character to your local library or export a compatible card.
-          </p>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.description.approveTheFinalDraftToAddThe" /></p>
         </div>
       </div>
 
@@ -206,7 +198,7 @@ export function CharacterCreatorWelcome({
         <div className="w-full flex flex-col gap-3 pt-4 border-t border-border/40">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-text-secondary flex items-center gap-2">
             <FolderOpen className="w-4 h-4" />
-            <span>Recent Unfinished Drafts</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.recentUnfinishedDrafts" /></span>
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {recentDrafts.map((d) => (
@@ -222,7 +214,7 @@ export function CharacterCreatorWelcome({
                     {d.name}
                   </span>
                   <span className="text-[10px] px-2 py-0.5 rounded bg-surface-elevated text-text-muted font-mono">
-                    Rev {d.revision}
+                    <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.rev" /> {d.revision}
                   </span>
                 </div>
                 <p className="text-[11px] text-text-muted line-clamp-1 italic">{d.sourceIdea}</p>
@@ -232,8 +224,7 @@ export function CharacterCreatorWelcome({
                     onClick={() => onOpenDraft(d.id)}
                     className="text-[11px] font-medium text-accent hover:underline"
                   >
-                    Open
-                  </button>
+                    <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.action.open" /></button>
                   {onDuplicateDraft && (
                     <button
                       type="button"
@@ -242,7 +233,7 @@ export function CharacterCreatorWelcome({
                       title="Duplicate Draft"
                     >
                       <Copy className="w-3 h-3" />
-                      <span>Duplicate</span>
+                      <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.duplicate" /></span>
                     </button>
                   )}
                   {onDeleteDraft && (
@@ -253,7 +244,7 @@ export function CharacterCreatorWelcome({
                       title="Delete Draft"
                     >
                       <Trash2 className="w-3 h-3" />
-                      <span>Delete</span>
+                      <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.text.delete" /></span>
                     </button>
                   )}
                 </div>

@@ -30,6 +30,7 @@ import { applyTheme, resolveInitialTheme } from './theme'
 import { CANONICAL_TAB_ORDER, normaliseTab, type TabId } from './config/tabs'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
 import { useProfileVolatileReset } from './hooks/useProfileVolatileReset'
+import { Trans } from 'react-i18next';
 
 /** Exported for regression testing: identifies whether a keyboard event target
  *  is an editable element where global shortcuts should be ignored. */
@@ -47,102 +48,102 @@ export function isShortcutTargetEditable(event: KeyboardEvent): boolean {
 
 const LazyWorkflowsView = lazy(() => import('./components/workflows/WorkflowTemplatesView').then((m) => ({ default: m.WorkflowTemplatesView })))
 function WorkflowsViewLazy() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading workflows…</div>}><LazyWorkflowsView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingWorkflows" /></div>}><LazyWorkflowsView /></Suspense>
 }
 
 const LazyPlaygroundView = lazy(() => import('./components/playground/playground-view').then((m) => ({ default: m.PlaygroundView })))
 function PlaygroundView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading playground…</div>}><LazyPlaygroundView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingPlayground" /></div>}><LazyPlaygroundView /></Suspense>
 }
 
 const LazyRpStudioView = lazy(() => import('./components/rp-studio').then((m) => ({ default: m.RpStudioView })))
 function RpStudioViewLazy() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading RP studio…</div>}><LazyRpStudioView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingRpStudio" /></div>}><LazyRpStudioView /></Suspense>
 }
 
 const LazyHistoryView = lazy(() => import('./components/chat/HistoryView'))
 function HistoryView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading history…</div>}><LazyHistoryView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingHistory" /></div>}><LazyHistoryView /></Suspense>
 }
 
 const LazyImagePage = lazy(() => import('./components/image/image-page').then(m => ({ default: m.ImagePage })))
 const LazyImageInspectorView = lazy(() => import('./components/image-inspector/ImageInspectorView').then(m => ({ default: m.ImageInspectorView })))
 function ImagePage() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading Image Studio…</div>}><LazyImagePage /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingImageStudio" /></div>}><LazyImagePage /></Suspense>
 }
 
 function ImageInspectorPage() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading Image Inspector…</div>}><LazyImageInspectorView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingImageInspector" /></div>}><LazyImageInspectorView /></Suspense>
 }
 
 const LazyAudioView = lazy(() => import('./components/audio/audio-view').then(m => ({ default: m.AudioView })))
 function AudioView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading Audio…</div>}><LazyAudioView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingAudio" /></div>}><LazyAudioView /></Suspense>
 }
 
 const LazyMusicView = lazy(() => import('./components/music/music-view').then(m => ({ default: m.MusicView })))
 function MusicView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading Music…</div>}><LazyMusicView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingMusic" /></div>}><LazyMusicView /></Suspense>
 }
 
 const LazyVideoView = lazy(() => import('./components/video/video-view').then(m => ({ default: m.VideoView })))
 function VideoView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading Video…</div>}><LazyVideoView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingVideo" /></div>}><LazyVideoView /></Suspense>
 }
 
 const LazyEmbeddingsView = lazy(() => import('./components/embeddings/embeddings-view').then(m => ({ default: m.EmbeddingsView })))
 function EmbeddingsView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading Embeddings…</div>}><LazyEmbeddingsView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingEmbeddings" /></div>}><LazyEmbeddingsView /></Suspense>
 }
 
 const LazyStatusView = lazy(() => import('./components/StatusView').then(m => ({ default: m.StatusView })))
 function StatusView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading Status…</div>}><LazyStatusView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingStatus" /></div>}><LazyStatusView /></Suspense>
 }
 
 const LazyCharactersView = lazy(() => import('./components/CharactersView').then(m => ({ default: m.CharactersView })))
 function CharactersView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading Characters…</div>}><LazyCharactersView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingCharacters" /></div>}><LazyCharactersView /></Suspense>
 }
 
 const LazyCharacterCreatorView = lazy(() => import('./components/character-creator/CharacterCreatorView').then(m => ({ default: m.CharacterCreatorView })))
 function CharacterCreatorViewLazy() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading Character Creator…</div>}><LazyCharacterCreatorView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingCharacterCreator" /></div>}><LazyCharacterCreatorView /></Suspense>
 }
 
 const LazySettingsView = lazy(() => import('./components/SettingsView').then((m) => ({ default: m.SettingsView })))
 function SettingsView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading settings…</div>}><LazySettingsView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingSettings" /></div>}><LazySettingsView /></Suspense>
 }
 
 const LazySearchScrapeView = lazy(() => import('./components/SearchScrapeView').then((m) => ({ default: m.SearchScrapeView })))
 function SearchScrapeView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading search…</div>}><LazySearchScrapeView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingSearch" /></div>}><LazySearchScrapeView /></Suspense>
 }
 
 const LazyMediaStudioView = lazy(() => import('./components/gallery/gallery-view').then((m) => ({ default: m.MediaStudioView })))
 function MediaStudioView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading media studio…</div>}><LazyMediaStudioView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingMediaStudio" /></div>}><LazyMediaStudioView /></Suspense>
 }
 
 const LazyPromptLibraryView = lazy(() => import('./components/prompts/PromptLibraryView').then((m) => ({ default: m.PromptLibraryView })))
 function PromptLibraryView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading prompt library…</div>}><LazyPromptLibraryView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingPromptLibrary" /></div>}><LazyPromptLibraryView /></Suspense>
 }
 
 const LazySceneComposerView = lazy(() => import('./components/scenes/SceneComposerView').then((m) => ({ default: m.SceneComposerView })))
 function SceneComposerView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading scenes…</div>}><LazySceneComposerView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingScenes" /></div>}><LazySceneComposerView /></Suspense>
 }
 
 const LazyStoragePrivacyDashboard = lazy(() => import('./components/privacy/StoragePrivacyDashboard').then((m) => ({ default: m.StoragePrivacyDashboard })))
 function StoragePrivacyDashboard() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading storage…</div>}><LazyStoragePrivacyDashboard /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingStorage" /></div>}><LazyStoragePrivacyDashboard /></Suspense>
 }
 
 const LazyDocumentAgentView = lazy(() => import('./components/documents/DocumentAgentView').then((m) => ({ default: m.DocumentAgentView })))
 function DocumentAgentView() {
-  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50">Loading documents…</div>}><LazyDocumentAgentView /></Suspense>
+  return <Suspense fallback={<div className="flex items-center justify-center h-full text-[12px] text-text-muted/50"><Trans i18nKey="common:surface.app.text.loadingDocuments" /></div>}><LazyDocumentAgentView /></Suspense>
 }
 
 const views: Record<TabId, React.ComponentType> = {
@@ -296,8 +297,7 @@ export function App() {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 z-[100] px-3 py-2 rounded-md bg-accent text-accent-fg text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
-        Skip to main content
-      </a>
+        <Trans i18nKey="common:surface.app.text.skipToMainContent" /></a>
       <AppMeshOverlay />
       {/* Mobile drawer overlay */}
       {mobileSidebarOpen && (

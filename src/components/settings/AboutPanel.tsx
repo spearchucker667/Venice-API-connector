@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation , Trans} from "react-i18next";
 import { APP_NAME, OFFICIAL_LINKS, FIRST_RUN_ACK_KEY } from "../../shared/legal";
 import { toast } from "../../stores/toast-store";
 import { version } from "../../../package.json";
@@ -13,7 +13,7 @@ export function AboutPanel(): React.ReactElement {
         <span className="text-[12px] px-1.5 py-0.5 rounded bg-warning/10 text-warning border border-warning/20 uppercase tracking-wider font-semibold">
           {t('settings:aboutPanel.unofficial', 'Unofficial')}
         </span>
-        <span className="text-[12px] text-text-muted">v{version} · Beta</span>
+        <span className="text-[12px] text-text-muted">v{version} <Trans i18nKey="common:surface.componentsSettingsAboutpanel.text.beta" /></span>
       </div>
 
       <div className="text-[13px] text-text-secondary leading-relaxed space-y-4">

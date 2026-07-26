@@ -27,6 +27,8 @@ const ROOT_DIR = path.join(__dirname, '..');
 const RESOURCES_DIR = path.join(ROOT_DIR, 'src', 'i18n', 'resources');
 const DOCS_I18N_DIR = path.join(ROOT_DIR, 'docs', 'i18n');
 const STATUS_METADATA_PATH = path.join(DOCS_I18N_DIR, 'translation-status.json');
+const NATIVE_REVIEW_STATUS_PATH = path.join(DOCS_I18N_DIR, 'native-review-status.json');
+const IDENTICAL_VALUE_ALLOWLIST_PATH = path.join(DOCS_I18N_DIR, 'identical-value-allowlist.json');
 
 const EXPECTED_LOCALES = [
   'en-US', 'es', 'fr', 'de', 'pt-BR', 'ru',
@@ -184,7 +186,22 @@ function applyCliFlags(args) {
   const strict = args.includes('--strict');
   const allowSentinels = args.includes('--allow-sentinels');
   const allowMissingMarkers = args.includes('--allow-missing-markers');
-  return { strict, allowSentinels, allowMissingMarkers };
+  const writeStatus = args.includes('--write-status');
+  return { strict, allowSentinels, allowMissingMarkers, writeStatus };
+}
+
+function loadNativeReviewStatus(filePath = NATIVE_REVIEW_STATUS_PATH) {
+  if (!fs.existsSync(filePath)) return { schemaVersion: 1, locales: {} };
+  const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  return parsed && typeof parsed === 'object' && parsed.locales
+    ? parsed
+    : { schemaVersion: 1, locales: {} };
+}
+
+function loadLocaleIdenticalAllowlist(filePath = IDENTICAL_VALUE_ALLOWLIST_PATH) {
+  if (!fs.existsSync(filePath)) return {};
+  const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  return parsed && typeof parsed === 'object' && parsed.locales ? parsed.locales : {};
 }
 
 function runVerification({
@@ -199,6 +216,10 @@ function runVerification({
   resourcesDir: resourcesDirOverride,
   docsDir: docsDirOverride,
   docsRequired: docsRequiredOverride,
+  nativeReviewStatusPath,
+  nativeReviewStatus,
+  identicalValueAllowlistPath,
+  identicalValueAllowlist,
 } = {}) {
   const errors = [];
   const warnings = [];
@@ -208,6 +229,10 @@ function runVerification({
   const activeResourcesDir = resourcesDirOverride || RESOURCES_DIR;
   const activeDocsDir = docsDirOverride || DOCS_I18N_DIR;
   const activeDocs = docsRequiredOverride || REQUIRED_DOCS;
+  const reviewEvidence = nativeReviewStatus
+    || loadNativeReviewStatus(nativeReviewStatusPath || NATIVE_REVIEW_STATUS_PATH);
+  const localeIdenticalValues = identicalValueAllowlist
+    || loadLocaleIdenticalAllowlist(identicalValueAllowlistPath || IDENTICAL_VALUE_ALLOWLIST_PATH);
 
   // 1. Verify resource directories exist
   for (const locale of activeLocales) {
@@ -287,6 +312,7 @@ function runVerification({
     let localeSentinel = 0;
     let localeMissingMarker = 0;
     let localePending = 0;
+    const localeAllowedIdentical = new Set(localeIdenticalValues[locale] || []);
 
     for (const ns of activeNamespaces) {
       const file = path.join(activeResourcesDir, locale, `${ns}.json`);
@@ -353,7 +379,7 @@ function runVerification({
           // Translation quality
           if (SENTINEL_PATTERN.test(locVal) || MISSING_MARKER_PATTERN.test(locVal)) {
             // Untranslated — does not count as "translated"
-          } else if (locVal !== enVal || ALLOWLISTED_IDENTICAL.has(enVal)) {
+          } else if (locVal !== enVal || ALLOWLISTED_IDENTICAL.has(enVal) || localeAllowedIdentical.has(enVal)) {
             localeTranslated++;
           } else {
             localeIdenticalUnapproved++;
@@ -407,11 +433,10 @@ function runVerification({
     }
   }
 
-  // 6. Write a truthful status JSON. `docs/translation-status.json` is the
-  // the only authoritative trust signal downstream — never claim `complete`
-  // unless the locale passes every measure with zero pending leaves.
+  // 6. Build truthful status JSON. Catalog integrity and native-language
+  // review are independent signals; machine output never self-certifies.
   const statusMetadata = {
-    schemaVersion: 2,
+    schemaVersion: 3,
     updatedAt: new Date().toISOString(),
     extractorArtifact: 'scripts/extract-i18n-keys.cjs (TS Compiler API)',
     verifier: 'scripts/verify-i18n.cjs (sentinel + missing-marker aware)',
@@ -437,7 +462,7 @@ function runVerification({
     const cov = coverageResults[locale];
     const docs = localeDocsInfo.get(locale) || { present: 0, total: 0 };
     const docsPct = docs.total > 0 ? parseFloat(((docs.present / docs.total) * 100).toFixed(1)) : 100;
-    const reviewStatus = cov.pct >= 100
+    const catalogStatus = cov.pct >= 100
       && cov.sentinelValues === 0
       && cov.missingMarkers === 0
       && cov.identicalUnapproved === 0
@@ -446,6 +471,11 @@ function runVerification({
       : cov.sentinelValues > 0 || cov.missingMarkers > 0
         ? 'pending-translation'
         : 'in-progress';
+    const evidence = locale === 'en-US'
+      ? { status: 'source-language', reviewer: null, reviewedAt: null }
+      : reviewEvidence.locales?.[locale]
+        || { status: 'first-pass-machine', reviewer: null, reviewedAt: null };
+    const reviewStatus = evidence.status || 'first-pass-machine';
     statusMetadata.locales[locale] = {
       name: localeNames[locale] || locale,
       uiCoveragePercent: cov.pct,
@@ -458,7 +488,10 @@ function runVerification({
       docsPresent: docs.present,
       docsTotal: docs.total,
       docs: docsPct >= 100 ? 'translated' : 'pending-human-translation',
+      catalogStatus,
       reviewStatus,
+      reviewer: evidence.reviewer || null,
+      reviewedAt: evidence.reviewedAt || null,
       lastUpdated: new Date().toISOString(),
     };
   }
@@ -500,12 +533,12 @@ function runVerification({
 }
 
 if (require.main === module) {
-  const { strict, allowSentinels, allowMissingMarkers } = applyCliFlags(process.argv.slice(2));
+  const { strict, allowSentinels, allowMissingMarkers, writeStatus } = applyCliFlags(process.argv.slice(2));
   const result = runVerification({
     strict,
     allowSentinels,
     allowMissingMarkers,
-    writeStatus: true,
+    writeStatus,
   });
   process.exit(result.ok ? 0 : 1);
 }
@@ -516,4 +549,9 @@ module.exports = {
   MISSING_MARKER_PATTERN,
   EXPECTED_LOCALES,
   EXPECTED_NAMESPACES: NAMESPACES,
+  NATIVE_REVIEW_STATUS_PATH,
+  IDENTICAL_VALUE_ALLOWLIST_PATH,
+  applyCliFlags,
+  loadNativeReviewStatus,
+  loadLocaleIdenticalAllowlist,
 };

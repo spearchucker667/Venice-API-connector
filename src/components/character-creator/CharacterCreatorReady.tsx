@@ -4,6 +4,7 @@
 
 import { CheckCircle2, AlertTriangle, XCircle, MessageSquare, ArrowLeft } from "lucide-react";
 import type { CharacterCreatorDraft } from "../../types/character-creator";
+import { Trans } from 'react-i18next';
 
 interface Props {
   draft: CharacterCreatorDraft;
@@ -51,8 +52,7 @@ export function CharacterCreatorReady({
           <div className="flex justify-between items-center">
             <span className="font-bold text-text-primary text-sm">{cardData.name}</span>
             <span className="text-[11px] px-2 py-0.5 rounded bg-accent/15 text-accent font-mono">
-              chara_card_v2
-            </span>
+              <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorready.text.charaCardV2" /></span>
           </div>
           <p className="text-text-secondary line-clamp-2 italic">{cardData.description || "No description specified"}</p>
         </div>
@@ -62,8 +62,7 @@ export function CharacterCreatorReady({
           {validationResults.errors.length > 0 && (
             <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs flex flex-col gap-1.5">
               <span className="font-bold text-rose-400 flex items-center gap-1.5">
-                <XCircle className="w-4 h-4" /> Errors (Must resolve)
-              </span>
+                <XCircle className="w-4 h-4" /> <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorready.text.errorsMustResolve" /></span>
               <ul className="list-disc list-inside text-rose-300 gap-1 flex flex-col pl-1">
                 {validationResults.errors.map((err, i) => (
                   <li key={i}>{err}</li>
@@ -75,8 +74,7 @@ export function CharacterCreatorReady({
           {validationResults.warnings.length > 0 && (
             <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs flex flex-col gap-1.5">
               <span className="font-bold text-amber-300 flex items-center gap-1.5">
-                <AlertTriangle className="w-4 h-4" /> Warnings (Optional)
-              </span>
+                <AlertTriangle className="w-4 h-4" /> <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorready.text.warningsOptional" /></span>
               <ul className="list-disc list-inside text-amber-200/90 gap-1 flex flex-col pl-1">
                 {validationResults.warnings.map((warn, i) => (
                   <li key={i}>{warn}</li>
@@ -101,7 +99,7 @@ export function CharacterCreatorReady({
             className="w-full sm:w-auto px-4 py-2 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-secondary flex items-center justify-center gap-1.5 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Return to Draft</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorready.text.returnToDraft" /></span>
           </button>
 
           <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
@@ -112,7 +110,7 @@ export function CharacterCreatorReady({
                 onClick={() => onApproveAndCreate(false, true)}
                 className="flex-1 sm:flex-initial px-3 py-2 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-text-secondary text-xs font-medium flex items-center justify-center gap-1 disabled:opacity-50 transition-colors"
               >
-                <span>Save as Copy</span>
+                <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorready.text.saveAsCopy" /></span>
               </button>
             )}
             <button

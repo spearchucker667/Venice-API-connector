@@ -36,6 +36,7 @@ import { useImageWorkspaceStore, type ImageGenerateHandoff } from '../../stores/
 import { GenerationLoadingIndicator } from '../generation/GenerationLoadingIndicator'
 
 import { DEFAULT_IMAGE_MODEL } from '../../constants/venice'
+import { Trans } from 'react-i18next';
 
 
 function toImageSrc(b64: string): string {
@@ -550,7 +551,7 @@ export function ImageView() {
       </div>
       <div>
         <div className="flex flex-col gap-1.5 mb-1.5">
-          <Label htmlFor={promptId} hint={`${prompt.length}/${promptLimit}`}>Prompt</Label>
+          <Label htmlFor={promptId} hint={`${prompt.length}/${promptLimit}`}><Trans i18nKey="common:surface.componentsImageImageView.text.prompt" /></Label>
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
@@ -560,8 +561,7 @@ export function ImageView() {
               aria-label="Save prompt to library"
               data-testid="image-save-prompt-to-library"
             >
-              Save to library
-            </button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.saveToLibrary" /></button>
             <button
               type="button"
               onClick={handleEnhance}
@@ -591,7 +591,7 @@ export function ImageView() {
               className="relative z-40 text-[12px] bg-surface-elevated text-text-secondary border border-border rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-accent hover:text-text-secondary transition-colors cursor-pointer min-w-[120px]"
               defaultValue=""
             >
-              <option value="" disabled>Add Template...</option>
+              <option value="" disabled><Trans i18nKey="common:surface.componentsImageImageView.option.addTemplate" /></option>
               {Object.entries(
                 PROMPT_TEMPLATES.filter((t) => t.compatibleModes.includes('image')).reduce((acc, t) => {
                   if (!acc[t.category]) acc[t.category] = [];
@@ -616,7 +616,7 @@ export function ImageView() {
       {/* Enhance prompt review flow */}
       {showEnhanceReview && enhancedPrompt && (
         <div className="p-3 mt-2 rounded-lg border border-accent/30 bg-accent/5">
-          <Label>Enhanced Prompt Preview</Label>
+          <Label><Trans i18nKey="common:surface.componentsImageImageView.text.enhancedPromptPreview" /></Label>
           <div className="text-[12.5px] text-text-primary mt-1 p-2 rounded bg-surface border border-border break-words [overflow-wrap:anywhere] whitespace-pre-wrap">
             {enhancedPrompt}
           </div>
@@ -626,15 +626,13 @@ export function ImageView() {
               onClick={applyEnhancedPrompt}
               className="px-3 py-1 text-[12px] rounded-md bg-accent text-accent-fg hover:bg-accent-hover transition-colors cursor-pointer"
             >
-              Use enhanced prompt
-            </button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.useEnhancedPrompt" /></button>
             <button
               type="button"
               onClick={cancelEnhanceReview}
               className="px-3 py-1 text-[12px] rounded-md bg-surface border border-border text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
             >
-              Keep original
-            </button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.keepOriginal" /></button>
           </div>
         </div>
       )}
@@ -642,22 +640,21 @@ export function ImageView() {
       {/* Template preview flow */}
       {previewTemplate && (
         <div className="p-3 mt-2 rounded-lg border border-accent/30 bg-accent/5">
-          <Label>Apply Template: {previewTemplate.label}</Label>
+          <Label><Trans i18nKey="common:surface.componentsImageImageView.text.applyTemplate" /> {previewTemplate.label}</Label>
           {previewTemplate.positiveText && (
             <div className="text-[12.5px] text-text-primary mt-1 mb-2 p-2 rounded bg-surface border border-border break-all whitespace-pre-wrap">
-              <strong className="text-text-secondary">Positive:</strong> {previewTemplate.positiveText}
+              <strong className="text-text-secondary"><Trans i18nKey="common:surface.componentsImageImageView.text.positive" /></strong> {previewTemplate.positiveText}
             </div>
           )}
           {previewTemplate.negativeText && (
             <div className="text-[12.5px] text-text-primary mt-1 mb-2 p-2 rounded bg-surface border border-border break-all whitespace-pre-wrap">
-              <strong className="text-text-secondary">Negative:</strong> {previewTemplate.negativeText}
+              <strong className="text-text-secondary"><Trans i18nKey="common:surface.componentsImageImageView.text.negative" /></strong> {previewTemplate.negativeText}
             </div>
           )}
           {previewTemplate.negativeText && !caps.supportsNegativePrompt && (
             <div role="alert" className="mt-2 rounded-md border border-warning/40 bg-warning/10 p-2 text-[12px] text-warning">
-              {model} does not support negative prompts. The template remains pending and your current prompt state has not changed.
-              {compatibleNegativeModel && (
-                <button type="button" onClick={() => setSelectedModel('image', compatibleNegativeModel)} className="ml-2 underline underline-offset-2">Switch to {compatibleNegativeModel}</button>
+              {model} <Trans i18nKey="common:surface.componentsImageImageView.text.doesNotSupportNegativePromptsTheTemplate" />{compatibleNegativeModel && (
+                <button type="button" onClick={() => setSelectedModel('image', compatibleNegativeModel)} className="ml-2 underline underline-offset-2"><Trans i18nKey="common:surface.componentsImageImageView.action.switchTo" /> {compatibleNegativeModel}</button>
               )}
             </div>
           )}
@@ -673,8 +670,7 @@ export function ImageView() {
               disabled={Boolean(previewTemplate.negativeText && !caps.supportsNegativePrompt)}
               className="px-3 py-1 text-[12px] rounded-md bg-accent text-accent-fg hover:bg-accent-hover transition-colors cursor-pointer"
             >
-              Append
-            </button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.append" /></button>
             <button
               type="button"
               onClick={() => {
@@ -686,15 +682,13 @@ export function ImageView() {
               disabled={Boolean(previewTemplate.negativeText && !caps.supportsNegativePrompt)}
               className="px-3 py-1 text-[12px] rounded-md border border-accent text-accent hover:bg-accent/10 transition-colors cursor-pointer"
             >
-              Replace
-            </button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.replace" /></button>
             <button
               type="button"
               onClick={() => setPreviewTemplate(null)}
               className="px-3 py-1 text-[12px] rounded-md bg-surface border border-border text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
             >
-              Cancel
-            </button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.cancel" /></button>
           </div>
         </div>
       )}
@@ -702,7 +696,7 @@ export function ImageView() {
       {caps.supportsNegativePrompt && (
         <div>
           <div className="flex items-center justify-between">
-            <Label htmlFor={negativePromptId}>Negative prompt</Label>
+            <Label htmlFor={negativePromptId}><Trans i18nKey="common:surface.componentsImageImageView.text.negativePrompt" /></Label>
             <button
               type="button"
               onClick={() => void handleSavePromptToLibrary('negative', negativePrompt)}
@@ -711,18 +705,17 @@ export function ImageView() {
               aria-label="Save negative prompt to library"
               data-testid="image-save-negative-to-library"
             >
-              Save to library
-            </button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.saveToLibrary" /></button>
           </div>
           <TextArea id={negativePromptId} value={negativePrompt} onChange={setNegativePrompt} placeholder="blurry, low quality…" rows={2} />
         </div>
       )}
 
       {hasAspectRatios ? (
-        <div><Label>Aspect Ratio</Label><PillGroup options={aspectOptions} value={aspectRatio} onChange={setAspectRatio} ariaLabel="Image aspect ratio" /></div>
+        <div><Label><Trans i18nKey="common:surface.componentsImageImageView.text.aspectRatio" /></Label><PillGroup options={aspectOptions} value={aspectRatio} onChange={setAspectRatio} ariaLabel="Image aspect ratio" /></div>
       ) : (
         <div>
-          <Label>Aspect Ratio</Label>
+          <Label><Trans i18nKey="common:surface.componentsImageImageView.text.aspectRatio" /></Label>
           <PillGroup
             options={whOptions}
             value={sizeKey}
@@ -733,12 +726,12 @@ export function ImageView() {
       )}
 
       {(dimOptions.resolutions?.length) && (
-        <div><Label>Resolution</Label><PillGroup options={resolutionOptions} value={resolution || resolutionOptions[0]?.value || ''} onChange={setResolution} ariaLabel="Image resolution" /></div>
+        <div><Label><Trans i18nKey="common:surface.componentsImageImageView.text.resolution" /></Label><PillGroup options={resolutionOptions} value={resolution || resolutionOptions[0]?.value || ''} onChange={setResolution} ariaLabel="Image resolution" /></div>
       )}
 
       {(dimOptions.qualities?.length) && (
         <div>
-          <Label>Quality</Label>
+          <Label><Trans i18nKey="common:surface.componentsImageImageView.text.quality" /></Label>
           <PillGroup
             options={dimOptions.qualities.map((option) => ({ value: option.id, label: option.label }))}
             value={quality || dimOptions.defaultQuality || ''}
@@ -750,7 +743,7 @@ export function ImageView() {
 
       {caps.supportsStyle !== false && styles && styles.length > 0 && (
         <div>
-          <Label htmlFor={styleId}>Style</Label>
+          <Label htmlFor={styleId}><Trans i18nKey="common:surface.componentsImageImageView.text.style" /></Label>
           <Select id={styleId} value={style} onChange={setStyle} options={styleOptions} searchable placeholder="None" />
         </div>
       )}
@@ -758,7 +751,7 @@ export function ImageView() {
       {/* Seed controls */}
       {caps.supportsSeed && (
         <div>
-          <Label htmlFor={seedId}>Seed</Label>
+          <Label htmlFor={seedId}><Trans i18nKey="common:surface.componentsImageImageView.text.seed" /></Label>
           <div className="flex items-center gap-2 mt-1">
             <label htmlFor={seedId} className="flex items-center gap-1.5 text-[12px] text-text-secondary cursor-pointer select-none">
               <input
@@ -768,8 +761,7 @@ export function ImageView() {
                 onChange={(e) => setSeedMode(e.target.checked ? 'fixed' : 'off')}
                 className="rounded border-border bg-surface-elevated text-accent w-3.5 h-3.5 cursor-pointer"
               />
-              Use fixed seed
-            </label>
+              <Trans i18nKey="common:surface.componentsImageImageView.label.useFixedSeed" /></label>
           </div>
           {seedMode === 'fixed' && (
             <div className="flex items-center gap-2 mt-1">
@@ -795,16 +787,14 @@ export function ImageView() {
                 className="px-2 py-1 text-[12px] rounded-md bg-surface border border-border text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
                 aria-label="Randomize seed"
               >
-                Randomize
-              </button>
+                <Trans i18nKey="common:surface.componentsImageImageView.action.randomize" /></button>
               <button
                 type="button"
                 onClick={() => setSeedMode('off')}
                 className="px-2 py-1 text-[12px] rounded-md bg-surface border border-border text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
                 aria-label="Clear seed"
               >
-                Clear
-              </button>
+                <Trans i18nKey="common:surface.componentsImageImageView.action.clear" /></button>
             </div>
           )}
         </div>
@@ -812,12 +802,12 @@ export function ImageView() {
 
       {caps.supportsSteps !== false && (
         <div>
-          <div className="flex justify-between"><Label htmlFor={stepsId}>Steps</Label><output htmlFor={stepsId} className="text-xs text-text-secondary">{steps}</output></div>
+          <div className="flex justify-between"><Label htmlFor={stepsId}><Trans i18nKey="common:surface.componentsImageImageView.text.steps" /></Label><output htmlFor={stepsId} className="text-xs text-text-secondary">{steps}</output></div>
           <input id={stepsId} type="range" min={1} max={maxSteps} value={steps} onChange={(e) => setSteps(Number(e.target.value))} className="w-full" aria-valuetext={`${steps} steps`} />
         </div>
       )}
       <div>
-        <div className="flex justify-between"><Label htmlFor={variantsId}>Variants</Label><output htmlFor={variantsId} className="text-xs text-text-secondary">{variants}</output></div>
+        <div className="flex justify-between"><Label htmlFor={variantsId}><Trans i18nKey="common:surface.componentsImageImageView.text.variants" /></Label><output htmlFor={variantsId} className="text-xs text-text-secondary">{variants}</output></div>
         <input id={variantsId} type="range" min={1} max={4} value={variants} onChange={(e) => setVariants(Number(e.target.value))} className="w-full" aria-valuetext={`${variants} variants`} />
       </div>
 
@@ -899,7 +889,7 @@ export function ImageView() {
                 }}
                 className="absolute bottom-2 left-2 rounded-lg border border-accent bg-overlay px-2 py-1 text-[11px] text-accent opacity-0 transition-all group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100"
                 data-testid="image-create-st-card"
-              >Create ST Card</button>
+              ><Trans i18nKey="common:surface.componentsImageImageView.action.createStCard" /></button>
             </div>
           ))}
         </div>

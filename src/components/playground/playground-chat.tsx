@@ -12,6 +12,7 @@ import { applyPatch, type WorkflowPatch } from '../../lib/workflow-mutations'
 import { validatePatch } from '../../lib/workflow-validator'
 import { generateId } from '../../lib/utils'
 import { cn } from '../../lib/utils'
+import { Trans } from 'react-i18next';
 
 const STARTER_PROMPTS = [
   'Build a workflow that makes a 9:16 reel using web search to research the topic, then writes a script and generates the video',
@@ -202,8 +203,8 @@ export function PlaygroundChat() {
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4">
         {messages.length === 0 ? (
           <div className="flex flex-col gap-3 pt-8">
-            <div className="text-[15px] text-text-secondary font-semibold mb-1">What should I build?</div>
-            <div className="text-[13px] text-text-muted mb-4">Describe a workflow in plain language. I&apos;ll assemble it on the canvas in real time.</div>
+            <div className="text-[15px] text-text-secondary font-semibold mb-1"><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.whatShouldIBuild" /></div>
+            <div className="text-[13px] text-text-muted mb-4"><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.describeAWorkflowInPlainLanguageI" /></div>
             <div className="flex flex-col gap-2">
               {STARTER_PROMPTS.map((p) => (
                 <button
@@ -236,7 +237,7 @@ export function PlaygroundChat() {
                   ) : m.error ? (
                     <span className="text-red-300/95">{m.error}</span>
                   ) : (
-                    m.content || <span className="text-text-muted italic">(no message)</span>
+                    m.content || <span className="text-text-muted italic"><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.noMessage" /></span>
                   )}
                 </div>
 
@@ -256,8 +257,7 @@ export function PlaygroundChat() {
 
                 {m.patches && m.patches.length > 0 && !m.activity?.length && (
                   <div className="max-w-[88%] px-3 py-1 text-[12px] text-text-muted font-mono tracking-wide">
-                    {m.patches.length} patch{m.patches.length === 1 ? '' : 'es'} applied
-                  </div>
+                    {m.patches.length} <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.patch" />{m.patches.length === 1 ? '' : 'es'} <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.applied" /></div>
                 )}
               </div>
             ))}
@@ -287,16 +287,14 @@ export function PlaygroundChat() {
               onClick={cancel}
               className="shrink-0 px-3 py-2 text-[13px] text-text-secondary hover:text-text-primary border border-border hover:bg-surface-muted rounded-lg transition-colors"
             >
-              Stop
-            </button>
+              <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.action.stop" /></button>
           ) : (
             <button
               onClick={() => send(input)}
               disabled={!input.trim()}
               className="shrink-0 px-4 py-2 text-[13px] font-medium bg-accent text-accent-fg rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
-              Send
-            </button>
+              <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.action.send" /></button>
           )}
         </div>
       </div>

@@ -157,11 +157,33 @@ describe("verify-safety-guard", () => {
     it("flags safety bypass toggles", () => {
       const srcDir = path.join(tmpDir, "src");
       fs.mkdirSync(srcDir, { recursive: true });
-      fs.writeFileSync(path.join(srcDir, "evil.ts"), "const bypass = true; // disable safety");
+      fs.writeFileSync(path.join(srcDir, "evil.ts"), "const safetyBypass = true;");
 
       const result = scanForViolations(tmpDir);
       expect(result.length).toBeGreaterThan(0);
       expect(result[0]).toContain("evil.ts");
+    });
+
+    it("does not flag translated UI copy or comments about disabling safety", () => {
+      const srcDir = path.join(tmpDir, "src");
+      fs.mkdirSync(srcDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(srcDir, "copy.tsx"),
+        "const label = 'Cannot disable Provider Safe Mode'; // never bypass guard",
+      );
+
+      expect(scanForViolations(tmpDir)).toEqual([]);
+    });
+
+    it("flags a known bypass identifier even when harmless prose is nearby", () => {
+      const srcDir = path.join(tmpDir, "src");
+      fs.mkdirSync(srcDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(srcDir, "bypass.ts"),
+        "const copy = 'Cannot disable safety';\nVENICE_FORGE_DEV_DISABLE_SAFETY_GUARD = true;",
+      );
+
+      expect(scanForViolations(tmpDir)[0]).toContain("bypass.ts");
     });
 
     it("ignores childExploitationGuard files", () => {

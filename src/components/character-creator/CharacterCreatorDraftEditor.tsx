@@ -23,6 +23,7 @@ import {
 import type { CharacterCardV2Dto } from "../../types/character-card-spec";
 import type { CharacterCreatorDraft, CharacterCreatorEditableField } from "../../types/character-creator";
 import { CharacterCreatorProcessPanel } from "./CharacterCreatorProcessPanel";
+import { Trans } from 'react-i18next';
 
 interface Props {
   draft: CharacterCreatorDraft;
@@ -122,7 +123,7 @@ export function CharacterCreatorDraftEditor({
       <div className="flex flex-wrap items-center justify-between gap-3 p-4 border-b border-border/60 bg-surface/60 shrink-0">
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <span className="text-xs px-2.5 py-1 rounded-full bg-accent/15 text-accent font-semibold shrink-0">
-            Draft Rev {draft.revision}
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.draftRev" /> {draft.revision}
           </span>
           <h2 className="text-base font-bold text-text-primary truncate min-w-0">
             {cardData.name || "Untitled Character"}
@@ -136,7 +137,7 @@ export function CharacterCreatorDraftEditor({
             className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-secondary hover:text-text-primary flex items-center gap-1.5 transition-colors"
           >
             <Save className="w-3.5 h-3.5" />
-            <span>Save Draft</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.saveDraft" /></span>
           </button>
           <button
             type="button"
@@ -144,7 +145,7 @@ export function CharacterCreatorDraftEditor({
             className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-secondary hover:text-text-primary flex items-center gap-1.5 transition-colors"
           >
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Validate</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.validate" /></span>
           </button>
           <button
             type="button"
@@ -152,7 +153,7 @@ export function CharacterCreatorDraftEditor({
             className="px-4 py-1.5 rounded-lg bg-accent text-accent-contrast font-medium text-xs flex items-center gap-1.5 hover:opacity-90 transition-opacity"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Approve & Create Character</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.approveCreateCharacter" /></span>
           </button>
         </div>
       </div>
@@ -175,7 +176,7 @@ export function CharacterCreatorDraftEditor({
           </div>
           {draft.creatorMetadata.assumptions.length > 0 && (
             <div className="text-text-muted text-[11px] flex flex-wrap gap-2">
-              <span className="font-semibold text-text-secondary">Assumptions:</span>
+              <span className="font-semibold text-text-secondary"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.assumptions" /></span>
               {draft.creatorMetadata.assumptions.map((a, i) => (
                 <span key={i} className="px-1.5 py-0.5 rounded bg-surface border border-border">
                   {a}
@@ -234,7 +235,7 @@ export function CharacterCreatorDraftEditor({
           {activeTab === "overview" && (
             <div className="flex flex-col gap-4">
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Character Name *</label>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.characterName" /></label>
                 <input
                   type="text"
                   value={cardData.name}
@@ -252,7 +253,7 @@ export function CharacterCreatorDraftEditor({
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Tags (Comma-separated)</label>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.tagsCommaSeparated" /></label>
                 <input
                   type="text"
                   value={cardData.tags.join(", ")}
@@ -261,7 +262,7 @@ export function CharacterCreatorDraftEditor({
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Creator Notes</label>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.creatorNotes" /></label>
                 <textarea
                   rows={3}
                   value={cardData.creator_notes}
@@ -275,7 +276,7 @@ export function CharacterCreatorDraftEditor({
           {activeTab === "identity" && (
             <div className="flex flex-col gap-4">
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Full Identity & Background</label>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.fullIdentityBackground" /></label>
                 <textarea
                   rows={8}
                   value={cardData.description}
@@ -290,14 +291,14 @@ export function CharacterCreatorDraftEditor({
             <div className="flex flex-col gap-4">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Personality & Speech Style</label>
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.personalitySpeechStyle" /></label>
                   <button
                     type="button"
                     onClick={() => onRegenerateField("personality")}
                     className="text-[11px] text-accent hover:underline flex items-center gap-1 font-medium"
                   >
                     <RotateCcw className="w-3 h-3" />
-                    <span>AI Regenerate</span>
+                    <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.aiRegenerate" /></span>
                   </button>
                 </div>
                 <textarea
@@ -314,14 +315,14 @@ export function CharacterCreatorDraftEditor({
             <div className="flex flex-col gap-5">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Scenario Context</label>
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.scenarioContext" /></label>
                   <button
                     type="button"
                     onClick={() => onRegenerateField("scenario")}
                     className="text-[11px] text-accent hover:underline flex items-center gap-1 font-medium"
                   >
                     <RotateCcw className="w-3 h-3" />
-                    <span>AI Regenerate</span>
+                    <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.aiRegenerate" /></span>
                   </button>
                 </div>
                 <textarea
@@ -334,14 +335,14 @@ export function CharacterCreatorDraftEditor({
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">First Message (Primary Greeting) *</label>
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.firstMessagePrimaryGreeting" /></label>
                   <button
                     type="button"
                     onClick={() => onRegenerateField("first_mes")}
                     className="text-[11px] text-accent hover:underline flex items-center gap-1 font-medium"
                   >
                     <RotateCcw className="w-3 h-3" />
-                    <span>AI Regenerate</span>
+                    <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.aiRegenerate" /></span>
                   </button>
                 </div>
                 <textarea
@@ -353,7 +354,7 @@ export function CharacterCreatorDraftEditor({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Alternate Greetings</label>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.alternateGreetings" /></label>
                 <div className="flex flex-col gap-2 mt-1">
                   {cardData.alternate_greetings.map((g, idx) => (
                     <div key={idx} className="flex items-start gap-2">
@@ -385,13 +386,13 @@ export function CharacterCreatorDraftEditor({
                     className="self-start text-xs text-accent hover:underline flex items-center gap-1 mt-1 font-medium"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>Add Alternate Greeting</span>
+                    <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.addAlternateGreeting" /></span>
                   </button>
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Example Dialogue</label>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.exampleDialogue" /></label>
                 <textarea
                   rows={6}
                   value={cardData.mes_example}
@@ -408,12 +409,11 @@ export function CharacterCreatorDraftEditor({
               <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs flex items-start gap-2">
                 <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                 <span>
-                  Advanced prompting instructions directly modify system prompt steering during model execution. Inspect carefully before creation.
-                </span>
+                  <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.advancedPromptingInstructionsDirectlyModifySystemPrompt" /></span>
               </div>
 
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">System Prompt Override</label>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.systemPromptOverride" /></label>
                 <textarea
                   rows={6}
                   value={cardData.system_prompt}
@@ -423,7 +423,7 @@ export function CharacterCreatorDraftEditor({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Post-History Instructions</label>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.postHistoryInstructions" /></label>
                 <textarea
                   rows={4}
                   value={cardData.post_history_instructions}
@@ -441,14 +441,14 @@ export function CharacterCreatorDraftEditor({
                   {avatarDataUrl ? (
                     <img src={avatarDataUrl} alt="Avatar Preview" className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-xs text-text-muted text-center p-2">No Avatar Selected</span>
+                    <span className="text-xs text-text-muted text-center p-2"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.noAvatarSelected" /></span>
                   )}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Avatar Controls</label>
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.avatarControls" /></label>
                   <div className="flex flex-wrap gap-2">
                     <label className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-elevated text-xs font-medium cursor-pointer transition-colors">
-                      <span>Choose Image File</span>
+                      <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.chooseImageFile" /></span>
                       <input type="file" accept="image/*" onChange={handleImageFileChange} className="hidden" />
                     </label>
                     {onGenerateAvatar && (
@@ -458,7 +458,7 @@ export function CharacterCreatorDraftEditor({
                         className="px-3 py-1.5 rounded-lg bg-accent/20 border border-accent/30 text-accent text-xs font-medium flex items-center gap-1 hover:bg-accent/30 transition-colors"
                       >
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span>Generate Avatar</span>
+                        <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.generateAvatar" /></span>
                       </button>
                     )}
                   </div>
@@ -466,7 +466,7 @@ export function CharacterCreatorDraftEditor({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Visual Avatar Prompt</label>
+                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.visualAvatarPrompt" /></label>
                 <textarea
                   rows={4}
                   value={draft.creatorMetadata.avatarPrompt || ""}
@@ -495,8 +495,8 @@ export function CharacterCreatorDraftEditor({
             <div className="flex flex-col gap-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider">Embedded Lorebook & World Info</h3>
-                  <p className="text-[11px] text-text-muted">Manage world lore entries embedded inside this Character Card V2 draft.</p>
+                  <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.heading.embeddedLorebookWorldInfo" /></h3>
+                  <p className="text-[11px] text-text-muted"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.description.manageWorldLoreEntriesEmbeddedInsideThis" /></p>
                 </div>
                 <button
                   type="button"
@@ -521,14 +521,14 @@ export function CharacterCreatorDraftEditor({
                   className="px-3 py-1.5 rounded-lg bg-accent text-accent-contrast text-xs font-medium flex items-center gap-1 hover:opacity-90 transition-opacity"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  <span>Add Lore Entry</span>
+                  <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.addLoreEntry" /></span>
                 </button>
               </div>
 
               {(!cardData.character_book?.entries || cardData.character_book.entries.length === 0) ? (
                 <div className="p-6 text-center rounded-xl bg-surface border border-border text-xs text-text-muted flex flex-col items-center gap-2">
                   <BookOpen className="w-8 h-8 text-text-muted/60" />
-                  <span>No embedded lore entries yet. Add keywords and background details for deep character worldbuilding.</span>
+                  <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.noEmbeddedLoreEntriesYetAddKeywords" /></span>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
@@ -564,7 +564,7 @@ export function CharacterCreatorDraftEditor({
                               }}
                               className="rounded border-border bg-surface text-accent"
                             />
-                            <span>Enabled</span>
+                            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.enabled" /></span>
                           </label>
                           <button
                             type="button"
@@ -599,19 +599,19 @@ export function CharacterCreatorDraftEditor({
           {activeTab === "metadata" && (
             <div className="flex flex-col gap-3 text-xs">
               <div className="p-3 rounded-xl bg-surface border border-border flex justify-between">
-                <span className="text-text-muted">Draft ID:</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.draftId" /></span>
                 <span className="font-mono text-text-primary">{draft.id}</span>
               </div>
               <div className="p-3 rounded-xl bg-surface border border-border flex justify-between">
-                <span className="text-text-muted">Revision Number:</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.revisionNumber" /></span>
                 <span className="font-mono text-text-primary">{draft.revision}</span>
               </div>
               <div className="p-3 rounded-xl bg-surface border border-border flex justify-between">
-                <span className="text-text-muted">Creator Model:</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.creatorModel" /></span>
                 <span className="font-mono text-accent font-semibold">{draft.modelId}</span>
               </div>
               <div className="p-3 rounded-xl bg-surface border border-border flex justify-between">
-                <span className="text-text-muted">Specification:</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.specification" /></span>
                 <span className="font-mono text-text-primary">{draft.card.spec} v{draft.card.spec_version}</span>
               </div>
             </div>
@@ -622,13 +622,12 @@ export function CharacterCreatorDraftEditor({
         <div className="w-full md:w-80 border-t md:border-t-0 md:border-l border-border/50 bg-surface/20 p-4 flex flex-col gap-4 shrink-0">
           <div className="flex items-center gap-2 text-xs font-bold text-text-primary">
             <Sparkles className="w-4 h-4 text-accent" />
-            <span>AI Assisted Revisions</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.aiAssistedRevisions" /></span>
           </div>
 
           <form onSubmit={handleFullRevisionSubmit} className="flex flex-col gap-2">
             <label className="text-[11px] text-text-muted font-medium">
-              Natural Language Request
-            </label>
+              <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.naturalLanguageRequest" /></label>
             <textarea
               rows={3}
               value={revisionInput}

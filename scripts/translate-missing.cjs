@@ -35,14 +35,8 @@ const PROJECT_ROOT = path.resolve(__dirname, '..');
 const RESOURCES_DIR = path.join(PROJECT_ROOT, 'src/i18n/resources');
 const STATE_PATH = path.join(PROJECT_ROOT, 'artifacts/i18n/translate-state.json');
 const REPORT_PATH = path.join(PROJECT_ROOT, 'artifacts/i18n/translate-report.json');
-const VENICE_BASE_URL = process.env.OPENAI_BASE_URL || 'https://api.venice.ai/api/v1';
-const veniceAuth = process.env.VENICE_API_KEY;
+const DEFAULT_VENICE_BASE_URL = 'https://api.venice.ai/api/v1';
 const MODEL = process.env.VENICE_TRANSLATE_MODEL || 'zai-org-glm-5-2';
-
-if (!veniceAuth) {
-  console.error('Venice API key is required. Set VENICE_API_KEY in the environment.');
-  process.exit(2);
-}
 
 const LOCALES = ['es', 'fr', 'de', 'pt-BR', 'ru', 'zh-CN', 'ja', 'hi', 'ar', 'ko', 'sv-SE'];
 const NAMESPACES = [
@@ -69,6 +63,37 @@ const ALLOWLISTED_IDENTICAL = new Set([
 const MISSING_MARKER_RE = /^\s*__MISSING__:/;
 const SENTINEL_RE = /^\s*\[[A-Za-z][A-Za-z-]{1,10}\]\s/;
 const INTERPOLATION_RE = /\{\{\s*([^{}]+?)\s*\}\}/g;
+
+function resolveVeniceBaseUrl(env = process.env) {
+  const raw = env.VENICE_TRANSLATE_BASE_URL || DEFAULT_VENICE_BASE_URL;
+  let url;
+  try {
+    url = new URL(raw);
+  } catch {
+    throw new Error('VENICE_TRANSLATE_BASE_URL must be a valid HTTPS URL.');
+  }
+  if (url.protocol !== 'https:') {
+    throw new Error('VENICE_TRANSLATE_BASE_URL must use HTTPS.');
+  }
+  const isCanonicalVeniceHost = url.hostname === 'api.venice.ai';
+  if (!isCanonicalVeniceHost && env.VENICE_TRANSLATE_ALLOW_CUSTOM_BASE_URL !== '1') {
+    throw new Error(
+      'Refusing to send VENICE_API_KEY to a non-Venice host. Set VENICE_TRANSLATE_ALLOW_CUSTOM_BASE_URL=1 only for an explicitly trusted HTTPS endpoint.',
+    );
+  }
+  url.pathname = url.pathname.replace(/\/+$/, '');
+  url.search = '';
+  url.hash = '';
+  return url.toString().replace(/\/$/, '');
+}
+
+function requireVeniceApiKey(env = process.env) {
+  const key = env.VENICE_API_KEY?.trim();
+  if (!key) {
+    throw new Error('Venice API key is required. Set VENICE_API_KEY in the environment.');
+  }
+  return key;
+}
 
 function localeNativeName(locale) {
   const lookup = {
@@ -219,11 +244,13 @@ function setEquals(a, b) {
 
 const ALLOWLIST_JOINED = Array.from(ALLOWLISTED_IDENTICAL).join(', ');
 
-async function callVenice(messages, attemptBudget = 3) {
+async function callVenice(messages, attemptBudget = 3, env = process.env) {
+  const baseUrl = resolveVeniceBaseUrl(env);
+  const veniceAuth = requireVeniceApiKey(env);
   let lastError;
   for (let attempt = 1; attempt <= attemptBudget; attempt += 1) {
     try {
-      const response = await fetch(`${VENICE_BASE_URL}/chat/completions`, {
+      const response = await fetch(`${baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -242,8 +269,8 @@ async function callVenice(messages, attemptBudget = 3) {
         continue;
       }
       if (!response.ok) {
-        const errText = await response.text();
-        throw new Error(`Venice responded ${response.status}: ${errText.slice(0, 240)}`);
+        await response.arrayBuffer();
+        throw new Error(`Venice translation request failed with HTTP ${response.status}.`);
       }
       const json = await response.json();
       const content = json?.choices?.[0]?.message?.content;
@@ -474,8 +501,11 @@ if (require.main === module) {
 
 module.exports = {
   ALLOWLISTED_IDENTICAL,
+  DEFAULT_VENICE_BASE_URL,
   MISSING_MARKER_RE,
   SENTINEL_RE,
   flattenTree,
   isCandidate,
+  requireVeniceApiKey,
+  resolveVeniceBaseUrl,
 };

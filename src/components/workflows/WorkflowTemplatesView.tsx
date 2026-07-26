@@ -8,6 +8,7 @@ import { ConfirmModal } from "../ConfirmModal";
 import { toast } from "../../stores/toast-store";
 import { useImageWorkspaceStore } from "../../stores/image-workspace-store";
 import type { WorkflowStepKind, WorkflowStepTarget } from "../../types/workflow";
+import { Trans } from 'react-i18next';
 
 const WORKFLOW_STEP_KINDS: WorkflowStepKind[] = ["prompt", "image_recipe", "scene", "media", "research", "rp_character", "rp_scenario", "handoff", "note"];
 const WORKFLOW_STEP_TARGETS: WorkflowStepTarget[] = ["chat", "image_studio", "media_studio", "research", "scene_composer", "rp_studio", "none"];
@@ -170,19 +171,17 @@ export function WorkflowTemplatesView() {
       {/* Sidebar List */}
       <div className="w-full md:w-1/3 lg:w-[clamp(280px,30%,400px)] shrink-0 soft-separator-b md:soft-separator-b-0 md:soft-separator-r p-4 overflow-y-auto flex flex-col gap-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-sm font-semibold text-text-secondary">Workflows</h2>
+          <h2 className="text-sm font-semibold text-text-secondary"><Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.heading.workflows" /></h2>
           <div className="flex gap-2">
             <label className="text-xs bg-surface-hover hover:bg-surface-hover text-text-primary px-2 py-1 rounded cursor-pointer">
-              Import
-              <input type="file" accept=".json" className="hidden" onChange={handleImport} />
+              <Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.label.import" /><input type="file" accept=".json" className="hidden" onChange={handleImport} />
             </label>
             <button
               onClick={handleCreateWorkflow}
               className="text-xs bg-surface-hover hover:bg-surface-hover text-text-primary px-2 py-1 rounded"
               data-testid="create-workflow-btn"
             >
-              New
-            </button>
+              <Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.action.new" /></button>
           </div>
         </div>
         <input
@@ -196,7 +195,7 @@ export function WorkflowTemplatesView() {
         />
         <div className="space-y-2 overflow-y-auto flex-1 min-h-0" role="listbox" aria-label="Workflow templates">
           {filteredWorkflows.length === 0 ? (
-            <div className="text-xs text-text-secondary p-2">No workflows found.</div>
+            <div className="text-xs text-text-secondary p-2"><Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.text.noWorkflowsFound" /></div>
           ) : (
             filteredWorkflows.map((w) => (
               <button
@@ -222,13 +221,12 @@ export function WorkflowTemplatesView() {
       {/* Detail View */}
       {!activeWorkflow || !activeVersion ? (
         <div className="flex-1 flex items-center justify-center text-sm text-text-secondary" data-testid="empty-state">
-          Select or create a workflow to begin.
-        </div>
+          <Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.text.selectOrCreateAWorkflowToBegin" /></div>
       ) : (
       <div className="flex-1 flex flex-col h-full bg-surface overflow-y-auto p-4 md:p-6 min-w-0" data-testid="workflow-detail">
         <div className="flex flex-col xl:flex-row justify-between items-start mb-6 gap-4">
           <div className="flex flex-col w-full xl:w-1/2 gap-3">
-            <label className="sr-only" htmlFor="workflow-title">Workflow Title</label>
+            <label className="sr-only" htmlFor="workflow-title"><Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.label.workflowTitle" /></label>
             <input
               id="workflow-title"
               type="text"
@@ -237,7 +235,7 @@ export function WorkflowTemplatesView() {
               className="bg-transparent text-xl font-semibold text-text-primary outline-none border-b border-border/0 focus:border-border w-full py-1"
               data-testid="workflow-title-input"
             />
-            <label className="sr-only" htmlFor="workflow-tags">Workflow Tags</label>
+            <label className="sr-only" htmlFor="workflow-tags"><Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.label.workflowTags" /></label>
             <input
               id="workflow-tags"
               type="text"
@@ -261,15 +259,13 @@ export function WorkflowTemplatesView() {
               className="text-xs bg-surface-hover hover:bg-surface-hover text-text-secondary px-3 py-1.5 rounded"
               data-testid="export-workflow-btn"
             >
-              Export
-            </button>
+              <Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.action.export" /></button>
             <button
               onClick={() => archiveWorkflow(activeWorkflow.id)}
               className="text-xs bg-surface-hover hover:bg-surface-hover text-text-secondary px-3 py-1.5 rounded"
               data-testid="archive-workflow-btn"
             >
-              Archive
-            </button>
+              <Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.action.archive" /></button>
             <button
               onClick={() => {
                 setWorkflowToDelete(activeWorkflow.id);
@@ -277,14 +273,13 @@ export function WorkflowTemplatesView() {
               className="text-xs bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded"
               data-testid="delete-workflow-btn"
             >
-              Delete
-            </button>
+              <Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.action.delete" /></button>
           </div>
         </div>
         
         {/* Versions Control */}
         <div className="mb-6 flex flex-wrap gap-4 items-center">
-          <label htmlFor="workflow-version" className="text-sm font-medium text-text-secondary">Version:</label>
+          <label htmlFor="workflow-version" className="text-sm font-medium text-text-secondary"><Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.label.version" /></label>
           <select
             id="workflow-version"
             value={activeWorkflow.currentVersionId}
@@ -301,21 +296,19 @@ export function WorkflowTemplatesView() {
             className="text-xs bg-surface-hover hover:bg-surface-hover text-text-secondary px-2 py-1 rounded"
             data-testid="add-version-btn"
           >
-            Add New Version
-          </button>
+            <Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.action.addNewVersion" /></button>
         </div>
 
         {/* Steps List */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-sm font-medium text-text-secondary">Steps</h3>
+            <h3 className="text-sm font-medium text-text-secondary"><Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.heading.steps" /></h3>
             <button
               onClick={() => addStep(activeWorkflow.id, { kind: "prompt", target: "chat", title: "New Prompt Step", enabled: true })}
               className="text-xs bg-surface-hover hover:bg-surface-hover text-text-primary px-2 py-1 rounded"
               data-testid="add-step-btn"
             >
-              Add Step
-            </button>
+              <Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.action.addStep" /></button>
           </div>
           <div className="space-y-2">
             {activeVersion.steps.map((step) => (
@@ -334,8 +327,7 @@ export function WorkflowTemplatesView() {
                   className="text-xs text-text-secondary hover:text-red-400 px-2 py-1"
                   data-testid="remove-step-btn"
                 >
-                  Remove
-                </button>
+                  <Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.action.remove" /></button>
                 </div>
                 {(step.kind === "prompt" || step.kind === "image_recipe" || step.kind === "research" || step.kind === "note") && (
                   <textarea
@@ -355,11 +347,11 @@ export function WorkflowTemplatesView() {
         {/* Compile Preview & Run Plan */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-auto">
           <div className="p-4 bg-surface rounded border border-border flex flex-col" data-testid="compile-preview">
-            <h4 className="text-xs uppercase tracking-wider font-medium text-text-secondary mb-2">Compile Preview</h4>
+            <h4 className="text-xs uppercase tracking-wider font-medium text-text-secondary mb-2"><Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.heading.compilePreview" /></h4>
             {compiled?.canRun ? (
-              <div className="text-xs text-green-400/80">Workflow is valid.</div>
+              <div className="text-xs text-green-400/80"><Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.text.workflowIsValid" /></div>
             ) : (
-              <div className="text-xs text-red-400/80">Workflow has errors.</div>
+              <div className="text-xs text-red-400/80"><Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.text.workflowHasErrors" /></div>
             )}
             <div className="mt-2 space-y-1">
               {compiled?.warnings.map((w) => (
@@ -371,9 +363,9 @@ export function WorkflowTemplatesView() {
           </div>
 
           <div className="p-4 bg-surface rounded border border-border flex flex-col" data-testid="run-plan-preview">
-            <h4 className="text-xs uppercase tracking-wider font-medium text-text-secondary mb-2">Run Plan</h4>
+            <h4 className="text-xs uppercase tracking-wider font-medium text-text-secondary mb-2"><Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.heading.runPlan" /></h4>
             {runPlan?.actions.length === 0 ? (
-              <div className="text-xs text-text-secondary">No runnable actions.</div>
+              <div className="text-xs text-text-secondary"><Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.text.noRunnableActions" /></div>
             ) : (
               <div className="space-y-2">
                 {runPlan?.actions.map((action) => (

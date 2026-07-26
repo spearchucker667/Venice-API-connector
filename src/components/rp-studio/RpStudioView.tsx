@@ -26,6 +26,7 @@ import { PillGroup } from "../ui/shared";
 import { useRendererConfigHydrated } from "../../safetyHydration";
 import { isElectron } from "../../services/desktopBridge";
 import { useCharacterCardStore } from "../../stores/character-card-store";
+import { Trans } from 'react-i18next';
 
 const CharacterEditor = lazy(async () => {
   const module = await import("./CharacterEditor");
@@ -67,7 +68,7 @@ export function RpStudioView() {
   return (
     <div className="flex flex-col h-full min-h-0">
       <div className="flex items-center gap-1 px-3 py-2 soft-separator-y mesh-header mesh-surface overflow-x-auto">
-        <div className="text-[12px] uppercase tracking-[0.08em] text-text-muted font-semibold mr-2 shrink-0">RP Studio</div>
+        <div className="text-[12px] uppercase tracking-[0.08em] text-text-muted font-semibold mr-2 shrink-0"><Trans i18nKey="common:surface.componentsRpStudioRpstudioview.text.rpStudio" /></div>
         {SUB_TABS.map((t) => (
           <button
             key={t.id}
@@ -89,10 +90,7 @@ export function RpStudioView() {
         >
           <span aria-hidden="true">⏳</span>
           <span>
-            Local config is still loading. RP Studio save controls are
-            temporarily unavailable until the safety settings snapshot
-            has hydrated.
-          </span>
+            <Trans i18nKey="common:surface.componentsRpStudioRpstudioview.text.localConfigIsStillLoadingRpStudio" /></span>
         </div>
       )}
 
@@ -109,7 +107,7 @@ export function RpStudioView() {
 
       <div className="flex-1 min-h-0 relative">
         {sub === "library" && (editingCardId ? (
-          <Suspense fallback={<div className="flex h-full items-center justify-center text-[12px] text-text-muted" role="status">Loading ST Card Studio…</div>}>
+          <Suspense fallback={<div className="flex h-full items-center justify-center text-[12px] text-text-muted" role="status"><Trans i18nKey="common:surface.componentsRpStudioRpstudioview.text.loadingStCardStudio" /></div>}>
             <CharacterEditor cardId={editingCardId} onClose={() => setEditingCardId(null)} disabled={showHydrationBanner} />
           </Suspense>
         ) : (

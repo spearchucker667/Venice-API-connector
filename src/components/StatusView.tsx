@@ -13,6 +13,7 @@ import { getAuditSnapshot } from '../shared/safety';
 import { useSettingsStore } from '../stores/settings-store';
 import { useInspectorStore } from '../stores/inspector-store';
 import { Meteocon } from './ui/Meteocon';
+import { Trans } from 'react-i18next';
 
 interface AppDiagnostics {
   appVersion: string;
@@ -91,23 +92,20 @@ export function StatusView() {
   return (
     <div className="flex flex-col h-full overflow-y-auto px-4 py-4 gap-4">
       <section className="space-y-2">
-        <h2 className="text-[15px] font-semibold text-text-primary">Status</h2>
+        <h2 className="text-[15px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsStatusview.heading.status" /></h2>
         <p className="text-[12.5px] text-text-muted leading-relaxed">
-          Aggregated runtime info for the current build. Open{' '}
+          <Trans i18nKey="common:surface.componentsStatusview.description.aggregatedRuntimeInfoForTheCurrentBuild" />{' '}
           <a className="underline" href="#" onClick={(e) => {
             e.preventDefault();
             void desktopApp.openLogsFolder();
           }}>
-            logs folder
-          </a>{' '}
-          to inspect detailed console output.
-        </p>
+            <Trans i18nKey="common:surface.componentsStatusview.text.logsFolder" /></a>{' '}
+          <Trans i18nKey="common:surface.componentsStatusview.description.toInspectDetailedConsoleOutput" /></p>
       </section>
 
       <section className="rounded-lg border border-border bg-surface-muted p-3 space-y-1.5">
         <h3 className="flex items-center gap-1.5 text-[12px] uppercase tracking-wide text-text-muted font-semibold">
-          <Meteocon name="barometer" size={14} /> Runtime
-        </h3>
+          <Meteocon name="barometer" size={14} /> <Trans i18nKey="common:surface.componentsStatusview.heading.runtime" /></h3>
         <Row k="App version" v={diag.appVersion} />
         <Row k="Transport" v={diag.transport} />
         <Row k="Mode" v={diag.isDesktop ? 'Electron desktop' : 'Web (browser)'} />
@@ -118,8 +116,7 @@ export function StatusView() {
 
       <section className="rounded-lg border border-border bg-surface-muted p-3 space-y-1.5">
         <h3 className="flex items-center gap-1.5 text-[12px] uppercase tracking-wide text-text-muted font-semibold">
-          <Meteocon name="humidity" size={14} /> Storage
-        </h3>
+          <Meteocon name="humidity" size={14} /> <Trans i18nKey="common:surface.componentsStatusview.heading.storage" /></h3>
         <Row k="Secure store" v={diag.storageMode} />
         <Row k="Encryption available" v={diag.secureStorageAvailable ? 'yes' : 'no'} />
         <Row k="Venice key configured" v={diag.apiKeyConfigured ? 'yes' : 'no'} />
@@ -129,8 +126,7 @@ export function StatusView() {
 
       <section className="rounded-lg border border-border bg-surface-muted p-3 space-y-1.5">
         <h3 className="flex items-center gap-1.5 text-[12px] uppercase tracking-wide text-text-muted font-semibold">
-          <Meteocon name="umbrella" size={14} /> Safety guard audit
-        </h3>
+          <Meteocon name="umbrella" size={14} /> <Trans i18nKey="common:surface.componentsStatusview.heading.safetyGuardAudit" /></h3>
         <Row k="Allowed" v={String(audit.allowed)} />
         <Row k="Warned" v={String(audit.warned)} />
         <Row k="Blocked" v={String(audit.blocked)} />
@@ -138,7 +134,7 @@ export function StatusView() {
         <Row k="Last decision at" v={audit.lastDecisionAt ?? 'n/a'} mono />
         {Object.keys(audit.bySeverity).length > 0 && (
           <div className="text-[12px] text-text-muted pt-1">
-            By severity: {Object.entries(audit.bySeverity)
+            <Trans i18nKey="common:surface.componentsStatusview.text.bySeverity" /> {Object.entries(audit.bySeverity)
               .map(([k, v]) => `${k}=${v}`)
               .join(' · ')}
           </div>
@@ -147,8 +143,7 @@ export function StatusView() {
 
       <section className="rounded-lg border border-border bg-surface-muted p-3 space-y-1.5">
         <h3 className="flex items-center gap-1.5 text-[12px] uppercase tracking-wide text-text-muted font-semibold">
-          <Meteocon name="time-morning" size={14} /> Last request
-        </h3>
+          <Meteocon name="time-morning" size={14} /> <Trans i18nKey="common:surface.componentsStatusview.heading.lastRequest" /></h3>
         {lastRequest ? (
           <>
             <Row k="Endpoint" v={lastRequest.endpoint} mono />
@@ -156,16 +151,16 @@ export function StatusView() {
             <Row k="Method" v={lastRequest.method} />
             {lastRequest.error && (
               <div className="text-[12px] text-danger pt-1 break-words">
-                Last error: {lastRequest.error}
+                <Trans i18nKey="common:surface.componentsStatusview.text.lastError" /> {lastRequest.error}
               </div>
             )}
           </>
         ) : (
           <>
-            <Chip>no requests yet (last error below if any)</Chip>
+            <Chip><Trans i18nKey="common:surface.componentsStatusview.text.noRequestsYetLastErrorBelowIf" /></Chip>
             {diag.lastApiError && (
               <div className="text-[12px] text-danger pt-1 break-words">
-                Last error: {diag.lastApiError}
+                <Trans i18nKey="common:surface.componentsStatusview.text.lastError" /> {diag.lastApiError}
               </div>
             )}
           </>
@@ -173,8 +168,7 @@ export function StatusView() {
       </section>
 
       <p className="text-[12px] text-text-muted">
-        Status provides transport, storage, audit, and request diagnostics. Use the dedicated Library, Research, Settings, and workflow tabs for feature-specific controls.
-      </p>
+        <Trans i18nKey="common:surface.componentsStatusview.description.statusProvidesTransportStorageAuditAndRequest" /></p>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useAgentModels, type AgentModel } from '../../hooks/use-agent-models'
 import { cn } from '../../lib/utils'
+import { Trans } from 'react-i18next';
 
 interface Props {
   value: string
@@ -61,7 +62,7 @@ export function AgentModelPicker({ value, onChange }: Props) {
         <span className="flex items-center gap-1.5 min-w-0 flex-1">
           <span className="truncate text-text-secondary">{label}</span>
           {current?.recommended && (
-            <span className="shrink-0 text-[12px] px-1 py-px rounded bg-emerald-400/15 text-emerald-300 font-medium uppercase tracking-wider">Rec</span>
+            <span className="shrink-0 text-[12px] px-1 py-px rounded bg-emerald-400/15 text-emerald-300 font-medium uppercase tracking-wider"><Trans i18nKey="common:surface.playgroundAgentModelPicker.text.rec" /></span>
           )}
         </span>
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
@@ -93,7 +94,7 @@ export function AgentModelPicker({ value, onChange }: Props) {
           </div>
           <div className="max-h-[380px] overflow-y-auto py-1">
             {grouped.length === 0 && (
-              <div className="px-3 py-6 text-center text-[13px] text-text-muted">No matches</div>
+              <div className="px-3 py-6 text-center text-[13px] text-text-muted"><Trans i18nKey="common:surface.playgroundAgentModelPicker.text.noMatches" /></div>
             )}
             {grouped.map((group) => (
               <div key={group.label}>
@@ -116,13 +117,13 @@ export function AgentModelPicker({ value, onChange }: Props) {
                       )}
                     </div>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {m.recommended && <Badge tone="emerald">Recommended</Badge>}
+                      {m.recommended && <Badge tone="emerald"><Trans i18nKey="common:surface.playgroundAgentModelPicker.text.recommended" /></Badge>}
                       {m.capabilities.supportsResponseSchema && <Badge tone="sky">JSON</Badge>}
-                      {m.capabilities.supportsFunctionCalling && <Badge tone="violet">Tools</Badge>}
-                      {m.reasoning && <Badge tone="amber">Reasoning</Badge>}
-                      {m.capabilities.supportsVision && <Badge tone="pink">Vision</Badge>}
-                      {m.capabilities.supportsWebSearch && <Badge tone="slate">Web</Badge>}
-                      {m.uncensored && <Badge tone="rose">Uncensored</Badge>}
+                      {m.capabilities.supportsFunctionCalling && <Badge tone="violet"><Trans i18nKey="common:surface.playgroundAgentModelPicker.text.tools" /></Badge>}
+                      {m.reasoning && <Badge tone="amber"><Trans i18nKey="common:surface.playgroundAgentModelPicker.text.reasoning" /></Badge>}
+                      {m.capabilities.supportsVision && <Badge tone="pink"><Trans i18nKey="common:surface.playgroundAgentModelPicker.text.vision" /></Badge>}
+                      {m.capabilities.supportsWebSearch && <Badge tone="slate"><Trans i18nKey="common:surface.playgroundAgentModelPicker.text.web" /></Badge>}
+                      {m.uncensored && <Badge tone="rose"><Trans i18nKey="common:surface.playgroundAgentModelPicker.text.uncensored" /></Badge>}
                     </div>
                     <div className="text-[12px] text-text-muted mt-1 font-mono truncate">
                       {m.id}{m.contextTokens ? ` · ${formatCtx(m.contextTokens)} ctx` : ''}

@@ -2,6 +2,7 @@ import React from "react";
 import { useAuthStore } from "../../stores/auth-store";
 import { useSettingsStore } from "../../stores/settings-store";
 import { isElectron } from "../../services/desktopBridge";
+import { Trans } from 'react-i18next';
 
 interface ProviderStatus {
   id: string;
@@ -80,8 +81,7 @@ export function ResearchProviderStatus({ onOpenApiKeyDialog }: { onOpenApiKeyDia
               onClick={onOpenApiKeyDialog}
               className="ml-1 text-accent hover:text-accent-hover underline"
             >
-              Add key
-            </button>
+              <Trans i18nKey="common:surface.componentsSearchResearchproviderstatus.action.addKey" /></button>
           )}
         </div>
       ))}

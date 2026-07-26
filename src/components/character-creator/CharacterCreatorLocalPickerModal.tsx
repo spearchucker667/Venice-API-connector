@@ -6,6 +6,7 @@ import { useState, useMemo } from "react";
 import { Search, X, User } from "lucide-react";
 import { useCharacterCardStore } from "../../stores/character-card-store";
 import { avatarDataUri, formatRelativeTime } from "../rp-studio/_shared";
+import { Trans } from 'react-i18next';
 
 interface Props {
   onSelectCharacter: (characterId: string) => void;
@@ -33,10 +34,9 @@ export function CharacterCreatorLocalPickerModal({ onSelectCharacter, onClose }:
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border/50 bg-surface-elevated">
           <div>
-            <h3 className="text-sm font-bold text-text-primary">Select Local Character to Edit</h3>
+            <h3 className="text-sm font-bold text-text-primary"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorlocalpickermodal.heading.selectLocalCharacterToEdit" /></h3>
             <p className="text-xs text-text-muted mt-0.5">
-              Choose a character from your local library to open as a draft in Character Creator.
-            </p>
+              <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorlocalpickermodal.description.chooseACharacterFromYourLocalLibrary" /></p>
           </div>
           <button
             type="button"
@@ -109,8 +109,7 @@ export function CharacterCreatorLocalPickerModal({ onSelectCharacter, onClose }:
                       {formatRelativeTime(card.updatedAt)}
                     </span>
                     <span className="text-xs font-medium text-accent opacity-0 group-hover:opacity-100 transition-opacity mt-1">
-                      Edit Draft →
-                    </span>
+                      <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorlocalpickermodal.text.editDraft" /></span>
                   </div>
                 </div>
               );
@@ -125,8 +124,7 @@ export function CharacterCreatorLocalPickerModal({ onSelectCharacter, onClose }:
             onClick={onClose}
             className="px-4 py-2 rounded-xl bg-surface border border-border text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
           >
-            Cancel
-          </button>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorlocalpickermodal.action.cancel" /></button>
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@ import {
   type StorageReferenceIssue,
 } from "../../types/storage-privacy";
 import { askDecision } from "../ui/modal-requests";
+import { Trans } from 'react-i18next';
 
 /** Map a storage-privacy category to the canonical tab id for manual review. */
 export function mapPrivacyCategoryToTab(category: StoragePrivacyCategory): Tab {
@@ -79,15 +80,14 @@ export function StoragePrivacyDashboard() {
             </svg>
           </div>
           <div className="space-y-1">
-            <h3 className="font-medium text-text-primary">Failed to load storage inventory</h3>
+            <h3 className="font-medium text-text-primary"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.heading.failedToLoadStorageInventory" /></h3>
             <p className="text-sm text-text-muted">{error}</p>
           </div>
           <button
             onClick={() => void refreshInventory()}
             className="mt-2 px-4 py-2 rounded-md bg-surface-muted hover:bg-surface text-text-primary text-sm font-medium border border-border transition-colors"
           >
-            Retry
-          </button>
+            <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.action.retry" /></button>
         </div>
       </div>
     );
@@ -98,7 +98,7 @@ export function StoragePrivacyDashboard() {
       <div className="flex h-full items-center justify-center p-8 text-text-secondary" data-testid="privacy-loading">
         <div className="flex flex-col items-center gap-4">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-text-muted border-t-accent" />
-          <p>Analyzing local storage...</p>
+          <p><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.description.analyzingLocalStorage" /></p>
         </div>
       </div>
     );
@@ -108,8 +108,8 @@ export function StoragePrivacyDashboard() {
     <div className="flex flex-col h-full bg-surface overflow-hidden" data-testid="storage-privacy-dashboard">
       <header className="flex items-center justify-between px-6 py-4 border-b border-border/50">
         <div>
-          <h1 className="text-lg font-semibold text-text-primary">Storage & Privacy</h1>
-          <p className="text-sm text-text-secondary">Inspect and manage local data boundaries.</p>
+          <h1 className="text-lg font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.heading.storagePrivacy" /></h1>
+          <p className="text-sm text-text-secondary"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.description.inspectAndManageLocalDataBoundaries" /></p>
         </div>
         <div className="flex gap-2">
           <button
@@ -123,14 +123,12 @@ export function StoragePrivacyDashboard() {
             onClick={() => void copySafeSummary()}
             className="px-3 py-1.5 rounded-md bg-surface-muted hover:bg-surface text-text-secondary text-sm transition-colors"
           >
-            Copy Safe Summary
-          </button>
+            <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.action.copySafeSummary" /></button>
           <button
             onClick={() => exportSafeSummary()}
             className="px-3 py-1.5 rounded-md bg-surface-muted hover:bg-surface text-text-secondary text-sm transition-colors"
           >
-            Export JSON
-          </button>
+            <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.action.exportJson" /></button>
         </div>
       </header>
 
@@ -145,7 +143,7 @@ export function StoragePrivacyDashboard() {
               <div className="flex items-start justify-between">
                 <span className="text-xs font-medium uppercase tracking-wider text-text-muted">{store.label}</span>
                 {store.encrypted === true && (
-                    <span className="px-1.5 py-0.5 rounded bg-success/20 text-success text-[12px] font-bold">ENCRYPTED</span>
+                    <span className="px-1.5 py-0.5 rounded bg-success/20 text-success text-[12px] font-bold"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.encrypted" /></span>
                 )}
               </div>
               <div className="mt-2">
@@ -158,15 +156,15 @@ export function StoragePrivacyDashboard() {
 
         {/* Store Inventory Table */}
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-widest px-1">Detailed Inventory</h2>
+          <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-widest px-1"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.heading.detailedInventory" /></h2>
           <div className="rounded-lg border border-border overflow-hidden">
             <table className="w-full text-left text-sm text-text-secondary">
               <thead className="bg-surface-muted text-text-muted text-xs uppercase">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Store</th>
-                  <th className="px-4 py-3 font-medium text-right">Items</th>
-                  <th className="px-4 py-3 font-medium">Flags</th>
-                  <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.column.store" /></th>
+                  <th className="px-4 py-3 font-medium text-right"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.column.items" /></th>
+                  <th className="px-4 py-3 font-medium"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.column.flags" /></th>
+                  <th className="px-4 py-3 font-medium"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.column.status" /></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -179,14 +177,14 @@ export function StoragePrivacyDashboard() {
                     <td className="px-4 py-4 text-right tabular-nums">
                       {store.count ?? 0}
                       {store.archivedCount ? (
-                          <div className="text-[12px] text-text-muted">{store.archivedCount} archived</div>
+                          <div className="text-[12px] text-text-muted">{store.archivedCount} <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.archived" /></div>
                       ) : null}
                     </td>
                     <td className="px-4 py-4">
                       <div className="flex gap-1.5">
-                        {store.containsSecrets && <Badge color="amber">Secrets</Badge>}
-                        {store.containsUserContent && <Badge color="blue">User Content</Badge>}
-                        {!store.exportableInSafeSummary && <Badge color="red">Sensitive</Badge>}
+                        {store.containsSecrets && <Badge color="amber"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.secrets" /></Badge>}
+                        {store.containsUserContent && <Badge color="blue"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.userContent" /></Badge>}
+                        {!store.exportableInSafeSummary && <Badge color="red"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.sensitive" /></Badge>}
                       </div>
                     </td>
                     <td className="px-4 py-4">
@@ -205,11 +203,10 @@ export function StoragePrivacyDashboard() {
         {/* Issues & Maintenance */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <section className="space-y-4">
-            <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-widest px-1">Reference Issues</h2>
+            <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-widest px-1"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.heading.referenceIssues" /></h2>
             {inventory.issues.length === 0 ? (
               <div className="p-8 rounded-lg border border-border bg-surface-muted text-center text-text-muted text-sm">
-                No storage health issues detected.
-              </div>
+                <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.noStorageHealthIssuesDetected" /></div>
             ) : (
               <div className="space-y-2">
                 {inventory.issues.map((issue: StorageReferenceIssue) => (
@@ -217,9 +214,9 @@ export function StoragePrivacyDashboard() {
                     <div className="space-y-1">
                       <p className="text-sm text-warning">{issue.message}</p>
                       <div className="flex gap-2 text-[12px] text-warning/60 uppercase font-bold">
-                        <span>Source: {issue.sourceCategory}</span>
+                        <span><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.source" /> {issue.sourceCategory}</span>
                         <span>·</span>
-                        <span>Target: {issue.targetCategory}</span>
+                        <span><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.target" /> {issue.targetCategory}</span>
                       </div>
                     </div>
                     {issue.repairable && (
@@ -227,8 +224,7 @@ export function StoragePrivacyDashboard() {
                             onClick={() => setActiveTab(mapPrivacyCategoryToTab(issue.sourceCategory))}
                             className="px-2 py-1 rounded border border-warning/30 text-warning hover:bg-warning/10 text-xs whitespace-nowrap"
                         >
-                            Review
-                        </button>
+                            <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.action.review" /></button>
                     )}
                   </div>
                 ))}
@@ -237,15 +233,15 @@ export function StoragePrivacyDashboard() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-widest px-1">Maintenance Plan</h2>
+            <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-widest px-1"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.heading.maintenancePlan" /></h2>
             <div className="space-y-2">
                 {maintenancePlan?.actions.map((action) => (
                     <div key={action.id} className="p-3 rounded-lg border border-border bg-surface-muted flex items-center justify-between gap-4">
                         <div className="space-y-0.5">
                             <div className="flex items-center gap-2">
                                 <span className="text-sm font-medium text-text-primary">{action.label}</span>
-                                {action.destructive && <span className="text-[9px] px-1 bg-danger/20 text-danger rounded font-bold uppercase">Destructive</span>}
-                                {action.dryRunOnly && <span className="text-[9px] px-1 bg-info/20 text-info rounded font-bold uppercase">Dry Run</span>}
+                                {action.destructive && <span className="text-[9px] px-1 bg-danger/20 text-danger rounded font-bold uppercase"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.destructive" /></span>}
+                                {action.dryRunOnly && <span className="text-[9px] px-1 bg-info/20 text-info rounded font-bold uppercase"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.dryRun" /></span>}
                             </div>
                             <p className="text-[12px] text-text-muted">{action.description}</p>
                         </div>
@@ -282,60 +278,54 @@ export function StoragePrivacyDashboard() {
             className="p-4 rounded-lg bg-surface-muted border border-border space-y-3"
             data-testid="privacy-exclusions-section"
         >
-            <h3 className="text-xs font-bold text-text-muted uppercase">Privacy Exclusions</h3>
+            <h3 className="text-xs font-bold text-text-muted uppercase"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.heading.privacyExclusions" /></h3>
             <p className="text-[12px] text-text-secondary leading-relaxed">
-                Different surfaces have different redaction boundaries. Inspect the truth table below before relying on it for export decisions.
-            </p>
+                <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.description.differentSurfacesHaveDifferentRedactionBoundariesInspect" /></p>
                         <div className="overflow-x-auto mt-2">
                 <table className="w-full text-[12px] text-left border-collapse" data-testid="privacy-exclusions-table">
                     <thead>
                         <tr className="text-text-muted uppercase text-[10px] tracking-wide">
-                            <th className="font-bold px-2 py-1 soft-separator-y">Surface</th>
-                            <th className="font-bold px-2 py-1 soft-separator-y">Prompts</th>
-                            <th className="font-bold px-2 py-1 soft-separator-y">History</th>
-                            <th className="font-bold px-2 py-1 soft-separator-y">Media Blobs</th>
-                            <th className="font-bold px-2 py-1 soft-separator-y">Paths &amp; Keys</th>
+                            <th className="font-bold px-2 py-1 soft-separator-y"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.column.surface" /></th>
+                            <th className="font-bold px-2 py-1 soft-separator-y"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.column.prompts" /></th>
+                            <th className="font-bold px-2 py-1 soft-separator-y"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.column.history" /></th>
+                            <th className="font-bold px-2 py-1 soft-separator-y"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.column.mediaBlobs" /></th>
+                            <th className="font-bold px-2 py-1 soft-separator-y"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.column.pathsAmpKeys" /></th>
                         </tr>
                     </thead>
                     <tbody data-testid="privacy-exclusions-rows">
                         <tr>
-                            <td className="px-2 py-1 soft-separator-y font-mono">Safe privacy summary</td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald">Always redacted</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald">Always redacted</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald">Always redacted</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald">Always redacted</Badge></td>
+                            <td className="px-2 py-1 soft-separator-y font-mono"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.cell.safePrivacySummary" /></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.alwaysRedacted" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.alwaysRedacted" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.alwaysRedacted" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.alwaysRedacted" /></Badge></td>
                         </tr>
                         <tr>
-                            <td className="px-2 py-1 soft-separator-y font-mono">Safe diagnostics JSON</td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald">Always redacted</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald">Always redacted</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald">Always redacted</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald">Always redacted</Badge></td>
+                            <td className="px-2 py-1 soft-separator-y font-mono"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.cell.safeDiagnosticsJson" /></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.alwaysRedacted" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.alwaysRedacted" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.alwaysRedacted" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.alwaysRedacted" /></Badge></td>
                         </tr>
                         <tr>
-                            <td className="px-2 py-1 soft-separator-y font-mono">Encrypted backup</td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber">Included</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber">Included</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber">Opt-in only</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald">Keys never exported</Badge></td>
+                            <td className="px-2 py-1 soft-separator-y font-mono"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.cell.encryptedBackup" /></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.included" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.included" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.optInOnly" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.keysNeverExported" /></Badge></td>
                         </tr>
                         <tr>
-                            <td className="px-2 py-1 soft-separator-y font-mono">Sync folder</td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber">Included</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber">Included</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber">Opt-in only</Badge></td>
-                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald">Keys never synced</Badge></td>
+                            <td className="px-2 py-1 soft-separator-y font-mono"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.cell.syncFolder" /></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.included" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.included" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="amber"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.optInOnly" /></Badge></td>
+                            <td className="px-2 py-1 soft-separator-y"><Badge color="emerald"><Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.text.keysNeverSynced" /></Badge></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <p className="text-[11px] text-text-muted leading-relaxed">
-                Prompts and history appear in encrypted backups and the sync folder because both are
-                end-to-end encrypted to a user-supplied passphrase. Media blobs (images, files, RP
-                assets) require an explicit opt-in toggle in the Backup &amp; Sync panel — excluded by
-                default. API keys, bearer tokens, and absolute local paths are never written into any
-                export, syncup, or diagnostic summary.
-            </p>
+                <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.description.promptsAndHistoryAppearInEncryptedBackups" /></p>
         </section>
       </main>
     </div>

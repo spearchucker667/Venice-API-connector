@@ -18,6 +18,7 @@ import {
   type LorebookInsertionMode,
   type LorebookV1,
 } from "../../types/rp";
+import { Trans } from 'react-i18next';
 
 
 const INSERTION_MODES: Array<{ value: LorebookInsertionMode; label: string }> = [
@@ -92,8 +93,7 @@ export function LorebookManager({ disabled = false }: { disabled?: boolean } = {
             if (blank) setEditingId(blank);
           }}
         >
-          New lorebook
-        </PrimaryButton>
+          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.newLorebook" /></PrimaryButton>
       </div>
 
       {error && <div className="px-4 py-3"><ErrorText>{error}</ErrorText></div>}
@@ -101,8 +101,7 @@ export function LorebookManager({ disabled = false }: { disabled?: boolean } = {
       <div className="flex-1 overflow-y-auto px-4 py-4">
         {isLoading && !hasLoaded ? (
           <div className="flex items-center justify-center h-full text-text-muted gap-2 text-[13px]">
-            <Spinner className="text-text-muted" /> Loading…
-          </div>
+            <Spinner className="text-text-muted" /> <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.loading" /></div>
         ) : filtered.length === 0 ? (
           <EmptyState>{hasLoaded ? "No lorebooks yet" : ""}</EmptyState>
         ) : (
@@ -125,16 +124,14 @@ export function LorebookManager({ disabled = false }: { disabled?: boolean } = {
                     onClick={() => setEditingId(l.id)}
                     className="flex-1 text-[12px] py-1.5 rounded-md border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors"
                   >
-                    Edit
-                  </button>
+                    <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.action.edit" /></button>
                   {confirmingDelete === l.id ? (
                     <button
                       type="button"
                       onClick={() => { void remove(l.id); cancelConfirm(); }}
                       className="text-[12px] py-1.5 px-2 rounded-md text-rose-300 border border-rose-500/30 hover:bg-rose-500/10"
                     >
-                      Delete?
-                    </button>
+                      <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.action.delete" /></button>
                   ) : (
                     <button
                       type="button"
@@ -166,7 +163,7 @@ export function LorebookEditor({ lorebookId, onClose, disabled = false }: { lore
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!draft) return <EmptyState>Lorebook not found.</EmptyState>;
+  if (!draft) return <EmptyState><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.lorebookNotFound" /></EmptyState>;
 
   const update = <K extends keyof LorebookV1>(key: K, value: LorebookV1[K]) =>
     setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
@@ -227,14 +224,14 @@ export function LorebookEditor({ lorebookId, onClose, disabled = false }: { lore
         </button>
         <h2 className="text-[15px] font-semibold text-text-primary truncate">{draft.name}</h2>
         <div className="ml-auto">
-          <PrimaryButton size="sm" loading={saving} disabled={disabled} onClick={handleSave}>Save</PrimaryButton>
+          <PrimaryButton size="sm" loading={saving} disabled={disabled} onClick={handleSave}><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.save" /></PrimaryButton>
         </div>
       </div>
       {error && <div className="px-4 py-3"><ErrorText>{error}</ErrorText></div>}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <Label htmlFor="lb-name">Name</Label>
+            <Label htmlFor="lb-name"><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.name" /></Label>
             <input
               id="lb-name"
               value={draft.name}
@@ -244,7 +241,7 @@ export function LorebookEditor({ lorebookId, onClose, disabled = false }: { lore
             />
           </div>
           <div>
-            <Label htmlFor="lb-tags">Tags (comma-separated)</Label>
+            <Label htmlFor="lb-tags"><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.tagsCommaSeparated" /></Label>
             <input
               id="lb-tags"
               value={draft.tags.join(", ")}
@@ -259,7 +256,7 @@ export function LorebookEditor({ lorebookId, onClose, disabled = false }: { lore
           </div>
         </div>
         <div>
-          <Label htmlFor="lb-desc">Description</Label>
+          <Label htmlFor="lb-desc"><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.description" /></Label>
           <TextArea
             value={draft.description}
             onChange={(v) => update("description", v)}
@@ -269,14 +266,13 @@ export function LorebookEditor({ lorebookId, onClose, disabled = false }: { lore
         </div>
 
         <div className="flex items-center justify-between">
-          <Label hint={`${draft.entries.length}/${MAX_LOREBOOK_ENTRIES}`}>Entries</Label>
+          <Label hint={`${draft.entries.length}/${MAX_LOREBOOK_ENTRIES}`}><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.entries" /></Label>
           <GhostButton onClick={addEntry} disabled={draft.entries.length >= MAX_LOREBOOK_ENTRIES}>
-            Add entry
-          </GhostButton>
+            <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.addEntry" /></GhostButton>
         </div>
 
         {draft.entries.length === 0 ? (
-          <div className="text-[12px] text-text-muted italic">No entries yet.</div>
+          <div className="text-[12px] text-text-muted italic"><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.noEntriesYet" /></div>
         ) : (
           <div className="space-y-2">
             {draft.entries.map((entry, i) => (
@@ -321,16 +317,13 @@ function EntryRow({
         />
         <label className="flex items-center gap-1.5 text-[12px] text-text-secondary">
           <input type="checkbox" checked={entry.enabled} onChange={(e) => onChange({ enabled: e.target.checked })} className="accent-[var(--color-accent)]" />
-          enabled
-        </label>
+          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.label.enabled" /></label>
         <label className="flex items-center gap-1.5 text-[12px] text-text-secondary">
           <input type="checkbox" checked={entry.constant} onChange={(e) => onChange({ constant: e.target.checked })} className="accent-[var(--color-accent)]" />
-          always
-        </label>
+          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.label.always" /></label>
         <label className="flex items-center gap-1.5 text-[12px] text-text-secondary">
           <input type="checkbox" checked={entry.matchWholeWords} onChange={(e) => onChange({ matchWholeWords: e.target.checked })} className="accent-[var(--color-accent)]" />
-          whole words
-        </label>
+          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.label.wholeWords" /></label>
         <button
           type="button"
           onClick={onRemove}

@@ -3,6 +3,7 @@ import { cn } from '../../lib/utils';
 import { type GenerationVisualState, getSemanticGroup, AnimationSemanticGroup } from './generation-animation-state';
 import { getAnimationsForGroup, AnimationAsset } from './generation-animation-registry';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { Trans } from 'react-i18next';
 
 export interface GenerationLoadingIndicatorProps {
   state: GenerationVisualState;
@@ -178,8 +179,7 @@ export function GenerationLoadingIndicator({
               onClick={onCancel}
               className="mt-2 text-xs text-accent hover:text-accent-hover transition-colors px-2 py-1 rounded-sm focus-visible:outline-accent"
             >
-              Cancel
-            </button>
+              <Trans i18nKey="common:surface.componentsGenerationGenerationloadingindicator.action.cancel" /></button>
           )}
         </div>
       )}

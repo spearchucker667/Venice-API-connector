@@ -56,6 +56,7 @@ import { askDecision, askText } from "../ui/modal-requests";
 import { Lock, Unlock } from "lucide-react";
 import { MasterPasswordDialog } from "../settings/MasterPasswordDialog";
 import { desktopMasterPassword } from "../../services/desktopBridge";
+import { Trans } from 'react-i18next';
 
 export function MediaStudioView() {
   const items = useMediaStore((state) => state.items);
@@ -680,14 +681,12 @@ export function MediaStudioView() {
     <div className="flex h-full flex-col overflow-hidden bg-surface">
       <header className="flex items-center justify-between soft-separator-y mesh-header mesh-surface px-5 py-4">
         <div>
-          <h2 className="text-[17px] font-semibold text-text-primary">Media Studio</h2>
+          <h2 className="text-[17px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsGalleryGalleryView.heading.mediaStudio" /></h2>
           <p className="mt-0.5 text-[12.5px] text-text-muted">
-            Browse, tag, edit, and export your generated media.
-          </p>
+            <Trans i18nKey="common:surface.componentsGalleryGalleryView.description.browseTagEditAndExportYourGenerated" /></p>
         </div>
         <div className="text-[12px] text-text-muted">
-          {items.length} of {totalCount} item{totalCount === 1 ? "" : "s"} loaded
-          {selectedMediaIds.length > 0 && <> · {selectedMediaIds.length} selected</>}
+          {items.length} of {totalCount} <Trans i18nKey="common:surface.componentsGalleryGalleryView.text.item" />{totalCount === 1 ? "" : "s"} <Trans i18nKey="common:surface.componentsGalleryGalleryView.text.loaded" />{selectedMediaIds.length > 0 && <> · {selectedMediaIds.length} <Trans i18nKey="common:surface.componentsGalleryGalleryView.text.selected" /></>}
         </div>
       </header>
 
@@ -760,11 +759,11 @@ export function MediaStudioView() {
       <div className="flex flex-1 overflow-hidden">
         <main className="flex-1 overflow-y-auto p-5">
           {loading && items.length === 0 ? (
-            <div className="grid h-full place-items-center text-[13px] text-text-muted">Loading Media Studio…</div>
+            <div className="grid h-full place-items-center text-[13px] text-text-muted"><Trans i18nKey="common:surface.componentsGalleryGalleryView.text.loadingMediaStudio" /></div>
           ) : filtered.length === 0 ? (
             <div className="grid h-full place-items-center text-center">
               <div>
-                <p className="text-[15px] font-medium text-text-primary">No matching media</p>
+                <p className="text-[15px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsGalleryGalleryView.description.noMatchingMedia" /></p>
                 <p className="mt-1 text-[12.5px] text-text-muted">
                   {items.length === 0
                     ? "Images and videos generated in Image Studio and Video Studio will appear here automatically."
@@ -862,7 +861,7 @@ export function MediaStudioView() {
 
       <div className="sr-only" aria-live="polite">
         {selectedItems.length > 0 && (
-          <span>{selectedItems.length} items selected.</span>
+          <span>{selectedItems.length} <Trans i18nKey="common:surface.componentsGalleryGalleryView.text.itemsSelected" /></span>
         )}
       </div>
 
@@ -913,8 +912,7 @@ export function MediaStudioView() {
                 onClick={() => setLineageOpen(false)}
                 className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
               >
-                Close
-              </button>
+                <Trans i18nKey="common:surface.componentsGalleryGalleryView.action.close" /></button>
             </div>
           </div>
         </div>
@@ -923,7 +921,7 @@ export function MediaStudioView() {
       {/* Phase 2B: Bulk tag input row, visible in multi-select mode when items are selected. */}
       {multiSelectMode && selectedMediaIds.length > 0 && (
         <div className="border-t border-border/50 bg-surface px-5 py-2 flex items-center gap-2 text-[12px]">
-          <label className="text-text-muted">Quick tag:</label>
+          <label className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryGalleryView.label.quickTag" /></label>
           <input
             type="text"
             value={bulkTagInput}
@@ -945,8 +943,7 @@ export function MediaStudioView() {
             data-testid="bulk-tag-apply"
             className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30"
           >
-            Apply
-          </button>
+            <Trans i18nKey="common:surface.componentsGalleryGalleryView.action.apply" /></button>
         </div>
       )}
 
@@ -963,7 +960,7 @@ export function MediaStudioView() {
             data-testid="open-compare"
             className="rounded-md border border-border px-2 py-1 text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30"
           >
-            Compare ({selectedMediaIds.length})
+            <Trans i18nKey="common:surface.componentsGalleryGalleryView.action.compare" />{selectedMediaIds.length})
           </button>
           <button
             type="button"
@@ -971,18 +968,16 @@ export function MediaStudioView() {
             data-testid="open-lineage"
             className="rounded-md border border-border px-2 py-1 text-text-secondary hover:border-accent hover:text-accent"
           >
-            Lineage
-          </button>
+            <Trans i18nKey="common:surface.componentsGalleryGalleryView.action.lineage" /></button>
           <span className="mx-1 text-text-muted/60">·</span>
-          <span className="text-text-muted">Send to:</span>
+          <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryGalleryView.text.sendTo" /></span>
           <button
             type="button"
             onClick={() => handleSendToImageStudio(inspectorItem)}
             data-testid="send-to-image"
             className="rounded-md border border-border px-2 py-1 text-text-secondary hover:border-accent hover:text-accent"
           >
-            Image Studio
-          </button>
+            <Trans i18nKey="common:surface.componentsGalleryGalleryView.action.imageStudio" /></button>
           {inspectorItem.mediaType !== "video" && (
             <button
               type="button"
@@ -990,8 +985,7 @@ export function MediaStudioView() {
               data-testid="send-to-tools"
               className="rounded-md border border-border px-2 py-1 text-text-secondary hover:border-accent hover:text-accent"
             >
-              Image Tools
-            </button>
+              <Trans i18nKey="common:surface.componentsGalleryGalleryView.action.imageTools" /></button>
           )}
           <button
             type="button"
@@ -999,26 +993,23 @@ export function MediaStudioView() {
             data-testid="send-to-chat"
             className="rounded-md border border-border px-2 py-1 text-text-secondary hover:border-accent hover:text-accent"
           >
-            Chat
-          </button>
+            <Trans i18nKey="common:surface.componentsGalleryGalleryView.action.chat" /></button>
           <button
             type="button"
             onClick={() => handleSendToVideo(inspectorItem)}
             data-testid="send-to-video"
             className="rounded-md border border-border px-2 py-1 text-text-secondary hover:border-accent hover:text-accent"
           >
-            Video Studio
-          </button>
+            <Trans i18nKey="common:surface.componentsGalleryGalleryView.action.videoStudio" /></button>
           <span className="mx-1 text-text-muted/60">·</span>
-          <span className="text-text-muted">Copy:</span>
+          <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryGalleryView.text.copy" /></span>
           <button
             type="button"
             onClick={() => void handleCopyPrompt(inspectorItem)}
             data-testid="copy-prompt"
             className="rounded-md border border-border px-2 py-1 text-text-secondary hover:border-accent hover:text-accent"
           >
-            Prompt
-          </button>
+            <Trans i18nKey="common:surface.componentsGalleryGalleryView.action.prompt" /></button>
           {inspectorItem.negative && (
             <button
               type="button"
@@ -1026,8 +1017,7 @@ export function MediaStudioView() {
               data-testid="copy-negative"
               className="rounded-md border border-border px-2 py-1 text-text-secondary hover:border-accent hover:text-accent"
             >
-              Negative
-            </button>
+              <Trans i18nKey="common:surface.componentsGalleryGalleryView.action.negative" /></button>
           )}
           {typeof inspectorItem.seed === "number" && (
             <button
@@ -1036,8 +1026,7 @@ export function MediaStudioView() {
               data-testid="copy-seed"
               className="rounded-md border border-border px-2 py-1 text-text-secondary hover:border-accent hover:text-accent"
             >
-              Seed
-            </button>
+              <Trans i18nKey="common:surface.componentsGalleryGalleryView.action.seed" /></button>
           )}
         </div>
       )}

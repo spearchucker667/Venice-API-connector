@@ -109,11 +109,11 @@ export function DataStoragePanel({
         // warning so a partial backup import never reads as "all green".
         if (summary.recordsImported === 0 && summary.recordsSkipped > 0) {
           toast.warn(
-            t('settings:dataStorage.toasts.importNothingNewProfile', 'Nothing imported into new profile: {{skipped}} skipped', { skipped: summary.recordsSkipped }),
+            t('settings:dataStorage.toasts.importNothingNewProfile', { defaultValue: 'Nothing imported into new profile: {{skipped}} skipped', skipped: summary.recordsSkipped }),
             t('settings:dataStorage.toasts.importNothingDetail', "No records applied; check the backup's manifest and target profile."),
           );
         } else {
-          toast.success(t('settings:dataStorage.toasts.importCompleteNewProfile', 'Import complete into new profile: {{imported}} imported. Reloading...', { imported: summary.recordsImported }));
+          toast.success(t('settings:dataStorage.toasts.importCompleteNewProfile', { defaultValue: 'Import complete into new profile: {{imported}} imported. Reloading...', imported: summary.recordsImported }));
         }
         
           // Give the toast a moment to render before reloading
@@ -147,16 +147,16 @@ export function DataStoragePanel({
       // warning so a partial backup import never reads as "all green".
       if (summary.recordsImported === 0 && summary.recordsSkipped > 0) {
         toast.warn(
-          t('settings:dataStorage.toasts.importNothing', 'Nothing imported: {{skipped}} skipped', { skipped: summary.recordsSkipped }),
+          t('settings:dataStorage.toasts.importNothing', { defaultValue: 'Nothing imported: {{skipped}} skipped', skipped: summary.recordsSkipped }),
           t('settings:dataStorage.toasts.importNothingDetail', "No records applied; check the backup's manifest and target profile."),
         );
       } else if (summary.recordsImported > 0 && summary.recordsSkipped > 0) {
         toast.warn(
-          t('settings:dataStorage.toasts.importPartial', 'Partial import: {{imported}} imported, {{skipped}} skipped', { imported: summary.recordsImported, skipped: summary.recordsSkipped }),
-          t('settings:dataStorage.toasts.importPartialDetail', '{{tombstones}} tombstones applied. Inspect the skipped count before relying on this backup.', { tombstones: summary.tombstonesApplied }),
+          t('settings:dataStorage.toasts.importPartial', { defaultValue: 'Partial import: {{imported}} imported, {{skipped}} skipped', imported: summary.recordsImported, skipped: summary.recordsSkipped }),
+          t('settings:dataStorage.toasts.importPartialDetail', { defaultValue: '{{tombstones}} tombstones applied. Inspect the skipped count before relying on this backup.', tombstones: summary.tombstonesApplied }),
         );
       } else {
-        toast.success(t('settings:dataStorage.toasts.importComplete', 'Import complete: {{imported}} imported, {{skipped}} skipped, {{tombstones}} tombstones applied.', { imported: summary.recordsImported, skipped: summary.recordsSkipped, tombstones: summary.tombstonesApplied }));
+        toast.success(t('settings:dataStorage.toasts.importComplete', { defaultValue: 'Import complete: {{imported}} imported, {{skipped}} skipped, {{tombstones}} tombstones applied.', imported: summary.recordsImported, skipped: summary.recordsSkipped, tombstones: summary.tombstonesApplied }));
       }
       window.dispatchEvent(new Event("venice:backup-imported"));
       const convs = await listConversations();
@@ -242,7 +242,7 @@ export function DataStoragePanel({
         <div className="rounded-xl border border-warning/20 bg-warning/[0.04] p-5 shadow-sm space-y-3">
           <h3 className="text-[14.5px] font-medium text-text-primary">{t('settings:dataStorage.recovery.title', 'Pre-Replace Recovery')}</h3>
           <p className="text-[12.5px] text-text-secondary leading-relaxed">
-            {t('settings:dataStorage.recovery.description', 'A verified encrypted recovery backup from {{date}} is available. Enter its backup password above to restore it transactionally.', { date: new Date(recovery.createdAt).toLocaleString() })}
+            {t('settings:dataStorage.recovery.description', { defaultValue: 'A verified encrypted recovery backup from {{date}} is available. Enter its backup password above to restore it transactionally.', date: new Date(recovery.createdAt).toLocaleString() })}
           </p>
           <button
             onClick={handleRestoreRecovery}

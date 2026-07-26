@@ -1,6 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import { error as logError } from "../shared/logger";
 import { uiSoundController } from "../services/uiSoundController";
+import { Trans } from 'react-i18next';
 
 interface Props {
   children: ReactNode;
@@ -32,10 +33,9 @@ export class ErrorBoundary extends Component<Props, State> {
           role="alert"
           className="m-8 rounded-2xl border border-danger/20 bg-danger/10 p-8 backdrop-blur-md shadow-lg"
         >
-          <h2 className="text-xl font-display font-semibold text-danger mb-3">Something went wrong.</h2>
+          <h2 className="text-xl font-display font-semibold text-danger mb-3"><Trans i18nKey="common:surface.componentsErrorboundary.heading.somethingWentWrong" /></h2>
           <p className="text-sm text-danger/80 mb-6">
-            The app hit an unexpected error and couldn&apos;t render this view. Your work is safe — try again or reload to recover.
-          </p>
+            <Trans i18nKey="common:surface.componentsErrorboundary.description.theAppHitAnUnexpectedErrorAnd" /></p>
           <div className="flex flex-wrap gap-3">
             <button
               className="btn primary"
@@ -45,9 +45,8 @@ export class ErrorBoundary extends Component<Props, State> {
                 this.setState({ hasError: false });
               }}
             >
-              Try again
-            </button>
-            <button className="btn" onClick={() => { uiSoundController.play('secondaryClick'); window.location.reload(); }}>Reload application</button>
+              <Trans i18nKey="common:surface.componentsErrorboundary.action.tryAgain" /></button>
+            <button className="btn" onClick={() => { uiSoundController.play('secondaryClick'); window.location.reload(); }}><Trans i18nKey="common:surface.componentsErrorboundary.action.reloadApplication" /></button>
           </div>
         </div>
       );

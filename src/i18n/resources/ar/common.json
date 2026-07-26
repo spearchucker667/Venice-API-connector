@@ -71,5 +71,1917 @@
   "isWebEnabled": "صحيح",
   "stable-audio": "q1",
   "video-model": "q2",
-  "promptLibrary": "lib-1"
+  "promptLibrary": "lib-1",
+  "surface": {
+    "app": {
+      "text": {
+        "skipToMainContent": "تخطي إلى المحتوى الرئيسي",
+        "loadingWorkflows": "تحميل سير العمل...",
+        "loadingPlayground": "تحميل الملعب...",
+        "loadingRpStudio": "تحميل RP studio...",
+        "loadingHistory": "تحميل السجل...",
+        "loadingImageStudio": "تحميل استوديو الصور...",
+        "loadingImageInspector": "تحميل برنامج فحص الصور...",
+        "loadingAudio": "تحميل الصوت...",
+        "loadingMusic": "تحميل الموسيقى...",
+        "loadingVideo": "تحميل الفيديو...",
+        "loadingEmbeddings": "تحميل التضمينات...",
+        "loadingStatus": "تحميل الحالة...",
+        "loadingCharacters": "تحميل الأحرف...",
+        "loadingCharacterCreator": "تحميل منشئ الأحرف...",
+        "loadingSettings": "تحميل الإعدادات...",
+        "loadingSearch": "تحميل البحث...",
+        "loadingMediaStudio": "تحميل استوديو الوسائط...",
+        "loadingPromptLibrary": "تحميل مكتبة المطالبة...",
+        "loadingScenes": "تحميل المشاهد...",
+        "loadingStorage": "تحميل التخزين...",
+        "loadingDocuments": "تحميل المستندات..."
+      }
+    },
+    "componentsCharactersview": {
+      "action": {
+        "chat": "محادثة",
+        "refresh": "تحديث",
+        "edit": "تحرير",
+        "close": "إغلاق",
+        "createStCard": "إنشاء بطاقة ST",
+        "select": "حدد",
+        "details": "التفاصيل",
+        "duplicateLocally": "التكرار محليًا",
+        "startChat": "بدء الدردشة",
+        "duplicate": "تكرار",
+        "exportStCardJson": "تصدير بطاقة ST JSON",
+        "deleteLocalCharacter": "حذف الحرف المحلي",
+        "importStCard": "استيراد بطاقة ST",
+        "drafts": "مسودات"
+      },
+      "heading": {
+        "characters": "الشخصيات",
+        "local": "محلي",
+        "featured": "مميز",
+        "adult": "للبالغين",
+        "hosted": "مستضاف"
+      },
+      "label": {
+        "model": "النموذج",
+        "sort": "فرز"
+      },
+      "text": {
+        "featured": "المميز",
+        "model": "الطراز:",
+        "ratings": "التقييمات",
+        "imports": "الواردات",
+        "venice": "البندقية ↗",
+        "needsValidation": "الاحتياجات التحقق من الصحة",
+        "includeAdultCharacters": "تتضمن أحرفًا للبالغين",
+        "webEnabledOnly": "تمكين الويب فقط",
+        "loadingCharacters": "تحميل الأحرف...",
+        "noCharactersFoundTryClearingTheSearch": "لم يتم العثور على أي أحرف. حاول مسح مربع البحث أو تمكين الشخصيات البالغة."
+      },
+      "description": {
+        "browseHostedAndLocallyAuthoredCharactersIn": "تصفح الأحرف المستضافة والمؤلفة محليًا في مركز واحد."
+      }
+    },
+    "componentsStatusview": {
+      "heading": {
+        "status": "الحالة",
+        "runtime": "وقت التشغيل",
+        "storage": "التخزين",
+        "safetyGuardAudit": "تدقيق حراسة الأمان",
+        "lastRequest": "آخر طلب"
+      },
+      "description": {
+        "aggregatedRuntimeInfoForTheCurrentBuild": "معلومات وقت التشغيل المجمعة للإصدار الحالي. افتح مجلد السجلات",
+        "toInspectDetailedConsoleOutput": "لفحص مخرجات وحدة التحكم التفصيلية.",
+        "statusProvidesTransportStorageAuditAndRequest": "توفر الحالة النقل والتخزين والتدقيق وتشخيص الطلب. استخدم علامات التبويب المكتبة والبحث والإعدادات وسير العمل المخصصة لعناصر التحكم الخاصة بالميزات."
+      },
+      "text": {
+        "logsFolder": "مجلد السجلات",
+        "bySeverity": "حسب الخطورة:",
+        "lastError": "الخطأ الأخير:",
+        "noRequestsYetLastErrorBelowIf": "لا توجد طلبات حتى الآن (الخطأ الأخير أدناه إن وجد)"
+      }
+    },
+    "componentsThememaker": {
+      "action": {
+        "cancel": "إلغاء",
+        "createNewTheme": "+ إنشاء سمة جديدة",
+        "importTheme": "استيراد السمة...",
+        "exportTheme": "تصدير السمة",
+        "darkMode": "الوضع الداكن",
+        "lightMode": "الوضع الفاتح",
+        "saveTheme": "حفظ السمة",
+        "deleteTheme": "حذف السمة",
+        "restoreDefaultTheme": "استعادة السمة الافتراضية",
+        "replaceExisting": "استبدال الموجود",
+        "importAsCopy": "استيراد كنسخة",
+        "importApply": "استيراد وتطبيق"
+      },
+      "heading": {
+        "themeSystemEditor": "نظام السمة ومحررها",
+        "importThemePreview": "استيراد معاينة السمة"
+      },
+      "description": {
+        "configureThemeColorsBorderContrastFocusRings": "قم بتكوين ألوان السمة وتباين الحدود وحلقات التركيز وأنماط أزرار الإجراء عبر Venice Forge.",
+        "reviewThemeMetadataAndPreviewLayoutBefore": "راجع بيانات تعريف السمة ومعاينة التخطيط قبل تطبيقها على مساحة العمل الخاصة بك."
+      },
+      "label": {
+        "selectActiveTheme": "تحديد السمة النشطة"
+      },
+      "text": {
+        "unsavedDraftChanges": "مسودة التغييرات غير المحفوظة",
+        "invalid": "غير صالح",
+        "liveThemePreview": "معاينة السمة المباشرة",
+        "showingLivePreviewOfActiveDraft": "عرض معاينة مباشرة للمسودة النشطة",
+        "themeName": "اسم السمة:",
+        "mode": "الوضع:",
+        "aCustomThemeNamedLdquo": "يوجد سمة مخصصة تسمى \"",
+        "rdquoAlreadyExistsInYourWorkspace": "\" بالفعل في مساحة العمل الخاصة بك.",
+        "importedLayoutPreview": "معاينة التخطيط المستوردة"
+      }
+    },
+    "componentsThemepreview": {
+      "text": {
+        "status": "الحالة",
+        "forge": "صياغة",
+        "activeItem": "عنصر نشط",
+        "inactiveItem": "عنصر غير نشط",
+        "selectedItem": "عنصر محدد",
+        "primaryButton": "زر أساسي",
+        "secondary": "ثانوي",
+        "inputField": "حقل الإدخال...",
+        "focusedControl": "التحكم المركّز",
+        "alertMessageBoundary": "حد رسالة التنبيه",
+        "contrastWarnings": "تحذيرات التباين:"
+      }
+    },
+    "componentsAudioAudioView": {
+      "text": {
+        "voice": "الصوت",
+        "download": "تنزيل",
+        "text": "نص",
+        "format": "التنسيق",
+        "speed": "السرعة",
+        "generateSpeech": "إنشاء كلام",
+        "transcribe": "نسخ",
+        "output": "الإخراج",
+        "pressGenerateToSynthesizeSpeech": "اضغط على \"إنشاء\" لتجميع الكلام",
+        "transcript": "النص",
+        "transcriptAppearsHere": "يظهر النص هنا"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatordrafteditor": {
+      "label": {
+        "creatorNotes": "ملاحظات المنشئ",
+        "postHistoryInstructions": "تعليمات ما بعد السجل",
+        "characterName": "اسم الحرف *",
+        "tagsCommaSeparated": "العلامات (مفصولة بفواصل)",
+        "fullIdentityBackground": "الهوية الكاملة والخلفية",
+        "personalitySpeechStyle": "الشخصية وأسلوب الكلام",
+        "scenarioContext": "سياق السيناريو",
+        "firstMessagePrimaryGreeting": "الرسالة الأولى (الترحيب الأساسي) *",
+        "alternateGreetings": "تحيات بديلة",
+        "exampleDialogue": "مثال للحوار",
+        "systemPromptOverride": "تجاوز موجه النظام",
+        "avatarControls": "عناصر تحكم الصورة الرمزية",
+        "visualAvatarPrompt": "مطالبة الصورة الرمزية المرئية",
+        "naturalLanguageRequest": "طلب اللغة الطبيعية"
+      },
+      "text": {
+        "enabled": "مُفعّل",
+        "draftRev": "مسودة مراجعة أخرى",
+        "saveDraft": "حفظ المسودة",
+        "validate": "التحقق من صحة",
+        "approveCreateCharacter": "الموافقة على الحرف وإنشاءه",
+        "assumptions": "الافتراضات:",
+        "aiRegenerate": "تجديد الذكاء الاصطناعي",
+        "addAlternateGreeting": "إضافة تحية بديلة",
+        "advancedPromptingInstructionsDirectlyModifySystemPrompt": "تقوم تعليمات المطالبة المتقدمة بتعديل التوجيه الفوري للنظام مباشرة أثناء تنفيذ النموذج. فحص بعناية قبل الإنشاء.",
+        "noAvatarSelected": "لم يتم تحديد صورة رمزية",
+        "chooseImageFile": "اختر ملف صورة",
+        "generateAvatar": "إنشاء صورة رمزية",
+        "addLoreEntry": "إضافة إدخال المعرفة",
+        "noEmbeddedLoreEntriesYetAddKeywords": "لا توجد إدخالات معلومات مضمنة حتى الآن. أضف كلمات رئيسية وتفاصيل خلفية لبناء عالم ذو طابع عميق.",
+        "draftId": "معرف المسودة:",
+        "revisionNumber": "رقم المراجعة:",
+        "creatorModel": "طراز المنشئ:",
+        "specification": "المواصفات:",
+        "aiAssistedRevisions": "المراجعات المدعومة بالذكاء الاصطناعي"
+      },
+      "heading": {
+        "embeddedLorebookWorldInfo": "كتاب Lorebook والمعلومات العالمية المضمنة"
+      },
+      "description": {
+        "manageWorldLoreEntriesEmbeddedInsideThis": "إدارة إدخالات المعرفة العالمية المضمنة داخل مسودة بطاقة الحرف V2 هذه."
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorerror": {
+      "text": {
+        "copy": "نسخ",
+        "diagnosticMessage": "رسالة تشخيصية",
+        "returnToDraft": "العودة إلى المسودة",
+        "retryOperation": "إعادة محاولة العملية"
+      },
+      "heading": {
+        "characterCreatorError": "خطأ منشئ الأحرف"
+      },
+      "description": {
+        "anErrorOccurredDuringGenerationOrCard": "حدث خطأ أثناء الإنشاء أو معالجة البطاقة. تم الحفاظ على مسودتك وفكرتك الحالية."
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorlocalpickermodal": {
+      "action": {
+        "cancel": "إلغاء"
+      },
+      "heading": {
+        "selectLocalCharacterToEdit": "تحديد حرف محلي لتحريره"
+      },
+      "description": {
+        "chooseACharacterFromYourLocalLibrary": "اختر حرفًا من مكتبتك المحلية لفتحه كمسودة في منشئ الأحرف."
+      },
+      "text": {
+        "editDraft": "تحرير المسودة →"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorprocesspanel": {
+      "text": {
+        "active": "نشط",
+        "aiDesignProcess": "عملية تصميم الذكاء الاصطناعي",
+        "designDirectionSummary": "توجيه التصميم وملخصه",
+        "interpretation": "التفسير:",
+        "initializingAiProcessPipeline": "تهيئة مسار عملية الذكاء الاصطناعي...",
+        "cancelGeneration": "إلغاء الإنشاء"
+      },
+      "description": {
+        "thisLogShowsUserFacingDesignDecisions": "يعرض هذا السجل قرارات التصميم التي تواجه المستخدم وأحداث التحقق من الصحة، وليس المنطق المخفي الخاص."
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorwelcome": {
+      "heading": {
+        "characterCreator": "منشئ الشخصيات"
+      },
+      "text": {
+        "create": "إنشاء",
+        "delete": "حذف",
+        "creatorModel": "نموذج المنشئ:",
+        "immutable": "(غير قابل للتغيير)",
+        "optionalDesignConstraintsContext": "قيود التصميم الاختيارية والسياق",
+        "allGeneratedContentRemainsADraftUntil": "يظل كل المحتوى الذي تم إنشاؤه مسودة حتى توافق عليه.",
+        "createDraft": "إنشاء مسودة",
+        "importExistingCard": "استيراد بطاقة موجودة",
+        "editLocalCharacter": "تحرير الحرف المحلي",
+        "describe": "وصف",
+        "review": "قم بمراجعة",
+        "recentUnfinishedDrafts": "المسودات الأخيرة غير المكتملة",
+        "rev": "القس",
+        "duplicate": "تكرار"
+      },
+      "description": {
+        "turnARoughIdeaIntoAComplete": "تحويل فكرة تقريبية إلى بطاقة أحرف كاملة وقابلة للتحرير.",
+        "startWithASentenceADetailedConcept": "ابدأ بجملة، أو مفهوم تفصيلي، أو نموذج أصلي لشخصية موجودة. سيقوم المنشئ بإنشاء مسودة كاملة يمكنك فحصها أو إعادة كتابتها أو حفظها أو تصديرها. لا تتم إضافة أي شيء إلى مكتبة الشخصيات الخاصة بك حتى توافق عليها.",
+        "enterAnythingFromAOneLineConcept": "أدخل أي شيء بدءًا من مفهوم السطر الواحد إلى مخطط تفصيلي للأحرف.",
+        "inspectAndEditTheIdentityPersonalityScenario": "لفحص وتحرير الهوية والشخصية والسيناريو والتحية وأمثلة الحوار والتعليمات السلوكية.",
+        "approveTheFinalDraftToAddThe": "قم بالموافقة على المسودة النهائية لإضافة الشخصية إلى مكتبتك المحلية أو تصدير بطاقة متوافقة."
+      },
+      "label": {
+        "characterConcept": "مفهوم الشخصية",
+        "tone": "النغمة",
+        "relationshipToUser": "العلاقة بالمستخدم",
+        "contentRating": "تصنيف المحتوى"
+      },
+      "option": {
+        "adultUncensored": "للبالغين غير الخاضعين للرقابة"
+      },
+      "action": {
+        "open": "فتح"
+      }
+    },
+    "componentsChatCharacterchatsview": {
+      "heading": {
+        "characterChats": "محادثات الشخصيات",
+        "startALocalCharacterChat": "بدء محادثة الأحرف المحلية",
+        "noCharacterChatsYet": "لا توجد محادثات مع الشخصيات حتى الآن"
+      },
+      "action": {
+        "edit": "تحرير",
+        "close": "إغلاق",
+        "chat": "محادثة",
+        "newStCard": "بطاقة ST الجديدة",
+        "browseHosted": "تصفح المستضاف",
+        "startChat": "ابدأ الدردشة",
+        "browseCharacters": "تصفح الأحرف",
+        "createLocalCharacter": "إنشاء شخصية محلية",
+        "browseHostedCharacters": "تصفح الشخصيات المستضافة ↗",
+        "createNewStCard": "+ إنشاء بطاقة ST جديدة"
+      },
+      "description": {
+        "hostedAndLocalCharacterConversations": "محادثات الشخصيات المستضافة والمحلية",
+        "noCharacterChatsMatchThisSearch": "لا توجد محادثات شخصية تتطابق مع هذا البحث.",
+        "selectAnyOfYourLocallyCreatedCharacters": "حدد أيًا من الشخصيات التي تم إنشاؤها محليًا لبدء محادثة مخصصة.",
+        "noLocalCharactersMatch": "لا توجد أحرف محلية متطابقة \"",
+        "chooseAHostedOrLocalCharacterTo": "اختر شخصية مستضافة أو محلية لبدء محادثة شخصية مخصصة."
+      },
+      "text": {
+        "searchCharacterChats": "البحث عن محادثات الشخصيات",
+        "localCharacters": "الأحرف المحلية",
+        "available": "متاحة",
+        "chat": "الدردشة →"
+      },
+      "label": {
+        "localCharacters": "الأحرف المحلية ("
+      }
+    },
+    "componentsChatCharacterscenecard": {
+      "action": {
+        "retry": "إعادة المحاولة",
+        "cancel": "إلغاء",
+        "openInMediaStudio": "مفتوح في Media Studio",
+        "copyPrompt": "نسخ المطالبة",
+        "regenerate": "إعادة الإنشاء"
+      },
+      "description": {
+        "scenePrompt": "موجه المشهد"
+      }
+    },
+    "componentsChatHistoryview": {
+      "action": {
+        "newChat": "محادثة جديدة",
+        "cancel": "إلغاء",
+        "rename": "إعادة تسمية",
+        "delete": "حذف",
+        "export": "تصدير",
+        "import": "استيراد",
+        "clearSelection": "مسح التحديد",
+        "deleteSelected": "حذف المحدد (",
+        "newFolder": "مجلد جديد",
+        "startNewConversation": "بدء محادثة جديدة",
+        "openPrivacyGate": "فتح بوابة الخصوصية",
+        "enablePrivacyGate": "تمكين بوابة الخصوصية"
+      },
+      "option": {
+        "characterChats": "محادثات الشخصيات",
+        "allChats": "جميع الدردشات",
+        "standardChats": "الدردشات القياسية",
+        "selectDestinationFolder": "حدد مجلد الوجهة...",
+        "unfiledNoFolder": "غير مصنف (بدون مجلد)"
+      },
+      "text": {
+        "unfiled": "غير مصنف",
+        "selected": "محددة",
+        "total": "الإجمالي)",
+        "moveTo": "انتقل إلى:",
+        "chooseOneChatTypeToMoveInto": "اختر دردشة واحدة اكتب للانتقال إلى مجلد.",
+        "ago": "منذ",
+        "noConversationsInThisFolder": "لا توجد محادثات في هذا المجلد.",
+        "noUnfiledConversations": "لا توجد محادثات غير مصنفة."
+      },
+      "heading": {
+        "chatHistory": "سجل الدردشة",
+        "noConversationsFound": "لم يتم العثور على محادثات"
+      },
+      "description": {
+        "manageAndRevisitYourPastConversations": "إدارة محادثاتك السابقة وإعادة زيارتها",
+        "tryADifferentSearchTermOrStart": "جرب مصطلح بحث مختلف أو ابدأ محادثة جديدة"
+      }
+    },
+    "componentsChatChatView": {
+      "action": {
+        "cancel": "إلغاء",
+        "remove": "إزالة",
+        "clear": "مسح",
+        "shuffle": "التبديل العشوائي",
+        "confirmSend": "تأكيد وإرسال",
+        "disableMemoryForThisMessage": "تعطيل الذاكرة لهذه الرسالة",
+        "saveContextText": "حفظ نص السياق",
+        "forgetFact": "انسى الحقيقة",
+        "chatContext": "⚙ سياق الدردشة ·",
+        "requireMemoryPreviewBeforeNextSend": "يلزم معاينة الذاكرة قبل الإرسال التالي"
+      },
+      "option": {
+        "disabled": "مُعطّل",
+        "inheritFromDefaultSettings": "الوراثة من الإعدادات الافتراضية",
+        "overrideUseChatSettings": "التجاوز (استخدام إعدادات الدردشة)"
+      },
+      "text": {
+        "howCanIHelpToday": "كيف يمكنني المساعدة اليوم",
+        "tryOneOfThese": "جرب إحدى هذه",
+        "startAConversationWith": "ابدأ محادثة مع",
+        "matchedLocalMemoryContext": "حقائق سياق الذاكرة المحلية المتطابقة",
+        "facts": "، ملخصات",
+        "summariesMatched": "متطابقة)",
+        "previousThread": "الموضوع السابق:",
+        "allMatchedContextHasBeenRemoved": "تمت إزالة كل السياق المطابق.",
+        "context": "السياق",
+        "chatContext": "سياق الدردشة",
+        "includeMemoryRetrievalForThisChat": "تضمين استرجاع الذاكرة لهذه الدردشة",
+        "includePriorConversationContext": "تضمين سياق المحادثة السابقة",
+        "selected": "تم تحديد",
+        "chattingAs": "الدردشة كـ"
+      },
+      "label": {
+        "systemPromptMode": "وضع مطالبة النظام"
+      },
+      "description": {
+        "onlySelectedLocalConversationsAreIncludedIn": "يتم تضمين المحادثات المحلية المحددة فقط في طلب النموذج التالي وإرسالها إلى Venice API. يتم تنقيح مفاتيح API والرموز المميزة لحاملها ومسارات الملفات المحلية؛ يتم اقتطاع المحتوى الطويل ليبقى ضمن الحدود. لا يتم تضمين سجل المحادثات مطلقًا في عمليات التشخيص أو عمليات التصدير الآمنة."
+      }
+    },
+    "componentsChatMessageBubble": {
+      "action": {
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "thinking": "التفكير"
+      },
+      "text": {
+        "attachedToThisMessage": "مرفقة بهذه الرسالة",
+        "truncated": "رؤية",
+        "vision": "مبتورة",
+        "safety": "الأمان:",
+        "code": "الرمز:",
+        "signals": "الإشارات:",
+        "toolUsed": "الأداة المستخدمة:",
+        "resultFrom": "النتيجة من"
+      }
+    },
+    "componentsChatVeniceParams": {
+      "action": {
+        "newChat": "محادثة جديدة",
+        "settings": "إعدادات"
+      },
+      "label": {
+        "appSystemPrompt": "موجه نظام التطبيق"
+      },
+      "option": {
+        "loadingLibrary": "جارٍ تحميل المكتبة...",
+        "errorLoadingLibrary": "خطأ في تحميل المكتبة",
+        "loadFromLibrary": "التحميل من المكتبة..."
+      },
+      "text": {
+        "approachingSystemPromptSizeLimit": "يقترب الحد الأقصى لحجم موجه النظام ("
+      }
+    },
+    "componentsDocumentsDocumentagentview": {
+      "option": {
+        "off": "متوقف",
+        "readAttachmentsOnly": "قراءة المرفقات فقط",
+        "limitedDocuments": "مستندات محدودة",
+        "manageSelectedWorkspace": "إدارة مساحة العمل المحددة",
+        "markdownMd": "تخفيض السعر (.md)",
+        "textTxt": "نص (.txt)",
+        "jsonJson": "JSON (.json)",
+        "csvCsv": "CSV (.csv)",
+        "htmlHtml": "HTML (.html)",
+        "wordDocx": "وورد (.docx)",
+        "pdfPdf": "PDF (.pdf)"
+      },
+      "action": {
+        "managedLibrary": "المكتبة المُدارة",
+        "connectedWorkspace": "مساحة العمل المتصلة",
+        "preview": "معاينة",
+        "source": "المصدر",
+        "history": "التاريخ ("
+      },
+      "text": {
+        "search": "بحث",
+        "cancel": "إلغاء",
+        "createDocument": "إنشاء مستند",
+        "sessionGrant": "منح الجلسة ·",
+        "revoke": "إلغاء",
+        "selectWorkspaceDirectory": "تحديد دليل مساحة العمل...",
+        "documentAgentToolsRequireTheHardenedElectron": "تتطلب أدوات وكيل المستندات سطح مكتب Electron المقوى الجسر",
+        "workingGroup": "مجموعة العمل",
+        "group": "+ مستندات المجموعة",
+        "document": "+ المستند",
+        "revision": "المراجعة:",
+        "export": "تصدير...",
+        "prepareEditProposal": "إعداد مقترح التعديل",
+        "by": "· بواسطة",
+        "restoreAsNewRevision": "الاستعادة كمراجعة جديدة",
+        "before": "قبل",
+        "after": "بعد",
+        "reject": "رفض",
+        "approveExactChange": "الموافقة على التغيير الدقيق.",
+        "itemS": "عنصر (عناصر)",
+        "searchMatches": "بحث مطابق (",
+        "read": "اقرأ",
+        "createGroup": "إنشاء مجموعة"
+      },
+      "heading": {
+        "agentAccessGrantControls": "وصول الوكيل وعناصر التحكم في المنح",
+        "documents": "(",
+        "immutableRevisionLineage": "نسب المراجعة غير القابل للتغيير",
+        "reviewProposal": "اقتراح المراجعة",
+        "grantedWorkspaceDirectory": "دليل مساحة العمل الممنوحة",
+        "createManagedDocument": "إنشاء مستند مُدار",
+        "createWorkingGroup": "إنشاء مجموعة عمل"
+      },
+      "description": {
+        "limitedDocumentsIsTheSafeDefaultWorkspace": "المستندات المحدودة هي الإعداد الافتراضي الآمن. الوصول إلى مساحة العمل مقيد بدليل واحد يمنحه المستخدم ولا يتضمن أبدًا Shell وGit والشبكة، سلسلة المفاتيح، أو التحكم OS.",
+        "noManagedDocumentsInThisWorkingGroup": "لا توجد مستندات مُدارة في مجموعة العمل هذه.",
+        "boundToHash": "المرتبط بالتجزئة",
+        "againstBaseRevision": "... مقابل المراجعة الأساسية",
+        "noDocumentSelected": "لم يتم تحديد مستند",
+        "selectADocumentFromTheLeftPanel": "حدد مستندًا من اللوحة اليسرى أو قم بإنشاء مستند جديد لبدء التحرير",
+        "noWorkspaceFilesFound": "لم يتم العثور على ملفات مساحة عمل.",
+        "noWorkspaceGranted": "لم يتم منح مساحة عمل",
+        "selectAWorkspaceDirectoryUnderAgentAccess": "حدد أ دليل مساحة العمل ضمن Agent Access أعلاه لتصفح الملفات.",
+        "selectAFileFromTheWorkspaceList": "حدد ملفًا من قائمة مساحات العمل لعرض محتوياته"
+      },
+      "label": {
+        "accessPreset": "الوصول إلى الإعداد المسبق",
+        "format": "التنسيق",
+        "initialContent": "المحتوى الأولي",
+        "workingGroupName": "اسم مجموعة العمل"
+      }
+    },
+    "componentsEmbeddingsEmbeddingsView": {
+      "action": {
+        "copy": "نسخ"
+      },
+      "text": {
+        "inputText": "نص الإدخال",
+        "generateEmbeddings": "إنشاء التضمينات",
+        "vector": "المتجهات (أبعاد",
+        "dimensions": ")",
+        "embeddingVectorsAppearHere": "تظهر نواقل التضمين هنا"
+      }
+    },
+    "componentsGalleryCompareView": {
+      "action": {
+        "close": "إغلاق"
+      },
+      "text": {
+        "compare": "مقارنة",
+        "items": "العناصر"
+      },
+      "description": {
+        "select2To": "حدد عنصرين إلى",
+        "itemsToCompare": "للمقارنة. (",
+        "selected": "محدد)"
+      },
+      "column": {
+        "field": "الحقل"
+      }
+    },
+    "componentsGalleryGalleryView": {
+      "heading": {
+        "mediaStudio": "استوديو الوسائط"
+      },
+      "action": {
+        "close": "إغلاق",
+        "apply": "تطبيق",
+        "imageStudio": "استوديو الصور",
+        "chat": "محادثة",
+        "videoStudio": "استوديو الفيديو",
+        "seed": "البذرة",
+        "compare": "قارن (",
+        "lineage": "النسب",
+        "imageTools": "أدوات الصورة",
+        "prompt": "مطالبة",
+        "negative": "سلبي"
+      },
+      "description": {
+        "browseTagEditAndExportYourGenerated": "تصفح الوسائط التي تم إنشاؤها ووضع علامة عليها وتحريرها وتصديرها. تم تحميل العنصر",
+        "noMatchingMedia": "لم يتم تحديد عناصر الوسائط المطابقة"
+      },
+      "text": {
+        "item": "غرض",
+        "loaded": "محملة",
+        "selected": "المحدد",
+        "loadingMediaStudio": "جارٍ تحميل Media Studio...",
+        "itemsSelected": ".",
+        "sendTo": "أرسل إلى:",
+        "copy": "النسخ:"
+      },
+      "label": {
+        "quickTag": "علامة سريعة:"
+      }
+    },
+    "componentsGalleryMediaCard": {
+      "text": {
+        "video": "فيديو",
+        "audio": "صوت",
+        "favorite": "المفضلة",
+        "image": "الصورة",
+        "seed": ":",
+        "more": "المزيد"
+      }
+    },
+    "galleryMediaDetailDialog": {
+      "action": {
+        "delete": "حذف",
+        "closeEsc": "إغلاق (Esc)"
+      },
+      "text": {
+        "previewUnavailable": "المعاينة غير متاحة",
+        "seed": "البذور:",
+        "source": "المصدر:",
+        "style": "النمط:",
+        "steps": "الخطوات:",
+        "cfg": "CFG:."
+      },
+      "heading": {
+        "filmstrip": "شريط الصور"
+      }
+    },
+    "componentsGalleryMediaInspector": {
+      "action": {
+        "close": "إغلاق",
+        "createStCard": "إنشاء بطاقة ST",
+        "upscale": "تكبير",
+        "edit": "تحرير",
+        "apply": "تطبيق",
+        "cancel": "إلغاء",
+        "add": "إضافة",
+        "clear": "مسح",
+        "useSettings": "استخدام الإعدادات",
+        "useRecipe": "استخدام الوصفة",
+        "regenerate": "إعادة الإنشاء",
+        "sameSeed": "نفس البذرة",
+        "downloadMedia": "تنزيل الوسائط",
+        "copyPrompt": "نسخ المطالبة",
+        "copyNegative": "نسخ سلبي",
+        "copySeed": "نسخ الأصل",
+        "copyMetadata": "نسخ البيانات الوصفية",
+        "saveRecipe": "حفظ الوصفة",
+        "copyRecipe": "نسخ الوصفة",
+        "exportRecipe": "تصدير الوصفة",
+        "applyToImageStudio": "تنطبق على Image Studio",
+        "remixAmpGenerate": "ريمكس وإنشاء",
+        "saveRemix": "حفظ الريمكس",
+        "saveNote": "حفظ الملاحظة",
+        "clearParentLink": "مسح الرابط الأصلي"
+      },
+      "text": {
+        "delete": "حذف",
+        "seed": "البذرة",
+        "steps": "الخطوات",
+        "view": "عرض",
+        "parameters": "المعلمات",
+        "source": "المصدر",
+        "style": "النمط",
+        "cfg": "CFG",
+        "aspect": "المظهر",
+        "recipeCompatibility": "توافق الوصفة",
+        "enhancedPrompt": "الموجه المحسن",
+        "originalPrompt": "الموجه الأصلي",
+        "remixPrompt": "موجه الريمكس",
+        "actions": "الإجراءات",
+        "modelCapabilities": "إمكانات النموذج",
+        "upscale": "الراقي",
+        "edit": "تحرير",
+        "video": "رؤية الفيديو",
+        "vision": "رؤية",
+        "tags": "العلامات",
+        "parentid": "معرف الوالدين="
+      },
+      "heading": {
+        "inspector": "المفتش",
+        "prompt": "موجه",
+        "parent": "الأصل",
+        "children": "الأطفال (",
+        "missingReferences": "مراجع مفقودة"
+      },
+      "description": {
+        "originalLdquo": "الأصل: \"",
+        "rdquo": "\"",
+        "promptViaInternalLlm": "موجه عبر LLM داخلي...",
+        "theseEndpointsAreRecognisedForTheSource": "يتم التعرف على نقاط النهاية هذه للنموذج المصدر. ستؤدي إعادة تشغيل نفس العملية على هذا العنصر إلى استخدامها.",
+        "noTagsYet": "لا توجد علامات بعد."
+      }
+    },
+    "componentsGalleryMediaToolbar": {
+      "text": {
+        "refresh": "تحديث",
+        "project": "مشروع",
+        "sort": "فرز",
+        "item": "العنصر",
+        "selected": "محدد"
+      },
+      "action": {
+        "clear": "مسح",
+        "compare": "مقارنة",
+        "export": "تصدير",
+        "apply": "تطبيق",
+        "delete": "حذف",
+        "selectAll": "تحديد الكل",
+        "addTag": "إضافة علامة",
+        "unstar": "إلغاء النجمة"
+      }
+    },
+    "componentsGenerationGenerationloadingindicator": {
+      "action": {
+        "cancel": "إلغاء"
+      }
+    },
+    "componentsImageInspectorImageinspectorview": {
+      "heading": {
+        "imageInspector": "مفتش الصور",
+        "analysisSummary": "ملخص التحليل",
+        "replicationPrompt": "موجه النسخ المتماثل",
+        "subjects": "الموضوعات",
+        "imageBasedSourceSearch": "مستند إلى الصور البحث عن المصدر"
+      },
+      "action": {
+        "openFile": "افتح الملف",
+        "cancelAnalysis": "إلغاء التحليل",
+        "analyzeImage": "تحليل الصورة"
+      },
+      "text": {
+        "noRecentImages": "لا توجد صور حديثة.",
+        "openAFileToStartInspecting": "افتح ملفًا لبدء الفحص.",
+        "middot": "·",
+        "selectOrUploadAnImageToInspect": "حدد صورة أو قم بتحميلها لفحصها",
+        "visionModel": "نموذج الرؤية",
+        "noVisionCapableModelsAvailableInCatalog": "لا تتوفر نماذج قادرة على الرؤية في الكتالوج.",
+        "analysisDepth": "عمق التحليل",
+        "promptTarget": "الهدف الموجه",
+        "specificInstructionsOptional": "تعليمات محددة (اختيارية)",
+        "negative": "سلبي:",
+        "directSourceImageMatchingIsUnavailableWith": "لا تتوفر المطابقة المباشرة لصورة المصدر مع عقود Google وBrave التي تم تكوينها. تقبل واجهات برمجة التطبيقات الحالية الخاصة بهم الاستعلامات النصية، وليس بايتات الصور التي تم فحصها. لقد تم تعطيل البحث الناتج عن الاستعلام هنا حتى لا يتم تحريف النتائج على أنها مطابقة للصور العكسية.",
+        "legacyTextQueryResults": "نتائج الاستعلام النصي القديم (",
+        "imageAnalysisFailed": "فشل تحليل الصورة",
+        "analysisResultsWillAppearHere": "ستظهر هنا نتائج التحليل."
+      }
+    },
+    "componentsImageImageTools": {
+      "text": {
+        "model": "النموذج",
+        "sourceImage": "الصورة المصدر",
+        "editPrompt": "مطالبة التحرير",
+        "scale": "مقياس",
+        "sourceAdherence": "الالتزام بالمصدر",
+        "veniceUpscalingDoesNotAcceptAText": "لا تقبل ترقية البندقية رسالة نصية. لإجراء تغييرات موجهة بشكل سريع، قم بالتبديل إلى تحرير.",
+        "result": "النتيجة"
+      },
+      "action": {
+        "download": "تنزيل",
+        "openEdit": "فتح تحرير",
+        "saveToMediaStudio": "حفظ في Media Studio"
+      },
+      "description": {
+        "bytes": "بايت",
+        "clickToUploadImage": "انقر لتحميل الصورة",
+        "higherValuesStayCloserToTheSource": "تظل القيم الأعلى أقرب إلى المصدر؛ تسمح القيم المنخفضة للارتقاء بإضافة المزيد من الملمس والتفاصيل."
+      }
+    },
+    "componentsImageImageView": {
+      "action": {
+        "cancel": "إلغاء",
+        "clear": "مسح",
+        "createStCard": "إنشاء بطاقة ST",
+        "saveToLibrary": "حفظ في المكتبة",
+        "useEnhancedPrompt": "استخدام المطالبة المحسنة",
+        "keepOriginal": "الاحتفاظ بالأصل",
+        "switchTo": "قم بالتبديل إلى",
+        "append": "إلحاق",
+        "replace": "استبدال",
+        "randomize": "عشوائيًا"
+      },
+      "text": {
+        "aspectRatio": "نسبة العرض إلى الارتفاع",
+        "resolution": "الدقة",
+        "seed": "البذرة",
+        "steps": "الخطوات",
+        "prompt": "مطالبة",
+        "enhancedPromptPreview": "معاينة مطالبة محسنة",
+        "applyTemplate": "تطبيق القالب:",
+        "positive": "إيجابي:",
+        "negative": "سلبي:",
+        "doesNotSupportNegativePromptsTheTemplate": "لا يدعم المطالبات السلبية. يظل القالب معلقًا ولم تتغير حالة المطالبة الحالية.",
+        "negativePrompt": "موجه سلبي",
+        "quality": "الجودة",
+        "style": "النمط",
+        "variants": "المتغيرات"
+      },
+      "option": {
+        "addTemplate": "إضافة قالب..."
+      },
+      "label": {
+        "useFixedSeed": "استخدم الأصل الثابت"
+      }
+    },
+    "layoutApiKeyDialog": {
+      "action": {
+        "cancel": "إلغاء",
+        "disconnect": "قطع الاتصال"
+      },
+      "heading": {
+        "connectToVenice": "اتصل بالبندقية"
+      },
+      "label": {
+        "veniceApiKey": "البندقية مفتاح API"
+      },
+      "description": {
+        "getAKeyAt": "احصل على مفتاح على"
+      }
+    },
+    "componentsLayoutInspectorPane": {
+      "text": {
+        "trafficInspector": "مفتش حركة المرور",
+        "status": "الحالة:",
+        "error": "خطأ",
+        "noRequestsCapturedYet": "لم يتم التقاط أي طلبات حتى الآن",
+        "sendChatOrGenerateImagesToInspect": "أرسل الدردشة أو قم بإنشاء صور لفحص حركة المرور.",
+        "guard": "الحماية:",
+        "time": "الوقت:",
+        "method": "الطريقة:",
+        "transport": "النقل:",
+        "outcome": "النتيجة:",
+        "guard4ba3843": "الحماية:",
+        "preview": "المعاينة:",
+        "latency": "زمن الاستجابة:",
+        "errorClass": "فئة الخطأ:",
+        "localSafetyEvaluation": "تقييم السلامة المحلية",
+        "mode": "الوضع:",
+        "familySafeModeRendererEvaluated": "الوضع الآمن للعائلة (يتم تقييمه بواسطة العارض)",
+        "result": "النتيجة:",
+        "reasonCode": "رمز السبب:",
+        "adultModeLocalFilterSkipped": "وضع البالغين (تم تخطي عامل التصفية المحلي)",
+        "electronMainProcessAuthoritative": "موثوق بالعملية الرئيسية الإلكترونية",
+        "theLocalFamilySafeGuardIsEnforced": "يتم فرض الحماية الآمنة للعائلة المحلية من خلال العملية الرئيسية. افتح سجل التدقيق لفحص القرار القانوني.",
+        "action": "الإجراء:",
+        "signals": "الإشارات:",
+        "sourceQuot": "] المصدر: \"",
+        "quotSeverity": "\" (الخطورة:",
+        "confidence": "، الثقة:",
+        "requestHeaders": "رؤوس الطلبات",
+        "requestBody": "نص الطلب",
+        "responseBody": "نص الاستجابة",
+        "selectARequestToViewDetails": "حدد طلبًا لعرض التفاصيل",
+        "noActiveConversationOpenAChatTo": "لا توجد محادثة نشطة. افتح محادثة لفحص طبقات المطالبة",
+        "active": "النشطة:",
+        "source": "المصدر:"
+      }
+    },
+    "componentsMusicMusicView": {
+      "text": {
+        "model": "النموذج",
+        "voice": "الصوت",
+        "download": "تنزيل",
+        "prompt": "موجه",
+        "lyrics": "كلمات",
+        "duration": "المدة",
+        "instrumentalOnly": "الآلات الموسيقية فقط",
+        "instrumental": "الآلات الموسيقية",
+        "customDuration": "المدة المخصصة",
+        "output": "الإخراج",
+        "pressGenerateToCreateYourTrack": "اضغط على \"إنشاء\" لإنشاء المسار الخاص بك"
+      },
+      "description": {
+        "duration": "المدة:"
+      },
+      "option": {
+        "seconds": "ثانية"
+      },
+      "action": {
+        "reset": "إعادة تعيين",
+        "generateAnother": "أنشئ آخر"
+      }
+    },
+    "playgroundAgentModelPicker": {
+      "text": {
+        "noMatches": "لا توجد نتائج",
+        "rec": "التسجيل",
+        "recommended": "الموصى به",
+        "tools": "الأدوات",
+        "reasoning": "الاستدلال",
+        "vision": "الرؤية",
+        "web": "الويب",
+        "uncensored": "غير خاضع للرقابة"
+      }
+    },
+    "componentsPlaygroundPlaygroundView": {
+      "text": {
+        "playground": "ساحة اللعب",
+        "agent": "الوكيل",
+        "n": "ن ·",
+        "running": "قيد التشغيل...",
+        "openInWorkflows": "فتح في سير العمل",
+        "open": "فتح"
+      },
+      "action": {
+        "clear": "مسح",
+        "run": "تشغيل"
+      },
+      "option": {
+        "editSavedWorkflow": "تحرير سير العمل المحفوظ..."
+      }
+    },
+    "componentsPlaygroundPreviewNode": {
+      "text": {
+        "done": "تم",
+        "error": "خطأ",
+        "running": "قيد التشغيل..."
+      }
+    },
+    "componentsPrivacyStorageprivacydashboard": {
+      "action": {
+        "retry": "إعادة المحاولة",
+        "copySafeSummary": "ملخص آمن للنسخ",
+        "exportJson": "تصدير JSON",
+        "review": "مراجعة"
+      },
+      "column": {
+        "status": "الحالة",
+        "prompts": "الطلبات",
+        "history": "السجل",
+        "store": "مخزن",
+        "items": "عناصر",
+        "flags": "علامات",
+        "surface": "السطح",
+        "mediaBlobs": "الوسائط الثنائية الكبيرة",
+        "pathsAmpKeys": "المسارات والمفاتيح"
+      },
+      "heading": {
+        "failedToLoadStorageInventory": "فشل تحميل مخزون التخزين",
+        "storagePrivacy": "التخزين والخصوصية",
+        "detailedInventory": "جرد تفصيلي",
+        "referenceIssues": "مشكلات مرجعية",
+        "maintenancePlan": "خطة الصيانة",
+        "privacyExclusions": "استثناءات الخصوصية"
+      },
+      "description": {
+        "analyzingLocalStorage": "تحليل التخزين المحلي...",
+        "inspectAndManageLocalDataBoundaries": "فحص حدود البيانات المحلية وإدارتها.",
+        "differentSurfacesHaveDifferentRedactionBoundariesInspect": "تحتوي الأسطح المختلفة على حدود تنقيح مختلفة. افحص جدول الحقيقة أدناه قبل الاعتماد عليه في قرارات التصدير.",
+        "promptsAndHistoryAppearInEncryptedBackups": "تظهر المطالبات والمحفوظات في النسخ الاحتياطية المشفرة ومجلد المزامنة لأن كليهما مشفران من طرف إلى طرف لعبارة مرور مقدمة من المستخدم. تتطلب كائنات الوسائط الثنائية الكبيرة (الصور والملفات وأصول RP) تبديلًا صريحًا للاشتراك في لوحة النسخ الاحتياطي والمزامنة - يتم استبعادها افتراضيًا. لا يتم أبدًا كتابة مفاتيح API والرموز المميزة لحاملها والمسارات المحلية المطلقة في أي ملخص تصدير أو مزامنة أو تشخيص."
+      },
+      "text": {
+        "encrypted": "مشفر",
+        "archived": "مؤرشفة",
+        "secrets": "أسرار",
+        "userContent": "مستخدم المحتوى",
+        "sensitive": "حساس",
+        "noStorageHealthIssuesDetected": "لم يتم اكتشاف مشكلات تتعلق بسلامة التخزين.",
+        "source": "المصدر:",
+        "target": "الهدف:",
+        "destructive": "المدمرة",
+        "dryRun": "التشغيل الجاف",
+        "alwaysRedacted": "المنقح دائمًا",
+        "included": "مضمن",
+        "optInOnly": "الاشتراك فقط",
+        "keysNeverExported": "لم يتم تصدير المفاتيح مطلقًا",
+        "keysNeverSynced": "لم تتم مزامنة المفاتيح مطلقًا"
+      },
+      "cell": {
+        "safePrivacySummary": "ملخص الخصوصية الآمنة",
+        "safeDiagnosticsJson": "التشخيص الآمن JSON",
+        "encryptedBackup": "النسخ الاحتياطي المشفر",
+        "syncFolder": "مجلد المزامنة"
+      }
+    },
+    "componentsPromptsPromptcreatemodal": {
+      "option": {
+        "project": "مشروع",
+        "global": "المشروع العالمي",
+        "selectAProject": "حدد مشروع"
+      },
+      "action": {
+        "cancel": "إلغاء",
+        "createPrompt": "إنشاء مطالبة"
+      },
+      "label": {
+        "title": "العنوان *",
+        "kind": "النوع *",
+        "scope": "النطاق *",
+        "project": "*",
+        "tags": "العلامات",
+        "content": "المحتوى *",
+        "negativeContent": "المحتوى السلبي"
+      },
+      "description": {
+        "commaSeparatedUpTo64TagsAnd": "مفصولة بفواصل؛ ما يصل إلى 64 علامة و64 حرفًا لكل علامة."
+      }
+    },
+    "componentsPromptsPromptlibraryview": {
+      "heading": {
+        "promptLibrary": "مكتبة الأوامر"
+      },
+      "action": {
+        "archive": "أرشفة",
+        "copy": "نسخ",
+        "delete": "حذف",
+        "cancel": "إلغاء",
+        "new": "جديد",
+        "favorites": "★ المفضلة",
+        "useInImageStudio": "الاستخدام في Image Studio",
+        "useInChat": "الاستخدام في الدردشة",
+        "createWorkflow": "إنشاء سجل سير العمل",
+        "history": "(",
+        "useThisVersion": "استخدم هذا الإصدار"
+      },
+      "description": {
+        "loading": "جارٍ التحميل...",
+        "noSavedPromptsYet": "لا توجد مطالبات محفوظة حتى الآن.",
+        "clickThe": "انقر فوق الزر",
+        "buttonAboveToCreateYourFirstPrompt": "أعلاه لإنشاء المطالبة الأولى."
+      },
+      "text": {
+        "new": "جديد",
+        "version": "الإصدار",
+        "created": "· تم إنشاؤه",
+        "updated": "· تم تحديث",
+        "current": "الحالي"
+      },
+      "label": {
+        "content": "المحتوى",
+        "negativeContent": "المحتوى السلبي"
+      }
+    },
+    "componentsResearchResearchworkspaceview": {
+      "heading": {
+        "research": "البحث",
+        "sources": "المصادر (",
+        "addFinding": "إضافة بحث",
+        "findings": "النتائج ("
+      },
+      "action": {
+        "newResearchSession": "جلسة بحث جديدة",
+        "createWorkflow": "إنشاء سير عمل",
+        "saveSummary": "حفظ الملخص",
+        "saveFinding": "حفظ البحث"
+      },
+      "text": {
+        "sources": "المصادر •",
+        "findings": "النتائج"
+      },
+      "description": {
+        "research": "بحث",
+        "selectAResearchSessionOrCreateA": "حدد جلسة بحث أو أنشئ جلسة جديدة للبدء."
+      },
+      "label": {
+        "searchQuery": "استعلام البحث",
+        "scrapeUrl": "كشط URL",
+        "findingTitle": "البحث عن عنوان",
+        "findingContent": "البحث عن المحتوى"
+      }
+    },
+    "componentsRpStudioAssetgallery": {
+      "action": {
+        "deletef6fdbe4": "حذف",
+        "delete": "هل تريد الحذف؟"
+      },
+      "text": {
+        "loadingAssets": "تحميل الأصول...",
+        "noImage": "لا توجد صورة",
+        "model": "النموذج:",
+        "seed": "البذور:",
+        "negative": "سلبي:",
+        "created": "تم الإنشاء:",
+        "closePreview": "إغلاق المعاينة",
+        "clickAnAssetToPreview": "انقر فوق أحد الأصول لمعاينته"
+      }
+    },
+    "componentsRpStudioCharacterbookeditor": {
+      "text": {
+        "remove": "إزالة",
+        "bookName": "اسم الكتاب",
+        "description": "الوصف",
+        "scanDepth": "عمق المسح",
+        "tokenBudget": "ميزانية الرمز المميز",
+        "entries": "الإدخالات (",
+        "addEntry": "إضافة إدخال",
+        "entry": "الإدخال",
+        "name": "الاسم",
+        "primaryKeysCommaSeparated": "المفاتيح الأساسية (مفصولة بفواصل)",
+        "secondaryKeys": "المفاتيح الثانوية",
+        "comment": "التعليق",
+        "content": "المحتوى",
+        "insertionPosition": "موضع الإدراج",
+        "insertionOrder": "ترتيب الإدراج",
+        "priority": "الأولوية",
+        "moveUp": "تحريك لأعلى",
+        "moveDown": "تحريك لأسفل"
+      },
+      "description": {
+        "enterAValidJsonObject": "أدخل كائن JSON صالح"
+      },
+      "label": {
+        "recursiveScanning": "المسح التكراري."
+      },
+      "option": {
+        "beforeCharacter": "قبل الحرف",
+        "afterCharacter": "بعد الحرف"
+      }
+    },
+    "componentsRpStudioCharactereditor": {
+      "text": {
+        "delete": "حذف",
+        "save": "حفظ",
+        "add": "إضافة",
+        "scenario": "السيناريو",
+        "next": "التالي",
+        "webSearch": "بحث الويب",
+        "temperature": "درجة الحرارة",
+        "view": "عرض",
+        "cancel": "إلغاء",
+        "close": "إغلاق",
+        "characterNotFound": "لم يتم العثور على الحرف",
+        "estimatedTokens": "الرموز المميزة المقدرة:",
+        "rawEstimate": "التقدير الأولي",
+        "outputReserve": "· احتياطي الإخراج",
+        "editWithCharacterCreator": "التحرير باستخدام منشئ الأحرف",
+        "characterVersion": "إصدار الشخصية",
+        "importSource": "مصدر الاستيراد",
+        "name": "الاسم",
+        "author": "المؤلف",
+        "adultContent18": "محتوى للبالغين (18+)",
+        "description": "الوصف",
+        "creatorNotes": "ملاحظات المنشئ",
+        "tags": "العلامات",
+        "personality": "الشخصية",
+        "systemPrompt": "موجه النظام",
+        "approachingSystemPromptSizeLimit": "يقترب من الحد الأقصى لحجم موجه النظام (",
+        "postHistoryInstructions": "تعليمات ما بعد السجل",
+        "instructions": "التعليمات",
+        "firstMessagePrimaryGreeting": "الرسالة الأولى (تحية أساسية)",
+        "alternateGreetings": "تحيات بديلة",
+        "addGreeting": "إضافة تحية",
+        "greetingPreview": "معاينة الترحيب",
+        "previous": "السابق",
+        "exampleDialogues": "مربعات حوار الأمثلة",
+        "updateRawPreview": "تحديث المعاينة الأولية",
+        "addExample": "إضافة مثال",
+        "noExamplesAddAFewShotExchange": "لا توجد أمثلة.",
+        "speakerRequired": "مطلوب مكبر صوت",
+        "rawExampleDialogue": "حوار نموذجي أولي",
+        "v2ExtensionData": "بيانات امتداد V2",
+        "characterBook": "كتاب الأحرف",
+        "createEmbeddedBook": "إنشاء كتاب مضمن",
+        "removeEmbeddedBook": "إزالة الكتاب المضمن",
+        "attachExistingLorebook": "قم بإرفاق lorebook الموجود",
+        "importEmbeddedAsLinked": "استيراد مضمن كمرتبط",
+        "syncIntoEmbedded": "المزامنة في المضمن",
+        "detachPreserveEmbedded": "فصل (احتفظ مضمن)",
+        "defaultModel": "النموذج الافتراضي",
+        "specialSettings": "الإعدادات الخاصة.",
+        "urlScrapingProvider": "URL موفر النسخ",
+        "enableThoughts": "تمكين الأفكار",
+        "topP": "أعلى ص",
+        "sourcedContextFiles": "ملفات المصدر والسياق",
+        "noSourcedOrContextFilesUploaded": "لم يتم تحميل ملفات المصدر أو السياق",
+        "reApply": "إعادة التطبيق",
+        "disposableTestChat": "دردشة اختبارية يمكن التخلص منها.",
+        "promptOrderTrace": "تتبع الطلب الفوري",
+        "testUserMessage": "اختبار رسالة المستخدم",
+        "unsavedModelResponse": "استجابة النموذج غير المحفوظة",
+        "saveAsRealConversation": "حفظ كمحادثة حقيقية",
+        "resetTest": "اختبار إعادة التعيين",
+        "cardGenerationModel": "نموذج إنشاء البطاقة",
+        "visionAnalysisModel": "نموذج تحليل الرؤية",
+        "localImageAsset": "أصل الصورة المحلية",
+        "textConcept": "مفهوم النص",
+        "visionCapableProvider": "إمكانية الرؤية · الموفر",
+        "contextTokensRequestImage": "رموز السياق · الطلب الصورة ~",
+        "textGenerationProfile": "ملف تعريف إنشاء النص",
+        "contentRating": "تصنيف المحتوى",
+        "detailLevel": "مستوى التفاصيل",
+        "customGenerationDirection": "اتجاه إنشاء مخصص",
+        "visualAnalysis": "التحليل المرئي:",
+        "generatedV2Draft": "مسودة V2 التي تم إنشاؤها:",
+        "applyToLocalDraft": "تنطبق على المسودة المحلية",
+        "reject": "رفض",
+        "generateFieldProposal": "إنشاء مقترح ميداني",
+        "before": "قبل",
+        "after": "بعد",
+        "applyProposal": "تطبيق الاقتراح",
+        "aiRefinementAssistant": "مساعد تحسين الذكاء الاصطناعي",
+        "before842beb5": "قبل:",
+        "after13f2d65": "بعد:",
+        "applySelected": "تطبيق المحدد",
+        "selectAll": "حدد الكل",
+        "cardValidation": "التحقق من صحة البطاقة",
+        "formatValidAndRecommendedFieldsComplete": "قم بتنسيق الحقول الصالحة والموصى بها كاملة.",
+        "stCardExport": "ST تصدير البطاقة",
+        "exportV2Json": "تصدير V2 JSON",
+        "exportV2Png": "تصدير V2 PNG",
+        "exportPrivacyReducedJson": "تصدير JSON مع تقليل الخصوصية",
+        "validation": "التحقق من الصحة",
+        "roundTripVerified": "تم التحقق ذهابًا وإيابًا",
+        "output": "الإخراج",
+        "bytes": "بايت",
+        "v2Fields": "حقول V2",
+        "extensions": "الامتدادات",
+        "embeddedLoreEntries": "إدخالات المعلومات المضمنة",
+        "droppedLocalOnlyFields": "الحقول المحلية فقط المسقطة",
+        "warnings": "التحذيرات",
+        "versionHistory": "سجل الإصدارات",
+        "saveVersion": "حفظ الإصدار",
+        "current": "(الحالي)",
+        "noVersionsSavedSaveAVersionTo": "لم يتم حفظ أي إصدارات. احفظ نسخة لتتبع التغييرات.",
+        "versionComparison": "مقارنة الإصدارات",
+        "saved": "تم الحفظ",
+        "current4fc0e2b": "سير العمل الحالي",
+        "workflow": "سير العمل",
+        "scene": "المشهد:",
+        "prompt": "المطالبة:",
+        "reApplyTo": "إعادة التقديم على",
+        "savingCharacter": "حفظ الحرف..."
+      },
+      "action": {
+        "remove": "إزالة",
+        "compare": "مقارنة",
+        "chat": "محادثة",
+        "allSteps": "جميع الخطوات",
+        "avatar": "الصورة الرمزية",
+        "setPrimary": "تعيين الأساسي",
+        "duplicate": "نسخة مكررة",
+        "down": "لأسفل",
+        "restore": "استعادة",
+        "saveToPromptLibrary": "حفظ في مكتبة المطالبة",
+        "startRpChat": "بدء دردشة RP",
+        "createScenarioFromCharacter": "إنشاء سيناريو من الشخصية",
+        "createWorkflow": "إنشاء سير عمل",
+        "previous": "← السابق (",
+        "viewAllSteps": "عرض جميع الخطوات",
+        "next": "التالي:"
+      },
+      "option": {
+        "off": "متوقف",
+        "generate": "التوليد",
+        "chooseLorebook": "اختر lorebook...",
+        "useChatDefault": "استخدم الدردشة الافتراضية",
+        "brave": "شجاع",
+        "google": "جوجل",
+        "noCompatibleLiveModel": "لا يوجد نموذج مباشر متوافق",
+        "vision": "· الرؤية · سياق",
+        "context": "سياق",
+        "chooseMediaStudioImage": "اختر صورة Media Studio...",
+        "general": "عام",
+        "mature": "ناضج",
+        "adult": "للبالغين",
+        "attachScene": "إرفاق مشهد...",
+        "attachPrompt": "إرفاق موجه..."
+      },
+      "label": {
+        "loadFileTxtMd": "تحميل الملف (.txt، .md)",
+        "uploadFileMax5mb": "تحميل الملف (5 ميجابايت كحد أقصى)"
+      },
+      "description": {
+        "localCharacterStoredInVeniceForgeNot": "الحرف المحلي - مخزن في Venice Forge، غير مستضاف على Venice.ai.",
+        "embeddedDataIsPortableInV2Exports": "تظل البيانات المضمنة محمولة في عمليات تصدير V2 المرتبطة وتتم مزامنتها مع النسخة المضمنة فقط عندما تطلبه",
+        "filesLoadedIntoPersonalitySystemPromptInstructions": "يتم تخزين الملفات المحملة في الشخصية أو موجه النظام أو التعليمات أو المرفقة كسياق عام مباشرة داخل بطاقة الشخصية هذه.",
+        "runsOneUnsavedTurnTheResponseNever": "يقوم بتشغيل دورة واحدة غير محفوظة. لا يؤدي الرد إلى تغيير هذه البطاقة مطلقًا أو يصبح نموذجًا للحوار تلقائيًا.",
+        "estimatedSystemPrompt": "موجه النظام المقدر:",
+        "tokensActivatedLorebookSections": "الرموز المميزة · أقسام كتاب الكتب المنشط:",
+        "analysisAndGeneratedCardsRemainProposalsYour": "يظل التحليل والبطاقات التي تم إنشاؤها مقترحات. يتم الاحتفاظ بمسودتك الحالية حتى تقوم بتطبيق واحدة بشكل صريح.",
+        "producesAnAllowlistedProposalOnlyNothingChanges": "يُنتج مقترحًا مدرجًا في القائمة المسموح بها فقط. لا شيء يتغير حتى تقوم بتطبيقه."
+      },
+      "heading": {
+        "1SourceAvatar": "1. المصدر والصورة الرمزية",
+        "2Identity": "2. الهوية",
+        "3Persona": "3. الشخصية",
+        "4PromptBehavior": "4. السلوك الفوري",
+        "5Greetings": "5. تحيات",
+        "6ExampleDialogue": "6. حوار الأمثلة",
+        "7CharacterBookExtensions": "7. كتاب الأحرف والملحقات",
+        "8ModelAndContext": "8. النموذج والسياق",
+        "9TestAiRefinement": "9. الاختبار وتحسين الذكاء الاصطناعي",
+        "aiDraftGeneration": "إنشاء مسودة الذكاء الاصطناعي",
+        "10ExportWorkflow": "10. التصدير وسير العمل"
+      },
+      "item": {
+        "tokens": "الرموز المميزة"
+      }
+    },
+    "componentsRpStudioCharacterlibrary": {
+      "text": {
+        "characterCreator": "منشئ الشخصيات",
+        "createStCard": "إنشاء بطاقة ST",
+        "close": "إغلاق",
+        "delete": "حذف",
+        "cancel": "إلغاء",
+        "buildCharacter": "بناء الحرف",
+        "drafts": "المسودات (",
+        "importCard": "استيراد البطاقة",
+        "characterImportChangedAnExistingCard": "أدى استيراد الأحرف إلى تغيير بطاقة موجودة.",
+        "undoImport": "التراجع عن الاستيراد",
+        "updated": "تم التحديث",
+        "resume": "استئناف",
+        "loadingCharacters": "تحميل الأحرف...",
+        "createYourFirstCharacter": "قم بإنشاء الحرف الأول الخاص بك",
+        "name": "الاسم",
+        "format": "التنسيق",
+        "creator": "المنشئ",
+        "greetings": "تحيات",
+        "loreEntries": "إدخالات المعرفة",
+        "extensions": "الامتدادات",
+        "characterBook": "كتاب الشخصيات",
+        "aMatchingCardAlreadyExistsChooseAn": "توجد بطاقة مطابقة بالفعل. اختر دقة واضحة؛ لا شيء يتم الكتابة عليه بصمت.",
+        "fieldsToMerge": "الحقول المطلوب دمجها",
+        "keepExisting": "الاحتفاظ بالموجودة",
+        "mergeFields": "دمج الحقول",
+        "replace": "استبدال",
+        "createCopy": "إنشاء نسخة"
+      },
+      "action": {
+        "chat": "محادثة",
+        "edit": "تحرير",
+        "delete": "هل تريد الحذف؟",
+        "exportJson": "تصدير JSON",
+        "exportPng": "تصدير PNG"
+      },
+      "description": {
+        "localCharactersAreStoredInVeniceForge": "يتم تخزين الأحرف المحلية في Venice Forge فقط. ولا تتم استضافتها على Venice.ai.",
+        "draftsAreEncryptedLocallyExcludedFromSync": "يتم تشفير المسودات محليًا، واستبعادها من المزامنة، ولا تظهر كأحرف نشطة حتى يتم حفظها.",
+        "noRecoverableDrafts": "لا توجد مسودات قابلة للاسترداد.",
+        "nothingIsSavedUntilYouConfirmThis": "لا يتم حفظ أي شيء حتى تقوم بتأكيد هذه المعاينة."
+      },
+      "heading": {
+        "localStCardDrafts": "مسودات بطاقة ST المحلية",
+        "reviewCharacterImport": "مراجعة استيراد الأحرف"
+      },
+      "option": {
+        "embeddedLinkedRecommended": "مضمن + مرتبط (مستحسن)",
+        "linkedOnly": "مرتبط فقط",
+        "embeddedOnly": "مضمن فقط",
+        "doNotImportBook": "عدم استيراد الكتاب"
+      },
+      "label": {
+        "setAsFavorite": "تعيين كمفضل",
+        "startRpChatAfterImport": "بدء دردشة RP بعد الاستيراد"
+      }
+    },
+    "componentsRpStudioLorebookmanager": {
+      "action": {
+        "edit": "تحرير",
+        "delete": "هل تريد الحذف؟"
+      },
+      "text": {
+        "save": "حفظ",
+        "newLorebook": "كتاب تقاليد جديد",
+        "loading": "جارٍ التحميل...",
+        "lorebookNotFound": "لم يتم العثور على كتاب Lorebook.",
+        "name": "الاسم",
+        "tagsCommaSeparated": "العلامات (مفصولة بفواصل)",
+        "description": "الوصف",
+        "entries": "الإدخالات",
+        "addEntry": "إضافة إدخال",
+        "noEntriesYet": "لا توجد إدخالات حتى الآن."
+      },
+      "label": {
+        "enabled": "تم تمكينه",
+        "always": "دائمًا",
+        "wholeWords": "الكلمات الكاملة"
+      }
+    },
+    "componentsRpStudioPersonamanager": {
+      "text": {
+        "active": "نشط",
+        "save": "حفظ",
+        "add": "إضافة",
+        "newPersona": "شخصية جديدة",
+        "loadingPersonas": "جارٍ تحميل الأشخاص...",
+        "personaNotFound": "لم يتم العثور على الشخصية.",
+        "personaImage": "صورة شخصية",
+        "removeImage": "إزالة الصورة",
+        "name": "الاسم",
+        "referenceThirdPerson": "المرجع (شخص ثالث)",
+        "description": "الوصف",
+        "tags": "العلامات"
+      },
+      "action": {
+        "edit": "تحرير",
+        "delete": "هل تريد الحذف؟"
+      },
+      "label": {
+        "loadFromFileTxtMd": "التحميل من ملف (.txt، .md)"
+      }
+    },
+    "componentsRpStudioPromptdebugdrawer": {
+      "text": {
+        "close": "إغلاق",
+        "chars": "الأحرف ·",
+        "excluded": "مستبعد:",
+        "noRecentMessages": "لا توجد رسائل حديثة."
+      },
+      "heading": {
+        "promptTrace": "التتبع الفوري"
+      }
+    },
+    "componentsRpStudioRpchatlist": {
+      "text": {
+        "cancel": "إلغاء",
+        "create": "إنشاء",
+        "model": "النموذج",
+        "characters": "الشخصيات",
+        "newRpChat": "دردشة RP جديدة",
+        "loadingChats": "جارٍ تحميل الدردشات...",
+        "startYourFirstRp": "ابدأ أول RP الخاص بك",
+        "title": "العنوان",
+        "openingGreeting": "التحية الافتتاحية",
+        "noCharactersYetCreateOneInThe": "لا يوجد أحرف حتى الآن - قم بإنشاء واحد في علامة التبويب \"الأحرف\".",
+        "personaOptional": "شخصية (اختياري)",
+        "lorebooks": "لوربوكس",
+        "scenarioOverride": "تجاوز السيناريو"
+      },
+      "action": {
+        "open": "افتح",
+        "delete": "هل تريد الحذف؟"
+      },
+      "heading": {
+        "newRpChat": "دردشة RP جديدة"
+      },
+      "option": {
+        "usePrimaryGreeting": "استخدم التحية الأساسية",
+        "alternateGreeting": "التحية البديلة",
+        "randomGreeting": "تحية عشوائية",
+        "startWithoutGreeting": "ابدأ بدون تحية",
+        "noPersona": "لا توجد شخصية"
+      }
+    },
+    "componentsRpStudioRpstudioview": {
+      "text": {
+        "rpStudio": "استوديو لعب الأدوار",
+        "localConfigIsStillLoadingRpStudio": "لا يزال التكوين المحلي قيد التحميل. عناصر التحكم في حفظ RP Studio غير متاحة مؤقتًا حتى يتم ترطيب لقطة إعدادات الأمان.",
+        "loadingStCardStudio": "جارٍ تحميل ST Card Studio..."
+      }
+    },
+    "componentsRpStudioScenegenerator": {
+      "text": {
+        "chat": "محادثة",
+        "seed": "البذرة",
+        "imageModel": "نموذج الصورة",
+        "prompt": "مطالبة",
+        "extracted": "مستخرج:",
+        "negativePrompt": "مطالبة سلبية",
+        "generateScene": "إنشاء مشهد",
+        "recentScenes": "المشاهد الأخيرة",
+        "noScenesYet": "لا توجد مشاهد حتى الآن.",
+        "noImage": "لا توجد صورة"
+      },
+      "option": {
+        "selectAChat": "حدد دردشة..."
+      }
+    },
+    "componentsScenesScenecomposerview": {
+      "heading": {
+        "sceneComposer": "مؤلف المشاهد",
+        "components": "المكونات ("
+      },
+      "option": {
+        "project": "مشروع",
+        "allScopes": "جميع النطاقات",
+        "global": "عالمي",
+        "newest": "الأحدث",
+        "oldest": "الأقدم",
+        "title": "العنوان",
+        "favorite": "المفضلة"
+      },
+      "action": {
+        "archive": "أرشفة",
+        "remove": "إزالة",
+        "delete": "حذف",
+        "cancel": "إلغاء",
+        "new": "جديد",
+        "favorites": "★ المفضلة",
+        "restore": "استعادة",
+        "saveMetadata": "حفظ البيانات الوصفية",
+        "add": "+ أضف",
+        "saveNewVersion": "حفظ الإصدار الجديد",
+        "useInImageStudio": "الاستخدام في Image Studio",
+        "copyRecipe": "نسخ الوصفة",
+        "createWorkflow": "إنشاء سجل سير العمل",
+        "history": "(",
+        "useThisVersion": "استخدم هذا الإصدار"
+      },
+      "description": {
+        "loading": "جارٍ التحميل...",
+        "noComponentsYetClickAddToBegin": "لا توجد مكونات بعد انقر فوق \"+ إضافة\" لبدء الإنشاء"
+      },
+      "text": {
+        "version": "الإصدار",
+        "component": "المكون",
+        "created": "· تم إنشاؤه",
+        "updated": "· تم التحديث",
+        "current": "الحالي"
+      },
+      "label": {
+        "defaults": "الإعدادات الافتراضية:"
+      }
+    },
+    "componentsSearchProfilediscoverytab": {
+      "action": {
+        "cancel": "إلغاء"
+      },
+      "heading": {
+        "publicProfileDiscovery": "اكتشاف الملف الشخصي العام",
+        "discoveredProfileCandidates": "مرشحو الملف الشخصي المكتشفون"
+      },
+      "description": {
+        "aggregatesSocialProfileMappingsFromPublicDatabases": "تجميع تعيينات الملف الشخصي الاجتماعي من قواعد البيانات العامة (GitHub، Twitter، LinkedIn، وما إلى ذلك) باستخدام Venice تكامل الويب"
+      },
+      "label": {
+        "platformsToSearch": "منصات للبحث"
+      },
+      "text": {
+        "candidates": "المرشحون",
+        "confidence": "الثقة"
+      }
+    },
+    "componentsSearchScrapetab": {
+      "action": {
+        "copy": "نسخ"
+      },
+      "heading": {
+        "webScrape": "سكراب الويب"
+      },
+      "option": {
+        "veniceWebScrape": "مكشطة ويب البندقية",
+        "jinaReader": "جينا ريدر"
+      }
+    },
+    "componentsSearchSearchscrapeview": {
+      "heading": {
+        "research": "البحث"
+      },
+      "description": {
+        "searchScrapeCollectEvidenceAndSynthesizeFindings": "البحث، واستخراج، وجمع الأدلة، وتجميعها. النتائج"
+      }
+    },
+    "componentsSearchSearchtab": {
+      "heading": {
+        "webSearch": "بحث الويب"
+      },
+      "option": {
+        "jinaSearch": "بحث جينا",
+        "braveSearchVenice": "بحث شجاع (البندقية)",
+        "googleSearchVenice": "بحث Google (البندقية)"
+      },
+      "action": {
+        "scrapeWithVenice": "امسح باستخدام البندقية",
+        "readWithJina": "اقرأ مع Jina",
+        "saveToSession": "حفظ في الجلسة"
+      },
+      "text": {
+        "noSearchResultsYet": "لا توجد نتائج بحث حتى الآن"
+      }
+    },
+    "componentsStatusDiagnosticsdrawer": {
+      "action": {
+        "close": "إغلاق",
+        "openPrivacyDashboard": "فتح لوحة الخصوصية",
+        "copySafeDiagnostics": "نسخ التشخيص الآمن",
+        "openStatus": "حالة الفتح",
+        "openConfig": "فتح التكوين",
+        "jumpToModel": "انتقل إلى النموذج"
+      },
+      "heading": {
+        "diagnostics": "التشخيص"
+      },
+      "description": {
+        "appHealthModelCatalogStorageSafetyAnd": "صحة التطبيق وكتالوج النماذج والتخزين والسلامة وحالة الموفر.",
+        "lastRefresh": "التحديث الأخير:",
+        "lastRefreshError": "خطأ التحديث الأخير:",
+        "webModeFilesystemRevealsAndTheSystem": "وضع الويب: نظام الملفات، والكشف، وقشرة النظام غير متوفرة. تم تعطيل بعض ميزات سطح المكتب فقط (توجيه الصوت، وتكوين YAML المحلي).",
+        "phase2cShipsReadOnlyDiagnosticsDestructive": "تقوم المرحلة 2C بشحن تشخيصات للقراءة فقط. الإصلاحات المدمرة (إعادة ضبط المفاتيح، ومسح التخزين، وحذف جميع البيانات) خارج النطاق وتعيش في علامات التبويب المخصصة لها."
+      },
+      "text": {
+        "copiedAt": "منسوخ في",
+        "includeRedactedPromptExcerptsInSafeDiagnostics": "تضمين مقتطفات موجهة منقحة في التشخيص الآمن",
+        "truncated80CharsAndSecretStrippedPrompt": "مقتطفات موجهة مقطوعة (≥80 حرفًا) ومقتطفات مطالبة سرية من مكتبة الموجهات. إيقاف بشكل افتراضي."
+      }
+    },
+    "componentsStatusHeaderstatuscluster": {
+      "action": {
+        "status": "الحالة"
+      }
+    },
+    "componentsStatusTaskcenterdrawer": {
+      "action": {
+        "cancel": "إلغاء",
+        "retry": "إعادة المحاولة",
+        "clear": "مسح",
+        "open": "فتح"
+      },
+      "heading": {
+        "taskCenter": "مركز المهام",
+        "generation": "جيل"
+      },
+      "description": {
+        "recentBackgroundGenerations": "أجيال الخلفية الحديثة",
+        "noRecentTasks": "لا توجد مهام حديثة. إنشاء"
+      },
+      "text": {
+        "cancellationUnavailable": "الإلغاء غير متاح"
+      }
+    },
+    "componentsUiShared": {
+      "text": {
+        "working": "جارٍ العمل…"
+      },
+      "action": {
+        "shuffle": "خلط عشوائي"
+      }
+    },
+    "componentsVideoVideoView": {
+      "text": {
+        "model": "النموذج",
+        "resolution": "الدقة",
+        "generationMode": "وضع الإنشاء",
+        "prompt": "مطالبة",
+        "negativePrompt": "مطالبة سلبية",
+        "referenceImage": "صورة مرجعية",
+        "duration": "المدة",
+        "aspect": "العرض",
+        "generateAudio": "إنشاء صوت",
+        "output": "الإخراج",
+        "generatedVideosAppearHere": "تظهر هنا مقاطع الفيديو التي تم إنشاؤها",
+        "averageGenerationTime30s2min": "متوسط وقت التوليد: 30 ثانية - 2 دقيقة"
+      },
+      "action": {
+        "download": "تنزيل",
+        "textToVideo": "نص إلى فيديو",
+        "imageToVideo": "صورة إلى فيديو",
+        "reset": "إعادة تعيين",
+        "generateAnother": "إنشاء آخر"
+      },
+      "description": {
+        "clickToAddImage": "انقر لإضافة صورة"
+      }
+    },
+    "componentsWorkflowsWorkflowtemplatesview": {
+      "heading": {
+        "workflows": "سير العمل",
+        "steps": "الخطوات",
+        "compilePreview": "ترجمة المعاينة",
+        "runPlan": "خطة التشغيل"
+      },
+      "label": {
+        "import": "استيراد",
+        "workflowTitle": "عنوان سير العمل",
+        "workflowTags": "علامات سير العمل",
+        "version": "الإصدار:"
+      },
+      "action": {
+        "export": "تصدير",
+        "archive": "أرشفة",
+        "delete": "حذف",
+        "remove": "إزالة",
+        "new": "جديد",
+        "addNewVersion": "إضافة إصدار جديد",
+        "addStep": "إضافة خطوة"
+      },
+      "text": {
+        "noWorkflowsFound": "لم يتم العثور على أي مهام سير عمل.",
+        "selectOrCreateAWorkflowToBegin": "حدد أو قم بإنشاء سير عمل للبدء.",
+        "workflowIsValid": "سير العمل صالح.",
+        "workflowHasErrors": "يحتوي سير العمل على أخطاء.",
+        "noRunnableActions": "لا توجد إجراءات قابلة للتشغيل."
+      }
+    },
+    "componentsDiagnosticspreview": {
+      "text": {
+        "noRequestsYet": "لا توجد طلبات حتى الآن",
+        "cfRay": "CF-RAY"
+      }
+    },
+    "componentsErrorboundary": {
+      "heading": {
+        "somethingWentWrong": "حدث خطأ ما."
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "واجه التطبيق خطأ غير متوقع ولم يتمكن من عرض هذا العرض. عملك آمن — حاول مرة أخرى أو أعد التحميل للتعافي."
+      },
+      "action": {
+        "tryAgain": "حاول مرة أخرى",
+        "reloadApplication": "إعادة تحميل التطبيق"
+      }
+    },
+    "componentsModelselect": {
+      "text": {
+        "highFidelity": "دقة عالية",
+        "standard": "قياسي",
+        "anon": "حالا",
+        "private": "خاص"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorcompleted": {
+      "heading": {
+        "characterCreated": "تم إنشاء الحرف"
+      },
+      "description": {
+        "hasBeenSavedToYourLocalCharacter": "\"تم حفظه في مكتبة الأحرف المحلية الخاصة بك."
+      },
+      "text": {
+        "startChat": "ابدأ الدردشة",
+        "viewCharacter": "عرض الحرف",
+        "continueEditing": "متابعة التحرير",
+        "exportCard": "بطاقة التصدير",
+        "createAnother": "إنشاء"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorgenerating": {
+      "heading": {
+        "generatingCharacterDraft": "إنشاء مسودة أحرف"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorready": {
+      "text": {
+        "charaCardV2": "chara_card_v2",
+        "errorsMustResolve": "الأخطاء (يجب حلها)",
+        "warningsOptional": "التحذيرات (اختياري)",
+        "returnToDraft": "العودة إلى المسودة",
+        "saveAsCopy": "حفظ كنسخة"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorview": {
+      "text": {
+        "autosaveFailed": "فشل الحفظ التلقائي:"
+      },
+      "action": {
+        "retrySave": "أعد محاولة الحفظ"
+      },
+      "description": {
+        "savingCharacterToLocalLibrary": "حفظ الحرف في المكتبة المحلية..."
+      }
+    },
+    "componentsChatChatInput": {
+      "action": {
+        "stop": "إيقاف"
+      }
+    },
+    "componentsDocumentsDocumentrenderer": {
+      "text": {
+        "documentIsEmpty": "المستند فارغ.",
+        "pageBreak": "فاصل الصفحات"
+      }
+    },
+    "componentsGalleryLineageViewer": {
+      "text": {
+        "cycleDetectedInTheLineageChainShowing": "تم اكتشاف دورة في سلسلة النسب - تظهر عرضًا مقطوعًا.",
+        "someLineageReferencesAreMissingFromThe": "البعض مراجع السلالة مفقودة من المجموعة المحملة. دورة",
+        "cycle": ":",
+        "missing": "(مفقود)"
+      },
+      "description": {
+        "noLineageRecorded": "لم يتم تسجيل السلالة"
+      }
+    },
+    "componentsGalleryRecipeComparison": {
+      "text": {
+        "recipeComparison": "مقارنة الوصفة"
+      },
+      "column": {
+        "field": "حقل",
+        "original": "أصلي",
+        "sanitized": "معقم"
+      }
+    },
+    "galleryRecipeCompatibilityCard": {
+      "text": {
+        "thisItemHasNoRecipeToCompare": "لا يحتوي هذا العنصر على وصفة للمقارنة مع النموذج الحالي.",
+        "for": "لـ",
+        "unsupportedField": "حقل غير مدعوم"
+      },
+      "action": {
+        "useWith": "استخدم مع",
+        "useOriginal": "استخدم الملف الأصلي"
+      }
+    },
+    "componentsLayoutHeader": {
+      "text": {
+        "tasks": "المهام"
+      }
+    },
+    "componentsLayoutMemoryPanel": {
+      "heading": {
+        "legacyConversationsDetected": "تم اكتشاف محادثات قديمة",
+        "encryptedConversationVault": "مخزن المحادثات المشفرة",
+        "maintenanceOperations": "عمليات الصيانة",
+        "curatedFacts": "حقائق منسقة ("
+      },
+      "description": {
+        "weFoundUnencryptedConversationRecordsFromA": "لقد عثرنا على سجلات محادثات غير مشفرة من تثبيت سابق. قم بترحيلهم إلى القبو الآمن الجديد الآن.",
+        "configureMemoryParametersAndLocalIndexingStructures": "تكوين معلمات الذاكرة وهياكل الفهرسة المحلية. يتم تشفير سجلات Vault والفهرس بالكامل في حالة عدم النشاط.",
+        "allowsTheVaultToAnalyzeAndExtract": "يسمح للمخزن بتحليل واستخراج الحقائق من المواضيع الجديدة.",
+        "pullsRelevantHistoryFactsDynamicallyToHelp": "يسحب حقائق التاريخ ذات الصلة ديناميكيًا للمساعدة في المطالبات المستقبلية.",
+        "displaysAPreviewBoxAboveTheChat": "يعرض مربع معاينة أعلى مدخلات الدردشة مما يسمح بتشذيب الحقائق.",
+        "transmitsSummaryMaterialToVeniceModelFor": "ينقل المواد الموجزة إلى نموذج فينيسيا لاكتشاف الحقائق بشكل أفضل.",
+        "lastIndexedAt": "تمت فهرسته آخر مرة في:",
+        "theseAreTheKeyFactsExtractedLocally": "هذه هي الحقائق الأساسية المستخرجة محليًا من سجل المحادثات."
+      },
+      "action": {
+        "openFolder": "فتح المجلد",
+        "openVaultFolder": "افتح مجلد Vault",
+        "forget": "ننسى"
+      },
+      "label": {
+        "enableConversationRecording": "تمكين تسجيل المحادثة",
+        "enableMemoryRetrieval": "تمكين استرداد الذاكرة",
+        "showPulledContextBeforeSending": "إظهار السياق المسحوب قبل الإرسال",
+        "useAiSummaries": "استخدام ملخصات الذكاء الاصطناعي"
+      },
+      "text": {
+        "noFactsStoredYet": "لم يتم تخزين أي حقائق حتى الآن.",
+        "source": "المصدر:",
+        "confidence": "• الثقة:"
+      }
+    },
+    "componentsPlaygroundPlaygroundChat": {
+      "text": {
+        "whatShouldIBuild": "ما الذي يجب أن أبنيه",
+        "describeAWorkflowInPlainLanguageI": "؟ وصف سير العمل بلغة واضحة، سأقوم بتجميعه على اللوحة القماشية في الوقت الفعلي.",
+        "noMessage": "(لا توجد رسالة)",
+        "patch": "التصحيح",
+        "applied": "المطبق"
+      },
+      "action": {
+        "stop": "إيقاف",
+        "send": "إرسال"
+      }
+    },
+    "componentsPlaygroundWorkflowPreview": {
+      "description": {
+        "noWorkflowYet": "لا يوجد سير عمل حتى الآن",
+        "tellTheAgentWhatYouWantTo": "أخبر الوكيل بما تريد بناءه - سيقوم بتجميع خط الأنابيب هنا في الوقت الفعلي."
+      }
+    },
+    "componentsRpStudioRpchatview": {
+      "heading": {
+        "chatNotFound": "لم يتم العثور على الدردشة"
+      },
+      "description": {
+        "theConversationYouReLookingForDoesn": "المحادثة التي تبحث عنها غير موجودة أو تم حذفها."
+      },
+      "text": {
+        "scene": "المشهد",
+        "inspector": "المفتش",
+        "startTheRoleplayBySendingAMessage": "ابدأ لعب الأدوار عن طريق إرسال رسالة.",
+        "thinking": "أفكر...",
+        "speaker": "المتحدث:",
+        "send": "إرسال"
+      },
+      "action": {
+        "narrator": "الراوي"
+      }
+    },
+    "componentsSearchAiresearchtab": {
+      "heading": {
+        "deepAiResearchAgent": "وكيل أبحاث الذكاء الاصطناعي العميق"
+      },
+      "description": {
+        "executesARecursiveWebSearchLoopScrapes": "ينفذ حلقة بحث متكررة على الويب، ويستخرج مصادر متعددة، ويوزع الاستشهادات، ويجمع استجابة نهائية شاملة."
+      },
+      "option": {
+        "jinaAiSearchReader": "بحث وقارئ الذكاء الاصطناعي من Jina",
+        "autoDefaultFromConfig": "تلقائي (افتراضي من التكوين)",
+        "braveSearch": "بحث Brave",
+        "googleSearch": "بحث Google",
+        "retrieveSynthesizeUsesVeniceModel": "الاسترداد والتجميع (يستخدم نموذج البندقية)",
+        "retrieveOnlyNoAiSynthesis": "استرداد فقط (بدون تركيب الذكاء الاصطناعي)"
+      },
+      "text": {
+        "budgetControls": "ضوابط الميزانية",
+        "retrievedEvidenceSources": "مصادر الأدلة المستردة"
+      },
+      "action": {
+        "copyAnswer": "نسخ الإجابة",
+        "copyEvidenceSources": "نسخ مصادر الأدلة"
+      }
+    },
+    "componentsSearchResearchproviderstatus": {
+      "action": {
+        "addKey": "إضافة مفتاح"
+      }
+    },
+    "componentsSearchTextparsertab": {
+      "heading": {
+        "documentTextParser": "محلل نص المستند"
+      },
+      "description": {
+        "extractRawTextFromPdfDocxXlsx": "استخراج النص الخام من PDF أو DOCX أو XLSX أو. مستندات TXT"
+      }
+    },
+    "componentsSettingsAboutpanel": {
+      "text": {
+        "beta": "· الإصدار التجريبي"
+      }
+    },
+    "componentsSettingsConfigpanel": {
+      "text": {
+        "configYaml": "التكوين.yaml",
+        "themesYaml": "theme.yaml",
+        "secretsKeepPlaintextKeysTrue": "Secrets.keep_plaintext_keys: صحيح"
+      }
+    },
+    "componentsUiErrorBoundary": {
+      "text": {
+        "somethingWentWrong": "حدث خطأ ما",
+        "showDetails": "عرض التفاصيل"
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "واجه التطبيق خطأ غير متوقع وتعذر عليه عرض هذا العرض. عملك آمن - قم بالتحديث للتعافي."
+      },
+      "action": {
+        "tryAgain": "حاول مرة أخرى",
+        "reloadPage": "إعادة تحميل الصفحة"
+      }
+    },
+    "componentsUiSelect": {
+      "text": {
+        "noResults": "لا توجد نتائج"
+      }
+    }
+  }
 }

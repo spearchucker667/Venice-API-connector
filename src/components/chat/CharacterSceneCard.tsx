@@ -1,4 +1,5 @@
 import type { CharacterSceneGenerationStatus } from '../../types/characterSceneGeneration';
+import { Trans } from 'react-i18next';
 
 interface CharacterSceneCardProps {
   status: CharacterSceneGenerationStatus;
@@ -57,7 +58,7 @@ export function CharacterSceneCard({
 
       {prompt && (
         <div className="mb-3">
-          <p className="text-[12px] text-text-muted uppercase tracking-wide mb-1">Scene prompt</p>
+          <p className="text-[12px] text-text-muted uppercase tracking-wide mb-1"><Trans i18nKey="common:surface.componentsChatCharacterscenecard.description.scenePrompt" /></p>
           <p className="text-[13.5px] text-text-secondary leading-relaxed line-clamp-4">{prompt}</p>
         </div>
       )}
@@ -80,40 +81,35 @@ export function CharacterSceneCard({
             onClick={onOpenInMediaStudio}
             className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-accent text-accent-fg hover:bg-accent-hover transition-colors cursor-pointer"
           >
-            Open in Media Studio
-          </button>
+            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.openInMediaStudio" /></button>
         )}
         {prompt && onCopyPrompt && (
           <button
             onClick={onCopyPrompt}
             className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
           >
-            Copy prompt
-          </button>
+            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.copyPrompt" /></button>
         )}
         {(status === 'failed' || status === 'rate_limited') && onRetry && (
           <button
             onClick={onRetry}
             className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
           >
-            Retry
-          </button>
+            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.retry" /></button>
         )}
         {status === 'complete' && onRegenerate && (
           <button
             onClick={onRegenerate}
             className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
           >
-            Regenerate
-          </button>
+            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.regenerate" /></button>
         )}
         {isRunning && onCancel && (
           <button
             onClick={onCancel}
             className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
           >
-            Cancel
-          </button>
+            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.cancel" /></button>
         )}
       </div>
     </div>

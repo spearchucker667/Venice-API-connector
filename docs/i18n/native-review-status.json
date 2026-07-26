@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "description": "Human native-language review evidence. Machine translation must never promote a locale to complete.",
+  "locales": {
+    "es": { "status": "first-pass-machine", "reviewer": null, "reviewedAt": null },
+    "fr": { "status": "first-pass-machine", "reviewer": null, "reviewedAt": null },
+    "de": { "status": "first-pass-machine", "reviewer": null, "reviewedAt": null },
+    "pt-BR": { "status": "first-pass-machine", "reviewer": null, "reviewedAt": null },
+    "ru": { "status": "first-pass-machine", "reviewer": null, "reviewedAt": null },
+    "zh-CN": { "status": "first-pass-machine", "reviewer": null, "reviewedAt": null },
+    "ja": { "status": "first-pass-machine", "reviewer": null, "reviewedAt": null },
+    "hi": { "status": "first-pass-machine", "reviewer": null, "reviewedAt": null },
+    "ar": { "status": "first-pass-machine", "reviewer": null, "reviewedAt": null },
+    "ko": { "status": "first-pass-machine", "reviewer": null, "reviewedAt": null },
+    "sv-SE": { "status": "first-pass-machine", "reviewer": null, "reviewedAt": null }
+  }
+}

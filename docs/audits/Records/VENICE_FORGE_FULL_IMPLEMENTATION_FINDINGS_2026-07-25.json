@@ -1,0 +1,249 @@
+{
+  "audit": {
+    "date": "2026-07-25",
+    "snapshot": "Venice_Forge-clean-20260724-230537.zip",
+    "repository": "spearchucker667/Venice_Forge",
+    "branch": "main",
+    "commit": "7fca076647112433fa4aacb859e707c99b914c12",
+    "version": "3.0.0-beta.1",
+    "verdict": "DO_NOT_CERTIFY_FULLY_IMPLEMENTED"
+  },
+  "metrics": {
+    "repository_files": 1379,
+    "repository_directories": 147,
+    "code_files": 1046,
+    "approx_code_loc": 195496,
+    "test_files": 422,
+    "canonical_tabs": 22,
+    "static_verifiers_passed": 30,
+    "dependency_backed_verifiers_blocked": 9,
+    "empty_catch_files": 43,
+    "console_call_files": 76,
+    "todo_marker_files": 2
+  },
+  "findings": [
+    {
+      "id": "VF-AUDIT-20260725-P0-001",
+      "severity": "P0",
+      "title": "Character Creator native import handle is parsed as JSON",
+      "status": "open",
+      "files": [
+        "electron/ipc/characterCardFileHandlers.ts:120-156",
+        "src/components/character-creator/CharacterCreatorView.tsx:430-440",
+        "src/services/characterCreatorImportService.ts:366-385"
+      ],
+      "impact": "Native JSON and PNG imports cannot open as Character Creator drafts.",
+      "required_fix": "Add sender-bound one-time handle consumption IPC returning a bounded V2 DTO and managed avatar reference."
+    },
+    {
+      "id": "VF-AUDIT-20260725-P0-002",
+      "severity": "P0",
+      "title": "Character Creator autosave suppresses write failure",
+      "status": "open",
+      "files": [
+        "src/components/character-creator/CharacterCreatorView.tsx:60-84"
+      ],
+      "impact": "Edits can be lost while validation, export or approval proceeds.",
+      "required_fix": "Retain pending data until success, return typed failure, block approval/export, and add revision-safe serialization."
+    },
+    {
+      "id": "VF-AUDIT-20260725-P0-003",
+      "severity": "P0",
+      "title": "Completion documentation contradicts live status",
+      "status": "open",
+      "files": [
+        "docs/ROADMAP.md",
+        "docs/summary_of_work.md",
+        "docs/reports/character-creator-implementation-report.md",
+        "README.md"
+      ],
+      "impact": "Release and agent decisions can rely on false completion claims.",
+      "required_fix": "Reopen the roadmap item, correct reports, and add a cross-ledger consistency verifier."
+    },
+    {
+      "id": "VF-AUDIT-20260725-P1-001",
+      "severity": "P1",
+      "title": "Character Creator IPC channel map contains unregistered operations",
+      "status": "open",
+      "files": [
+        "electron/ipc/characterCreatorHandlers.ts:13-24"
+      ],
+      "impact": "Trusted API contract drifts from implementation.",
+      "required_fix": "Remove dead channels or implement every channel through typed main/preload/renderer contracts."
+    },
+    {
+      "id": "VF-AUDIT-20260725-P1-002",
+      "severity": "P1",
+      "title": "Character Creator validation IPC is weaker than canonical approval validation",
+      "status": "open",
+      "files": [
+        "electron/ipc/characterCreatorHandlers.ts:51-65"
+      ],
+      "impact": "Malformed cards can pass the main-process validator.",
+      "required_fix": "Use one shared runtime schema and canonical validator."
+    },
+    {
+      "id": "VF-AUDIT-20260725-P1-003",
+      "severity": "P1",
+      "title": "Character Creator export trusts unbounded renderer DTO and data URL",
+      "status": "open",
+      "files": [
+        "electron/ipc/characterCreatorHandlers.ts:67-123"
+      ],
+      "impact": "Malformed export and memory-pressure boundary.",
+      "required_fix": "Export by canonical draft/card ID or strictly validate and bound decoded data."
+    },
+    {
+      "id": "VF-AUDIT-20260725-P1-004",
+      "severity": "P1",
+      "title": "AI Design Process is largely post-hoc and hardcodes original mode",
+      "status": "open",
+      "files": [
+        "src/services/characterCreatorAiService.ts:397-421"
+      ],
+      "impact": "Displayed process and inspiration mode do not match documented semantics.",
+      "required_fix": "Implement real concept-analysis stage or rename the UI; preserve all design modes."
+    },
+    {
+      "id": "VF-AUDIT-20260725-P1-005",
+      "severity": "P1",
+      "title": "Character Creator response validation is incomplete",
+      "status": "open",
+      "files": [
+        "src/services/characterCreatorAiService.ts"
+      ],
+      "impact": "Unbounded arrays, unsafe extension keys, silent truncation and raw errors can pass.",
+      "required_fix": "Use recursive JSON validation, limits, warnings and centralized redaction."
+    },
+    {
+      "id": "VF-DOCUMENT-AGENT-001",
+      "severity": "P1",
+      "title": "Document Agent release hardening is incomplete",
+      "status": "open",
+      "files": [
+        "docs/ROADMAP.md:41"
+      ],
+      "impact": "Source retention, parser isolation, full review UI, tool-loop integration, journal recovery and packaged QA are missing.",
+      "required_fix": "Complete the canonical roadmap acceptance scope."
+    },
+    {
+      "id": "VF-IMAGE-SEARCH-001",
+      "severity": "P1",
+      "title": "Direct source-image reverse matching is not implemented",
+      "status": "blocked_product_decision",
+      "files": [
+        "docs/ROADMAP.md:21"
+      ],
+      "impact": "Image Inspector cannot perform true source-image web matching.",
+      "required_fix": "Select a provider and implement consent, custody, upload, normalization, cost and tests."
+    },
+    {
+      "id": "VF-VERIFY-005",
+      "severity": "P1",
+      "title": "Signed, paid, two-device and accessibility release evidence is missing",
+      "status": "external_blocker",
+      "files": [
+        "docs/ROADMAP.md:37"
+      ],
+      "impact": "Release cannot be certified.",
+      "required_fix": "Run the complete signed and manual acceptance matrix."
+    },
+    {
+      "id": "VF-BACKUP-SYNC-ADVANCED",
+      "severity": "P1",
+      "title": "Advanced sync providers and live key rotation are deferred",
+      "status": "deferred",
+      "files": [
+        "docs/backup-and-sync.md",
+        "docs/sync-troubleshooting.md"
+      ],
+      "impact": "Backup/sync is not fully feature-complete.",
+      "required_fix": "Implement only if retained in release scope; otherwise clearly defer."
+    },
+    {
+      "id": "VF-STORAGE-MAINTENANCE-ORPHANS",
+      "severity": "P2",
+      "title": "Orphan archival is dry-run-only",
+      "status": "deferred",
+      "files": [
+        "src/services/storageMaintenance.ts:72-82",
+        "src/services/storageMaintenance.ts:122-138"
+      ],
+      "impact": "Users can analyze but not safely repair orphan records.",
+      "required_fix": "Add quarantine, preview, rollback and audit."
+    },
+    {
+      "id": "VF-PROVIDERS-DEFERRED",
+      "severity": "P2",
+      "title": "Six provider families are not implemented",
+      "status": "deferred",
+      "files": [
+        "src/types/provider.ts:170-178"
+      ],
+      "impact": "Provider expansion is incomplete.",
+      "required_fix": "Implement or remove from near-term feature claims."
+    },
+    {
+      "id": "VF-CREDENTIAL-ROTATION",
+      "severity": "P2",
+      "title": "Scheduled credential rotation is not implemented",
+      "status": "deferred",
+      "files": [
+        "src/components/settings/ProvidersPanel.tsx:126"
+      ],
+      "impact": "Credential lifecycle remains manual.",
+      "required_fix": "Implement only with provider-specific secure custody and audit."
+    },
+    {
+      "id": "VF-RESEARCH-ROBOTS",
+      "severity": "P2",
+      "title": "Jina respectRobotsTxt control is not implemented",
+      "status": "open",
+      "files": [
+        "src/research/providers/jinaResearchProvider.ts:14-16"
+      ],
+      "impact": "A requested policy control cannot be claimed as effective.",
+      "required_fix": "Verify provider support or remove/disable the option."
+    },
+    {
+      "id": "VF-SCAN-20260717-031029-008",
+      "severity": "P3",
+      "title": "Provider verifier mock portability debt",
+      "status": "open",
+      "files": [
+        "docs/ROADMAP.md:56"
+      ],
+      "required_fix": "Move Electron mock setup to the shared test setup."
+    },
+    {
+      "id": "VF-SCAN-20260717-031029-009",
+      "severity": "P3",
+      "title": "Deprecated enhancePrompt extraction no-op",
+      "status": "open",
+      "files": [
+        "docs/ROADMAP.md:57"
+      ],
+      "required_fix": "Remove or correctly map the deprecated fallthrough."
+    }
+  ],
+  "validation": {
+    "fresh_dependency_install": {
+      "status": "blocked",
+      "reason": "Sandbox package gateway returned repeated HTTP 503 responses; node_modules absent."
+    },
+    "static_verifiers": {
+      "status": "pass",
+      "count": 30
+    },
+    "fresh_lint_typecheck_test_build": {
+      "status": "not_run",
+      "reason": "Dependencies unavailable."
+    },
+    "github_current_head_statuses": {
+      "status": "none_returned"
+    },
+    "github_current_head_pr_workflow_runs": {
+      "status": "none_returned"
+    }
+  }
+}

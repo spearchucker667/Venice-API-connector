@@ -124,6 +124,8 @@
 *.bak
 # Upstream-agent transcript dumps are forensic artifacts, not source files.
 /patch_*.txt
+/.agent-backups/
+/patch_runner.js
 # =============================================================================
 # Operating-system and editor metadata
 # =============================================================================

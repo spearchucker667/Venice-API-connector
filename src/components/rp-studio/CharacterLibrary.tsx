@@ -22,6 +22,7 @@ import type { CharacterCardImportApplyOptions } from "../../types/character-card
 import { askDecision } from "../ui/modal-requests";
 import { deleteCharacterCardDraft, listCharacterCardDrafts, saveCharacterCardDraft, type CharacterCardDraftRecord } from "../../services/characterCards/characterCardDraftService";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
+import { Trans } from 'react-i18next';
 
 const STANDARD_FILTER = [
   { value: "standard", label: "Standard" },
@@ -158,8 +159,7 @@ export function CharacterLibrary({ onEdit }: Props) {
             className="w-full bg-surface border border-border rounded-lg px-3 py-1.5 text-[13.5px] text-text-primary outline-none focus:border-accent transition-colors placeholder:text-text-muted"
           />
           <p className="mt-1 text-[12px] text-text-muted">
-            Local characters are stored in Venice Forge only. They are not hosted on Venice.ai.
-          </p>
+            <Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.description.localCharactersAreStoredInVeniceForge" /></p>
         </div>
         <PillGroup
           options={adultFilterOptions.map((o) => ({ value: o.value, label: o.label }))}
@@ -180,16 +180,13 @@ export function CharacterLibrary({ onEdit }: Props) {
             className="text-[13px] bg-surface-elevated border border-border rounded px-3 py-1.5 focus:outline-none focus:border-accent"
           />
           <PrimaryButton onClick={handleCreateMe} size="sm" disabled={!createMePrompt.trim()}>
-            Build Character
-          </PrimaryButton>
+            <Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.buildCharacter" /></PrimaryButton>
           <PrimaryButton onClick={() => openCharacterCreator({ mode: "new-from-idea" })} size="sm">
-            Character Creator
-          </PrimaryButton>
+            <Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.characterCreator" /></PrimaryButton>
           <PrimaryButton onClick={handleCreate} size="sm">
-            Create ST Card
-          </PrimaryButton>
-          <GhostButton onClick={() => setShowDraftManager((visible) => !visible)}>Drafts ({draftRecords.length})</GhostButton>
-          <GhostButton onClick={chooseImport}>Import card</GhostButton>
+            <Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.createStCard" /></PrimaryButton>
+          <GhostButton onClick={() => setShowDraftManager((visible) => !visible)}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.drafts" />{draftRecords.length})</GhostButton>
+          <GhostButton onClick={chooseImport}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.importCard" /></GhostButton>
         </div>
       </div>
 
@@ -198,25 +195,24 @@ export function CharacterLibrary({ onEdit }: Props) {
           <ErrorText>{error}</ErrorText>
         </div>
       )}
-      {lastUndo && <div className="mx-4 mt-3 flex items-center justify-between rounded-lg border border-warning/40 bg-surface-elevated px-3 py-2 text-[13px]" role="status"><span>Character import changed an existing card.</span><GhostButton onClick={async () => { const result = await desktopCharacterCards.undoImport({ handle: lastUndo.handle }); if (result.ok) { await refresh(); setLastUndo(null); toast.success("Import undone"); } else toast.error("Undo failed", result.error); }}>Undo import</GhostButton></div>}
+      {lastUndo && <div className="mx-4 mt-3 flex items-center justify-between rounded-lg border border-warning/40 bg-surface-elevated px-3 py-2 text-[13px]" role="status"><span><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.characterImportChangedAnExistingCard" /></span><GhostButton onClick={async () => { const result = await desktopCharacterCards.undoImport({ handle: lastUndo.handle }); if (result.ok) { await refresh(); setLastUndo(null); toast.success("Import undone"); } else toast.error("Undo failed", result.error); }}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.undoImport" /></GhostButton></div>}
       {showDraftManager && <section className="mx-4 mt-3 rounded-lg border border-border bg-surface-elevated p-3" aria-labelledby="card-drafts-title">
-        <div className="flex items-center justify-between"><h2 id="card-drafts-title" className="text-[14px] font-semibold text-text-primary">Local ST Card drafts</h2><GhostButton onClick={() => setShowDraftManager(false)}>Close</GhostButton></div>
-        <p className="mt-1 text-[12px] text-text-muted">Drafts are encrypted locally, excluded from sync, and do not appear as active characters until saved.</p>
-        {draftRecords.length === 0 ? <p className="mt-3 text-[12px] text-text-muted">No recoverable drafts.</p> : <div className="mt-3 space-y-2">{draftRecords.map((record) => <div key={record.id} className="flex items-center justify-between gap-3 rounded border border-border bg-surface px-3 py-2"><div className="min-w-0"><div className="truncate text-[13px] text-text-primary">{record.card.name || "Untitled"}</div><div className="text-[11px] text-text-muted">Updated {new Date(record.updatedAt).toLocaleString()}</div></div><div className="flex gap-2"><GhostButton onClick={() => onEdit(record.cardId)}>Resume</GhostButton><GhostButton onClick={async () => { await deleteCharacterCardDraft(record.cardId); setDraftRecords((records) => records.filter((item) => item.id !== record.id)); }}>Delete</GhostButton></div></div>)}</div>}
+        <div className="flex items-center justify-between"><h2 id="card-drafts-title" className="text-[14px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.heading.localStCardDrafts" /></h2><GhostButton onClick={() => setShowDraftManager(false)}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.close" /></GhostButton></div>
+        <p className="mt-1 text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.description.draftsAreEncryptedLocallyExcludedFromSync" /></p>
+        {draftRecords.length === 0 ? <p className="mt-3 text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.description.noRecoverableDrafts" /></p> : <div className="mt-3 space-y-2">{draftRecords.map((record) => <div key={record.id} className="flex items-center justify-between gap-3 rounded border border-border bg-surface px-3 py-2"><div className="min-w-0"><div className="truncate text-[13px] text-text-primary">{record.card.name || "Untitled"}</div><div className="text-[11px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.updated" /> {new Date(record.updatedAt).toLocaleString()}</div></div><div className="flex gap-2"><GhostButton onClick={() => onEdit(record.cardId)}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.resume" /></GhostButton><GhostButton onClick={async () => { await deleteCharacterCardDraft(record.cardId); setDraftRecords((records) => records.filter((item) => item.id !== record.id)); }}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.delete" /></GhostButton></div></div>)}</div>}
       </section>}
 
       <div className="flex-1 overflow-y-auto px-4 py-4">
         {isLoading && !hasLoaded ? (
           <div className="flex items-center justify-center h-full text-text-muted gap-2 text-[13px]">
-            <Spinner className="text-text-muted" /> Loading characters…
-          </div>
+            <Spinner className="text-text-muted" /> <Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.loadingCharacters" /></div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-3">
             <EmptyState>
               {hasLoaded ? "No characters yet" : ""}
             </EmptyState>
             {hasLoaded && (
-              <GhostButton onClick={handleCreate}>Create your first character</GhostButton>
+              <GhostButton onClick={handleCreate}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.createYourFirstCharacter" /></GhostButton>
             )}
           </div>
         ) : (
@@ -238,26 +234,26 @@ export function CharacterLibrary({ onEdit }: Props) {
       {importCandidate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay p-4" role="presentation">
           <div ref={importDialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="card-import-title" className="w-full max-w-lg rounded-xl border border-border bg-surface-elevated p-5 shadow-xl focus:outline-none">
-            <h2 id="card-import-title" className="text-lg font-semibold text-text-primary">Review character import</h2>
-            <p className="mt-1 text-sm text-text-secondary">Nothing is saved until you confirm this preview.</p>
+            <h2 id="card-import-title" className="text-lg font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.heading.reviewCharacterImport" /></h2>
+            <p className="mt-1 text-sm text-text-secondary"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.description.nothingIsSavedUntilYouConfirmThis" /></p>
             <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-              <dt className="text-text-muted">Name</dt><dd className="text-text-primary">{importCandidate.preview.name || "Untitled"}</dd>
-              <dt className="text-text-muted">Format</dt><dd className="text-text-primary">{importCandidate.preview.format}</dd>
-              <dt className="text-text-muted">Creator</dt><dd className="text-text-primary">{importCandidate.preview.creator || "Not specified"}</dd>
-              <dt className="text-text-muted">Greetings</dt><dd className="text-text-primary">{importCandidate.preview.greetingCount}</dd>
-              <dt className="text-text-muted">Lore entries</dt><dd className="text-text-primary">{importCandidate.preview.characterBookEntryCount}</dd>
-              <dt className="text-text-muted">Extensions</dt><dd className="text-text-primary">{importCandidate.preview.extensionNamespaceCount}</dd>
+              <dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.name" /></dt><dd className="text-text-primary">{importCandidate.preview.name || "Untitled"}</dd>
+              <dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.format" /></dt><dd className="text-text-primary">{importCandidate.preview.format}</dd>
+              <dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.creator" /></dt><dd className="text-text-primary">{importCandidate.preview.creator || "Not specified"}</dd>
+              <dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.greetings" /></dt><dd className="text-text-primary">{importCandidate.preview.greetingCount}</dd>
+              <dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.loreEntries" /></dt><dd className="text-text-primary">{importCandidate.preview.characterBookEntryCount}</dd>
+              <dt className="text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.extensions" /></dt><dd className="text-text-primary">{importCandidate.preview.extensionNamespaceCount}</dd>
             </dl>
             {importCandidate.preview.warnings.length > 0 && <div className="mt-4 rounded-lg border border-warning/40 p-3 text-sm text-text-secondary" role="status">{importCandidate.preview.warnings.map((warning) => <p key={`${warning.code}-${warning.path}`}>{warning.path}: {warning.message}</p>)}</div>}
             <div className="mt-4 space-y-2">
-              <label className="flex items-center justify-between gap-3 text-sm text-text-secondary"><span>Character book</span><select value={importBookMode} onChange={(event) => setImportBookMode(event.target.value as typeof importBookMode)} className="rounded border border-border bg-surface px-2 py-1 text-text-primary"><option value="both">Embedded + linked (recommended)</option><option value="linked">Linked only</option><option value="embedded">Embedded only</option><option value="none">Do not import book</option></select></label>
-              <label className="flex items-center gap-2 text-sm text-text-secondary"><input type="checkbox" checked={favoriteImport} onChange={(event) => setFavoriteImport(event.target.checked)} /> Set as favorite</label>
-              <label className="flex items-center gap-2 text-sm text-text-secondary"><input type="checkbox" checked={startAfterImport} onChange={(event) => setStartAfterImport(event.target.checked)} /> Start RP chat after import</label>
+              <label className="flex items-center justify-between gap-3 text-sm text-text-secondary"><span><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.characterBook" /></span><select value={importBookMode} onChange={(event) => setImportBookMode(event.target.value as typeof importBookMode)} className="rounded border border-border bg-surface px-2 py-1 text-text-primary"><option value="both"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.option.embeddedLinkedRecommended" /></option><option value="linked"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.option.linkedOnly" /></option><option value="embedded"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.option.embeddedOnly" /></option><option value="none"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.option.doNotImportBook" /></option></select></label>
+              <label className="flex items-center gap-2 text-sm text-text-secondary"><input type="checkbox" checked={favoriteImport} onChange={(event) => setFavoriteImport(event.target.checked)} /> <Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.label.setAsFavorite" /></label>
+              <label className="flex items-center gap-2 text-sm text-text-secondary"><input type="checkbox" checked={startAfterImport} onChange={(event) => setStartAfterImport(event.target.checked)} /> <Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.label.startRpChatAfterImport" /></label>
             </div>
-            {importCollision && <><ErrorText>A matching card already exists. Choose an explicit resolution; nothing is overwritten silently.</ErrorText><fieldset className="mt-3 rounded border border-border p-2"><legend className="px-1 text-[12px] text-text-muted">Fields to merge</legend><div className="grid grid-cols-2 gap-1 text-[11px] text-text-secondary">{(["name", "description", "personality", "scenario", "firstMessage", "systemPrompt", "postHistoryInstructions", "alternateGreetings", "exampleDialogues", "rawExampleDialogue", "tags", "author", "characterVersion", "tavernExtensions", "embeddedCharacterBook"] as const).map((field) => <label key={field} className="flex items-center gap-1"><input type="checkbox" checked={mergeFields.includes(field)} onChange={(event) => setMergeFields((fields) => event.target.checked ? [...fields, field] : fields.filter((item) => item !== field))} /> {field}</label>)}</div></fieldset></>}
+            {importCollision && <><ErrorText><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.aMatchingCardAlreadyExistsChooseAn" /></ErrorText><fieldset className="mt-3 rounded border border-border p-2"><legend className="px-1 text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.fieldsToMerge" /></legend><div className="grid grid-cols-2 gap-1 text-[11px] text-text-secondary">{(["name", "description", "personality", "scenario", "firstMessage", "systemPrompt", "postHistoryInstructions", "alternateGreetings", "exampleDialogues", "rawExampleDialogue", "tags", "author", "characterVersion", "tavernExtensions", "embeddedCharacterBook"] as const).map((field) => <label key={field} className="flex items-center gap-1"><input type="checkbox" checked={mergeFields.includes(field)} onChange={(event) => setMergeFields((fields) => event.target.checked ? [...fields, field] : fields.filter((item) => item !== field))} /> {field}</label>)}</div></fieldset></>}
             <div className="mt-5 flex justify-end gap-2">
-              <GhostButton onClick={() => setImportCandidate(null)} disabled={importing}>Cancel</GhostButton>
-              {importCollision ? <><GhostButton onClick={() => void applyImport("keep-existing")} disabled={importing}>Keep existing</GhostButton><GhostButton onClick={() => void applyImport("merge")} disabled={importing}>Merge fields</GhostButton><GhostButton onClick={() => void applyImport("replace")} disabled={importing}>Replace</GhostButton><PrimaryButton onClick={() => void applyImport("create-copy")} disabled={importing}>Create copy</PrimaryButton></> : <PrimaryButton onClick={() => void applyImport("create")} disabled={importing}>{importing ? "Importing…" : "Import"}</PrimaryButton>}
+              <GhostButton onClick={() => setImportCandidate(null)} disabled={importing}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.cancel" /></GhostButton>
+              {importCollision ? <><GhostButton onClick={() => void applyImport("keep-existing")} disabled={importing}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.keepExisting" /></GhostButton><GhostButton onClick={() => void applyImport("merge")} disabled={importing}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.mergeFields" /></GhostButton><GhostButton onClick={() => void applyImport("replace")} disabled={importing}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.replace" /></GhostButton><PrimaryButton onClick={() => void applyImport("create-copy")} disabled={importing}><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.text.createCopy" /></PrimaryButton></> : <PrimaryButton onClick={() => void applyImport("create")} disabled={importing}>{importing ? "Importing…" : "Import"}</PrimaryButton>}
             </div>
           </div>
         </div>
@@ -349,15 +345,13 @@ function CardTile({
           }}
           className="flex-1 text-[12px] py-1.5 rounded-md border border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] focus-visible:outline-offset-2"
         >
-          Chat
-        </button>
+          <Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.action.chat" /></button>
         <button
           type="button"
           onClick={onEdit}
           className="flex-1 text-[12px] py-1.5 rounded-md border border-border text-text-secondary hover:text-text-primary hover:border-accent/40 hover:bg-surface-elevated transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] focus-visible:outline-offset-2"
         >
-          Edit
-        </button>
+          <Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.action.edit" /></button>
         {confirming ? (
           <button
             type="button"
@@ -367,8 +361,7 @@ function CardTile({
             }}
             className="text-[12px] py-1.5 px-2 rounded-md text-rose-300 hover:text-rose-200 border border-rose-500/30 hover:bg-rose-500/10 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-400 focus-visible:outline-offset-2"
           >
-            Delete?
-          </button>
+            <Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.action.delete" /></button>
         ) : (
           <button
             type="button"
@@ -384,8 +377,8 @@ function CardTile({
         )}
       </div>
       <div className="flex gap-1.5">
-        <button type="button" onClick={() => onExport("json")} className="flex-1 text-[11px] py-1 rounded border border-border text-text-muted hover:text-text-primary">Export JSON</button>
-        <button type="button" onClick={() => onExport("png")} disabled={!card.avatar} className="flex-1 text-[11px] py-1 rounded border border-border text-text-muted hover:text-text-primary disabled:opacity-40">Export PNG</button>
+        <button type="button" onClick={() => onExport("json")} className="flex-1 text-[11px] py-1 rounded border border-border text-text-muted hover:text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.action.exportJson" /></button>
+        <button type="button" onClick={() => onExport("png")} disabled={!card.avatar} className="flex-1 text-[11px] py-1 rounded border border-border text-text-muted hover:text-text-primary disabled:opacity-40"><Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.action.exportPng" /></button>
       </div>
     </div>
   );

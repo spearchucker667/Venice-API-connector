@@ -41,6 +41,8 @@ const verifier = require("./verify-i18n.cjs") as {
     skipSourceInventory?: boolean;
     writeStatus?: boolean;
     statusPath?: string;
+    nativeReviewStatus?: { locales: Record<string, { status: string; reviewer: string | null; reviewedAt: string | null }> };
+    identicalValueAllowlist?: Record<string, string[]>;
   }) => {
     ok: boolean;
     errors: string[];
@@ -261,8 +263,9 @@ describe("verify-i18n sentinel + missing-marker rejection", () => {
     expect(result.errors.some((e) => /sentinel/i.test(e) && /es/.test(e))).toBe(true);
     expect(result.coverageResults.fr.sentinelValues).toBe(0);
     expect(result.coverageResults.es.sentinelValues).toBe(1);
-    expect(result.status.locales.es.reviewStatus).toBe("pending-translation");
-    expect(result.status.locales.fr.reviewStatus).toBe("complete");
+    expect(result.status.locales.es.catalogStatus).toBe("pending-translation");
+    expect(result.status.locales.fr.catalogStatus).toBe("complete");
+    expect(result.status.locales.fr.reviewStatus).toBe("first-pass-machine");
     expect(result.coverageResults.fr.translated).toBe(2);
   });
 
@@ -305,7 +308,7 @@ describe("verify-i18n sentinel + missing-marker rejection", () => {
     expect(result.errors.some((e) => /interpolation mismatch/i.test(e))).toBe(true);
   });
 
-  it("reports reviewStatus=complete only when coverage is 100% and no sentinels/missing markers", () => {
+  it("keeps machine-complete catalogs out of production until native review is recorded", () => {
     const root = makeProject({
       "en-US": {
         common:
@@ -326,6 +329,49 @@ describe("verify-i18n sentinel + missing-marker rejection", () => {
     });
     expect(result.ok).toBe(true);
     expect(result.coverageResults.es.translated).toBe(2);
+    expect(result.status.locales.es.catalogStatus).toBe("complete");
+    expect(result.status.locales.es.reviewStatus).toBe("first-pass-machine");
+  });
+
+  it("records explicit native-review evidence separately from catalog status", () => {
+    const root = makeProject({
+      "en-US": { common: '{ "save": "Save" }' },
+      es: { common: '{ "save": "Guardar" }' },
+    });
+    const result = verifier.runVerification({
+      locales: ["en-US", "es"],
+      namespaces: ["common"],
+      resourcesDir: path.join(root, "src", "i18n", "resources"),
+      docsDir: path.join(root, "docs", "i18n"),
+      docsRequired: [],
+      skipSourceInventory: true,
+      nativeReviewStatus: {
+        locales: {
+          es: { status: "complete", reviewer: "Reviewer", reviewedAt: "2026-07-26" },
+        },
+      },
+    });
+    expect(result.status.locales.es.catalogStatus).toBe("complete");
     expect(result.status.locales.es.reviewStatus).toBe("complete");
+    expect(result.status.locales.es.reviewer).toBe("Reviewer");
+  });
+
+  it("accepts an explicit locale-specific identical-value exception without promoting native review", () => {
+    const root = makeProject({
+      "en-US": { common: '{ "format": "JSON (.json)" }' },
+      es: { common: '{ "format": "JSON (.json)" }' },
+    });
+    const result = verifier.runVerification({
+      locales: ["en-US", "es"],
+      namespaces: ["common"],
+      resourcesDir: path.join(root, "src", "i18n", "resources"),
+      docsDir: path.join(root, "docs", "i18n"),
+      docsRequired: [],
+      skipSourceInventory: true,
+      identicalValueAllowlist: { es: ["JSON (.json)"] },
+    });
+    expect(result.ok).toBe(true);
+    expect(result.status.locales.es.catalogStatus).toBe("complete");
+    expect(result.status.locales.es.reviewStatus).toBe("first-pass-machine");
   });
 });

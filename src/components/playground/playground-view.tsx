@@ -12,6 +12,7 @@ import { toast } from '../../stores/toast-store'
 import { DEFAULT_AGENT_MODEL } from '../../lib/playground-agent'
 import { askDecision } from '../ui/modal-requests'
 import { GenerationLoadingIndicator } from '../generation/GenerationLoadingIndicator'
+import { Trans } from 'react-i18next';
 
 export function PlaygroundView() {
   const draft = usePlaygroundStore((s) => s.draft)
@@ -144,8 +145,8 @@ export function PlaygroundView() {
       <div className="w-[420px] shrink-0 border-r border-border/50 flex flex-col">
         <div className="flex items-center justify-between gap-2 px-3 h-11 border-b border-border/50 bg-surface shrink-0">
           <div className="flex items-center gap-2 min-w-0">
-            <span className="text-[14px] font-medium text-text-secondary shrink-0">Playground</span>
-            <span className="text-[12px] px-1.5 py-0.5 rounded bg-surface-elevated text-text-muted uppercase tracking-wider shrink-0">Agent</span>
+            <span className="text-[14px] font-medium text-text-secondary shrink-0"><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundView.text.playground" /></span>
+            <span className="text-[12px] px-1.5 py-0.5 rounded bg-surface-elevated text-text-muted uppercase tracking-wider shrink-0"><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundView.text.agent" /></span>
           </div>
           <div className="flex items-center gap-1.5 shrink-0 min-w-0">
             <AgentModelPicker value={currentAgentModel} onChange={setPlaygroundAgentModel} />
@@ -154,8 +155,7 @@ export function PlaygroundView() {
               className="text-[12px] text-text-muted hover:text-text-secondary transition-colors px-3 py-1 rounded focus-visible:outline focus-visible:outline-1 focus-visible:outline-accent"
               title="Clear conversation"
             >
-              Clear
-            </button>
+              <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundView.action.clear" /></button>
           </div>
         </div>
         <div className="flex-1 min-h-0">
@@ -180,13 +180,13 @@ export function PlaygroundView() {
                 onChange={(e) => e.target.value && handleLoadWorkflow(e.target.value)}
                 className="bg-surface-elevated border border-border rounded px-2 py-1 text-[12px] text-text-muted outline-none hover:border-accent max-w-[200px]"
               >
-                <option value="">Edit saved workflow…</option>
+                <option value=""><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundView.option.editSavedWorkflow" /></option>
                 {workflows.map((w) => (
                   <option key={w.id} value={w.id}>{w.name}</option>
                 ))}
               </select>
             ) : null}
-            <span className="text-[12px] text-text-muted font-mono shrink-0">{draft.nodes.length}n · {draft.edges.length}e</span>
+            <span className="text-[12px] text-text-muted font-mono shrink-0">{draft.nodes.length}<Trans i18nKey="common:surface.componentsPlaygroundPlaygroundView.text.n" /> {draft.edges.length}e</span>
             {validation.errors.length > 0 && (
               <span
                 className="w-1.5 h-1.5 rounded-full bg-red-400/80 shrink-0"
@@ -223,13 +223,12 @@ export function PlaygroundView() {
               {isRunning ? (
                 <>
                   <GenerationLoadingIndicator size="sm" state="processing" />
-                  <span className="hidden sm:inline">Running…</span>
+                  <span className="hidden sm:inline"><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundView.text.running" /></span>
                 </>
               ) : (
                 <>
                   <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3" /></svg>
-                  Run
-                </>
+                  <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundView.action.run" /></>
               )}
             </button>
             <button
@@ -262,8 +261,8 @@ export function PlaygroundView() {
               )}
               title="Open in Workflows tab"
             >
-              <span className="hidden md:inline">Open in Workflows</span>
-              <span className="md:hidden">Open</span>
+              <span className="hidden md:inline"><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundView.text.openInWorkflows" /></span>
+              <span className="md:hidden"><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundView.text.open" /></span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M7 17L17 7M7 7h10v10" /></svg>
             </button>
           </div>

@@ -21,9 +21,11 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [user/IMAGE_INSPECTOR.md](user/IMAGE_INSPECTOR.md) — Image-to-prompt analysis, supported inputs, text-based source discovery, privacy, and troubleshooting.
 - [i18n/TRANSLATION_GUIDE.md](i18n/TRANSLATION_GUIDE.md) — Translation guidelines and key conventions.
 - [i18n/GLOSSARY.md](i18n/GLOSSARY.md) — Internationalization terminology glossary.
-- [i18n/translation-status.json](i18n/translation-status.json) — Machine-readable translation coverage and review status metadata (schema v2 — per-locale `sentinelLeaves`, `missingMarkerLeaves`, `identicalUnapprovedLeaves`, `docsCoveragePercent`, and `reviewStatus`).
+- [i18n/translation-status.json](i18n/translation-status.json) — Machine-readable catalog coverage and review metadata (schema v3); catalog completeness and native-language approval are separate gates.
+- [i18n/native-review-status.json](i18n/native-review-status.json) — Per-locale qualified-review state, reviewer/date evidence, and production-completion input.
+- [i18n/identical-value-allowlist.json](i18n/identical-value-allowlist.json) — Locale-specific technical, format, brand, and cognate values allowed to remain identical to en-US; entries never constitute native review.
 - [Development/i18n-tooling.md](DEVELOPMENT/i18n-tooling.md) — `i18n:extract` / `i18n:sync-catalogs` / `i18n:coverage` workflow and the AST-driven extractor / safe-sync / sentinel-aware verifier contract.
-- [audits/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md](audits/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md) — Multilingual AI system prompt and instruction audit.
+- [audits/Records/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md](audits/Records/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md) — Retained multilingual AI system prompt and instruction audit.
 - [LEGAL.md](../LEGAL.md) — Root legal notice, copyright statement, and trademark disclaimers.
 - [PRIVACY.md](../PRIVACY.md) — User privacy model summary.
 
@@ -124,31 +126,35 @@ This is the canonical source-of-truth navigation map for all documentation in th
 ## 7. Roadmap / Current Work
 
 - [ROADMAP.md](ROADMAP.md) — Canonical current-work-only task ledger; closed work and historical validation stay in the session ledger and historical reports.
-- [audits/TODO/Function_calling_todo.md](audits/TODO/Function_calling_todo.md) — Canonical Document Agent implementation and acceptance specification.
-- [audits/TODO/Venice_Forge_Extensive_Scan_2026-07-22.md](audits/TODO/Venice_Forge_Extensive_Scan_2026-07-22.md) — July 22 repository scan input with a dated, per-finding remediation addendum.
-- [audits/TODO/Venice_Forge_Findings_2026-07-22.json](audits/TODO/Venice_Forge_Findings_2026-07-22.json) — Machine-readable July 22 snapshot findings plus remediation disposition metadata.
+- [audits/TODO/CHATGPT_5_6_REPOSITORY_AUDIT_2026-07-26.md](audits/TODO/CHATGPT_5_6_REPOSITORY_AUDIT_2026-07-26.md) — Current audit evidence reconciled through the canonical roadmap and session ledger.
+- [audits/TODO/CHATGPT_5_6_REPOSITORY_AUDIT_HANDOFF_2026-07-26.md](audits/TODO/CHATGPT_5_6_REPOSITORY_AUDIT_HANDOFF_2026-07-26.md) — Active implementation handoff for hardcoded-string migration, native review, CI ratcheting, packaged QA, and validation.
 - [summary_of_work.md](summary_of_work.md) — Active session ledger (recent sessions only).
 - July 17 03:10 deep-scan audit evidence was processed; remediated live status remains in `ROADMAP.md` and `summary_of_work.md`.
-- [audits/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md](audits/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md) — `VF-I18N-REMEDIATION-20260725-01` foundation-phase final report (discrepancy freeze, AST extractor, safe sync tool, sentinel-aware verifier, and obsolete-script lockdown; remaining risks and deferred work itemised).
-- [reports/MINIMAX_M3_I18N_FULL_APP_REMEDIATION_REPORT_2026-07-26.md](reports/MINIMAX_M3_I18N_FULL_APP_REMEDIATION_REPORT_2026-07-26.md) — `MINIMAX-M3-I18N-FULL-APP-REMEDIATION-2026-07-26` full-app-phase final report (Phases 0–9: status-isolation, runtime marker firewall, dynamic-key manifest, hardcoded-string inventory, first-pass machine translation, verifier allowlist expansion, formatter+RTL coverage, alias+layout scaffolding, `isProductionComplete` derivation from status JSON).
 
 ---
 
 ## 8. Historical Reports
 
-- [reports/README.md](reports/README.md) — Guideline explaining audit history and historical report rules.
-- [reports/CANONICAL_REPORT_INDEX.md](reports/CANONICAL_REPORT_INDEX.md) — Navigator for past validation audits.
+- [audits/Records/Function_calling_todo.md](audits/Records/Function_calling_todo.md) — Retained Document Agent implementation and acceptance specification; unfinished product scope is tracked in `ROADMAP.md`.
+- [audits/Records/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md](audits/Records/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md) — Retained multilingual prompt-language audit evidence.
+- [audits/Records/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md](audits/Records/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md) — Retained i18n foundation-phase remediation report.
+- [audits/Records/Venice_Forge_Extensive_Scan_2026-07-22.md](audits/Records/Venice_Forge_Extensive_Scan_2026-07-22.md) — Retained July 22 repository scan and remediation addendum.
+- [audits/Records/Venice_Forge_Findings_2026-07-22.json](audits/Records/Venice_Forge_Findings_2026-07-22.json) — Machine-readable July 22 snapshot findings and dispositions.
+- [reports/historical/README.md](reports/historical/README.md) — Guideline explaining audit history and historical report rules.
+- [reports/historical/CANONICAL_REPORT_INDEX.md](reports/historical/CANONICAL_REPORT_INDEX.md) — Navigator for past validation audits.
 - [archives/README.md](archives/README.md) — Archive policy and non-authoritative historical-material boundary.
-- [reports/INTENDED_FEATURE_VERIFICATION_2026-07-15.md](reports/INTENDED_FEATURE_VERIFICATION_2026-07-15.md) — Historical snapshot reconciliation of the supplied intended-feature checklist.
-- [reports/MEDIA_CHARACTER_REMEDIATION_REPORT.md](reports/MEDIA_CHARACTER_REMEDIATION_REPORT.md) — Historical 2026-07-12/13 media/character implementation evidence.
-- [reports/VIDEO_GALLERY_CHARACTER_CHATS_UI_SURFACE_REMEDIATION_REPORT.md](reports/VIDEO_GALLERY_CHARACTER_CHATS_UI_SURFACE_REMEDIATION_REPORT.md) — Historical 2026-07-15 video, Character Chats, and UI evidence.
-- [reports/VIDEO_PIPELINE_AND_RESEARCH_BROWSER_DEACTIVATION_2026-07-18.md](reports/VIDEO_PIPELINE_AND_RESEARCH_BROWSER_DEACTIVATION_2026-07-18.md) — Current implementation and validation report for streamed video durability and Research Browser deactivation.
-- [reports/VENICE_FORGE_CHAT_FOLDERS_MEDIA_DOCUMENTS_REPORT_2026-07-19.md](reports/VENICE_FORGE_CHAT_FOLDERS_MEDIA_DOCUMENTS_REPORT_2026-07-19.md) — Closure report for the 2026-07-19 chat folders / agent media / documents / video 9-phase work order (Phase 0+1+2+3+4+5+6+7+8+9 + vo-validate).
-- [reports/VENICE_FORGE_THEME_ENGINE_BORDER_AND_PORTABILITY_AUDIT_2026-07-21.md](reports/VENICE_FORGE_THEME_ENGINE_BORDER_AND_PORTABILITY_AUDIT_2026-07-21.md) — Closure report for the 2026-07-21 Theme Engine, Border System, Focus Ring, and Theme Portability audit & remediation.
+- [reports/historical/INTENDED_FEATURE_VERIFICATION_2026-07-15.md](reports/historical/INTENDED_FEATURE_VERIFICATION_2026-07-15.md) — Historical snapshot reconciliation of the supplied intended-feature checklist.
+- [reports/historical/MEDIA_CHARACTER_REMEDIATION_REPORT.md](reports/historical/MEDIA_CHARACTER_REMEDIATION_REPORT.md) — Historical 2026-07-12/13 media/character implementation evidence.
+- [reports/historical/VIDEO_GALLERY_CHARACTER_CHATS_UI_SURFACE_REMEDIATION_REPORT.md](reports/historical/VIDEO_GALLERY_CHARACTER_CHATS_UI_SURFACE_REMEDIATION_REPORT.md) — Historical 2026-07-15 video, Character Chats, and UI evidence.
+- [reports/historical/VIDEO_PIPELINE_AND_RESEARCH_BROWSER_DEACTIVATION_2026-07-18.md](reports/historical/VIDEO_PIPELINE_AND_RESEARCH_BROWSER_DEACTIVATION_2026-07-18.md) — Historical implementation and validation report for streamed video durability and Research Browser deactivation.
+- [reports/historical/VENICE_FORGE_CHAT_FOLDERS_MEDIA_DOCUMENTS_REPORT_2026-07-19.md](reports/historical/VENICE_FORGE_CHAT_FOLDERS_MEDIA_DOCUMENTS_REPORT_2026-07-19.md) — Closure report for the 2026-07-19 chat folders / agent media / documents / video 9-phase work order.
+- [reports/historical/VENICE_FORGE_THEME_ENGINE_BORDER_AND_PORTABILITY_AUDIT_2026-07-21.md](reports/historical/VENICE_FORGE_THEME_ENGINE_BORDER_AND_PORTABILITY_AUDIT_2026-07-21.md) — Closure report for the 2026-07-21 Theme Engine, Border System, Focus Ring, and Theme Portability audit & remediation.
+- [reports/historical/MINIMAX_M3_I18N_FULL_APP_REMEDIATION_REPORT_2026-07-26.md](reports/historical/MINIMAX_M3_I18N_FULL_APP_REMEDIATION_REPORT_2026-07-26.md) — Retained full-app i18n remediation report and explicit manual-review deferrals.
+- [reports/historical/VENICE_FORGE_2026-07-20_REMEDIATION_REPORT.md](reports/historical/VENICE_FORGE_2026-07-20_REMEDIATION_REPORT.md) — Retained July 20 remediation report.
 - [pastel-theme-pack-report.md](pastel-theme-pack-report.md) — 2026-07-23 implementation report for the Pastel Aqua/Pink Theme Pack (Cotton Candy Console, Sweet Nightmare, Dual Persona, Polaroid Board). Records token corrections, WCAG AA validation, border analysis, and pre-existing failure evidence.
-- [reports/character-creator-implementation-report.md](reports/character-creator-implementation-report.md) — Implementation report for the Build Character Creator feature powered immutably by `zai-org-glm-5-2`.
-- [reports/VENICE_FORGE_COMPLETION_EXECUTION_2026-07-25.md](reports/VENICE_FORGE_COMPLETION_EXECUTION_2026-07-25.md) — Execution log for the 2026-07-25 master feature-completion work order.
-- [reports/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md](reports/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md) — Implementation report for the 2026-07-25 Image Generation Prompt, Aspect Ratio, Download, and Safety Remediation work order.
+- [reports/historical/character-creator-implementation-report.md](reports/historical/character-creator-implementation-report.md) — Implementation report for the Build Character Creator feature powered immutably by `zai-org-glm-5-2`.
+- [reports/historical/VENICE_FORGE_COMPLETION_EXECUTION_2026-07-25.md](reports/historical/VENICE_FORGE_COMPLETION_EXECUTION_2026-07-25.md) — Execution log for the 2026-07-25 master feature-completion work order.
+- [reports/historical/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md](reports/historical/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md) — Implementation report for the 2026-07-25 Image Generation Prompt, Aspect Ratio, Download, and Safety Remediation work order.
 - [reports/historical/final-massive-bug-hunt-with-proof.md](reports/historical/final-massive-bug-hunt-with-proof.md) — Historical audit log of closed validation checks from the v2.1.0 release boundary.
 - [audits/Records/Venice_Forge_Full_Repository_Audit_2026-07-18/12-final-report.md](audits/Records/Venice_Forge_Full_Repository_Audit_2026-07-18/12-final-report.md) — Retained July 18 full-repository audit evidence, moved byte-for-byte from the former active-audit location.
 - [audits/Records/Venice_Forge_Most_Recent_Change_Audit_2026-07-20/09-final-report.md](audits/Records/Venice_Forge_Most_Recent_Change_Audit_2026-07-20/09-final-report.md) — Retained July 20 recent-change audit evidence, moved byte-for-byte from the former active-audit location.

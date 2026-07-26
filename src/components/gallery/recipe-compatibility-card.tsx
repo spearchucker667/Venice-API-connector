@@ -13,6 +13,7 @@ import {
   getImageModelCapabilities,
 } from "../../config/image-model-capabilities";
 import { RecipeComparison } from "./recipe-comparison";
+import { Trans } from 'react-i18next';
 
 const STATUS_TONE: Record<RecipeCompatibilityReport["status"], string> = {
   compatible: "bg-success/10 text-success border-success/30",
@@ -61,8 +62,7 @@ export function RecipeCompatibilityCard({
     return (
       <div className={className} data-testid="recipe-compatibility-empty">
         <div className="text-[12px] text-text-secondary">
-          This item has no recipe to compare against the current model.
-        </div>
+          <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.text.thisItemHasNoRecipeToCompare" /></div>
       </div>
     );
   }
@@ -79,12 +79,12 @@ export function RecipeCompatibilityCard({
         <div className="flex items-center gap-2">
           <span className="font-medium">{STATUS_LABEL[report.status]}</span>
           <span className="opacity-90">
-            for <span className="font-medium">{caps.label}</span>
+            <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.text.for" /> <span className="font-medium">{caps.label}</span>
           </span>
         </div>
         {report.unsupportedFields.length > 0 && (
           <span className="text-[12px] opacity-80" title={report.unsupportedFields.join(", ")}>
-            {report.unsupportedFields.length} unsupported field{report.unsupportedFields.length === 1 ? "" : "s"}
+            {report.unsupportedFields.length} <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.text.unsupportedField" />{report.unsupportedFields.length === 1 ? "" : "s"}
           </span>
         )}
       </div>
@@ -114,7 +114,7 @@ export function RecipeCompatibilityCard({
             className="px-2 py-1 text-[12px] rounded-md bg-accent text-accent-fg hover:bg-accent-hover transition-colors cursor-pointer"
             data-testid="recipe-use-with-current-model"
           >
-            Use with {caps.label}
+            <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.action.useWith" /> {caps.label}
           </button>
         )}
         {onUseOriginal && (
@@ -125,8 +125,7 @@ export function RecipeCompatibilityCard({
             data-testid="recipe-use-original"
             title="Send the original recipe to Image Studio without sanitization"
           >
-            Use original
-          </button>
+            <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.action.useOriginal" /></button>
         )}
         {onToggleComparison && (
           <button

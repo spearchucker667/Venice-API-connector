@@ -14,6 +14,7 @@ import {
 import '@xyflow/react/dist/style.css'
 import type { VeniceNodeData } from '../../stores/workflow-store'
 import { PreviewNode } from './preview-node'
+import { Trans } from 'react-i18next';
 
 const nodeTypes = { venice: PreviewNode }
 
@@ -64,8 +65,8 @@ export function WorkflowPreview({ nodes, edges }: { nodes: Node<VeniceNodeData>[
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center max-w-sm">
-          <p className="text-[14px] text-text-muted mb-2">No workflow yet</p>
-          <p className="text-[13px] text-text-muted">Tell the agent what you want to build — it will assemble the pipeline here in real time.</p>
+          <p className="text-[14px] text-text-muted mb-2"><Trans i18nKey="common:surface.componentsPlaygroundWorkflowPreview.description.noWorkflowYet" /></p>
+          <p className="text-[13px] text-text-muted"><Trans i18nKey="common:surface.componentsPlaygroundWorkflowPreview.description.tellTheAgentWhatYouWantTo" /></p>
         </div>
       </div>
     )

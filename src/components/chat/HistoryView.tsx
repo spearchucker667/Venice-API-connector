@@ -13,6 +13,7 @@ import { askDecision, askSecret } from '../ui/modal-requests'
 import { getConversationDisplayTitle } from '../../utils/conversationDisplayTitle'
 import { CharacterAvatar } from '../characters/CharacterAvatar'
 import { getConversationKind } from '../../utils/conversationKind'
+import { Trans } from 'react-i18next';
 
 function formatRelativeTime(date: number): string {
   const now = Date.now()
@@ -292,8 +293,8 @@ export default function HistoryView() {
             <Meteocon name="time-morning" size={20} />
           </div>
           <div>
-            <h1 className="text-[17px] font-bold text-text-primary">Chat History</h1>
-            <p className="text-[12px] text-text-muted">Manage and revisit your past conversations</p>
+            <h1 className="text-[17px] font-bold text-text-primary"><Trans i18nKey="common:surface.componentsChatHistoryview.heading.chatHistory" /></h1>
+            <p className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsChatHistoryview.description.manageAndRevisitYourPastConversations" /></p>
           </div>
         </div>
         <button
@@ -301,8 +302,7 @@ export default function HistoryView() {
           className="flex items-center gap-2 px-4 py-2 bg-accent text-accent-fg text-[13px] font-medium rounded-md hover:bg-accent/90 transition-colors shadow-sm cursor-pointer"
         >
           <Plus size={16} />
-          New Chat
-        </button>
+          <Trans i18nKey="common:surface.componentsChatHistoryview.action.newChat" /></button>
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -323,9 +323,9 @@ export default function HistoryView() {
               onChange={(e) => setFilterType(e.target.value as 'all' | 'character' | 'standard')}
               className="px-4 py-2.5 bg-surface-elevated border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent text-[14px] text-text-primary transition-all"
             >
-              <option value="all">All Chats</option>
-              <option value="character">Character Chats</option>
-              <option value="standard">Standard Chats</option>
+              <option value="all"><Trans i18nKey="common:surface.componentsChatHistoryview.option.allChats" /></option>
+              <option value="character"><Trans i18nKey="common:surface.componentsChatHistoryview.option.characterChats" /></option>
+              <option value="standard"><Trans i18nKey="common:surface.componentsChatHistoryview.option.standardChats" /></option>
             </select>
           </div>
 
@@ -340,15 +340,14 @@ export default function HistoryView() {
                 {isAllVisibleSelected ? 'Deselect all visible' : 'Select all visible'}
               </button>
               <span className="text-[13px] text-text-secondary font-medium">
-                {selectedIds.length} selected
-                {filtered.length > 0 && <span className="text-text-muted text-[12px]"> ({filtered.length} total)</span>}
+                {selectedIds.length} <Trans i18nKey="common:surface.componentsChatHistoryview.text.selected" />{filtered.length > 0 && <span className="text-text-muted text-[12px]"> ({filtered.length} <Trans i18nKey="common:surface.componentsChatHistoryview.text.total" /></span>}
               </span>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
               {selectedIds.length > 0 && (
                 <label className="flex items-center gap-1.5 text-[12px] text-text-muted">
-                  <span>Move to:</span>
+                  <span><Trans i18nKey="common:surface.componentsChatHistoryview.text.moveTo" /></span>
                   <select
                     onChange={(e) => {
                       if (e.target.value !== '') {
@@ -360,14 +359,14 @@ export default function HistoryView() {
                     defaultValue=""
                     className="px-2 py-1 bg-surface border border-border rounded text-[12px] text-text-primary focus:border-accent focus:outline-none cursor-pointer"
                   >
-                    <option value="" disabled>Select destination folder...</option>
-                    <option value="__unfiled__">Unfiled (No folder)</option>
+                    <option value="" disabled><Trans i18nKey="common:surface.componentsChatHistoryview.option.selectDestinationFolder" /></option>
+                    <option value="__unfiled__"><Trans i18nKey="common:surface.componentsChatHistoryview.option.unfiledNoFolder" /></option>
                     {destinationFolders.map((f) => (
                       <option key={f.id} value={f.id}>{f.name}</option>
                     ))}
                   </select>
                   {selectedKinds.size > 1 && (
-                    <span className="text-[11px] text-text-muted">Choose one chat type to move into a folder.</span>
+                    <span className="text-[11px] text-text-muted"><Trans i18nKey="common:surface.componentsChatHistoryview.text.chooseOneChatTypeToMoveInto" /></span>
                   )}
                 </label>
               )}
@@ -378,15 +377,14 @@ export default function HistoryView() {
                 disabled={selectedIds.length === 0}
                 className="px-3 py-1 text-[12px] rounded-md border border-border text-text-secondary disabled:opacity-40 hover:bg-surface transition-colors"
               >
-                Clear selection
-              </button>
+                <Trans i18nKey="common:surface.componentsChatHistoryview.action.clearSelection" /></button>
               <button
                 type="button"
                 onClick={handleBatchDelete}
                 disabled={selectedIds.length === 0}
                 className="px-3 py-1 text-[12px] rounded-md border border-danger/40 text-danger disabled:opacity-40 hover:bg-danger/10 transition-colors font-medium"
               >
-                Delete selected ({selectedIds.length})
+                <Trans i18nKey="common:surface.componentsChatHistoryview.action.deleteSelected" />{selectedIds.length})
               </button>
             </div>
           </div>
@@ -588,7 +586,7 @@ export default function HistoryView() {
                         {conv.messages.length}
                       </span>
                       <span>•</span>
-                      <span>{formatRelativeTime(conv.updatedAt)} ago</span>
+                      <span>{formatRelativeTime(conv.updatedAt)} <Trans i18nKey="common:surface.componentsChatHistoryview.text.ago" /></span>
                     </div>
                     <div className="text-accent opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
                       <ArrowRight size={16} />
@@ -603,8 +601,7 @@ export default function HistoryView() {
                   
                   {expandedFolders[folder.id] !== false && folderConvs.length === 0 && (
                     <div className="pl-8 py-4 text-[13px] text-text-muted/60 italic border border-dashed border-border/50 rounded-lg text-center">
-                      No conversations in this folder.
-                    </div>
+                      <Trans i18nKey="common:surface.componentsChatHistoryview.text.noConversationsInThisFolder" /></div>
                   )}
                 </div>
               )
@@ -644,7 +641,7 @@ export default function HistoryView() {
                       <span className="text-text-muted">
                         {expandedFolders['unfiled'] !== false ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
                       </span>
-                      <span className="text-[15px] font-semibold text-text-primary">Unfiled</span>
+                      <span className="text-[15px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsChatHistoryview.text.unfiled" /></span>
                       <span className="text-[12px] text-text-muted ml-2">
                         ({unfiledConvs.length}{unfiledSelectedCount > 0 ? ` · ${unfiledSelectedCount} selected` : ''})
                       </span>
@@ -732,7 +729,7 @@ export default function HistoryView() {
                         {conv.messages.length}
                       </span>
                       <span>•</span>
-                      <span>{formatRelativeTime(conv.updatedAt)} ago</span>
+                      <span>{formatRelativeTime(conv.updatedAt)} <Trans i18nKey="common:surface.componentsChatHistoryview.text.ago" /></span>
                     </div>
                     <div className="text-accent opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
                       <ArrowRight size={16} />
@@ -747,8 +744,7 @@ export default function HistoryView() {
                   
                   {expandedFolders['unfiled'] !== false && unfiledConvs.length === 0 && (
                     <div className="pl-8 py-4 text-[13px] text-text-muted/60 italic border border-dashed border-border/50 rounded-lg text-center">
-                      No unfiled conversations.
-                    </div>
+                      <Trans i18nKey="common:surface.componentsChatHistoryview.text.noUnfiledConversations" /></div>
                   )}
                 </div>
               )
@@ -779,8 +775,7 @@ export default function HistoryView() {
                     onClick={() => { setNewFolderName(''); setIsCreatingFolder(false) }}
                     className="px-3 py-1.5 text-[13px] text-text-muted hover:bg-surface-elevated border border-border rounded"
                   >
-                    Cancel
-                  </button>
+                    <Trans i18nKey="common:surface.componentsChatHistoryview.action.cancel" /></button>
                 </div>
               ) : (
                 <button
@@ -788,21 +783,19 @@ export default function HistoryView() {
                   className="flex items-center gap-2 px-3 py-1.5 text-[13px] font-medium text-text-muted hover:text-accent hover:bg-accent/10 rounded-md transition-colors border border-dashed border-border hover:border-accent/50"
                 >
                   <FolderPlus size={16} />
-                  New Folder
-                </button>
+                  <Trans i18nKey="common:surface.componentsChatHistoryview.action.newFolder" /></button>
               )}
             </div>
 {filtered.length === 0 && (
               <div className="col-span-full py-32 flex flex-col items-center justify-center text-text-muted bg-surface-elevated/30 border border-dashed border-border rounded-2xl">
                 <BookOpen size={48} className="mb-4 opacity-10" />
-                <h3 className="text-[16px] font-medium">No conversations found</h3>
-                <p className="text-[13px] opacity-60">Try a different search term or start a new chat</p>
+                <h3 className="text-[16px] font-medium"><Trans i18nKey="common:surface.componentsChatHistoryview.heading.noConversationsFound" /></h3>
+                <p className="text-[13px] opacity-60"><Trans i18nKey="common:surface.componentsChatHistoryview.description.tryADifferentSearchTermOrStart" /></p>
                 <button
                   onClick={handleStartNew}
                   className="mt-6 px-5 py-2 border border-accent text-accent hover:bg-accent hover:text-accent-fg rounded-md transition-all text-[13px] font-medium cursor-pointer"
                 >
-                  Start New Conversation
-                </button>
+                  <Trans i18nKey="common:surface.componentsChatHistoryview.action.startNewConversation" /></button>
               </div>
             )}
           </div>
@@ -861,7 +854,7 @@ export default function HistoryView() {
                   title="Privacy access gate; not per-folder encryption at rest"
                   className="w-full text-left px-3 py-2 text-[13px] text-text-primary hover:bg-accent/10 hover:text-accent transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  {isLocked ? <><Unlock size={14} /> Open Privacy Gate</> : <><Lock size={14} /> Enable Privacy Gate</>}
+                  {isLocked ? <><Unlock size={14} /> <Trans i18nKey="common:surface.componentsChatHistoryview.action.openPrivacyGate" /></> : <><Lock size={14} /> <Trans i18nKey="common:surface.componentsChatHistoryview.action.enablePrivacyGate" /></>}
                 </button>
                 <button
                   onClick={(e) => {
@@ -875,8 +868,7 @@ export default function HistoryView() {
                   }}
                   className="w-full text-left px-3 py-2 text-[13px] text-text-primary hover:bg-accent/10 hover:text-accent transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <Edit2 size={14} /> Rename
-                </button>
+                  <Edit2 size={14} /> <Trans i18nKey="common:surface.componentsChatHistoryview.action.rename" /></button>
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
@@ -885,8 +877,7 @@ export default function HistoryView() {
                   }}
                   className="w-full text-left px-3 py-2 text-[13px] text-danger hover:bg-danger/10 transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <Trash2 size={14} /> Delete
-                </button>
+                  <Trash2 size={14} /> <Trans i18nKey="common:surface.componentsChatHistoryview.action.delete" /></button>
                 <div className="h-px bg-border/50 my-1" />
                 <button
                   onClick={async (e) => {
@@ -906,8 +897,7 @@ export default function HistoryView() {
                   }}
                   className="w-full text-left px-3 py-2 text-[13px] text-text-primary hover:bg-accent/10 hover:text-accent transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <Download size={14} /> Export
-                </button>
+                  <Download size={14} /> <Trans i18nKey="common:surface.componentsChatHistoryview.action.export" /></button>
                 <button
                   onClick={async (e) => {
                     e.stopPropagation()
@@ -916,8 +906,7 @@ export default function HistoryView() {
                   }}
                   className="w-full text-left px-3 py-2 text-[13px] text-text-primary hover:bg-accent/10 hover:text-accent transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  <Upload size={14} /> Import
-                </button>
+                  <Upload size={14} /> <Trans i18nKey="common:surface.componentsChatHistoryview.action.import" /></button>
               </>
             )
           })()}

@@ -5,6 +5,7 @@ import { NODE_SCHEMAS } from '../../lib/workflow-schema'
 import { usePlaygroundStore } from '../../stores/playground-store'
 import { cn } from '../../lib/utils'
 import { ManagedVideoPlayer } from '../media/ManagedVideoPlayer'
+import { Trans } from 'react-i18next';
 
 const COLORS: Record<string, string> = {
   textInput: 'border-blue-500/30',
@@ -68,9 +69,9 @@ function PreviewNodeComponent({ id, data }: NodeProps<PreviewNode>) {
 
       <div className="flex items-center gap-2 px-3.5 py-2.5 border-b border-border/50">
         <span className="text-[13.5px] font-medium text-text-secondary">{schema?.label ?? data.nodeType}</span>
-        {result?.status === 'running' && <span className="ml-auto text-[12px] text-text-muted">Running…</span>}
-        {result?.status === 'done' && <span className="ml-auto text-[12px] text-green-400/50">Done</span>}
-        {result?.status === 'error' && <span className="ml-auto text-[12px] text-red-400/60">Error</span>}
+        {result?.status === 'running' && <span className="ml-auto text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsPlaygroundPreviewNode.text.running" /></span>}
+        {result?.status === 'done' && <span className="ml-auto text-[12px] text-green-400/50"><Trans i18nKey="common:surface.componentsPlaygroundPreviewNode.text.done" /></span>}
+        {result?.status === 'error' && <span className="ml-auto text-[12px] text-red-400/60"><Trans i18nKey="common:surface.componentsPlaygroundPreviewNode.text.error" /></span>}
         {!result?.status && meta.length > 0 && (
           <span className="ml-auto text-[12px] text-text-muted truncate max-w-[140px]" title={meta.join(' · ')}>{meta.join(' · ')}</span>
         )}

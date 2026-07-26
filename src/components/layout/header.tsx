@@ -14,6 +14,7 @@ import { formatModelLabelWithCost } from '../../utils/pricing'
 import { CharacterAvatar } from '../characters/CharacterAvatar'
 import type { ModelInfo, VeniceModel } from '../../types/venice'
 import { useCallback, useMemo } from 'react'
+import { Trans } from 'react-i18next';
 
 interface Props {
   onOpenApiKey: () => void
@@ -125,8 +126,7 @@ export function Header({ onOpenApiKey, onOpenMobileSidebar }: Props) {
           <polyline points="12 6 12 12 16 14" />
         </svg>
         <span className="text-[13px] hidden xl:inline text-text-secondary">
-          Tasks
-        </span>
+          <Trans i18nKey="common:surface.componentsLayoutHeader.text.tasks" /></span>
         {activeTaskCount > 0 && (
           <span className="flex items-center justify-center w-5 h-5 rounded-full bg-accent text-accent-fg text-[11px] font-bold">
             {activeTaskCount}

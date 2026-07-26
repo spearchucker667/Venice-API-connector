@@ -4,6 +4,7 @@
 
 import { AlertCircle, RotateCcw, ArrowLeft, Copy } from "lucide-react";
 import { toast } from "../../stores/toast-store";
+import { Trans } from 'react-i18next';
 
 interface Props {
   error: string;
@@ -29,22 +30,21 @@ export function CharacterCreatorError({
         <AlertCircle className="w-8 h-8" />
       </div>
 
-      <h2 className="text-lg font-bold text-text-primary mb-2">Character Creator Error</h2>
+      <h2 className="text-lg font-bold text-text-primary mb-2"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.heading.characterCreatorError" /></h2>
       <p className="text-xs text-text-muted mb-4 max-w-md">
-        An error occurred during generation or card processing. Your current draft and idea have been preserved.
-      </p>
+        <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.description.anErrorOccurredDuringGenerationOrCard" /></p>
 
       {/* Error Details Box */}
       <div className="w-full bg-surface/60 rounded-xl border border-rose-500/20 p-4 mb-6 text-left">
         <div className="flex items-center justify-between text-xs text-rose-400 font-bold mb-1">
-          <span>Diagnostic Message</span>
+          <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.diagnosticMessage" /></span>
           <button
             type="button"
             onClick={handleCopyError}
             className="hover:underline flex items-center gap-1 text-[11px] font-medium"
           >
             <Copy className="w-3 h-3" />
-            <span>Copy</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.copy" /></span>
           </button>
         </div>
         <p className="text-xs text-text-secondary font-mono break-all line-clamp-4">
@@ -61,7 +61,7 @@ export function CharacterCreatorError({
             className="px-4 py-2 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-secondary flex items-center gap-1.5 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Return to Draft</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.returnToDraft" /></span>
           </button>
         )}
         <button
@@ -70,7 +70,7 @@ export function CharacterCreatorError({
           className="px-5 py-2 rounded-xl bg-accent text-accent-contrast font-medium text-xs flex items-center gap-1.5 hover:opacity-90 transition-opacity"
         >
           <RotateCcw className="w-4 h-4" />
-          <span>Retry Operation</span>
+          <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.retryOperation" /></span>
         </button>
       </div>
     </div>

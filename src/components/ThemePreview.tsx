@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { completeThemeTokens, type Theme } from "../theme/themeTypes";
 import { contrastRatio } from "../theme/contrast";
+import { Trans } from 'react-i18next';
 
 export function ThemePreview({ theme }: { theme: Theme }) {
   const t = completeThemeTokens(theme.mode, theme.tokens);
@@ -57,8 +58,8 @@ export function ThemePreview({ theme }: { theme: Theme }) {
         <div
           className="flex items-center justify-between rounded-lg px-3 py-2 bg-[var(--preview-surface)] border border-[var(--preview-border)]"
         >
-          <span className="text-[var(--preview-text-primary)] font-semibold">Forge</span>
-          <span className="text-[var(--preview-text-muted)] text-[12px]">Status</span>
+          <span className="text-[var(--preview-text-primary)] font-semibold"><Trans i18nKey="common:surface.componentsThemepreview.text.forge" /></span>
+          <span className="text-[var(--preview-text-muted)] text-[12px]"><Trans i18nKey="common:surface.componentsThemepreview.text.status" /></span>
         </div>
         {/* Sidebar + Content mock */}
         <div className="flex gap-2">
@@ -66,14 +67,11 @@ export function ThemePreview({ theme }: { theme: Theme }) {
             className="w-1/3 rounded-lg p-2 space-y-1 bg-[var(--preview-surface)] border border-[var(--preview-border)]"
           >
             <div className="rounded px-2 py-1 text-xs bg-[var(--preview-accent)] text-[var(--preview-accent-fg)] font-medium">
-              Active item
-            </div>
+              <Trans i18nKey="common:surface.componentsThemepreview.text.activeItem" /></div>
             <div className="rounded px-2 py-1 text-xs text-[var(--preview-text-secondary)]">
-              Inactive item
-            </div>
+              <Trans i18nKey="common:surface.componentsThemepreview.text.inactiveItem" /></div>
             <div className="rounded px-2 py-1 text-xs bg-[var(--preview-selection-bg)] text-[var(--preview-selection-fg)]">
-              Selected item
-            </div>
+              <Trans i18nKey="common:surface.componentsThemepreview.text.selectedItem" /></div>
           </div>
           <div
             className="flex-1 rounded-lg p-3 space-y-2 bg-[var(--preview-surface-elevated)] border border-[var(--preview-border-strong)]"
@@ -84,13 +82,11 @@ export function ThemePreview({ theme }: { theme: Theme }) {
               <div
                 className="rounded px-3 py-1 text-xs font-medium bg-[var(--preview-accent)] text-[var(--preview-accent-fg)]"
               >
-                Primary Button
-              </div>
+                <Trans i18nKey="common:surface.componentsThemepreview.text.primaryButton" /></div>
               <div
                 className="rounded px-3 py-1 text-xs font-medium border border-[var(--preview-border)] bg-[var(--preview-btn-sec-bg)] text-[var(--preview-btn-sec-fg)]"
               >
-                Secondary
-              </div>
+                <Trans i18nKey="common:surface.componentsThemepreview.text.secondary" /></div>
             </div>
           </div>
         </div>
@@ -99,24 +95,21 @@ export function ThemePreview({ theme }: { theme: Theme }) {
           <div
             className="rounded-lg px-3 py-2 text-sm bg-[var(--preview-input-bg)] border border-[var(--preview-border)] text-[var(--preview-input-fg)]"
           >
-            Input field…
-          </div>
+            <Trans i18nKey="common:surface.componentsThemepreview.text.inputField" /></div>
           <div
             className="rounded-lg px-3 py-2 text-sm bg-[var(--preview-input-bg)] border border-[var(--preview-border-strong)] text-[var(--preview-input-fg)] outline outline-2 outline-[var(--preview-focus-ring)] outline-offset-1"
           >
-            Focused control
-          </div>
+            <Trans i18nKey="common:surface.componentsThemepreview.text.focusedControl" /></div>
         </div>
         {/* Alert mock */}
         <div
           className="rounded-lg px-3 py-2 text-xs bg-[var(--preview-danger-bg)] border border-[var(--preview-danger-border)] text-[var(--preview-danger)]"
         >
-          Alert message boundary
-        </div>
+          <Trans i18nKey="common:surface.componentsThemepreview.text.alertMessageBoundary" /></div>
       </div>
       {warnings.length > 0 && (
         <div className="rounded-lg border border-warning/30 bg-warning/10 p-3 text-xs text-warning" aria-live="polite">
-          <strong>Contrast warnings:</strong>
+          <strong><Trans i18nKey="common:surface.componentsThemepreview.text.contrastWarnings" /></strong>
           <ul className="mt-1 list-disc pl-4 space-y-0.5">
             {warnings.map((w, i) => (
               <li key={i}>{w}</li>

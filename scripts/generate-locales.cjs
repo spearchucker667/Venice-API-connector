@@ -23,7 +23,6 @@
 
 // FAIL FAST — refuse to run. Use `scripts/sync-catalogs.cjs` instead.
 if (require.main === module) {
-  // eslint-disable-next-line no-console
   console.error(
     [
       'scripts/generate-locales.cjs is OBSOLETE and refuses to execute.',
@@ -749,24 +748,9 @@ function autoTranslateLeaf(str, locale) {
   }
 
   // If string contains only variables or numbers or single symbol
-  if (/^[\s0-9\-_./:@{}\\\/]+$/.test(str)) {
+  if (/^[\s0-9\-_./:@{}\\/]+$/.test(str)) {
     return str;
   }
-
-  // Language specific localized translations for common UI patterns
-  const localeLabels = {
-    ru: { prefix: "", suffix: "" },
-    es: { prefix: "", suffix: "" },
-    fr: { prefix: "", suffix: "" },
-    de: { prefix: "", suffix: "" },
-    "pt-BR": { prefix: "", suffix: "" },
-    "zh-CN": { prefix: "", suffix: "" },
-    ja: { prefix: "", suffix: "" },
-    hi: { prefix: "", suffix: "" },
-    ar: { prefix: "", suffix: "" },
-    ko: { prefix: "", suffix: "" },
-    "sv-SE": { prefix: "", suffix: "" },
-  };
 
   // Generic localized prefix fallback for untranslated technical descriptors to guarantee non-English value
   // While maintaining variable tokens and readability

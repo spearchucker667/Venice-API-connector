@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation , Trans} from "react-i18next";
 import { useConfigStore, reloadConfig } from "../../stores/config-store";
 import { toast } from "../../stores/toast-store";
 import { askDecision } from "../ui/modal-requests";
@@ -61,8 +61,8 @@ export function ConfigPanel(): React.ReactElement {
       <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg space-y-3">
         <h3 className="text-[15px] font-semibold text-text-primary">{t('settings:configPanel.masterConfig.title', 'Local Master Config')}</h3>
         <p className="text-[12.5px] text-text-secondary">
-          {t('settings:configPanel.masterConfig.description1', 'Edit ')}<code className="px-1 py-0.5 rounded bg-surface border border-border text-[12px]">config.yaml</code>{t('settings:configPanel.masterConfig.description2', ' and ')}
-          <code className="px-1 py-0.5 rounded bg-surface border border-border text-[12px]">themes.yaml</code>{t('settings:configPanel.masterConfig.description3', ' on disk to configure Venice Forge without touching the UI. See ')}
+          {t('settings:configPanel.masterConfig.description1', 'Edit ')}<code className="px-1 py-0.5 rounded bg-surface border border-border text-[12px]"><Trans i18nKey="common:surface.componentsSettingsConfigpanel.text.configYaml" /></code>{t('settings:configPanel.masterConfig.description2', ' and ')}
+          <code className="px-1 py-0.5 rounded bg-surface border border-border text-[12px]"><Trans i18nKey="common:surface.componentsSettingsConfigpanel.text.themesYaml" /></code>{t('settings:configPanel.masterConfig.description3', ' on disk to configure Venice Forge without touching the UI. See ')}
           <code className="px-1 py-0.5 rounded bg-surface border border-border text-[12px]">docs/CONFIG.md</code>{t('settings:configPanel.masterConfig.description4', ' for the full schema.')}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[12px]">
@@ -133,8 +133,8 @@ export function ConfigPanel(): React.ReactElement {
       <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg space-y-3">
         <h3 className="text-[15px] font-semibold text-text-primary">{t('settings:configPanel.apiKeyImport.title', 'API Key Import')}</h3>
         <p className="text-[12.5px] text-text-secondary">
-          {t('settings:configPanel.apiKeyImport.description1', 'Plaintext keys in ')}<code className="px-1 py-0.5 rounded bg-surface border border-border text-[12px]">config.yaml</code>{t('settings:configPanel.apiKeyImport.description2', ' are imported into OS secure storage on startup and redacted from the file (unless ')}
-          <code className="px-1 py-0.5 rounded bg-surface border border-border text-[12px]">secrets.keep_plaintext_keys: true</code>{t('settings:configPanel.apiKeyImport.description3', ' is set).')}
+          {t('settings:configPanel.apiKeyImport.description1', 'Plaintext keys in ')}<code className="px-1 py-0.5 rounded bg-surface border border-border text-[12px]"><Trans i18nKey="common:surface.componentsSettingsConfigpanel.text.configYaml" /></code>{t('settings:configPanel.apiKeyImport.description2', ' are imported into OS secure storage on startup and redacted from the file (unless ')}
+          <code className="px-1 py-0.5 rounded bg-surface border border-border text-[12px]"><Trans i18nKey="common:surface.componentsSettingsConfigpanel.text.secretsKeepPlaintextKeysTrue" /></code>{t('settings:configPanel.apiKeyImport.description3', ' is set).')}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[12px]">
           <div className="rounded-lg border border-border p-3 bg-surface">

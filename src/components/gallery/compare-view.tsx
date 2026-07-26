@@ -13,6 +13,7 @@ import { useMemo } from "react";
 import type { MediaItem } from "../../types/media";
 import { extractGenerationRecipe, type GenerationRecipe } from "../../types/project";
 import { MEDIA_SELECTION_MAX } from "../../stores/media-selection-store";
+import { Trans } from 'react-i18next';
 
 export interface CompareField {
   /** Canonical field key, e.g. `model`, `prompt`, `seed`. */
@@ -168,16 +169,14 @@ export function CompareView({ items, className, onClose }: CompareViewProps) {
     return (
       <div className={className} data-testid="compare-view-disabled">
         <p className="text-[12px] text-text-muted">
-          Select 2 to {MEDIA_SELECTION_MAX} items to compare. ({items.length} selected)
-        </p>
+          <Trans i18nKey="common:surface.componentsGalleryCompareView.description.select2To" /> {MEDIA_SELECTION_MAX} <Trans i18nKey="common:surface.componentsGalleryCompareView.description.itemsToCompare" />{items.length} <Trans i18nKey="common:surface.componentsGalleryCompareView.description.selected" /></p>
         {onClose && (
           <button
             type="button"
             onClick={onClose}
             className="mt-1.5 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
           >
-            Close
-          </button>
+            <Trans i18nKey="common:surface.componentsGalleryCompareView.action.close" /></button>
         )}
       </div>
     );
@@ -189,7 +188,7 @@ export function CompareView({ items, className, onClose }: CompareViewProps) {
   return (
     <div className={className} data-testid="compare-view" data-changed={changedCount}>
       <div className="flex items-center justify-between text-[12px] uppercase tracking-wide text-text-secondary">
-        <span>Compare {items.length} items</span>
+        <span><Trans i18nKey="common:surface.componentsGalleryCompareView.text.compare" /> {items.length} <Trans i18nKey="common:surface.componentsGalleryCompareView.text.items" /></span>
         <span aria-live="polite">
           {changedCount === 0
             ? "All shared fields match"
@@ -202,15 +201,14 @@ export function CompareView({ items, className, onClose }: CompareViewProps) {
             className="ml-2 rounded-md border border-border px-2 py-1.5 min-h-[32px] text-[12px] text-text-secondary hover:border-accent hover:text-accent"
             aria-label="Close compare view"
           >
-            Close
-          </button>
+            <Trans i18nKey="common:surface.componentsGalleryCompareView.action.close" /></button>
         )}
       </div>
       <div className="mt-1.5 overflow-auto rounded-md border border-border/60 max-h-[60vh]">
         <table className="w-full text-[12px]">
           <thead className="bg-surface/60 sticky top-0 z-10">
             <tr>
-              <th className="text-left px-2 py-1 font-medium">Field</th>
+              <th className="text-left px-2 py-1 font-medium"><Trans i18nKey="common:surface.componentsGalleryCompareView.column.field" /></th>
               {headerLabels.map((label, idx) => (
                 <th
                   key={items[idx]?.id ?? idx}

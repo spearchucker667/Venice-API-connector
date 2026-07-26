@@ -11,9 +11,19 @@ const tm = require('./translate-missing.cjs') as {
     out?: Record<string, { value: unknown; isString: boolean }>,
   ) => Record<string, { value: unknown; isString: boolean }>;
   isCandidate: (marker: unknown, enUSValue: unknown) => boolean;
+  requireVeniceApiKey: (env?: Record<string, string | undefined>) => string;
+  resolveVeniceBaseUrl: (env?: Record<string, string | undefined>) => string;
 };
 
-const { ALLOWLISTED_IDENTICAL, MISSING_MARKER_RE, SENTINEL_RE, flattenTree, isCandidate } = tm;
+const {
+  ALLOWLISTED_IDENTICAL,
+  MISSING_MARKER_RE,
+  SENTINEL_RE,
+  flattenTree,
+  isCandidate,
+  requireVeniceApiKey,
+  resolveVeniceBaseUrl,
+} = tm;
 
 describe('translate-missing detection', () => {
   it('flattens a nested tree', () => {
@@ -68,5 +78,28 @@ describe('translate-missing detection', () => {
     expect(ALLOWLISTED_IDENTICAL.has('Venice Forge')).toBe(true);
     expect(ALLOWLISTED_IDENTICAL.has('JSON')).toBe(true);
     expect(ALLOWLISTED_IDENTICAL.has('Argon2id')).toBe(true);
+  });
+
+  it('defaults to the canonical Venice HTTPS endpoint and ignores OPENAI_BASE_URL', () => {
+    expect(resolveVeniceBaseUrl({ OPENAI_BASE_URL: 'https://attacker.example/v1' })).toBe(
+      'https://api.venice.ai/api/v1',
+    );
+  });
+
+  it('rejects HTTP and non-Venice endpoints without explicit opt-in', () => {
+    expect(() => resolveVeniceBaseUrl({ VENICE_TRANSLATE_BASE_URL: 'http://api.venice.ai/api/v1' })).toThrow(/HTTPS/);
+    expect(() => resolveVeniceBaseUrl({ VENICE_TRANSLATE_BASE_URL: 'https://example.test/v1' })).toThrow(/Refusing/);
+  });
+
+  it('permits an explicitly trusted custom HTTPS endpoint', () => {
+    expect(resolveVeniceBaseUrl({
+      VENICE_TRANSLATE_BASE_URL: 'https://translator.example/v1/',
+      VENICE_TRANSLATE_ALLOW_CUSTOM_BASE_URL: '1',
+    })).toBe('https://translator.example/v1');
+  });
+
+  it('requires a non-empty Venice API key only when execution requests it', () => {
+    expect(() => requireVeniceApiKey({})).toThrow(/VENICE_API_KEY/);
+    expect(requireVeniceApiKey({ VENICE_API_KEY: ' test-key ' })).toBe('test-key');
   });
 });

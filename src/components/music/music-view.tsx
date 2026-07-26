@@ -14,6 +14,7 @@ import { getPromptStartersForCategory } from '../../services/promptStarterServic
 import { getAudioExtension } from '../../utils/image'
 import { ModelSelect } from '../ModelSelect'
 import type { ModelInfo } from '../../types/venice'
+import { Trans } from 'react-i18next';
 
 // Model capabilities
 interface MusicModelConfig {
@@ -114,7 +115,7 @@ export function MusicView() {
   const controls = (
     <>
       <div>
-        <Label>Model</Label>
+        <Label><Trans i18nKey="common:surface.componentsMusicMusicView.text.model" /></Label>
         <ModelSelect
           value={model}
           onChange={(value) => setSelectedModel('music', value)}
@@ -124,30 +125,30 @@ export function MusicView() {
         />
         {config.duration && (
           <p className="mt-1 text-[12px] text-text-muted" data-testid="music-duration-limits">
-            Duration: {config.durationOptions.length > 0
+            <Trans i18nKey="common:surface.componentsMusicMusicView.description.duration" /> {config.durationOptions.length > 0
               ? config.durationOptions.map((value) => `${value}s`).join(', ')
               : `${config.minDuration}s–${config.maxDuration}s`}
           </p>
         )}
       </div>
       <div>
-        <Label htmlFor={promptId}>Prompt</Label>
+        <Label htmlFor={promptId}><Trans i18nKey="common:surface.componentsMusicMusicView.text.prompt" /></Label>
         <TextArea id={promptId} value={prompt} onChange={setPrompt} placeholder="An upbeat electronic track with a driving bassline and ethereal synths…" rows={4} />
       </div>
 
       {config.lyrics && (
         <div>
-          <Label htmlFor={lyricsId}>Lyrics</Label>
+          <Label htmlFor={lyricsId}><Trans i18nKey="common:surface.componentsMusicMusicView.text.lyrics" /></Label>
           <TextArea id={lyricsId} value={lyrics} onChange={setLyrics} placeholder="Optional lyrics or vocal direction…" rows={3} />
         </div>
       )}
 
       {config.duration && (
         <div>
-          <Label hint={`${duration}s`}>Duration</Label>
+          <Label hint={`${duration}s`}><Trans i18nKey="common:surface.componentsMusicMusicView.text.duration" /></Label>
           {config.durationOptions.length > 0 ? (
             <select aria-label="Music duration" value={duration} onChange={(e) => setDuration(Number(e.target.value))} className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-[14px] text-text-primary">
-              {config.durationOptions.map((value) => <option key={value} value={value}>{value} seconds</option>)}
+              {config.durationOptions.map((value) => <option key={value} value={value}>{value} <Trans i18nKey="common:surface.componentsMusicMusicView.option.seconds" /></option>)}
             </select>
           ) : (
             <input aria-label="Music duration" type="range" min={config.minDuration} max={config.maxDuration} step={1} value={duration} onChange={(e) => setDuration(Number(e.target.value))} className="w-full" />
@@ -157,7 +158,7 @@ export function MusicView() {
 
       {config.instrumental && (
         <div className="flex items-center justify-between">
-          <Label>Instrumental only</Label>
+          <Label><Trans i18nKey="common:surface.componentsMusicMusicView.text.instrumentalOnly" /></Label>
           <button
             onClick={() => setInstrumental(!instrumental)}
             aria-pressed={instrumental}
@@ -169,10 +170,10 @@ export function MusicView() {
       )}
 
       <div className="flex flex-wrap gap-1">
-        {config.lyrics && <Tag>Lyrics</Tag>}
-        {config.instrumental && <Tag>Instrumental</Tag>}
-        {config.voice && <Tag>Voice</Tag>}
-        {config.duration && <Tag>Custom Duration</Tag>}
+        {config.lyrics && <Tag><Trans i18nKey="common:surface.componentsMusicMusicView.text.lyrics" /></Tag>}
+        {config.instrumental && <Tag><Trans i18nKey="common:surface.componentsMusicMusicView.text.instrumental" /></Tag>}
+        {config.voice && <Tag><Trans i18nKey="common:surface.componentsMusicMusicView.text.voice" /></Tag>}
+        {config.duration && <Tag><Trans i18nKey="common:surface.componentsMusicMusicView.text.customDuration" /></Tag>}
       </div>
 
       <PrimaryButton
@@ -186,7 +187,7 @@ export function MusicView() {
       {error && (
         <div className="flex items-center justify-between gap-2">
           <ErrorText>{error}</ErrorText>
-          <button onClick={reset} className="text-[13px] text-text-secondary hover:text-text-primary underline underline-offset-2 shrink-0 transition-colors">Reset</button>
+          <button onClick={reset} className="text-[13px] text-text-secondary hover:text-text-primary underline underline-offset-2 shrink-0 transition-colors"><Trans i18nKey="common:surface.componentsMusicMusicView.action.reset" /></button>
         </div>
       )}
     </>
@@ -197,7 +198,7 @@ export function MusicView() {
         {audioUrl ? (
           <div className="animate-fade-in flex flex-col gap-4">
             <div className="flex items-center justify-between">
-              <Label>Output</Label>
+              <Label><Trans i18nKey="common:surface.componentsMusicMusicView.text.output" /></Label>
               <div className="flex items-center gap-3">
                 {(() => {
                   const alreadySaved = queueAlreadySaved || (!!queueId && savedQueueIdsRef.current.has(queueId))
@@ -250,8 +251,7 @@ export function MusicView() {
                 })()}
                 <a href={audioUrl} download={`venice-music${getAudioExtension(mimeType, audioUrl)}`} target="_blank" rel="noopener noreferrer" className="text-[14px] text-text-muted hover:text-text-muted transition-colors flex items-center gap-1.5">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
-                  Download
-                </a>
+                  <Trans i18nKey="common:surface.componentsMusicMusicView.text.download" /></a>
               </div>
             </div>
             <audio
@@ -276,7 +276,7 @@ export function MusicView() {
               <p className="text-[15px] text-text-muted leading-relaxed">{prompt}</p>
               {lyrics && <p className="text-[14px] text-text-muted mt-2 italic">{lyrics}</p>}
             </div>
-            <button onClick={reset} className="self-start text-[14px] text-text-muted hover:text-text-muted transition-colors">Generate another</button>
+            <button onClick={reset} className="self-start text-[14px] text-text-muted hover:text-text-muted transition-colors"><Trans i18nKey="common:surface.componentsMusicMusicView.action.generateAnother" /></button>
           </div>
         ) : (
           <div className="flex items-center justify-center flex-1 text-text-muted text-[15px]">
@@ -295,7 +295,7 @@ export function MusicView() {
                 onShuffle={() => setStarters(getPromptStartersForCategory('music', 4))}
               />
             ) : (
-              <span>Press Generate to create your track</span>
+              <span><Trans i18nKey="common:surface.componentsMusicMusicView.text.pressGenerateToCreateYourTrack" /></span>
             )}
           </div>
         )}

@@ -1,7 +1,7 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '../../lib/utils'
-import { useSettingsStore, type Tab } from '../../stores/settings-store'
+import { useSettingsStore } from '../../stores/settings-store'
 import { selectConversationSummaries, useChatStore, type ConversationSummary } from '../../stores/chat-store'
 import { useShallow } from 'zustand/shallow'
 import { useProjectStore } from '../../stores/project-store'
@@ -84,11 +84,6 @@ function PrivacyIcon() {
 }
 function DocumentsIcon() {
   return <Meteocon name="thermometer" size={20} />
-}
-
-interface NavGroup {
-  label: string
-  items: Array<{ id: Tab; label: string; Icon: () => React.JSX.Element }>
 }
 
 /**
@@ -344,7 +339,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
                 try {
                   const p = await useProjectStore.getState().createProject(name)
                   useProjectStore.getState().setActiveProject(p.id)
-                  toast.success(t('project.created', 'Created "{{name}}"', { name: p.name }))
+                  toast.success(t('project.created', { defaultValue: 'Created "{{name}}"', name: p.name }))
                 } catch (e: unknown) {
                   const msg = e && typeof e === 'object' && 'message' in e ? String((e as { message?: unknown }).message) : t('project.createFailed', 'Failed to create project')
                   toast.error(msg)
@@ -565,7 +560,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
                     )}
                     {deferredSearch.trim() && searchResult.totalMatches > filtered.length && (
                       <div role="status" className="pt-1 text-[12px] text-text-muted">
-                        {t('chat.showingMatches', 'Showing first {{count}} of {{total}} matches', { count: filtered.length, total: searchResult.totalMatches })}
+                        {t('chat.showingMatches', { defaultValue: 'Showing first {{count}} of {{total}} matches', count: filtered.length, total: searchResult.totalMatches })}
                       </div>
                     )}
                 </div>

@@ -158,7 +158,7 @@ export function SettingsView() {
     const unsubs = [
       desktopUpdates.onUpdateAvailable((info: UpdateInfo) => {
         updateEventSeenRef.current = true;
-        setUpdateStatus(t('settings:updates.available', 'Update available: v{{version}}', { version: info?.version || "new" }));
+        setUpdateStatus(t('settings:updates.available', { defaultValue: 'Update available: v{{version}}', version: info?.version || "new" }));
         setIsUpdateChecking(false);
       }),
       desktopUpdates.onUpdateNotAvailable(() => {
@@ -168,7 +168,7 @@ export function SettingsView() {
       }),
       desktopUpdates.onDownloadProgress((progress: ProgressInfo) => {
         updateEventSeenRef.current = true;
-        setUpdateStatus(t('settings:updates.downloading', 'Downloading update: {{percent}}%', { percent: Math.round(progress?.percent || 0) }));
+        setUpdateStatus(t('settings:updates.downloading', { defaultValue: 'Downloading update: {{percent}}%', percent: Math.round(progress?.percent || 0) }));
       }),
       desktopUpdates.onUpdateDownloaded(() => {
         updateEventSeenRef.current = true;
@@ -178,13 +178,13 @@ export function SettingsView() {
       }),
       desktopUpdates.onUpdateError((err: string) => {
         updateEventSeenRef.current = true;
-        setUpdateStatus(t('settings:updates.error', 'Update error: {{error}}', { error: err }));
+        setUpdateStatus(t('settings:updates.error', { defaultValue: 'Update error: {{error}}', error: err }));
         setIsUpdateChecking(false);
       }),
     ];
 
     return () => unsubs.forEach((unsub) => unsub());
-  }, []);
+  }, [t]);
 
   async function checkForUpdates() {
     setIsUpdateChecking(true);
@@ -197,13 +197,13 @@ export function SettingsView() {
         const msg = raw.startsWith("Error: ") ? raw.slice(7) : raw;
         setUpdateStatus(msg === "Update checks are only available in production builds."
           ? t('settings:updates.devBuild', "Development build — update checks run only in packaged production builds.")
-          : t('settings:updates.checkFailed', "Update check failed: {{error}}", { error: msg }));
+          : t('settings:updates.checkFailed', { defaultValue: "Update check failed: {{error}}", error: msg }));
       } else if (!updateEventSeenRef.current) {
         setUpdateStatus(t('settings:updates.checkCompleted', "Update check completed."));
       }
     } catch (err: unknown) {
       const message = redactErrorMessage(err);
-      setUpdateStatus(t('settings:updates.checkFailed', "Update check failed: {{error}}", { error: message }));
+      setUpdateStatus(t('settings:updates.checkFailed', { defaultValue: "Update check failed: {{error}}", error: message }));
     } finally {
       setIsUpdateChecking(false);
     }
@@ -214,7 +214,7 @@ export function SettingsView() {
       await desktopUpdates.installUpdate();
     } catch (err: unknown) {
       const message = redactErrorMessage(err);
-      setUpdateStatus(t('settings:updates.installFailed', "Install failed: {{error}}", { error: message }));
+      setUpdateStatus(t('settings:updates.installFailed', { defaultValue: "Install failed: {{error}}", error: message }));
     }
   }
 
@@ -252,9 +252,9 @@ export function SettingsView() {
     try {
       const result = await desktopApiKey.test();
       if (result.ok) {
-        toast.success(t('settings:apiKeys.testSuccess', 'Connection successful{{status}}.', { status: result.status ? ` (HTTP ${result.status})` : "" }));
+        toast.success(t('settings:apiKeys.testSuccess', { defaultValue: 'Connection successful{{status}}.', status: result.status ? ` (HTTP ${result.status})` : "" }));
       } else {
-        toast.error(t('settings:apiKeys.testFailed', 'Connection failed: {{message}}', { message: result.message }));
+        toast.error(t('settings:apiKeys.testFailed', { defaultValue: 'Connection failed: {{message}}', message: result.message }));
       }
     } catch (err) {
       toast.error(t('settings:apiKeys.testError', "Test connection failed."), redactErrorMessage(err));
@@ -298,9 +298,9 @@ export function SettingsView() {
     try {
       const result = await desktopJinaApiKey.test();
       if (result.ok) {
-        toast.success(t('settings:jinaKeys.testSuccess', 'Jina connection successful{{status}}.', { status: result.status ? ` (HTTP ${result.status})` : "" }));
+        toast.success(t('settings:jinaKeys.testSuccess', { defaultValue: 'Jina connection successful{{status}}.', status: result.status ? ` (HTTP ${result.status})` : "" }));
       } else {
-        toast.error(t('settings:jinaKeys.testFailed', 'Jina connection failed: {{message}}', { message: result.message }));
+        toast.error(t('settings:jinaKeys.testFailed', { defaultValue: 'Jina connection failed: {{message}}', message: result.message }));
       }
     } catch (err) {
       toast.error(t('settings:jinaKeys.testError', "Jina test connection failed."), redactErrorMessage(err));

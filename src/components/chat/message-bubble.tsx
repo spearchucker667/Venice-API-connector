@@ -20,6 +20,7 @@ import { CharacterSceneCard } from './CharacterSceneCard'
 import type { CharacterSceneGenerationResult } from '../../types/characterSceneGeneration'
 import type { ChatDocumentRef } from '../../types/chatDocument'
 import { ManagedDocumentAttachmentCard } from '../documents/ManagedDocumentAttachmentCard'
+import { Trans } from 'react-i18next';
 
 const ChatTtsPlayer = lazy(async () => {
   const module = await import('./ChatTtsPlayer')
@@ -203,8 +204,7 @@ function MessageBubbleImpl({ message, index, onCopy, onDelete, onEdit, onDeleteF
   const injectedContextDisclosure = injectedContext ? (
     <details className="mt-3 rounded-lg border border-border/50 bg-surface-elevated/30 text-left text-[12px] text-text-secondary">
       <summary className="cursor-pointer select-none px-3 py-2 font-medium text-text-primary">
-        {injectedContextLabel} attached to this message
-      </summary>
+        {injectedContextLabel} <Trans i18nKey="common:surface.componentsChatMessageBubble.text.attachedToThisMessage" /></summary>
       <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-words border-t border-border/40 px-3 py-2 font-mono text-[12px] leading-relaxed text-text-muted">
         {injectedContext}
       </pre>
@@ -305,8 +305,8 @@ function MessageBubbleImpl({ message, index, onCopy, onDelete, onEdit, onDeleteF
                   className="min-h-24 w-full resize-y rounded-md border border-border bg-surface p-2 text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
                 />
                 <div className="flex justify-end gap-2">
-                  <button type="button" onClick={() => setIsEditing(false)} className="rounded-md px-2 py-1 text-sm text-text-secondary hover:bg-surface">Cancel</button>
-                  <button type="button" onClick={saveEdit} className="rounded-md bg-accent px-2 py-1 text-sm text-accent-fg">Save</button>
+                  <button type="button" onClick={() => setIsEditing(false)} className="rounded-md px-2 py-1 text-sm text-text-secondary hover:bg-surface"><Trans i18nKey="common:surface.componentsChatMessageBubble.action.cancel" /></button>
+                  <button type="button" onClick={saveEdit} className="rounded-md bg-accent px-2 py-1 text-sm text-accent-fg"><Trans i18nKey="common:surface.componentsChatMessageBubble.action.save" /></button>
                 </div>
               </div>
             ) : (
@@ -330,10 +330,10 @@ function MessageBubbleImpl({ message, index, onCopy, onDelete, onEdit, onDeleteF
                     <span className="max-w-[140px] truncate font-medium text-text-primary">{ref.name}</span>
                     <span className="text-text-muted uppercase tracking-wider">{ref.kind}</span>
                     {ref.truncated && (
-                      <span className="ml-0.5 rounded bg-amber-500/20 px-1 text-[10px] text-amber-400" title="Attachment was partially omitted due to context budget">truncated</span>
+                      <span className="ml-0.5 rounded bg-amber-500/20 px-1 text-[10px] text-amber-400" title="Attachment was partially omitted due to context budget"><Trans i18nKey="common:surface.componentsChatMessageBubble.text.truncated" /></span>
                     )}
                     {ref.requiresVision && (
-                      <span className="ml-0.5 rounded bg-blue-500/20 px-1 text-[10px] text-blue-400">vision</span>
+                      <span className="ml-0.5 rounded bg-blue-500/20 px-1 text-[10px] text-blue-400"><Trans i18nKey="common:surface.componentsChatMessageBubble.text.vision" /></span>
                     )}
                   </div>
                 ))}
@@ -342,16 +342,16 @@ function MessageBubbleImpl({ message, index, onCopy, onDelete, onEdit, onDeleteF
             {redTeamMode && localSafetyDecision && (
               <div className="mt-2 text-[12px] font-mono p-2 bg-surface border border-border/40 rounded-md text-left text-text-secondary select-text space-y-1">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-semibold text-text-muted">Safety:</span>
+                  <span className="font-semibold text-text-muted"><Trans i18nKey="common:surface.componentsChatMessageBubble.text.safety" /></span>
                   <span className={localSafetyDecision.allow ? "text-accent font-semibold" : "text-danger font-semibold"}>
                     {localSafetyDecision.allow ? "ALLOW" : "BLOCKED"}
                   </span>
                 </div>
                 {localSafetyDecision.reasonCode && (
-                  <div><span className="font-semibold text-text-muted">Code:</span> {localSafetyDecision.reasonCode}</div>
+                  <div><span className="font-semibold text-text-muted"><Trans i18nKey="common:surface.componentsChatMessageBubble.text.code" /></span> {localSafetyDecision.reasonCode}</div>
                 )}
                 {localSafetyDecision.signals && localSafetyDecision.signals.length > 0 && (
-                  <div><span className="font-semibold text-text-muted">Signals:</span> {localSafetyDecision.signals.map(s => `${s.category}:${s.source}`).join(', ')}</div>
+                  <div><span className="font-semibold text-text-muted"><Trans i18nKey="common:surface.componentsChatMessageBubble.text.signals" /></span> {localSafetyDecision.signals.map(s => `${s.category}:${s.source}`).join(', ')}</div>
                 )}
               </div>
             )}
@@ -391,8 +391,7 @@ function MessageBubbleImpl({ message, index, onCopy, onDelete, onEdit, onDeleteF
                 className={cn('transition-transform duration-150', reasoningOpen && 'rotate-90')}>
                 <path d="M3.5 2L6.5 5L3.5 8" />
               </svg>
-              Thinking
-            </button>
+              <Trans i18nKey="common:surface.componentsChatMessageBubble.action.thinking" /></button>
             {reasoningOpen && (
               <div className="bg-surface border border-border rounded-lg px-3 py-2 text-[15px] text-text-muted leading-relaxed whitespace-pre-wrap animate-fade-in max-h-60 overflow-y-auto">
                 {message.reasoning_content}
@@ -415,8 +414,8 @@ function MessageBubbleImpl({ message, index, onCopy, onDelete, onEdit, onDeleteF
               className="min-h-28 w-full resize-y rounded-md border border-border bg-surface p-2 text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
             />
             <div className="flex gap-2">
-              <button type="button" onClick={() => setIsEditing(false)} className="rounded-md px-2 py-1 text-sm text-text-secondary hover:bg-surface-elevated">Cancel</button>
-              <button type="button" onClick={saveEdit} className="rounded-md bg-accent px-2 py-1 text-sm text-accent-fg">Save</button>
+              <button type="button" onClick={() => setIsEditing(false)} className="rounded-md px-2 py-1 text-sm text-text-secondary hover:bg-surface-elevated"><Trans i18nKey="common:surface.componentsChatMessageBubble.action.cancel" /></button>
+              <button type="button" onClick={saveEdit} className="rounded-md bg-accent px-2 py-1 text-sm text-accent-fg"><Trans i18nKey="common:surface.componentsChatMessageBubble.action.save" /></button>
             </div>
           </div>
         ) : content && !isTool ? (
@@ -428,16 +427,16 @@ function MessageBubbleImpl({ message, index, onCopy, onDelete, onEdit, onDeleteF
               {localSafetyDecision && (
                 <div className="text-[12px] font-mono p-2 bg-surface border border-border/40 rounded-md text-text-secondary select-text space-y-1">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-semibold text-text-muted">Safety:</span>
+                    <span className="font-semibold text-text-muted"><Trans i18nKey="common:surface.componentsChatMessageBubble.text.safety" /></span>
                     <span className={localSafetyDecision.allow ? "text-accent font-semibold" : "text-danger font-semibold"}>
                       {localSafetyDecision.allow ? "ALLOW" : "BLOCKED"}
                     </span>
                   </div>
                   {localSafetyDecision.reasonCode && (
-                    <div><span className="font-semibold text-text-muted">Code:</span> {localSafetyDecision.reasonCode}</div>
+                    <div><span className="font-semibold text-text-muted"><Trans i18nKey="common:surface.componentsChatMessageBubble.text.code" /></span> {localSafetyDecision.reasonCode}</div>
                   )}
                   {localSafetyDecision.signals && localSafetyDecision.signals.length > 0 && (
-                    <div><span className="font-semibold text-text-muted">Signals:</span> {localSafetyDecision.signals.map(s => `${s.category}:${s.source}`).join(', ')}</div>
+                    <div><span className="font-semibold text-text-muted"><Trans i18nKey="common:surface.componentsChatMessageBubble.text.signals" /></span> {localSafetyDecision.signals.map(s => `${s.category}:${s.source}`).join(', ')}</div>
                   )}
                 </div>
               )}
@@ -471,7 +470,7 @@ function MessageBubbleImpl({ message, index, onCopy, onDelete, onEdit, onDeleteF
               <div key={idx} className="bg-surface-elevated/40 border border-border/60 rounded-md p-2 font-mono text-[12px] text-text-secondary">
                 <div className="flex items-center gap-1.5 text-accent mb-1">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                  <span className="font-semibold">Tool used: {tc.function.name}</span>
+                  <span className="font-semibold"><Trans i18nKey="common:surface.componentsChatMessageBubble.text.toolUsed" /> {tc.function.name}</span>
                 </div>
                 <div className="pl-5 truncate max-w-full opacity-80" title={tc.function.arguments}>
                   {tc.function.arguments || 'No arguments'}
@@ -486,7 +485,7 @@ function MessageBubbleImpl({ message, index, onCopy, onDelete, onEdit, onDeleteF
             <details className="rounded-md border border-border/50 bg-surface-elevated/20 text-[12px] text-text-secondary">
               <summary className="cursor-pointer select-none px-3 py-1.5 font-medium flex items-center gap-1.5">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                Result from {message.name || 'tool'}
+                <Trans i18nKey="common:surface.componentsChatMessageBubble.text.resultFrom" /> {message.name || 'tool'}
               </summary>
               <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-words border-t border-border/40 px-3 py-2 font-mono text-[11px] leading-relaxed text-text-muted">
                 {content}

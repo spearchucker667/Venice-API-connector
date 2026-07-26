@@ -2,6 +2,7 @@ import React, { useId, useRef, useState } from 'react';
 import type { PromptKind, PromptScope } from '../../types/prompt-library';
 import { useProjectStore } from '../../stores/project-store';
 import { AccessibleDialog } from '../ui/AccessibleDialog';
+import { Trans } from 'react-i18next';
 
 interface Props {
   onClose: () => void;
@@ -95,45 +96,45 @@ export function PromptCreateModal({ onClose, onCreate }: Props) {
         <div className="flex-1 overflow-y-auto p-5">
           <form id={formId} onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <label htmlFor={titleId} className="block text-xs font-medium text-text-secondary mb-1">Title *</label>
+              <label htmlFor={titleId} className="block text-xs font-medium text-text-secondary mb-1"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.label.title" /></label>
               <input ref={titleRef} id={titleId} required value={title} onChange={e => setTitle(e.target.value)} className="w-full bg-background border border-border rounded-md px-3 py-2 text-[13px] focus:border-accent" placeholder="E.g., Dark Fantasy Portrait" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor={kindId} className="block text-xs font-medium text-text-secondary mb-1">Kind *</label>
+                <label htmlFor={kindId} className="block text-xs font-medium text-text-secondary mb-1"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.label.kind" /></label>
                 <select id={kindId} value={kind} onChange={e => setKind(e.target.value as PromptKind)} className="w-full bg-background border border-border rounded-md px-3 py-2 text-[13px] focus:border-accent">
                   {KIND_OPTIONS.map(k => <option key={k.value} value={k.value}>{k.label}</option>)}
                 </select>
               </div>
               <div>
-                <label htmlFor={scopeId} className="block text-xs font-medium text-text-secondary mb-1">Scope *</label>
+                <label htmlFor={scopeId} className="block text-xs font-medium text-text-secondary mb-1"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.label.scope" /></label>
                 <select id={scopeId} value={scope} onChange={e => setScope(e.target.value as PromptScope)} className="w-full bg-background border border-border rounded-md px-3 py-2 text-[13px] focus:border-accent">
-                  <option value="global">Global</option>
-                  <option value="project">Project</option>
+                  <option value="global"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.option.global" /></option>
+                  <option value="project"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.option.project" /></option>
                 </select>
               </div>
             </div>
             {scope === 'project' && (
               <div>
-                <label htmlFor={projectIdField} className="block text-xs font-medium text-text-secondary mb-1">Project *</label>
+                <label htmlFor={projectIdField} className="block text-xs font-medium text-text-secondary mb-1"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.label.project" /></label>
                 <select id={projectIdField} required value={projectId} onChange={e => setProjectId(e.target.value)} className="w-full bg-background border border-border rounded-md px-3 py-2 text-[13px] focus:border-accent">
-                  <option value="" disabled>Select a project</option>
+                  <option value="" disabled><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.option.selectAProject" /></option>
                   {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </div>
             )}
             <div>
-              <label htmlFor={tagsId} className="block text-xs font-medium text-text-secondary mb-1">Tags</label>
+              <label htmlFor={tagsId} className="block text-xs font-medium text-text-secondary mb-1"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.label.tags" /></label>
               <input id={tagsId} value={tagsInput} onChange={e => setTagsInput(e.target.value)} className="w-full bg-background border border-border rounded-md px-3 py-2 text-[13px] focus:border-accent" placeholder="e.g. dark fantasy, portrait lighting" aria-describedby={`${tagsId}-help`} />
-              <p id={`${tagsId}-help`} className="mt-1 text-xs text-text-muted">Comma-separated; up to 64 tags and 64 characters per tag.</p>
+              <p id={`${tagsId}-help`} className="mt-1 text-xs text-text-muted"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.description.commaSeparatedUpTo64TagsAnd" /></p>
             </div>
             <div>
-              <label htmlFor={contentId} className="block text-xs font-medium text-text-secondary mb-1">Content *</label>
+              <label htmlFor={contentId} className="block text-xs font-medium text-text-secondary mb-1"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.label.content" /></label>
               <textarea id={contentId} required value={content} onChange={e => setContent(e.target.value)} rows={4} className="w-full bg-background border border-border rounded-md px-3 py-2 text-[13px] font-mono focus:border-accent resize-y min-h-[100px]" placeholder="Enter prompt text here..." />
             </div>
             {(kind === 'image' || kind === 'recipe' || kind === 'general') && (
               <div>
-                <label htmlFor={negativeId} className="block text-xs font-medium text-text-secondary mb-1">Negative Content</label>
+                <label htmlFor={negativeId} className="block text-xs font-medium text-text-secondary mb-1"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.label.negativeContent" /></label>
                 <textarea id={negativeId} value={negativeContent} onChange={e => setNegativeContent(e.target.value)} rows={2} className="w-full bg-background border border-border rounded-md px-3 py-2 text-[13px] font-mono focus:border-accent resize-y min-h-[60px]" placeholder="Optional negative prompt..." />
               </div>
             )}
@@ -141,8 +142,8 @@ export function PromptCreateModal({ onClose, onCreate }: Props) {
           {error && <p role="alert" className="mt-4 text-sm text-danger">{error}</p>}
         </div>
         <div className="px-5 py-4 border-t border-border/50 flex justify-end gap-3 bg-surface-elevated/30">
-          <button type="button" onClick={onClose} disabled={isSubmitting} className="px-4 py-2 text-[12.5px] rounded-md border border-border text-text-secondary hover:text-text-primary">Cancel</button>
-          <button type="submit" form={formId} disabled={isSubmitting || !title.trim() || !content.trim() || (scope === 'project' && !projectId)} className="px-4 py-2 text-[12.5px] rounded-md bg-accent text-accent-fg hover:bg-accent-hover disabled:opacity-50 font-medium">Create Prompt</button>
+          <button type="button" onClick={onClose} disabled={isSubmitting} className="px-4 py-2 text-[12.5px] rounded-md border border-border text-text-secondary hover:text-text-primary"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.action.cancel" /></button>
+          <button type="submit" form={formId} disabled={isSubmitting || !title.trim() || !content.trim() || (scope === 'project' && !projectId)} className="px-4 py-2 text-[12.5px] rounded-md bg-accent text-accent-fg hover:bg-accent-hover disabled:opacity-50 font-medium"><Trans i18nKey="common:surface.componentsPromptsPromptcreatemodal.action.createPrompt" /></button>
         </div>
     </AccessibleDialog>
   );

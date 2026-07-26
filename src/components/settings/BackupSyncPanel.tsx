@@ -93,7 +93,7 @@ export function BackupSyncPanel() {
       }
     }
     loadSyncState();
-  }, [setSettingsSyncFolder]);
+  }, [setSettingsSyncFolder, t]);
 
   const isSyncActive = runtimeStatus.mainWatcher === "running" && runtimeStatus.rendererSessionAttached;
   const isRendererDetached = runtimeStatus.mainWatcher === "running" && !runtimeStatus.rendererSessionAttached;
@@ -121,7 +121,7 @@ export function BackupSyncPanel() {
       toast.success(t('settings:backupSync.toasts.folderConfigured', "Encrypted sync folder configured."));
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error";
-      toast.error(t('settings:backupSync.toasts.setFolderFailed', "Failed to set sync folder: {{error}}", { error: msg }));
+      toast.error(t('settings:backupSync.toasts.setFolderFailed', { defaultValue: "Failed to set sync folder: {{error}}", error: msg }));
     }
   };
 
@@ -159,7 +159,7 @@ export function BackupSyncPanel() {
         : t('settings:backupSync.toasts.syncStartedOptIn', "Sync started — media is opt-in."));
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error";
-      toast.error(t('settings:backupSync.toasts.startFailedReason', "Failed to start sync: {{error}}", { error: msg }));
+      toast.error(t('settings:backupSync.toasts.startFailedReason', { defaultValue: "Failed to start sync: {{error}}", error: msg }));
       setRuntimeStatus((prev) => ({
         ...prev,
         mainWatcher: "error",
@@ -197,7 +197,7 @@ export function BackupSyncPanel() {
       toast.success(t('settings:backupSync.toasts.syncPaused', "Sync paused. Re-enter the passphrase to resume."));
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error";
-      toast.error(t('settings:backupSync.toasts.pauseFailedReason', "Failed to pause sync: {{error}}", { error: msg }));
+      toast.error(t('settings:backupSync.toasts.pauseFailedReason', { defaultValue: "Failed to pause sync: {{error}}", error: msg }));
       setRuntimeStatus((prev) => ({
         ...prev,
         mainWatcher: "error",
@@ -235,7 +235,7 @@ export function BackupSyncPanel() {
       toast.success(t('settings:backupSync.toasts.sessionReattached', "Sync session reattached."));
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Unknown error";
-      toast.error(t('settings:backupSync.toasts.reattachFailedReason', "Failed to reattach sync: {{error}}", { error: msg }));
+      toast.error(t('settings:backupSync.toasts.reattachFailedReason', { defaultValue: "Failed to reattach sync: {{error}}", error: msg }));
     } finally {
       setIsTransitioning(false);
     }
@@ -389,7 +389,7 @@ export function BackupSyncPanel() {
           {!isSyncActive ? (
             <p className="text-sm text-text-secondary italic">
               {runtimeStatus.mainWatcher === "error"
-                ? t('settings:backupSync.conflicts.statusError', 'Sync error: {{error}}', { error: runtimeStatus.degradedReason })
+                ? t('settings:backupSync.conflicts.statusError', { defaultValue: 'Sync error: {{error}}', error: runtimeStatus.degradedReason })
                 : isRendererDetached
                   ? t('settings:backupSync.conflicts.statusDetached', 'The main process watcher is running but the renderer session is detached. Re-enter the passphrase to reattach.')
                   : syncFolder
@@ -408,7 +408,7 @@ export function BackupSyncPanel() {
           ) : (
             <div className="space-y-4">
               <p className="text-sm text-text-secondary font-medium mb-2">
-                {t('settings:backupSync.conflicts.found', 'Found {{count}} conflict(s). Resolve them below:', { count: conflicts.length })}
+                {t('settings:backupSync.conflicts.found', { defaultValue: 'Found {{count}} conflict(s). Resolve them below:', count: conflicts.length })}
               </p>
               {conflicts.map((conflict) => {
                 const winnerLabel =
@@ -434,7 +434,7 @@ export function BackupSyncPanel() {
                         </h5>
                         <p className="text-[11px] text-text-muted">ID: {conflict.originalId}</p>
                         <p className="text-[11px] text-text-secondary mt-1">
-                          {t('settings:backupSync.conflicts.resolutionNote', 'Sync kept {{winner}}; the conflicting {{loser}} revision ({{loserTitle}}) is preserved until you resolve the conflict.', { winner: winnerLabel, loser: loserLabel, loserTitle: loserTitle })}
+                          {t('settings:backupSync.conflicts.resolutionNote', { defaultValue: 'Sync kept {{winner}}; the conflicting {{loser}} revision ({{loserTitle}}) is preserved until you resolve the conflict.', winner: winnerLabel, loser: loserLabel, loserTitle: loserTitle })}
                         </p>
                       </div>
                     </div>
@@ -444,21 +444,21 @@ export function BackupSyncPanel() {
                         className="px-3 py-1.5 bg-surface-elevated hover:bg-accent/10 hover:text-accent text-text-secondary rounded text-[12px] font-medium border border-border/50 transition-colors flex-1"
                         title={t('settings:backupSync.conflicts.keepOriginalTitle', 'Keep the revision currently saved at this id and discard the conflicting copy.')}
                       >
-                        {t('settings:backupSync.conflicts.keepOriginal', 'Keep {{winner}} copy', { winner: winnerLabel })}
+                        {t('settings:backupSync.conflicts.keepOriginal', { defaultValue: 'Keep {{winner}} copy', winner: winnerLabel })}
                       </button>
                       <button
                         onClick={() => resolveConflict(conflict, "keep_conflict")}
                         className="px-3 py-1.5 bg-surface-elevated hover:bg-warning/10 hover:text-warning text-text-secondary rounded text-[12px] font-medium border border-border/50 transition-colors flex-1"
-                        title={t('settings:backupSync.conflicts.keepConflictTitle', 'Replace the current revision with the {{loser}} copy.', { loser: loserLabel })}
+                        title={t('settings:backupSync.conflicts.keepConflictTitle', { defaultValue: 'Replace the current revision with the {{loser}} copy.', loser: loserLabel })}
                       >
-                        {t('settings:backupSync.conflicts.keepConflict', 'Use {{loser}} copy', { loser: loserLabel })}
+                        {t('settings:backupSync.conflicts.keepConflict', { defaultValue: 'Use {{loser}} copy', loser: loserLabel })}
                       </button>
                       <button
                         onClick={() => resolveConflict(conflict, "keep_both")}
                         className="px-3 py-1.5 bg-surface-elevated hover:bg-success/10 hover:text-success text-text-secondary rounded text-[12px] font-medium border border-border/50 transition-colors flex-1"
-                        title={t('settings:backupSync.conflicts.keepBothTitle', 'Keep the current revision and save the {{loser}} copy as a separate record.', { loser: loserLabel })}
+                        title={t('settings:backupSync.conflicts.keepBothTitle', { defaultValue: 'Keep the current revision and save the {{loser}} copy as a separate record.', loser: loserLabel })}
                       >
-                        {t('settings:backupSync.conflicts.keepBoth', 'Save {{loser}} as copy', { loser: loserLabel })}
+                        {t('settings:backupSync.conflicts.keepBoth', { defaultValue: 'Save {{loser}} as copy', loser: loserLabel })}
                       </button>
                     </div>
                   </div>

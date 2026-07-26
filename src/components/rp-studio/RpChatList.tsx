@@ -16,6 +16,7 @@ import { assessCharacterBatchImport } from "../../shared/safety/characterImportS
 import { useSettingsStore } from "../../stores/settings-store";
 import { getEffectiveRendererLocalFamilySafeModeEnabled } from "../../safetyHydration";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
+import { Trans } from 'react-i18next';
 
 interface Props {
   onOpen: (chatId: string) => void;
@@ -86,7 +87,7 @@ export function RpChatList({ onOpen }: Props) {
           ariaLabel="Adult filter"
         />
         <div className="flex-1" />
-        <PrimaryButton size="sm" onClick={() => setCreating(true)}>New RP chat</PrimaryButton>
+        <PrimaryButton size="sm" onClick={() => setCreating(true)}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.newRpChat" /></PrimaryButton>
       </div>
 
       {error && <div className="px-4 py-3"><ErrorText>{error}</ErrorText></div>}
@@ -94,12 +95,11 @@ export function RpChatList({ onOpen }: Props) {
       <div className="flex-1 overflow-y-auto px-4 py-4">
         {isLoading && !hasLoaded ? (
           <div className="flex items-center justify-center h-full text-text-muted gap-2 text-[13px]">
-            <Spinner className="text-text-muted" /> Loading chats…
-          </div>
+            <Spinner className="text-text-muted" /> <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.loadingChats" /></div>
         ) : filteredChats.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-3">
             <EmptyState>{hasLoaded ? "No RP chats yet" : ""}</EmptyState>
-            {hasLoaded && <GhostButton onClick={() => setCreating(true)}>Start your first RP</GhostButton>}
+            {hasLoaded && <GhostButton onClick={() => setCreating(true)}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.startYourFirstRp" /></GhostButton>}
           </div>
         ) : (
           <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
@@ -159,16 +159,14 @@ export function RpChatList({ onOpen }: Props) {
                       onClick={() => { setActive(chat.id); onOpen(chat.id); }}
                       className="flex-1 text-[12px] py-1.5 rounded-md border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors"
                     >
-                      Open
-                    </button>
+                      <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.action.open" /></button>
                     {confirmingDelete === chat.id ? (
                       <button
                         type="button"
                         onClick={() => { void remove(chat.id); cancelConfirm(); }}
                         className="text-[12px] py-1.5 px-2 rounded-md text-rose-300 border border-rose-500/30 hover:bg-rose-500/10"
                       >
-                        Delete?
-                      </button>
+                        <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.action.delete" /></button>
                     ) : (
                       <button
                         type="button"
@@ -331,16 +329,16 @@ export function NewChatDialog({
     >
       <div className="w-full max-w-2xl max-h-[85%] flex flex-col bg-surface border border-border rounded-2xl shadow-2xl overflow-hidden">
         <div className="flex items-center gap-2 px-5 py-3 soft-separator-y mesh-header mesh-surface">
-          <h2 className="text-[15px] font-semibold text-text-primary">New RP chat</h2>
+          <h2 className="text-[15px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.heading.newRpChat" /></h2>
           <div className="ml-auto flex items-center gap-2">
-            <GhostButton onClick={onClose} disabled={saving}>Cancel</GhostButton>
-            <PrimaryButton size="sm" onClick={() => void handleCreate()} loading={saving}>Create</PrimaryButton>
+            <GhostButton onClick={onClose} disabled={saving}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.cancel" /></GhostButton>
+            <PrimaryButton size="sm" onClick={() => void handleCreate()} loading={saving}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.create" /></PrimaryButton>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
           {error && <ErrorText>{error}</ErrorText>}
           <div>
-            <Label htmlFor="rp-title">Title</Label>
+            <Label htmlFor="rp-title"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.title" /></Label>
             <input
               ref={titleRef}
               id="rp-title"
@@ -351,7 +349,7 @@ export function NewChatDialog({
             />
           </div>
           <div>
-            <Label htmlFor="rp-model">Model</Label>
+            <Label htmlFor="rp-model"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.model" /></Label>
             <select
               id="rp-model"
               value={modelId}
@@ -364,19 +362,19 @@ export function NewChatDialog({
             </select>
           </div>
           <div>
-            <Label htmlFor="rp-greeting">Opening greeting</Label>
+            <Label htmlFor="rp-greeting"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.openingGreeting" /></Label>
             <select id="rp-greeting" value={greetingChoice} onChange={(event) => setGreetingChoice(event.target.value)} className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary">
-              <option value="primary">Use primary greeting</option>
-              {(cards.find((card) => card.id === selectedCards[0])?.alternateGreetings ?? []).map((_, index) => <option key={index} value={`alternate:${index}`}>Alternate greeting {index + 1}</option>)}
-              <option value="random">Random greeting</option>
-              <option value="none">Start without greeting</option>
+              <option value="primary"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.usePrimaryGreeting" /></option>
+              {(cards.find((card) => card.id === selectedCards[0])?.alternateGreetings ?? []).map((_, index) => <option key={index} value={`alternate:${index}`}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.alternateGreeting" /> {index + 1}</option>)}
+              <option value="random"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.randomGreeting" /></option>
+              <option value="none"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.startWithoutGreeting" /></option>
             </select>
           </div>
           <div>
-            <Label hint={`${selectedCards.length}/${MAX_ACTIVE_CHARACTERS}`}>Characters</Label>
+            <Label hint={`${selectedCards.length}/${MAX_ACTIVE_CHARACTERS}`}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.characters" /></Label>
             <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto p-1">
               {visibleCards.length === 0 ? (
-                <div className="text-[12px] text-text-muted italic">No characters yet — create one in the Characters tab.</div>
+                <div className="text-[12px] text-text-muted italic"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.noCharactersYetCreateOneInThe" /></div>
               ) : (
                 visibleCards.map((c) => (
                   <button
@@ -394,14 +392,14 @@ export function NewChatDialog({
             </div>
           </div>
           <div>
-            <Label htmlFor="rp-persona">Persona (optional)</Label>
+            <Label htmlFor="rp-persona"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.personaOptional" /></Label>
             <select
               id="rp-persona"
               value={personaId}
               onChange={(e) => setPersonaId(e.target.value)}
               className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-colors"
             >
-              <option value="">No persona</option>
+              <option value=""><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.noPersona" /></option>
               {personas.map((p) => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
@@ -409,7 +407,7 @@ export function NewChatDialog({
           </div>
           {lorebooks.length > 0 && (
             <div>
-              <Label>Lorebooks</Label>
+              <Label><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.lorebooks" /></Label>
               <div className="flex flex-wrap gap-1.5">
                 {lorebooks.map((l) => (
                   <button
@@ -427,8 +425,7 @@ export function NewChatDialog({
           )}
           <div>
             <Label htmlFor="rp-scenario" hint="optional">
-              Scenario override
-            </Label>
+              <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.scenarioOverride" /></Label>
             <textarea
               id="rp-scenario"
               value={scenario}

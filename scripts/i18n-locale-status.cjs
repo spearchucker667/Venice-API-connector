@@ -58,11 +58,13 @@ function deriveCompletion(status) {
     const sentinels = row?.sentinelLeaves ?? 0;
     const missing = row?.missingMarkerLeaves ?? 0;
     const identicalUnapproved = row?.identicalUnapprovedLeaves ?? 0;
-    const review = row?.reviewStatus ?? 'unknown';
+    const review = row?.reviewStatus ?? (locale === 'en-US' ? 'source-language' : 'first-pass-machine');
+    const catalogStatus = row?.catalogStatus ?? 'unknown';
     const pctComplete = canonical > 0 ? translated / canonical : 1;
 
     const isProductionComplete =
-      review === 'complete' &&
+      (locale === 'en-US' || review === 'complete') &&
+      (locale === 'en-US' || catalogStatus === 'complete') &&
       sentinels === 0 &&
       missing === 0 &&
       identicalUnapproved === 0;
@@ -76,6 +78,7 @@ function deriveCompletion(status) {
       missingMarkerLeaves: missing,
       identicalUnapprovedLeaves: identicalUnapproved,
       reviewStatus: review,
+      catalogStatus,
       coveragePercent: Math.round(pctComplete * 1000) / 10,
       isProductionComplete,
     };
@@ -103,7 +106,8 @@ function renderModule(completion) {
   lines.push('  sentinelLeaves: number;');
   lines.push('  missingMarkerLeaves: number;');
   lines.push('  identicalUnapprovedLeaves: number;');
-  lines.push('  reviewStatus: \'complete\' | \'in-progress\' | \'pending-translation\' | \'unknown\';');
+  lines.push('  reviewStatus: \'source-language\' | \'complete\' | \'in-progress\' | \'first-pass-machine\' | \'not-started\' | \'unknown\';');
+  lines.push('  catalogStatus: \'complete\' | \'in-progress\' | \'pending-translation\' | \'unknown\';');
   lines.push('  coveragePercent: number;');
   lines.push('  isProductionComplete: boolean;');
   lines.push('}');

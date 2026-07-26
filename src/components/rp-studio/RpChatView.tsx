@@ -26,6 +26,7 @@ import { assessRpContext } from "../../shared/safety/characterImportSafety";
 import type { CharacterCardV1, LorebookV1, PromptAssemblyResult, RpMessageV1, UserPersonaV1 } from "../../types/rp";
 import { veniceStreamChat } from "../../services/veniceClient";
 import { selectTriggeredEntries } from "../../services/rp/lorebookService";
+import { Trans } from 'react-i18next';
 
 const SYSTEM_BLOCK_BUDGET = 8_000;
 const RECENT_MESSAGE_BUDGET = 12;
@@ -95,10 +96,9 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
         </div>
-        <h2 className="text-[15px] font-semibold text-text-primary">Chat not found</h2>
+        <h2 className="text-[15px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioRpchatview.heading.chatNotFound" /></h2>
         <p className="text-[13px] text-text-secondary mt-1 max-w-[260px]">
-          The conversation you're looking for doesn't exist or has been deleted.
-        </p>
+          <Trans i18nKey="common:surface.componentsRpStudioRpchatview.description.theConversationYouReLookingForDoesn" /></p>
       </div>
     );
   }
@@ -293,15 +293,15 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
           <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-200 border border-rose-500/30">18+</span>
         )}
         <div className="ml-auto flex items-center gap-1.5">
-          <GhostButton onClick={() => onOpenScene(chat.id)}>Scene</GhostButton>
-          <GhostButton onClick={() => setShowInspector(true)}>Inspector</GhostButton>
+          <GhostButton onClick={() => onOpenScene(chat.id)}><Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.scene" /></GhostButton>
+          <GhostButton onClick={() => setShowInspector(true)}><Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.inspector" /></GhostButton>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3" ref={scrollRef}>
         {chat.messages.length === 0 && (
           <div className="text-center text-text-muted text-[13px] mt-12">
-            Start the roleplay by sending a message. {roster[0] ? `${roster[0].name} will respond first.` : ""}
+            <Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.startTheRoleplayBySendingAMessage" /> {roster[0] ? `${roster[0].name} will respond first.` : ""}
           </div>
         )}
         {chat.messages.map((m) => {
@@ -317,7 +317,7 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
             <GenerationLoadingIndicator size="sm" state="streaming" label="Streaming…" className="text-text-muted justify-start" />
             {reasoning && (
               <details className="text-text-muted text-[12px] mt-2 group">
-                <summary className="cursor-pointer select-none">Thinking…</summary>
+                <summary className="cursor-pointer select-none"><Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.thinking" /></summary>
                 <pre className="mt-1 whitespace-pre-wrap font-sans">{reasoning}</pre>
               </details>
             )}
@@ -334,7 +334,7 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
       <div className="border-t border-border/50 px-4 py-3 space-y-2">
         {roster.length > 1 && (
           <div className="flex items-center gap-2">
-            <Label>Speaker:</Label>
+            <Label><Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.speaker" /></Label>
             <div className="flex flex-wrap gap-1.5">
               {roster.map((c, i) => (
                 <button
@@ -353,8 +353,7 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
                 aria-pressed={narratorMode}
                 className={`text-[12px] px-2.5 py-1 rounded-md border transition-colors ${narratorMode ? "border-amber-400/40 bg-amber-400/10 text-amber-200" : "border-border text-text-secondary hover:text-text-primary"}`}
               >
-                Narrator
-              </button>
+                <Trans i18nKey="common:surface.componentsRpStudioRpchatview.action.narrator" /></button>
             </div>
           </div>
         )}
@@ -372,8 +371,7 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
             disabled={!draft.trim()}
             onClick={() => void handleSend()}
           >
-            Send
-          </PrimaryButton>
+            <Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.send" /></PrimaryButton>
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@ import { useRpChatStore } from "../../stores/rp-chat-store";
 import { GhostButton, ErrorText, EmptyState, PillGroup } from "../ui/shared";
 import { Spinner } from "../ui/spinner";
 import { formatRelativeTime, truncate } from "./_shared";
+import { Trans } from 'react-i18next';
 
 export function AssetGallery() {
   const load = useSceneAssetStore((s) => s.load);
@@ -76,8 +77,7 @@ export function AssetGallery() {
         <div className="flex-1 overflow-y-auto p-4">
           {isLoading && !hasLoaded ? (
             <div className="flex items-center justify-center h-full text-text-muted gap-2 text-[13px]">
-              <Spinner className="text-text-muted" /> Loading assets…
-            </div>
+              <Spinner className="text-text-muted" /> <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.loadingAssets" /></div>
           ) : filtered.length === 0 ? (
             <EmptyState>{hasLoaded ? "No assets yet" : ""}</EmptyState>
           ) : (
@@ -96,7 +96,7 @@ export function AssetGallery() {
                       {a.url ? (
                         <img src={a.url} alt="" className="w-full h-full object-cover" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-text-muted text-[12px]">no image</div>
+                        <div className="w-full h-full flex items-center justify-center text-text-muted text-[12px]"><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.noImage" /></div>
                       )}
                     </div>
                     <div className="p-2">
@@ -117,8 +117,7 @@ export function AssetGallery() {
                           }}
                           className="flex-1 text-[12px] py-1 rounded border border-rose-500/30 text-rose-300 hover:bg-rose-500/10"
                         >
-                          Delete?
-                        </button>
+                          <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.action.delete" /></button>
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); cancelConfirmDelete(); }}
@@ -134,8 +133,7 @@ export function AssetGallery() {
                         aria-label="Delete asset"
                         className="w-full text-[12px] py-1 rounded text-text-muted hover:text-rose-300 transition-colors"
                       >
-                        Delete
-                      </button>
+                        <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.action.deletef6fdbe4" /></button>
                     )}
                   </div>
                 </div>
@@ -151,22 +149,22 @@ export function AssetGallery() {
               {selected.url ? (
                 <img src={selected.url} alt="" className="w-full h-full object-contain" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-text-muted text-[12px]">no image</div>
+                <div className="w-full h-full flex items-center justify-center text-text-muted text-[12px]"><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.noImage" /></div>
               )}
             </div>
             <div className="text-[12px] text-text-secondary whitespace-pre-wrap">{selected.prompt}</div>
             <div className="text-[12px] text-text-muted space-y-0.5">
-              <div>Model: {selected.model}</div>
-              {selected.seed !== undefined && <div>Seed: {selected.seed}</div>}
-              {selected.negativePrompt && <div>Negative: {selected.negativePrompt}</div>}
-              <div>Created: {formatRelativeTime(selected.createdAt)}</div>
+              <div><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.model" /> {selected.model}</div>
+              {selected.seed !== undefined && <div><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.seed" /> {selected.seed}</div>}
+              {selected.negativePrompt && <div><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.negative" /> {selected.negativePrompt}</div>}
+              <div><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.created" /> {formatRelativeTime(selected.createdAt)}</div>
             </div>
             <div className="pt-2">
-              <GhostButton onClick={() => setSelectedId(null)}>Close preview</GhostButton>
+              <GhostButton onClick={() => setSelectedId(null)}><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.closePreview" /></GhostButton>
             </div>
           </>
         ) : (
-          <div className="text-[12px] text-text-muted italic">Click an asset to preview.</div>
+          <div className="text-[12px] text-text-muted italic"><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.clickAnAssetToPreview" /></div>
         )}
       </div>
     </div>

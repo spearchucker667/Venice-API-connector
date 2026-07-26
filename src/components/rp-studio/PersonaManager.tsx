@@ -10,6 +10,7 @@ import { formatRelativeTime, truncate } from "./_shared";
 import type { UserPersonaV1 } from "../../types/rp";
 import { MAX_PERSONA_IMAGE_BYTES } from "../../services/rp/personaService";
 import { isSupportedImageFile, readImageAttachment } from "../../services/attachmentService";
+import { Trans } from 'react-i18next';
 
 
 export function PersonaManager({ disabled = false }: { disabled?: boolean } = {}) {
@@ -90,8 +91,7 @@ export function PersonaManager({ disabled = false }: { disabled?: boolean } = {}
             if (blank) setEditingId(blank);
           }}
         >
-          New persona
-        </PrimaryButton>
+          <Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.newPersona" /></PrimaryButton>
       </div>
 
       {error && (
@@ -103,8 +103,7 @@ export function PersonaManager({ disabled = false }: { disabled?: boolean } = {}
       <div className="flex-1 overflow-y-auto px-4 py-4">
         {isLoading && !hasLoaded ? (
           <div className="flex items-center justify-center h-full text-text-muted gap-2 text-[13px]">
-            <Spinner className="text-text-muted" /> Loading personas…
-          </div>
+            <Spinner className="text-text-muted" /> <Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.loadingPersonas" /></div>
         ) : filtered.length === 0 ? (
           <EmptyState>{hasLoaded ? "No personas yet" : ""}</EmptyState>
         ) : (
@@ -117,7 +116,7 @@ export function PersonaManager({ disabled = false }: { disabled?: boolean } = {}
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-[14px] font-semibold text-text-primary truncate">{p.name}</div>
                   {p.id === activePersonaId && (
-                    <span className="text-[12px] uppercase tracking-wider text-[var(--color-accent)] font-semibold">Active</span>
+                    <span className="text-[12px] uppercase tracking-wider text-[var(--color-accent)] font-semibold"><Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.active" /></span>
                   )}
                 </div>
                 {p.description && (
@@ -130,8 +129,7 @@ export function PersonaManager({ disabled = false }: { disabled?: boolean } = {}
                     onClick={() => setEditingId(p.id)}
                     className="flex-1 text-[12px] py-1.5 rounded-md border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors"
                   >
-                    Edit
-                  </button>
+                    <Trans i18nKey="common:surface.componentsRpStudioPersonamanager.action.edit" /></button>
                   <button
                     type="button"
                     onClick={() => void setActive(p.id === activePersonaId ? null : p.id)}
@@ -145,8 +143,7 @@ export function PersonaManager({ disabled = false }: { disabled?: boolean } = {}
                       onClick={() => { void remove(p.id); cancelConfirm(); }}
                       className="text-[12px] py-1.5 px-2 rounded-md text-rose-300 border border-rose-500/30 hover:bg-rose-500/10"
                     >
-                      Delete?
-                    </button>
+                      <Trans i18nKey="common:surface.componentsRpStudioPersonamanager.action.delete" /></button>
                   ) : (
                     <button
                       type="button"
@@ -179,7 +176,7 @@ export function PersonaEditor({ personaId, onClose, onSave, disabled = false }: 
   const [tagInput, setTagInput] = useState("");
   const imageInputRef = useRef<HTMLInputElement>(null);
 
-  if (!draft) return <EmptyState>Persona not found.</EmptyState>;
+  if (!draft) return <EmptyState><Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.personaNotFound" /></EmptyState>;
 
   const update = <K extends keyof UserPersonaV1>(key: K, value: UserPersonaV1[K]) =>
     setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
@@ -249,13 +246,13 @@ export function PersonaEditor({ personaId, onClose, onSave, disabled = false }: 
         </button>
         <h2 className="text-[15px] font-semibold text-text-primary truncate">{draft.name}</h2>
         <div className="ml-auto">
-          <PrimaryButton size="sm" loading={saving} disabled={disabled} onClick={handleSave}>Save</PrimaryButton>
+          <PrimaryButton size="sm" loading={saving} disabled={disabled} onClick={handleSave}><Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.save" /></PrimaryButton>
         </div>
       </div>
       {error && <div className="px-4 py-3"><ErrorText>{error}</ErrorText></div>}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         <div>
-          <Label htmlFor="persona-image">Persona image</Label>
+          <Label htmlFor="persona-image"><Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.personaImage" /></Label>
           <input ref={imageInputRef} id="persona-image" type="file" accept="image/png,image/jpeg,image/webp" data-testid="persona-image-input" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) void handleImage(file); event.target.value = ""; }} />
           <div className="flex items-center gap-3">
             {draft.image && (
@@ -271,13 +268,12 @@ export function PersonaEditor({ personaId, onClose, onSave, disabled = false }: 
             </GhostButton>
             {draft.image && (
               <GhostButton onClick={() => update("image", undefined)}>
-                Remove image
-              </GhostButton>
+                <Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.removeImage" /></GhostButton>
             )}
           </div>
         </div>
         <div>
-          <Label htmlFor="persona-name">Name</Label>
+          <Label htmlFor="persona-name"><Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.name" /></Label>
           <input
             id="persona-name"
             value={draft.name}
@@ -288,8 +284,7 @@ export function PersonaEditor({ personaId, onClose, onSave, disabled = false }: 
         </div>
         <div>
           <Label htmlFor="persona-ref" hint="optional">
-            Reference (third-person)
-          </Label>
+            <Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.referenceThirdPerson" /></Label>
           <input
             id="persona-ref"
             value={draft.reference ?? ""}
@@ -301,7 +296,7 @@ export function PersonaEditor({ personaId, onClose, onSave, disabled = false }: 
         </div>
         <div>
           <div className="flex items-center justify-between mb-1">
-            <Label htmlFor="persona-desc">Description</Label>
+            <Label htmlFor="persona-desc"><Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.description" /></Label>
             <label className="inline-flex items-center gap-1 text-[11.5px] text-accent hover:underline cursor-pointer">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -309,8 +304,7 @@ export function PersonaEditor({ personaId, onClose, onSave, disabled = false }: 
                 <line x1="12" y1="18" x2="12" y2="12" />
                 <polyline points="9 15 12 12 15 15" />
               </svg>
-              Load from file (.txt, .md)
-              <input
+              <Trans i18nKey="common:surface.componentsRpStudioPersonamanager.label.loadFromFileTxtMd" /><input
                 type="file"
                 className="hidden"
                 accept=".txt,.md,text/plain,text/markdown"
@@ -331,7 +325,7 @@ export function PersonaEditor({ personaId, onClose, onSave, disabled = false }: 
           />
         </div>
         <div>
-          <Label htmlFor="persona-tags">Tags</Label>
+          <Label htmlFor="persona-tags"><Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.tags" /></Label>
           <div className="flex gap-2">
             <input
               id="persona-tags"
@@ -341,7 +335,7 @@ export function PersonaEditor({ personaId, onClose, onSave, disabled = false }: 
               placeholder="Add tag…"
               className="flex-1 bg-surface border border-border rounded-lg px-3 py-1.5 text-[13.5px] text-text-primary outline-none focus:border-accent transition-colors placeholder:text-text-muted"
             />
-            <GhostButton onClick={addTag} disabled={!tagInput.trim()}>Add</GhostButton>
+            <GhostButton onClick={addTag} disabled={!tagInput.trim()}><Trans i18nKey="common:surface.componentsRpStudioPersonamanager.text.add" /></GhostButton>
           </div>
           {draft.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">

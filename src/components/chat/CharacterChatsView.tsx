@@ -11,6 +11,7 @@ import { startNormalChatForCharacter } from '../../services/rpHelpers'
 import { createBlankCharacterCardDraft } from '../../services/characterCards/characterCardStudioHandoff'
 import { avatarDataUri } from '../rp-studio/_shared'
 import { AccessibleDialog } from '../ui/AccessibleDialog'
+import { Trans } from 'react-i18next';
 
 function formatActivity(timestamp: number): string {
   const minutes = Math.floor(Math.max(0, Date.now() - timestamp) / 60_000)
@@ -107,8 +108,8 @@ export function CharacterChatsView() {
         <header className="space-y-3 px-4 py-4 soft-separator-y mesh-header">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-[16px] font-semibold text-text-primary">Character Chats</h1>
-              <p className="mt-0.5 text-[12px] text-text-muted">Hosted and local character conversations</p>
+              <h1 className="text-[16px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsChatCharacterchatsview.heading.characterChats" /></h1>
+              <p className="mt-0.5 text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsChatCharacterchatsview.description.hostedAndLocalCharacterConversations" /></p>
             </div>
             <button
               type="button"
@@ -122,7 +123,7 @@ export function CharacterChatsView() {
           </div>
           <label className="mesh-input flex items-center gap-2 rounded-lg px-3 py-2">
             <Search size={14} className="text-text-muted" />
-            <span className="sr-only">Search character chats</span>
+            <span className="sr-only"><Trans i18nKey="common:surface.componentsChatCharacterchatsview.text.searchCharacterChats" /></span>
             <input
               type="search"
               value={search}
@@ -163,14 +164,14 @@ export function CharacterChatsView() {
           })}
 
           {visibleConversations.length === 0 && characterConversations.length > 0 && (
-            <p className="px-3 py-10 text-center text-[12px] text-text-muted">No character chats match this search.</p>
+            <p className="px-3 py-10 text-center text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsChatCharacterchatsview.description.noCharacterChatsMatchThisSearch" /></p>
           )}
 
           {characterConversations.length === 0 && localCards.length > 0 && (
             <div className="mt-4 px-2">
               <div className="mb-2 flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-text-muted">
-                <span>Local Characters</span>
-                <span className="text-[10px] text-accent">{localCards.length} available</span>
+                <span><Trans i18nKey="common:surface.componentsChatCharacterchatsview.text.localCharacters" /></span>
+                <span className="text-[10px] text-accent">{localCards.length} <Trans i18nKey="common:surface.componentsChatCharacterchatsview.text.available" /></span>
               </div>
               <div className="space-y-1">
                 {localCards.slice(0, 8).map((card) => {
@@ -184,7 +185,7 @@ export function CharacterChatsView() {
                     >
                       <CharacterAvatar character={meta} cacheKey={`sidebar-quick-${card.id}`} size="sm" />
                       <span className="min-w-0 flex-1 truncate font-medium">{card.name}</span>
-                      <span className="text-[11px] text-accent opacity-0 group-hover:opacity-100 transition-opacity">Chat →</span>
+                      <span className="text-[11px] text-accent opacity-0 group-hover:opacity-100 transition-opacity"><Trans i18nKey="common:surface.componentsChatCharacterchatsview.text.chat" /></span>
                     </button>
                   )
                 })}
@@ -203,11 +204,9 @@ export function CharacterChatsView() {
                   <div>
                     <h2 className="text-xl font-semibold text-text-primary flex items-center gap-2">
                       <Sparkles className="h-5 w-5 text-accent" />
-                      Start a Local Character Chat
-                    </h2>
+                      <Trans i18nKey="common:surface.componentsChatCharacterchatsview.heading.startALocalCharacterChat" /></h2>
                     <p className="mt-1 text-[13px] text-text-muted">
-                      Select any of your locally created characters to launch a dedicated conversation.
-                    </p>
+                      <Trans i18nKey="common:surface.componentsChatCharacterchatsview.description.selectAnyOfYourLocallyCreatedCharacters" /></p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <button
@@ -215,15 +214,13 @@ export function CharacterChatsView() {
                       onClick={() => void handleCreateNewLocalCard()}
                       className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-[12.5px] font-medium text-text-secondary hover:text-text-primary hover:border-accent/40 transition-colors"
                     >
-                      <Plus size={14} /> New ST Card
-                    </button>
+                      <Plus size={14} /> <Trans i18nKey="common:surface.componentsChatCharacterchatsview.action.newStCard" /></button>
                     <button
                       type="button"
                       onClick={handleBrowseHosted}
                       className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-[12.5px] font-medium text-accent-fg hover:bg-accent-hover transition-colors"
                     >
-                      Browse Hosted
-                    </button>
+                      <Trans i18nKey="common:surface.componentsChatCharacterchatsview.action.browseHosted" /></button>
                   </div>
                 </div>
 
@@ -276,15 +273,13 @@ export function CharacterChatsView() {
                             onClick={() => void handleStartLocalChat(card.id)}
                             className="flex-1 rounded-lg bg-accent px-3 py-1.5 text-[12.5px] font-medium text-accent-fg hover:bg-accent-hover transition-colors cursor-pointer"
                           >
-                            Start Chat
-                          </button>
+                            <Trans i18nKey="common:surface.componentsChatCharacterchatsview.action.startChat" /></button>
                           <button
                             type="button"
                             onClick={() => setActiveTab('rp-studio')}
                             className="rounded-lg border border-border bg-surface px-3 py-1.5 text-[12.5px] font-medium text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
                           >
-                            Edit
-                          </button>
+                            <Trans i18nKey="common:surface.componentsChatCharacterchatsview.action.edit" /></button>
                         </div>
                       </article>
                     )
@@ -292,21 +287,19 @@ export function CharacterChatsView() {
                 </div>
 
                 {filteredLocalCardsForEmpty.length === 0 && (
-                  <p className="py-8 text-center text-[13px] text-text-muted">No local characters match "{emptyLocalSearch}".</p>
+                  <p className="py-8 text-center text-[13px] text-text-muted"><Trans i18nKey="common:surface.componentsChatCharacterchatsview.description.noLocalCharactersMatch" />{emptyLocalSearch}".</p>
                 )}
               </div>
             ) : (
               <div className="mesh-card max-w-md rounded-2xl p-8 text-center">
                 <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-accent/10 text-accent"><Users size={22} /></div>
-                <h2 className="text-[17px] font-semibold text-text-primary">No character chats yet</h2>
-                <p className="mt-2 text-[13px] text-text-muted">Choose a hosted or local character to begin a dedicated character conversation.</p>
+                <h2 className="text-[17px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsChatCharacterchatsview.heading.noCharacterChatsYet" /></h2>
+                <p className="mt-2 text-[13px] text-text-muted"><Trans i18nKey="common:surface.componentsChatCharacterchatsview.description.chooseAHostedOrLocalCharacterTo" /></p>
                 <div className="mt-5 flex flex-wrap justify-center gap-2">
                   <button type="button" onClick={handleBrowseHosted} className="rounded-lg bg-accent px-4 py-2 text-[13px] font-semibold text-accent-fg hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">
-                    Browse characters
-                  </button>
+                    <Trans i18nKey="common:surface.componentsChatCharacterchatsview.action.browseCharacters" /></button>
                   <button type="button" onClick={() => void handleCreateNewLocalCard()} className="rounded-lg border border-border bg-surface px-4 py-2 text-[13px] font-semibold text-text-secondary hover:text-text-primary">
-                    Create local character
-                  </button>
+                    <Trans i18nKey="common:surface.componentsChatCharacterchatsview.action.createLocalCharacter" /></button>
                 </div>
               </div>
             )}
@@ -326,8 +319,7 @@ export function CharacterChatsView() {
               onClick={() => setShowPicker(false)}
               className="rounded border border-border px-2 py-1 text-text-secondary hover:text-text-primary"
             >
-              Close
-            </button>
+              <Trans i18nKey="common:surface.componentsChatCharacterchatsview.action.close" /></button>
           }
         >
           <div className="flex flex-col gap-4 p-5 max-h-[75vh] overflow-y-auto">
@@ -337,20 +329,18 @@ export function CharacterChatsView() {
                 onClick={handleBrowseHosted}
                 className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-[12.5px] font-medium text-text-secondary hover:text-text-primary hover:border-accent/40"
               >
-                Browse Hosted Characters ↗
-              </button>
+                <Trans i18nKey="common:surface.componentsChatCharacterchatsview.action.browseHostedCharacters" /></button>
               <button
                 type="button"
                 onClick={() => void handleCreateNewLocalCard()}
                 className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-[12.5px] font-medium text-text-secondary hover:text-text-primary hover:border-accent/40"
               >
-                + Create New ST Card
-              </button>
+                <Trans i18nKey="common:surface.componentsChatCharacterchatsview.action.createNewStCard" /></button>
             </div>
 
             <div className="space-y-2">
               <label className="text-[12px] font-semibold uppercase tracking-wider text-text-muted">
-                Local Characters ({localCards.length})
+                <Trans i18nKey="common:surface.componentsChatCharacterchatsview.label.localCharacters" />{localCards.length})
               </label>
               {localCards.length > 3 && (
                 <input
@@ -382,8 +372,7 @@ export function CharacterChatsView() {
                           onClick={() => void handleStartLocalChat(card.id)}
                           className="shrink-0 rounded-md bg-accent px-3 py-1 text-[12px] font-medium text-accent-fg hover:bg-accent-hover cursor-pointer"
                         >
-                          Chat
-                        </button>
+                          <Trans i18nKey="common:surface.componentsChatCharacterchatsview.action.chat" /></button>
                       </div>
                     )
                   })}

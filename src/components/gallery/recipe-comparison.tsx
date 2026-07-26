@@ -5,6 +5,7 @@
 
 import { Fragment } from "react";
 import type { GenerationRecipe } from "../../types/project";
+import { Trans } from 'react-i18next';
 
 export interface RecipeComparisonField {
   /** Stable field key, e.g. `width`, `height`, `aspectRatio`. */
@@ -78,7 +79,7 @@ export function RecipeComparison({ original, sanitized, className }: RecipeCompa
       aria-label="Recipe comparison"
     >
       <div className="flex items-center justify-between text-[12px] uppercase tracking-wide text-text-secondary">
-        <span>Recipe comparison</span>
+        <span><Trans i18nKey="common:surface.componentsGalleryRecipeComparison.text.recipeComparison" /></span>
         <span aria-live="polite">
           {changedCount === 0 ? "Identical" : `${changedCount} field${changedCount === 1 ? "" : "s"} will change`}
         </span>
@@ -87,9 +88,9 @@ export function RecipeComparison({ original, sanitized, className }: RecipeCompa
         <table className="w-full text-[12px]">
           <thead className="bg-surface/60 text-text-secondary">
             <tr>
-              <th className="text-left px-2 py-1 font-medium">Field</th>
-              <th className="text-left px-2 py-1 font-medium">Original</th>
-              <th className="text-left px-2 py-1 font-medium">Sanitized</th>
+              <th className="text-left px-2 py-1 font-medium"><Trans i18nKey="common:surface.componentsGalleryRecipeComparison.column.field" /></th>
+              <th className="text-left px-2 py-1 font-medium"><Trans i18nKey="common:surface.componentsGalleryRecipeComparison.column.original" /></th>
+              <th className="text-left px-2 py-1 font-medium"><Trans i18nKey="common:surface.componentsGalleryRecipeComparison.column.sanitized" /></th>
             </tr>
           </thead>
           <tbody>

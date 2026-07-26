@@ -1,6 +1,7 @@
 import {  useState, useRef, useEffect, useMemo, useId  } from 'react'
 import { createPortal } from 'react-dom'
 import { cn } from '../../lib/utils'
+import { Trans } from 'react-i18next';
 
 interface SelectProps {
   value: string
@@ -227,7 +228,7 @@ export function Select({ value, onChange, options, placeholder = 'Select...', se
           )}
           <div ref={listRef} id={listboxId} role="listbox" aria-labelledby={triggerId} tabIndex={-1} className="max-h-60 overflow-y-auto p-0.5">
             {filtered.length === 0 ? (
-              <div className="px-2.5 py-2.5 text-[14px] text-text-muted text-center">No results</div>
+              <div className="px-2.5 py-2.5 text-[14px] text-text-muted text-center"><Trans i18nKey="common:surface.componentsUiSelect.text.noResults" /></div>
             ) : (
               filtered.map((o, i) => (
                 <div

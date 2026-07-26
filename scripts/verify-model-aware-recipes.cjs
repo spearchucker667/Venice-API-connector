@@ -101,7 +101,7 @@ function main() {
       "RecipeCompatibilityCard",
       "currentModel",
       "data-testid=\"inspector-recipe-compatibility\"",
-      "Export recipe",
+      "common:surface.componentsGalleryMediaInspector.action.exportRecipe",
     ],
     "media-inspector recipe compatibility wiring",
   );

@@ -12,6 +12,7 @@ import { modelSupportsVision } from '../../constants/venice';
 import { GenerationLoadingIndicator } from '../generation/GenerationLoadingIndicator';
 import { askDecision } from '../ui/modal-requests';
 import type { VeniceModel } from '../../types/venice';
+import { Trans } from 'react-i18next';
 
 function formatUsdRate(value: number | undefined): string {
   if (value === undefined || !Number.isFinite(value)) return '—';
@@ -114,14 +115,12 @@ export function ImageInspectorView() {
         <div className="p-4 border-b border-border/50">
           <h2 className="text-[14px] font-semibold text-text mb-4 flex items-center gap-2">
             <ScanSearch className="w-4 h-4" />
-            Image Inspector
-          </h2>
+            <Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.heading.imageInspector" /></h2>
           
           <div className="flex gap-2">
             <button onClick={handleUploadClick} className="flex-1 bg-accent text-accent-fg hover:bg-accent/90 rounded-md font-medium text-[12px] py-1.5 flex items-center justify-center gap-2 transition-colors">
               <HardDriveUpload className="w-3 h-3" />
-              Open File
-            </button>
+              <Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.action.openFile" /></button>
             <button onClick={handleClipboardPaste} className="flex items-center justify-center bg-surface-elevated hover:bg-surface-muted text-text-muted rounded-md px-3 border border-border/50 transition-colors" title="Paste from clipboard">
               <ClipboardPaste className="w-3 h-3" />
             </button>
@@ -131,8 +130,7 @@ export function ImageInspectorView() {
         <div className="flex-1 overflow-y-auto p-2">
           {sessions.length === 0 ? (
             <div className="text-[12px] text-text-muted/50 text-center py-8">
-              No recent images.<br/>Open a file to start inspecting.
-            </div>
+              <Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.noRecentImages" /><br/><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.openAFileToStartInspecting" /></div>
           ) : (
             <div className="flex flex-col gap-1">
               {sessions.map(s => (
@@ -156,7 +154,7 @@ export function ImageInspectorView() {
                     </div>
                     <div className="overflow-hidden">
                       <div className="truncate font-medium">{s.title}</div>
-                      <div className="text-[11px] opacity-60 mt-0.5">{new Date(s.createdAt).toLocaleDateString()} &middot; {s.status}</div>
+                      <div className="text-[11px] opacity-60 mt-0.5">{new Date(s.createdAt).toLocaleDateString()} <Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.middot" /> {s.status}</div>
                     </div>
                   </button>
                   <button
@@ -181,7 +179,7 @@ export function ImageInspectorView() {
         {!activeSession ? (
           <div className="flex-1 flex items-center justify-center flex-col text-text-muted/50">
             <ScanSearch className="w-16 h-16 opacity-20 mb-4" />
-            <div className="text-[14px]">Select or upload an image to inspect</div>
+            <div className="text-[14px]"><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.selectOrUploadAnImageToInspect" /></div>
           </div>
         ) : (
           <div className="flex-1 flex flex-col lg:flex-row p-6 gap-6 max-w-6xl mx-auto w-full">
@@ -199,7 +197,7 @@ export function ImageInspectorView() {
               <div className="space-y-5 bg-surface p-5 rounded-lg border border-border/50">
                 {/* Vision Model Selection (Strictly Limited to Vision Models) */}
                 <div className="space-y-2">
-                  <Label>Vision Model</Label>
+                  <Label><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.visionModel" /></Label>
                   {visionModels.length > 0 ? (
                     <Select
                       value={selectedModelId}
@@ -213,8 +211,7 @@ export function ImageInspectorView() {
                     />
                   ) : (
                     <div className="text-[12px] p-2 bg-error/10 border border-error/20 rounded text-error">
-                      No vision-capable models available in catalog.
-                    </div>
+                      <Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.noVisionCapableModelsAvailableInCatalog" /></div>
                   )}
                   {selectedModel && (
                     <div className="text-[11px] text-text-muted" data-testid="image-inspector-model-cost">
@@ -224,7 +221,7 @@ export function ImageInspectorView() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Analysis Depth</Label>
+                  <Label><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.analysisDepth" /></Label>
                   <PillGroup
                     ariaLabel="Analysis Depth"
                     options={[
@@ -239,7 +236,7 @@ export function ImageInspectorView() {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>Prompt Target</Label>
+                  <Label><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.promptTarget" /></Label>
                   <Select
                     value={target}
                     onChange={(v) => setTarget(v as PromptTarget)}
@@ -254,7 +251,7 @@ export function ImageInspectorView() {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>Specific Instructions (Optional)</Label>
+                  <Label><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.specificInstructionsOptional" /></Label>
                   <TextArea
                     value={instructions}
                     onChange={(v) => setInstructions(v)}
@@ -268,8 +265,7 @@ export function ImageInspectorView() {
                     className="w-full bg-error text-error-fg hover:bg-error/90 rounded-md font-medium py-2.5 mt-2 flex items-center justify-center gap-2 transition-colors"
                   >
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Cancel Analysis
-                  </button>
+                    <Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.action.cancelAnalysis" /></button>
                 ) : (
                   <button 
                     onClick={() => startAnalysis(
@@ -283,8 +279,7 @@ export function ImageInspectorView() {
                     className="w-full bg-accent text-accent-fg hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed rounded-md font-medium py-2.5 mt-2 flex items-center justify-center gap-2 transition-colors"
                   >
                     <ScanSearch className="w-4 h-4" />
-                    Analyze Image
-                  </button>
+                    <Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.action.analyzeImage" /></button>
                 )}
               </div>
             </div>
@@ -294,7 +289,7 @@ export function ImageInspectorView() {
               {analysis ? (
                 <div className="bg-surface p-6 rounded-lg border border-border/50 space-y-6">
                   <div>
-                    <h3 className="text-[14px] font-semibold text-text mb-2 border-b border-border/50 pb-2">Analysis Summary</h3>
+                    <h3 className="text-[14px] font-semibold text-text mb-2 border-b border-border/50 pb-2"><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.heading.analysisSummary" /></h3>
                     <p className="text-[13px] text-text-muted leading-relaxed whitespace-pre-wrap">
                       {analysis.summary || 'No summary available.'}
                     </p>
@@ -302,13 +297,13 @@ export function ImageInspectorView() {
                   
                   {analysis.replicationPrompt && (
                     <div>
-                      <h3 className="text-[14px] font-semibold text-text mb-2 border-b border-border/50 pb-2">Replication Prompt</h3>
+                      <h3 className="text-[14px] font-semibold text-text mb-2 border-b border-border/50 pb-2"><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.heading.replicationPrompt" /></h3>
                       <div className="bg-background rounded p-3 text-[13px] text-text border border-border/30 font-mono whitespace-pre-wrap select-all">
                         {analysis.replicationPrompt.positive}
                       </div>
                       {analysis.replicationPrompt.negative && (
                         <div className="mt-2 bg-background/50 rounded p-3 text-[12px] text-error/80 border border-error/20 font-mono whitespace-pre-wrap select-all">
-                          <strong>Negative:</strong> {analysis.replicationPrompt.negative}
+                          <strong><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.negative" /></strong> {analysis.replicationPrompt.negative}
                         </div>
                       )}
                     </div>
@@ -316,7 +311,7 @@ export function ImageInspectorView() {
                   
                   {analysis.subjects && analysis.subjects.length > 0 && (
                     <div>
-                      <h3 className="text-[14px] font-semibold text-text mb-2 border-b border-border/50 pb-2">Subjects</h3>
+                      <h3 className="text-[14px] font-semibold text-text mb-2 border-b border-border/50 pb-2"><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.heading.subjects" /></h3>
                       <ul className="list-disc pl-5 text-[13px] text-text-muted space-y-1">
                         {analysis.subjects.map((sub, i) => (
                           <li key={i}><strong>{sub.description.split(':')[0] || 'Subject'}:</strong> {sub.description}</li>
@@ -329,20 +324,16 @@ export function ImageInspectorView() {
                   <div className="pt-4 border-t border-border/50">
                     <h3 className="text-[14px] font-semibold text-text mb-3 flex items-center gap-2">
                       <Globe className="w-4 h-4 text-accent" />
-                      Image-Based Source Search
-                    </h3>
+                      <Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.heading.imageBasedSourceSearch" /></h3>
                     
                     <div className="rounded-md border border-warning/30 bg-warning/5 p-3 text-[12px] text-text-muted">
-                      Direct source-image matching is unavailable with the configured Google and Brave contracts.
-                      Their current APIs accept text queries, not the inspected image bytes. Query-generated search
-                      has been disabled here so results are not misrepresented as reverse-image matches.
-                    </div>
+                      <Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.directSourceImageMatchingIsUnavailableWith" /></div>
 
                     {/* Preserve display of results created by earlier application versions. */}
                     {searchResults.length > 0 && (
                       <div className="mt-4 space-y-3">
                         <div className="text-[12px] font-medium text-text-muted">
-                          Legacy Text-Query Results ({searchResults.length})
+                          <Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.legacyTextQueryResults" />{searchResults.length})
                         </div>
                         <div className="space-y-2 max-h-[300px] overflow-y-auto p-1">
                           {searchResults.map((res) => (
@@ -385,7 +376,7 @@ export function ImageInspectorView() {
               ) : activeSession.status === 'failed' ? (
                 <div className="flex-1 flex items-center justify-center bg-error/5 rounded-lg border border-error/30 min-h-[400px] p-8">
                   <div className="max-w-lg text-center">
-                    <div className="text-[14px] font-semibold text-error">Image analysis failed</div>
+                    <div className="text-[14px] font-semibold text-error"><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.imageAnalysisFailed" /></div>
                     <div className="text-[12px] text-text-muted mt-2">
                       {activeSession.error?.message || 'The selected vision model could not analyze this image.'}
                     </div>
@@ -393,7 +384,7 @@ export function ImageInspectorView() {
                 </div>
               ) : (
                 <div className="flex-1 flex items-center justify-center bg-surface/50 rounded-lg border border-border/50 border-dashed min-h-[400px]">
-                  <div className="text-[13px] text-text-muted/50">Analysis results will appear here.</div>
+                  <div className="text-[13px] text-text-muted/50"><Trans i18nKey="common:surface.componentsImageInspectorImageinspectorview.text.analysisResultsWillAppearHere" /></div>
                 </div>
               )}
             </div>

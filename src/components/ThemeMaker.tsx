@@ -52,6 +52,7 @@ import { useConfigStore } from "../stores/config-store";
 import { toast } from "../stores/toast-store";
 import { redactErrorMessage } from "../shared/redaction";
 import { desktopConfig } from "../services/desktopBridge";
+import { Trans } from 'react-i18next';
 
 const TOKEN_LABELS: Record<keyof ThemeTokens, string> = {
   background: "Background",
@@ -584,32 +585,27 @@ export function ThemeMaker() {
       {/* Header Controls */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-4">
         <div>
-          <h3 className="text-lg font-semibold text-text-primary">Theme System & Editor</h3>
+          <h3 className="text-lg font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsThememaker.heading.themeSystemEditor" /></h3>
           <p className="text-xs text-text-muted">
-            Configure theme colors, border contrast, focus rings, and action button styles across Venice Forge.
-          </p>
+            <Trans i18nKey="common:surface.componentsThememaker.description.configureThemeColorsBorderContrastFocusRings" /></p>
         </div>
         <div className="flex items-center gap-2">
           <button className="btn" onClick={handleCreateNewFromActive}>
-            + Create New Theme
-          </button>
+            <Trans i18nKey="common:surface.componentsThememaker.action.createNewTheme" /></button>
           <button className="btn" onClick={handleImportClick}>
-            Import Theme…
-          </button>
+            <Trans i18nKey="common:surface.componentsThememaker.action.importTheme" /></button>
           <button className="btn" onClick={handleExport}>
-            Export Theme
-          </button>
+            <Trans i18nKey="common:surface.componentsThememaker.action.exportTheme" /></button>
         </div>
       </div>
 
       {/* Theme Selector Palette */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-text-secondary">Select Active Theme</label>
+          <label className="text-sm font-medium text-text-secondary"><Trans i18nKey="common:surface.componentsThememaker.label.selectActiveTheme" /></label>
           {isDraftDirty && (
             <span className="inline-flex items-center rounded-full bg-warning/20 px-2 py-0.5 text-xs font-medium text-warning border border-warning/30">
-              Unsaved Draft Changes
-            </span>
+              <Trans i18nKey="common:surface.componentsThememaker.text.unsavedDraftChanges" /></span>
           )}
         </div>
         <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-1 border border-border rounded-lg bg-surface">
@@ -649,8 +645,7 @@ export function ThemeMaker() {
                   draft.mode === "dark" ? "bg-accent text-accent-fg" : "text-text-muted hover:text-text-primary"
                 }`}
               >
-                Dark Mode
-              </button>
+                <Trans i18nKey="common:surface.componentsThememaker.action.darkMode" /></button>
               <button
                 type="button"
                 onClick={() => updateMode("light")}
@@ -658,25 +653,21 @@ export function ThemeMaker() {
                   draft.mode === "light" ? "bg-accent text-accent-fg" : "text-text-muted hover:text-text-primary"
                 }`}
               >
-                Light Mode
-              </button>
+                <Trans i18nKey="common:surface.componentsThememaker.action.lightMode" /></button>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button className="btn primary" onClick={handleSave} disabled={!isDraftDirty && selector === draft.id}>
-              Save Theme
-            </button>
+              <Trans i18nKey="common:surface.componentsThememaker.action.saveTheme" /></button>
             <button className="btn" onClick={handleReset} disabled={!isDraftDirty}>
               Cancel / Reset
             </button>
             {customThemesMap[selector] && (
               <button className="btn danger" onClick={handleDeleteCustom}>
-                Delete Theme
-              </button>
+                <Trans i18nKey="common:surface.componentsThememaker.action.deleteTheme" /></button>
             )}
             <button className="btn ghost" onClick={handleRestoreDefaults}>
-              Restore Default Theme
-            </button>
+              <Trans i18nKey="common:surface.componentsThememaker.action.restoreDefaultTheme" /></button>
           </div>
         </div>
 
@@ -717,8 +708,7 @@ export function ThemeMaker() {
                       </div>
                       {!valid && (
                         <span role="alert" className="text-[10px] text-danger shrink-0">
-                          Invalid
-                        </span>
+                          <Trans i18nKey="common:surface.componentsThememaker.text.invalid" /></span>
                       )}
                     </div>
                   );
@@ -732,8 +722,8 @@ export function ThemeMaker() {
       {/* Live Preview Panel */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <div className="text-sm font-medium text-text-secondary">Live Theme Preview</div>
-          <span className="text-xs text-text-muted">Showing live preview of active draft</span>
+          <div className="text-sm font-medium text-text-secondary"><Trans i18nKey="common:surface.componentsThememaker.text.liveThemePreview" /></div>
+          <span className="text-xs text-text-muted"><Trans i18nKey="common:surface.componentsThememaker.text.showingLivePreviewOfActiveDraft" /></span>
         </div>
         <ThemePreview theme={draft} />
       </div>
@@ -743,46 +733,40 @@ export function ThemeMaker() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">{/* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */}
           <div className="w-full max-w-xl rounded-xl border border-border bg-surface-elevated p-6 space-y-4 shadow-2xl">
             <div className="border-b border-border/50 pb-3">
-              <h3 className="text-lg font-semibold text-text-primary">Import Theme Preview</h3>
+              <h3 className="text-lg font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsThememaker.heading.importThemePreview" /></h3>
               <p className="text-xs text-text-muted">
-                Review theme metadata and preview layout before applying to your workspace.
-              </p>
+                <Trans i18nKey="common:surface.componentsThememaker.description.reviewThemeMetadataAndPreviewLayoutBefore" /></p>
             </div>
 
             <div className="space-y-2 text-sm text-text-secondary">
               <div>
-                <strong>Theme Name:</strong> {importModal.theme.name}
+                <strong><Trans i18nKey="common:surface.componentsThememaker.text.themeName" /></strong> {importModal.theme.name}
               </div>
               <div>
-                <strong>Mode:</strong> {importModal.theme.mode}
+                <strong><Trans i18nKey="common:surface.componentsThememaker.text.mode" /></strong> {importModal.theme.mode}
               </div>
               {importModal.conflictName && (
                 <div className="rounded-lg border border-warning/30 bg-warning/10 p-3 text-xs text-warning">
-                  A custom theme named &ldquo;{importModal.conflictName}&rdquo; already exists in your workspace.
-                </div>
+                  <Trans i18nKey="common:surface.componentsThememaker.text.aCustomThemeNamedLdquo" />{importModal.conflictName}<Trans i18nKey="common:surface.componentsThememaker.text.rdquoAlreadyExistsInYourWorkspace" /></div>
               )}
             </div>
 
             <div className="rounded-lg border border-border p-3 bg-surface">
-              <div className="text-xs font-semibold text-text-muted mb-2">Imported Layout Preview</div>
+              <div className="text-xs font-semibold text-text-muted mb-2"><Trans i18nKey="common:surface.componentsThememaker.text.importedLayoutPreview" /></div>
               <ThemePreview theme={importModal.theme} />
             </div>
 
             <div className="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-border/50">
               <button className="btn ghost" onClick={() => setImportModal(null)}>
-                Cancel
-              </button>
+                <Trans i18nKey="common:surface.componentsThememaker.action.cancel" /></button>
               {importModal.conflictName && (
                 <button className="btn danger" onClick={() => confirmImport("replace")}>
-                  Replace Existing
-                </button>
+                  <Trans i18nKey="common:surface.componentsThememaker.action.replaceExisting" /></button>
               )}
               <button className="btn" onClick={() => confirmImport("copy")}>
-                Import as Copy
-              </button>
+                <Trans i18nKey="common:surface.componentsThememaker.action.importAsCopy" /></button>
               <button className="btn primary" onClick={() => confirmImport("apply")}>
-                Import & Apply
-              </button>
+                <Trans i18nKey="common:surface.componentsThememaker.action.importApply" /></button>
             </div>
           </div>
         </div>

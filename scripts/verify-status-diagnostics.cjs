@@ -181,11 +181,12 @@ if (drawer) {
   );
   check(
     "DiagnosticsDrawer mounts the Web-mode caveat",
-    /Web mode: filesystem/.test(drawer),
+    /common:surface\.componentsStatusDiagnosticsdrawer\.description\.webModeFilesystemRevealsAndTheSystem/.test(drawer),
   );
   check(
     "DiagnosticsDrawer renders the Repair section as read-only",
-    /Repair/.test(drawer) && /out of scope/.test(drawer),
+    /Repair/.test(drawer) &&
+      /common:surface\.componentsStatusDiagnosticsdrawer\.description\.phase2cShipsReadOnlyDiagnosticsDestructive/.test(drawer),
   );
 }
 

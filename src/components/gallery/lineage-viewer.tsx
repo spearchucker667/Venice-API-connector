@@ -16,6 +16,7 @@
 
 import { useMemo } from "react";
 import type { MediaItem } from "../../types/media";
+import { Trans } from 'react-i18next';
 
 export interface LineageNode {
   id: string;
@@ -186,8 +187,7 @@ export function LineageViewer({
           className="mb-1.5 rounded-md border border-amber-400/30 bg-amber-500/[0.06] px-2 py-1 text-[12px] text-amber-200/90"
           data-testid="lineage-cycle-warning"
         >
-          Cycle detected in the lineage chain — showing a truncated view.
-        </div>
+          <Trans i18nKey="common:surface.componentsGalleryLineageViewer.text.cycleDetectedInTheLineageChainShowing" /></div>
       )}
       {chain.hasMissing && !chain.hasCycle && (
         <div
@@ -195,8 +195,7 @@ export function LineageViewer({
           className="mb-1.5 rounded-md border border-amber-400/30 bg-amber-500/[0.06] px-2 py-1 text-[12px] text-amber-200/90"
           data-testid="lineage-missing-warning"
         >
-          Some lineage references are missing from the loaded set.
-        </div>
+          <Trans i18nKey="common:surface.componentsGalleryLineageViewer.text.someLineageReferencesAreMissingFromThe" /></div>
       )}
 
       {chain.ancestors.length > 0 && (
@@ -211,9 +210,9 @@ export function LineageViewer({
             >
               <span className="text-text-muted">↳</span>
               {node.cycle ? (
-                <span className="text-warning">cycle: {node.id}</span>
+                <span className="text-warning"><Trans i18nKey="common:surface.componentsGalleryLineageViewer.text.cycle" /> {node.id}</span>
               ) : node.missing ? (
-                <span className="text-text-muted">(missing) {node.id}</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryLineageViewer.text.missing" /> {node.id}</span>
               ) : (
                 <button
                   type="button"
@@ -253,9 +252,9 @@ export function LineageViewer({
             >
               <span className="text-text-muted">↳</span>
               {node.cycle ? (
-                <span className="text-warning">cycle: {node.id}</span>
+                <span className="text-warning"><Trans i18nKey="common:surface.componentsGalleryLineageViewer.text.cycle" /> {node.id}</span>
               ) : node.missing ? (
-                <span className="text-text-muted">(missing) {node.id}</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryLineageViewer.text.missing" /> {node.id}</span>
               ) : (
                 <button
                   type="button"
@@ -276,7 +275,7 @@ export function LineageViewer({
       )}
 
       {chain.ancestors.length === 0 && chain.descendants.length === 0 && (
-        <p className="mt-1 text-[12px] text-text-muted">No lineage recorded.</p>
+        <p className="mt-1 text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsGalleryLineageViewer.description.noLineageRecorded" /></p>
       )}
     </section>
   );

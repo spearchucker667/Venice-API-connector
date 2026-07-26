@@ -8,6 +8,7 @@ import { useMediaThumb } from "../../hooks/useMediaThumb";
 import { mediaItemSource, formatDimensions, formatDuration, isVideoItem, isAudioItem } from "../../utils/mediaItem";
 import { cn } from "../../lib/utils";
 import type { MediaItem } from "../../types/media";
+import { Trans } from 'react-i18next';
 
 const OP_TONE: Record<string, "emerald" | "sky" | "violet" | "amber" | "pink" | "slate" | "rose" | "teal"> = {
   generate: "slate",
@@ -135,7 +136,7 @@ function MediaCardImpl({
         {item.favorite && (
           <span className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-md bg-overlay px-1.5 py-0.5 text-[12px] text-rose-200 backdrop-blur">
             <Heart className="h-3 w-3 fill-current" />
-            <span>Favorite</span>
+            <span><Trans i18nKey="common:surface.componentsGalleryMediaCard.text.favorite" /></span>
           </span>
         )}
 
@@ -149,9 +150,9 @@ function MediaCardImpl({
       <div className="flex flex-col gap-1.5 p-3">
         <div className="flex items-center gap-1.5">
           <Badge tone={OP_TONE[item.operation] ?? "slate"}>{OP_LABEL[item.operation] ?? "Item"}</Badge>
-          {isVideo ? <Badge tone="rose">Video</Badge> : isAudio ? <Badge tone="sky">Audio</Badge> : <Badge tone="slate">Image</Badge>}
+          {isVideo ? <Badge tone="rose"><Trans i18nKey="common:surface.componentsGalleryMediaCard.text.video" /></Badge> : isAudio ? <Badge tone="sky"><Trans i18nKey="common:surface.componentsGalleryMediaCard.text.audio" /></Badge> : <Badge tone="slate"><Trans i18nKey="common:surface.componentsGalleryMediaCard.text.image" /></Badge>}
           {dims && <Badge tone="slate">{dims}</Badge>}
-          {typeof item.seed === "number" && <Badge tone="amber">seed: {item.seed}</Badge>}
+          {typeof item.seed === "number" && <Badge tone="amber"><Trans i18nKey="common:surface.componentsGalleryMediaCard.text.seed" /> {item.seed}</Badge>}
         </div>
         <p className="line-clamp-2 text-[12.5px] text-text-primary" title={item.prompt}>
           {item.prompt || "Untitled"}
@@ -170,7 +171,7 @@ function MediaCardImpl({
               </span>
             ))}
             {item.tags.length > 3 && (
-              <span className="text-[12px] text-text-muted">+{item.tags.length - 3} more</span>
+              <span className="text-[12px] text-text-muted">+{item.tags.length - 3} <Trans i18nKey="common:surface.componentsGalleryMediaCard.text.more" /></span>
             )}
           </div>
         )}

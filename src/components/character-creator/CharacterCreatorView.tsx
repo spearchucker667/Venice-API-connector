@@ -40,6 +40,7 @@ import { CharacterCreatorReady } from "./CharacterCreatorReady";
 import { CharacterCreatorCompleted } from "./CharacterCreatorCompleted";
 import { CharacterCreatorError } from "./CharacterCreatorError";
 import { CharacterCreatorLocalPickerModal } from "./CharacterCreatorLocalPickerModal";
+import { Trans } from 'react-i18next';
 
 export function CharacterCreatorView() {
   const activeTab = useSettingsStore((s) => s.activeTab);
@@ -604,14 +605,13 @@ export function CharacterCreatorView() {
         <div className="mx-6 mt-4 p-3 bg-red-950/60 border border-red-500/40 rounded-lg flex items-center justify-between text-red-200 text-sm shrink-0">
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
-            <span><strong>Autosave failed:</strong> {autosaveError}</span>
+            <span><strong><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorview.text.autosaveFailed" /></strong> {autosaveError}</span>
           </div>
           <button
             onClick={() => void flushPendingSave()}
             className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-xs transition-colors" // THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR
           >
-            Retry Save
-          </button>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorview.action.retrySave" /></button>
         </div>
       )}
       {viewState === "welcome" && (
@@ -663,7 +663,7 @@ export function CharacterCreatorView() {
       {viewState === "saving" && (
         <div className="flex flex-col items-center justify-center h-full p-6">
           <div className="w-12 h-12 rounded-full border-2 border-accent border-t-transparent animate-spin mb-4" />
-          <p className="text-sm font-semibold text-text-primary">Saving Character to Local Library...</p>
+          <p className="text-sm font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorview.description.savingCharacterToLocalLibrary" /></p>
         </div>
       )}
 

@@ -1,5 +1,10 @@
-import { vi } from "vitest";
+import { beforeEach, vi } from "vitest";
 import "fake-indexeddb/auto";
+import { changeLanguage } from "../src/i18n";
+
+beforeEach(() => {
+  changeLanguage("en-US");
+});
 
 // Silence expected application logs during tests to keep CI output clean.
 // This is done at the module level so it captures logs emitted during store hydration (imports).

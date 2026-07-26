@@ -71,5 +71,1917 @@
   "isWebEnabled": "true",
   "stable-audio": "q1",
   "video-model": "q2",
-  "promptLibrary": "lib-1"
+  "promptLibrary": "lib-1",
+  "surface": {
+    "app": {
+      "text": {
+        "skipToMainContent": "Перейти к основному содержимому",
+        "loadingWorkflows": "Загрузка рабочих процессов…",
+        "loadingPlayground": "Загрузка игровой площадки…",
+        "loadingRpStudio": "Загрузка RP studio…",
+        "loadingHistory": "Загрузка истории…",
+        "loadingImageStudio": "Загрузка Image Studio…",
+        "loadingImageInspector": "Загрузка Image Inspector…",
+        "loadingAudio": "Загрузка аудио…",
+        "loadingMusic": "Загрузка музыки…",
+        "loadingVideo": "Загрузка видео…",
+        "loadingEmbeddings": "Загрузка вложений…",
+        "loadingStatus": "Загрузка статуса…",
+        "loadingCharacters": "Загрузка персонажей…",
+        "loadingCharacterCreator": "Загрузка редактора персонажей…",
+        "loadingSettings": "Загрузка настроек…",
+        "loadingSearch": "Загрузка поиска…",
+        "loadingMediaStudio": "Загрузка медиастудии…",
+        "loadingPromptLibrary": "Загрузка библиотеки подсказок…",
+        "loadingScenes": "Загрузка сцен…",
+        "loadingStorage": "Загрузка хранилища…",
+        "loadingDocuments": "Загрузка документов…"
+      }
+    },
+    "componentsCharactersview": {
+      "action": {
+        "chat": "Чат",
+        "refresh": "Обновить",
+        "edit": "Редактировать",
+        "close": "Закрыть",
+        "createStCard": "Создать ST Card",
+        "select": "Выберите",
+        "details": "Подробности",
+        "duplicateLocally": "Дублируйте локально",
+        "startChat": "Начать чат",
+        "duplicate": "Дублировать",
+        "exportStCardJson": "Экспорт карты ST JSON",
+        "deleteLocalCharacter": "Удаление локального персонажа",
+        "importStCard": "Импорт карты ST",
+        "drafts": "Черновики"
+      },
+      "heading": {
+        "characters": "Персонажи",
+        "local": "Локальный",
+        "featured": "Избранный",
+        "adult": "Взрослый",
+        "hosted": "Размещено"
+      },
+      "label": {
+        "model": "Модель",
+        "sort": "Сортировка"
+      },
+      "text": {
+        "featured": "Рекомендуемая",
+        "model": "Модель:",
+        "ratings": "оценки",
+        "imports": "импорт",
+        "venice": "Венеция ↗",
+        "needsValidation": "Требуется Проверка",
+        "includeAdultCharacters": "Включить взрослых персонажей",
+        "webEnabledOnly": "Только с поддержкой Интернета",
+        "loadingCharacters": "Загрузка символов…",
+        "noCharactersFoundTryClearingTheSearch": "Символы не найдены. Попробуйте очистить поле поиска или включить персонажей для взрослых."
+      },
+      "description": {
+        "browseHostedAndLocallyAuthoredCharactersIn": "Просматривайте размещенных и созданных локально персонажей в одном хабе."
+      }
+    },
+    "componentsStatusview": {
+      "heading": {
+        "status": "Статус",
+        "runtime": "Время выполнения",
+        "storage": "Хранение",
+        "safetyGuardAudit": "Аудит системы безопасности",
+        "lastRequest": "Последний запрос"
+      },
+      "description": {
+        "aggregatedRuntimeInfoForTheCurrentBuild": "Совокупная информация о времени выполнения для текущей сборки. Откройте папку журналов",
+        "toInspectDetailedConsoleOutput": ", чтобы просмотреть подробные выходные данные консоли.",
+        "statusProvidesTransportStorageAuditAndRequest": "Статус обеспечивает транспортировку, хранение, аудит и диагностику запросов. Используйте специальные вкладки «Библиотека», «Исследования», «Настройки» и «Рабочий процесс» для управления конкретными функциями."
+      },
+      "text": {
+        "logsFolder": "папка журналов",
+        "bySeverity": "По серьезности:",
+        "lastError": "Последняя ошибка:",
+        "noRequestsYetLastErrorBelowIf": "запросов пока нет (последняя ошибка указана ниже, если таковые имеются)."
+      }
+    },
+    "componentsThememaker": {
+      "action": {
+        "cancel": "Отмена",
+        "createNewTheme": "+ Создать новую тему",
+        "importTheme": "Импортировать тему…",
+        "exportTheme": "Экспортировать тему",
+        "darkMode": "Темный режим",
+        "lightMode": "Светлый режим",
+        "saveTheme": "Сохранить тему",
+        "deleteTheme": "Удалить тему",
+        "restoreDefaultTheme": "Восстановить настройки по умолчанию Тема",
+        "replaceExisting": "Заменить существующий",
+        "importAsCopy": "Импортировать как копию",
+        "importApply": "Импортировать и применить"
+      },
+      "heading": {
+        "themeSystemEditor": "Система и редактор тем",
+        "importThemePreview": "Предварительный просмотр импорта темы"
+      },
+      "description": {
+        "configureThemeColorsBorderContrastFocusRings": "Настройте цвета темы, контрастность границ, кольца фокусировки и стили кнопок действий в Venice Forge.",
+        "reviewThemeMetadataAndPreviewLayoutBefore": "Перед применением в рабочей области просмотрите метаданные темы и макет предварительного просмотра."
+      },
+      "label": {
+        "selectActiveTheme": "Выбрать активную тему"
+      },
+      "text": {
+        "unsavedDraftChanges": "Несохраненные черновые изменения",
+        "invalid": "Недействительно",
+        "liveThemePreview": "Предварительный просмотр темы в реальном времени",
+        "showingLivePreviewOfActiveDraft": "Отображение предварительного просмотра активного черновика в реальном времени",
+        "themeName": "Название темы:",
+        "mode": "Режим:",
+        "aCustomThemeNamedLdquo": "Пользовательская тема с именем «",
+        "rdquoAlreadyExistsInYourWorkspace": "» уже существует в вашей рабочей области.",
+        "importedLayoutPreview": "Предварительный просмотр импортированного макета"
+      }
+    },
+    "componentsThemepreview": {
+      "text": {
+        "status": "Статус",
+        "forge": "Создать",
+        "activeItem": "Активный элемент",
+        "inactiveItem": "Неактивный элемент",
+        "selectedItem": "Выбранный элемент",
+        "primaryButton": "Основная кнопка",
+        "secondary": "Вторичная",
+        "inputField": "Поле ввода…",
+        "focusedControl": "Фокусное управление",
+        "alertMessageBoundary": "Граница предупреждающего сообщения",
+        "contrastWarnings": "Контрастные предупреждения:"
+      }
+    },
+    "componentsAudioAudioView": {
+      "text": {
+        "voice": "Голос",
+        "download": "Скачать",
+        "text": "Текст",
+        "format": "Формат",
+        "speed": "Скорость",
+        "generateSpeech": "Генерация речи",
+        "transcribe": "Расшифровка",
+        "output": "Вывод",
+        "pressGenerateToSynthesizeSpeech": "Нажмите Создать для синтеза речи",
+        "transcript": "Расшифровка",
+        "transcriptAppearsHere": "Расшифровка появляется здесь"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatordrafteditor": {
+      "label": {
+        "creatorNotes": "Заметки создателя",
+        "postHistoryInstructions": "Инструкции после истории",
+        "characterName": "Имя персонажа *",
+        "tagsCommaSeparated": "Теги (разделенные запятыми)",
+        "fullIdentityBackground": "Полная личность и биография",
+        "personalitySpeechStyle": "Личность и стиль речи",
+        "scenarioContext": "Контекст сценария",
+        "firstMessagePrimaryGreeting": "Первое сообщение (основное приветствие) *",
+        "alternateGreetings": "Альтернативные приветствия",
+        "exampleDialogue": "Пример диалогового окна.",
+        "systemPromptOverride": "Переопределение системной подсказки",
+        "avatarControls": "Элементы управления аватаром",
+        "visualAvatarPrompt": "Визуальная подсказка аватара",
+        "naturalLanguageRequest": "Запрос на естественном языке"
+      },
+      "text": {
+        "enabled": "Включено",
+        "draftRev": "Версия черновика",
+        "saveDraft": "Сохранить черновик",
+        "validate": "Подтвердить",
+        "approveCreateCharacter": "Утвердить и создать персонажа",
+        "assumptions": "Допущения:",
+        "aiRegenerate": "Регенерация AI",
+        "addAlternateGreeting": "Добавить альтернативное приветствие.",
+        "advancedPromptingInstructionsDirectlyModifySystemPrompt": "Инструкции по расширенным подсказкам напрямую изменяют управление системными подсказками во время выполнения модели. Внимательно осмотрите перед созданием.",
+        "noAvatarSelected": "Аватар не выбран",
+        "chooseImageFile": "Выбор файла изображения",
+        "generateAvatar": "Создать аватар",
+        "addLoreEntry": "Добавить запись истории.",
+        "noEmbeddedLoreEntriesYetAddKeywords": "Встроенных записей истории пока нет. Добавьте ключевые слова и дополнительные сведения для более глубокого построения мира персонажей.",
+        "draftId": "Идентификатор черновика:",
+        "revisionNumber": "Номер версии:",
+        "creatorModel": "Модель создателя:",
+        "specification": "Спецификация:",
+        "aiAssistedRevisions": "Версии с помощью AI"
+      },
+      "heading": {
+        "embeddedLorebookWorldInfo": "Встроенная книга знаний и информация о мире"
+      },
+      "description": {
+        "manageWorldLoreEntriesEmbeddedInsideThis": "Управление записями о мире, встроенными в черновик карты персонажа V2."
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorerror": {
+      "text": {
+        "copy": "Копировать",
+        "diagnosticMessage": "Диагностическое сообщение",
+        "returnToDraft": "Возврат к черновику",
+        "retryOperation": "Повторите операцию"
+      },
+      "heading": {
+        "characterCreatorError": "Ошибка создателя персонажа"
+      },
+      "description": {
+        "anErrorOccurredDuringGenerationOrCard": "Произошла ошибка во время генерации или обработки карты. Ваш текущий проект и идея сохранены."
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorlocalpickermodal": {
+      "action": {
+        "cancel": "Отмена"
+      },
+      "heading": {
+        "selectLocalCharacterToEdit": "Выберите локального персонажа для редактирования"
+      },
+      "description": {
+        "chooseACharacterFromYourLocalLibrary": "Выберите персонажа из локальной библиотеки, чтобы открыть его как черновик в редакторе персонажей."
+      },
+      "text": {
+        "editDraft": "Редактировать черновик →"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorprocesspanel": {
+      "text": {
+        "active": "Активно",
+        "aiDesignProcess": "Процесс проектирования ИИ",
+        "designDirectionSummary": "Направление проектирования и краткое описание",
+        "interpretation": "Интерпретация:",
+        "initializingAiProcessPipeline": "Инициализация конвейера процесса AI…",
+        "cancelGeneration": "Отмена генерации"
+      },
+      "description": {
+        "thisLogShowsUserFacingDesignDecisions": "В этом журнале показаны проектные решения и события проверки, с которыми сталкивается пользователь, а не частные скрытые рассуждения."
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorwelcome": {
+      "heading": {
+        "characterCreator": "Создатель персонажей"
+      },
+      "text": {
+        "create": "Создать",
+        "delete": "Удалить",
+        "creatorModel": "Модель создателя:",
+        "immutable": "(Неизменяемый)",
+        "optionalDesignConstraintsContext": "Дополнительные ограничения и контекст дизайна",
+        "allGeneratedContentRemainsADraftUntil": "Весь созданный контент остается черновиком, пока вы его не одобрите.",
+        "createDraft": "Создать черновик",
+        "importExistingCard": "Импортировать существующую карту",
+        "editLocalCharacter": "Редактировать локальный персонаж",
+        "describe": "Описать",
+        "review": "Просмотрите",
+        "recentUnfinishedDrafts": "Последние незаконченные черновики",
+        "rev": "Ред.",
+        "duplicate": "Дубликат"
+      },
+      "description": {
+        "turnARoughIdeaIntoAComplete": "Превратите грубую идею в полную, редактируемую карту персонажа.",
+        "startWithASentenceADetailedConcept": "Начните с предложения, подробной концепции или существующего архетипа персонажа. Создатель создаст полный черновик, который вы сможете просмотреть, переписать, сохранить или экспортировать. Ничего не будет добавлено в вашу библиотеку персонажей, пока вы не одобрите это.",
+        "enterAnythingFromAOneLineConcept": "Введите что-нибудь, от однострочной концепции до подробного описания персонажа.",
+        "inspectAndEditTheIdentityPersonalityScenario": "Проверьте и отредактируйте личность, личность, сценарий, приветствие, примеры диалогов и инструкции по поведению.",
+        "approveTheFinalDraftToAddThe": "Утвердите окончательный вариант, чтобы добавить персонажа в местную библиотеку или экспортировать совместимую карту."
+      },
+      "label": {
+        "characterConcept": "Концепция персонажа",
+        "tone": "Тон",
+        "relationshipToUser": "Отношение к пользователю",
+        "contentRating": "Рейтинг контента"
+      },
+      "option": {
+        "adultUncensored": "Для взрослых без цензуры"
+      },
+      "action": {
+        "open": "Открыть"
+      }
+    },
+    "componentsChatCharacterchatsview": {
+      "heading": {
+        "characterChats": "Чаты с персонажами",
+        "startALocalCharacterChat": "Начать чат с локальными персонажами",
+        "noCharacterChatsYet": "Пока нет чатов с персонажами"
+      },
+      "action": {
+        "edit": "Редактировать",
+        "close": "Закрыть",
+        "chat": "Чат",
+        "newStCard": "Новая карточка ST",
+        "browseHosted": "Просмотр хостинга",
+        "startChat": "Начать чат",
+        "browseCharacters": "Просмотрите персонажей",
+        "createLocalCharacter": "Создайте локального персонажа",
+        "browseHostedCharacters": "Просмотр размещенных персонажей ↗",
+        "createNewStCard": "+ Создать новую карту ST"
+      },
+      "description": {
+        "hostedAndLocalCharacterConversations": "Разговоры персонажей на хосте и локально",
+        "noCharacterChatsMatchThisSearch": "Ни один чат персонажей не соответствует этому запросу.",
+        "selectAnyOfYourLocallyCreatedCharacters": "Выберите любого из ваших локально созданных персонажей, чтобы начать специальный разговор.",
+        "noLocalCharactersMatch": "Нет совпадений с местными символами \"",
+        "chooseAHostedOrLocalCharacterTo": "Выберите хостингового или локального персонажа, чтобы начать разговор с выделенным персонажем."
+      },
+      "text": {
+        "searchCharacterChats": "Поиск чатов персонажей",
+        "localCharacters": "Доступны локальные персонажи",
+        "available": "доступный",
+        "chat": "Чат →"
+      },
+      "label": {
+        "localCharacters": "Локальные персонажи ("
+      }
+    },
+    "componentsChatCharacterscenecard": {
+      "action": {
+        "retry": "Повторить",
+        "cancel": "Отмена",
+        "openInMediaStudio": "Открыть в Media Studio",
+        "copyPrompt": "Подсказка копирования",
+        "regenerate": "Перегенерировать"
+      },
+      "description": {
+        "scenePrompt": "Подсказка сцены"
+      }
+    },
+    "componentsChatHistoryview": {
+      "action": {
+        "newChat": "Новый чат",
+        "cancel": "Отмена",
+        "rename": "Переименовать",
+        "delete": "Удалить",
+        "export": "Экспорт",
+        "import": "Импорт",
+        "clearSelection": "Очистить выбор",
+        "deleteSelected": "Удалить выбранное (",
+        "newFolder": "Новая папка",
+        "startNewConversation": "Начать новый разговор",
+        "openPrivacyGate": "Открыть шлюз конфиденциальности",
+        "enablePrivacyGate": "Включить шлюз конфиденциальности"
+      },
+      "option": {
+        "characterChats": "Чаты с персонажами",
+        "allChats": "Все чаты",
+        "standardChats": "Стандартные чаты",
+        "selectDestinationFolder": "Выберите папку назначения...",
+        "unfiledNoFolder": "Не сохранено (без папки)"
+      },
+      "text": {
+        "unfiled": "Без папки",
+        "selected": "выбрано",
+        "total": "всего)",
+        "moveTo": "Перейти к:",
+        "chooseOneChatTypeToMoveInto": "Выберите один тип чата для перемещения в папку.",
+        "ago": "назад",
+        "noConversationsInThisFolder": "В этой папке нет разговоров.",
+        "noUnfiledConversations": "Нет незарегистрированных разговоров."
+      },
+      "heading": {
+        "chatHistory": "История чата",
+        "noConversationsFound": "Разговоров не найдено"
+      },
+      "description": {
+        "manageAndRevisitYourPastConversations": "Управляйте своими прошлыми разговорами и возвращайтесь к ним",
+        "tryADifferentSearchTermOrStart": "Попробуйте другой поисковый запрос или начните новый чат"
+      }
+    },
+    "componentsChatChatView": {
+      "action": {
+        "cancel": "Отмена",
+        "remove": "Удалить",
+        "clear": "Очистить",
+        "shuffle": "Перемешать",
+        "confirmSend": "Подтвердить и отправить",
+        "disableMemoryForThisMessage": "Отключить память для этого сообщения",
+        "saveContextText": "Сохранить текст контекста",
+        "forgetFact": "Забыть факт",
+        "chatContext": "⚙ Контекст чата ·",
+        "requireMemoryPreviewBeforeNextSend": "Требовать предварительный просмотр памяти перед следующей отправкой."
+      },
+      "option": {
+        "disabled": "Отключено",
+        "inheritFromDefaultSettings": "Наследовать настройки по умолчанию",
+        "overrideUseChatSettings": "Переопределить (использовать настройки чата)"
+      },
+      "text": {
+        "howCanIHelpToday": "Чем я могу помочь сегодня?",
+        "tryOneOfThese": "Попробуйте один из этих",
+        "startAConversationWith": "Начните разговор с",
+        "matchedLocalMemoryContext": "Совпадающий контекст локальной памяти",
+        "facts": "факты,",
+        "summariesMatched": "совпадают)",
+        "previousThread": "Предыдущая тема:",
+        "allMatchedContextHasBeenRemoved": "Весь соответствующий контекст был удален.",
+        "context": "Контекст",
+        "chatContext": "Контекст чата",
+        "includeMemoryRetrievalForThisChat": "Включить извлечение памяти для этого чата",
+        "includePriorConversationContext": "Включить контекст предыдущего разговора",
+        "selected": "выбрано",
+        "chattingAs": "В чате как"
+      },
+      "label": {
+        "systemPromptMode": "Режим системной подсказки"
+      },
+      "description": {
+        "onlySelectedLocalConversationsAreIncludedIn": "Только выбранные местные разговоры включаются в следующий запрос модели и отправляются в Венецию API. Ключи API, токены-носители и пути к локальным файлам отредактированы; длинный контент усекается, чтобы оставаться в пределах границ. История разговоров никогда не включается в диагностику или безопасный экспорт."
+      }
+    },
+    "componentsChatMessageBubble": {
+      "action": {
+        "cancel": "Отмена",
+        "save": "Сохранить",
+        "thinking": "Мышление"
+      },
+      "text": {
+        "attachedToThisMessage": "прикреплено к этому сообщению",
+        "truncated": "усечено",
+        "vision": "видение",
+        "safety": "Безопасность:",
+        "code": "Код:",
+        "signals": "Сигналы:",
+        "toolUsed": "Используемый инструмент:",
+        "resultFrom": "Результат из"
+      }
+    },
+    "componentsChatVeniceParams": {
+      "action": {
+        "newChat": "Новый чат",
+        "settings": "Настройки"
+      },
+      "label": {
+        "appSystemPrompt": "Системное приглашение приложения"
+      },
+      "option": {
+        "loadingLibrary": "Загрузка библиотеки...",
+        "errorLoadingLibrary": "Ошибка при загрузке библиотеки",
+        "loadFromLibrary": "Загрузка из библиотеки..."
+      },
+      "text": {
+        "approachingSystemPromptSizeLimit": "Приближается размер системного приглашения ("
+      }
+    },
+    "componentsDocumentsDocumentagentview": {
+      "option": {
+        "off": "Выключено",
+        "readAttachmentsOnly": "Только чтение вложений",
+        "limitedDocuments": "Ограниченные документы",
+        "manageSelectedWorkspace": "Управление выбранным рабочим пространством",
+        "markdownMd": "Уценка (.md)",
+        "textTxt": "Текст (.txt)",
+        "jsonJson": "JSON (.json)",
+        "csvCsv": ". CSV (.csv)",
+        "htmlHtml": "HTML (.html)",
+        "wordDocx": "Слово (.docx)",
+        "pdfPdf": "PDF (.pdf)"
+      },
+      "action": {
+        "managedLibrary": "Управляемая библиотека",
+        "connectedWorkspace": "Подключенное рабочее пространство",
+        "preview": "Предпросмотр",
+        "source": "Источник",
+        "history": "История ("
+      },
+      "text": {
+        "search": "Поиск",
+        "cancel": "Отмена",
+        "createDocument": "Создать документ",
+        "sessionGrant": "Разрешение сеанса ·",
+        "revoke": "Отзыв",
+        "selectWorkspaceDirectory": "Выбор каталога рабочего пространства…",
+        "documentAgentToolsRequireTheHardenedElectron": "Для инструментов Document Agent требуется защищенный рабочий стол Electron. мост",
+        "workingGroup": "Рабочая группа",
+        "group": "+ Группа",
+        "document": "+ Документ",
+        "revision": "Версия:",
+        "export": "Экспорт…",
+        "prepareEditProposal": "Подготовьте предложение по редактированию",
+        "by": "· Автор",
+        "restoreAsNewRevision": "Восстановить как новую версию",
+        "before": "До",
+        "after": "После",
+        "reject": "Отклонить",
+        "approveExactChange": "Утвердить точное изменение",
+        "itemS": "элемент(ы)",
+        "searchMatches": "Поиск совпадений (",
+        "read": "Чтение",
+        "createGroup": "Создать группу"
+      },
+      "heading": {
+        "agentAccessGrantControls": "Доступ агента и контроль предоставления",
+        "documents": "Документы (",
+        "immutableRevisionLineage": "Неизменяемое происхождение версии",
+        "reviewProposal": "Рассмотрение предложения",
+        "grantedWorkspaceDirectory": "Предоставленный каталог рабочего пространства",
+        "createManagedDocument": "Создать управляемый документ",
+        "createWorkingGroup": "Создать рабочую группу"
+      },
+      "description": {
+        "limitedDocumentsIsTheSafeDefaultWorkspace": "Ограниченные документы — безопасный вариант по умолчанию. Доступ к рабочему пространству ограничен одним каталогом, предоставленным пользователем, и никогда не включает оболочку, Git, сеть, брелок или элемент управления OS",
+        "noManagedDocumentsInThisWorkingGroup": "В этой рабочей группе нет управляемых документов.",
+        "boundToHash": "Привязка к хешу",
+        "againstBaseRevision": "… относительно базовой версии",
+        "noDocumentSelected": "Нет. Документ выбран",
+        "selectADocumentFromTheLeftPanel": "Выберите документ на левой панели или создайте новый, чтобы начать редактирование.",
+        "noWorkspaceFilesFound": "Файлы рабочего пространства не найдены.",
+        "noWorkspaceGranted": "Рабочее пространство не предоставлено",
+        "selectAWorkspaceDirectoryUnderAgentAccess": "Для просмотра выберите каталог рабочего пространства в разделе «Доступ агента» выше. файлы",
+        "selectAFileFromTheWorkspaceList": "Выберите файл из списка рабочей области, чтобы просмотреть его содержимое."
+      },
+      "label": {
+        "accessPreset": "Предустановка доступа",
+        "format": "Формат",
+        "initialContent": "Исходное содержимое",
+        "workingGroupName": "Имя рабочей группы"
+      }
+    },
+    "componentsEmbeddingsEmbeddingsView": {
+      "action": {
+        "copy": "Копировать"
+      },
+      "text": {
+        "inputText": "Введите текст",
+        "generateEmbeddings": "Создать вложения",
+        "vector": "Вектор (размеры",
+        "dimensions": ")",
+        "embeddingVectorsAppearHere": "Здесь появляются вектора встраивания"
+      }
+    },
+    "componentsGalleryCompareView": {
+      "action": {
+        "close": "Закрыть"
+      },
+      "text": {
+        "compare": "Сравнить",
+        "items": "предметы"
+      },
+      "description": {
+        "select2To": "Выберите от 2 до",
+        "itemsToCompare": "элементов для сравнения. (Выбран",
+        "selected": ") Элементы"
+      },
+      "column": {
+        "field": "Поле"
+      }
+    },
+    "componentsGalleryGalleryView": {
+      "heading": {
+        "mediaStudio": "Медиастудия"
+      },
+      "action": {
+        "close": "Закрыть",
+        "apply": "Применить",
+        "imageStudio": "Студия изображений",
+        "chat": "Чат",
+        "videoStudio": "Видеостудия",
+        "seed": "Сид",
+        "compare": "Сравнить (",
+        "lineage": "Родословная",
+        "imageTools": "Инструменты для изображений",
+        "prompt": "Подсказка",
+        "negative": "Отрицательный результат"
+      },
+      "description": {
+        "browseTagEditAndExportYourGenerated": "Просматривайте, помечайте, редактируйте и экспортируйте созданные вами медиафайлы.",
+        "noMatchingMedia": "Не выбраны соответствующие элементы носителя"
+      },
+      "text": {
+        "item": "элемент",
+        "loaded": "загружен",
+        "selected": "выбран",
+        "loadingMediaStudio": "Загрузка Media Studio…",
+        "itemsSelected": ".",
+        "sendTo": "Отправить:",
+        "copy": "Копировать:"
+      },
+      "label": {
+        "quickTag": "Быстрый тег:"
+      }
+    },
+    "componentsGalleryMediaCard": {
+      "text": {
+        "video": "Видео",
+        "audio": "Аудио",
+        "favorite": "Избранное",
+        "image": "Изображение",
+        "seed": ":",
+        "more": "подробнее"
+      }
+    },
+    "galleryMediaDetailDialog": {
+      "action": {
+        "delete": "Удалить",
+        "closeEsc": "Закрыть (Esc)"
+      },
+      "text": {
+        "previewUnavailable": "Предварительный просмотр недоступен",
+        "seed": "Начальное значение:",
+        "source": "Источник:",
+        "style": "Стиль:",
+        "steps": "Шаги:",
+        "cfg": "CFG:."
+      },
+      "heading": {
+        "filmstrip": "Диафильм"
+      }
+    },
+    "componentsGalleryMediaInspector": {
+      "action": {
+        "close": "Закрыть",
+        "createStCard": "Создать ST Card",
+        "upscale": "Апскейл",
+        "edit": "Редактировать",
+        "apply": "Применить",
+        "cancel": "Отмена",
+        "add": "Добавить",
+        "clear": "Очистить",
+        "useSettings": "Использовать настройки",
+        "useRecipe": "Использовать рецепт",
+        "regenerate": "Регенерировать",
+        "sameSeed": "То же начальное значение",
+        "downloadMedia": "Загрузить носитель",
+        "copyPrompt": "Копировать приглашение",
+        "copyNegative": "Копировать отрицательный",
+        "copySeed": "Копировать начальное значение",
+        "copyMetadata": "Копировать метаданные",
+        "saveRecipe": "Сохранить рецепт",
+        "copyRecipe": "Копировать рецепт",
+        "exportRecipe": "Экспортировать рецепт",
+        "applyToImageStudio": "Применить в Image Studio",
+        "remixAmpGenerate": "Ремикс и создание",
+        "saveRemix": "Подсказка о сохранении ремикса",
+        "saveNote": "Сохранить заметку",
+        "clearParentLink": "Очистить родительскую ссылку"
+      },
+      "text": {
+        "delete": "Удалить",
+        "seed": "Сид",
+        "steps": "Шаги",
+        "view": "Просмотр",
+        "parameters": "Параметры",
+        "source": "Источник",
+        "style": "Стиль",
+        "cfg": "Конфигурация",
+        "aspect": "Формат",
+        "recipeCompatibility": "Совместимость рецептов",
+        "enhancedPrompt": "Расширенная подсказка",
+        "originalPrompt": "Исходная подсказка",
+        "remixPrompt": "Подсказка о создании ремикса",
+        "actions": "Действия",
+        "modelCapabilities": "Возможности модели",
+        "upscale": "масштабирование",
+        "edit": "редактирование",
+        "video": "видео",
+        "vision": "видение",
+        "tags": "Теги",
+        "parentid": "родительский идентификатор ="
+      },
+      "heading": {
+        "inspector": "Инспектор",
+        "prompt": "подсказка",
+        "parent": "Родительский",
+        "children": "Дочерние (",
+        "missingReferences": "Отсутствующие ссылки"
+      },
+      "description": {
+        "originalLdquo": "Оригинал: «",
+        "rdquo": "»",
+        "promptViaInternalLlm": "через внутренний LLM…",
+        "theseEndpointsAreRecognisedForTheSource": "Эти конечные точки распознаются для исходной модели. Они будут использоваться при повторном запуске той же операции с этим элементом.",
+        "noTagsYet": "Тегов пока нет."
+      }
+    },
+    "componentsGalleryMediaToolbar": {
+      "text": {
+        "refresh": "Обновить",
+        "project": "Проект",
+        "sort": "Сортировать",
+        "item": "элемент",
+        "selected": "выбран"
+      },
+      "action": {
+        "clear": "Очистить",
+        "compare": "Сравнить",
+        "export": "Экспорт",
+        "apply": "Применить",
+        "delete": "Удалить",
+        "selectAll": "Выбрать все",
+        "addTag": "Добавить тег",
+        "unstar": "Снять звездочку"
+      }
+    },
+    "componentsGenerationGenerationloadingindicator": {
+      "action": {
+        "cancel": "Отмена"
+      }
+    },
+    "componentsImageInspectorImageinspectorview": {
+      "heading": {
+        "imageInspector": "Инспектор изображений",
+        "analysisSummary": "Сводка анализа",
+        "replicationPrompt": "Запрос на репликацию",
+        "subjects": "Субъекты",
+        "imageBasedSourceSearch": "Поиск источника на основе изображений"
+      },
+      "action": {
+        "openFile": "Открыть файл",
+        "cancelAnalysis": "Отмена анализа",
+        "analyzeImage": "Анализ изображения"
+      },
+      "text": {
+        "noRecentImages": "Нет последних изображений.",
+        "openAFileToStartInspecting": "Откройте файл, чтобы начать проверку.",
+        "middot": "·",
+        "selectOrUploadAnImageToInspect": "Выберите или загрузите изображение для проверки.",
+        "visionModel": "Модель машинного зрения.",
+        "noVisionCapableModelsAvailableInCatalog": "В каталоге нет доступных моделей с функцией машинного зрения.",
+        "analysisDepth": "Глубина анализа.",
+        "promptTarget": "Цель подсказки.",
+        "specificInstructionsOptional": "Конкретные инструкции (необязательно)",
+        "negative": "Отрицательный результат:",
+        "directSourceImageMatchingIsUnavailableWith": "Прямое сопоставление источника и изображения невозможно при настроенном Google и контракты Brave. Их текущие API принимают текстовые запросы, а не проверяемые байты изображений. Поиск, генерируемый запросами, здесь отключен, поэтому результаты не искажаются как совпадения с обратным изображением.",
+        "legacyTextQueryResults": "Устаревшие результаты текстового запроса (",
+        "imageAnalysisFailed": "Не удалось выполнить анализ изображения.",
+        "analysisResultsWillAppearHere": "Здесь появятся результаты анализа."
+      }
+    },
+    "componentsImageImageTools": {
+      "text": {
+        "model": "Модель",
+        "sourceImage": "Исходное изображение",
+        "editPrompt": "Запрос на изменение",
+        "scale": "Масштаб",
+        "sourceAdherence": "Присоединение к источнику",
+        "veniceUpscalingDoesNotAcceptAText": "При масштабировании в Венеции не принимаются текстовые запросы. Для внесения изменений по подсказке переключитесь на «Редактировать».",
+        "result": "Результат"
+      },
+      "action": {
+        "download": "Скачать",
+        "openEdit": "Открыть редактирование",
+        "saveToMediaStudio": "Сохранить в Media Studio"
+      },
+      "description": {
+        "bytes": "байты",
+        "clickToUploadImage": "Нажмите, чтобы загрузить изображение.",
+        "higherValuesStayCloserToTheSource": "Более высокие значения остаются ближе к источнику; более низкие значения позволяют апскейлеру добавить больше текстуры и деталей."
+      }
+    },
+    "componentsImageImageView": {
+      "action": {
+        "cancel": "Отмена",
+        "clear": "Очистить",
+        "createStCard": "Создать ST Card",
+        "saveToLibrary": "Сохранить в библиотеке",
+        "useEnhancedPrompt": "Использовать расширенную подсказку",
+        "keepOriginal": "Сохранить исходный",
+        "switchTo": "Переключиться на",
+        "append": "Добавить",
+        "replace": "Заменить",
+        "randomize": "Случайно"
+      },
+      "text": {
+        "aspectRatio": "Соотношение сторон",
+        "resolution": "Разрешение",
+        "seed": "Сид",
+        "steps": "Шаги",
+        "prompt": "Подсказка",
+        "enhancedPromptPreview": "Расширенный предварительный просмотр подсказки",
+        "applyTemplate": "Применить шаблон:",
+        "positive": "Положительное:",
+        "negative": "Отрицательное:",
+        "doesNotSupportNegativePromptsTheTemplate": "не поддерживает отрицательные запросы. Шаблон остается в ожидании, и ваше текущее состояние приглашения не изменилось.",
+        "negativePrompt": "Отрицательное приглашение",
+        "quality": "Качество",
+        "style": "Стиль",
+        "variants": "Варианты"
+      },
+      "option": {
+        "addTemplate": "Добавить шаблон..."
+      },
+      "label": {
+        "useFixedSeed": "Использовать фиксированное начальное число"
+      }
+    },
+    "layoutApiKeyDialog": {
+      "action": {
+        "cancel": "Отмена",
+        "disconnect": "Отключите"
+      },
+      "heading": {
+        "connectToVenice": "Подключиться к Венеции"
+      },
+      "label": {
+        "veniceApiKey": "Венеция API ключ"
+      },
+      "description": {
+        "getAKeyAt": "Получите ключ по адресу"
+      }
+    },
+    "componentsLayoutInspectorPane": {
+      "text": {
+        "trafficInspector": "Инспектор трафика",
+        "status": "Статус:",
+        "error": "Ошибка",
+        "noRequestsCapturedYet": "Запросы еще не зафиксированы",
+        "sendChatOrGenerateImagesToInspect": "Отправьте чат или создайте изображения для проверки трафика.",
+        "guard": "защита:",
+        "time": "Время:",
+        "method": "Метод:",
+        "transport": "Транспорт:",
+        "outcome": "Результат:",
+        "guard4ba3843": "Защита:",
+        "preview": "Предварительный просмотр:",
+        "latency": "Задержка:",
+        "errorClass": "Класс ошибки:",
+        "localSafetyEvaluation": "Локальная оценка безопасности",
+        "mode": "Режим:",
+        "familySafeModeRendererEvaluated": "Семейный безопасный режим (оценивается средством рендеринга)",
+        "result": "Результат:",
+        "reasonCode": "Код причины:",
+        "adultModeLocalFilterSkipped": "Режим для взрослых (локальный фильтр пропущен)",
+        "electronMainProcessAuthoritative": "Авторитетный основной процесс Electron",
+        "theLocalFamilySafeGuardIsEnforced": "Локальная семейная безопасность обеспечивается основным процессом. Откройте журнал аудита, чтобы проверить каноническое решение.",
+        "action": "Действие:",
+        "signals": "Сигналы:",
+        "sourceQuot": "] источник: «",
+        "quotSeverity": "» (серьезность:",
+        "confidence": ", достоверность:",
+        "requestHeaders": "Заголовки запроса",
+        "requestBody": "Тело запроса",
+        "responseBody": "Тело ответа",
+        "selectARequestToViewDetails": "Выберите запрос для просмотра подробностей",
+        "noActiveConversationOpenAChatTo": "Нет активности Откройте чат, чтобы просмотреть слои подсказок.",
+        "active": "Активно:",
+        "source": "Источник:"
+      }
+    },
+    "componentsMusicMusicView": {
+      "text": {
+        "model": "Модель",
+        "voice": "Голос",
+        "download": "Скачать",
+        "prompt": "Подсказка",
+        "lyrics": "Текст",
+        "duration": "Продолжительность",
+        "instrumentalOnly": "Только инструментальная композиция",
+        "instrumental": "Инструментальная",
+        "customDuration": "Пользовательская длительность",
+        "output": "Выход",
+        "pressGenerateToCreateYourTrack": "Нажмите «Создать», чтобы создать свой трек."
+      },
+      "description": {
+        "duration": "Продолжительность:"
+      },
+      "option": {
+        "seconds": "секунд"
+      },
+      "action": {
+        "reset": "Сброс",
+        "generateAnother": "Создайте еще один"
+      }
+    },
+    "playgroundAgentModelPicker": {
+      "text": {
+        "noMatches": "Нет matches",
+        "rec": "Рек",
+        "recommended": "Рекомендуемые",
+        "tools": "Инструменты",
+        "reasoning": "Аргументация",
+        "vision": "Видение",
+        "web": "Интернет",
+        "uncensored": "Без цензуры"
+      }
+    },
+    "componentsPlaygroundPlaygroundView": {
+      "text": {
+        "playground": "Песочница",
+        "agent": "Агент",
+        "n": "н ·",
+        "running": "Выполняется…",
+        "openInWorkflows": "Открыть в рабочих процессах",
+        "open": "Открыть"
+      },
+      "action": {
+        "clear": "Очистить",
+        "run": "Выполнить."
+      },
+      "option": {
+        "editSavedWorkflow": "Редактировать сохраненный рабочий процесс…"
+      }
+    },
+    "componentsPlaygroundPreviewNode": {
+      "text": {
+        "done": "Готово",
+        "error": "Ошибка",
+        "running": "Выполняется…"
+      }
+    },
+    "componentsPrivacyStorageprivacydashboard": {
+      "action": {
+        "retry": "Повторить",
+        "copySafeSummary": "Сводная информация о безопасном копировании",
+        "exportJson": "Экспорт JSON",
+        "review": "Обзор"
+      },
+      "column": {
+        "status": "Статус",
+        "prompts": "Промпты",
+        "history": "История",
+        "store": "Магазин",
+        "items": "Предметы",
+        "flags": "Флаги",
+        "surface": "Поверхность",
+        "mediaBlobs": "Медиа-объекты",
+        "pathsAmpKeys": "Пути и ключи"
+      },
+      "heading": {
+        "failedToLoadStorageInventory": "Не удалось загрузить инвентарь хранилища.",
+        "storagePrivacy": "Хранение и конфиденциальность",
+        "detailedInventory": "Подробный инвентарь",
+        "referenceIssues": "Проблемы со ссылками",
+        "maintenancePlan": "План обслуживания",
+        "privacyExclusions": "Исключения конфиденциальности"
+      },
+      "description": {
+        "analyzingLocalStorage": "Анализ локального хранилища...",
+        "inspectAndManageLocalDataBoundaries": "Проверяйте границы локальных данных и управляйте ими.",
+        "differentSurfacesHaveDifferentRedactionBoundariesInspect": "Различные поверхности имеют разные границы редактирования. Изучите приведенную ниже таблицу истинности, прежде чем полагаться на нее при принятии решений об экспорте.",
+        "promptsAndHistoryAppearInEncryptedBackups": "Запросы и история отображаются в зашифрованных резервных копиях и папке синхронизации, поскольку оба они полностью зашифрованы с использованием парольной фразы, введенной пользователем. Медиа-объекты (изображения, файлы, ресурсы RP) требуют явного включения переключателя на панели «Резервное копирование и синхронизация» — по умолчанию исключено. Ключи API, токены-носители и абсолютные локальные пути никогда не записываются ни в какие сводки экспорта, синхронизации или диагностики."
+      },
+      "text": {
+        "encrypted": "Зашифровано",
+        "archived": "В архиве",
+        "secrets": "Секреты",
+        "userContent": "Пользовательский контент",
+        "sensitive": "Чувствительные",
+        "noStorageHealthIssuesDetected": "Проблем с работоспособностью хранилища не обнаружено.",
+        "source": "Источник:",
+        "target": "Цель:",
+        "destructive": "Разрушение",
+        "dryRun": "Пробный прогон",
+        "alwaysRedacted": "Всегда редактируется",
+        "included": "Включено",
+        "optInOnly": "Только по подписке",
+        "keysNeverExported": "Ключи никогда не экспортировались",
+        "keysNeverSynced": "Ключи никогда не синхронизировались"
+      },
+      "cell": {
+        "safePrivacySummary": "Сводка безопасной конфиденциальности",
+        "safeDiagnosticsJson": "Безопасная диагностика JSON",
+        "encryptedBackup": "Зашифрованное резервное копирование",
+        "syncFolder": "Папка синхронизации"
+      }
+    },
+    "componentsPromptsPromptcreatemodal": {
+      "option": {
+        "project": "Проект",
+        "global": "Глобальный",
+        "selectAProject": "Выберите проект"
+      },
+      "action": {
+        "cancel": "Отмена",
+        "createPrompt": "Создать подсказку"
+      },
+      "label": {
+        "title": "Название *",
+        "kind": "Вид *",
+        "scope": "Область действия *",
+        "project": "Проект *",
+        "tags": "Теги",
+        "content": "Контент *",
+        "negativeContent": "Отрицательный контент"
+      },
+      "description": {
+        "commaSeparatedUpTo64TagsAnd": "Разделяются запятыми; до 64 тегов и 64 символов в каждом теге."
+      }
+    },
+    "componentsPromptsPromptlibraryview": {
+      "heading": {
+        "promptLibrary": "Библиотека промптов"
+      },
+      "action": {
+        "archive": "Архивировать",
+        "copy": "Копировать",
+        "delete": "Удалить",
+        "cancel": "Отмена",
+        "new": "Новое",
+        "favorites": "★ Избранное",
+        "useInImageStudio": "Использование в Image Studio",
+        "useInChat": "Использование в чате",
+        "createWorkflow": "Создание истории рабочего процесса",
+        "history": "(",
+        "useThisVersion": "Используйте эту версию"
+      },
+      "description": {
+        "loading": "Загрузка…",
+        "noSavedPromptsYet": "Сохраненных подсказок пока нет.",
+        "clickThe": "Нажмите кнопку",
+        "buttonAboveToCreateYourFirstPrompt": "выше, чтобы создать первое приглашение."
+      },
+      "text": {
+        "new": "Создать",
+        "version": "версия",
+        "created": "· Создано",
+        "updated": "· Обновлено",
+        "current": "ТЕКУЩИЙ"
+      },
+      "label": {
+        "content": "Содержимое",
+        "negativeContent": "Негативный контент"
+      }
+    },
+    "componentsResearchResearchworkspaceview": {
+      "heading": {
+        "research": "Исследования",
+        "sources": "Источники (",
+        "addFinding": "Добавить результат",
+        "findings": "Результаты ("
+      },
+      "action": {
+        "newResearchSession": "Новая исследовательская сессия",
+        "createWorkflow": "Создать рабочий процесс",
+        "saveSummary": "Сохранить сводку",
+        "saveFinding": "Сохранить поиск"
+      },
+      "text": {
+        "sources": "источники •",
+        "findings": "выводы"
+      },
+      "description": {
+        "research": "исследование",
+        "selectAResearchSessionOrCreateA": "Выберите сеанс исследования или создайте новый, чтобы начать."
+      },
+      "label": {
+        "searchQuery": "Поисковый запрос",
+        "scrapeUrl": "Очистить URL",
+        "findingTitle": "Поиск названия",
+        "findingContent": "Поиск контента"
+      }
+    },
+    "componentsRpStudioAssetgallery": {
+      "action": {
+        "deletef6fdbe4": "Удалить",
+        "delete": "Удалить?"
+      },
+      "text": {
+        "loadingAssets": "Загрузка ресурсов…",
+        "noImage": "нет изображения",
+        "model": "Модель:",
+        "seed": "Начальное значение:",
+        "negative": "Отрицательное:",
+        "created": "Создано:",
+        "closePreview": "Закрыть предварительный просмотр",
+        "clickAnAssetToPreview": "Щелкните актив для просмотра"
+      }
+    },
+    "componentsRpStudioCharacterbookeditor": {
+      "text": {
+        "remove": "Удалить",
+        "bookName": "Имя книги",
+        "description": "Описание",
+        "scanDepth": "Глубина сканирования",
+        "tokenBudget": "Бюджет токена",
+        "entries": "Записи (",
+        "addEntry": "Добавить запись",
+        "entry": "Запись",
+        "name": "Имя",
+        "primaryKeysCommaSeparated": "Первичные ключи (разделенные запятой)",
+        "secondaryKeys": "Вторичные ключи",
+        "comment": "Комментарий",
+        "content": "Содержимое",
+        "insertionPosition": "Позиция вставки",
+        "insertionOrder": "Порядок вставки",
+        "priority": "Приоритет",
+        "moveUp": "Вверх",
+        "moveDown": "Вниз"
+      },
+      "description": {
+        "enterAValidJsonObject": "Введите действительный объект JSON"
+      },
+      "label": {
+        "recursiveScanning": "Рекурсивное сканирование."
+      },
+      "option": {
+        "beforeCharacter": "Перед символом",
+        "afterCharacter": "После символа"
+      }
+    },
+    "componentsRpStudioCharactereditor": {
+      "text": {
+        "delete": "Удалить",
+        "save": "Сохранить",
+        "add": "Добавить",
+        "scenario": "Сценарий",
+        "next": "Далее",
+        "webSearch": "Веб-поиск",
+        "temperature": "Температура",
+        "view": "Просмотр",
+        "cancel": "Отмена",
+        "close": "Закрыть",
+        "characterNotFound": "Символ не найден",
+        "estimatedTokens": "Предполагаемые токены:",
+        "rawEstimate": "Необработанная оценка",
+        "outputReserve": "· Выходной резерв",
+        "editWithCharacterCreator": "Редактировать с помощью редактора персонажей",
+        "characterVersion": "Версия персонажа",
+        "importSource": "Источник импорта",
+        "name": "Имя",
+        "author": "Автор",
+        "adultContent18": "Контент для взрослых (18+)",
+        "description": "Описание",
+        "creatorNotes": "Заметки автора",
+        "tags": "Теги",
+        "personality": "Личность",
+        "systemPrompt": "Системная подсказка",
+        "approachingSystemPromptSizeLimit": "Приближается размер системного подсказки (",
+        "postHistoryInstructions": "Инструкции после истории",
+        "instructions": "Инструкции",
+        "firstMessagePrimaryGreeting": "Первое сообщение (Основное приветствие)",
+        "alternateGreetings": "Альтернативные приветствия",
+        "addGreeting": "Добавить приветствие",
+        "greetingPreview": "Предварительный просмотр приветствия",
+        "previous": "Предыдущий",
+        "exampleDialogues": "Примеры диалогов",
+        "updateRawPreview": "Обновить необработанный предварительный просмотр",
+        "addExample": "Добавить пример",
+        "noExamplesAddAFewShotExchange": "Никаких примеров не добавить.",
+        "speakerRequired": "Требуется динамик.",
+        "rawExampleDialogue": "Необработанный пример диалога",
+        "v2ExtensionData": "Данные расширения V2",
+        "characterBook": "Книга персонажей",
+        "createEmbeddedBook": "Создать встроенную книгу",
+        "removeEmbeddedBook": "Удалить встроенную книгу",
+        "attachExistingLorebook": "Прикрепить существующую книгу знаний",
+        "importEmbeddedAsLinked": "Импортировать встроенную как ссылку",
+        "syncIntoEmbedded": "Синхронизировать со встроенной",
+        "detachPreserveEmbedded": "Отсоединить (сохранить встроенную)",
+        "defaultModel": "Модель по умолчанию",
+        "specialSettings": "Специальные настройки",
+        "urlScrapingProvider": "URL Поставщик парсинга",
+        "enableThoughts": "Включить мысли",
+        "topP": "Top P",
+        "sourcedContextFiles": "Файлы исходного кода и контекста",
+        "noSourcedOrContextFilesUploaded": "Исходные файлы и контекстные файлы не загружены.",
+        "reApply": "Повторно применить",
+        "disposableTestChat": "Одноразовый тестовый чат.",
+        "promptOrderTrace": "Отслеживание порядка подсказок",
+        "testUserMessage": "Тестовое сообщение пользователя",
+        "unsavedModelResponse": "Несохраненный ответ модели",
+        "saveAsRealConversation": "Сохранить как реальный разговор",
+        "resetTest": "Сбросить тест",
+        "cardGenerationModel": "Модель создания карты",
+        "visionAnalysisModel": "Модель визуального анализа",
+        "localImageAsset": "Локальный ресурс изображения",
+        "textConcept": "Концепция текста",
+        "visionCapableProvider": "Поддержка Vision · поставщик",
+        "contextTokensRequestImage": "токены контекста · запрос изображение ~",
+        "textGenerationProfile": "Профиль генерации текста",
+        "contentRating": "Рейтинг контента",
+        "detailLevel": "Уровень детализации",
+        "customGenerationDirection": "Пользовательское направление создания",
+        "visualAnalysis": "Визуальный анализ:",
+        "generatedV2Draft": "Созданный черновик версии 2:",
+        "applyToLocalDraft": "Применить к локальному черновику",
+        "reject": "Отклонить",
+        "generateFieldProposal": "Создать предложение поля",
+        "before": "До",
+        "after": "После",
+        "applyProposal": "Применить предложение",
+        "aiRefinementAssistant": "Помощник по уточнению AI",
+        "before842beb5": "До:",
+        "after13f2d65": "После:",
+        "applySelected": "Применить выбранное",
+        "selectAll": "Выбрать все",
+        "cardValidation": "Проверка карты",
+        "formatValidAndRecommendedFieldsComplete": "Отформатировать действительные и рекомендуемые поля заполнено.",
+        "stCardExport": "ST Экспорт карты",
+        "exportV2Json": "Экспорт V2 JSON",
+        "exportV2Png": "Экспорт V2 PNG",
+        "exportPrivacyReducedJson": "Экспорт с ограниченным доступом к конфиденциальности JSON",
+        "validation": "Проверка",
+        "roundTripVerified": "Двусторонняя проверка",
+        "output": "Выходные данные",
+        "bytes": "байты",
+        "v2Fields": "Поля V2",
+        "extensions": "Расширения",
+        "embeddedLoreEntries": "Встроенные записи истории",
+        "droppedLocalOnlyFields": "Удалены локальные поля",
+        "warnings": "Предупреждения",
+        "versionHistory": "История версий",
+        "saveVersion": "Сохранить версию",
+        "current": "(текущую)",
+        "noVersionsSavedSaveAVersionTo": "Версии не сохранены. Сохраните версию, чтобы отслеживать изменения.",
+        "versionComparison": "Сравнение версий",
+        "saved": "Сохранено",
+        "current4fc0e2b": "Текущий",
+        "workflow": "Рабочий процесс",
+        "scene": "Сцена:",
+        "prompt": "Подсказка:",
+        "reApplyTo": "Повторно применить к",
+        "savingCharacter": "Сохранение персонажа…"
+      },
+      "action": {
+        "remove": "Удалить",
+        "compare": "Сравнить",
+        "chat": "Чат",
+        "allSteps": "Все шаги",
+        "avatar": "аватар",
+        "setPrimary": "Установить основной",
+        "duplicate": "Дублировать",
+        "down": "Вниз",
+        "restore": "Восстановить",
+        "saveToPromptLibrary": "Сохранить в библиотеке подсказок",
+        "startRpChat": "Запустить RP-чат",
+        "createScenarioFromCharacter": "Создать сценарий из персонажа",
+        "createWorkflow": "Создать рабочий процесс",
+        "previous": "← Предыдущая (",
+        "viewAllSteps": "Просмотреть все шаги",
+        "next": "Далее:"
+      },
+      "option": {
+        "off": "Выключено",
+        "generate": "Генерация",
+        "chooseLorebook": "Выбрать книгу знаний…",
+        "useChatDefault": "Использовать чат по умолчанию",
+        "brave": "Храбрый",
+        "google": "Гугл",
+        "noCompatibleLiveModel": "Нет совместимой активной модели",
+        "vision": "· видение ·",
+        "context": "контекст",
+        "chooseMediaStudioImage": "Выберите изображение Media Studio…",
+        "general": "Общий",
+        "mature": "Для взрослых",
+        "adult": "Для взрослых",
+        "attachScene": "Прикрепить сцену…",
+        "attachPrompt": "Прикрепить подсказку…"
+      },
+      "label": {
+        "loadFileTxtMd": "Загрузить файл (.txt, .md)",
+        "uploadFileMax5mb": "Загрузить файл (макс. 5 МБ)"
+      },
+      "description": {
+        "localCharacterStoredInVeniceForgeNot": "Локальный символ — хранится в Venice Forge, не размещается на Venice.ai.",
+        "embeddedDataIsPortableInV2Exports": "Встроенные данные переносимы при экспорте V2. Связанные книги знаний остаются локальными и синхронизируются со встроенной копией только по вашему запросу.",
+        "filesLoadedIntoPersonalitySystemPromptInstructions": "Файлы, загруженные в персональные данные, системные приглашения, инструкции или прикрепленные в качестве общего контекста, хранятся непосредственно внутри этой карты персонажа.",
+        "runsOneUnsavedTurnTheResponseNever": "Проходит один несохраненный ход. Ответ никогда не изменяет эту карту и не становится автоматически примером диалога.",
+        "estimatedSystemPrompt": "Предполагаемая системная подсказка:",
+        "tokensActivatedLorebookSections": "жетоны · активированные разделы книги знаний:",
+        "analysisAndGeneratedCardsRemainProposalsYour": "Анализ и сгенерированные карты остаются предложениями. Ваш текущий черновик сохраняется до тех пор, пока вы явно не примените его.",
+        "producesAnAllowlistedProposalOnlyNothingChanges": "Создает только предложение из белого списка. Ничего не изменится, пока вы не примените это."
+      },
+      "heading": {
+        "1SourceAvatar": "1. Источник и аватар",
+        "2Identity": "2. Личность",
+        "3Persona": "3. Персона",
+        "4PromptBehavior": "4. Поведение подсказки",
+        "5Greetings": "5. Приветствия",
+        "6ExampleDialogue": "6. Пример диалога",
+        "7CharacterBookExtensions": "7. Книга персонажей и расширения",
+        "8ModelAndContext": "8. Модель и контекст",
+        "9TestAiRefinement": "9. Тестирование и доработка ИИ",
+        "aiDraftGeneration": "Генерация черновика ИИ",
+        "10ExportWorkflow": "10. Экспорт и рабочий процесс"
+      },
+      "item": {
+        "tokens": "жетоны"
+      }
+    },
+    "componentsRpStudioCharacterlibrary": {
+      "text": {
+        "characterCreator": "Создатель персонажей",
+        "createStCard": "Создать ST Card",
+        "close": "Закрыть",
+        "delete": "Удалить",
+        "cancel": "Отмена",
+        "buildCharacter": "Создать персонажа",
+        "drafts": "Черновики (",
+        "importCard": "Карта импорта",
+        "characterImportChangedAnExistingCard": "Импорт персонажа изменил существующую карту.",
+        "undoImport": "Отменить импорт",
+        "updated": "Обновлено.",
+        "resume": "Возобновить",
+        "loadingCharacters": "Загрузка персонажей…",
+        "createYourFirstCharacter": "Создайте своего первого персонажа",
+        "name": "Имя",
+        "format": "Формат",
+        "creator": "Создатель",
+        "greetings": "Приветствие",
+        "loreEntries": "Записи истории",
+        "extensions": "Расширения",
+        "characterBook": "Книга персонажей",
+        "aMatchingCardAlreadyExistsChooseAn": "Соответствующая карточка уже существует. Выберите явное разрешение; ничего не перезаписывается молча.",
+        "fieldsToMerge": "Поля для объединения",
+        "keepExisting": "Сохранить существующие",
+        "mergeFields": "Объединить поля",
+        "replace": "Заменить",
+        "createCopy": "Создать копию"
+      },
+      "action": {
+        "chat": "Чат",
+        "edit": "Редактировать",
+        "delete": "Удалить?",
+        "exportJson": "Экспорт JSON",
+        "exportPng": "Экспорт PNG"
+      },
+      "description": {
+        "localCharactersAreStoredInVeniceForge": "Локальные символы хранятся только в Venice Forge. Они не размещены на Venice.ai.",
+        "draftsAreEncryptedLocallyExcludedFromSync": "Черновики шифруются локально, исключаются из синхронизации и не отображаются как активные персонажи до тех пор, пока не будут сохранены.",
+        "noRecoverableDrafts": "Черновиков, которые можно восстановить, нет.",
+        "nothingIsSavedUntilYouConfirmThis": "Ничего не сохраняется, пока вы не подтвердите этот предварительный просмотр."
+      },
+      "heading": {
+        "localStCardDrafts": "Локальные ST Черновики карточек",
+        "reviewCharacterImport": "Просмотрите импорт персонажей"
+      },
+      "option": {
+        "embeddedLinkedRecommended": "Встроенный + связанный (рекомендуется)",
+        "linkedOnly": "Только связанный",
+        "embeddedOnly": "Только встроенный",
+        "doNotImportBook": "Не импортировать книгу."
+      },
+      "label": {
+        "setAsFavorite": "Установить в избранное.",
+        "startRpChatAfterImport": "Запустить чат RP после импорта."
+      }
+    },
+    "componentsRpStudioLorebookmanager": {
+      "action": {
+        "edit": "Редактировать",
+        "delete": "Удалить?"
+      },
+      "text": {
+        "save": "Сохранить",
+        "newLorebook": "Новая книга знаний",
+        "loading": "Загрузка…",
+        "lorebookNotFound": "Книга знаний не найдена.",
+        "name": "Имя",
+        "tagsCommaSeparated": "Теги (через запятую)",
+        "description": "Описание",
+        "entries": "Записи",
+        "addEntry": "Добавить запись",
+        "noEntriesYet": "Пока нет записей."
+      },
+      "label": {
+        "enabled": "включено",
+        "always": "всегда",
+        "wholeWords": "целые слова"
+      }
+    },
+    "componentsRpStudioPersonamanager": {
+      "text": {
+        "active": "Активно",
+        "save": "Сохранить",
+        "add": "Добавить",
+        "newPersona": "Новый персонаж",
+        "loadingPersonas": "Загрузка персонажей…",
+        "personaNotFound": "Персона не найдена.",
+        "personaImage": "Изображение персонажа",
+        "removeImage": "Удалить изображение",
+        "name": "Имя",
+        "referenceThirdPerson": "Ссылка (от третьего лица)",
+        "description": "Описание",
+        "tags": "Теги"
+      },
+      "action": {
+        "edit": "Редактировать",
+        "delete": "Удалить?"
+      },
+      "label": {
+        "loadFromFileTxtMd": "Загрузка из файла (.txt, .md)"
+      }
+    },
+    "componentsRpStudioPromptdebugdrawer": {
+      "text": {
+        "close": "Закрыть",
+        "chars": "символы ·",
+        "excluded": "исключено:",
+        "noRecentMessages": "Нет последних сообщений."
+      },
+      "heading": {
+        "promptTrace": "Трассировка подсказки"
+      }
+    },
+    "componentsRpStudioRpchatlist": {
+      "text": {
+        "cancel": "Отмена",
+        "create": "Создать",
+        "model": "Модель",
+        "characters": "Персонажи",
+        "newRpChat": "Новый чат RP",
+        "loadingChats": "Загрузка чатов…",
+        "startYourFirstRp": "Начните свой первый RP",
+        "title": "Название",
+        "openingGreeting": "Вступительное приветствие",
+        "noCharactersYetCreateOneInThe": "Символов пока нет — создайте их на вкладке «Символы».",
+        "personaOptional": "Персона (необязательно)",
+        "lorebooks": "Книги знаний",
+        "scenarioOverride": "Переопределение сценария"
+      },
+      "action": {
+        "open": "Открыть",
+        "delete": "Удалить?"
+      },
+      "heading": {
+        "newRpChat": "Новый чат RP"
+      },
+      "option": {
+        "usePrimaryGreeting": "Использовать основное приветствие",
+        "alternateGreeting": "Альтернативное приветствие",
+        "randomGreeting": "Случайное приветствие",
+        "startWithoutGreeting": "Начать без приветствия",
+        "noPersona": "Нет персоны"
+      }
+    },
+    "componentsRpStudioRpstudioview": {
+      "text": {
+        "rpStudio": "Студия ролевых игр",
+        "localConfigIsStillLoadingRpStudio": "Локальная конфигурация все еще загружается. Элементы управления сохранением в RP Studio временно недоступны до тех пор, пока не будет гидратирован снимок настроек безопасности.",
+        "loadingStCardStudio": "Загрузка ST Card Studio…"
+      }
+    },
+    "componentsRpStudioScenegenerator": {
+      "text": {
+        "chat": "Чат",
+        "seed": "Сид",
+        "imageModel": "Модель изображения",
+        "prompt": "Подсказка",
+        "extracted": "Извлечено:",
+        "negativePrompt": "Отрицательная подсказка",
+        "generateScene": "Создать сцену",
+        "recentScenes": "Последние сцены",
+        "noScenesYet": "Сцен пока нет.",
+        "noImage": "нет изображения"
+      },
+      "option": {
+        "selectAChat": "Выберите чат…"
+      }
+    },
+    "componentsScenesScenecomposerview": {
+      "heading": {
+        "sceneComposer": "Компоновщик сцен",
+        "components": "Компоненты ("
+      },
+      "option": {
+        "project": "Проект",
+        "allScopes": "Все области",
+        "global": "Глобальный",
+        "newest": "Самый новый",
+        "oldest": "Самый старый",
+        "title": "Название",
+        "favorite": "Избранное"
+      },
+      "action": {
+        "archive": "Архивировать",
+        "remove": "Удалить",
+        "delete": "Удалить",
+        "cancel": "Отмена",
+        "new": "Новый",
+        "favorites": "★ Избранное",
+        "restore": "Восстановить",
+        "saveMetadata": "Сохранить метаданные",
+        "add": "+ Добавить",
+        "saveNewVersion": "Сохранить новую версию",
+        "useInImageStudio": "Использовать в Image Studio",
+        "copyRecipe": "Скопировать рецепт",
+        "createWorkflow": "Создать историю рабочего процесса",
+        "history": "(",
+        "useThisVersion": "Использовать эту версию"
+      },
+      "description": {
+        "loading": "Загрузка…",
+        "noComponentsYetClickAddToBegin": "Компонентов пока нет. Нажмите «+ Добавить», чтобы начать создание."
+      },
+      "text": {
+        "version": "версия",
+        "component": "компонент",
+        "created": "· Создано",
+        "updated": "· Обновлено",
+        "current": "ТЕКУЩАЯ"
+      },
+      "label": {
+        "defaults": "По умолчанию:"
+      }
+    },
+    "componentsSearchProfilediscoverytab": {
+      "action": {
+        "cancel": "Отмена"
+      },
+      "heading": {
+        "publicProfileDiscovery": "Обнаружение общедоступных профилей",
+        "discoveredProfileCandidates": "Обнаруженные кандидаты по профилю"
+      },
+      "description": {
+        "aggregatesSocialProfileMappingsFromPublicDatabases": "Объединяет сопоставления социальных профилей из общедоступных баз данных (GitHub, Twitter, LinkedIn и т. д.) с помощью Venice веб-интеграция"
+      },
+      "label": {
+        "platformsToSearch": "Платформы для поиска"
+      },
+      "text": {
+        "candidates": "Кандидаты",
+        "confidence": "уверенность"
+      }
+    },
+    "componentsSearchScrapetab": {
+      "action": {
+        "copy": "Копировать"
+      },
+      "heading": {
+        "webScrape": "Веб-очистка"
+      },
+      "option": {
+        "veniceWebScrape": "Венецианская веб-очистка",
+        "jinaReader": "Джина Ридер"
+      }
+    },
+    "componentsSearchSearchscrapeview": {
+      "heading": {
+        "research": "Исследования"
+      },
+      "description": {
+        "searchScrapeCollectEvidenceAndSynthesizeFindings": "Поиск, очистка, сбор доказательств и обобщение результатов."
+      }
+    },
+    "componentsSearchSearchtab": {
+      "heading": {
+        "webSearch": "Веб-поиск"
+      },
+      "option": {
+        "jinaSearch": "Jina Поиск",
+        "braveSearchVenice": "Brave Search (Венеция)",
+        "googleSearchVenice": "Поиск в Google (Венеция)"
+      },
+      "action": {
+        "scrapeWithVenice": "Ссора с Венецией",
+        "readWithJina": "Чтение с Джиной",
+        "saveToSession": "Сохранить в сеансе"
+      },
+      "text": {
+        "noSearchResultsYet": "Результаты поиска пока отсутствуют"
+      }
+    },
+    "componentsStatusDiagnosticsdrawer": {
+      "action": {
+        "close": "Закрыть",
+        "openPrivacyDashboard": "Открыть панель конфиденциальности",
+        "copySafeDiagnostics": "Копировать безопасную диагностику",
+        "openStatus": "Открытый статус",
+        "openConfig": "Открытая конфигурация",
+        "jumpToModel": "Перейти к модели"
+      },
+      "heading": {
+        "diagnostics": "Диагностика"
+      },
+      "description": {
+        "appHealthModelCatalogStorageSafetyAnd": "Состояние приложения, каталог моделей, хранилище, безопасность и состояние поставщика.",
+        "lastRefresh": "последнее обновление:",
+        "lastRefreshError": "Ошибка последнего обновления:",
+        "webModeFilesystemRevealsAndTheSystem": "Веб-режим: файловая система, раскрытие и системная оболочка недоступны. Некоторые функции только для рабочего стола (маршрутизация звука, локальная конфигурация YAML) отключены.",
+        "phase2cShipsReadOnlyDiagnosticsDestructive": "Фаза 2C предоставляет диагностику только для чтения. Деструктивный ремонт (сброс ключей, очистка хранилища, удаление всех данных) выходит за рамки и находится на отдельных вкладках."
+      },
+      "text": {
+        "copiedAt": ", скопированную в",
+        "includeRedactedPromptExcerptsInSafeDiagnostics": "Включить отредактированные выдержки из подсказок в безопасную диагностику.",
+        "truncated80CharsAndSecretStrippedPrompt": "Усеченные (<80 символов) и секретные фрагменты подсказок из библиотеки подсказок. По умолчанию выключено."
+      }
+    },
+    "componentsStatusHeaderstatuscluster": {
+      "action": {
+        "status": "Статус"
+      }
+    },
+    "componentsStatusTaskcenterdrawer": {
+      "action": {
+        "cancel": "Отмена",
+        "retry": "Повторить",
+        "clear": "Очистить",
+        "open": "Открыть"
+      },
+      "heading": {
+        "taskCenter": "Центр задач",
+        "generation": "поколение"
+      },
+      "description": {
+        "recentBackgroundGenerations": "Недавние фоновые генерации",
+        "noRecentTasks": "Недавних задач нет."
+      },
+      "text": {
+        "cancellationUnavailable": "Отмена невозможна"
+      }
+    },
+    "componentsUiShared": {
+      "text": {
+        "working": "Выполняется…"
+      },
+      "action": {
+        "shuffle": "Перемешать"
+      }
+    },
+    "componentsVideoVideoView": {
+      "text": {
+        "model": "Модель",
+        "resolution": "Разрешение",
+        "generationMode": "Режим генерации",
+        "prompt": "Подсказка",
+        "negativePrompt": "Отрицательный запрос",
+        "referenceImage": "Справочное изображение",
+        "duration": "Продолжительность",
+        "aspect": "Формат",
+        "generateAudio": "Создать аудио",
+        "output": "Вывод",
+        "generatedVideosAppearHere": "Сгенерированные видео появятся здесь",
+        "averageGenerationTime30s2min": "Среднее время создания: 30 с–2 минуты"
+      },
+      "action": {
+        "download": "Скачать",
+        "textToVideo": "Текст в видео",
+        "imageToVideo": "Изображение в видео",
+        "reset": "Сбросить",
+        "generateAnother": "Создать другое"
+      },
+      "description": {
+        "clickToAddImage": "Нажмите, чтобы добавить изображение"
+      }
+    },
+    "componentsWorkflowsWorkflowtemplatesview": {
+      "heading": {
+        "workflows": "Рабочие процессы",
+        "steps": "Шаги",
+        "compilePreview": "Предварительный просмотр компиляции",
+        "runPlan": "План выполнения"
+      },
+      "label": {
+        "import": "Импорт",
+        "workflowTitle": "Название рабочего процесса",
+        "workflowTags": "Теги рабочего процесса",
+        "version": "Версия:"
+      },
+      "action": {
+        "export": "Экспорт",
+        "archive": "Архивировать",
+        "delete": "Удалить",
+        "remove": "Удалить",
+        "new": "Новое",
+        "addNewVersion": "Добавить новую версию",
+        "addStep": "Добавить шаг"
+      },
+      "text": {
+        "noWorkflowsFound": "Рабочие процессы не найдены.",
+        "selectOrCreateAWorkflowToBegin": "Чтобы начать, выберите или создайте рабочий процесс.",
+        "workflowIsValid": "Рабочий процесс действителен.",
+        "workflowHasErrors": "В рабочем процессе есть ошибки.",
+        "noRunnableActions": "Нет выполняемых действий."
+      }
+    },
+    "componentsDiagnosticspreview": {
+      "text": {
+        "noRequestsYet": "запросов пока нет",
+        "cfRay": "CF-RAY"
+      }
+    },
+    "componentsErrorboundary": {
+      "heading": {
+        "somethingWentWrong": "Что-то пошло не так."
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "Приложение обнаружило непредвиденную ошибку и не смогло отобразить это представление. Ваша работа в безопасности — попробуйте еще раз или перезагрузите компьютер, чтобы восстановиться."
+      },
+      "action": {
+        "tryAgain": "Повторите попытку",
+        "reloadApplication": "Перезагрузите приложение"
+      }
+    },
+    "componentsModelselect": {
+      "text": {
+        "highFidelity": "Высокое качество",
+        "standard": "Стандартное",
+        "anon": "Анонимное",
+        "private": "Частное"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorcompleted": {
+      "heading": {
+        "characterCreated": "Созданный персонаж"
+      },
+      "description": {
+        "hasBeenSavedToYourLocalCharacter": "\"был сохранен в вашей локальной библиотеке символов."
+      },
+      "text": {
+        "startChat": "Начать чат",
+        "viewCharacter": "Просмотр персонажа",
+        "continueEditing": "Продолжить редактирование",
+        "exportCard": "Экспортировать карту",
+        "createAnother": "Создать другого"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorgenerating": {
+      "heading": {
+        "generatingCharacterDraft": "Создание черновика персонажа"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorready": {
+      "text": {
+        "charaCardV2": "chara_card_v2",
+        "errorsMustResolve": "Ошибки (необходимо устранить)",
+        "warningsOptional": "Предупреждения (необязательно)",
+        "returnToDraft": "Вернуться к черновику",
+        "saveAsCopy": "Сохранить как Копировать"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorview": {
+      "text": {
+        "autosaveFailed": "Не удалось выполнить автосохранение:"
+      },
+      "action": {
+        "retrySave": "Повторить попытку сохранения."
+      },
+      "description": {
+        "savingCharacterToLocalLibrary": "Сохранение персонажа в локальную библиотеку..."
+      }
+    },
+    "componentsChatChatInput": {
+      "action": {
+        "stop": "Остановить"
+      }
+    },
+    "componentsDocumentsDocumentrenderer": {
+      "text": {
+        "documentIsEmpty": "Документ пуст.",
+        "pageBreak": "Разрыв страницы"
+      }
+    },
+    "componentsGalleryLineageViewer": {
+      "text": {
+        "cycleDetectedInTheLineageChainShowing": "Цикл обнаружен в цепочке происхождения — показано усеченное представление.",
+        "someLineageReferencesAreMissingFromThe": "Некоторые в загруженном наборе",
+        "cycle": "отсутствуют ссылки на происхождение:",
+        "missing": "(отсутствует)"
+      },
+      "description": {
+        "noLineageRecorded": "Родословная не записана."
+      }
+    },
+    "componentsGalleryRecipeComparison": {
+      "text": {
+        "recipeComparison": "Сравнение рецептов"
+      },
+      "column": {
+        "field": "Поле",
+        "original": "Оригинал",
+        "sanitized": "Санитарно"
+      }
+    },
+    "galleryRecipeCompatibilityCard": {
+      "text": {
+        "thisItemHasNoRecipeToCompare": "У этого предмета нет рецепта для сравнения с текущей моделью",
+        "for": "для",
+        "unsupportedField": "неподдерживаемого поля"
+      },
+      "action": {
+        "useWith": "Используйте с",
+        "useOriginal": "Используйте оригинал."
+      }
+    },
+    "componentsLayoutHeader": {
+      "text": {
+        "tasks": "Задачи"
+      }
+    },
+    "componentsLayoutMemoryPanel": {
+      "heading": {
+        "legacyConversationsDetected": "Обнаружены устаревшие разговоры",
+        "encryptedConversationVault": "Зашифрованное хранилище диалогов",
+        "maintenanceOperations": "Операции по техническому обслуживанию",
+        "curatedFacts": "Кураторские факты ("
+      },
+      "description": {
+        "weFoundUnencryptedConversationRecordsFromA": "Мы обнаружили незашифрованные записи разговоров из предыдущей установки. Перенесите их в новое безопасное хранилище прямо сейчас.",
+        "configureMemoryParametersAndLocalIndexingStructures": "Настроить параметры памяти и локальные структуры индексации. Записи хранилища и индекс в состоянии покоя полностью зашифрованы.",
+        "allowsTheVaultToAnalyzeAndExtract": "Позволяет хранилищу анализировать и извлекать факты из новых тем.",
+        "pullsRelevantHistoryFactsDynamicallyToHelp": "Динамическое извлечение соответствующих исторических фактов для помощи в будущих подсказках.",
+        "displaysAPreviewBoxAboveTheChat": "Отображает окно предварительного просмотра над вводом в чате, позволяющее сократить количество фактов.",
+        "transmitsSummaryMaterialToVeniceModelFor": "Передача сводных материалов в модель Венеции для лучшего обнаружения фактов.",
+        "lastIndexedAt": "Последняя индексация:",
+        "theseAreTheKeyFactsExtractedLocally": "Это ключевые факты, извлеченные локально из истории ваших разговоров."
+      },
+      "action": {
+        "openFolder": "Открыть папку",
+        "openVaultFolder": "Открыть папку хранилища",
+        "forget": "Забыть"
+      },
+      "label": {
+        "enableConversationRecording": "Включить запись разговоров.",
+        "enableMemoryRetrieval": "Включить извлечение памяти.",
+        "showPulledContextBeforeSending": "Показывать извлеченный контекст перед отправкой.",
+        "useAiSummaries": "Использование сводок AI."
+      },
+      "text": {
+        "noFactsStoredYet": "Факты еще не сохранены.",
+        "source": "Источник:",
+        "confidence": "• Уверенность:"
+      }
+    },
+    "componentsPlaygroundPlaygroundChat": {
+      "text": {
+        "whatShouldIBuild": "Что мне следует создать",
+        "describeAWorkflowInPlainLanguageI": "Опишите? рабочий процесс простым языком я соберу его на холсте в режиме реального времени",
+        "noMessage": "(нет сообщения)",
+        "patch": "патч",
+        "applied": "применен"
+      },
+      "action": {
+        "stop": "Остановить",
+        "send": "Отправить"
+      }
+    },
+    "componentsPlaygroundWorkflowPreview": {
+      "description": {
+        "noWorkflowYet": "Пока нет рабочего процесса.",
+        "tellTheAgentWhatYouWantTo": "Сообщите агенту, что вы хотите построить — он соберет здесь конвейер в реальном времени."
+      }
+    },
+    "componentsRpStudioRpchatview": {
+      "heading": {
+        "chatNotFound": "Чат не найден"
+      },
+      "description": {
+        "theConversationYouReLookingForDoesn": "Разговор, который вы ищете, не существует или был удален."
+      },
+      "text": {
+        "scene": "Сцена",
+        "inspector": "Инспектор",
+        "startTheRoleplayBySendingAMessage": "Начните ролевую игру, отправив сообщение.",
+        "thinking": "Думаю…",
+        "speaker": "Спикер:",
+        "send": "Отправить"
+      },
+      "action": {
+        "narrator": "Диктор"
+      }
+    },
+    "componentsSearchAiresearchtab": {
+      "heading": {
+        "deepAiResearchAgent": "Глубокий. Агент AI Research Agent"
+      },
+      "description": {
+        "executesARecursiveWebSearchLoopScrapes": "Выполняет рекурсивный цикл веб-поиска, очищает несколько источников, анализирует цитаты и синтезирует исчерпывающий окончательный ответ."
+      },
+      "option": {
+        "jinaAiSearchReader": "Поиск и чтение Jina AI",
+        "autoDefaultFromConfig": "Авто (по умолчанию из конфигурации)",
+        "braveSearch": "Отважный поиск",
+        "googleSearch": "Поиск в Google",
+        "retrieveSynthesizeUsesVeniceModel": "Извлечение и синтез (использует модель Венеции).",
+        "retrieveOnlyNoAiSynthesis": "Только получение (без синтеза ИИ)"
+      },
+      "text": {
+        "budgetControls": "Контроль бюджета",
+        "retrievedEvidenceSources": "Полученные источники доказательств"
+      },
+      "action": {
+        "copyAnswer": "Копирование ответа",
+        "copyEvidenceSources": "Копирование источников доказательств"
+      }
+    },
+    "componentsSearchResearchproviderstatus": {
+      "action": {
+        "addKey": "Добавить ключ"
+      }
+    },
+    "componentsSearchTextparsertab": {
+      "heading": {
+        "documentTextParser": "Анализатор текста документа"
+      },
+      "description": {
+        "extractRawTextFromPdfDocxXlsx": "Извлечение необработанного текста из документов PDF, DOCX, XLSX или TXT."
+      }
+    },
+    "componentsSettingsAboutpanel": {
+      "text": {
+        "beta": "· Бета-версия"
+      }
+    },
+    "componentsSettingsConfigpanel": {
+      "text": {
+        "configYaml": "config.yaml",
+        "themesYaml": "themes.yaml",
+        "secretsKeepPlaintextKeysTrue": "secrets.keep_plaintext_keys: true"
+      }
+    },
+    "componentsUiErrorBoundary": {
+      "text": {
+        "somethingWentWrong": "Что-то пошло не так",
+        "showDetails": "Показать детали"
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "Приложение обнаружило непредвиденную ошибку и не смогло отобразить это представление. Ваша работа в безопасности — обновите, чтобы восстановиться."
+      },
+      "action": {
+        "tryAgain": "Повторить попытку",
+        "reloadPage": "Обновить страницу"
+      }
+    },
+    "componentsUiSelect": {
+      "text": {
+        "noResults": "Нет результатов"
+      }
+    }
+  }
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { Field } from "../../components/Field";
 import { copyText } from "../../utils/download";
 import { toast } from "../../stores/toast-store";
+import { Trans } from 'react-i18next';
 
 export function ScrapeTab({
   url,
@@ -24,7 +25,7 @@ export function ScrapeTab({
 }) {
   return (
     <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg flex flex-col gap-4">
-      <h3 className="text-[14.5px] font-medium text-text-primary">Web Scrape</h3>
+      <h3 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsSearchScrapetab.heading.webScrape" /></h3>
       
       <Field label="URL to scrape">
         <input
@@ -37,8 +38,8 @@ export function ScrapeTab({
 
       <Field label="Reader provider">
         <select value={provider} onChange={(event) => setProvider(event.target.value as "venice" | "jina")} className="w-full bg-surface border border-border rounded-lg px-3.5 py-2 text-[14px] text-text-primary outline-none focus:border-accent">
-          <option value="venice">Venice Web Scrape</option>
-          <option value="jina">Jina Reader</option>
+          <option value="venice"><Trans i18nKey="common:surface.componentsSearchScrapetab.option.veniceWebScrape" /></option>
+          <option value="jina"><Trans i18nKey="common:surface.componentsSearchScrapetab.option.jinaReader" /></option>
         </select>
       </Field>
 
@@ -58,8 +59,7 @@ export function ScrapeTab({
           }}
           disabled={!scrapeOutput}
         >
-          Copy
-        </button>
+          <Trans i18nKey="common:surface.componentsSearchScrapetab.action.copy" /></button>
       </div>
 
       <textarea

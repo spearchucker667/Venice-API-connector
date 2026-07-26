@@ -29,6 +29,7 @@ import { runResearchScrape } from "../../services/researchService";
 import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
 
 import { DEFAULT_CHAT_MODEL } from "../../constants/venice";
+import { Trans } from 'react-i18next';
 
 export function SearchScrapeView() {
   const [subTab, setSubTab] = useState<SubTab>("workspace");
@@ -394,10 +395,9 @@ export function SearchScrapeView() {
       <div className="flex-none p-5 border-b border-border/50 bg-surface">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-[17px] font-semibold text-text-primary">Research</h2>
+            <h2 className="text-[17px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsSearchSearchscrapeview.heading.research" /></h2>
             <p className="text-[12.5px] text-text-muted mt-0.5">
-              Search, scrape, collect evidence, and synthesize findings.
-            </p>
+              <Trans i18nKey="common:surface.componentsSearchSearchscrapeview.description.searchScrapeCollectEvidenceAndSynthesizeFindings" /></p>
           </div>
           <DiagPreview diagnostics={diagnostics} />
         </div>

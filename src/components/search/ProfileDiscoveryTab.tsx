@@ -3,6 +3,7 @@ import { Field } from "../../components/Field";
 import { Chip } from "../../components/Chip";
 import { safeHref, ALL_PLATFORMS } from "./searchScrapeUtils";
 import type { SocialProfileCandidate } from "../../research/agent/socialDiscovery";
+import { Trans } from 'react-i18next';
 
 export function ProfileDiscoveryTab({
   targetName,
@@ -50,10 +51,9 @@ export function ProfileDiscoveryTab({
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg flex flex-col gap-4">
-        <h3 className="text-[14.5px] font-medium text-text-primary">Public Profile Discovery</h3>
+        <h3 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsSearchProfilediscoverytab.heading.publicProfileDiscovery" /></h3>
         <p className="text-[12.5px] text-text-secondary leading-relaxed">
-          Aggregates social profile mappings from public databases (GitHub, Twitter, LinkedIn, etc.) using Venice web integration.
-        </p>
+          <Trans i18nKey="common:surface.componentsSearchProfilediscoverytab.description.aggregatesSocialProfileMappingsFromPublicDatabases" /></p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="Target Name">
@@ -109,7 +109,7 @@ export function ProfileDiscoveryTab({
         </div>
 
         <div className="space-y-2">
-          <label className="text-[12.5px] text-text-secondary block font-medium">Platforms to search</label>
+          <label className="text-[12.5px] text-text-secondary block font-medium"><Trans i18nKey="common:surface.componentsSearchProfilediscoverytab.label.platformsToSearch" /></label>
           <div className="flex flex-wrap gap-2">
             {ALL_PLATFORMS.map((platform) => {
               const isSelected = allowedPlatforms.includes(platform);
@@ -155,8 +155,7 @@ export function ProfileDiscoveryTab({
               className="px-4 py-2 rounded-lg text-[13px] font-medium bg-surface border border-border text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
               onClick={cancelRun}
             >
-              Cancel
-            </button>
+              <Trans i18nKey="common:surface.componentsSearchProfilediscoverytab.action.cancel" /></button>
           )}
         </div>
       </div>
@@ -164,8 +163,8 @@ export function ProfileDiscoveryTab({
       {profileCandidates.length > 0 && (
         <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-[14.5px] font-medium text-text-primary">Discovered Profile Candidates</h3>
-            <Chip tone="ok">{profileCandidates.length} Candidates</Chip>
+            <h3 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsSearchProfilediscoverytab.heading.discoveredProfileCandidates" /></h3>
+            <Chip tone="ok">{profileCandidates.length} <Trans i18nKey="common:surface.componentsSearchProfilediscoverytab.text.candidates" /></Chip>
           </div>
           <div className="space-y-3">
             {profileCandidates.map((c, idx) => (
@@ -173,8 +172,7 @@ export function ProfileDiscoveryTab({
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-text-primary">{c.platform}</span>
                   <Chip tone={c.confidence === "high" ? "ok" : c.confidence === "medium" ? "warn" : "neutral"}>
-                    {c.confidence} confidence
-                  </Chip>
+                    {c.confidence} <Trans i18nKey="common:surface.componentsSearchProfilediscoverytab.text.confidence" /></Chip>
                 </div>
                 <div className="text-text-secondary">
                   {c.displayName || "Unknown Identity"} {c.handle && <span className="text-text-muted ml-1">@{c.handle.replace(/^@+/, "")}</span>}

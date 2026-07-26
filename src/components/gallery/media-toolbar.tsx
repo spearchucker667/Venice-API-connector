@@ -8,6 +8,7 @@ import { PillGroup, GhostButton } from "../ui/shared";
 import type { MediaFilter, MediaSort } from "../../stores/media-store";
 import { formatBytesApprox, estimateItemBytes } from "../../utils/mediaItem";
 import type { MediaItem } from "../../types/media";
+import { Trans } from 'react-i18next';
 
 const FILTER_OPTIONS: Array<{ value: MediaFilter; label: string }> = [
   { value: "all", label: "All" },
@@ -125,7 +126,7 @@ export function MediaToolbar({
         </div>
 
         <label className="flex items-center gap-1 text-[12px] text-text-muted">
-          <span>Sort</span>
+          <span><Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.sort" /></span>
           <select
             value={sort}
             onChange={(e) => onSortChange(e.target.value as MediaSort)}
@@ -140,8 +141,7 @@ export function MediaToolbar({
         <GhostButton onClick={onRefresh} ariaLabel="Refresh media library" disabled={refreshing}>
           <span className="flex items-center gap-1.5">
             <span className={cn("inline-block", refreshing && "animate-spin")} aria-hidden="true">↻</span>
-            Refresh
-          </span>
+            <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.refresh" /></span>
         </GhostButton>
 
         <button
@@ -167,7 +167,7 @@ export function MediaToolbar({
           ariaLabel="Filter media"
         />
         <span className="ml-auto text-[12px] text-text-muted">
-          {totalCount} item{totalCount === 1 ? "" : "s"}
+          {totalCount} <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.item" />{totalCount === 1 ? "" : "s"}
         </span>
       </div>
 
@@ -177,8 +177,7 @@ export function MediaToolbar({
           data-testid="bulk-action-toolbar"
         >
           <span className="text-[12px] text-text-secondary">
-            {selectedIds.size} selected
-            {selectedItems.length > 0 && (
+            {selectedIds.size} <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.selected" />{selectedItems.length > 0 && (
               <>
                 {" "}·{" "}
                 <span className="text-text-muted">
@@ -194,16 +193,14 @@ export function MediaToolbar({
               data-testid="bulk-select-all"
               className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
             >
-              Select all
-            </button>
+              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.selectAll" /></button>
             <button
               type="button"
               onClick={onClearSelection}
               data-testid="bulk-clear-selection"
               className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
             >
-              Clear
-            </button>
+              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.clear" /></button>
             {onBatchCompare && (
               <button
                 type="button"
@@ -212,8 +209,7 @@ export function MediaToolbar({
                 data-testid="bulk-compare"
                 className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                Compare
-              </button>
+                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.compare" /></button>
             )}
             {onBatchExport && (
               <button
@@ -223,8 +219,7 @@ export function MediaToolbar({
                 data-testid="bulk-export"
                 className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30"
               >
-                Export
-              </button>
+                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.export" /></button>
             )}
             {onBatchAddTag && (
               <button
@@ -234,12 +229,11 @@ export function MediaToolbar({
                 data-testid="bulk-add-tag"
                 className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30"
               >
-                Add tag
-              </button>
+                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.addTag" /></button>
             )}
             {onBulkProjectIdChange && (
               <label className="flex items-center gap-1 text-[12px] text-text-muted">
-                <span>Project</span>
+                <span><Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.project" /></span>
                 <select
                   value={bulkProjectId ?? ""}
                   onChange={(e) => onBulkProjectIdChange(e.target.value)}
@@ -261,8 +255,7 @@ export function MediaToolbar({
                 data-testid="bulk-assign-project"
                 className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30"
               >
-                Apply
-              </button>
+                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.apply" /></button>
             )}
             <button
               type="button"
@@ -279,8 +272,7 @@ export function MediaToolbar({
               disabled={!hasSelection}
               className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30"
             >
-              Unstar
-            </button>
+              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.unstar" /></button>
             <button
               type="button"
               onClick={onBatchDelete}
@@ -288,8 +280,7 @@ export function MediaToolbar({
               data-testid="bulk-delete"
               className="rounded-md border border-danger/30 px-2 py-1 text-[12px] text-text-danger hover:bg-danger/10 disabled:opacity-30"
             >
-              Delete
-            </button>
+              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.delete" /></button>
           </div>
         </div>
       )}

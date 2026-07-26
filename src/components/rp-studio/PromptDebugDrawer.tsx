@@ -12,6 +12,7 @@ import { cn } from "../../lib/utils";
 import { GhostButton, PillGroup, TextArea } from "../ui/shared";
 import { truncate } from "./_shared";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
+import { Trans } from 'react-i18next';
 
 const KIND_TONE: Record<PromptAssemblyTraceEntry["kind"], string> = {
   "safety-preamble": "border-emerald-400/30 text-emerald-300",
@@ -55,12 +56,12 @@ export function PromptDebugDrawer({ assembly, onClose }: Props) {
     >
       <div className="ml-auto h-full w-full max-w-xl mesh-surface soft-separator-x flex flex-col">
         <div className="flex items-center gap-2 px-4 py-3 soft-separator-y mesh-header mesh-surface">
-          <h2 className="text-[14px] font-semibold text-text-primary">Prompt trace</h2>
+          <h2 className="text-[14px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioPromptdebugdrawer.heading.promptTrace" /></h2>
           <span className="text-[12px] text-text-muted">
-            {totalIncludedChars.toLocaleString()} chars · {assembly.budgetExceeded ? "budget exceeded" : "within budget"}
+            {totalIncludedChars.toLocaleString()} <Trans i18nKey="common:surface.componentsRpStudioPromptdebugdrawer.text.chars" /> {assembly.budgetExceeded ? "budget exceeded" : "within budget"}
           </span>
           <div className="ml-auto">
-            <GhostButton onClick={onClose}>Close</GhostButton>
+            <GhostButton onClick={onClose}><Trans i18nKey="common:surface.componentsRpStudioPromptdebugdrawer.text.close" /></GhostButton>
           </div>
         </div>
         <div className="px-4 py-2 soft-separator-y mesh-surface">
@@ -92,7 +93,7 @@ export function PromptDebugDrawer({ assembly, onClose }: Props) {
                   <div className="flex-1 min-w-0">
                     <div className="truncate">{entry.label}</div>
                     {entry.reason && (
-                      <div className="text-[12px] text-text-muted mt-0.5">excluded: {entry.reason}</div>
+                      <div className="text-[12px] text-text-muted mt-0.5"><Trans i18nKey="common:surface.componentsRpStudioPromptdebugdrawer.text.excluded" /> {entry.reason}</div>
                     )}
                   </div>
                   <span className="text-[12px] text-text-muted shrink-0">{entry.chars}ch</span>
@@ -110,7 +111,7 @@ export function PromptDebugDrawer({ assembly, onClose }: Props) {
           {view === "recent" && (
             <div className="space-y-2">
               {assembly.recentMessages.length === 0 ? (
-                <div className="text-[12px] text-text-muted italic">No recent messages.</div>
+                <div className="text-[12px] text-text-muted italic"><Trans i18nKey="common:surface.componentsRpStudioPromptdebugdrawer.text.noRecentMessages" /></div>
               ) : (
                 assembly.recentMessages.map((m, i) => (
                   <div key={i} className="bg-surface-elevated border border-border rounded-md p-2">

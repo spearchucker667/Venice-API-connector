@@ -17,7 +17,7 @@ function fixture(overrides: Record<string, string> = {}): string {
   const files = {
     "package.json": JSON.stringify({ version: "3.0.0-beta.2" }),
     "AGENTS.md": "**Version:** 3.0.0-beta.2",
-    "README.md": "release-v3.0.0--beta.1-blue",
+    "README.md": "release-v3.0.0--beta.2-blue",
     "docs/ABOUT.md": "Venice Forge is currently a 3.0 beta.",
     "LEGAL.md": "Version comes from package.json.",
     "src/components/settings/AboutPanel.tsx": 'import { version } from "../../../package.json";',

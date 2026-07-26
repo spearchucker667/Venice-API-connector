@@ -14,6 +14,7 @@ import { getPromptStartersForCategory } from '../../services/promptStarterServic
 import { redactErrorMessage } from '../../shared/redaction'
 import { DEFAULT_TTS_MODEL } from '../../constants/venice'
 import { DEFAULT_TTS_VOICE, TTS_FALLBACK_VOICES } from '../../constants/tts'
+import { Trans } from 'react-i18next';
 
 const FORMATS = ['mp3', 'opus', 'aac', 'flac', 'wav'] as const
 
@@ -105,18 +106,18 @@ export function AudioView() {
       {tab === 'tts' ? (
         <>
           <div>
-            <Label htmlFor={textId}>Text</Label>
+            <Label htmlFor={textId}><Trans i18nKey="common:surface.componentsAudioAudioView.text.text" /></Label>
             <TextArea id={textId} value={text} onChange={setText} placeholder="Enter text to convert to speech…" rows={5} />
           </div>
-          <div><Label htmlFor={voiceId}>Voice</Label><Select id={voiceId} value={voice} onChange={setVoice} options={voiceOptions} searchable /></div>
+          <div><Label htmlFor={voiceId}><Trans i18nKey="common:surface.componentsAudioAudioView.text.voice" /></Label><Select id={voiceId} value={voice} onChange={setVoice} options={voiceOptions} searchable /></div>
           <div className="grid grid-cols-2 gap-3">
-            <div><Label htmlFor={formatId}>Format</Label><Select id={formatId} value={format} onChange={setFormat} options={formatOptions} /></div>
+            <div><Label htmlFor={formatId}><Trans i18nKey="common:surface.componentsAudioAudioView.text.format" /></Label><Select id={formatId} value={format} onChange={setFormat} options={formatOptions} /></div>
             <div>
-              <Label htmlFor={speedId}>Speed</Label>
+              <Label htmlFor={speedId}><Trans i18nKey="common:surface.componentsAudioAudioView.text.speed" /></Label>
               <input id={speedId} type="range" min={0.25} max={4} step={0.25} value={speed} onChange={(e) => setSpeed(Number(e.target.value))} className="w-full" />
             </div>
           </div>
-          <PrimaryButton onClick={handleTTS} disabled={!text.trim() || !hasVeniceKey} loading={tts.isPending} size="lg">Generate Speech</PrimaryButton>
+          <PrimaryButton onClick={handleTTS} disabled={!text.trim() || !hasVeniceKey} loading={tts.isPending} size="lg"><Trans i18nKey="common:surface.componentsAudioAudioView.text.generateSpeech" /></PrimaryButton>
           {tts.error && <ErrorText>{redactErrorMessage(tts.error)}</ErrorText>}
         </>
       ) : (
@@ -131,8 +132,7 @@ export function AudioView() {
             <p className="text-[14px] text-text-secondary">{file ? file.name : 'Click to select audio file'}</p>
           </button>
           <PrimaryButton onClick={() => { if (file) transcription.mutate(file, { onSuccess: (d) => setTranscript(d.text), onError: (err) => toast.fromError(err, 'Transcription failed') }) }} disabled={!file || !hasVeniceKey} loading={transcription.isPending} size="lg">
-            Transcribe
-          </PrimaryButton>
+            <Trans i18nKey="common:surface.componentsAudioAudioView.text.transcribe" /></PrimaryButton>
           {transcription.error && <ErrorText>{redactErrorMessage(transcription.error)}</ErrorText>}
         </>
       )}
@@ -145,11 +145,10 @@ export function AudioView() {
           audioUrl ? (
             <div className="flex flex-col gap-4 animate-fade-in">
               <div className="flex items-center justify-between">
-                <Label>Output</Label>
+                <Label><Trans i18nKey="common:surface.componentsAudioAudioView.text.output" /></Label>
                 <a href={audioUrl} download={`venice-speech.${format}`} className="text-[14px] text-text-muted hover:text-text-muted transition-colors flex items-center gap-1.5">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
-                  Download
-                </a>
+                  <Trans i18nKey="common:surface.componentsAudioAudioView.text.download" /></a>
               </div>
               <audio
                 controls
@@ -186,12 +185,12 @@ export function AudioView() {
               />
             </div>
           ) : (
-            <EmptyState>Press Generate to synthesize speech</EmptyState>
+            <EmptyState><Trans i18nKey="common:surface.componentsAudioAudioView.text.pressGenerateToSynthesizeSpeech" /></EmptyState>
           )
         ) : (
           transcript ? (
             <div className="flex flex-col gap-3 animate-fade-in">
-              <Label>Transcript</Label>
+              <Label><Trans i18nKey="common:surface.componentsAudioAudioView.text.transcript" /></Label>
               <div className="bg-surface border border-border rounded-xl p-6 text-[15px] text-text-secondary whitespace-pre-wrap leading-relaxed">
                 {transcript}
               </div>
@@ -201,7 +200,7 @@ export function AudioView() {
               <GenerationLoadingIndicator state="processing" label="Transcribing audio…" />
             </div>
           ) : (
-            <EmptyState>Transcript appears here</EmptyState>
+            <EmptyState><Trans i18nKey="common:surface.componentsAudioAudioView.text.transcriptAppearsHere" /></EmptyState>
           )
         )}
     </div>

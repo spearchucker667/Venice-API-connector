@@ -131,7 +131,7 @@ export function CommandPalette({ open, onClose, onToggle }: CommandPaletteProps)
     }))?.trim() || t('project.untitledProject', 'Untitled Project')
     const p = await useProjectStore.getState().createProject(name)
     useProjectStore.getState().setActiveProject(p.id)
-    toast.success(t('project.created', 'Created "{{name}}"', { name: p.name }))
+    toast.success(t('project.created', { defaultValue: 'Created "{{name}}"', name: p.name }))
     onClose()
     setQuery('')
   }
@@ -154,7 +154,7 @@ export function CommandPalette({ open, onClose, onToggle }: CommandPaletteProps)
       toast.success(t('commandPalette.clearedSelection', 'Cleared media selection'))
     } else if (kind === 'compare') {
       if (store.selectedMediaIds.length < 2 || store.selectedMediaIds.length > MEDIA_SELECTION_MAX) {
-        toast.error(t('commandPalette.selectCountToCompare', 'Select 2 to {{max}} items to compare.', { max: MEDIA_SELECTION_MAX }))
+        toast.error(t('commandPalette.selectCountToCompare', { defaultValue: 'Select 2 to {{max}} items to compare.', max: MEDIA_SELECTION_MAX }))
         return
       }
       handlers.onCompare?.(store.selectedMediaIds)
@@ -288,7 +288,7 @@ export function CommandPalette({ open, onClose, onToggle }: CommandPaletteProps)
           {hasMediaHandlers && (
             <div data-testid="command-palette-media-section">
               <div className="px-2 pt-2 pb-1 text-[12px] uppercase tracking-[0.06em] text-text-muted border-t border-border/50 mt-1">
-                {t('groups.mediaStudio', 'Media Studio ({{count}} selected)', { count: selectionCount })}
+                {t('groups.mediaStudio', { defaultValue: 'Media Studio ({{count}} selected)', count: selectionCount })}
               </div>
               <button
                 data-command-item
@@ -449,7 +449,7 @@ export function CommandPalette({ open, onClose, onToggle }: CommandPaletteProps)
               a.download = `venice-forge-prompts-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
               a.click();
               URL.revokeObjectURL(url);
-              toast.success(t('commandPalette.exportedPrompts', 'Exported {{count}} prompt{{plural}}', { count: ids.length, plural: ids.length === 1 ? '' : 's' }));
+              toast.success(t('commandPalette.exportedPrompts', { defaultValue: 'Exported {{count}} prompt{{plural}}', count: ids.length, plural: ids.length === 1 ? '' : 's' }));
               onClose();
               setQuery('');
             }}
@@ -477,15 +477,15 @@ export function CommandPalette({ open, onClose, onToggle }: CommandPaletteProps)
                   const result = await usePromptLibraryStore.getState().importPrompts(payload, { reconcile: true });
                   const parts: string[] = [];
                   if (result.imported.length > 0) {
-                    parts.push(t('commandPalette.importedCount', 'imported {{count}} prompt{{plural}}', { count: result.imported.length, plural: result.imported.length === 1 ? '' : 's' }));
+                    parts.push(t('commandPalette.importedCount', { defaultValue: 'imported {{count}} prompt{{plural}}', count: result.imported.length, plural: result.imported.length === 1 ? '' : 's' }));
                   }
                   if (result.reconciled.length > 0) {
-                    parts.push(t('commandPalette.syncedCount', 'synced {{count}} prompt{{plural}}', { count: result.reconciled.length, plural: result.reconciled.length === 1 ? '' : 's' }));
+                    parts.push(t('commandPalette.syncedCount', { defaultValue: 'synced {{count}} prompt{{plural}}', count: result.reconciled.length, plural: result.reconciled.length === 1 ? '' : 's' }));
                   }
                   if (result.skipped.length > 0) {
-                    parts.push(t('commandPalette.skippedCount', 'skipped {{count}}', { count: result.skipped.length }));
+                    parts.push(t('commandPalette.skippedCount', { defaultValue: 'skipped {{count}}', count: result.skipped.length }));
                   }
-                  toast.success(parts.length > 0 ? t('commandPalette.importSuccess', 'Prompt library: {{parts}}', { parts: parts.join(', ') }) : t('commandPalette.importUpToDate', 'Prompt library up to date'));
+                  toast.success(parts.length > 0 ? t('commandPalette.importSuccess', { defaultValue: 'Prompt library: {{parts}}', parts: parts.join(', ') }) : t('commandPalette.importUpToDate', 'Prompt library up to date'));
                 } catch (err) {
                   toast.error(t('commandPalette.couldNotImport', 'Could not import'), redactErrorMessage(err));
                 }
@@ -547,7 +547,7 @@ export function CommandPalette({ open, onClose, onToggle }: CommandPaletteProps)
               a.download = `venice-forge-scenes-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
               a.click();
               URL.revokeObjectURL(url);
-              toast.success(t('commandPalette.exportedScenes', 'Exported {{count}} scene{{plural}}', { count: ids.length, plural: ids.length === 1 ? '' : 's' }));
+              toast.success(t('commandPalette.exportedScenes', { defaultValue: 'Exported {{count}} scene{{plural}}', count: ids.length, plural: ids.length === 1 ? '' : 's' }));
               onClose();
               setQuery('');
             }}
@@ -573,10 +573,16 @@ export function CommandPalette({ open, onClose, onToggle }: CommandPaletteProps)
                   });
                   const result = await useSceneComposerStore.getState().importScenes(payload);
                   toast.success(
-                    t('commandPalette.importedScenesSuccess', 'Imported {{count}} scene{{plural}}{{skipped}}', {
+                    t('commandPalette.importedScenesSuccess', {
+                      defaultValue: 'Imported {{count}} scene{{plural}}{{skipped}}',
                       count: result.imported.length,
                       plural: result.imported.length === 1 ? '' : 's',
-                      skipped: result.skipped.length > 0 ? t('commandPalette.skippedScenes', ' (skipped {{count}})', { count: result.skipped.length }) : ''
+                      skipped: result.skipped.length > 0
+                        ? t('commandPalette.skippedScenes', {
+                            defaultValue: ' (skipped {{count}})',
+                            count: result.skipped.length,
+                          })
+                        : '',
                     })
                   );
                 } catch (err) {
@@ -653,7 +659,7 @@ export function CommandPalette({ open, onClose, onToggle }: CommandPaletteProps)
               useScenarioStore.getState().createBlank({
                 scope: 'character',
                 characterId: activeId ?? undefined,
-                name: card ? t('commandPalette.scenarioFor', 'Scenario for {{name}}', { name: card.name }) : t('commandPalette.newScenario', 'New Scenario'),
+                name: card ? t('commandPalette.scenarioFor', { defaultValue: 'Scenario for {{name}}', name: card.name }) : t('commandPalette.newScenario', 'New Scenario'),
               });
               toast.success(t('commandPalette.createdNewScenario', 'Created new scenario'));
               onClose();
@@ -728,7 +734,7 @@ export function CommandPalette({ open, onClose, onToggle }: CommandPaletteProps)
               a.download = `venice-forge-research-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
               a.click();
               URL.revokeObjectURL(url);
-              toast.success(t('commandPalette.exportedResearch', 'Exported {{count}} research session{{plural}}', { count: ids.length, plural: ids.length === 1 ? '' : 's' }));
+              toast.success(t('commandPalette.exportedResearch', { defaultValue: 'Exported {{count}} research session{{plural}}', count: ids.length, plural: ids.length === 1 ? '' : 's' }));
               onClose();
               setQuery('');
             }}
@@ -754,10 +760,16 @@ export function CommandPalette({ open, onClose, onToggle }: CommandPaletteProps)
                   });
                   const result = await useResearchStore.getState().importResearch(payload);
                   toast.success(
-                    t('commandPalette.importedResearchSuccess', 'Imported {{count}} session{{plural}}{{skipped}}', {
+                    t('commandPalette.importedResearchSuccess', {
+                      defaultValue: 'Imported {{count}} session{{plural}}{{skipped}}',
                       count: result.imported.length,
                       plural: result.imported.length === 1 ? '' : 's',
-                      skipped: result.skipped.length > 0 ? t('commandPalette.skippedScenes', ' (skipped {{count}})', { count: result.skipped.length }) : ''
+                      skipped: result.skipped.length > 0
+                        ? t('commandPalette.skippedScenes', {
+                            defaultValue: ' (skipped {{count}})',
+                            count: result.skipped.length,
+                          })
+                        : '',
                     })
                   );
                 } catch (err) {

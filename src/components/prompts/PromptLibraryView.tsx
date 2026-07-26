@@ -31,6 +31,7 @@ import { useChatStore } from "../../stores/chat-store";
 import { PromptCreateModal } from "./PromptCreateModal";
 import { Select } from "../ui/select";
 import { ConfirmModal } from "../ConfirmModal";
+import { Trans } from 'react-i18next';
 
 const KIND_OPTIONS: Array<{ value: PromptKind; label: string }> = [
   { value: "image", label: "Image" },
@@ -179,7 +180,7 @@ export function PromptLibraryView() {
       >
         <div className="px-3 py-2 soft-separator-y mesh-header mesh-surface space-y-2">
           <div className="flex items-center gap-2">
-            <h2 className="text-[14px] font-semibold">Prompt Library</h2>
+            <h2 className="text-[14px] font-semibold"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.heading.promptLibrary" /></h2>
             <button
               type="button"
               onClick={() => setIsCreateModalOpen(true)}
@@ -192,8 +193,7 @@ export function PromptLibraryView() {
               className="ml-auto rounded-md border border-border px-2 py-1 text-[12px] hover:border-accent hover:text-accent"
               data-testid="prompt-library-new"
             >
-              New
-            </button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.new" /></button>
           </div>
           <input
             value={query}
@@ -260,8 +260,7 @@ export function PromptLibraryView() {
               }`}
               data-testid="prompt-library-favorites-filter"
             >
-              ★ Favorites
-            </button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.favorites" /></button>
             <button
               type="button"
               onClick={() => setShowArchived((value) => !value)}
@@ -273,19 +272,18 @@ export function PromptLibraryView() {
               }`}
               data-testid="prompt-library-archive-filter"
             >
-              Archive
-            </button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.archive" /></button>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto" data-testid="prompt-library-list">
           {!hydrated ? (
-            <p className="p-3 text-text-muted text-[12px]">Loading…</p>
+            <p className="p-3 text-text-muted text-[12px]"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.loading" /></p>
           ) : filtered.length === 0 ? (
             <div className="p-3 text-text-muted text-[12px]" data-testid="prompt-library-empty">
               {prompts.length === 0
                 ? <>
-                    <p>No saved prompts yet.</p>
-                    <p className="mt-1">Click the <strong className="text-text-primary">New</strong> button above to create your first prompt.</p>
+                    <p><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.noSavedPromptsYet" /></p>
+                    <p className="mt-1"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.clickThe" /> <strong className="text-text-primary"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.new" /></strong> <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.buttonAboveToCreateYourFirstPrompt" /></p>
                   </>
                 : "No prompts match the current filters."}
             </div>
@@ -312,7 +310,7 @@ export function PromptLibraryView() {
                     </div>
                     <div className="text-[12px] text-text-muted mt-0.5 truncate">
                       {p.scope === "project" ? "Project" : "Global"} ·{" "}
-                      {p.versions.length} version{p.versions.length === 1 ? "" : "s"}
+                      {p.versions.length} <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.version" />{p.versions.length === 1 ? "" : "s"}
                     </div>
                     {p.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1">
@@ -586,8 +584,8 @@ function PromptDetail(props: PromptDetailProps) {
               ? `Project: ${projects.find((p) => p.id === item.projectId)?.name ?? "(unknown)"}`
               : "Global"}
           </span>
-          <span>· Created {new Date(item.createdAt).toLocaleString()}</span>
-          <span>· Updated {new Date(item.updatedAt).toLocaleString()}</span>
+          <span><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.created" /> {new Date(item.createdAt).toLocaleString()}</span>
+          <span><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.updated" /> {new Date(item.updatedAt).toLocaleString()}</span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Select
@@ -624,7 +622,7 @@ function PromptDetail(props: PromptDetailProps) {
 
       <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-3">
         <div>
-          <label className="text-[12px] uppercase tracking-wide text-text-muted">Content</label>
+          <label className="text-[12px] uppercase tracking-wide text-text-muted"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.label.content" /></label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
@@ -634,8 +632,7 @@ function PromptDetail(props: PromptDetailProps) {
         </div>
         <div>
           <label className="text-[12px] uppercase tracking-wide text-text-muted">
-            Negative content
-          </label>
+            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.label.negativeContent" /></label>
           <textarea
             value={negativeContent}
             onChange={(e) => setNegativeContent(e.target.value)}
@@ -673,8 +670,7 @@ function PromptDetail(props: PromptDetailProps) {
               className="rounded-md border border-border px-2 py-1 text-[12px]"
               data-testid="prompt-library-use-image"
             >
-              Use in Image Studio
-            </button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.useInImageStudio" /></button>
           )}
           {(item.kind === "chat" || item.kind === "system" || item.kind === "general") && (
             <button
@@ -687,8 +683,7 @@ function PromptDetail(props: PromptDetailProps) {
               className="rounded-md border border-border px-2 py-1 text-[12px]"
               data-testid="prompt-library-use-chat"
             >
-              Use in Chat
-            </button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.useInChat" /></button>
           )}
           <button
             type="button"
@@ -696,23 +691,21 @@ function PromptDetail(props: PromptDetailProps) {
             className="rounded-md border border-border px-2 py-1 text-[12px]"
             data-testid="prompt-library-create-workflow"
           >
-            Create Workflow
-          </button>
+            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.createWorkflow" /></button>
           <button
             type="button"
             onClick={async () => { await copyText(content); }}
             className="rounded-md border border-border px-2 py-1 text-[12px]"
             data-testid="prompt-library-copy"
           >
-            Copy
-          </button>
+            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.copy" /></button>
           <button
             type="button"
             onClick={() => setShowVersionHistory((value) => !value)}
             className="rounded-md border border-border px-2 py-1 text-[12px]"
             data-testid="prompt-library-toggle-history"
           >
-            {showVersionHistory ? "Hide" : "Show"} history ({item.versions.length})
+            {showVersionHistory ? "Hide" : "Show"} <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.history" />{item.versions.length})
           </button>
           {confirmDelete ? (
             <div className="flex items-center gap-2">
@@ -730,8 +723,7 @@ function PromptDetail(props: PromptDetailProps) {
                 className="rounded-md border border-red-500/60 text-red-300 px-2 py-1 text-[12px] disabled:opacity-50"
                 data-testid="prompt-library-delete"
               >
-                Delete
-              </button>
+                <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.delete" /></button>
               <button
                 type="button"
                 onClick={() => {
@@ -740,8 +732,7 @@ function PromptDetail(props: PromptDetailProps) {
                 }}
                 className="rounded-md border border-border px-2 py-1 text-[12px]"
               >
-                Cancel
-              </button>
+                <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.cancel" /></button>
             </div>
           ) : (
             <button
@@ -750,8 +741,7 @@ function PromptDetail(props: PromptDetailProps) {
               className="rounded-md border border-red-500/40 text-red-300 px-2 py-1 text-[12px]"
               data-testid="prompt-library-delete-arm"
             >
-              Delete
-            </button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.delete" /></button>
           )}
         </div>
         {showVersionHistory && (
@@ -773,7 +763,7 @@ function PromptDetail(props: PromptDetailProps) {
                       {new Date(v.createdAt).toLocaleString()}
                     </span>
                     {v.id === item.currentVersionId && (
-                      <span className="text-accent text-[12px]">CURRENT</span>
+                      <span className="text-accent text-[12px]"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.current" /></span>
                     )}
                     <button
                       type="button"
@@ -782,8 +772,7 @@ function PromptDetail(props: PromptDetailProps) {
                       className="ml-auto rounded-md border border-border px-2 py-0.5 text-[12px] disabled:opacity-50"
                       data-testid={`prompt-library-use-version-${v.version}`}
                     >
-                      Use this version
-                    </button>
+                      <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.useThisVersion" /></button>
                   </div>
                   {v.notes && (
                     <p className="text-[12px] text-text-muted mt-0.5">{v.notes}</p>

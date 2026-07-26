@@ -5,6 +5,7 @@ import { desktopConversations } from "../../services/desktopBridge";
 import { askDecision } from "../ui/modal-requests";
 import { redactErrorMessage } from "../../shared/redaction";
 import type { ConversationRecordV1, MemoryFact } from "../../types/conversationVault";
+import { Trans } from 'react-i18next';
 
 export function MemoryPanel() {
   const {
@@ -152,10 +153,9 @@ export function MemoryPanel() {
       {/* Vault Migration Alert */}
       {hasLegacy && (
         <div className="rounded-xl border border-warning bg-warning/10 p-5 shadow-lg space-y-3">
-          <h4 className="text-[14.5px] font-medium text-text-primary">Legacy Conversations Detected</h4>
+          <h4 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.heading.legacyConversationsDetected" /></h4>
           <p className="text-[12.5px] text-text-secondary leading-relaxed">
-            We found unencrypted conversation records from a previous installation. Migrate them to the new secure vault now.
-          </p>
+            <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.description.weFoundUnencryptedConversationRecordsFromA" /></p>
           <div className="flex gap-2">
             <button
               onClick={handleMigrate}
@@ -168,25 +168,23 @@ export function MemoryPanel() {
               onClick={handleOpenFolder}
               className="px-4 py-1.5 rounded-lg text-[13px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
             >
-              Open Folder
-            </button>
+              <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.action.openFolder" /></button>
           </div>
         </div>
       )}
 
       {/* Settings Options */}
       <div className="rounded-xl soft-panel mesh-surface-elevated p-5 space-y-4">
-        <h3 className="text-[14.5px] font-medium text-text-primary">Encrypted Conversation Vault</h3>
+        <h3 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.heading.encryptedConversationVault" /></h3>
         <p className="text-[12.5px] text-text-secondary leading-relaxed">
-          Configure memory parameters and local indexing structures. Vault records and the index are fully encrypted at rest.
-        </p>
+          <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.description.configureMemoryParametersAndLocalIndexingStructures" /></p>
 
         <div className="space-y-3 pt-2">
           {/* Enable Recording */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-[13.5px] font-medium text-text-primary">Enable conversation recording</label>
-              <p className="text-[12px] text-text-muted mt-0.5">Allows the vault to analyze and extract facts from new threads.</p>
+              <label className="text-[13.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.label.enableConversationRecording" /></label>
+              <p className="text-[12px] text-text-muted mt-0.5"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.description.allowsTheVaultToAnalyzeAndExtract" /></p>
             </div>
             <input
               type="checkbox"
@@ -199,8 +197,8 @@ export function MemoryPanel() {
           {/* Enable Retrieval */}
           <div className="flex items-center justify-between soft-separator-y pt-3">
             <div>
-              <label className="text-[13.5px] font-medium text-text-primary">Enable memory retrieval</label>
-              <p className="text-[12px] text-text-muted mt-0.5">Pulls relevant history facts dynamically to help future prompts.</p>
+              <label className="text-[13.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.label.enableMemoryRetrieval" /></label>
+              <p className="text-[12px] text-text-muted mt-0.5"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.description.pullsRelevantHistoryFactsDynamicallyToHelp" /></p>
             </div>
             <input
               type="checkbox"
@@ -213,8 +211,8 @@ export function MemoryPanel() {
           {/* Show Context Preview */}
           <div className="flex items-center justify-between soft-separator-y pt-3">
             <div>
-              <label className="text-[13.5px] font-medium text-text-primary">Show pulled context before sending</label>
-              <p className="text-[12px] text-text-muted mt-0.5">Displays a preview box above the chat input allowing fact pruning.</p>
+              <label className="text-[13.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.label.showPulledContextBeforeSending" /></label>
+              <p className="text-[12px] text-text-muted mt-0.5"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.description.displaysAPreviewBoxAboveTheChat" /></p>
             </div>
             <input
               type="checkbox"
@@ -227,8 +225,8 @@ export function MemoryPanel() {
           {/* AI summaries toggle */}
           <div className="flex items-center justify-between soft-separator-y pt-3">
             <div>
-              <label className="text-[13.5px] font-medium text-text-primary">Use AI summaries</label>
-              <p className="text-[12px] text-text-muted mt-0.5">Transmits summary material to Venice model for better fact discovery.</p>
+              <label className="text-[13.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.label.useAiSummaries" /></label>
+              <p className="text-[12px] text-text-muted mt-0.5"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.description.transmitsSummaryMaterialToVeniceModelFor" /></p>
             </div>
             <input
               type="checkbox"
@@ -242,7 +240,7 @@ export function MemoryPanel() {
 
       {/* Index & Folder Management Actions */}
       <div className="rounded-xl soft-panel mesh-surface-elevated p-5 space-y-4">
-        <h3 className="text-[14.5px] font-medium text-text-primary">Maintenance Operations</h3>
+        <h3 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.heading.maintenanceOperations" /></h3>
         <div className="flex flex-wrap gap-3">
           <button
             onClick={handleRebuildIndex}
@@ -255,24 +253,22 @@ export function MemoryPanel() {
             onClick={handleOpenFolder}
             className="px-4 py-1.5 rounded-lg text-[13px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
           >
-            Open Vault Folder
-          </button>
+            <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.action.openVaultFolder" /></button>
         </div>
         {lastIndexed && (
-          <p className="text-[12px] text-text-muted">Last indexed at: {lastIndexed}</p>
+          <p className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.description.lastIndexedAt" /> {lastIndexed}</p>
         )}
       </div>
 
       {/* Remembered Facts List */}
       <div className="rounded-xl soft-panel mesh-surface-elevated p-5 space-y-4">
-        <h3 className="text-[14.5px] font-medium text-text-primary">Curated Facts ({allFacts.length})</h3>
+        <h3 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.heading.curatedFacts" />{allFacts.length})</h3>
         <p className="text-[12.5px] text-text-secondary">
-          These are the key facts extracted locally from your conversation history.
-        </p>
+          <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.description.theseAreTheKeyFactsExtractedLocally" /></p>
 
         <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
           {allFacts.length === 0 ? (
-            <div className="text-center text-[12.5px] text-text-muted py-6">No facts stored yet.</div>
+            <div className="text-center text-[12.5px] text-text-muted py-6"><Trans i18nKey="common:surface.componentsLayoutMemoryPanel.text.noFactsStoredYet" /></div>
           ) : (
             allFacts.map(({ fact, record }) => (
               <div
@@ -282,15 +278,14 @@ export function MemoryPanel() {
                 <div className="flex-1 min-w-0">
                   <div className="text-[13px] text-text-primary leading-normal break-words">{fact.text}</div>
                   <div className="text-[12px] text-text-muted mt-1">
-                    Source: <span className="font-medium">{record.title}</span> • Confidence: {Math.round(fact.confidence * 100)}%
+                    <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.text.source" /> <span className="font-medium">{record.title}</span> <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.text.confidence" /> {Math.round(fact.confidence * 100)}%
                   </div>
                 </div>
                 <button
                   onClick={() => handleForgetFact(fact.id, record)}
                   className="shrink-0 px-2 py-1 text-[12px] font-medium text-danger bg-danger/10 hover:bg-danger/20 border border-transparent rounded transition-colors cursor-pointer"
                 >
-                  Forget
-                </button>
+                  <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.action.forget" /></button>
               </div>
             ))
           )}

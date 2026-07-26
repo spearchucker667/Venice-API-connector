@@ -3,6 +3,8 @@
  */
 
 import { describe, expect, it, beforeEach } from 'vitest';
+import { renderHook } from '@testing-library/react';
+import { useTranslation } from 'react-i18next';
 import {
   changeLanguage,
   formatBytes,
@@ -86,6 +88,13 @@ describe('i18n Core Module', () => {
   });
 
   describe('Language Switching & DOM Attributes', () => {
+    it('interpolates variables through the React translation hook', () => {
+      const { result } = renderHook(() => useTranslation(['settings', 'common']));
+      expect(result.current.t('settings:profiles.aria.setPassword', { name: 'Personal' })).toBe(
+        'Set password for Personal',
+      );
+    });
+
     it('updates active i18n language and HTML attributes immediately', () => {
       changeLanguage('es');
       expect(i18n.language).toBe('es');

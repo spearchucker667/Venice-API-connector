@@ -3,6 +3,7 @@ import { Field } from "../../components/Field";
 import { copyText } from "../../utils/download";
 import { toast } from "../../stores/toast-store";
 import type { ResearchBudget } from "../../research/agent/researchRunner";
+import { Trans } from 'react-i18next';
 
 export function AiResearchTab({
   researchQuestion,
@@ -63,10 +64,9 @@ export function AiResearchTab({
 
   return (
     <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg flex flex-col gap-4">
-      <h3 className="text-[14.5px] font-medium text-text-primary">Deep AI Research Agent</h3>
+      <h3 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsSearchAiresearchtab.heading.deepAiResearchAgent" /></h3>
       <p className="text-[12.5px] text-text-secondary leading-relaxed">
-        Executes a recursive web search loop, scrapes multiple sources, parses citations, and synthesizes a comprehensive final response.
-      </p>
+        <Trans i18nKey="common:surface.componentsSearchAiresearchtab.description.executesARecursiveWebSearchLoopScrapes" /></p>
 
       <Field label="Research Question">
         <input
@@ -85,7 +85,7 @@ export function AiResearchTab({
             className="w-full bg-surface border border-border rounded-lg px-3.5 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-all cursor-pointer"
           >
             <option value="venice">Venice (Brave/Google)</option>
-            <option value="jina">Jina AI Search & Reader</option>
+            <option value="jina"><Trans i18nKey="common:surface.componentsSearchAiresearchtab.option.jinaAiSearchReader" /></option>
           </select>
         </Field>
 
@@ -96,9 +96,9 @@ export function AiResearchTab({
             disabled={researchProviderId !== "venice"}
             className="w-full bg-surface border border-border rounded-lg px-3.5 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-all cursor-pointer disabled:opacity-50"
           >
-            <option value="auto">Auto (default from config)</option>
-            <option value="brave">Brave Search</option>
-            <option value="google">Google Search</option>
+            <option value="auto"><Trans i18nKey="common:surface.componentsSearchAiresearchtab.option.autoDefaultFromConfig" /></option>
+            <option value="brave"><Trans i18nKey="common:surface.componentsSearchAiresearchtab.option.braveSearch" /></option>
+            <option value="google"><Trans i18nKey="common:surface.componentsSearchAiresearchtab.option.googleSearch" /></option>
           </select>
         </Field>
       </div>
@@ -109,13 +109,13 @@ export function AiResearchTab({
           onChange={(e) => setResearchRunMode(e.target.value as "retrieve-only" | "retrieve-and-synthesize")}
           className="w-full bg-surface border border-border rounded-lg px-3.5 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-all cursor-pointer"
         >
-          <option value="retrieve-and-synthesize">Retrieve & Synthesize (uses Venice model)</option>
-          <option value="retrieve-only">Retrieve Only (no AI synthesis)</option>
+          <option value="retrieve-and-synthesize"><Trans i18nKey="common:surface.componentsSearchAiresearchtab.option.retrieveSynthesizeUsesVeniceModel" /></option>
+          <option value="retrieve-only"><Trans i18nKey="common:surface.componentsSearchAiresearchtab.option.retrieveOnlyNoAiSynthesis" /></option>
         </select>
       </Field>
 
       <div className="rounded-lg bg-surface border border-border p-4 space-y-3">
-        <div className="text-[12.5px] font-medium text-text-primary">Budget Controls</div>
+        <div className="text-[12.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsSearchAiresearchtab.text.budgetControls" /></div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {budgetField("Max Queries", researchBudget.maxQueries, 1, 8, (n) =>
             setResearchBudget({ ...researchBudget, maxQueries: n })
@@ -154,8 +154,7 @@ export function AiResearchTab({
           }}
           disabled={!researchOutput}
         >
-          Copy Answer
-        </button>
+          <Trans i18nKey="common:surface.componentsSearchAiresearchtab.action.copyAnswer" /></button>
         <button
           className="px-3.5 py-2 rounded-lg text-[13px] font-medium bg-surface border border-border text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
           onClick={() => {
@@ -164,8 +163,7 @@ export function AiResearchTab({
           }}
           disabled={!researchEvidenceSources}
         >
-          Copy Evidence Sources
-        </button>
+          <Trans i18nKey="common:surface.componentsSearchAiresearchtab.action.copyEvidenceSources" /></button>
       </div>
 
       <textarea
@@ -177,7 +175,7 @@ export function AiResearchTab({
 
       {researchEvidenceSources && (
         <div className="rounded-lg bg-surface border border-border p-4 space-y-2">
-          <div className="text-[12.5px] font-medium text-text-primary">Retrieved Evidence Sources</div>
+          <div className="text-[12.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsSearchAiresearchtab.text.retrievedEvidenceSources" /></div>
           <pre className="text-[12px] text-text-muted whitespace-pre-wrap font-mono">{researchEvidenceSources}</pre>
         </div>
       )}

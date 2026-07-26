@@ -6,6 +6,7 @@ import { getActiveProfileId } from "../../services/activeProfile";
 import type { BackgroundTaskStatus } from "../../types/background-task";
 import { useSettingsStore } from "../../stores/settings-store";
 import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
+import { Trans } from 'react-i18next';
 
 const STATUS_BADGE: Record<BackgroundTaskStatus, string> = {
   idle: "bg-surface-muted text-text-muted border-border",
@@ -79,10 +80,9 @@ export function TaskCenterDrawer() {
       >
         <div className="flex shrink-0 items-center justify-between soft-separator-b p-4">
           <div>
-            <h2 className="text-lg font-semibold text-text-primary">Task Center</h2>
+            <h2 className="text-lg font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.heading.taskCenter" /></h2>
             <p className="text-sm text-text-secondary mt-0.5">
-              Recent background generations
-            </p>
+              <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.description.recentBackgroundGenerations" /></p>
           </div>
           <button
             type="button"
@@ -98,7 +98,7 @@ export function TaskCenterDrawer() {
 
         <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4" tabIndex={-1}>
           {tasks.length === 0 ? (
-            <p className="text-center text-sm text-text-muted mt-8">No recent tasks.</p>
+            <p className="text-center text-sm text-text-muted mt-8"><Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.description.noRecentTasks" /></p>
           ) : (
             tasks.map(task => {
               const typeLabel = task.type.charAt(0).toUpperCase() + task.type.slice(1);
@@ -122,8 +122,7 @@ export function TaskCenterDrawer() {
                         }
                       />
                       <h3 className="font-medium text-sm text-text-primary truncate">
-                        {typeLabel} generation
-                      </h3>
+                        {typeLabel} <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.heading.generation" /></h3>
                     </div>
                     <span className={`shrink-0 inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wider ${STATUS_BADGE[task.status]}`}>
                       {task.type === 'video' && task.stage ? task.stage : task.status}
@@ -147,13 +146,11 @@ export function TaskCenterDrawer() {
                         onClick={() => cancelTask(task.id)}
                         className="rounded bg-surface-base px-2 py-1 text-xs font-medium text-text-primary hover:bg-surface-muted transition-colors border border-border"
                       >
-                        Cancel
-                      </button>
+                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.cancel" /></button>
                     )}
                     {isRunning && cancellationUnsupported && (
                       <span className="px-2 py-1 text-xs text-warning">
-                        Cancellation unavailable
-                      </span>
+                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.text.cancellationUnavailable" /></span>
                     )}
                     {(task.status === 'failed' || task.status === 'timeout' || task.status === 'aborted') && (
                       <button
@@ -161,8 +158,7 @@ export function TaskCenterDrawer() {
                         onClick={() => retryTask(task.id)}
                         className="rounded bg-surface-base px-2 py-1 text-xs font-medium text-text-primary hover:bg-surface-muted transition-colors border border-border"
                       >
-                        Retry
-                      </button>
+                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.retry" /></button>
                     )}
                     {task.status === 'completed' && task.resultUrl && (
                       <button
@@ -170,16 +166,14 @@ export function TaskCenterDrawer() {
                         onClick={() => handleOpenTask(task.id)}
                         className="rounded bg-surface-base px-2 py-1 text-xs font-medium text-text-primary hover:bg-surface-muted transition-colors border border-border"
                       >
-                        Open
-                      </button>
+                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.open" /></button>
                     )}
                     <button
                       type="button"
                       onClick={() => clearTask(task.id)}
                       className="rounded bg-surface-base px-2 py-1 text-xs font-medium text-danger hover:bg-danger/10 transition-colors border border-border"
                     >
-                      Clear
-                    </button>
+                      <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.clear" /></button>
                   </div>
                 </div>
               );

@@ -4,6 +4,24 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-07-26 (ChatGPT 5.6 audit implementation — local execution complete, external review retained)
+
+**Work order:** `docs/audits/TODO/CHATGPT_5_6_REPOSITORY_AUDIT_HANDOFF_2026-07-26.md`, reconciled against the canonical `main` checkout rather than accepted from the supplied ZIP snapshot.
+
+**Verified finding:** the audit's 1,291 production JSX-text candidates across 84 files were reproducible in the live checkout. The application had also drifted from i18next v26's supported interpolation-call shape, the safety verifier treated localized copy as executable bypass code, translation status conflated catalog completeness with native review, two feature verifiers depended on English literals, and the generated locale payload was being absorbed into an unrelated 1.47 MiB feature chunk.
+
+**Implemented local audit work:** P1-01 migrated all 1,291 production candidates to scoped `Trans` keys and expanded all 12 `common` catalogs; the strict scanner and ratchet baseline now report zero candidates across 479 production files. P2-01 remains wired into `verify:contracts:static`, with exact-count, rename, decrease, reappearance, and reason-required escape-hatch coverage. Translation tooling is read-only by default, requires explicit status writes, separates 100% catalog coverage from native review, uses explicit HTTPS translation endpoint policy, and discards provider response bodies from errors. All 11 non-English locales are truthfully `first-pass-machine` and `isProductionComplete: false`; identical technical/cognate values are recorded in a locale-specific exception file but do not count as native review. The i18next v26 interpolation calls were normalized and protected by a real hook regression test. Locale catalogs now build as one bounded chunk per locale, restoring the unchanged 300 KiB unknown-chunk budget.
+
+**Safety, hygiene, and verifier reconciliation:** comment/string stripping prevents the safety guard from rejecting harmless localized copy while preserving executable bypass detection. English-literal feature verifiers now assert stable translation keys. Stale Markdown paths and handoff checks were updated for the user-owned documentation relocation. `.agent-backups/` and `patch_runner.js` are removed from repository tracking while their ignored local copies remain intact.
+
+**Validation under Node 22.13.1/npm 10.9.2:** `npm ci`, zero-warning ESLint, both TypeScript projects, `npm test` (432 files / 4,732 tests passed; one file / one test skipped), the segmented `test:ci` matrix, strict hardcoded-string verification, catalog/status generation, safety, Markdown, archive, handoff, bundle, static/feature/release contracts, build, and unsigned x64+arm64 macOS DMG/ZIP packaging/checksum verification passed. The first monolithic test run had one suite-load timeout and one stale English-literal assertion; the exact server case passed in 16 ms in isolation, the assertion was corrected to validate the translation key plus en-US value, and the full rerun passed. `npm audit fix` upgraded Electron Builder within its declared range and removed the moderate `tar` advisory; `npm audit --audit-level=moderate` still fails on 16 high transitive `brace-expansion` findings for which npm offers only a breaking Electron Builder downgrade.
+
+**Rendered/manual evidence:** the in-app Browser completed onboarding and Language & Region switches for all 12 locales at desktop and compact checks, confirmed Arabic `dir=rtl`, found no unresolved keys or horizontal document overflow, and exercised the four-step onboarding flow. Unsigned macOS packages were built and structurally verified, but qualified native-speaker review, signed/notarized launch evidence, screen-reader/keyboard/high-zoom review, and cross-platform packaged review remain external acceptance work and are not inferred from automated coverage.
+
+**Remaining audit work:** no further local code migration from this work order is known. P1-02 remains blocked on qualified native reviewers and dated sign-off. The human-only portion of P2-02 remains open. P2-03 is locally green except for the upstream transitive `brace-expansion` audit advisory; `npm run ci` cannot be honestly green until a compatible upstream fix lands or the project explicitly approves a reviewed dependency strategy.
+
+### Prior Session Summary (i18n Full-App Remediation — Phases 0–9 closed; Phase 6 sweep and external manual QA deferred)
+
 **Date:** 2026-07-26 (i18n Full-App Remediation — Phases 0–9 closed; Phase 6 sweep and external manual QA deferred)
 
 **Work Order:** `MINIMAX-M3-I18N-FULL-APP-REMEDIATION-2026-07-26` builds on the `VF-I18N-REMEDIATION-20260725-01` foundation (Phases 0/1/3/6) and closes Phases 0–9 across status-isolation, runtime marker firewall, dynamic-key manifest, hardcoded-string audit, first-pass machine translations, visible-surface inventory, formatter+RTL coverage, layout scaffolding, and `isProductionComplete` derivation from the truthful status JSON. Phases 6 (per-component rewiring of 1,016 candidate strings) and external Electron manual QA across 11 locales remain multi-session / multi-human work.
@@ -1154,6 +1172,8 @@ The earlier P1 audit closure (P1 #1–#8 with `VERIFY-128..131`) remains the con
 
 ## Open TODO Ledger
 
+**ChatGPT 5.6 localization audit reconciliation (2026-07-26):** local implementation is closed. P1-01 migrated all 1,291 production candidates and the strict/ratchet inventory is zero. P2-01 is closed. P2-02 has all-locale browser/RTL/unresolved-key/overflow evidence and verified unsigned macOS packages, but native-speaker, signed/notarized, keyboard/screen-reader/high-zoom, and Windows packaged acceptance remain external. P2-03 is green across clean install, lint, typecheck, full and segmented tests, build, bundle, contracts, and macOS artifacts; the configured audit/CI gate remains blocked by 16 high transitive `brace-expansion` findings with no compatible non-breaking Electron Builder remediation currently available. The audit and handoff under `docs/audits/TODO/` are evidence and execution input; `docs/ROADMAP.md` remains status authority.
+
 **Draft Store Hardening verification blockers (2026-07-24, partial resolution 2026-07-24):** `VF-CHARACTER-CREATOR-HARDENING-001` in `docs/ROADMAP.md` tracks the reproduced concurrent-approval duplicate creation, orphaned-character rollback failure, backup compatibility regression, mocked/incomplete acceptance coverage, reachable minimal IPC validation, missing JPEG/WebP end-to-end evidence, unresolved 390×844 RP Studio overflow/clipping, and missing README/repository-tree synchronization. The 2026-07-24 implementation session resolved the three originally authorised items:
 
 - **P0-01 concurrent duplicates** — Closed at the JS layer via a per-draft FIFO mutex (`approveLockByDraft` / `withDraftApprovalLock` in `src/services/characterCreatorImportService.ts`) plus a last-writer-wins verify inside `CharacterDraftService.tryMarkCreated`. New-character IDs use `crypto.randomUUID()`. The independent audit probe `tests/character-creator/independentAuditProbe.test.ts` now passes its three tests.
@@ -1279,6 +1299,48 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 **Dependency-audit status (refreshed 2026-07-23):** the prior July 22 transitive-vulnerability note is superseded by the current locked dependency tree. `npm audit --audit-level=moderate` now reports zero vulnerabilities inside the passing `npm run ci` gate; no dependency edit was required in this session.
 
 ## Validation Matrix
+
+### July 26 — ChatGPT 5.6 audit implementation closeout
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| `npm ci` with Node 22.13.1/npm 10.9.2 | PASS | Clean dependency install completed; `http-proxy-middleware@4.2.0` warns that its supported Node 22 floor is 22.15.0, while the repository's declared floor remains 22.13.0. |
+| `npm run lint:eslint` | PASS | Zero errors or warnings. |
+| `npm run typecheck` | PASS | Renderer and Electron TypeScript projects passed. |
+| `npm test` | PASS | 432 files / 4,732 tests passed; one file / one test skipped. |
+| `npm run test:ci` | PASS | Server, Electron, ingestion, unit, UI, and contract segments passed serially. |
+| `npm run i18n:extract` | PASS | 1,918 usages / 1,829 unique / 0 missing; 208 unused catalog entries reported. |
+| `npm run i18n:verify-hardcoded -- --strict` | PASS | Zero production candidates across 479 files. |
+| `npm run i18n:coverage:write && npm run i18n:locale-status` | PASS | All catalogs 100%; en-US complete; 11 non-English locales correctly remain `first-pass-machine` / incomplete. |
+| `npm run verify:contracts:static` | PASS | Includes bundle, safety, Markdown, handoff, i18n, prompt-language, and hardcoded-string gates. |
+| `npm run verify:contracts:features` + `npm run verify:contracts:release` | PASS | All feature and release contracts passed after English-literal verifier drift was replaced with stable key assertions. |
+| `npm run build` | PASS | Web, server, and Electron builds passed; locale catalogs are bounded per-locale chunks and all bundle budgets pass. |
+| `npm run dist:mac` | PASS | Unsigned x64 and arm64 DMG/ZIP artifacts and checksums built; signing was intentionally unavailable (`identity: null`). |
+| `npm run verify:dist:mac` | PASS | Both architectures, ZIP/DMG files, blockmaps, and `latest-mac.yml` verified. |
+| In-app Browser rendered QA | PARTIAL PASS | All 12 locales switched in onboarding and Language & Region; Arabic set `dir=rtl`; no unresolved keys or horizontal document overflow; onboarding completed. Temporary compact-viewport compositor output was malformed and the tab was dropped on reset, so it is not treated as screenshot evidence. |
+| `npm audit --audit-level=moderate` | **FAIL (upstream)** | Moderate `tar` advisory was removed by a within-range Electron Builder/lockfile update. Sixteen high `brace-expansion` findings remain transitive; npm offers only a breaking Electron Builder downgrade. No force fix or suppression applied. |
+| `npm run ci` | BLOCKED | Every constituent local gate except the configured npm audit is independently green; aggregate CI cannot be reported green while the advisory remains. |
+
+### July 26 — ChatGPT 5.6 audit reconciliation, P2-01 baseline ratchet
+
+| Command | Result | Evidence |
+|---|---|---|
+| `npm run i18n:verify-hardcoded` | PASS (advisory inventory) | Reproduced 1,304 candidates across 92 files before production-test exclusion. |
+| `npx eslint scripts/verify-hardcoded-strings.cjs scripts/verify-hardcoded-strings.test.ts` | PASS | Zero errors or warnings under Node 22.13.1 after punctuation normalization was made lint-safe. |
+| `npx vitest run scripts/verify-hardcoded-strings.test.ts --no-file-parallelism` | PASS | 1 file / 5 tests. |
+| `npm run i18n:hardcoded-baseline` | PASS | Wrote 1,291 production candidates as 1,231 exact baseline entries; no `*.test.*`/`*.spec.*` entries. |
+| `npm run verify:i18n-hardcoded-regressions` | PASS | 0 regressions / 0 decreases against the generated baseline. |
+| `npx vitest run scripts/verify-hardcoded-strings.test.ts scripts/verify-ci-contract.test.ts --no-file-parallelism` | PASS | 2 files / 11 tests. |
+| `npm run verify:ci-contract` | PASS | Aggregate contracts wiring and workflow coverage accepted. |
+| `npm run typecheck` | PASS | Renderer and Electron TypeScript projects completed without errors. |
+| `npm run build` | PASS | Vite transformed 3,277 modules; renderer, server, Electron main, and preload bundles completed. |
+| `npm run lint:eslint` | FAIL — PRE-EXISTING | Seven previously recorded issues: two errors plus one warning in retired `scripts/generate-locales.cjs`, unused `NavGroup`, and three missing `t` hook dependencies. The focused changed-file ESLint command passes. |
+| `npm test` | FAIL — PRE-EXISTING/UNRELATED | 427 files / 4,704 tests passed; one file / one test skipped; five files failed with ten failed tests plus the `translate-missing` collection-time retirement guard. Failures are the documentation-link repository assertion, release badge fixture, four ProfilePanel interpolation assertions, four CharacterCreatorView QueryClient setup assertions, and the retired translator guard. The new verifier suite passes 5/5. |
+| `npm run verify:markdown-links` | FAIL — PRE-EXISTING MOVE | 27 broken links caused by moved user-owned audit/report documents retaining their old relative paths. |
+| `npm run verify:repo-handoff-hygiene` | FAIL — PRE-EXISTING MOVE | The verifier still requires `docs/reports/README.md`, which the dirty worktree moved to `docs/reports/historical/README.md`. |
+| `npm run verify:roadmap-current`; `npm run verify:agent-docs` | PASS | Current-work authority and agent-document contracts remain valid. |
+| Full aggregate contracts/package matrix | NOT RUN | Aggregate static contracts would stop on the documented pre-existing release/Markdown/handoff failures; packaged verification remains P2-03. |
+| Packaged locale/RTL/accessibility QA | NOT RUN | Remains P2-02 and depends on the P1 migration/review work. |
 
 ### July 24 — Draft Store Hardening P0-01 + P0-02 + P1-03 implementation
 
@@ -1790,6 +1852,22 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+### 2026-07-26 — ChatGPT 5.6 audit local implementation closeout
+
+- Migrated 1,291 production JSX-text candidates across 84 files to 1,242 scoped `Trans` keys, expanded all 12 locale catalogs, and ratcheted the hardcoded-string baseline to zero.
+- Split catalog completeness from qualified native review, added explicit native-review and locale-specific identical-value evidence, hardened translation endpoint/error handling, repaired i18next v26 interpolation calls, and kept all non-English locales truthfully incomplete.
+- Reconciled safety and feature verifiers with localized source, repaired stale documentation links for the user-owned evidence relocation, removed three local-only contaminants from Git tracking while retaining ignored local copies, and split translation catalogs into bounded locale chunks.
+- Passed Node 22 clean install, zero-warning lint, typecheck, full 4,732-test Vitest, segmented CI tests, static/feature/release contracts, build, bundle budgets, and verified unsigned x64/arm64 macOS packages/checksums. Recorded the remaining upstream `brace-expansion` audit failure and external native/signed/accessibility/cross-platform review without converting either into success.
+
+### 2026-07-26 — ChatGPT 5.6 audit reconciliation and P2-01 ratchet
+
+- Reviewed both active files under `docs/audits/TODO/` and reconciled the extracted-ZIP claims against the live canonical checkout.
+- Reproduced the 1,304-candidate advisory inventory under the declared Node 22.13.1 runtime.
+- Implemented an exact candidate-identity baseline, explicit update command, no-regression comparison, reason-required allow directives, production-test exclusion, focused tests, and static-contract/CI wiring.
+- Generated `config/i18n-hardcoded-baseline.json` with 1,291 production candidates in 1,231 exact entries.
+- Passed focused lint, 11 focused tests, the baseline gate, CI-contract verification, and both TypeScript projects; broad P2-03 validation and P2-02 manual QA remain open.
+- Ran the production build successfully and completed the full test surface; 4,704 tests passed while unrelated pre-existing translation-fixture, QueryClient, release-metadata, and moved-document link failures remained. Recorded the seven pre-existing full-lint issues and the documentation-move blockers without widening this tranche into unrelated remediation.
 
 ### 2026-07-24 — Independent Draft Store Hardening verification
 

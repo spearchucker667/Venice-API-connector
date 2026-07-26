@@ -2,6 +2,7 @@ import { cn } from '../../lib/utils'
 import { Spinner } from './spinner'
 import { RefreshCw } from 'lucide-react'
 import { uiSoundController } from '../../services/uiSoundController'
+import { Trans } from 'react-i18next';
 
 export function Label({ children, htmlFor, hint }: { children: React.ReactNode; htmlFor?: string; hint?: string }) {
   return (
@@ -71,7 +72,7 @@ export function PrimaryButton({ onClick, disabled, loading, children, ariaLabel,
       )}
     >
       {loading ? (
-        <span className="flex items-center justify-center gap-2"><Spinner className="text-disabled-fg" /> Working…</span>
+        <span className="flex items-center justify-center gap-2"><Spinner className="text-disabled-fg" /> <Trans i18nKey="common:surface.componentsUiShared.text.working" /></span>
       ) : children}
     </button>
   )
@@ -165,8 +166,7 @@ export function ExamplePrompts({ items, onPick, title = 'Try one of these', onSh
             title="Shuffle suggestions"
           >
             <RefreshCw className="w-3 h-3 animate-hover-spin" />
-            Shuffle
-          </button>
+            <Trans i18nKey="common:surface.componentsUiShared.action.shuffle" /></button>
         )}
       </div>
       <div className="flex flex-col gap-2">

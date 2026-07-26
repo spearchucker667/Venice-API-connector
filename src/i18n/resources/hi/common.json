@@ -71,5 +71,1917 @@
   "isWebEnabled": "सत्य",
   "stable-audio": "q1",
   "video-model": "q2",
-  "promptLibrary": "lib-1"
+  "promptLibrary": "lib-1",
+  "surface": {
+    "app": {
+      "text": {
+        "skipToMainContent": "मुख्य सामग्री पर जाएं",
+        "loadingWorkflows": "वर्कफ़्लो लोड हो रहा है...",
+        "loadingPlayground": "खेल का मैदान लोड हो रहा है...",
+        "loadingRpStudio": "आरपी स्टूडियो लोड हो रहा है...",
+        "loadingHistory": "इतिहास लोड हो रहा है...",
+        "loadingImageStudio": "इमेज स्टूडियो लोड हो रहा है...",
+        "loadingImageInspector": "इमेज इंस्पेक्टर लोड हो रहा है...",
+        "loadingAudio": "ऑडियो लोड हो रहा है...",
+        "loadingMusic": "संगीत लोड हो रहा है...",
+        "loadingVideo": "वीडियो लोड हो रहा है...",
+        "loadingEmbeddings": "एम्बेडिंग लोड हो रहा है...",
+        "loadingStatus": "स्थिति लोड हो रही है...",
+        "loadingCharacters": "कैरेक्टर लोड हो रहा है...",
+        "loadingCharacterCreator": "कैरेक्टर क्रिएटर लोड हो रहा है...",
+        "loadingSettings": "सेटिंग्स लोड हो रही है...",
+        "loadingSearch": "सर्च लोड हो रहा है...",
+        "loadingMediaStudio": "मीडिया स्टूडियो लोड हो रहा है...",
+        "loadingPromptLibrary": "प्रॉम्प्ट लाइब्रेरी लोड हो रही है...",
+        "loadingScenes": "दृश्य लोड हो रहे हैं...",
+        "loadingStorage": "स्टोरेज लोड हो रहा है...",
+        "loadingDocuments": "दस्तावेज़ लोड हो रहे हैं..."
+      }
+    },
+    "componentsCharactersview": {
+      "action": {
+        "chat": "चैट",
+        "refresh": "रिफ़्रेश करें",
+        "edit": "संपादित करें",
+        "close": "बंद करें",
+        "createStCard": "ST कार्ड बनाएँ",
+        "select": "चुनें",
+        "details": "विवरण",
+        "duplicateLocally": "स्थानीय रूप से डुप्लिकेट करें",
+        "startChat": "चैट प्रारंभ करें",
+        "duplicate": "डुप्लिकेट",
+        "exportStCardJson": "निर्यात करें ST कार्ड JSON",
+        "deleteLocalCharacter": "स्थानीय वर्ण हटाएं",
+        "importStCard": "आयात ST कार्ड",
+        "drafts": "ड्राफ्ट"
+      },
+      "heading": {
+        "characters": "चरित्र",
+        "local": "स्थानीय",
+        "featured": "विशेष रुप से प्रदर्शित",
+        "adult": "वयस्क",
+        "hosted": "होस्ट किया गया"
+      },
+      "label": {
+        "model": "मॉडल",
+        "sort": "सॉर्ट करें"
+      },
+      "text": {
+        "featured": "फ़ीचर्ड",
+        "model": "मॉडल:",
+        "ratings": "रेटिंग्स",
+        "imports": "आयात",
+        "venice": "वेनिस ↗",
+        "needsValidation": "सत्यापन की आवश्यकता है",
+        "includeAdultCharacters": "वयस्क वर्ण शामिल करें",
+        "webEnabledOnly": "केवल वेब-सक्षम",
+        "loadingCharacters": "वर्ण लोड हो रहे हैं...",
+        "noCharactersFoundTryClearingTheSearch": "कोई अक्षर नहीं मिला। खोज बॉक्स को साफ़ करने या वयस्क पात्रों को सक्षम करने का प्रयास करें।"
+      },
+      "description": {
+        "browseHostedAndLocallyAuthoredCharactersIn": "एक हब में होस्ट किए गए और स्थानीय रूप से लिखे गए वर्ण ब्राउज़ करें।"
+      }
+    },
+    "componentsStatusview": {
+      "heading": {
+        "status": "स्थिति",
+        "runtime": "रनटाइम",
+        "storage": "स्टोरेज",
+        "safetyGuardAudit": "सुरक्षा गार्ड ऑडिट",
+        "lastRequest": "अंतिम अनुरोध"
+      },
+      "description": {
+        "aggregatedRuntimeInfoForTheCurrentBuild": "वर्तमान निर्माण के लिए एकत्रित रनटाइम जानकारी। विस्तृत कंसोल आउटपुट का निरीक्षण करने के लिए",
+        "toInspectDetailedConsoleOutput": "खोलें।",
+        "statusProvidesTransportStorageAuditAndRequest": "स्थिति परिवहन, भंडारण, ऑडिट और अनुरोध निदान प्रदान करती है। सुविधा-विशिष्ट नियंत्रणों के लिए समर्पित लाइब्रेरी, अनुसंधान, सेटिंग्स और वर्कफ़्लो टैब का उपयोग करें।"
+      },
+      "text": {
+        "logsFolder": "लॉग फ़ोल्डर",
+        "bySeverity": "गंभीरता से:",
+        "lastError": "अंतिम त्रुटि:",
+        "noRequestsYetLastErrorBelowIf": "अभी तक कोई अनुरोध नहीं (यदि कोई हो तो नीचे अंतिम त्रुटि)"
+      }
+    },
+    "componentsThememaker": {
+      "action": {
+        "cancel": "रद्द करें",
+        "createNewTheme": "+ नई थीम बनाएं",
+        "importTheme": "थीम आयात करें...",
+        "exportTheme": "थीम निर्यात करें",
+        "darkMode": "डार्क मोड",
+        "lightMode": "लाइट मोड",
+        "saveTheme": "थीम सहेजें",
+        "deleteTheme": "थीम हटाएं",
+        "restoreDefaultTheme": "पुनर्स्थापित करें डिफ़ॉल्ट थीम",
+        "replaceExisting": "मौजूदा को बदलें",
+        "importAsCopy": "कॉपी के रूप में आयात करें",
+        "importApply": "आयात और लागू करें"
+      },
+      "heading": {
+        "themeSystemEditor": "थीम सिस्टम और संपादक",
+        "importThemePreview": "आयात थीम पूर्वावलोकन"
+      },
+      "description": {
+        "configureThemeColorsBorderContrastFocusRings": "Venice Forge में थीम रंग, बॉर्डर कंट्रास्ट, फोकस रिंग और एक्शन बटन शैलियों को कॉन्फ़िगर करें।",
+        "reviewThemeMetadataAndPreviewLayoutBefore": "अपने कार्यक्षेत्र पर लागू करने से पहले थीम मेटाडेटा और पूर्वावलोकन लेआउट की समीक्षा करें।"
+      },
+      "label": {
+        "selectActiveTheme": "सक्रिय थीम चुनें"
+      },
+      "text": {
+        "unsavedDraftChanges": "बिना सहेजे गए ड्राफ्ट परिवर्तन",
+        "invalid": "अमान्य",
+        "liveThemePreview": "लाइव थीम पूर्वावलोकन",
+        "showingLivePreviewOfActiveDraft": "सक्रिय ड्राफ्ट का लाइव पूर्वावलोकन दिखा रहा है",
+        "themeName": "थीम का नाम:",
+        "mode": "मोड:",
+        "aCustomThemeNamedLdquo": "आपके कार्यक्षेत्र में \"",
+        "rdquoAlreadyExistsInYourWorkspace": "\" नामक एक कस्टम थीम पहले से मौजूद है।",
+        "importedLayoutPreview": "आयातित लेआउट पूर्वावलोकन"
+      }
+    },
+    "componentsThemepreview": {
+      "text": {
+        "status": "स्थिति",
+        "forge": "फोर्ज",
+        "activeItem": "सक्रिय आइटम",
+        "inactiveItem": "निष्क्रिय आइटम",
+        "selectedItem": "चयनित आइटम",
+        "primaryButton": "प्राथमिक बटन",
+        "secondary": "माध्यमिक",
+        "inputField": "इनपुट फ़ील्ड…",
+        "focusedControl": "केंद्रित नियंत्रण",
+        "alertMessageBoundary": "चेतावनी संदेश सीमा",
+        "contrastWarnings": "कंट्रास्ट चेतावनियाँ:"
+      }
+    },
+    "componentsAudioAudioView": {
+      "text": {
+        "voice": "आवाज़",
+        "download": "डाउनलोड",
+        "text": "पाठ",
+        "format": "प्रारूप",
+        "speed": "गति",
+        "generateSpeech": "भाषण उत्पन्न करें",
+        "transcribe": "प्रतिलेखन",
+        "output": "आउटपुट",
+        "pressGenerateToSynthesizeSpeech": "भाषण को संश्लेषित करने के लिए जेनरेट दबाएं",
+        "transcript": "प्रतिलेख",
+        "transcriptAppearsHere": "प्रतिलेख यहां दिखाई देता है"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatordrafteditor": {
+      "label": {
+        "creatorNotes": "निर्माता टिप्पणियाँ",
+        "postHistoryInstructions": "इतिहास-पश्चात निर्देश",
+        "characterName": "चरित्र का नाम *",
+        "tagsCommaSeparated": "टैग (अल्पविराम से अलग)",
+        "fullIdentityBackground": "पूर्ण पहचान और पृष्ठभूमि",
+        "personalitySpeechStyle": "व्यक्तित्व और भाषण शैली",
+        "scenarioContext": "परिदृश्य संदर्भ",
+        "firstMessagePrimaryGreeting": "पहला संदेश (प्राथमिक अभिवादन) *",
+        "alternateGreetings": "वैकल्पिक अभिवादन",
+        "exampleDialogue": "उदाहरण संवाद",
+        "systemPromptOverride": "सिस्टम प्रॉम्प्ट ओवरराइड",
+        "avatarControls": "अवतार नियंत्रण",
+        "visualAvatarPrompt": "विज़ुअल अवतार प्रॉम्प्ट",
+        "naturalLanguageRequest": "प्राकृतिक भाषा अनुरोध"
+      },
+      "text": {
+        "enabled": "सक्षम",
+        "draftRev": "ड्राफ्ट रेव",
+        "saveDraft": "ड्राफ्ट सहेजें",
+        "validate": "मान्य करें",
+        "approveCreateCharacter": "स्वीकृत करें और कैरेक्टर बनाएं",
+        "assumptions": "धारणाएं:",
+        "aiRegenerate": "AI पुनर्जीवित",
+        "addAlternateGreeting": "वैकल्पिक अभिवादन जोड़ें",
+        "advancedPromptingInstructionsDirectlyModifySystemPrompt": "उन्नत संकेत निर्देश सीधे मॉडल निष्पादन के दौरान सिस्टम प्रॉम्प्ट स्टीयरिंग को संशोधित करते हैं। निर्माण से पहले सावधानीपूर्वक निरीक्षण करें.",
+        "noAvatarSelected": "कोई अवतार चयनित नहीं",
+        "chooseImageFile": "छवि फ़ाइल चुनें",
+        "generateAvatar": "अवतार उत्पन्न करें",
+        "addLoreEntry": "विद्या प्रविष्टि जोड़ें",
+        "noEmbeddedLoreEntriesYetAddKeywords": "अभी तक कोई एम्बेडेड विद्या प्रविष्टियाँ नहीं। गहन चरित्र विश्व निर्माण के लिए कीवर्ड और पृष्ठभूमि विवरण जोड़ें।",
+        "draftId": "ड्राफ्ट आईडी:",
+        "revisionNumber": "संशोधन संख्या:",
+        "creatorModel": "निर्माता मॉडल:",
+        "specification": "विशिष्टता:",
+        "aiAssistedRevisions": "AI सहायता प्राप्त संशोधन"
+      },
+      "heading": {
+        "embeddedLorebookWorldInfo": "एंबेडेड लोरबुक और विश्व जानकारी"
+      },
+      "description": {
+        "manageWorldLoreEntriesEmbeddedInsideThis": "इस कैरेक्टर कार्ड V2 ड्राफ्ट के अंदर एम्बेडेड विश्व विद्या प्रविष्टियों को प्रबंधित करें।"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorerror": {
+      "text": {
+        "copy": "कॉपी करें",
+        "diagnosticMessage": "डायग्नोस्टिक संदेश",
+        "returnToDraft": "ड्राफ्ट पर लौटें",
+        "retryOperation": "पुनः प्रयास करें ऑपरेशन"
+      },
+      "heading": {
+        "characterCreatorError": "चरित्र निर्माता त्रुटि"
+      },
+      "description": {
+        "anErrorOccurredDuringGenerationOrCard": "जनरेशन या कार्ड प्रोसेसिंग के दौरान एक त्रुटि हुई। आपका वर्तमान प्रारूप और विचार सुरक्षित रखा गया है।"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorlocalpickermodal": {
+      "action": {
+        "cancel": "रद्द करें"
+      },
+      "heading": {
+        "selectLocalCharacterToEdit": "संपादित करने के लिए स्थानीय कैरेक्टर का चयन करें"
+      },
+      "description": {
+        "chooseACharacterFromYourLocalLibrary": "कैरेक्टर क्रिएटर में ड्राफ्ट के रूप में खोलने के लिए अपनी स्थानीय लाइब्रेरी से एक कैरेक्टर चुनें।"
+      },
+      "text": {
+        "editDraft": "ड्राफ्ट संपादित करें →"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorprocesspanel": {
+      "text": {
+        "active": "सक्रिय",
+        "aiDesignProcess": "AI डिज़ाइन प्रक्रिया",
+        "designDirectionSummary": "डिज़ाइन दिशा और सारांश",
+        "interpretation": "व्याख्या:",
+        "initializingAiProcessPipeline": "AI प्रक्रिया पाइपलाइन प्रारंभ करना...",
+        "cancelGeneration": "जनरेशन रद्द करें"
+      },
+      "description": {
+        "thisLogShowsUserFacingDesignDecisions": "यह लॉग उपयोगकर्ता-सामना वाले डिज़ाइन निर्णय और सत्यापन घटनाओं को दिखाता है, निजी छिपे हुए तर्क को नहीं।"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorwelcome": {
+      "heading": {
+        "characterCreator": "चरित्र निर्माता"
+      },
+      "text": {
+        "create": "बनाएं",
+        "delete": "हटाएं",
+        "creatorModel": "निर्माता मॉडल:",
+        "immutable": "(अपरिवर्तनीय)",
+        "optionalDesignConstraintsContext": "वैकल्पिक डिजाइन बाधाएं और संदर्भ",
+        "allGeneratedContentRemainsADraftUntil": "जब तक आप इसे अनुमोदित नहीं करते तब तक सभी उत्पन्न सामग्री एक मसौदा बनी रहती है।",
+        "createDraft": "ड्राफ्ट बनाएं",
+        "importExistingCard": "मौजूदा कार्ड आयात करें",
+        "editLocalCharacter": "स्थानीय चरित्र संपादित करें",
+        "describe": "वर्णन करें",
+        "review": "समीक्षा करें",
+        "recentUnfinishedDrafts": "हाल के अधूरे ड्राफ्ट",
+        "rev": "रेव",
+        "duplicate": "डुप्लिकेट"
+      },
+      "description": {
+        "turnARoughIdeaIntoAComplete": "एक मोटे विचार को पूर्ण, संपादन योग्य चरित्र कार्ड में बदलें।",
+        "startWithASentenceADetailedConcept": "एक वाक्य, एक विस्तृत अवधारणा, या एक मौजूदा चरित्र मूलरूप से प्रारंभ करें। निर्माता एक संपूर्ण ड्राफ्ट बनाएगा जिसका आप निरीक्षण कर सकते हैं, पुनः लिख सकते हैं, सहेज सकते हैं या निर्यात कर सकते हैं। जब तक आप इसे अनुमोदित नहीं करते तब तक आपकी चरित्र लाइब्रेरी में कुछ भी नहीं जोड़ा जाता है।",
+        "enterAnythingFromAOneLineConcept": "एक-पंक्ति अवधारणा से विस्तृत चरित्र रूपरेखा तक कुछ भी दर्ज करें।",
+        "inspectAndEditTheIdentityPersonalityScenario": "पहचान, व्यक्तित्व, परिदृश्य, अभिवादन, संवाद उदाहरण और व्यवहार संबंधी निर्देशों का निरीक्षण और संपादन करें।",
+        "approveTheFinalDraftToAddThe": "अपने स्थानीय पुस्तकालय में चरित्र जोड़ने या एक संगत कार्ड निर्यात करने के लिए अंतिम ड्राफ्ट को मंजूरी दें।"
+      },
+      "label": {
+        "characterConcept": "चरित्र अवधारणा",
+        "tone": "टोन",
+        "relationshipToUser": "उपयोगकर्ता से संबंध",
+        "contentRating": "सामग्री रेटिंग"
+      },
+      "option": {
+        "adultUncensored": "वयस्क बिना सेंसर किया हुआ"
+      },
+      "action": {
+        "open": "खोलें"
+      }
+    },
+    "componentsChatCharacterchatsview": {
+      "heading": {
+        "characterChats": "चरित्र चैट",
+        "startALocalCharacterChat": "एक स्थानीय चरित्र चैट प्रारंभ करें",
+        "noCharacterChatsYet": "अभी तक कोई वर्ण चैट नहीं"
+      },
+      "action": {
+        "edit": "संपादित करें",
+        "close": "बंद करें",
+        "chat": "चैट",
+        "newStCard": "नया ST कार्ड",
+        "browseHosted": "होस्टेड ब्राउज़ करें",
+        "startChat": "चैट प्रारंभ करें",
+        "browseCharacters": "वर्ण ब्राउज़ करें",
+        "createLocalCharacter": "स्थानीय वर्ण बनाएं",
+        "browseHostedCharacters": "होस्ट किए गए वर्ण ब्राउज़ करें ↗",
+        "createNewStCard": "+ नया ST कार्ड बनाएं"
+      },
+      "description": {
+        "hostedAndLocalCharacterConversations": "होस्ट और स्थानीय चरित्र वार्तालाप",
+        "noCharacterChatsMatchThisSearch": "कोई भी चरित्र चैट इस खोज से मेल नहीं खाता।",
+        "selectAnyOfYourLocallyCreatedCharacters": "एक समर्पित वार्तालाप शुरू करने के लिए अपने स्थानीय रूप से बनाए गए किसी भी वर्ण का चयन करें।",
+        "noLocalCharactersMatch": "कोई स्थानीय वर्ण मेल नहीं खाता \"",
+        "chooseAHostedOrLocalCharacterTo": "एक समर्पित चरित्र वार्तालाप शुरू करने के लिए एक होस्ट किया गया या स्थानीय वर्ण चुनें।"
+      },
+      "text": {
+        "searchCharacterChats": "चरित्र चैट खोजें",
+        "localCharacters": "स्थानीय वर्ण",
+        "available": "उपलब्ध हैं",
+        "chat": "चैट →"
+      },
+      "label": {
+        "localCharacters": "स्थानीय वर्ण ("
+      }
+    },
+    "componentsChatCharacterscenecard": {
+      "action": {
+        "retry": "पुनः प्रयास करें",
+        "cancel": "रद्द करें",
+        "openInMediaStudio": "मीडिया स्टूडियो में खोलें",
+        "copyPrompt": "प्रॉम्प्ट कॉपी करें",
+        "regenerate": "पुन: उत्पन्न करें"
+      },
+      "description": {
+        "scenePrompt": "दृश्य प्रॉम्प्ट"
+      }
+    },
+    "componentsChatHistoryview": {
+      "action": {
+        "newChat": "नई चैट",
+        "cancel": "रद्द करें",
+        "rename": "नाम बदलें",
+        "delete": "हटाएं",
+        "export": "निर्यात करें",
+        "import": "आयात करें",
+        "clearSelection": "चयन साफ़ करें",
+        "deleteSelected": "चयनित हटाएँ (",
+        "newFolder": "नया फ़ोल्डर",
+        "startNewConversation": "नई बातचीत शुरू करें",
+        "openPrivacyGate": "गोपनीयता गेट खोलें",
+        "enablePrivacyGate": "गोपनीयता गेट सक्षम करें"
+      },
+      "option": {
+        "characterChats": "चरित्र चैट",
+        "allChats": "सभी चैट",
+        "standardChats": "मानक चैट",
+        "selectDestinationFolder": "गंतव्य फ़ोल्डर चुनें...",
+        "unfiledNoFolder": "अनफ़िल्ड (कोई फ़ोल्डर नहीं)"
+      },
+      "text": {
+        "unfiled": "अवर्गीकृत",
+        "selected": "चयनित",
+        "total": "कुल)",
+        "moveTo": "यहां जाएं:",
+        "chooseOneChatTypeToMoveInto": "चुनें एक फ़ोल्डर में ले जाने के लिए एक चैट प्रकार।",
+        "ago": "पहले",
+        "noConversationsInThisFolder": "इस फ़ोल्डर में कोई बातचीत नहीं।",
+        "noUnfiledConversations": "कोई अनफ़िल्टर्ड बातचीत नहीं।"
+      },
+      "heading": {
+        "chatHistory": "चैट इतिहास",
+        "noConversationsFound": "कोई बातचीत नहीं मिली"
+      },
+      "description": {
+        "manageAndRevisitYourPastConversations": "अपनी पिछली बातचीत को प्रबंधित करें और दोबारा देखें",
+        "tryADifferentSearchTermOrStart": "एक अलग खोज शब्द आज़माएँ या एक नई चैट शुरू करें"
+      }
+    },
+    "componentsChatChatView": {
+      "action": {
+        "cancel": "रद्द करें",
+        "remove": "हटाएं",
+        "clear": "साफ़ करें",
+        "shuffle": "शफ़ल करें",
+        "confirmSend": "पुष्टि करें और भेजें",
+        "disableMemoryForThisMessage": "इस संदेश के लिए मेमोरी अक्षम करें",
+        "saveContextText": "संदर्भ टेक्स्ट सहेजें",
+        "forgetFact": "तथ्य भूल जाएं",
+        "chatContext": "⚙ चैट संदर्भ ·",
+        "requireMemoryPreviewBeforeNextSend": "अगले भेजने से पहले मेमोरी पूर्वावलोकन की आवश्यकता है"
+      },
+      "option": {
+        "disabled": "अक्षम",
+        "inheritFromDefaultSettings": "डिफ़ॉल्ट सेटिंग्स से इनहेरिट करें",
+        "overrideUseChatSettings": "ओवरराइड (चैट सेटिंग्स का उपयोग करें)"
+      },
+      "text": {
+        "howCanIHelpToday": "मैं आज कैसे मदद कर सकता हूं?",
+        "tryOneOfThese": "इनमें से किसी एक को आज़माएं",
+        "startAConversationWith": "के साथ बातचीत शुरू करें",
+        "matchedLocalMemoryContext": "मिलान वाले स्थानीय मेमोरी संदर्भ के साथ बातचीत शुरू करें",
+        "facts": "तथ्य,",
+        "summariesMatched": "सारांश मेल खाते हैं)",
+        "previousThread": "पिछला थ्रेड:",
+        "allMatchedContextHasBeenRemoved": "सभी मिलान किए गए संदर्भ हटा दिए गए हैं।",
+        "context": "संदर्भ",
+        "chatContext": "चैट संदर्भ",
+        "includeMemoryRetrievalForThisChat": "इस चैट के लिए मेमोरी पुनर्प्राप्ति शामिल करें",
+        "includePriorConversationContext": "पूर्व वार्तालाप संदर्भ शामिल करें",
+        "selected": "चयनित",
+        "chattingAs": "इस संदेश के साथ संलग्न"
+      },
+      "label": {
+        "systemPromptMode": "सिस्टम प्रॉम्प्ट मोड"
+      },
+      "description": {
+        "onlySelectedLocalConversationsAreIncludedIn": "केवल चयनित स्थानीय वार्तालापों को अगले मॉडल अनुरोध में शामिल किया गया है और वेनिस API पर भेजा गया है। API कुंजियाँ, वाहक टोकन और स्थानीय फ़ाइल पथ संशोधित किए गए हैं; लंबी सामग्री को सीमा के भीतर रहने के लिए छोटा कर दिया जाता है। बातचीत का इतिहास कभी भी निदान या सुरक्षित निर्यात में शामिल नहीं किया जाता है।"
+      }
+    },
+    "componentsChatMessageBubble": {
+      "action": {
+        "cancel": "रद्द करें",
+        "save": "सहेजें",
+        "thinking": "सोच"
+      },
+      "text": {
+        "attachedToThisMessage": "के रूप में चैटिंग",
+        "truncated": "छोटा किया गया",
+        "vision": "विज़न",
+        "safety": "सुरक्षा:",
+        "code": "कोड:",
+        "signals": "सिग्नल:",
+        "toolUsed": "टूल का उपयोग किया गया:",
+        "resultFrom": "परिणाम"
+      }
+    },
+    "componentsChatVeniceParams": {
+      "action": {
+        "newChat": "नई चैट",
+        "settings": "सेटिंग्स"
+      },
+      "label": {
+        "appSystemPrompt": "ऐप सिस्टम प्रॉम्प्ट"
+      },
+      "option": {
+        "loadingLibrary": "लाइब्रेरी लोड हो रही है...",
+        "errorLoadingLibrary": "लाइब्रेरी लोड करने में त्रुटि",
+        "loadFromLibrary": "लाइब्रेरी से लोड..."
+      },
+      "text": {
+        "approachingSystemPromptSizeLimit": "सिस्टम प्रॉम्प्ट आकार सीमा के करीब पहुंच रहा है ("
+      }
+    },
+    "componentsDocumentsDocumentagentview": {
+      "option": {
+        "off": "बंद",
+        "readAttachmentsOnly": "केवल अटैचमेंट पढ़ें",
+        "limitedDocuments": "सीमित दस्तावेज़",
+        "manageSelectedWorkspace": "चयनित कार्यस्थान प्रबंधित करें",
+        "markdownMd": "मार्कडाउन (.md)",
+        "textTxt": "टेक्स्ट (.txt)",
+        "jsonJson": "JSON (.json)।",
+        "csvCsv": "CSV (.csv)।",
+        "htmlHtml": "HTML (.html)",
+        "wordDocx": "वर्ड (.docx)",
+        "pdfPdf": "पीडीएफ (.pdf)।"
+      },
+      "action": {
+        "managedLibrary": "प्रबंधित लाइब्रेरी",
+        "connectedWorkspace": "कनेक्टेड वर्कस्पेस",
+        "preview": "पूर्वावलोकन",
+        "source": "स्रोत",
+        "history": "इतिहास ("
+      },
+      "text": {
+        "search": "खोजें",
+        "cancel": "रद्द करें",
+        "createDocument": "दस्तावेज़ बनाएँ",
+        "sessionGrant": "सत्र अनुदान ·",
+        "revoke": "निरस्त करें",
+        "selectWorkspaceDirectory": "कार्यस्थान निर्देशिका चुनें...",
+        "documentAgentToolsRequireTheHardenedElectron": "दस्तावेज़ एजेंट टूल को कठोर बनाने की आवश्यकता होती है इलेक्ट्रॉन डेस्कटॉप ब्रिज",
+        "workingGroup": "कार्य समूह",
+        "group": "+ समूह",
+        "document": "+ दस्तावेज़",
+        "revision": "संशोधन:",
+        "export": "निर्यात…",
+        "prepareEditProposal": "संपादन प्रस्ताव तैयार करें",
+        "by": "·",
+        "restoreAsNewRevision": "द्वारा नए संशोधन के रूप में पुनर्स्थापित करें",
+        "before": "पहले",
+        "after": "बाद में",
+        "reject": "अस्वीकार करें",
+        "approveExactChange": "सटीक परिवर्तन को मंजूरी दें",
+        "itemS": "आइटम",
+        "searchMatches": "खोज मिलान (",
+        "read": "पढ़ें",
+        "createGroup": "समूह बनाएं"
+      },
+      "heading": {
+        "agentAccessGrantControls": "एजेंट एक्सेस और अनुदान नियंत्रण",
+        "documents": "दस्तावेज़ (",
+        "immutableRevisionLineage": "अपरिवर्तनीय संशोधन वंशावली",
+        "reviewProposal": "समीक्षा प्रस्ताव",
+        "grantedWorkspaceDirectory": "स्वीकृत कार्यस्थान निर्देशिका",
+        "createManagedDocument": "प्रबंधित दस्तावेज़ बनाएं",
+        "createWorkingGroup": "कार्य समूह बनाएं"
+      },
+      "description": {
+        "limitedDocumentsIsTheSafeDefaultWorkspace": "सीमित दस्तावेज़ सुरक्षित डिफ़ॉल्ट है। वर्कस्पेस एक्सेस एक उपयोगकर्ता द्वारा दी गई निर्देशिका तक ही सीमित है और इसमें शेल, गिट, कभी भी शामिल नहीं है। नेटवर्क, कीचेन, या OS नियंत्रण।",
+        "noManagedDocumentsInThisWorkingGroup": "इस कार्य समूह में कोई प्रबंधित दस्तावेज़ नहीं।",
+        "boundToHash": "आधार संशोधन के विरुद्ध हैश",
+        "againstBaseRevision": "से बंधा हुआ।",
+        "noDocumentSelected": "कोई दस्तावेज़ चयनित नहीं",
+        "selectADocumentFromTheLeftPanel": "संपादन शुरू करने के लिए बाएं पैनल से एक दस्तावेज़ चुनें या एक नया बनाएं।",
+        "noWorkspaceFilesFound": "कोई कार्यस्थान फ़ाइल नहीं मिली।",
+        "noWorkspaceGranted": "कोई कार्यस्थान स्वीकृत नहीं है",
+        "selectAWorkspaceDirectoryUnderAgentAccess": "फ़ाइलों को ब्राउज़ करने के लिए ऊपर एजेंट एक्सेस के अंतर्गत एक कार्यस्थान निर्देशिका का चयन करें।",
+        "selectAFileFromTheWorkspaceList": "कार्यस्थान सूची से एक फ़ाइल को देखने के लिए उसका चयन करें सामग्री।"
+      },
+      "label": {
+        "accessPreset": "एक्सेस प्रीसेट",
+        "format": "प्रारूप",
+        "initialContent": "प्रारंभिक सामग्री",
+        "workingGroupName": "कार्य समूह का नाम"
+      }
+    },
+    "componentsEmbeddingsEmbeddingsView": {
+      "action": {
+        "copy": "कॉपी करें"
+      },
+      "text": {
+        "inputText": "इनपुट टेक्स्ट",
+        "generateEmbeddings": "एंबेडिंग उत्पन्न करें",
+        "vector": "वेक्टर (",
+        "dimensions": "आयाम)",
+        "embeddingVectorsAppearHere": "एंबेडिंग वेक्टर यहां दिखाई देते हैं"
+      }
+    },
+    "componentsGalleryCompareView": {
+      "action": {
+        "close": "बंद करें"
+      },
+      "text": {
+        "compare": "तुलना करें",
+        "items": "आइटम"
+      },
+      "description": {
+        "select2To": "तुलना करने के लिए 2 से",
+        "itemsToCompare": "आइटम का चयन करें। (",
+        "selected": "चयनित)"
+      },
+      "column": {
+        "field": "फ़ील्ड"
+      }
+    },
+    "componentsGalleryGalleryView": {
+      "heading": {
+        "mediaStudio": "मीडिया स्टूडियो"
+      },
+      "action": {
+        "close": "बंद करें",
+        "apply": "लागू करें",
+        "imageStudio": "छवि स्टूडियो",
+        "chat": "चैट",
+        "videoStudio": "वीडियो स्टूडियो",
+        "seed": "सीड",
+        "compare": "तुलना करें (",
+        "lineage": "वंशावली",
+        "imageTools": "छवि उपकरण",
+        "prompt": "संकेत",
+        "negative": "नकारात्मक"
+      },
+      "description": {
+        "browseTagEditAndExportYourGenerated": "अपने जेनरेट किए गए मीडिया को ब्राउज़ करें, टैग करें, संपादित करें और निर्यात करें।",
+        "noMatchingMedia": "कोई मेल खाने वाला मीडिया नहीं"
+      },
+      "text": {
+        "item": "आइटम",
+        "loaded": "लोड किया गया",
+        "selected": "चयनित",
+        "loadingMediaStudio": "मीडिया स्टूडियो लोड हो रहा है...",
+        "itemsSelected": "आइटम चयनित।",
+        "sendTo": "यहां भेजें:",
+        "copy": "प्रतिलिपि:"
+      },
+      "label": {
+        "quickTag": "त्वरित टैग:"
+      }
+    },
+    "componentsGalleryMediaCard": {
+      "text": {
+        "video": "वीडियो",
+        "audio": "ऑडियो",
+        "favorite": "पसंदीदा",
+        "image": "छवि",
+        "seed": "बीज:",
+        "more": "अधिक"
+      }
+    },
+    "galleryMediaDetailDialog": {
+      "action": {
+        "delete": "हटाएं",
+        "closeEsc": "बंद करें (Esc)"
+      },
+      "text": {
+        "previewUnavailable": "पूर्वावलोकन अनुपलब्ध",
+        "seed": "बीज:",
+        "source": "स्रोत:",
+        "style": "शैली:",
+        "steps": "चरण:",
+        "cfg": "CFG:."
+      },
+      "heading": {
+        "filmstrip": "फिल्मस्ट्रिप"
+      }
+    },
+    "componentsGalleryMediaInspector": {
+      "action": {
+        "close": "बंद करें",
+        "createStCard": "ST कार्ड बनाएँ",
+        "upscale": "अपस्केल",
+        "edit": "संपादित करें",
+        "apply": "लागू करें",
+        "cancel": "रद्द करें",
+        "add": "जोड़ें",
+        "clear": "साफ़ करें",
+        "useSettings": "सेटिंग्स का उपयोग करें",
+        "useRecipe": "नुस्खा का उपयोग करें",
+        "regenerate": "पुन: उत्पन्न करें",
+        "sameSeed": "समान बीज",
+        "downloadMedia": "डाउनलोड मीडिया",
+        "copyPrompt": "कॉपी प्रॉम्प्ट",
+        "copyNegative": "प्रतिलिपि नकारात्मक",
+        "copySeed": "प्रतिलिपि बीज",
+        "copyMetadata": "कॉपी मेटाडेटा",
+        "saveRecipe": "नुस्खा सहेजें",
+        "copyRecipe": "प्रतिलिपि नुस्खा",
+        "exportRecipe": "निर्यात नुस्खा",
+        "applyToImageStudio": "इमेज स्टूडियो पर लागू करें",
+        "remixAmpGenerate": "रीमिक्स और जेनरेट करें",
+        "saveRemix": "आंतरिक एलएलएम के माध्यम से रीमिक्स सहेजें",
+        "saveNote": "नोट सहेजें",
+        "clearParentLink": "पेरेंट लिंक साफ़ करें"
+      },
+      "text": {
+        "delete": "हटाएं",
+        "seed": "सीड",
+        "steps": "चरण",
+        "view": "देखें",
+        "parameters": "पैरामीटर्स",
+        "source": "स्रोत",
+        "style": "शैली",
+        "cfg": "CFG।",
+        "aspect": "पहलू",
+        "recipeCompatibility": "रेसिपी संगतता",
+        "enhancedPrompt": "उन्नत प्रॉम्प्ट",
+        "originalPrompt": "मूल प्रॉम्प्ट",
+        "remixPrompt": "रीमिक्स प्रॉम्प्ट",
+        "actions": "क्रियाएँ",
+        "modelCapabilities": "मॉडल क्षमताएं",
+        "upscale": "अपस्केल",
+        "edit": "संपादित करें",
+        "video": "वीडियो",
+        "vision": "विजन",
+        "tags": "टैग",
+        "parentid": "पेरेंटआईडी="
+      },
+      "heading": {
+        "inspector": "इंस्पेक्टर",
+        "prompt": "प्रॉम्प्ट",
+        "parent": "अभिभावक",
+        "children": "बच्चे (",
+        "missingReferences": "गुम संदर्भ"
+      },
+      "description": {
+        "originalLdquo": "मूल: \"",
+        "rdquo": "\"",
+        "promptViaInternalLlm": "प्रॉम्प्ट…",
+        "theseEndpointsAreRecognisedForTheSource": "ये समापन बिंदु स्रोत मॉडल के लिए पहचाने जाते हैं। इस आइटम पर वही ऑपरेशन दोबारा चलाने से उनका उपयोग होगा।",
+        "noTagsYet": "अभी तक कोई टैग नहीं।"
+      }
+    },
+    "componentsGalleryMediaToolbar": {
+      "text": {
+        "refresh": "रिफ़्रेश करें",
+        "project": "प्रोजेक्ट",
+        "sort": "सॉर्ट करें",
+        "item": "आइटम",
+        "selected": "चयनित"
+      },
+      "action": {
+        "clear": "साफ़ करें",
+        "compare": "तुलना करें",
+        "export": "निर्यात करें",
+        "apply": "लागू करें",
+        "delete": "हटाएं",
+        "selectAll": "सभी का चयन करें",
+        "addTag": "टैग जोड़ें",
+        "unstar": "अनस्टार करें"
+      }
+    },
+    "componentsGenerationGenerationloadingindicator": {
+      "action": {
+        "cancel": "रद्द करें"
+      }
+    },
+    "componentsImageInspectorImageinspectorview": {
+      "heading": {
+        "imageInspector": "छवि निरीक्षक",
+        "analysisSummary": "विश्लेषण सारांश",
+        "replicationPrompt": "प्रतिकृति संकेत",
+        "subjects": "विषय",
+        "imageBasedSourceSearch": "छवि-आधारित स्रोत खोज"
+      },
+      "action": {
+        "openFile": "का उपयोग करें फ़ाइल खोलें",
+        "cancelAnalysis": "विश्लेषण रद्द करें",
+        "analyzeImage": "छवि का विश्लेषण करें"
+      },
+      "text": {
+        "noRecentImages": "कोई हाल की छवि नहीं।",
+        "openAFileToStartInspecting": "निरीक्षण शुरू करने के लिए एक फ़ाइल खोलें।",
+        "middot": "·",
+        "selectOrUploadAnImageToInspect": "निरीक्षण करने के लिए एक छवि चुनें या अपलोड करें",
+        "visionModel": "विज़न मॉडल",
+        "noVisionCapableModelsAvailableInCatalog": "कैटलॉग में कोई विज़न-सक्षम मॉडल उपलब्ध नहीं है।",
+        "analysisDepth": "विश्लेषण गहराई",
+        "promptTarget": "शीघ्र लक्ष्य",
+        "specificInstructionsOptional": "विशिष्ट निर्देश (वैकल्पिक)",
+        "negative": "नकारात्मक:",
+        "directSourceImageMatchingIsUnavailableWith": "कॉन्फ़िगर किए गए Google और Brave अनुबंधों के साथ प्रत्यक्ष स्रोत-छवि मिलान उपलब्ध नहीं है। उनके वर्तमान एपीआई टेक्स्ट क्वेरी स्वीकार करते हैं, निरीक्षण की गई छवि बाइट्स नहीं। क्वेरी-जनरेटेड खोज को यहां अक्षम कर दिया गया है ताकि परिणामों को रिवर्स-इमेज मिलान के रूप में गलत तरीके से प्रस्तुत न किया जाए।",
+        "legacyTextQueryResults": "लीगेसी टेक्स्ट-क्वेरी परिणाम (",
+        "imageAnalysisFailed": "छवि विश्लेषण विफल रहा",
+        "analysisResultsWillAppearHere": "विश्लेषण परिणाम यहां दिखाई देंगे।"
+      }
+    },
+    "componentsImageImageTools": {
+      "text": {
+        "model": "मॉडल",
+        "sourceImage": "स्रोत छवि",
+        "editPrompt": "संपादन संकेत",
+        "scale": "स्केल",
+        "sourceAdherence": "स्रोत पालन",
+        "veniceUpscalingDoesNotAcceptAText": "वेनिस अपस्केलिंग टेक्स्ट प्रॉम्प्ट को स्वीकार नहीं करता है। शीघ्र-निर्देशित परिवर्तनों के लिए, संपादन पर स्विच करें।",
+        "result": "परिणाम"
+      },
+      "action": {
+        "download": "डाउनलोड",
+        "openEdit": "संपादन खोलें",
+        "saveToMediaStudio": "मीडिया स्टूडियो में सहेजें"
+      },
+      "description": {
+        "bytes": "बाइट्स",
+        "clickToUploadImage": "छवि अपलोड करने के लिए क्लिक करें",
+        "higherValuesStayCloserToTheSource": "उच्च मूल्य स्रोत के करीब रहते हैं; निम्न मान अपस्केलर को अधिक बनावट और विवरण जोड़ने की अनुमति देते हैं।"
+      }
+    },
+    "componentsImageImageView": {
+      "action": {
+        "cancel": "रद्द करें",
+        "clear": "साफ़ करें",
+        "createStCard": "ST कार्ड बनाएँ",
+        "saveToLibrary": "लाइब्रेरी में सहेजें",
+        "useEnhancedPrompt": "उन्नत प्रॉम्प्ट का उपयोग करें",
+        "keepOriginal": "मूल रखें",
+        "switchTo": "पर स्विच",
+        "append": "पर स्विच करें",
+        "replace": "बदलें",
+        "randomize": "यादृच्छिक करें"
+      },
+      "text": {
+        "aspectRatio": "पहलू अनुपात",
+        "resolution": "रिज़ॉल्यूशन",
+        "seed": "सीड",
+        "steps": "चरण",
+        "prompt": "संकेत",
+        "enhancedPromptPreview": "उन्नत प्रॉम्प्ट पूर्वावलोकन",
+        "applyTemplate": "टेम्पलेट लागू करें:",
+        "positive": "सकारात्मक:",
+        "negative": "नकारात्मक:",
+        "doesNotSupportNegativePromptsTheTemplate": "नकारात्मक संकेतों का समर्थन नहीं करता. टेम्प्लेट लंबित है और आपकी वर्तमान संकेत स्थिति नहीं बदली है।",
+        "negativePrompt": "नकारात्मक संकेत",
+        "quality": "गुणवत्ता",
+        "style": "शैली",
+        "variants": "वेरिएंट"
+      },
+      "option": {
+        "addTemplate": "टेम्पलेट जोड़ें..."
+      },
+      "label": {
+        "useFixedSeed": "निश्चित बीज का उपयोग करें"
+      }
+    },
+    "layoutApiKeyDialog": {
+      "action": {
+        "cancel": "रद्द करें",
+        "disconnect": "डिस्कनेक्ट करें"
+      },
+      "heading": {
+        "connectToVenice": "वेनिस से कनेक्ट करें"
+      },
+      "label": {
+        "veniceApiKey": "वेनिस API कुंजी"
+      },
+      "description": {
+        "getAKeyAt": "पर एक कुंजी प्राप्त करें"
+      }
+    },
+    "componentsLayoutInspectorPane": {
+      "text": {
+        "trafficInspector": "ट्रैफ़िक निरीक्षक",
+        "status": "स्थिति:",
+        "error": "त्रुटि",
+        "noRequestsCapturedYet": "अभी तक कोई अनुरोध कैप्चर नहीं किया गया है",
+        "sendChatOrGenerateImagesToInspect": "ट्रैफ़िक का निरीक्षण करने के लिए चैट भेजें या चित्र बनाएं।",
+        "guard": "गार्ड:",
+        "time": "समय:",
+        "method": "विधि:",
+        "transport": "परिवहन:",
+        "outcome": "परिणाम:",
+        "guard4ba3843": "गार्ड:",
+        "preview": "पूर्वावलोकन:",
+        "latency": "विलंबता:",
+        "errorClass": "त्रुटि वर्ग:",
+        "localSafetyEvaluation": "स्थानीय सुरक्षा मूल्यांकन",
+        "mode": "मोड:",
+        "familySafeModeRendererEvaluated": "पारिवारिक सुरक्षित मोड (रेंडरर-मूल्यांकन)",
+        "result": "परिणाम:",
+        "reasonCode": "कारण कोड:",
+        "adultModeLocalFilterSkipped": "वयस्क मोड (स्थानीय फ़िल्टर छोड़ दिया गया)",
+        "electronMainProcessAuthoritative": "इलेक्ट्रॉन मुख्य-प्रक्रिया आधिकारिक",
+        "theLocalFamilySafeGuardIsEnforced": "स्थानीय परिवार-सुरक्षित गार्ड को मुख्य प्रक्रिया द्वारा लागू किया जाता है। विहित निर्णय का निरीक्षण करने के लिए ऑडिट लॉग खोलें।",
+        "action": "कार्रवाई:",
+        "signals": "सिग्नल:",
+        "sourceQuot": "] स्रोत: \"",
+        "quotSeverity": "\" (गंभीरता:",
+        "confidence": ", आत्मविश्वास:",
+        "requestHeaders": "अनुरोध हेडर",
+        "requestBody": "अनुरोध मुख्य भाग",
+        "responseBody": "प्रतिक्रिया निकाय",
+        "selectARequestToViewDetails": "विवरण देखने के लिए एक अनुरोध चुनें",
+        "noActiveConversationOpenAChatTo": "कोई सक्रिय नहीं वार्तालाप। त्वरित परतों का निरीक्षण करने के लिए चैट खोलें।",
+        "active": "सक्रिय:",
+        "source": "स्रोत:"
+      }
+    },
+    "componentsMusicMusicView": {
+      "text": {
+        "model": "मॉडल",
+        "voice": "आवाज़",
+        "download": "डाउनलोड",
+        "prompt": "संकेत",
+        "lyrics": "गीत",
+        "duration": "अवधि",
+        "instrumentalOnly": "केवल वाद्य यंत्र",
+        "instrumental": "वाद्य यंत्र",
+        "customDuration": "कस्टम अवधि",
+        "output": "आउटपुट",
+        "pressGenerateToCreateYourTrack": "अपना ट्रैक बनाने के लिए जेनरेट दबाएं"
+      },
+      "description": {
+        "duration": "अवधि:"
+      },
+      "option": {
+        "seconds": "सेकंड"
+      },
+      "action": {
+        "reset": "रीसेट करें",
+        "generateAnother": "दूसरा उत्पन्न करें"
+      }
+    },
+    "playgroundAgentModelPicker": {
+      "text": {
+        "noMatches": "कोई मिलान नहीं",
+        "rec": "रिक।",
+        "recommended": "अनुशंसित",
+        "tools": "उपकरण",
+        "reasoning": "रीज़निंग",
+        "vision": "विजन",
+        "web": "वेब",
+        "uncensored": "बिना सेंसर किया हुआ"
+      }
+    },
+    "componentsPlaygroundPlaygroundView": {
+      "text": {
+        "playground": "प्लेग्राउंड",
+        "agent": "एजेंट",
+        "n": "एन ·",
+        "running": "चल रहा है…",
+        "openInWorkflows": "वर्कफ़्लो में खोलें",
+        "open": "खुला है"
+      },
+      "action": {
+        "clear": "साफ़ करें",
+        "run": "चलाएँ"
+      },
+      "option": {
+        "editSavedWorkflow": "सहेजे गए वर्कफ़्लो को संपादित करें…"
+      }
+    },
+    "componentsPlaygroundPreviewNode": {
+      "text": {
+        "done": "पूर्ण",
+        "error": "त्रुटि",
+        "running": "चल रहा है..."
+      }
+    },
+    "componentsPrivacyStorageprivacydashboard": {
+      "action": {
+        "retry": "पुनः प्रयास करें",
+        "copySafeSummary": "प्रतिलिपि सुरक्षित सारांश",
+        "exportJson": "निर्यात JSON",
+        "review": "समीक्षा"
+      },
+      "column": {
+        "status": "स्थिति",
+        "prompts": "प्रॉम्प्ट",
+        "history": "इतिहास",
+        "store": "स्टोर",
+        "items": "आइटम",
+        "flags": "झंडे",
+        "surface": "सतह",
+        "mediaBlobs": "मीडिया ब्लॉब्स",
+        "pathsAmpKeys": "पथ और कुंजियाँ"
+      },
+      "heading": {
+        "failedToLoadStorageInventory": "भंडारण सूची लोड करने में विफल",
+        "storagePrivacy": "भंडारण और गोपनीयता",
+        "detailedInventory": "विस्तृत सूची",
+        "referenceIssues": "संदर्भ समस्याएँ",
+        "maintenancePlan": "रखरखाव योजना",
+        "privacyExclusions": "गोपनीयता बहिष्करण"
+      },
+      "description": {
+        "analyzingLocalStorage": "स्थानीय भंडारण का विश्लेषण किया जा रहा है...",
+        "inspectAndManageLocalDataBoundaries": "स्थानीय डेटा सीमाओं का निरीक्षण और प्रबंधन किया जा रहा है।",
+        "differentSurfacesHaveDifferentRedactionBoundariesInspect": "विभिन्न सतहों की अलग-अलग रिडक्शन सीमाएँ होती हैं। निर्यात निर्णयों के लिए इस पर भरोसा करने से पहले नीचे दी गई सत्य तालिका का निरीक्षण करें।",
+        "promptsAndHistoryAppearInEncryptedBackups": "संकेत और इतिहास एन्क्रिप्टेड बैकअप और सिंक फ़ोल्डर में दिखाई देते हैं क्योंकि दोनों उपयोगकर्ता द्वारा प्रदत्त पासफ़्रेज़ के लिए एंड-टू-एंड एन्क्रिप्टेड हैं। मीडिया ब्लॉब्स (चित्र, फ़ाइलें, आरपी संपत्ति) को बैकअप और सिंक पैनल में एक स्पष्ट ऑप्ट-इन टॉगल की आवश्यकता होती है - डिफ़ॉल्ट रूप से बाहर रखा गया है। API कुंजियाँ, वाहक टोकन और पूर्ण स्थानीय पथ कभी भी किसी निर्यात, सिंकअप या डायग्नोस्टिक सारांश में नहीं लिखे जाते हैं।"
+      },
+      "text": {
+        "encrypted": "एन्क्रिप्टेड",
+        "archived": "संग्रहीत",
+        "secrets": "रहस्य",
+        "userContent": "उपयोगकर्ता सामग्री",
+        "sensitive": "संवेदनशील",
+        "noStorageHealthIssuesDetected": "कोई भंडारण स्वास्थ्य समस्या नहीं पाई गई।",
+        "source": "स्रोत:",
+        "target": "लक्ष्य:",
+        "destructive": "विनाशकारी",
+        "dryRun": "ड्राई रन",
+        "alwaysRedacted": "हमेशा संशोधित",
+        "included": "शामिल है",
+        "optInOnly": "केवल ऑप्ट-इन",
+        "keysNeverExported": "कुंजियाँ कभी निर्यात नहीं हुईं",
+        "keysNeverSynced": "कुंजियाँ कभी सिंक नहीं हुईं"
+      },
+      "cell": {
+        "safePrivacySummary": "सुरक्षित गोपनीयता सारांश",
+        "safeDiagnosticsJson": "सुरक्षित निदान JSON",
+        "encryptedBackup": "एन्क्रिप्टेड बैकअप",
+        "syncFolder": "सिंक फ़ोल्डर"
+      }
+    },
+    "componentsPromptsPromptcreatemodal": {
+      "option": {
+        "project": "प्रोजेक्ट",
+        "global": "वैश्विक",
+        "selectAProject": "एक प्रोजेक्ट चुनें"
+      },
+      "action": {
+        "cancel": "रद्द करें",
+        "createPrompt": "प्रॉम्प्ट बनाएं"
+      },
+      "label": {
+        "title": "शीर्षक *",
+        "kind": "प्रकार *",
+        "scope": "दायरा *",
+        "project": "प्रोजेक्ट *",
+        "tags": "टैग",
+        "content": "सामग्री *",
+        "negativeContent": "नकारात्मक सामग्री"
+      },
+      "description": {
+        "commaSeparatedUpTo64TagsAnd": "अल्पविराम से अलग; अधिकतम 64 टैग और प्रति टैग 64 अक्षर।"
+      }
+    },
+    "componentsPromptsPromptlibraryview": {
+      "heading": {
+        "promptLibrary": "प्रॉम्प्ट लाइब्रेरी"
+      },
+      "action": {
+        "archive": "आर्काइव",
+        "copy": "कॉपी करें",
+        "delete": "हटाएं",
+        "cancel": "रद्द करें",
+        "new": "नया",
+        "favorites": "★ पसंदीदा",
+        "useInImageStudio": "इमेज स्टूडियो में उपयोग करें",
+        "useInChat": "चैट में उपयोग करें",
+        "createWorkflow": "वर्कफ़्लो बनाएं",
+        "history": "इतिहास (",
+        "useThisVersion": "इस संस्करण का उपयोग करें"
+      },
+      "description": {
+        "loading": "लोड हो रहा है…",
+        "noSavedPromptsYet": "अभी तक कोई सहेजा गया संकेत नहीं।",
+        "clickThe": "अपना पहला प्रॉम्प्ट बनाने के लिए ऊपर दिए गए",
+        "buttonAboveToCreateYourFirstPrompt": "बटन पर क्लिक करें।"
+      },
+      "text": {
+        "new": "नए",
+        "version": "संस्करण",
+        "created": "· बनाया गया",
+        "updated": "· अपडेट किया गया",
+        "current": "वर्तमान"
+      },
+      "label": {
+        "content": "सामग्री",
+        "negativeContent": "नकारात्मक सामग्री"
+      }
+    },
+    "componentsResearchResearchworkspaceview": {
+      "heading": {
+        "research": "अनुसंधान",
+        "sources": "स्रोत (",
+        "addFinding": "खोज जोड़ें",
+        "findings": "निष्कर्ष ("
+      },
+      "action": {
+        "newResearchSession": "नया अनुसंधान सत्र",
+        "createWorkflow": "वर्कफ़्लो बनाएं",
+        "saveSummary": "सारांश सहेजें",
+        "saveFinding": "ढूँढना सहेजें"
+      },
+      "text": {
+        "sources": "स्रोत •",
+        "findings": "निष्कर्ष"
+      },
+      "description": {
+        "research": "शोध",
+        "selectAResearchSessionOrCreateA": "शुरू करने के लिए एक शोध सत्र चुनें या एक नया बनाएँ।"
+      },
+      "label": {
+        "searchQuery": "खोज क्वेरी",
+        "scrapeUrl": "स्क्रैप URL",
+        "findingTitle": "खोज शीर्षक",
+        "findingContent": "सामग्री ढूँढना"
+      }
+    },
+    "componentsRpStudioAssetgallery": {
+      "action": {
+        "deletef6fdbe4": "हटाएं",
+        "delete": "हटाएँ?"
+      },
+      "text": {
+        "loadingAssets": "संपत्ति लोड हो रही है...",
+        "noImage": "कोई छवि नहीं",
+        "model": "मॉडल:",
+        "seed": "बीज:",
+        "negative": "नकारात्मक:",
+        "created": "बनाया गया:",
+        "closePreview": "पूर्वावलोकन बंद करें",
+        "clickAnAssetToPreview": "पूर्वावलोकन करने के लिए किसी संपत्ति पर क्लिक करें।"
+      }
+    },
+    "componentsRpStudioCharacterbookeditor": {
+      "text": {
+        "remove": "हटाएं",
+        "bookName": "पुस्तक का नाम",
+        "description": "विवरण",
+        "scanDepth": "स्कैन गहराई",
+        "tokenBudget": "टोकन बजट",
+        "entries": "प्रविष्टियाँ (",
+        "addEntry": "प्रविष्टि जोड़ें",
+        "entry": "प्रविष्टि",
+        "name": "नाम",
+        "primaryKeysCommaSeparated": "प्राथमिक कुंजी (अल्पविराम से अलग)",
+        "secondaryKeys": "माध्यमिक कुंजी",
+        "comment": "टिप्पणी",
+        "content": "सामग्री",
+        "insertionPosition": "प्रविष्टि स्थिति",
+        "insertionOrder": "प्रविष्टि क्रम",
+        "priority": "प्राथमिकता",
+        "moveUp": "ऊपर ले जाएं",
+        "moveDown": "नीचे ले जाएं"
+      },
+      "description": {
+        "enterAValidJsonObject": "एक वैध JSON ऑब्जेक्ट दर्ज करें।"
+      },
+      "label": {
+        "recursiveScanning": "पुनरावर्ती स्कैनिंग।"
+      },
+      "option": {
+        "beforeCharacter": "चरित्र से पहले",
+        "afterCharacter": "चरित्र के बाद"
+      }
+    },
+    "componentsRpStudioCharactereditor": {
+      "text": {
+        "delete": "हटाएं",
+        "save": "सहेजें",
+        "add": "जोड़ें",
+        "scenario": "परिदृश्य",
+        "next": "अगला",
+        "webSearch": "वेब खोज",
+        "temperature": "तापमान",
+        "view": "देखें",
+        "cancel": "रद्द करें",
+        "close": "बंद करें",
+        "characterNotFound": "कैरेक्टर नहीं मिला।",
+        "estimatedTokens": "अनुमानित टोकन:",
+        "rawEstimate": "कच्चा अनुमान",
+        "outputReserve": "· आउटपुट रिजर्व",
+        "editWithCharacterCreator": "चरित्र निर्माता के साथ संपादित करें",
+        "characterVersion": "चरित्र संस्करण",
+        "importSource": "आयात स्रोत",
+        "name": "नाम",
+        "author": "लेखक",
+        "adultContent18": "वयस्क सामग्री (18+)",
+        "description": "विवरण",
+        "creatorNotes": "निर्माता नोट्स",
+        "tags": "टैग",
+        "personality": "व्यक्तित्व",
+        "systemPrompt": "सिस्टम प्रॉम्प्ट",
+        "approachingSystemPromptSizeLimit": "सिस्टम प्रॉम्प्ट आकार सीमा के निकट (",
+        "postHistoryInstructions": "पोस्ट-इतिहास निर्देश",
+        "instructions": "निर्देश",
+        "firstMessagePrimaryGreeting": "पहला संदेश (प्राथमिक अभिवादन)",
+        "alternateGreetings": "वैकल्पिक अभिवादन",
+        "addGreeting": "अभिवादन जोड़ें",
+        "greetingPreview": "अभिवादन पूर्वावलोकन",
+        "previous": "पिछला",
+        "exampleDialogues": "उदाहरण संवाद",
+        "updateRawPreview": "कच्चा पूर्वावलोकन अपडेट करें",
+        "addExample": "उदाहरण जोड़ें",
+        "noExamplesAddAFewShotExchange": "आवाज को लॉक करने के लिए कुछ-शॉट एक्सचेंज जोड़ें।",
+        "speakerRequired": "स्पीकर की आवश्यकता है",
+        "rawExampleDialogue": "कच्चा उदाहरण संवाद",
+        "v2ExtensionData": "V2 एक्सटेंशन डेटा",
+        "characterBook": "कैरेक्टर बुक",
+        "createEmbeddedBook": "एम्बेडेड बुक बनाएं",
+        "removeEmbeddedBook": "एम्बेडेड बुक निकालें",
+        "attachExistingLorebook": "मौजूदा विद्यापुस्तक संलग्न करें",
+        "importEmbeddedAsLinked": "लिंक के रूप में एम्बेडेड आयात करें",
+        "syncIntoEmbedded": "एम्बेडेड में सिंक करें",
+        "detachPreserveEmbedded": "अलग करें (एम्बेडेड को सुरक्षित रखें)",
+        "defaultModel": "डिफ़ॉल्ट मॉडल",
+        "specialSettings": "विशेष सेटिंग्स",
+        "urlScrapingProvider": "URL स्क्रैपिंग प्रदाता",
+        "enableThoughts": "विचार सक्षम करें",
+        "topP": "शीर्ष P",
+        "sourcedContextFiles": "स्रोत और संदर्भ फ़ाइलें",
+        "noSourcedOrContextFilesUploaded": "कोई स्रोत या संदर्भ फ़ाइल अपलोड नहीं की गई है",
+        "reApply": "पुनः लागू करें",
+        "disposableTestChat": "डिस्पोजेबल परीक्षण चैट।",
+        "promptOrderTrace": "प्रॉम्प्ट-ऑर्डर ट्रेस",
+        "testUserMessage": "परीक्षण उपयोगकर्ता संदेश",
+        "unsavedModelResponse": "बिना सहेजे गए मॉडल प्रतिक्रिया",
+        "saveAsRealConversation": "वास्तविक वार्तालाप के रूप में सहेजें",
+        "resetTest": "परीक्षण रीसेट करें",
+        "cardGenerationModel": "कार्ड-जनरेशन मॉडल",
+        "visionAnalysisModel": "विज़न-विश्लेषण मॉडल",
+        "localImageAsset": "स्थानीय छवि संपत्ति",
+        "textConcept": "टेक्स्ट अवधारणा",
+        "visionCapableProvider": "विज़न सक्षम · प्रदाता",
+        "contextTokensRequestImage": "संदर्भ टोकन · अनुरोध छवि ~",
+        "textGenerationProfile": "टेक्स्ट जेनरेशन प्रोफ़ाइल",
+        "contentRating": "सामग्री रेटिंग",
+        "detailLevel": "विवरण स्तर",
+        "customGenerationDirection": "कस्टम जेनरेशन दिशा",
+        "visualAnalysis": "दृश्य विश्लेषण:",
+        "generatedV2Draft": "जेनरेटेड V2 ड्राफ्ट:",
+        "applyToLocalDraft": "स्थानीय ड्राफ्ट पर लागू करें",
+        "reject": "अस्वीकार करें",
+        "generateFieldProposal": "फ़ील्ड प्रस्ताव उत्पन्न करें",
+        "before": "पहले",
+        "after": "बाद में",
+        "applyProposal": "प्रस्ताव लागू करें",
+        "aiRefinementAssistant": "AI परिशोधन सहायक",
+        "before842beb5": "पहले:",
+        "after13f2d65": "बाद में:",
+        "applySelected": "चयनित लागू करें",
+        "selectAll": "सभी का चयन करें",
+        "cardValidation": "कार्ड सत्यापन",
+        "formatValidAndRecommendedFieldsComplete": "प्रारूप मान्य और अनुशंसित फ़ील्ड पूर्ण।",
+        "stCardExport": "ST कार्ड निर्यात",
+        "exportV2Json": "निर्यात V2 JSON",
+        "exportV2Png": "निर्यात V2 PNG",
+        "exportPrivacyReducedJson": "निर्यात गोपनीयता-कम JSON",
+        "validation": "सत्यापन",
+        "roundTripVerified": "राउंड-ट्रिप सत्यापित",
+        "output": "आउटपुट",
+        "bytes": "बाइट्स",
+        "v2Fields": "V2 फ़ील्ड",
+        "extensions": "एक्सटेंशन",
+        "embeddedLoreEntries": "एंबेडेड विद्या प्रविष्टियाँ",
+        "droppedLocalOnlyFields": "केवल स्थानीय फ़ील्ड हटा दी गईं",
+        "warnings": "चेतावनियाँ",
+        "versionHistory": "संस्करण इतिहास",
+        "saveVersion": "संस्करण सहेजें",
+        "current": "(वर्तमान)",
+        "noVersionsSavedSaveAVersionTo": "कोई संस्करण सहेजा नहीं गया। परिवर्तनों को ट्रैक करने के लिए एक संस्करण सहेजें।",
+        "versionComparison": "संस्करण तुलना",
+        "saved": "सहेजा गया",
+        "current4fc0e2b": "वर्तमान",
+        "workflow": "वर्कफ़्लो",
+        "scene": "दृश्य:",
+        "prompt": "संकेत:",
+        "reApplyTo": "पुनः आवेदन करें",
+        "savingCharacter": "पर पुनः आवेदन करें] चरित्र सहेजा जा रहा है…"
+      },
+      "action": {
+        "remove": "हटाएं",
+        "compare": "तुलना करें",
+        "chat": "चैट",
+        "allSteps": "सभी चरण",
+        "avatar": "अवतार",
+        "setPrimary": "प्राथमिक सेट करें",
+        "duplicate": "डुप्लिकेट",
+        "down": "नीचे",
+        "restore": "पुनर्स्थापित करें",
+        "saveToPromptLibrary": "प्रॉम्प्ट लाइब्रेरी में सहेजें",
+        "startRpChat": "आरपी चैट प्रारंभ करें",
+        "createScenarioFromCharacter": "चरित्र से परिदृश्य बनाएं",
+        "createWorkflow": "वर्कफ़्लो बनाएं",
+        "previous": "← पिछला (",
+        "viewAllSteps": "सभी चरण देखें",
+        "next": "अगला:"
+      },
+      "option": {
+        "off": "बंद",
+        "generate": "उत्पन्न करें",
+        "chooseLorebook": "विद्यापुस्तक चुनें...",
+        "useChatDefault": "चैट डिफ़ॉल्ट का उपयोग करें",
+        "brave": "बहादुर",
+        "google": "गूगल।",
+        "noCompatibleLiveModel": "कोई संगत लाइव मॉडल नहीं",
+        "vision": "· विज़न ·",
+        "context": "संदर्भ",
+        "chooseMediaStudioImage": "मीडिया स्टूडियो छवि चुनें…",
+        "general": "सामान्य",
+        "mature": "परिपक्व",
+        "adult": "वयस्क",
+        "attachScene": "दृश्य संलग्न करें...",
+        "attachPrompt": "प्रॉम्प्ट संलग्न करें..."
+      },
+      "label": {
+        "loadFileTxtMd": "फ़ाइल लोड करें (.txt, .md)",
+        "uploadFileMax5mb": "फ़ाइल अपलोड करें (अधिकतम 5MB)"
+      },
+      "description": {
+        "localCharacterStoredInVeniceForgeNot": "स्थानीय कैरेक्टर - Venice Forge में संग्रहीत है, Venice.ai पर होस्ट नहीं किया गया है।",
+        "embeddedDataIsPortableInV2Exports": "एंबेडेड डेटा V2 एक्सपोर्ट में पोर्टेबल है, लिंक्ड लोरबुक स्थानीय रहते हैं और एम्बेडेड कॉपी में सिंक्रोनाइज़ होते हैं केवल जब आप इसका अनुरोध करते हैं।",
+        "filesLoadedIntoPersonalitySystemPromptInstructions": "व्यक्तित्व, सिस्टम प्रॉम्प्ट, निर्देशों में लोड की गई या सामान्य संदर्भ के रूप में संलग्न फ़ाइलें सीधे संग्रहीत की जाती हैं इस कैरेक्टर कार्ड के अंदर।",
+        "runsOneUnsavedTurnTheResponseNever": "एक बिना सहेजे गए मोड़ को चलाता है। प्रतिक्रिया इस कार्ड को कभी भी परिवर्तित नहीं करती है या स्वचालित रूप से उदाहरण संवाद नहीं बन जाती है।",
+        "estimatedSystemPrompt": "अनुमानित सिस्टम प्रॉम्प्ट:",
+        "tokensActivatedLorebookSections": "टोकन · सक्रिय लोरबुक अनुभाग:",
+        "analysisAndGeneratedCardsRemainProposalsYour": "विश्लेषण और जनरेट किए गए कार्ड प्रस्ताव बने हुए हैं। आपका वर्तमान ड्राफ्ट तब तक सुरक्षित रखा जाता है जब तक आप स्पष्ट रूप से इसे लागू नहीं करते।",
+        "producesAnAllowlistedProposalOnlyNothingChanges": "केवल स्वीकृत सूची वाला प्रस्ताव तैयार करता है। जब तक आप इसे लागू नहीं करते तब तक कुछ भी नहीं बदलता।"
+      },
+      "heading": {
+        "1SourceAvatar": "1. स्रोत और अवतार",
+        "2Identity": "2. पहचान",
+        "3Persona": "3. व्यक्तित्व",
+        "4PromptBehavior": "4. शीघ्र व्यवहार",
+        "5Greetings": "5. अभिवादन",
+        "6ExampleDialogue": "6. उदाहरण संवाद",
+        "7CharacterBookExtensions": "7. कैरेक्टर बुक और एक्सटेंशन",
+        "8ModelAndContext": "8. मॉडल और संदर्भ",
+        "9TestAiRefinement": "9. परीक्षण और AI परिशोधन",
+        "aiDraftGeneration": "AI ड्राफ्ट जनरेशन",
+        "10ExportWorkflow": "10. निर्यात और वर्कफ़्लो"
+      },
+      "item": {
+        "tokens": "टोकन"
+      }
+    },
+    "componentsRpStudioCharacterlibrary": {
+      "text": {
+        "characterCreator": "चरित्र निर्माता",
+        "createStCard": "ST कार्ड बनाएँ",
+        "close": "बंद करें",
+        "delete": "हटाएं",
+        "cancel": "रद्द करें",
+        "buildCharacter": "कैरेक्टर बनाएं",
+        "drafts": "ड्राफ्ट (",
+        "importCard": "आयात कार्ड",
+        "characterImportChangedAnExistingCard": "कैरेक्टर आयात ने मौजूदा कार्ड को बदल दिया।",
+        "undoImport": "आयात को पूर्ववत करें",
+        "updated": "अपडेट किया गया",
+        "resume": "फिर से शुरू करें",
+        "loadingCharacters": "अक्षर लोड हो रहे हैं...",
+        "createYourFirstCharacter": "अपना पहला अक्षर बनाएं",
+        "name": "नाम",
+        "format": "प्रारूप",
+        "creator": "निर्माता",
+        "greetings": "अभिवादन",
+        "loreEntries": "विद्या प्रविष्टियाँ",
+        "extensions": "एक्सटेंशन",
+        "characterBook": "चरित्र पुस्तिका",
+        "aMatchingCardAlreadyExistsChooseAn": "एक मिलान कार्ड पहले से मौजूद है। एक स्पष्ट संकल्प चुनें; कुछ भी चुपचाप अधिलेखित नहीं किया जाता है।",
+        "fieldsToMerge": "मर्ज करने के लिए फ़ील्ड्स",
+        "keepExisting": "मौजूदा रखें",
+        "mergeFields": "फ़ील्ड्स मर्ज करें",
+        "replace": "बदलें",
+        "createCopy": "कॉपी बनाएं"
+      },
+      "action": {
+        "chat": "चैट",
+        "edit": "संपादित करें",
+        "delete": "हटाएं?",
+        "exportJson": "निर्यात JSON",
+        "exportPng": "निर्यात PNG"
+      },
+      "description": {
+        "localCharactersAreStoredInVeniceForge": "स्थानीय वर्ण केवल Venice Forge में संग्रहीत हैं। उन्हें होस्ट नहीं किया गया है Venice.ai।",
+        "draftsAreEncryptedLocallyExcludedFromSync": "ड्राफ्ट को स्थानीय रूप से एन्क्रिप्ट किया गया है, सिंक से बाहर रखा गया है। और सहेजे जाने तक सक्रिय वर्णों के रूप में प्रकट नहीं होते हैं",
+        "noRecoverableDrafts": "कोई पुनर्प्राप्ति योग्य ड्राफ्ट नहीं",
+        "nothingIsSavedUntilYouConfirmThis": "जब तक आप इस पूर्वावलोकन की पुष्टि नहीं करते तब तक कुछ भी सहेजा नहीं जाता है।"
+      },
+      "heading": {
+        "localStCardDrafts": "स्थानीय ST कार्ड ड्राफ्ट",
+        "reviewCharacterImport": "चरित्र आयात की समीक्षा करें"
+      },
+      "option": {
+        "embeddedLinkedRecommended": "एंबेडेड + लिंक्ड (अनुशंसित)",
+        "linkedOnly": "केवल लिंक किया गया",
+        "embeddedOnly": "केवल एंबेडेड",
+        "doNotImportBook": "पुस्तक आयात न करें"
+      },
+      "label": {
+        "setAsFavorite": "पसंदीदा के रूप में सेट करें",
+        "startRpChatAfterImport": "आयात के बाद आरपी चैट प्रारंभ करें"
+      }
+    },
+    "componentsRpStudioLorebookmanager": {
+      "action": {
+        "edit": "संपादित करें",
+        "delete": "हटाएं?"
+      },
+      "text": {
+        "save": "सहेजें",
+        "newLorebook": "नई विद्यापुस्तक",
+        "loading": "लोड हो रहा है…",
+        "lorebookNotFound": "लोरबुक नहीं मिला।",
+        "name": "नाम",
+        "tagsCommaSeparated": "टैग (अल्पविराम से अलग)",
+        "description": "विवरण",
+        "entries": "प्रविष्टियाँ",
+        "addEntry": "प्रविष्टि जोड़ें",
+        "noEntriesYet": "अभी तक कोई प्रविष्टि नहीं।"
+      },
+      "label": {
+        "enabled": "सक्षम",
+        "always": "हमेशा",
+        "wholeWords": "पूरे शब्द"
+      }
+    },
+    "componentsRpStudioPersonamanager": {
+      "text": {
+        "active": "सक्रिय",
+        "save": "सहेजें",
+        "add": "जोड़ें",
+        "newPersona": "नया व्यक्तित्व",
+        "loadingPersonas": "व्यक्तित्व लोड हो रहा है...",
+        "personaNotFound": "व्यक्तित्व नहीं मिला।",
+        "personaImage": "व्यक्तित्व छवि",
+        "removeImage": "छवि हटाएं",
+        "name": "नाम",
+        "referenceThirdPerson": "संदर्भ (तीसरा व्यक्ति)",
+        "description": "विवरण",
+        "tags": "टैग"
+      },
+      "action": {
+        "edit": "संपादित करें",
+        "delete": "हटाएं?"
+      },
+      "label": {
+        "loadFromFileTxtMd": "फ़ाइल से लोड करें (.txt, .md)"
+      }
+    },
+    "componentsRpStudioPromptdebugdrawer": {
+      "text": {
+        "close": "बंद करें",
+        "chars": "वर्ण ·",
+        "excluded": "बाहर रखा गया:",
+        "noRecentMessages": "कोई हालिया संदेश नहीं।"
+      },
+      "heading": {
+        "promptTrace": "प्रॉम्प्ट ट्रेस"
+      }
+    },
+    "componentsRpStudioRpchatlist": {
+      "text": {
+        "cancel": "रद्द करें",
+        "create": "बनाएं",
+        "model": "मॉडल",
+        "characters": "चरित्र",
+        "newRpChat": "नई आरपी चैट",
+        "loadingChats": "चैट लोड हो रही है...",
+        "startYourFirstRp": "अपना पहला आरपी शुरू करें",
+        "title": "शीर्षक",
+        "openingGreeting": "प्रारंभिक अभिवादन",
+        "noCharactersYetCreateOneInThe": "अभी तक कोई वर्ण नहीं - वर्ण टैब में एक बनाएं।",
+        "personaOptional": "व्यक्तित्व (वैकल्पिक)",
+        "lorebooks": "लोरबुक्स",
+        "scenarioOverride": "परिदृश्य ओवरराइड"
+      },
+      "action": {
+        "open": "खोलें",
+        "delete": "हटाएं?"
+      },
+      "heading": {
+        "newRpChat": "नई आरपी चैट"
+      },
+      "option": {
+        "usePrimaryGreeting": "प्राथमिक अभिवादन का उपयोग करें",
+        "alternateGreeting": "वैकल्पिक अभिवादन",
+        "randomGreeting": "यादृच्छिक अभिवादन",
+        "startWithoutGreeting": "बिना अभिवादन के प्रारंभ करें",
+        "noPersona": "कोई व्यक्तित्व नहीं"
+      }
+    },
+    "componentsRpStudioRpstudioview": {
+      "text": {
+        "rpStudio": "RP स्टूडियो",
+        "localConfigIsStillLoadingRpStudio": "स्थानीय कॉन्फ़िगरेशन अभी भी लोड हो रहा है। सुरक्षा सेटिंग्स स्नैपशॉट हाइड्रेटेड होने तक आरपी स्टूडियो सेव नियंत्रण अस्थायी रूप से अनुपलब्ध हैं।",
+        "loadingStCardStudio": "ST कार्ड स्टूडियो लोड हो रहा है..."
+      }
+    },
+    "componentsRpStudioScenegenerator": {
+      "text": {
+        "chat": "चैट",
+        "seed": "सीड",
+        "imageModel": "छवि मॉडल",
+        "prompt": "संकेत",
+        "extracted": "निकाला गया:",
+        "negativePrompt": "नकारात्मक संकेत",
+        "generateScene": "दृश्य उत्पन्न करें",
+        "recentScenes": "हाल के दृश्य",
+        "noScenesYet": "अभी तक कोई दृश्य नहीं।",
+        "noImage": "कोई छवि नहीं"
+      },
+      "option": {
+        "selectAChat": "एक चैट चुनें..."
+      }
+    },
+    "componentsScenesScenecomposerview": {
+      "heading": {
+        "sceneComposer": "दृश्य रचयिता",
+        "components": "घटक ("
+      },
+      "option": {
+        "project": "प्रोजेक्ट",
+        "allScopes": "सभी क्षेत्र",
+        "global": "वैश्विक",
+        "newest": "नवीनतम",
+        "oldest": "सबसे पुराना",
+        "title": "शीर्षक",
+        "favorite": "पसंदीदा"
+      },
+      "action": {
+        "archive": "आर्काइव",
+        "remove": "हटाएं",
+        "delete": "हटाएं",
+        "cancel": "रद्द करें",
+        "new": "नया",
+        "favorites": "★ पसंदीदा",
+        "restore": "पुनर्स्थापित करें",
+        "saveMetadata": "मेटाडेटा सहेजें",
+        "add": "+ जोड़ें",
+        "saveNewVersion": "नया संस्करण सहेजें",
+        "useInImageStudio": "इमेज स्टूडियो में उपयोग करें",
+        "copyRecipe": "कॉपी रेसिपी",
+        "createWorkflow": "वर्कफ़्लो बनाएं",
+        "history": "इतिहास (",
+        "useThisVersion": "इस संस्करण का उपयोग करें"
+      },
+      "description": {
+        "loading": "लोड हो रहा है...",
+        "noComponentsYetClickAddToBegin": "अभी तक कोई घटक नहीं है। रचना शुरू करने के लिए \"+ जोड़ें\" पर क्लिक करें।"
+      },
+      "text": {
+        "version": "संस्करण",
+        "component": "घटक",
+        "created": "· बनाया गया",
+        "updated": "· अपडेट किया गया",
+        "current": "वर्तमान"
+      },
+      "label": {
+        "defaults": "डिफ़ॉल्ट:"
+      }
+    },
+    "componentsSearchProfilediscoverytab": {
+      "action": {
+        "cancel": "रद्द करें"
+      },
+      "heading": {
+        "publicProfileDiscovery": "सार्वजनिक प्रोफ़ाइल डिस्कवरी",
+        "discoveredProfileCandidates": "खोजे गए प्रोफ़ाइल उम्मीदवार"
+      },
+      "description": {
+        "aggregatesSocialProfileMappingsFromPublicDatabases": "वेनिस वेब एकीकरण का उपयोग करके सार्वजनिक डेटाबेस (GitHub, Twitter, LinkedIn, आदि) से सामाजिक प्रोफ़ाइल मैपिंग एकत्र करता है।"
+      },
+      "label": {
+        "platformsToSearch": "खोजने के लिए प्लेटफ़ॉर्म"
+      },
+      "text": {
+        "candidates": "उम्मीदवार",
+        "confidence": "आत्मविश्वास"
+      }
+    },
+    "componentsSearchScrapetab": {
+      "action": {
+        "copy": "कॉपी करें"
+      },
+      "heading": {
+        "webScrape": "वेब स्क्रैप"
+      },
+      "option": {
+        "veniceWebScrape": "वेनिस वेब स्क्रैप",
+        "jinaReader": "जीना रीडर"
+      }
+    },
+    "componentsSearchSearchscrapeview": {
+      "heading": {
+        "research": "अनुसंधान"
+      },
+      "description": {
+        "searchScrapeCollectEvidenceAndSynthesizeFindings": "खोजें, परिमार्जन करें, साक्ष्य एकत्र करें और निष्कर्षों का संश्लेषण करें।"
+      }
+    },
+    "componentsSearchSearchtab": {
+      "heading": {
+        "webSearch": "वेब खोज"
+      },
+      "option": {
+        "jinaSearch": "जीना खोज",
+        "braveSearchVenice": "ब्रेव सर्च (वेनिस)",
+        "googleSearchVenice": "गूगल सर्च (वेनिस)"
+      },
+      "action": {
+        "scrapeWithVenice": "वेनिस के साथ स्क्रैप",
+        "readWithJina": "जीना के साथ पढ़ें",
+        "saveToSession": "सत्र में सहेजें"
+      },
+      "text": {
+        "noSearchResultsYet": "अभी तक कोई खोज परिणाम नहीं।"
+      }
+    },
+    "componentsStatusDiagnosticsdrawer": {
+      "action": {
+        "close": "बंद करें",
+        "openPrivacyDashboard": "गोपनीयता डैशबोर्ड खोलें",
+        "copySafeDiagnostics": "कॉपी सेफ डायग्नोस्टिक्स",
+        "openStatus": "ओपन स्टेटस",
+        "openConfig": "ओपन कॉन्फिग",
+        "jumpToModel": "मॉडल पर जाएं"
+      },
+      "heading": {
+        "diagnostics": "डायग्नोस्टिक्स"
+      },
+      "description": {
+        "appHealthModelCatalogStorageSafetyAnd": "ऐप स्वास्थ्य, मॉडल कैटलॉग, भंडारण, सुरक्षा और प्रदाता स्थिति।",
+        "lastRefresh": "अंतिम रीफ्रेश:",
+        "lastRefreshError": "अंतिम रीफ्रेश त्रुटि:",
+        "webModeFilesystemRevealsAndTheSystem": "वेब मोड: फाइल सिस्टम, रिवील और सिस्टम शेल अनुपलब्ध हैं। कुछ केवल-डेस्कटॉप सुविधाएँ (ऑडियो रूटिंग, स्थानीय YAML कॉन्फ़िगरेशन) अक्षम हैं।",
+        "phase2cShipsReadOnlyDiagnosticsDestructive": "चरण 2सी रीड-ओनली डायग्नोस्टिक्स भेजता है। विनाशकारी मरम्मत (कुंजियाँ रीसेट करें, भंडारण साफ़ करें, सभी डेटा हटाएं) दायरे से बाहर हैं और अपने समर्पित टैब में रहते हैं।"
+      },
+      "text": {
+        "copiedAt": "को",
+        "includeRedactedPromptExcerptsInSafeDiagnostics": "पर कॉपी किया गया है। सेफ डायग्नोस्टिक्स में संशोधित प्रॉम्प्ट अंश शामिल करें",
+        "truncated80CharsAndSecretStrippedPrompt": "प्रॉम्प्ट लाइब्रेरी से काटे गए (≤80 वर्ण) और गुप्त-स्ट्रिप्ड प्रॉम्प्ट स्निपेट। डिफ़ॉल्ट रूप से बंद."
+      }
+    },
+    "componentsStatusHeaderstatuscluster": {
+      "action": {
+        "status": "स्थिति"
+      }
+    },
+    "componentsStatusTaskcenterdrawer": {
+      "action": {
+        "cancel": "रद्द करें",
+        "retry": "पुनः प्रयास करें",
+        "clear": "साफ़ करें",
+        "open": "खोलें"
+      },
+      "heading": {
+        "taskCenter": "कार्य केंद्र",
+        "generation": "पीढ़ी"
+      },
+      "description": {
+        "recentBackgroundGenerations": "हाल की पृष्ठभूमि पीढ़ियाँ",
+        "noRecentTasks": "कोई हालिया कार्य नहीं।"
+      },
+      "text": {
+        "cancellationUnavailable": "रद्दीकरण अनुपलब्ध"
+      }
+    },
+    "componentsUiShared": {
+      "text": {
+        "working": "कार्यरत…"
+      },
+      "action": {
+        "shuffle": "शफ़ल"
+      }
+    },
+    "componentsVideoVideoView": {
+      "text": {
+        "model": "मॉडल",
+        "resolution": "रिज़ॉल्यूशन",
+        "generationMode": "जनरेशन मोड",
+        "prompt": "संकेत",
+        "negativePrompt": "नकारात्मक संकेत",
+        "referenceImage": "संदर्भ छवि",
+        "duration": "अवधि",
+        "aspect": "पहलू",
+        "generateAudio": "ऑडियो उत्पन्न करें",
+        "output": "आउटपुट",
+        "generatedVideosAppearHere": "जेनरेट किए गए वीडियो यहां दिखाई देते हैं",
+        "averageGenerationTime30s2min": "औसत पीढ़ी का समय: 30 सेकंड-2 मिनट"
+      },
+      "action": {
+        "download": "डाउनलोड",
+        "textToVideo": "वीडियो पर टेक्स्ट करें",
+        "imageToVideo": "छवि से वीडियो",
+        "reset": "रीसेट करें",
+        "generateAnother": "उत्पन्न करें अन्य"
+      },
+      "description": {
+        "clickToAddImage": "छवि जोड़ने के लिए क्लिक करें"
+      }
+    },
+    "componentsWorkflowsWorkflowtemplatesview": {
+      "heading": {
+        "workflows": "वर्कफ़्लो",
+        "steps": "चरण",
+        "compilePreview": "संकलन पूर्वावलोकन",
+        "runPlan": "रन प्लान"
+      },
+      "label": {
+        "import": "आयात करें",
+        "workflowTitle": "वर्कफ़्लो शीर्षक",
+        "workflowTags": "वर्कफ़्लो टैग",
+        "version": "संस्करण:"
+      },
+      "action": {
+        "export": "निर्यात करें",
+        "archive": "आर्काइव",
+        "delete": "हटाएं",
+        "remove": "हटाएं",
+        "new": "नया",
+        "addNewVersion": "नया संस्करण जोड़ें",
+        "addStep": "चरण जोड़ें"
+      },
+      "text": {
+        "noWorkflowsFound": "कोई वर्कफ़्लो नहीं मिला।",
+        "selectOrCreateAWorkflowToBegin": "शुरू करने के लिए वर्कफ़्लो चुनें या बनाएं।",
+        "workflowIsValid": "वर्कफ़्लो मान्य है।",
+        "workflowHasErrors": "वर्कफ़्लो में त्रुटियाँ हैं।",
+        "noRunnableActions": "कोई रन करने योग्य क्रिया नहीं।"
+      }
+    },
+    "componentsDiagnosticspreview": {
+      "text": {
+        "noRequestsYet": "अभी तक कोई अनुरोध नहीं",
+        "cfRay": "CF-RAY।"
+      }
+    },
+    "componentsErrorboundary": {
+      "heading": {
+        "somethingWentWrong": "कुछ गलत हो गया।"
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "ऐप में एक अप्रत्याशित त्रुटि आई और यह दृश्य प्रस्तुत नहीं किया जा सका। आपका काम सुरक्षित है - पुनः प्रयास करें या पुनर्प्राप्त करने के लिए पुनः लोड करें।"
+      },
+      "action": {
+        "tryAgain": "पुनः प्रयास करें",
+        "reloadApplication": "एप्लिकेशन को पुनः लोड करें"
+      }
+    },
+    "componentsModelselect": {
+      "text": {
+        "highFidelity": "उच्च निष्ठा",
+        "standard": "मानक",
+        "anon": "एनोन",
+        "private": "निजी"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorcompleted": {
+      "heading": {
+        "characterCreated": "चरित्र निर्मित"
+      },
+      "description": {
+        "hasBeenSavedToYourLocalCharacter": "” को आपके स्थानीय चरित्र पुस्तकालय में सहेजा गया है।"
+      },
+      "text": {
+        "startChat": "चैट प्रारंभ करें",
+        "viewCharacter": "चरित्र देखें",
+        "continueEditing": "संपादन जारी रखें",
+        "exportCard": "निर्यात कार्ड",
+        "createAnother": "एक और बनाएं"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorgenerating": {
+      "heading": {
+        "generatingCharacterDraft": "कैरेक्टर ड्राफ्ट जेनरेट करना"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorready": {
+      "text": {
+        "charaCardV2": "char_card_v2",
+        "errorsMustResolve": "त्रुटियाँ (समाधान अवश्य करें)",
+        "warningsOptional": "चेतावनियाँ (वैकल्पिक)",
+        "returnToDraft": "ड्राफ्ट पर लौटें",
+        "saveAsCopy": "कॉपी के रूप में सहेजें"
+      }
+    },
+    "componentsCharacterCreatorCharactercreatorview": {
+      "text": {
+        "autosaveFailed": "स्वतः सहेजना विफल:"
+      },
+      "action": {
+        "retrySave": "सहेजने का पुनः प्रयास करें"
+      },
+      "description": {
+        "savingCharacterToLocalLibrary": "चरित्र को स्थानीय लाइब्रेरी में सहेजा जा रहा है..."
+      }
+    },
+    "componentsChatChatInput": {
+      "action": {
+        "stop": "रोकें"
+      }
+    },
+    "componentsDocumentsDocumentrenderer": {
+      "text": {
+        "documentIsEmpty": "दस्तावेज़ खाली है।",
+        "pageBreak": "पेज ब्रेक"
+      }
+    },
+    "componentsGalleryLineageViewer": {
+      "text": {
+        "cycleDetectedInTheLineageChainShowing": "वंश श्रृंखला में चक्र का पता चला - एक छोटा दृश्य दिखा रहा है।",
+        "someLineageReferencesAreMissingFromThe": "कुछ लोड किए गए सेट से वंश संदर्भ गायब हैं।",
+        "cycle": "चक्र:",
+        "missing": "(गायब)"
+      },
+      "description": {
+        "noLineageRecorded": "कोई वंश दर्ज नहीं किया गया है"
+      }
+    },
+    "componentsGalleryRecipeComparison": {
+      "text": {
+        "recipeComparison": "रेसिपी तुलना"
+      },
+      "column": {
+        "field": "फ़ील्ड",
+        "original": "मूल",
+        "sanitized": "सेनिटाइज़्ड"
+      }
+    },
+    "galleryRecipeCompatibilityCard": {
+      "text": {
+        "thisItemHasNoRecipeToCompare": "इस आइटम में वर्तमान मॉडल के मुकाबले तुलना करने के लिए कोई नुस्खा नहीं है।",
+        "for": "के लिए",
+        "unsupportedField": "असमर्थित फ़ील्ड के लिए"
+      },
+      "action": {
+        "useWith": "के साथ प्रयोग करें",
+        "useOriginal": "के साथ उपयोग करें मूल"
+      }
+    },
+    "componentsLayoutHeader": {
+      "text": {
+        "tasks": "कार्य"
+      }
+    },
+    "componentsLayoutMemoryPanel": {
+      "heading": {
+        "legacyConversationsDetected": "लीगेसी वार्तालाप का पता लगाया गया",
+        "encryptedConversationVault": "एन्क्रिप्टेड वार्तालाप वॉल्ट",
+        "maintenanceOperations": "रखरखाव संचालन",
+        "curatedFacts": "क्यूरेटेड तथ्य ("
+      },
+      "description": {
+        "weFoundUnencryptedConversationRecordsFromA": "हमें पिछले इंस्टॉलेशन से अनएन्क्रिप्टेड वार्तालाप रिकॉर्ड मिले। अब उन्हें नए सुरक्षित वॉल्ट में स्थानांतरित करें।",
+        "configureMemoryParametersAndLocalIndexingStructures": "मेमोरी पैरामीटर और स्थानीय अनुक्रमण संरचनाओं को कॉन्फ़िगर करें। वॉल्ट रिकॉर्ड और इंडेक्स पूरी तरह से एन्क्रिप्टेड हैं।",
+        "allowsTheVaultToAnalyzeAndExtract": "वॉल्ट को नए थ्रेड्स से तथ्यों का विश्लेषण करने और निकालने की अनुमति देता है।",
+        "pullsRelevantHistoryFactsDynamicallyToHelp": "भविष्य के संकेतों में सहायता के लिए प्रासंगिक इतिहास तथ्यों को गतिशील रूप से खींचता है।",
+        "displaysAPreviewBoxAboveTheChat": "चैट इनपुट के ऊपर एक पूर्वावलोकन बॉक्स प्रदर्शित करता है जो तथ्यों को काटने की अनुमति देता है।",
+        "transmitsSummaryMaterialToVeniceModelFor": "बेहतर तथ्य खोज के लिए सारांश सामग्री को वेनिस मॉडल तक पहुंचाता है।",
+        "lastIndexedAt": "अंतिम बार अनुक्रमित:",
+        "theseAreTheKeyFactsExtractedLocally": "ये आपके वार्तालाप इतिहास से स्थानीय रूप से निकाले गए मुख्य तथ्य हैं।"
+      },
+      "action": {
+        "openFolder": "फ़ोल्डर खोलें",
+        "openVaultFolder": "वॉल्ट फ़ोल्डर खोलें",
+        "forget": "भूल जाओ"
+      },
+      "label": {
+        "enableConversationRecording": "वार्तालाप रिकॉर्डिंग सक्षम करें",
+        "enableMemoryRetrieval": "मेमोरी पुनर्प्राप्ति सक्षम करें",
+        "showPulledContextBeforeSending": "भेजने से पहले खींचा गया संदर्भ दिखाएं",
+        "useAiSummaries": "AI सारांश का उपयोग करें"
+      },
+      "text": {
+        "noFactsStoredYet": "अभी तक कोई तथ्य संग्रहीत नहीं है।",
+        "source": "स्रोत:",
+        "confidence": "• आत्मविश्वास:"
+      }
+    },
+    "componentsPlaygroundPlaygroundChat": {
+      "text": {
+        "whatShouldIBuild": "मुझे क्या बनाना चाहिए?",
+        "describeAWorkflowInPlainLanguageI": "सरल भाषा में वर्कफ़्लो का वर्णन करें। मैं इसे वास्तविक समय में कैनवास पर एकत्रित करूंगा।",
+        "noMessage": "(कोई संदेश नहीं)",
+        "patch": "पैच",
+        "applied": "लागू किया गया"
+      },
+      "action": {
+        "stop": "रोकें",
+        "send": "भेजें"
+      }
+    },
+    "componentsPlaygroundWorkflowPreview": {
+      "description": {
+        "noWorkflowYet": "अभी तक कोई वर्कफ़्लो नहीं है",
+        "tellTheAgentWhatYouWantTo": "एजेंट को बताएं कि आप क्या बनाना चाहते हैं - यह वास्तविक समय में यहां पाइपलाइन को इकट्ठा करेगा।"
+      }
+    },
+    "componentsRpStudioRpchatview": {
+      "heading": {
+        "chatNotFound": "चैट नहीं मिली"
+      },
+      "description": {
+        "theConversationYouReLookingForDoesn": "आप जिस वार्तालाप की तलाश कर रहे हैं वह मौजूद नहीं है या हटा दिया गया है।"
+      },
+      "text": {
+        "scene": "दृश्य",
+        "inspector": "इंस्पेक्टर",
+        "startTheRoleplayBySendingAMessage": "एक संदेश भेजकर रोलप्ले शुरू करें।",
+        "thinking": "सोच रहा हूं...",
+        "speaker": "स्पीकर:",
+        "send": "भेजें"
+      },
+      "action": {
+        "narrator": "नैरेटर"
+      }
+    },
+    "componentsSearchAiresearchtab": {
+      "heading": {
+        "deepAiResearchAgent": "डीप एआई रिसर्च एजेंट"
+      },
+      "description": {
+        "executesARecursiveWebSearchLoopScrapes": "एक पुनरावर्ती वेब खोज लूप निष्पादित करता है, कई स्रोतों को स्क्रैप करता है, उद्धरणों को पार्स करता है, और एक व्यापक अंतिम प्रतिक्रिया को संश्लेषित करता है"
+      },
+      "option": {
+        "jinaAiSearchReader": "जिना एआई खोज और रीडर",
+        "autoDefaultFromConfig": "ऑटो (कॉन्फिग से डिफ़ॉल्ट)",
+        "braveSearch": "बहादुर खोज",
+        "googleSearch": "Google खोज",
+        "retrieveSynthesizeUsesVeniceModel": "पुनर्प्राप्त करें और संश्लेषित करें। (वेनिस मॉडल का उपयोग करता है)",
+        "retrieveOnlyNoAiSynthesis": "केवल पुनर्प्राप्त करें (कोई AI संश्लेषण नहीं)"
+      },
+      "text": {
+        "budgetControls": "बजट नियंत्रण",
+        "retrievedEvidenceSources": "पुनर्प्राप्त साक्ष्य स्रोत"
+      },
+      "action": {
+        "copyAnswer": "प्रतिलिपि उत्तर",
+        "copyEvidenceSources": "प्रतिलिपि साक्ष्य स्रोत"
+      }
+    },
+    "componentsSearchResearchproviderstatus": {
+      "action": {
+        "addKey": "कुंजी जोड़ें"
+      }
+    },
+    "componentsSearchTextparsertab": {
+      "heading": {
+        "documentTextParser": "दस्तावेज़ टेक्स्ट पार्सर"
+      },
+      "description": {
+        "extractRawTextFromPdfDocxXlsx": "PDF, DOCX, XLSX, या TXT दस्तावेज़ों से कच्चा पाठ निकालें।"
+      }
+    },
+    "componentsSettingsAboutpanel": {
+      "text": {
+        "beta": "· बीटा"
+      }
+    },
+    "componentsSettingsConfigpanel": {
+      "text": {
+        "configYaml": "config.yaml",
+        "themesYaml": "themes.yaml",
+        "secretsKeepPlaintextKeysTrue": "Secrets.keep_plaintext_keys: true"
+      }
+    },
+    "componentsUiErrorBoundary": {
+      "text": {
+        "somethingWentWrong": "कुछ गलत हो गया",
+        "showDetails": "विवरण दिखाएं"
+      },
+      "description": {
+        "theAppHitAnUnexpectedErrorAnd": "ऐप में एक अप्रत्याशित त्रुटि आई और यह दृश्य प्रस्तुत नहीं किया जा सका। आपका काम सुरक्षित है - ठीक होने के लिए ताज़ा करें।"
+      },
+      "action": {
+        "tryAgain": "पुनः प्रयास करें",
+        "reloadPage": "पृष्ठ पुनः लोड करें"
+      }
+    },
+    "componentsUiSelect": {
+      "text": {
+        "noResults": "कोई परिणाम नहीं"
+      }
+    }
+  }
 }

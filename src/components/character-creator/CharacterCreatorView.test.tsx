@@ -38,6 +38,10 @@ vi.mock("../../services/characterCreatorAiService", async () => {
   };
 });
 
+vi.mock("../../hooks/use-models", () => ({
+  useModels: vi.fn(() => ({ data: undefined, isLoading: false, error: null })),
+}));
+
 describe("CharacterCreatorView Component", () => {
   beforeEach(() => {
     (StorageService as any)._clear();

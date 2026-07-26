@@ -6,6 +6,7 @@ import { IngestedAttachment } from '../../types/ingestion'
 import { processFileAttachment } from '../../services/ingestion/attachmentAssembler'
 import { MAX_ATTACHMENTS_PER_MESSAGE } from '../../services/ingestion/ingestionLimits'
 import type { ChatMemoryStatus } from '../../hooks/use-chat'
+import { Trans } from 'react-i18next';
 
 interface ChatInputProps {
   onSend: (message: string, attachments?: IngestedAttachment[]) => void
@@ -270,8 +271,7 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled, disableImageA
                 className="flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium text-text-primary bg-surface-elevated hover:bg-surface border border-border rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
               >
                 <svg width="9" height="9" viewBox="0 0 8 8" fill="currentColor"><rect width="8" height="8" rx="1" /></svg>
-                Stop
-              </button>
+                <Trans i18nKey="common:surface.componentsChatChatInput.action.stop" /></button>
             ) : (
               <button
                 onClick={handleSubmit}

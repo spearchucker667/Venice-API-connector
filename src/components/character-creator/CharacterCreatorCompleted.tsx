@@ -5,6 +5,7 @@
 import { CheckCircle2, MessageSquare, User, FileUp, Sparkles, Edit3 } from "lucide-react";
 import type { CharacterCardV1 } from "../../types/rp";
 import { CharacterCreatorMascot } from "./CharacterCreatorMascot";
+import { Trans } from 'react-i18next';
 
 interface Props {
   character: CharacterCardV1;
@@ -32,10 +33,9 @@ export function CharacterCreatorCompleted({
         </div>
       </div>
 
-      <h2 className="text-xl font-bold text-text-primary mb-1">Character Created</h2>
+      <h2 className="text-xl font-bold text-text-primary mb-1"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorcompleted.heading.characterCreated" /></h2>
       <p className="text-xs text-text-muted mb-6">
-        “<span className="text-text-primary font-semibold">{character.name}</span>” has been saved to your local character library.
-      </p>
+        “<span className="text-text-primary font-semibold">{character.name}</span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorcompleted.description.hasBeenSavedToYourLocalCharacter" /></p>
 
       {/* Primary & Secondary Actions */}
       <div className="flex flex-col gap-2.5 w-full">
@@ -45,7 +45,7 @@ export function CharacterCreatorCompleted({
           className="w-full py-2.5 rounded-xl bg-accent text-accent-contrast font-medium text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
         >
           <MessageSquare className="w-4 h-4" />
-          <span>Start Chat</span>
+          <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorcompleted.text.startChat" /></span>
         </button>
 
         <div className="grid grid-cols-2 gap-2">
@@ -55,7 +55,7 @@ export function CharacterCreatorCompleted({
             className="py-2 px-3 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-primary flex items-center justify-center gap-1.5 transition-colors"
           >
             <User className="w-3.5 h-3.5" />
-            <span>View Character</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorcompleted.text.viewCharacter" /></span>
           </button>
           <button
             type="button"
@@ -63,7 +63,7 @@ export function CharacterCreatorCompleted({
             className="py-2 px-3 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-primary flex items-center justify-center gap-1.5 transition-colors"
           >
             <Edit3 className="w-3.5 h-3.5" />
-            <span>Continue Editing</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorcompleted.text.continueEditing" /></span>
           </button>
         </div>
 
@@ -74,7 +74,7 @@ export function CharacterCreatorCompleted({
             className="py-2 px-3 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-secondary flex items-center justify-center gap-1.5 transition-colors"
           >
             <FileUp className="w-3.5 h-3.5 text-accent" />
-            <span>Export Card</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorcompleted.text.exportCard" /></span>
           </button>
           <button
             type="button"
@@ -82,7 +82,7 @@ export function CharacterCreatorCompleted({
             className="py-2 px-3 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-secondary flex items-center justify-center gap-1.5 transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5 text-accent" />
-            <span>Create Another</span>
+            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorcompleted.text.createAnother" /></span>
           </button>
         </div>
       </div>

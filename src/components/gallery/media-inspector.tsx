@@ -22,6 +22,7 @@ import { copyText } from "../../stores/media-send-to";
 import { useSettingsStore } from "../../stores/settings-store";
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
 import { desktopFiles, isElectron } from "../../services/desktopBridge";
+import { Trans } from 'react-i18next';
 
 interface MediaInspectorProps {
   item: MediaItem;
@@ -344,8 +345,7 @@ export function MediaInspector({
       <div className="flex items-start justify-between gap-2">
         <div>
           <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em] text-text-muted">
-            Inspector
-          </h3>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.inspector" /></h3>
           <p className="mt-1 line-clamp-2 text-[13px] text-text-primary">{item.prompt || "Untitled"}</p>
         </div>
         <button
@@ -353,8 +353,7 @@ export function MediaInspector({
           onClick={onClose}
           className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
         >
-          Close
-        </button>
+          <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.close" /></button>
       </div>
 
       <section className="space-y-1.5">
@@ -374,8 +373,7 @@ export function MediaInspector({
           </button>
           <GhostButton onClick={() => onDelete(item)} ariaLabel="Delete">
             <span className="inline-flex items-center gap-1.5 text-danger">
-              <Trash2 className="h-3.5 w-3.5" /> Delete
-            </span>
+              <Trash2 className="h-3.5 w-3.5" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.delete" /></span>
           </GhostButton>
         </div>
       </section>
@@ -385,43 +383,42 @@ export function MediaInspector({
         <section>
           <Label>
             <span className="inline-flex items-center gap-1">
-              <Sparkles className="h-3 w-3" /> Parameters
-            </span>
+              <Sparkles className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.parameters" /></span>
           </Label>
           <div className="space-y-1 text-[12px] text-text-secondary">
             {typeof item.seed === "number" && (
               <div className="flex justify-between">
-                <span className="text-text-muted">Seed</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.seed" /></span>
                 <span className="font-mono">{item.seed}</span>
               </div>
             )}
             {item.source && (
               <div className="flex justify-between">
-                <span className="text-text-muted">Source</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.source" /></span>
                 <span>{item.source}</span>
               </div>
             )}
             {item.style && (
               <div className="flex justify-between">
-                <span className="text-text-muted">Style</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.style" /></span>
                 <span>{item.style}</span>
               </div>
             )}
             {item.steps !== undefined && item.steps !== null && (
               <div className="flex justify-between">
-                <span className="text-text-muted">Steps</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.steps" /></span>
                 <span>{String(item.steps)}</span>
               </div>
             )}
             {item.cfg !== undefined && item.cfg !== null && (
               <div className="flex justify-between">
-                <span className="text-text-muted">CFG</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.cfg" /></span>
                 <span>{String(item.cfg)}</span>
               </div>
             )}
             {item.aspectRatio && (
               <div className="flex justify-between">
-                <span className="text-text-muted">Aspect</span>
+                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.aspect" /></span>
                 <span>{item.aspectRatio}</span>
               </div>
             )}
@@ -432,7 +429,7 @@ export function MediaInspector({
       {/* ── Enhanced / original prompts ─────────────────────────────── */}
       {currentModel && generationRecipe && (
         <section data-testid="inspector-recipe-compatibility">
-          <Label>Recipe compatibility</Label>
+          <Label><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.recipeCompatibility" /></Label>
           <RecipeCompatibilityCard
             recipe={generationRecipe}
             currentModel={currentModel}
@@ -445,7 +442,7 @@ export function MediaInspector({
       )}
       {item.enhancedPrompt && (
         <section>
-          <Label>Enhanced Prompt</Label>
+          <Label><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.enhancedPrompt" /></Label>
           <p className="rounded-md border border-border bg-surface-elevated p-2 text-[12px] text-text-primary">
             {item.enhancedPrompt}
           </p>
@@ -453,7 +450,7 @@ export function MediaInspector({
       )}
       {item.originalPrompt && item.originalPrompt !== item.prompt && (
         <section>
-          <Label>Original Prompt</Label>
+          <Label><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.originalPrompt" /></Label>
           <p className="rounded-md border border-border bg-surface-elevated p-2 text-[12px] text-text-muted">
             {item.originalPrompt}
           </p>
@@ -461,7 +458,7 @@ export function MediaInspector({
       )}
       {item.remixPrompt && (
         <section>
-          <Label>Remix Prompt</Label>
+          <Label><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.remixPrompt" /></Label>
           <p className="rounded-md border border-border bg-surface-elevated p-2 text-[12px] text-text-primary">
             {item.remixPrompt}
           </p>
@@ -470,7 +467,7 @@ export function MediaInspector({
 
       {/* ── Action buttons ──────────────────────────────────────────── */}
       <section>
-        <Label>Actions</Label>
+        <Label><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.actions" /></Label>
         <div className="flex flex-wrap gap-1.5">
           {onUseSettings && (
             <button
@@ -480,8 +477,7 @@ export function MediaInspector({
               title="Load this image's settings into Image Studio (no generation)"
               data-testid="inspector-use-settings"
             >
-              <Settings className="h-3 w-3" /> Use settings
-            </button>
+              <Settings className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.useSettings" /></button>
           )}
           {item.mediaType === "image" && (
             <button
@@ -498,8 +494,7 @@ export function MediaInspector({
               className="inline-flex items-center gap-1 rounded-md border border-accent px-2 py-1 text-[12px] text-accent hover:bg-accent/10"
               data-testid="inspector-create-st-card"
             >
-              <ImagePlus className="h-3 w-3" /> Create ST Card
-            </button>
+              <ImagePlus className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.createStCard" /></button>
           )}
           {onUseRecipe && (
             <button
@@ -509,8 +504,7 @@ export function MediaInspector({
               title="Load the generation recipe (prompt, model, seed, dimensions, etc.) into the appropriate studio"
               data-testid="inspector-use-recipe"
             >
-              <Settings className="h-3 w-3" /> Use recipe
-            </button>
+              <Settings className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.useRecipe" /></button>
           )}
           {onRegenerate && (
             <button
@@ -520,8 +514,7 @@ export function MediaInspector({
               title="Regenerate using this image's settings (new random seed)"
               data-testid="inspector-regenerate"
             >
-              <RefreshCw className="h-3 w-3" /> Regenerate
-            </button>
+              <RefreshCw className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.regenerate" /></button>
           )}
           {onRegenerate && hasSeed && (
             <button
@@ -531,8 +524,7 @@ export function MediaInspector({
               title="Regenerate using the same seed as this image"
               data-testid="inspector-regenerate-same-seed"
             >
-              <Repeat className="h-3 w-3" /> Same seed
-            </button>
+              <Repeat className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.sameSeed" /></button>
           )}
           {onUpscale && capabilities.upscale && (
             <button
@@ -542,8 +534,7 @@ export function MediaInspector({
               title="Upscale / enhance this image"
               data-testid="inspector-upscale"
             >
-              <Maximize2 className="h-3 w-3" /> Upscale
-            </button>
+              <Maximize2 className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.upscale" /></button>
           )}
           {onOpenImageTools && capabilities.edit && (
             <button
@@ -553,8 +544,7 @@ export function MediaInspector({
               title="Open this image in the image editor"
               data-testid="inspector-edit"
             >
-              <ImagePlus className="h-3 w-3" /> Edit
-            </button>
+              <ImagePlus className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.edit" /></button>
           )}
           {item.generatedMediaId && isElectron() && (
             <button
@@ -569,8 +559,7 @@ export function MediaInspector({
               title="Save the main-process media file with a native dialog"
               data-testid="inspector-download-generated-media"
             >
-              <Download className="h-3 w-3" /> Download media
-            </button>
+              <Download className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.downloadMedia" /></button>
           )}
           <button
             type="button"
@@ -579,8 +568,7 @@ export function MediaInspector({
             title="Copy prompt text"
             data-testid="inspector-copy-prompt"
           >
-            <Copy className="h-3 w-3" /> Copy prompt
-          </button>
+            <Copy className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyPrompt" /></button>
           {item.negative && (
             <button
               type="button"
@@ -589,8 +577,7 @@ export function MediaInspector({
               title="Copy negative prompt"
               data-testid="inspector-copy-negative"
             >
-              <Copy className="h-3 w-3" /> Copy negative
-            </button>
+              <Copy className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyNegative" /></button>
           )}
           {hasSeed && (
             <button
@@ -600,8 +587,7 @@ export function MediaInspector({
               title={`Copy seed (${item.seed})`}
               data-testid="inspector-copy-seed"
             >
-              <Copy className="h-3 w-3" /> Copy seed
-            </button>
+              <Copy className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copySeed" /></button>
           )}
           <button
             type="button"
@@ -610,8 +596,7 @@ export function MediaInspector({
             title="Copy metadata as JSON"
             data-testid="inspector-copy-metadata"
           >
-            <Copy className="h-3 w-3" /> Copy metadata
-          </button>
+            <Copy className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyMetadata" /></button>
           {generationRecipe && (
             <button
               type="button"
@@ -620,8 +605,7 @@ export function MediaInspector({
               title="Save recipe to Prompt Library"
               data-testid="inspector-save-recipe-to-library"
             >
-              <NotebookPen className="h-3 w-3" /> Save recipe
-            </button>
+              <NotebookPen className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.saveRecipe" /></button>
           )}
           {generationRecipe && (
             <button
@@ -631,8 +615,7 @@ export function MediaInspector({
               title="Copy generation recipe as JSON"
               data-testid="inspector-copy-recipe"
             >
-              <Copy className="h-3 w-3" /> Copy recipe
-            </button>
+              <Copy className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyRecipe" /></button>
           )}
           {generationRecipe && (
             <button
@@ -642,8 +625,7 @@ export function MediaInspector({
               title="Download generation recipe as a JSON file"
               data-testid="inspector-export-recipe"
             >
-              <Download className="h-3 w-3" /> Export recipe
-            </button>
+              <Download className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.exportRecipe" /></button>
           )}
           {item.prompt && (
             <>
@@ -684,15 +666,13 @@ export function MediaInspector({
       {enhanceState && !enhanceState.loading && enhanceState.result && (
         <section className="rounded-md border border-accent/40 bg-accent/[0.04] p-2.5">
           <h4 className="mb-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-accent">
-            {enhanceState.mode === "enhance" ? "Enhanced" : "Remixed"} prompt
-          </h4>
+            {enhanceState.mode === "enhance" ? "Enhanced" : "Remixed"} <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.prompt" /></h4>
           <div className="space-y-2">
             <p className="rounded-md border border-border bg-surface-elevated p-2 text-[12px] text-text-primary">
               {enhanceState.result}
             </p>
             <p className="text-[12px] text-text-muted">
-              Original: &ldquo;{item.prompt}&rdquo;
-            </p>
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.originalLdquo" />{item.prompt}<Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.rdquo" /></p>
             <div className="flex flex-wrap gap-1.5">
               {enhanceState.mode === "enhance" ? (
                 <>
@@ -702,15 +682,13 @@ export function MediaInspector({
                     className="inline-flex items-center gap-1 rounded-md border border-accent px-2.5 py-1 text-[12px] text-accent hover:bg-accent/10"
                     data-testid="inspector-apply-enhance"
                   >
-                    Apply
-                  </button>
+                    <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.apply" /></button>
                   <button
                     type="button"
                     onClick={() => setEnhanceState(null)}
                     className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                   >
-                    Cancel
-                  </button>
+                    <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.cancel" /></button>
                 </>
               ) : (
                 <>
@@ -721,8 +699,7 @@ export function MediaInspector({
                       className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                       data-testid="inspector-remix-apply-to-studio"
                     >
-                      Apply to Image Studio
-                    </button>
+                      <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.applyToImageStudio" /></button>
                   )}
                   {onApplyRemix && onRegenerate && (
                     <button
@@ -731,8 +708,7 @@ export function MediaInspector({
                       className="inline-flex items-center gap-1 rounded-md border border-accent px-2.5 py-1 text-[12px] text-accent hover:bg-accent/10"
                       data-testid="inspector-remix-and-generate"
                     >
-                      Remix &amp; Generate
-                    </button>
+                      <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.remixAmpGenerate" /></button>
                   )}
                   {onApplyRemix && (
                     <button
@@ -749,16 +725,14 @@ export function MediaInspector({
                       className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                       data-testid="inspector-remix-save"
                     >
-                      Save remix
-                    </button>
+                      <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.saveRemix" /></button>
                   )}
                   <button
                     type="button"
                     onClick={() => setEnhanceState(null)}
                     className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                   >
-                    Cancel
-                  </button>
+                    <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.cancel" /></button>
                 </>
               )}
             </div>
@@ -770,8 +744,7 @@ export function MediaInspector({
       {enhanceState?.loading && (
         <section className="rounded-md border border-border p-2.5">
           <p className="text-[12px] text-text-muted">
-            {enhanceState.mode === "enhance" ? "Enhancing" : "Remixing"} prompt via internal LLM…
-          </p>
+            {enhanceState.mode === "enhance" ? "Enhancing" : "Remixing"} <Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.promptViaInternalLlm" /></p>
         </section>
       )}
 
@@ -779,24 +752,21 @@ export function MediaInspector({
         <section>
           <Label>
             <span className="inline-flex items-center gap-1">
-              <Sparkles className="h-3 w-3" /> Model capabilities
-            </span>
+              <Sparkles className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.modelCapabilities" /></span>
           </Label>
           <div className="flex flex-wrap gap-1">
-            {capabilities.upscale && <Badge tone="emerald">upscale</Badge>}
-            {capabilities.edit && <Badge tone="violet">edit</Badge>}
-            {capabilities.video && <Badge tone="sky">video</Badge>}
-            {capabilities.vision && <Badge tone="amber">vision</Badge>}
+            {capabilities.upscale && <Badge tone="emerald"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.upscale" /></Badge>}
+            {capabilities.edit && <Badge tone="violet"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.edit" /></Badge>}
+            {capabilities.video && <Badge tone="sky"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.video" /></Badge>}
+            {capabilities.vision && <Badge tone="amber"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.vision" /></Badge>}
           </div>
           <p className="mt-1.5 text-[12px] text-text-muted">
-            These endpoints are recognised for the source model. Re-running the
-            same operation on this item will use them.
-          </p>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.theseEndpointsAreRecognisedForTheSource" /></p>
         </section>
       )}
 
       <section>
-        <Label htmlFor="media-tags">Tags</Label>
+        <Label htmlFor="media-tags"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.tags" /></Label>
         <div className="flex gap-1.5">
           <input
             id="media-tags"
@@ -817,8 +787,7 @@ export function MediaInspector({
             onClick={() => void handleAddTags()}
             className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1.5 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
           >
-            <TagIcon className="h-3.5 w-3.5" /> Add
-          </button>
+            <TagIcon className="h-3.5 w-3.5" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.add" /></button>
         </div>
         {item.tags.length > 0 ? (
           <div className="mt-2 flex flex-wrap gap-1.5">
@@ -836,7 +805,7 @@ export function MediaInspector({
             ))}
           </div>
         ) : (
-          <p className="mt-1.5 text-[12px] text-text-muted">No tags yet.</p>
+          <p className="mt-1.5 text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.noTagsYet" /></p>
         )}
       </section>
 
@@ -857,23 +826,21 @@ export function MediaInspector({
             disabled={noteDraft === item.note}
             className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-[12px] text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-30"
           >
-            <NotebookPen className="h-3 w-3" /> Save note
-          </button>
+            <NotebookPen className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.saveNote" /></button>
         </div>
       </section>
 
       {parentItem && (
         <section>
           <h4 className="mb-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-text-muted">
-            Parent
-          </h4>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.parent" /></h4>
           <button
             type="button"
             onClick={() => onOpenParent(parentItem)}
             className="flex w-full items-center gap-2 rounded-md border border-border bg-surface-elevated p-2 text-left hover:border-accent"
           >
             <span className="line-clamp-1 text-[12px] text-text-primary">{parentItem.prompt || "Untitled"}</span>
-            <span className="ml-auto text-[12px] text-text-muted">View</span>
+            <span className="ml-auto text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.view" /></span>
           </button>
         </section>
       )}
@@ -881,7 +848,7 @@ export function MediaInspector({
       {childrenItems.length > 0 && (
         <section>
           <h4 className="mb-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-text-muted">
-            Children ({childrenItems.length})
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.children" />{childrenItems.length})
           </h4>
           <ul className="space-y-1.5">
             {childrenItems.map((child) => (
@@ -906,8 +873,7 @@ export function MediaInspector({
           className="rounded-md border border-amber-400/30 bg-amber-500/[0.06] p-2.5"
         >
           <h4 className="mb-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-amber-200/90">
-            Missing references
-          </h4>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.missingReferences" /></h4>
           <p className="mb-2 text-[12px] text-text-secondary">
             {hasDanglingParent && hasDanglingChildren
               ? "This item references records that no longer exist. Clear the stale pointers to repair the lineage."
@@ -917,14 +883,13 @@ export function MediaInspector({
           </p>
           {hasDanglingParent && (
             <div className="mb-1.5 flex items-center gap-2 text-[12px] text-text-muted">
-              <span className="font-mono">parentId={item.parentId}</span>
+              <span className="font-mono"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.parentid" />{item.parentId}</span>
               <button
                 type="button"
                 onClick={() => void handleClearDanglingParent()}
                 className="ml-auto rounded-md border border-amber-400/40 px-2 py-1 text-amber-200/90 hover:border-amber-300 hover:text-amber-100"
               >
-                Clear parent link
-              </button>
+                <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.clearParentLink" /></button>
             </div>
           )}
           {hasDanglingChildren && (
@@ -939,7 +904,7 @@ export function MediaInspector({
                 onClick={() => void handleClearDanglingChildren()}
                 className="ml-auto rounded-md border border-amber-400/40 px-2 py-1 text-amber-200/90 hover:border-amber-300 hover:text-amber-100"
               >
-                Clear {missingChildIds.length === 1 ? "1 missing ref" : `${missingChildIds.length} missing refs`}
+                <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.clear" /> {missingChildIds.length === 1 ? "1 missing ref" : `${missingChildIds.length} missing refs`}
               </button>
             </div>
           )}

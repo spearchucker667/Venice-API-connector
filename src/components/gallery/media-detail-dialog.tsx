@@ -10,6 +10,7 @@ import { useFocusTrap } from "../../hooks/useFocusTrap";
 import { mediaItemSource, formatDimensions, formatDuration, isVideoItem, isAudioItem } from "../../utils/mediaItem";
 import type { MediaItem } from "../../types/media";
 import { ManagedVideoPlayer } from "../media/ManagedVideoPlayer";
+import { Trans } from 'react-i18next';
 
 interface MediaDetailDialogProps {
   item: MediaItem;
@@ -98,16 +99,14 @@ export function MediaDetailDialog({
               onClick={() => onDelete(item)}
               className="inline-flex items-center gap-1 rounded-md border border-danger/30 px-2 py-1 text-[12px] text-danger hover:bg-danger/10"
             >
-              <Trash2 className="h-3.5 w-3.5" /> Delete
-            </button>
+              <Trash2 className="h-3.5 w-3.5" /> <Trans i18nKey="common:surface.galleryMediaDetailDialog.action.delete" /></button>
             <button
               ref={closeRef}
               type="button"
               onClick={onClose}
               className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
             >
-              Close (Esc)
-            </button>
+              <Trans i18nKey="common:surface.galleryMediaDetailDialog.action.closeEsc" /></button>
           </div>
         </header>
 
@@ -137,8 +136,7 @@ export function MediaDetailDialog({
             )
           ) : (
             <div className="grid h-64 w-96 place-items-center rounded-lg border border-border bg-surface text-text-muted">
-              Preview unavailable
-            </div>
+              <Trans i18nKey="common:surface.galleryMediaDetailDialog.text.previewUnavailable" /></div>
           )}
           <button
             type="button"
@@ -157,15 +155,15 @@ export function MediaDetailDialog({
           </p>
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] text-text-muted">
             {typeof item.seed === "number" && (
-              <span>Seed: <span className="font-mono text-text-secondary">{item.seed}</span></span>
+              <span><Trans i18nKey="common:surface.galleryMediaDetailDialog.text.seed" /> <span className="font-mono text-text-secondary">{item.seed}</span></span>
             )}
-            {item.source && <span>Source: <span className="text-text-secondary">{item.source}</span></span>}
-            {item.style && <span>Style: <span className="text-text-secondary">{item.style}</span></span>}
+            {item.source && <span><Trans i18nKey="common:surface.galleryMediaDetailDialog.text.source" /> <span className="text-text-secondary">{item.source}</span></span>}
+            {item.style && <span><Trans i18nKey="common:surface.galleryMediaDetailDialog.text.style" /> <span className="text-text-secondary">{item.style}</span></span>}
             {item.steps !== undefined && item.steps !== null && (
-              <span>Steps: <span className="text-text-secondary">{String(item.steps)}</span></span>
+              <span><Trans i18nKey="common:surface.galleryMediaDetailDialog.text.steps" /> <span className="text-text-secondary">{String(item.steps)}</span></span>
             )}
             {item.cfg !== undefined && item.cfg !== null && (
-              <span>CFG: <span className="text-text-secondary">{String(item.cfg)}</span></span>
+              <span><Trans i18nKey="common:surface.galleryMediaDetailDialog.text.cfg" /> <span className="text-text-secondary">{String(item.cfg)}</span></span>
             )}
           </div>
           <p className="mt-0.5 text-[12px] text-text-muted">
@@ -176,7 +174,7 @@ export function MediaDetailDialog({
       </div>
 
       <aside className="hidden w-72 shrink-0 soft-separator-x mesh-surface p-4 text-text-primary lg:flex lg:flex-col">
-        <h3 className="mb-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-text-muted">Filmstrip</h3>
+        <h3 className="mb-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-text-muted"><Trans i18nKey="common:surface.galleryMediaDetailDialog.heading.filmstrip" /></h3>
         <div className="grid grid-cols-3 gap-2 overflow-y-auto pr-1">
           {allItems.map((candidate) => {
             const cs = mediaItemSource(candidate);
