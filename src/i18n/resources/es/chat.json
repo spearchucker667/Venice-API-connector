@@ -1,0 +1,20 @@
+{
+  "title": "Chat",
+  "emptyStateTitle": "Iniciar una nueva conversación",
+  "emptyStateDescription": "Escribe una instrucción a continuación o selecciona un modelo para comenzar a chatear.",
+  "composerPlaceholder": "Escribe un mensaje... (Mayús+Enter para nueva línea)",
+  "systemPromptLabel": "Instrucción del sistema",
+  "modelSelectorLabel": "Modelo",
+  "webSearchLabel": "Búsqueda web",
+  "webCitationsLabel": "Citas web",
+  "thinkingMode": "Modo de razonamiento",
+  "stripThinking": "Ocultar razonamiento",
+  "tokenUsage": "{{count}} / {{max}} tokens",
+  "newChat": "Nuevo chat",
+  "clearHistory": "Limpiar historial",
+  "exportHistory": "Exportar historial",
+  "folders": "Carpetas",
+  "unfiled": "Sin archivar",
+  "attachFile": "Adjuntar archivo",
+  "managedDocument": "Documento gestionado"
+}

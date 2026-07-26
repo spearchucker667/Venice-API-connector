@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2026-07-25",
+  "locales": {
+    "en-US": {
+      "name": "English (US)",
+      "uiCoveragePercent": 100,
+      "docsCoveragePercent": 100,
+      "reviewStatus": "canonical"
+    },
+    "es": {
+      "name": "Español",
+      "uiCoveragePercent": 100,
+      "docsCoveragePercent": 100,
+      "reviewStatus": "complete"
+    },
+    "fr": {
+      "name": "Français",
+      "uiCoveragePercent": 100,
+      "docsCoveragePercent": 100,
+      "reviewStatus": "complete"
+    },
+    "de": {
+      "name": "Deutsch",
+      "uiCoveragePercent": 100,
+      "docsCoveragePercent": 100,
+      "reviewStatus": "complete"
+    },
+    "pt-BR": {
+      "name": "Português (Brasil)",
+      "uiCoveragePercent": 100,
+      "docsCoveragePercent": 100,
+      "reviewStatus": "complete"
+    },
+    "ru": {
+      "name": "Русский",
+      "uiCoveragePercent": 100,
+      "docsCoveragePercent": 100,
+      "reviewStatus": "complete"
+    },
+    "zh-CN": {
+      "name": "简体中文",
+      "uiCoveragePercent": 100,
+      "docsCoveragePercent": 100,
+      "reviewStatus": "complete"
+    },
+    "ja": {
+      "name": "日本語",
+      "uiCoveragePercent": 100,
+      "docsCoveragePercent": 100,
+      "reviewStatus": "complete"
+    },
+    "hi": {
+      "name": "हिन्दी",
+      "uiCoveragePercent": 100,
+      "docsCoveragePercent": 100,
+      "reviewStatus": "complete"
+    },
+    "ar": {
+      "name": "العربية",
+      "uiCoveragePercent": 100,
+      "docsCoveragePercent": 100,
+      "reviewStatus": "complete"
+    }
+  }
+}

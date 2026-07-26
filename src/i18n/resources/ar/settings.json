@@ -1,0 +1,48 @@
+{
+  "title": "Config & Settings",
+  "subtitle": "Manage API endpoints, defaults, and appearance styles.",
+  "sections": {
+    "languageRegion": "اللغة والمنطقة",
+    "profiles": "Profiles",
+    "apiKeys": "Venice API Key",
+    "providers": "Fallback Providers",
+    "defaults": "Defaults & Behavior",
+    "safety": "Safety",
+    "vault": "Conversation Vault",
+    "appearance": "Appearance",
+    "data": "Data & Storage",
+    "backupSync": "Backup & Sync",
+    "about": "About & Legal",
+    "updates": "Updates",
+    "config": "Local Config",
+    "audioSpeech": "Audio & Speech"
+  },
+  "languageRegion": {
+    "title": "اللغة والمنطقة",
+    "description": "Customize application language, text direction, and regional formatting preferences.",
+    "uiLanguageLabel": "لغة الواجهة",
+    "useSystemLanguage": "استخدام لغة النظام",
+    "resolvedLocale": "Active Locale",
+    "textDirection": "Text Direction",
+    "leftToRight": "Left-to-Right (LTR)",
+    "rightToLeft": "Right-to-Left (RTL)",
+    "formattingPreview": "Regional Formatting Preview",
+    "dateExample": "Date",
+    "timeExample": "Time",
+    "numberExample": "Number",
+    "bytesExample": "File Size"
+  },
+  "apiKeys": {
+    "title": "Venice API Key",
+    "keyInputLabel": "API Key",
+    "testConnection": "Test Connection",
+    "saveKey": "Save Key",
+    "deleteKey": "Delete Key"
+  },
+  "safety": {
+    "title": "Safety & Guard",
+    "localFamilySafeMode": "Local Family Safe Mode",
+    "veniceApiSafeMode": "Venice API Safe Mode",
+    "statusBanner": "Local filter: {{localStatus}} | Venice provider filtering: {{veniceStatus}}"
+  }
+}

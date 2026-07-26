@@ -12,7 +12,8 @@ import { isElectron, desktopApiKey, desktopJinaApiKey, desktopUpdates, desktopCo
 import { redactErrorMessage } from "../../shared/redaction";
 import { reloadConfig } from "../../stores/config-store";
 import type { UpdateInfo, ProgressInfo } from "electron-updater";
-import { KeyIcon, CloudIcon } from "lucide-react";
+import { KeyIcon, CloudIcon, GlobeIcon } from "lucide-react";
+import { LanguageRegionPanel } from "./LanguageRegionPanel";
 import { ApiKeysPanel } from "./ApiKeysPanel";
 import { ProvidersPanel } from "./ProvidersPanel";
 import { DefaultsPanel } from "./DefaultsPanel";
@@ -330,6 +331,12 @@ export function SettingsView() {
       <div className="flex-1 flex min-h-0 overflow-hidden">
         {/* Navigation Rail */}
         <div className="w-52 border-r border-border/50 p-3 space-y-1 overflow-y-auto shrink-0 hidden sm:block">
+          <button onClick={() => setActiveSection("language")} className={sectionButtonClass("language")}>
+            <div className="flex items-center gap-2.5">
+              <GlobeIcon className="w-4 h-4 opacity-75" />
+              <span className="font-medium">Language & Region</span>
+            </div>
+          </button>
           <button onClick={() => setActiveSection("profiles")} className={sectionButtonClass("profiles")}>
             Profiles
           </button>
@@ -339,7 +346,7 @@ export function SettingsView() {
               <span className="font-medium">Venice API Key</span>
             </div>
           </button>
-          
+
           <button onClick={() => setActiveSection("providers")} className={sectionButtonClass("providers")}>
             <div className="flex items-center gap-2.5">
               <CloudIcon className="w-4 h-4 opacity-75" />
@@ -388,6 +395,10 @@ export function SettingsView() {
 
         {/* Content panel */}
         <div className="flex-1 overflow-y-auto p-6 max-w-3xl">
+          {activeSection === "language" && (
+            <LanguageRegionPanel />
+          )}
+
           {activeSection === "profiles" && (
             <ProfilePanel />
           )}

@@ -19,6 +19,10 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [FAQ.md](FAQ.md) — Answers on local key custody, safety modes, storage, and ST Card Studio import/export behavior.
 - [SUPPORT.md](SUPPORT.md) — User support guidelines.
 - [user/IMAGE_INSPECTOR.md](user/IMAGE_INSPECTOR.md) — Image-to-prompt analysis, supported inputs, text-based source discovery, privacy, and troubleshooting.
+- [i18n/TRANSLATION_GUIDE.md](i18n/TRANSLATION_GUIDE.md) — Translation guidelines and key conventions.
+- [i18n/GLOSSARY.md](i18n/GLOSSARY.md) — Internationalization terminology glossary.
+- [i18n/translation-status.json](i18n/translation-status.json) — Machine-readable translation coverage and review status metadata.
+- [audits/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md](audits/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md) — Multilingual AI system prompt and instruction audit.
 - [LEGAL.md](../LEGAL.md) — Root legal notice, copyright statement, and trademark disclaimers.
 - [PRIVACY.md](../PRIVACY.md) — User privacy model summary.
 

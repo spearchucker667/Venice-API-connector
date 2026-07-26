@@ -1,0 +1,10 @@
+{
+  "title": "Flujos de trabajo",
+  "playground": "Área de flujos de trabajo",
+  "templates": "Plantillas",
+  "nodes": "Nodos",
+  "canvas": "Lienzo de flujo de trabajo",
+  "runWorkflow": "Ejecutar flujo de trabajo",
+  "exportWorkflow": "Exportar flujo de trabajo",
+  "importWorkflow": "Importar flujo de trabajo"
+}

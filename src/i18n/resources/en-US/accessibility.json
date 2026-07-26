@@ -1,0 +1,11 @@
+{
+  "skipToContent": "Skip to main content",
+  "mainNavigation": "Main navigation",
+  "dialogTitle": "Dialog window",
+  "closeDialog": "Close dialog",
+  "expanded": "Expanded",
+  "collapsed": "Collapsed",
+  "selected": "Selected",
+  "stepIndicator": "Step {{current}} of {{total}}",
+  "statusNotification": "Status update"
+}

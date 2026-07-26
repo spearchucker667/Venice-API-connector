@@ -12,10 +12,14 @@ import { normaliseTab, type TabId } from '../config/tabs'
  */
 export type Tab = TabId
 
+import type { LocaleSetting } from '../i18n/locale-types'
+import { changeLanguage } from '../i18n'
+
 /** Canonical sub-section id within the Settings tab. Used by the
  *  onboarding "Create Profile" deep-link and any future external entry
  *  points to land users on the right surface (Profiles, API Keys, …). */
 export type SettingsSection =
+  | 'language'
   | 'profiles'
   | 'api-keys'
   | 'defaults'
@@ -30,6 +34,7 @@ export type SettingsSection =
   | 'audio-speech'
 
 const VALID_SETTINGS_SECTIONS = new Set<SettingsSection>([
+  'language',
   'profiles',
   'providers',
   'api-keys',
@@ -202,6 +207,10 @@ interface SettingsState {
   setAudioPreferences: (prefs: Partial<AudioPreferences>) => void
   setUiSoundPreferences: (prefs: Partial<AudioPreferences['uiSounds']>) => void
   setChatTtsPreferences: (prefs: Partial<AudioPreferences['chatTts']>) => void
+  
+  // Localization
+  uiLocale: LocaleSetting
+  setUiLocale: (locale: LocaleSetting) => void
 
   // Phase 9 Developer-Portal Error Intake: prompt opt-in. Off by default —
   // we NEVER include raw prompt text in the safe diagnostics snapshot
@@ -223,6 +232,14 @@ export const useSettingsStore = create<SettingsState>()(
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
   pendingSettingsSection: null,
   setPendingSettingsSection: (section) => set({ pendingSettingsSection: section }),
+
+  // Localization default
+  uiLocale: 'system' as LocaleSetting,
+  setUiLocale: (locale: LocaleSetting) => {
+    set({ uiLocale: locale })
+    changeLanguage(locale)
+  },
+
   selectedModels: {},
       setSelectedModel: (tab, modelId) =>
         set((s) => ({ selectedModels: { ...s.selectedModels, [tab]: modelId } })),
@@ -344,7 +361,7 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'venice-settings',
-      version: 12,
+      version: 13,
       storage: createJSONStorage(() => createSafeStorage()),
       migrate: (persisted) => {
         const state = persisted && typeof persisted === 'object'
@@ -352,6 +369,7 @@ export const useSettingsStore = create<SettingsState>()(
           : {}
         return {
           ...state,
+          uiLocale: state.uiLocale ?? 'system',
           // v6: collapsed state is session-only. Old false/corrupt values must
           // never hide the labeled desktop menu on the next launch.
           sidebarOpen: true,
@@ -404,11 +422,17 @@ export const useSettingsStore = create<SettingsState>()(
             : (state.customTheme ? [state.customTheme] : []),
         } as SettingsState
       },
-      merge: (persisted, current) => ({
-        ...current,
-        ...(persisted && typeof persisted === 'object' ? persisted : {}),
-        sidebarOpen: true,
-      }),
+      merge: (persisted, current) => {
+        const merged = {
+          ...current,
+          ...(persisted && typeof persisted === 'object' ? persisted : {}),
+          sidebarOpen: true,
+        };
+        if (merged.uiLocale) {
+          changeLanguage(merged.uiLocale);
+        }
+        return merged;
+      },
     },
   ),
 )

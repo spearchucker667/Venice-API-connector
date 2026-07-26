@@ -1,0 +1,10 @@
+{
+  "title": "Workflows",
+  "playground": "Workflow Playground",
+  "templates": "Templates",
+  "nodes": "Nodes",
+  "canvas": "Workflow Canvas",
+  "runWorkflow": "Run Workflow",
+  "exportWorkflow": "Export Workflow",
+  "importWorkflow": "Import Workflow"
+}

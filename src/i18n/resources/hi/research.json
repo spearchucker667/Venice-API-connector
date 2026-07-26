@@ -1,0 +1,14 @@
+{
+  "title": "Research",
+  "searchAndScrape": "Search & Scrape",
+  "provider": "Provider",
+  "veniceProvider": "Venice Search",
+  "jinaProvider": "Jina Search",
+  "autoProvider": "Auto Provider",
+  "socialDiscovery": "Social Discovery",
+  "queryPlaceholder": "Enter research topic or URL to scrape...",
+  "results": "Search Results",
+  "sources": "Sources",
+  "timeline": "Timeline",
+  "noResults": "No research results found for query."
+}

@@ -19,7 +19,6 @@ import { RecipeCompatibilityCard } from "./recipe-compatibility-card";
 import { usePromptLibraryStore, resolvePromptProjectId } from "../../stores/prompt-library-store";
 import { toast } from "../../stores/toast-store";
 import { copyText } from "../../stores/media-send-to";
-import { createCharacterCardDraftFromMedia } from "../../services/characterCards/characterCardStudioHandoff";
 import { useSettingsStore } from "../../stores/settings-store";
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
 import { desktopFiles, isElectron } from "../../services/desktopBridge";

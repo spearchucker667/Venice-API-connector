@@ -1,0 +1,12 @@
+{
+  "networkError": "Error de red. Por favor, comprueba tu conexión a Internet.",
+  "apiKeyMissing": "Falta la clave de API. Configúrala en Ajustes.",
+  "rateLimit429": "Límite de velocidad superado. Espera antes de reintentar.",
+  "safeModeBlock451": "Solicitud bloqueada por el filtro del Modo Seguro Familiar.",
+  "gatewayTimeout504": "Tiempo de espera agotado. Inténtalo de nuevo.",
+  "modelUnavailable": "El modelo {{model}} no está disponible actualmente.",
+  "autosaveFailed": "Error al guardar automáticamente: {{error}}",
+  "fileReadError": "Error al leer el archivo.",
+  "invalidFormat": "Formato de archivo no válido.",
+  "unknownError": "Ocurrió un error inesperado."
+}

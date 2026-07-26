@@ -1,0 +1,48 @@
+{
+  "title": "Configuración",
+  "subtitle": "Gestiona puntos de enlace de API, valores predeterminados y estilos visuales.",
+  "sections": {
+    "languageRegion": "Idioma y región",
+    "profiles": "Perfiles",
+    "apiKeys": "Clave de API de Venice",
+    "providers": "Proveedores secundarios",
+    "defaults": "Valores predeterminados y comportamiento",
+    "safety": "Seguridad",
+    "vault": "Bóveda de conversaciones",
+    "appearance": "Apariencia",
+    "data": "Datos y almacenamiento",
+    "backupSync": "Copia de seguridad y sincronización",
+    "about": "Acerca de y legal",
+    "updates": "Actualizaciones",
+    "config": "Configuración local",
+    "audioSpeech": "Audio y voz"
+  },
+  "languageRegion": {
+    "title": "Idioma y región",
+    "description": "Personaliza el idioma de la interfaz, la dirección del texto y las preferencias de formato regional.",
+    "uiLanguageLabel": "Idioma de la interfaz",
+    "useSystemLanguage": "Usar idioma del sistema",
+    "resolvedLocale": "Configuración regional activa",
+    "textDirection": "Dirección del texto",
+    "leftToRight": "De izquierda a derecha (LTR)",
+    "rightToLeft": "De derecha a izquierda (RTL)",
+    "formattingPreview": "Vista previa de formato regional",
+    "dateExample": "Fecha",
+    "timeExample": "Hora",
+    "numberExample": "Número",
+    "bytesExample": "Tamaño de archivo"
+  },
+  "apiKeys": {
+    "title": "Clave de API de Venice",
+    "keyInputLabel": "Clave de API",
+    "testConnection": "Probar conexión",
+    "saveKey": "Guardar clave",
+    "deleteKey": "Eliminar clave"
+  },
+  "safety": {
+    "title": "Seguridad y filtro",
+    "localFamilySafeMode": "Modo Seguro Familiar local",
+    "veniceApiSafeMode": "Modo Seguro de API de Venice",
+    "statusBanner": "Filtro local: {{localStatus}} | Filtrado de proveedor Venice: {{veniceStatus}}"
+  }
+}

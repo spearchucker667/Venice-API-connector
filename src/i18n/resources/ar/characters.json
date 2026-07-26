@@ -1,0 +1,19 @@
+{
+  "title": "Characters & RP Studio",
+  "characterCreator": "Character Creator",
+  "characterLibrary": "Character Library",
+  "rpStudio": "RP Studio",
+  "persona": "Persona",
+  "scenario": "Scenario",
+  "lorebook": "Lorebook",
+  "greeting": "Greeting",
+  "dialogueExamples": "Dialogue Examples",
+  "creatorNotes": "Creator Notes",
+  "systemPrompt": "System Prompt",
+  "postHistoryInstructions": "Post-History Instructions",
+  "generateDraft": "Generate Character Draft",
+  "reviseDraft": "Revise Draft",
+  "exportCard": "Export Card (V2 PNG)",
+  "importCard": "Import Character Card",
+  "modelLock": "Model locked to {{model}}"
+}

@@ -1,0 +1,31 @@
+{
+  "welcomeTitle": "Bienvenido a Venice Forge",
+  "welcomeSubtitle": "El banco de trabajo local privado.",
+  "welcomeDescription": "Un banco de trabajo de escritorio local que almacena datos en este dispositivo y envía solicitudes a los proveedores configurados.",
+  "privacyNote": "Tus datos se mantienen locales. Las claves de API se guardan en el almacenamiento seguro del sistema.",
+  "getStarted": "Comenzar",
+  "createProfile": "Crear perfil",
+  "continue": "Continuar",
+  "languageSelectorLabel": "Idioma de la aplicación",
+  "systemLanguageOption": "Idioma del sistema ({{language}})",
+  "selectLanguage": "Seleccionar idioma",
+  "stepIndicator": "Paso de incorporación {{current}} de {{total}}",
+  "steps": {
+    "welcome": {
+      "title": "Bienvenido a Venice Forge",
+      "description": "Un banco de trabajo de escritorio local que almacena datos en este dispositivo y envía solicitudes a los proveedores configurados."
+    },
+    "profiles": {
+      "title": "Perfiles",
+      "description": "Crea perfiles para configuraciones de renderizado y bibliotecas independientes."
+    },
+    "security": {
+      "title": "Seguro por defecto",
+      "description": "Las contraseñas y secretos están cifrados mediante el almacenamiento seguro nativo del SO."
+    },
+    "safety": {
+      "title": "Modo Seguro Familiar",
+      "description": "Se requiere una contraseña maestra antes de activar o desactivar el Modo Seguro Familiar."
+    }
+  }
+}

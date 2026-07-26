@@ -1,0 +1,14 @@
+{
+  "title": "Documents",
+  "workingGroups": "Working Groups",
+  "managedLibrary": "Managed Library",
+  "connectedWorkspace": "Connected Workspace",
+  "documentAgent": "Document Agent",
+  "proposals": "Proposals",
+  "revisions": "Revision History",
+  "createDocument": "Create Document",
+  "importDocument": "Import Document",
+  "searchWorkspace": "Search Workspace",
+  "fileInspector": "File Inspector",
+  "noDocuments": "No documents found in working group."
+}

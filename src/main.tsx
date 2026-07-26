@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { App } from "./App";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import "./index.css";
+import "./i18n";
 import { initDesktopBridge } from "./services/desktopBridge";
 import { refreshConfig } from "./stores/config-store";
 import { useAuthStore } from "./stores/auth-store";

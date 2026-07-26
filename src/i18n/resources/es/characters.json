@@ -1,0 +1,19 @@
+{
+  "title": "Personajes y Estudio RP",
+  "characterCreator": "Creador de personajes",
+  "characterLibrary": "Biblioteca de personajes",
+  "rpStudio": "Estudio RP",
+  "persona": "Persona",
+  "scenario": "Escenario",
+  "lorebook": "Libro de conocimientos",
+  "greeting": "Saludo",
+  "dialogueExamples": "Ejemplos de diálogo",
+  "creatorNotes": "Notas del creador",
+  "systemPrompt": "Instrucción del sistema",
+  "postHistoryInstructions": "Instrucciones posteriores al historial",
+  "generateDraft": "Generar borrador de personaje",
+  "reviseDraft": "Revisar borrador",
+  "exportCard": "Exportar tarjeta (V2 PNG)",
+  "importCard": "Importar tarjeta de personaje",
+  "modelLock": "Modelo bloqueado en {{model}}"
+}

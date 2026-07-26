@@ -4,6 +4,21 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-07-25 (Multilingual UI, Prompt-Language, and Documentation Support)
+
+**Scope:** Implemented application-wide localization and internationalization for Venice Forge supporting 10 initial locales (`en-US`, `es`, `fr`, `de`, `pt-BR`, `ru`, `zh-CN`, `ja`, `hi`, `ar`) with instant switching, global persistence, `<html lang>` and `<html dir>` synchronization, Arabic RTL support, locale-aware formatters, AI prompt-language audit, localized documentation, and automated verification scripts.
+
+- **i18n Core Architecture (`src/i18n/`):** Built canonical locale registry (`SUPPORTED_LOCALES`), locale resolution with system browser language fallback (`resolveEffectiveLocale`), text-direction helper (`applyDocumentDirection`), locale-aware formatters (`formatNumber`, `formatDate`, `formatTime`, `formatBytes`, `formatDimensions`), and resource bundler loading 11 namespaces (`common`, `onboarding`, `settings`, `chat`, `media`, `documents`, `research`, `characters`, `workflows`, `errors`, `accessibility`) across all 10 initial locales.
+- **Locale State & Persistence (`src/stores/settings-store.ts`):** Added `uiLocale` setting (`SupportedLocale | 'system'`, default `'system'`) to `useSettingsStore`. Bumped store version to 13 with versioned migration and immediate store-driven `changeLanguage()` switching on boot and selection change.
+- **Onboarding Language Selector (`src/components/OnboardingSplash.tsx`):** Added optional language selector dropdown on Step 0 of onboarding displaying native names. Selecting a locale immediately translates current and subsequent steps and persists preference without requiring restart.
+- **Settings Language & Region Section (`src/components/settings/LanguageRegionPanel.tsx`, `SettingsView.tsx`):** Added `Language & Region` subsection to Config/Settings navigation rail. Displays interface language dropdown, active resolved locale indicator, text direction badge (LTR/RTL), and live regional formatting previews for date, time, number, and file size.
+- **RTL & Accessibility Support:** Configured Arabic (`ar`) as RTL (`document.documentElement.dir = 'ar'`), updated ARIA labels, focus handling, and accessibility announcements.
+- **AI System Prompt Audit (`docs/audits/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md`):** Audited repository prompt sources against Venice Forge Multilingual Policy ("Respond in the language requested by the user..."). Replaced unjustified English-only prompt constraints. Created audit report and `config/prompt-language-audit.json` manifest.
+- **Documentation Localization (`docs/i18n/`):** Created `docs/i18n/TRANSLATION_GUIDE.md`, `docs/i18n/GLOSSARY.md`, `docs/i18n/translation-status.json`, and localized documentation sets under `docs/i18n/<locale>/` (`README.md`, `ABOUT.md`, `FAQ.md`, `SUPPORT.md`, `PRIVACY.md`, `SECURITY.md`, `CONTRIBUTING.md`). Added language index to main English `README.md` linking to all localized editions.
+- **Automated Verification (`scripts/verify-i18n.cjs`, `scripts/verify-prompt-language.cjs`):** Added automated verifiers for key/interpolation parity, missing keys, documentation parity, and prompt language directives. Integrated `verify:i18n` and `verify:prompt-language` into `verify:contracts:static`.
+
+### Prior Session Summary (Character Creator Image Routing and Dimension Cleanup) [demoted from "Latest Session Summary"]
+
 **Date:** 2026-07-25 (Character Creator Image Routing and Dimension Cleanup)
 
 **Scope:** Resolved the "Create ST Card" image routing issue where clicking the button would incorrectly route to the RP Studio manual editor instead of the AI Character Creator. Cleaned up remaining unused UI dimension configurations.

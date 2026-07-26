@@ -1,0 +1,14 @@
+{
+  "title": "Documentos",
+  "workingGroups": "Grupos de trabajo",
+  "managedLibrary": "Biblioteca gestionada",
+  "connectedWorkspace": "Espacio de trabajo conectado",
+  "documentAgent": "Agente de documentos",
+  "proposals": "Propuestas",
+  "revisions": "Historial de revisiones",
+  "createDocument": "Crear documento",
+  "importDocument": "Importar documento",
+  "searchWorkspace": "Buscar en espacio de trabajo",
+  "fileInspector": "Inspector de archivos",
+  "noDocuments": "No se encontraron documentos en el grupo de trabajo."
+}

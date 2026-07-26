@@ -1,0 +1,11 @@
+{
+  "skipToContent": "Saltar al contenido principal",
+  "mainNavigation": "Navegación principal",
+  "dialogTitle": "Ventana de diálogo",
+  "closeDialog": "Cerrar diálogo",
+  "expanded": "Desplegado",
+  "collapsed": "Plegado",
+  "selected": "Seleccionado",
+  "stepIndicator": "Paso {{current}} de {{total}}",
+  "statusNotification": "Actualización de estado"
+}

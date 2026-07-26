@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "description": "Verification manifest for AI system prompts and instructions audit",
+  "allowedEnglishDirectives": [
+    {
+      "file": "src/shared/safety/childExploitationGuard.ts",
+      "symbol": "SAFETY_MATCH_PATTERNS",
+      "matchedText": "English keyword pattern matching",
+      "rationale": "Safety guard keyword tables analyze English and multi-language safety terms for CSAM/harm prevention.",
+      "expires": "2027-01-01"
+    },
+    {
+      "file": "src/shared/safety/matchTables.ts",
+      "symbol": "MATCH_TABLES",
+      "matchedText": "English safety pattern list",
+      "rationale": "Static security match table containing hardcoded safety violation strings.",
+      "expires": "2027-01-01"
+    }
+  ]
+}

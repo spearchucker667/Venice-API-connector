@@ -14,7 +14,6 @@ import { usePromptLibraryStore, resolvePromptProjectId } from '../../stores/prom
 import { toast } from '../../stores/toast-store'
 import { redactErrorMessage } from '../../shared/redaction'
 import type { MediaItem } from '../../types/media'
-import { createCharacterCardDraftFromMedia } from '../../services/characterCards/characterCardStudioHandoff'
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
 import { generateId } from '../../lib/utils'
 import { getPromptStartersForCategory } from '../../services/promptStarterService'
