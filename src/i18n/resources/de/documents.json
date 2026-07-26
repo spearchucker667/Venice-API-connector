@@ -1,14 +1,14 @@
 {
-  "title": "Documents",
-  "workingGroups": "Working Groups",
-  "managedLibrary": "Managed Library",
-  "connectedWorkspace": "Connected Workspace",
-  "documentAgent": "Document Agent",
-  "proposals": "Proposals",
-  "revisions": "Revision History",
-  "createDocument": "Create Document",
-  "importDocument": "Import Document",
-  "searchWorkspace": "Search Workspace",
-  "fileInspector": "File Inspector",
-  "noDocuments": "No documents found in working group."
+  "title": "Dokumente",
+  "workingGroups": "__MISSING__:workingGroups",
+  "managedLibrary": "__MISSING__:managedLibrary",
+  "connectedWorkspace": "__MISSING__:connectedWorkspace",
+  "documentAgent": "__MISSING__:documentAgent",
+  "proposals": "__MISSING__:proposals",
+  "revisions": "__MISSING__:revisions",
+  "createDocument": "__MISSING__:createDocument",
+  "importDocument": "__MISSING__:importDocument",
+  "searchWorkspace": "__MISSING__:searchWorkspace",
+  "fileInspector": "__MISSING__:fileInspector",
+  "noDocuments": "__MISSING__:noDocuments"
 }

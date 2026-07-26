@@ -1,48 +1,534 @@
 {
-  "title": "Config & Settings",
-  "subtitle": "Manage API endpoints, defaults, and appearance styles.",
+  "title": "__MISSING__:title",
+  "subtitle": "__MISSING__:subtitle",
   "sections": {
-    "languageRegion": "Language & Region",
-    "profiles": "Profiles",
-    "apiKeys": "Venice API Key",
-    "providers": "Fallback Providers",
-    "defaults": "Defaults & Behavior",
-    "safety": "Safety",
-    "vault": "Conversation Vault",
-    "appearance": "Appearance",
-    "data": "Data & Storage",
-    "backupSync": "Backup & Sync",
-    "about": "About & Legal",
+    "languageRegion": "__MISSING__:sections.languageRegion",
+    "profiles": "__MISSING__:sections.profiles",
+    "apiKeys": "__MISSING__:sections.apiKeys",
+    "providers": "__MISSING__:sections.providers",
+    "defaults": "__MISSING__:sections.defaults",
+    "safety": "__MISSING__:sections.safety",
+    "vault": "__MISSING__:sections.vault",
+    "appearance": "__MISSING__:sections.appearance",
+    "data": "__MISSING__:sections.data",
+    "backupSync": "__MISSING__:sections.backupSync",
+    "about": "__MISSING__:sections.about",
     "updates": "Updates",
-    "config": "Local Config",
-    "audioSpeech": "Audio & Speech"
+    "config": "__MISSING__:sections.config",
+    "audioSpeech": "__MISSING__:sections.audioSpeech"
   },
   "languageRegion": {
-    "title": "Language & Region",
-    "description": "Customize application language, text direction, and regional formatting preferences.",
-    "uiLanguageLabel": "Interface Language",
-    "useSystemLanguage": "Use system language",
-    "resolvedLocale": "Active Locale",
-    "textDirection": "Text Direction",
-    "leftToRight": "Left-to-Right (LTR)",
-    "rightToLeft": "Right-to-Left (RTL)",
-    "formattingPreview": "Regional Formatting Preview",
+    "title": "__MISSING__:languageRegion.title",
+    "description": "__MISSING__:languageRegion.description",
+    "uiLanguageLabel": "__MISSING__:languageRegion.uiLanguageLabel",
+    "useSystemLanguage": "__MISSING__:languageRegion.useSystemLanguage",
+    "resolvedLocale": "__MISSING__:languageRegion.resolvedLocale",
+    "textDirection": "__MISSING__:languageRegion.textDirection",
+    "leftToRight": "__MISSING__:languageRegion.leftToRight",
+    "rightToLeft": "__MISSING__:languageRegion.rightToLeft",
+    "formattingPreview": "__MISSING__:languageRegion.formattingPreview",
     "dateExample": "Date",
-    "timeExample": "Time",
-    "numberExample": "Number",
-    "bytesExample": "File Size"
+    "timeExample": "__MISSING__:languageRegion.timeExample",
+    "numberExample": "__MISSING__:languageRegion.numberExample",
+    "bytesExample": "__MISSING__:languageRegion.bytesExample"
   },
   "apiKeys": {
-    "title": "Venice API Key",
-    "keyInputLabel": "API Key",
-    "testConnection": "Test Connection",
-    "saveKey": "Save Key",
-    "deleteKey": "Delete Key"
+    "title": "__MISSING__:apiKeys.title",
+    "keyInputLabel": "__MISSING__:apiKeys.keyInputLabel",
+    "testConnection": "__MISSING__:apiKeys.testConnection",
+    "saveKey": "__MISSING__:apiKeys.saveKey",
+    "deleteKey": "__MISSING__:apiKeys.deleteKey",
+    "veniceTitle": "__MISSING__:apiKeys.veniceTitle",
+    "status": {
+      "configured": "__MISSING__:apiKeys.status.configured",
+      "unset": "__MISSING__:apiKeys.status.unset",
+      "optional": "__MISSING__:apiKeys.status.optional"
+    },
+    "veniceDescription": "__MISSING__:apiKeys.veniceDescription",
+    "jinaTitle": "__MISSING__:apiKeys.jinaTitle",
+    "jinaDescription": {
+      "prefix": "__MISSING__:apiKeys.jinaDescription.prefix",
+      "electron": "__MISSING__:apiKeys.jinaDescription.electron",
+      "web": "__MISSING__:apiKeys.jinaDescription.web"
+    },
+    "savedElectron": "__MISSING__:apiKeys.savedElectron",
+    "savedWeb": "__MISSING__:apiKeys.savedWeb",
+    "saveFailed": "__MISSING__:apiKeys.saveFailed",
+    "deleteConfirm": {
+      "title": "__MISSING__:apiKeys.deleteConfirm.title",
+      "electron": "__MISSING__:apiKeys.deleteConfirm.electron",
+      "web": "__MISSING__:apiKeys.deleteConfirm.web"
+    },
+    "deleted": "__MISSING__:apiKeys.deleted",
+    "deleteFailed": "__MISSING__:apiKeys.deleteFailed",
+    "testSuccess": "__MISSING__:apiKeys.testSuccess",
+    "testFailed": "__MISSING__:apiKeys.testFailed",
+    "testError": "__MISSING__:apiKeys.testError"
   },
   "safety": {
-    "title": "Safety & Guard",
-    "localFamilySafeMode": "Local Family Safe Mode",
-    "veniceApiSafeMode": "Venice API Safe Mode",
-    "statusBanner": "Local filter: {{localStatus}} | Venice provider filtering: {{veniceStatus}}"
+    "title": "__MISSING__:safety.title",
+    "localFamilySafeMode": "__MISSING__:safety.localFamilySafeMode",
+    "veniceApiSafeMode": "__MISSING__:safety.veniceApiSafeMode",
+    "statusBanner": "__MISSING__:safety.statusBanner",
+    "familySafeModeTitle": "__MISSING__:safety.familySafeModeTitle",
+    "familySafeModeDescription": "__MISSING__:safety.familySafeModeDescription",
+    "onFamilySafeMode": "__MISSING__:safety.onFamilySafeMode",
+    "offAdultMode": "__MISSING__:safety.offAdultMode",
+    "status": {
+      "enabled": "__MISSING__:safety.status.enabled",
+      "disabled": "__MISSING__:safety.status.disabled",
+      "localOffProviderOn": "__MISSING__:safety.status.localOffProviderOn",
+      "bothOff": "__MISSING__:safety.status.bothOff",
+      "filteredLocally": "__MISSING__:safety.status.filteredLocally"
+    },
+    "effectiveStatus": "__MISSING__:safety.effectiveStatus",
+    "setMasterPassword": "__MISSING__:safety.setMasterPassword",
+    "masterPasswordEnabled": "__MISSING__:safety.masterPasswordEnabled",
+    "veniceApiSafeModeTitle": "__MISSING__:safety.veniceApiSafeModeTitle",
+    "veniceApiSafeModeDescription": "__MISSING__:safety.veniceApiSafeModeDescription",
+    "errors": {
+      "cannotDisableTitle": "__MISSING__:safety.errors.cannotDisableTitle",
+      "cannotDisableDetail": "__MISSING__:safety.errors.cannotDisableDetail"
+    },
+    "keepCurrent": "__MISSING__:safety.keepCurrent"
+  },
+  "aboutPanel": {
+    "unofficial": "__MISSING__:aboutPanel.unofficial",
+    "disclaimer": "__MISSING__:aboutPanel.disclaimer",
+    "officialLinks": "__MISSING__:aboutPanel.officialLinks",
+    "termsOfService": "__MISSING__:aboutPanel.termsOfService",
+    "privacyPolicy": "__MISSING__:aboutPanel.privacyPolicy",
+    "apiDocs": "__MISSING__:aboutPanel.apiDocs",
+    "trademarks": "__MISSING__:aboutPanel.trademarks",
+    "resetGate": "__MISSING__:aboutPanel.resetGate",
+    "toasts": {
+      "resetSuccess": "__MISSING__:aboutPanel.toasts.resetSuccess",
+      "resetFailed": "__MISSING__:aboutPanel.toasts.resetFailed"
+    },
+    "resetGateBtn": "__MISSING__:aboutPanel.resetGateBtn"
+  },
+  "audioSpeech": {
+    "cacheCleared": "__MISSING__:audioSpeech.cacheCleared",
+    "errors": {
+      "clearCache": "__MISSING__:audioSpeech.errors.clearCache"
+    },
+    "title": "__MISSING__:audioSpeech.title",
+    "description": "__MISSING__:audioSpeech.description",
+    "interfaceSoundsTitle": "__MISSING__:audioSpeech.interfaceSoundsTitle",
+    "interfaceSoundsDescription": "__MISSING__:audioSpeech.interfaceSoundsDescription",
+    "soundPack": "__MISSING__:audioSpeech.soundPack",
+    "packs": {
+      "soft": "__MISSING__:audioSpeech.packs.soft",
+      "tactile": "__MISSING__:audioSpeech.packs.tactile",
+      "glass": "__MISSING__:audioSpeech.packs.glass",
+      "retro": "__MISSING__:audioSpeech.packs.retro",
+      "minimal": "__MISSING__:audioSpeech.packs.minimal"
+    },
+    "volume": "__MISSING__:audioSpeech.volume",
+    "restoreDefaults": "__MISSING__:audioSpeech.restoreDefaults",
+    "chatTtsTitle": "__MISSING__:audioSpeech.chatTtsTitle",
+    "chatTtsDescription": "__MISSING__:audioSpeech.chatTtsDescription",
+    "showControls": "__MISSING__:audioSpeech.showControls",
+    "autoRead": "__MISSING__:audioSpeech.autoRead",
+    "ttsModel": "__MISSING__:audioSpeech.ttsModel",
+    "defaultProviderModel": "__MISSING__:audioSpeech.defaultProviderModel",
+    "saved": "__MISSING__:audioSpeech.saved",
+    "loadingModels": "__MISSING__:audioSpeech.loadingModels",
+    "voice": "__MISSING__:audioSpeech.voice",
+    "defaultVoice": "__MISSING__:audioSpeech.defaultVoice",
+    "speed": "__MISSING__:audioSpeech.speed",
+    "volumeLabel": "__MISSING__:audioSpeech.volumeLabel",
+    "skipCodeBlocks": "__MISSING__:audioSpeech.skipCodeBlocks",
+    "stopOnNewReply": "__MISSING__:audioSpeech.stopOnNewReply",
+    "cacheSpeech": "__MISSING__:audioSpeech.cacheSpeech",
+    "clearing": "__MISSING__:audioSpeech.clearing",
+    "clearCache": "__MISSING__:audioSpeech.clearCache"
+  },
+  "backupSync": {
+    "toasts": {
+      "sessionReattached": "__MISSING__:backupSync.toasts.sessionReattached",
+      "chooseFolderFailed": "__MISSING__:backupSync.toasts.chooseFolderFailed",
+      "folderConfigured": "__MISSING__:backupSync.toasts.folderConfigured",
+      "setFolderFailed": "__MISSING__:backupSync.toasts.setFolderFailed",
+      "enterPassphrase": "__MISSING__:backupSync.toasts.enterPassphrase",
+      "startFailed": "__MISSING__:backupSync.toasts.startFailed",
+      "syncStartedMedia": "__MISSING__:backupSync.toasts.syncStartedMedia",
+      "syncStartedOptIn": "__MISSING__:backupSync.toasts.syncStartedOptIn",
+      "startFailedReason": "__MISSING__:backupSync.toasts.startFailedReason",
+      "pauseFailed": "__MISSING__:backupSync.toasts.pauseFailed",
+      "syncPaused": "__MISSING__:backupSync.toasts.syncPaused",
+      "pauseFailedReason": "__MISSING__:backupSync.toasts.pauseFailedReason",
+      "enterPassphraseReattach": "__MISSING__:backupSync.toasts.enterPassphraseReattach",
+      "reattachFailed": "__MISSING__:backupSync.toasts.reattachFailed",
+      "reattachFailedReason": "__MISSING__:backupSync.toasts.reattachFailedReason"
+    },
+    "title": "__MISSING__:backupSync.title",
+    "desktopOnly": "__MISSING__:backupSync.desktopOnly",
+    "description": "__MISSING__:backupSync.description",
+    "syncFolder": {
+      "title": "__MISSING__:backupSync.syncFolder.title",
+      "description": "__MISSING__:backupSync.syncFolder.description",
+      "none": "__MISSING__:backupSync.syncFolder.none",
+      "change": "__MISSING__:backupSync.syncFolder.change",
+      "choose": "__MISSING__:backupSync.syncFolder.choose",
+      "includeMedia": "__MISSING__:backupSync.syncFolder.includeMedia",
+      "includeMediaNote": "__MISSING__:backupSync.syncFolder.includeMediaNote",
+      "passphrasePlaceholder": "__MISSING__:backupSync.syncFolder.passphrasePlaceholder",
+      "pause": "__MISSING__:backupSync.syncFolder.pause",
+      "reattach": "__MISSING__:backupSync.syncFolder.reattach",
+      "start": "__MISSING__:backupSync.syncFolder.start"
+    },
+    "status": {
+      "active": "__MISSING__:backupSync.status.active",
+      "error": "Error",
+      "paused": "__MISSING__:backupSync.status.paused",
+      "off": "__MISSING__:backupSync.status.off"
+    },
+    "security": {
+      "encryption": "__MISSING__:backupSync.security.encryption",
+      "noKeys": "__MISSING__:backupSync.security.noKeys"
+    },
+    "conflicts": {
+      "title": "__MISSING__:backupSync.conflicts.title",
+      "description": "__MISSING__:backupSync.conflicts.description",
+      "statusError": "__MISSING__:backupSync.conflicts.statusError",
+      "statusDetached": "__MISSING__:backupSync.conflicts.statusDetached",
+      "statusConfigured": "__MISSING__:backupSync.conflicts.statusConfigured",
+      "statusDisabled": "__MISSING__:backupSync.conflicts.statusDisabled",
+      "checking": "__MISSING__:backupSync.conflicts.checking",
+      "noConflicts": "__MISSING__:backupSync.conflicts.noConflicts",
+      "mediaIncluded": "__MISSING__:backupSync.conflicts.mediaIncluded",
+      "mediaExcluded": "__MISSING__:backupSync.conflicts.mediaExcluded",
+      "found": "__MISSING__:backupSync.conflicts.found",
+      "resolutionNote": "__MISSING__:backupSync.conflicts.resolutionNote",
+      "keepOriginalTitle": "__MISSING__:backupSync.conflicts.keepOriginalTitle",
+      "keepOriginal": "__MISSING__:backupSync.conflicts.keepOriginal",
+      "keepConflictTitle": "__MISSING__:backupSync.conflicts.keepConflictTitle",
+      "keepConflict": "__MISSING__:backupSync.conflicts.keepConflict",
+      "keepBothTitle": "__MISSING__:backupSync.conflicts.keepBothTitle",
+      "keepBoth": "__MISSING__:backupSync.conflicts.keepBoth"
+    }
+  },
+  "configPanel": {
+    "toasts": {
+      "reloaded": "__MISSING__:configPanel.toasts.reloaded",
+      "reloadFailed": "__MISSING__:configPanel.toasts.reloadFailed",
+      "openFolderFailed": "__MISSING__:configPanel.toasts.openFolderFailed",
+      "templateExported": "__MISSING__:configPanel.toasts.templateExported",
+      "exportCancelled": "__MISSING__:configPanel.toasts.exportCancelled",
+      "exportFailed": "__MISSING__:configPanel.toasts.exportFailed",
+      "secureStoreCleared": "__MISSING__:configPanel.toasts.secureStoreCleared",
+      "secureStoreClearFailed": "__MISSING__:configPanel.toasts.secureStoreClearFailed"
+    },
+    "masterConfig": {
+      "title": "__MISSING__:configPanel.masterConfig.title",
+      "description1": "__MISSING__:configPanel.masterConfig.description1",
+      "description2": "__MISSING__:configPanel.masterConfig.description2",
+      "description3": "__MISSING__:configPanel.masterConfig.description3",
+      "description4": "__MISSING__:configPanel.masterConfig.description4",
+      "configPath": "__MISSING__:configPanel.masterConfig.configPath",
+      "unavailable": "__MISSING__:configPanel.masterConfig.unavailable",
+      "themesPath": "__MISSING__:configPanel.masterConfig.themesPath",
+      "loadedFrom": "__MISSING__:configPanel.masterConfig.loadedFrom",
+      "profile": "__MISSING__:configPanel.masterConfig.profile",
+      "parseError": "__MISSING__:configPanel.masterConfig.parseError",
+      "validationWarnings": "__MISSING__:configPanel.masterConfig.validationWarnings"
+    },
+    "actions": {
+      "reload": "__MISSING__:configPanel.actions.reload",
+      "openFolder": "__MISSING__:configPanel.actions.openFolder",
+      "exportTemplate": "__MISSING__:configPanel.actions.exportTemplate",
+      "clearSecureStore": "__MISSING__:configPanel.actions.clearSecureStore"
+    },
+    "apiKeyImport": {
+      "title": "__MISSING__:configPanel.apiKeyImport.title",
+      "description1": "__MISSING__:configPanel.apiKeyImport.description1",
+      "description2": "__MISSING__:configPanel.apiKeyImport.description2",
+      "description3": "__MISSING__:configPanel.apiKeyImport.description3",
+      "veniceKey": "__MISSING__:configPanel.apiKeyImport.veniceKey",
+      "configured": "__MISSING__:configPanel.apiKeyImport.configured",
+      "notConfigured": "__MISSING__:configPanel.apiKeyImport.notConfigured",
+      "imported": "__MISSING__:configPanel.apiKeyImport.imported",
+      "redacted": "__MISSING__:configPanel.apiKeyImport.redacted",
+      "jinaKey": "__MISSING__:configPanel.apiKeyImport.jinaKey",
+      "note": "__MISSING__:configPanel.apiKeyImport.note",
+      "clearConfirm": {
+        "title": "__MISSING__:configPanel.apiKeyImport.clearConfirm.title",
+        "detail": "__MISSING__:configPanel.apiKeyImport.clearConfirm.detail",
+        "action": "__MISSING__:configPanel.apiKeyImport.clearConfirm.action"
+      }
+    },
+    "effectiveSettings": {
+      "title": "__MISSING__:configPanel.effectiveSettings.title",
+      "description1": "__MISSING__:configPanel.effectiveSettings.description1",
+      "description2": "__MISSING__:configPanel.effectiveSettings.description2",
+      "activeTheme": "__MISSING__:configPanel.effectiveSettings.activeTheme",
+      "defaultChatModel": "__MISSING__:configPanel.effectiveSettings.defaultChatModel",
+      "useUiDefault": "__MISSING__:configPanel.effectiveSettings.useUiDefault",
+      "temperature": "__MISSING__:configPanel.effectiveSettings.temperature",
+      "topP": "__MISSING__:configPanel.effectiveSettings.topP",
+      "maxTokens": "__MISSING__:configPanel.effectiveSettings.maxTokens",
+      "webSearch": "__MISSING__:configPanel.effectiveSettings.webSearch"
+    }
+  },
+  "dataStorage": {
+    "toasts": {
+      "importReadFailed": "__MISSING__:dataStorage.toasts.importReadFailed",
+      "importNothingNewProfile": "__MISSING__:dataStorage.toasts.importNothingNewProfile",
+      "importNothingDetail": "__MISSING__:dataStorage.toasts.importNothingDetail",
+      "importCompleteNewProfile": "__MISSING__:dataStorage.toasts.importCompleteNewProfile",
+      "importNothing": "__MISSING__:dataStorage.toasts.importNothing",
+      "importPartial": "__MISSING__:dataStorage.toasts.importPartial",
+      "importPartialDetail": "__MISSING__:dataStorage.toasts.importPartialDetail",
+      "importComplete": "__MISSING__:dataStorage.toasts.importComplete",
+      "replaceFailedRestored": "__MISSING__:dataStorage.toasts.replaceFailedRestored",
+      "replaceFailedRecovery": "__MISSING__:dataStorage.toasts.replaceFailedRecovery",
+      "importFailed": "__MISSING__:dataStorage.toasts.importFailed",
+      "recoveryRestored": "__MISSING__:dataStorage.toasts.recoveryRestored",
+      "recoveryRestoredDetail": "__MISSING__:dataStorage.toasts.recoveryRestoredDetail",
+      "recoveryRestoreFailed": "__MISSING__:dataStorage.toasts.recoveryRestoreFailed",
+      "recoveryRestoreFailedDetail": "__MISSING__:dataStorage.toasts.recoveryRestoreFailedDetail"
+    },
+    "manualBackup": {
+      "title": "__MISSING__:dataStorage.manualBackup.title",
+      "description": "__MISSING__:dataStorage.manualBackup.description",
+      "passwordPlaceholder": "__MISSING__:dataStorage.manualBackup.passwordPlaceholder",
+      "includeDrafts": "__MISSING__:dataStorage.manualBackup.includeDrafts",
+      "includeMedia": "__MISSING__:dataStorage.manualBackup.includeMedia",
+      "export": "__MISSING__:dataStorage.manualBackup.export",
+      "import": "__MISSING__:dataStorage.manualBackup.import"
+    },
+    "recovery": {
+      "title": "__MISSING__:dataStorage.recovery.title",
+      "description": "__MISSING__:dataStorage.recovery.description",
+      "restore": "__MISSING__:dataStorage.recovery.restore"
+    },
+    "dangerZone": {
+      "title": "__MISSING__:dataStorage.dangerZone.title",
+      "description": "__MISSING__:dataStorage.dangerZone.description",
+      "clearDefaults": "__MISSING__:dataStorage.dangerZone.clearDefaults",
+      "clearIndexedDB": "__MISSING__:dataStorage.dangerZone.clearIndexedDB"
+    }
+  },
+  "defaultsPanel": {
+    "defaultChatModel": "__MISSING__:defaultsPanel.defaultChatModel",
+    "defaultImageModel": "__MISSING__:defaultsPanel.defaultImageModel",
+    "defaultWebSearch": "__MISSING__:defaultsPanel.defaultWebSearch",
+    "defaultSystemPrompt": "__MISSING__:defaultsPanel.defaultSystemPrompt",
+    "systemPromptPlaceholder": "__MISSING__:defaultsPanel.systemPromptPlaceholder",
+    "veniceSystemPromptToggle": "__MISSING__:defaultsPanel.veniceSystemPromptToggle",
+    "enableCitations": "__MISSING__:defaultsPanel.enableCitations",
+    "characterSceneGeneration": {
+      "title": "__MISSING__:defaultsPanel.characterSceneGeneration.title",
+      "description": "__MISSING__:defaultsPanel.characterSceneGeneration.description",
+      "mode": "__MISSING__:defaultsPanel.characterSceneGeneration.mode",
+      "modeAriaLabel": "__MISSING__:defaultsPanel.characterSceneGeneration.modeAriaLabel",
+      "manualOnly": "__MISSING__:defaultsPanel.characterSceneGeneration.manualOnly",
+      "autoManual": "__MISSING__:defaultsPanel.characterSceneGeneration.autoManual"
+    }
+  },
+  "importPlan": {
+    "title": "__MISSING__:importPlan.title",
+    "summary": "__MISSING__:importPlan.summary",
+    "metadata": {
+      "authenticated": "__MISSING__:importPlan.metadata.authenticated",
+      "legacy": "__MISSING__:importPlan.metadata.legacy",
+      "format": "__MISSING__:importPlan.metadata.format",
+      "exportedAt": "__MISSING__:importPlan.metadata.exportedAt",
+      "source": "__MISSING__:importPlan.metadata.source",
+      "profileRef": "__MISSING__:importPlan.metadata.profileRef",
+      "crypto": "__MISSING__:importPlan.metadata.crypto",
+      "counts": "__MISSING__:importPlan.metadata.counts",
+      "sha": "__MISSING__:importPlan.metadata.sha"
+    },
+    "warningsLabel": "__MISSING__:importPlan.warningsLabel",
+    "preview": {
+      "title": "__MISSING__:importPlan.preview.title",
+      "recordsCount": "__MISSING__:importPlan.preview.recordsCount",
+      "new": "__MISSING__:importPlan.preview.new",
+      "modified": "__MISSING__:importPlan.preview.modified",
+      "conflicts": "__MISSING__:importPlan.preview.conflicts",
+      "identical": "__MISSING__:importPlan.preview.identical",
+      "noChanges": "__MISSING__:importPlan.preview.noChanges"
+    },
+    "mode": {
+      "title": "__MISSING__:importPlan.mode.title",
+      "merge": "__MISSING__:importPlan.mode.merge",
+      "mergeDesc": "__MISSING__:importPlan.mode.mergeDesc",
+      "replace": "__MISSING__:importPlan.mode.replace",
+      "replaceDesc": "__MISSING__:importPlan.mode.replaceDesc",
+      "newProfile": "__MISSING__:importPlan.mode.newProfile",
+      "newProfileDesc": "__MISSING__:importPlan.mode.newProfileDesc"
+    },
+    "warnings": {
+      "recoveryEnabled": "__MISSING__:importPlan.warnings.recoveryEnabled",
+      "recoveryEnabledDesc": "__MISSING__:importPlan.warnings.recoveryEnabledDesc",
+      "replaceUnavailable": "__MISSING__:importPlan.warnings.replaceUnavailable",
+      "replaceUnavailableDesc": "__MISSING__:importPlan.warnings.replaceUnavailableDesc"
+    },
+    "profileName": "__MISSING__:importPlan.profileName",
+    "profileNamePlaceholder": "__MISSING__:importPlan.profileNamePlaceholder",
+    "actions": {
+      "confirm": "__MISSING__:importPlan.actions.confirm"
+    }
+  },
+  "masterPassword": {
+    "errors": {
+      "mismatch": "__MISSING__:masterPassword.errors.mismatch",
+      "tooShort": "__MISSING__:masterPassword.errors.tooShort",
+      "saveFailed": "__MISSING__:masterPassword.errors.saveFailed",
+      "lockedOut": "__MISSING__:masterPassword.errors.lockedOut",
+      "incorrect": "__MISSING__:masterPassword.errors.incorrect",
+      "verifyFailed": "__MISSING__:masterPassword.errors.verifyFailed"
+    },
+    "titleSet": "__MISSING__:masterPassword.titleSet",
+    "titleEnter": "__MISSING__:masterPassword.titleEnter",
+    "description": "__MISSING__:masterPassword.description",
+    "labels": {
+      "password": "__MISSING__:masterPassword.labels.password",
+      "confirm": "__MISSING__:masterPassword.labels.confirm"
+    }
+  },
+  "profiles": {
+    "removePassword": {
+      "title": "__MISSING__:profiles.removePassword.title",
+      "detail": "__MISSING__:profiles.removePassword.detail",
+      "action": "__MISSING__:profiles.removePassword.action"
+    },
+    "errors": {
+      "removeFailed": "__MISSING__:profiles.errors.removeFailed",
+      "tooShort": "__MISSING__:profiles.errors.tooShort",
+      "mismatch": "__MISSING__:profiles.errors.mismatch",
+      "saveFailed": "__MISSING__:profiles.errors.saveFailed",
+      "incorrect": "__MISSING__:profiles.errors.incorrect",
+      "deleteFailed": "__MISSING__:profiles.errors.deleteFailed"
+    },
+    "title": "__MISSING__:profiles.title",
+    "description": "__MISSING__:profiles.description",
+    "badge": {
+      "active": "__MISSING__:profiles.badge.active",
+      "locked": "__MISSING__:profiles.badge.locked"
+    },
+    "aria": {
+      "removePassword": "__MISSING__:profiles.aria.removePassword",
+      "setPassword": "__MISSING__:profiles.aria.setPassword",
+      "switchTo": "__MISSING__:profiles.aria.switchTo",
+      "delete": "__MISSING__:profiles.aria.delete"
+    },
+    "actions": {
+      "removePassword": "__MISSING__:profiles.actions.removePassword",
+      "setPassword": "__MISSING__:profiles.actions.setPassword",
+      "switchTo": "__MISSING__:profiles.actions.switchTo",
+      "createProfile": "__MISSING__:profiles.actions.createProfile"
+    },
+    "deleteProfile": {
+      "title": "__MISSING__:profiles.deleteProfile.title",
+      "detail": "__MISSING__:profiles.deleteProfile.detail",
+      "action": "__MISSING__:profiles.deleteProfile.action"
+    },
+    "newProfilePlaceholder": "__MISSING__:profiles.newProfilePlaceholder",
+    "dialog": {
+      "titleSet": "__MISSING__:profiles.dialog.titleSet",
+      "titleUnlock": "__MISSING__:profiles.dialog.titleUnlock",
+      "description": "__MISSING__:profiles.dialog.description",
+      "labelSet": "__MISSING__:profiles.dialog.labelSet",
+      "labelUnlock": "__MISSING__:profiles.dialog.labelUnlock",
+      "labelConfirm": "__MISSING__:profiles.dialog.labelConfirm",
+      "savePassword": "__MISSING__:profiles.dialog.savePassword"
+    }
+  },
+  "providers": {
+    "errors": {
+      "loadFailed": "__MISSING__:providers.errors.loadFailed",
+      "saveFailed": "__MISSING__:providers.errors.saveFailed",
+      "enableWithoutKey": "__MISSING__:providers.errors.enableWithoutKey"
+    },
+    "title": "__MISSING__:providers.title",
+    "description": "__MISSING__:providers.description",
+    "deferredNotice": "__MISSING__:providers.deferredNotice",
+    "autoFallback": {
+      "title": "__MISSING__:providers.autoFallback.title",
+      "description": "__MISSING__:providers.autoFallback.description",
+      "enableAria": "__MISSING__:providers.autoFallback.enableAria",
+      "orderingLabel": "__MISSING__:providers.autoFallback.orderingLabel",
+      "orderingPlaceholder": "__MISSING__:providers.autoFallback.orderingPlaceholder",
+      "orderingNotice": "__MISSING__:providers.autoFallback.orderingNotice"
+    },
+    "badge": {
+      "deferred": "__MISSING__:providers.badge.deferred"
+    },
+    "aria": {
+      "enable": "__MISSING__:providers.aria.enable"
+    },
+    "status": {
+      "keyConfigured": "__MISSING__:providers.status.keyConfigured"
+    },
+    "actions": {
+      "removeKey": "__MISSING__:providers.actions.removeKey"
+    },
+    "inputs": {
+      "keyPlaceholder": "__MISSING__:providers.inputs.keyPlaceholder"
+    }
+  },
+  "errors": {
+    "persistSafety": "__MISSING__:errors.persistSafety"
+  },
+  "updates": {
+    "available": "__MISSING__:updates.available",
+    "upToDate": "__MISSING__:updates.upToDate",
+    "downloading": "__MISSING__:updates.downloading",
+    "downloaded": "__MISSING__:updates.downloaded",
+    "error": "__MISSING__:updates.error",
+    "checking": "__MISSING__:updates.checking",
+    "devBuild": "__MISSING__:updates.devBuild",
+    "checkFailed": "__MISSING__:updates.checkFailed",
+    "checkCompleted": "__MISSING__:updates.checkCompleted",
+    "installFailed": "__MISSING__:updates.installFailed"
+  },
+  "jinaKeys": {
+    "savedElectron": "__MISSING__:jinaKeys.savedElectron",
+    "savedWeb": "__MISSING__:jinaKeys.savedWeb",
+    "saveFailed": "__MISSING__:jinaKeys.saveFailed",
+    "deleteConfirm": {
+      "title": "__MISSING__:jinaKeys.deleteConfirm.title",
+      "electron": "__MISSING__:jinaKeys.deleteConfirm.electron",
+      "web": "__MISSING__:jinaKeys.deleteConfirm.web"
+    },
+    "deleted": "__MISSING__:jinaKeys.deleted",
+    "deleteFailed": "__MISSING__:jinaKeys.deleteFailed",
+    "testSuccess": "__MISSING__:jinaKeys.testSuccess",
+    "testFailed": "__MISSING__:jinaKeys.testFailed",
+    "testError": "__MISSING__:jinaKeys.testError"
+  },
+  "header": {
+    "title": "__MISSING__:header.title",
+    "description": {
+      "electron": "__MISSING__:header.description.electron",
+      "web": "__MISSING__:header.description.web"
+    }
+  },
+  "tabs": {
+    "languageRegion": "__MISSING__:tabs.languageRegion",
+    "profiles": "__MISSING__:tabs.profiles",
+    "apiKeys": "__MISSING__:tabs.apiKeys",
+    "providers": "__MISSING__:tabs.providers",
+    "defaults": "__MISSING__:tabs.defaults",
+    "safety": "__MISSING__:tabs.safety",
+    "vault": "__MISSING__:tabs.vault",
+    "appearance": "__MISSING__:tabs.appearance",
+    "data": "__MISSING__:tabs.data",
+    "backupSync": "__MISSING__:tabs.backupSync",
+    "about": "__MISSING__:tabs.about",
+    "updates": "Updates",
+    "config": "__MISSING__:tabs.config",
+    "audioSpeech": "__MISSING__:tabs.audioSpeech"
+  },
+  "updatesPanel": {
+    "title": "__MISSING__:updatesPanel.title",
+    "description": "__MISSING__:updatesPanel.description",
+    "status": "__MISSING__:updatesPanel.status",
+    "checking": "__MISSING__:updatesPanel.checking",
+    "checkForUpdates": "__MISSING__:updatesPanel.checkForUpdates",
+    "restartAndInstall": "__MISSING__:updatesPanel.restartAndInstall"
   }
 }

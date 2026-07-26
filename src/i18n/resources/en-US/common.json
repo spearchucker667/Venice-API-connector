@@ -29,7 +29,14 @@
     "add": "Add",
     "view": "View",
     "help": "Help",
-    "settings": "Settings"
+    "settings": "Settings",
+    "saveKey": "Save Key",
+    "testing": "Testing...",
+    "testKey": "Test Key",
+    "preview": "Preview",
+    "unlock": "Unlock",
+    "saving": "Saving...",
+    "importAll": "Import all"
   },
   "status": {
     "active": "Active",
@@ -42,6 +49,27 @@
     "success": "Success",
     "warning": "Warning",
     "error": "Error",
-    "loading": "Loading"
-  }
+    "loading": "Loading",
+    "on": "On",
+    "off": "Off",
+    "untitled": "Untitled",
+    "untitledLowercase": "(untitled)",
+    "working": "Working…",
+    "restoring": "Restoring…",
+    "auto": "Auto",
+    "idle": "Idle"
+  },
+  "conversations": "conv-1",
+  "character_cards": "card-1",
+  "rp_chats": "rpchat-1",
+  "tombstones": "conv-1",
+  "cancelled": "failed",
+  "failed": "failed",
+  "repair": "complete",
+  "isAdult": "true",
+  "isPro": "true",
+  "isWebEnabled": "true",
+  "stable-audio": "q1",
+  "video-model": "q2",
+  "promptLibrary": "lib-1"
 }

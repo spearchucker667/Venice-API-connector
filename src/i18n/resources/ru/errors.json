@@ -1,12 +1,12 @@
 {
-  "networkError": "Network request failed. Please check your internet connection.",
-  "apiKeyMissing": "API key is missing. Please configure your API key in Settings.",
-  "rateLimit429": "Rate limit exceeded. Please wait before retrying.",
-  "safeModeBlock451": "Request blocked by Family Safe Mode filter.",
-  "gatewayTimeout504": "Request timed out. Please try again.",
-  "modelUnavailable": "Model {{model}} is currently unavailable.",
-  "autosaveFailed": "Autosave failed: {{error}}",
-  "fileReadError": "Failed to read file.",
-  "invalidFormat": "Invalid file format.",
-  "unknownError": "An unexpected error occurred."
+  "networkError": "__MISSING__:networkError",
+  "apiKeyMissing": "__MISSING__:apiKeyMissing",
+  "rateLimit429": "__MISSING__:rateLimit429",
+  "safeModeBlock451": "__MISSING__:safeModeBlock451",
+  "gatewayTimeout504": "__MISSING__:gatewayTimeout504",
+  "modelUnavailable": "__MISSING__:modelUnavailable",
+  "autosaveFailed": "__MISSING__:autosaveFailed",
+  "fileReadError": "Не удалось read file.",
+  "invalidFormat": "__MISSING__:invalidFormat",
+  "unknownError": "__MISSING__:unknownError"
 }

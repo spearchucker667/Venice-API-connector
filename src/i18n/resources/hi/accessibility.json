@@ -1,11 +1,11 @@
 {
-  "skipToContent": "Skip to main content",
-  "mainNavigation": "Main navigation",
-  "dialogTitle": "Dialog window",
-  "closeDialog": "Close dialog",
-  "expanded": "Expanded",
-  "collapsed": "Collapsed",
-  "selected": "Selected",
-  "stepIndicator": "Step {{current}} of {{total}}",
-  "statusNotification": "Status update"
+  "skipToContent": "__MISSING__:skipToContent",
+  "mainNavigation": "__MISSING__:mainNavigation",
+  "dialogTitle": "__MISSING__:dialogTitle",
+  "closeDialog": "__MISSING__:closeDialog",
+  "expanded": "__MISSING__:expanded",
+  "collapsed": "__MISSING__:collapsed",
+  "selected": "__MISSING__:selected",
+  "stepIndicator": "__MISSING__:stepIndicator",
+  "statusNotification": "__MISSING__:statusNotification"
 }

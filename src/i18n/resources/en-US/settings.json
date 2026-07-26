@@ -37,12 +37,498 @@
     "keyInputLabel": "API Key",
     "testConnection": "Test Connection",
     "saveKey": "Save Key",
-    "deleteKey": "Delete Key"
+    "deleteKey": "Delete Key",
+    "veniceTitle": "Venice.ai Integration",
+    "status": {
+      "configured": "Configured",
+      "unset": "Unset",
+      "optional": "Optional"
+    },
+    "veniceDescription": "Your API key is saved using secure storage encryption and is never exposed to the web sandbox.",
+    "jinaTitle": "Jina.ai Integration",
+    "jinaDescription": {
+      "prefix": "Provides deep web searching, scraping, and social profile discovery mapping capabilities.",
+      "electron": "Jina API keys are saved with the same OS secure storage.",
+      "web": "Jina API keys are kept only in memory for this browser session; use the server environment for persistent web configuration."
+    },
+    "savedElectron": "Venice API key saved securely.",
+    "savedWeb": "Venice API key saved for this development session.",
+    "saveFailed": "Failed to save API key.",
+    "deleteConfirm": {
+      "title": "Delete Venice API key?",
+      "electron": "This will remove your Venice API key from OS secure storage. You will need to re-enter it to make requests.",
+      "web": "This will remove the Venice API key from the current development session."
+    },
+    "deleted": "Venice API key deleted.",
+    "deleteFailed": "Failed to delete API key.",
+    "testSuccess": "Connection successful{{status}}.",
+    "testFailed": "Connection failed: {{message}}",
+    "testError": "Test connection failed."
   },
   "safety": {
     "title": "Safety & Guard",
     "localFamilySafeMode": "Local Family Safe Mode",
     "veniceApiSafeMode": "Venice API Safe Mode",
-    "statusBanner": "Local filter: {{localStatus}} | Venice provider filtering: {{veniceStatus}}"
+    "statusBanner": "Local filter: {{localStatus}} | Venice provider filtering: {{veniceStatus}}",
+    "familySafeModeTitle": "Family Safe Mode",
+    "familySafeModeDescription": "Runs Venice Forge",
+    "onFamilySafeMode": "ON: Family Safe Mode",
+    "offAdultMode": "OFF: Adult Mode (Local Filter OFF)",
+    "status": {
+      "enabled": "When enabled, matching requests are blocked locally before the provider is called.",
+      "disabled": "Bypasses Venice Forge",
+      "localOffProviderOn": "Local family filter is OFF, but Venice API provider-side Safe Mode is still ON. Outbound requests include safe_mode: true.",
+      "bothOff": "Both local family filter and Venice API provider Safe Mode are OFF. Outbound requests include safe_mode: false.",
+      "filteredLocally": "Matching requests are filtered locally before reaching the provider."
+    },
+    "effectiveStatus": "Effective Status: Local filter: {{local}} | Venice provider filtering: {{provider}}",
+    "setMasterPassword": "Set Master Password to lock Family Safe Mode",
+    "masterPasswordEnabled": "Master Password is enabled",
+    "veniceApiSafeModeTitle": "Venice API Safe Mode",
+    "veniceApiSafeModeDescription": "Controls the provider-side safemode parameter sent to Venice. This is separate from Family Safe Mode.",
+    "errors": {
+      "cannotDisableTitle": "Cannot disable Provider Safe Mode",
+      "cannotDisableDetail": "Family Safe Mode must be turned off first."
+    },
+    "keepCurrent": "Keep current safety"
+  },
+  "aboutPanel": {
+    "unofficial": "Unofficial",
+    "disclaimer": "Venice Forge is a third-party desktop client configured to interface directly with the Venice.ai inference API endpoints. It is not affiliated with, endorsed by, sponsored by, or approved by Venice.ai, Inc.",
+    "officialLinks": "Official Links",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "apiDocs": "API Documentation",
+    "trademarks": "Venice , Venice.ai , and related logos are trademarks of Venice.ai, Inc. Use of these names is solely for nominative identification of API compatibility.",
+    "resetGate": "Reset legal acknowledgment gate:",
+    "toasts": {
+      "resetSuccess": "Legal acknowledgment reset. It will appear on next reload.",
+      "resetFailed": "Could not reset acknowledgment."
+    },
+    "resetGateBtn": "Reset gate"
+  },
+  "audioSpeech": {
+    "cacheCleared": "TTS cache cleared",
+    "errors": {
+      "clearCache": "Unable to clear TTS cache"
+    },
+    "title": "Audio & Speech",
+    "description": "Configure interface sounds and text-to-speech for model replies.",
+    "interfaceSoundsTitle": "Interface Sounds",
+    "interfaceSoundsDescription": "Interface sounds use bundled local audio and do not contact a network service.",
+    "soundPack": "Sound pack",
+    "packs": {
+      "soft": "Soft",
+      "tactile": "Tactile",
+      "glass": "Glass",
+      "retro": "Retro",
+      "minimal": "Minimal"
+    },
+    "volume": "Volume",
+    "restoreDefaults": "Restore defaults",
+    "chatTtsTitle": "Chat Text-to-Speech",
+    "chatTtsDescription": "Text-to-speech sends the selected assistant reply text to your configured speech provider and may consume API usage. Automatic playback is off by default.",
+    "showControls": "Show TTS controls on assistant replies",
+    "autoRead": "Automatically read completed replies",
+    "ttsModel": "TTS model",
+    "defaultProviderModel": "Default provider model",
+    "saved": "(saved)",
+    "loadingModels": "Loading speech models…",
+    "voice": "Voice",
+    "defaultVoice": "Default voice",
+    "speed": "Speed: {{speed}}x",
+    "volumeLabel": "Volume: {{volume}}%",
+    "skipCodeBlocks": "Skip code blocks",
+    "stopOnNewReply": "Stop current playback when a new reply begins",
+    "cacheSpeech": "Cache generated speech",
+    "clearing": "Clearing…",
+    "clearCache": "Clear TTS cache"
+  },
+  "backupSync": {
+    "toasts": {
+      "sessionReattached": "Sync session reattached.",
+      "chooseFolderFailed": "Failed to choose sync folder.",
+      "folderConfigured": "Encrypted sync folder configured.",
+      "setFolderFailed": "Failed to set sync folder: {{error}}",
+      "enterPassphrase": "Please enter a sync passphrase.",
+      "startFailed": "Failed to start sync.",
+      "syncStartedMedia": "Sync started — media blobs will be synced.",
+      "syncStartedOptIn": "Sync started — media is opt-in.",
+      "startFailedReason": "Failed to start sync: {{error}}",
+      "pauseFailed": "Failed to pause sync.",
+      "syncPaused": "Sync paused. Re-enter the passphrase to resume.",
+      "pauseFailedReason": "Failed to pause sync: {{error}}",
+      "enterPassphraseReattach": "Please enter the sync passphrase to reattach.",
+      "reattachFailed": "Failed to reattach sync session.",
+      "reattachFailedReason": "Failed to reattach sync: {{error}}"
+    },
+    "title": "Backup & Sync",
+    "desktopOnly": "Local-first Sync is currently only available on the Desktop app.",
+    "description": "Keep your local data securely synced across your devices without forcing a central cloud account.",
+    "syncFolder": {
+      "title": "Sync Folder",
+      "description": "Continuously sync encrypted data to a folder (e.g. iCloud Drive, Dropbox).",
+      "none": "No sync folder selected",
+      "change": "Change Folder",
+      "choose": "Choose Folder",
+      "includeMedia": "Include media blobs in sync packets",
+      "includeMediaNote": "(images, files, RP assets)",
+      "passphrasePlaceholder": "Enter Encryption Passphrase",
+      "pause": "Pause Sync",
+      "reattach": "Reattach Session",
+      "start": "Start Sync"
+    },
+    "status": {
+      "active": "Active",
+      "error": "Error",
+      "paused": "Paused",
+      "off": "Off"
+    },
+    "security": {
+      "encryption": "Sync packets use Argon2id-derived XChaCha20-Poly1305 encryption before being written to this folder.",
+      "noKeys": "Your API keys and absolute machine paths are NEVER synced."
+    },
+    "conflicts": {
+      "title": "Sync Status & Conflicts",
+      "description": "Monitor sync activity and resolve data conflicts.",
+      "statusError": "Sync error: {{error}}",
+      "statusDetached": "The main process watcher is running but the renderer session is detached. Re-enter the passphrase to reattach.",
+      "statusConfigured": "Sync is configured but not fully active. Enter the passphrase and start sync.",
+      "statusDisabled": "Enable sync to monitor activity.",
+      "checking": "Checking for conflicts...",
+      "noConflicts": "Sync is active. No conflicts found.",
+      "mediaIncluded": " Media blobs are included.",
+      "mediaExcluded": " Media blobs are excluded (opt-in).",
+      "found": "Found {{count}} conflict(s). Resolve them below:",
+      "resolutionNote": "Sync kept {{winner}}; the conflicting {{loser}} revision ({{loserTitle}}) is preserved until you resolve the conflict.",
+      "keepOriginalTitle": "Keep the revision currently saved at this id and discard the conflicting copy.",
+      "keepOriginal": "Keep {{winner}} copy",
+      "keepConflictTitle": "Replace the current revision with the {{loser}} copy.",
+      "keepConflict": "Use {{loser}} copy",
+      "keepBothTitle": "Keep the current revision and save the {{loser}} copy as a separate record.",
+      "keepBoth": "Save {{loser}} as copy"
+    }
+  },
+  "configPanel": {
+    "toasts": {
+      "reloaded": "Local config reloaded.",
+      "reloadFailed": "Failed to reload config.",
+      "openFolderFailed": "Failed to open config folder.",
+      "templateExported": "Template exported.",
+      "exportCancelled": "Export cancelled.",
+      "exportFailed": "Failed to export config template.",
+      "secureStoreCleared": "Secure store cleared.",
+      "secureStoreClearFailed": "Failed to clear secure store."
+    },
+    "masterConfig": {
+      "title": "Local Master Config",
+      "description1": "Edit ",
+      "description2": " and ",
+      "description3": " on disk to configure Venice Forge without touching the UI. See ",
+      "description4": " for the full schema.",
+      "configPath": "Config path",
+      "unavailable": "(unavailable)",
+      "themesPath": "Themes path",
+      "loadedFrom": "Loaded from",
+      "profile": "Profile",
+      "parseError": "Parse error:",
+      "validationWarnings": "Validation warnings"
+    },
+    "actions": {
+      "reload": "Reload Config",
+      "openFolder": "Open Config Folder",
+      "exportTemplate": "Export Sanitized Template",
+      "clearSecureStore": "Clear Secure Store"
+    },
+    "apiKeyImport": {
+      "title": "API Key Import",
+      "description1": "Plaintext keys in ",
+      "description2": " are imported into OS secure storage on startup and redacted from the file (unless ",
+      "description3": " is set).",
+      "veniceKey": "Venice key",
+      "configured": "Configured (secure store)",
+      "notConfigured": "Not configured",
+      "imported": "Imported this run",
+      "redacted": "Plaintext redacted",
+      "jinaKey": "Jina key",
+      "note": "Raw keys are never sent to the renderer. Reset the secure store to clear stored keys; you can then re-enter them via the API Keys tab.",
+      "clearConfirm": {
+        "title": "Clear secure store keys?",
+        "detail": "This removes all stored API keys from the secure store. This cannot be undone.",
+        "action": "Clear keys"
+      }
+    },
+    "effectiveSettings": {
+      "title": "Effective Settings (preview)",
+      "description1": "Read-only preview of the merged config currently in memory. The ",
+      "description2": " source remains the canonical source of truth — edit it on disk and click ",
+      "activeTheme": "Active theme",
+      "defaultChatModel": "Default chat model",
+      "useUiDefault": "(use UI default)",
+      "temperature": "Temperature",
+      "topP": "Top-p",
+      "maxTokens": "Max tokens",
+      "webSearch": "Web search"
+    }
+  },
+  "dataStorage": {
+    "toasts": {
+      "importReadFailed": "Failed to read backup. Incorrect password or corrupt file.",
+      "importNothingNewProfile": "Nothing imported into new profile: {{skipped}} skipped",
+      "importNothingDetail": "No records applied; check the backup",
+      "importCompleteNewProfile": "Import complete into new profile: {{imported}} imported. Reloading...",
+      "importNothing": "Nothing imported: {{skipped}} skipped",
+      "importPartial": "Partial import: {{imported}} imported, {{skipped}} skipped",
+      "importPartialDetail": "{{tombstones}} tombstones applied. Inspect the skipped count before relying on this backup.",
+      "importComplete": "Import complete: {{imported}} imported, {{skipped}} skipped, {{tombstones}} tombstones applied.",
+      "replaceFailedRestored": "Replace failed; data restored",
+      "replaceFailedRecovery": "Replace failed; recovery required",
+      "importFailed": "Import failed.",
+      "recoveryRestored": "Recovery restored",
+      "recoveryRestoredDetail": "The prior profile state was restored and the replaced state was retained as a new recovery backup.",
+      "recoveryRestoreFailed": "Recovery restore failed",
+      "recoveryRestoreFailedDetail": "The recovery backup could not be restored."
+    },
+    "manualBackup": {
+      "title": "Manual Backup",
+      "description": "Create an encrypted, portable backup of your local history, character cards, and workflows. You can import this backup on any device.",
+      "passwordPlaceholder": "Backup Password",
+      "includeDrafts": "Include encrypted local ST Card drafts (drafts never sync)",
+      "includeMedia": "Include media in this backup (images, files, RP assets — encrypted with the rest of the backup)",
+      "export": "Export Backup",
+      "import": "Import Backup"
+    },
+    "recovery": {
+      "title": "Pre-Replace Recovery",
+      "description": "A verified encrypted recovery backup from {{date}} is available. Enter its backup password above to restore it transactionally.",
+      "restore": "Restore Recovery Backup"
+    },
+    "dangerZone": {
+      "title": "Danger Zone",
+      "description": "These operations are destructive and cannot be undone. Always export a backup first if you have important history.",
+      "clearDefaults": "Clear App Defaults",
+      "clearIndexedDB": "Clear IndexedDB Data"
+    }
+  },
+  "defaultsPanel": {
+    "defaultChatModel": "Default Chat Model",
+    "defaultImageModel": "Default Image Model",
+    "defaultWebSearch": "Default Web Search",
+    "defaultSystemPrompt": "Default System Prompt",
+    "systemPromptPlaceholder": "Optional. Leave empty to avoid adding an app-authored system message.",
+    "veniceSystemPromptToggle": "Venice System Prompt Toggle",
+    "enableCitations": "Enable Citations by Default",
+    "characterSceneGeneration": {
+      "title": "Character Scene Generation",
+      "description": "Allow character chats to create inline scene images from the current conversation only. Protected by local rate limits.",
+      "mode": "Mode",
+      "modeAriaLabel": "Character scene generation mode",
+      "manualOnly": "Manual only",
+      "autoManual": "Automatic + manual"
+    }
+  },
+  "importPlan": {
+    "title": "Review Import Plan",
+    "summary": "This backup contains {{records}} records across {{stores}} data stores.",
+    "metadata": {
+      "authenticated": "Authenticated Backup Metadata",
+      "legacy": "Legacy Backup Metadata",
+      "format": "Format: v{{version}}{{appVersion}}",
+      "exportedAt": "Exported: {{date}}",
+      "source": "Source: {{runtime}} / {{device}}",
+      "profileRef": "Profile ref: {{ref}}",
+      "crypto": "Crypto: {{alg}} / {{kdf}} / key v{{key}}",
+      "counts": "{{tombstones}} tombstones / {{blobs}} embedded blobs",
+      "sha": "Payload SHA-256: {{sha}}"
+    },
+    "warningsLabel": "Import warnings",
+    "preview": {
+      "title": "Data Changes Preview",
+      "recordsCount": "{{count}} records",
+      "new": "{{count}} new",
+      "modified": "{{count}} modified",
+      "conflicts": "{{count}} conflicts",
+      "identical": "{{count}} identical",
+      "noChanges": "No changes"
+    },
+    "mode": {
+      "title": "Choose Import Mode",
+      "merge": "Merge Data",
+      "mergeDesc": "Keep existing data and add new records. Conflicts will be saved alongside local versions.",
+      "replace": "Replace All",
+      "replaceDesc": "Wipe all current local data and replace it entirely with this backup.",
+      "newProfile": "New Profile",
+      "newProfileDesc": "Create a fresh profile workspace and import this backup into it."
+    },
+    "warnings": {
+      "recoveryEnabled": "Automatic Recovery Enabled",
+      "recoveryEnabledDesc": "The desktop app will stage this backup, create and verify an encrypted recovery artifact, then roll back automatically if replacement fails.",
+      "replaceUnavailable": "Replace Unavailable in Web Mode",
+      "replaceUnavailableDesc": "Use Merge or New Profile. Durable replace recovery requires the Venice Forge desktop app."
+    },
+    "profileName": "Profile Name",
+    "profileNamePlaceholder": "e.g. Work Backup",
+    "actions": {
+      "confirm": "Confirm Import"
+    }
+  },
+  "masterPassword": {
+    "errors": {
+      "mismatch": "Passwords do not match",
+      "tooShort": "Password too short (min {{min}} characters)",
+      "saveFailed": "Failed to securely save password",
+      "lockedOut": " Locked out. Try again in {{seconds}}s.",
+      "incorrect": "Incorrect password.",
+      "verifyFailed": "Failed to verify password"
+    },
+    "titleSet": "Set Master Password",
+    "titleEnter": "Enter Master Password",
+    "description": "This local control password protects Family Safe Mode changes. The app stores a salted verifier, not the password itself.",
+    "labels": {
+      "password": "Master password",
+      "confirm": "Confirm master password"
+    }
+  },
+  "profiles": {
+    "removePassword": {
+      "title": "Remove profile password?",
+      "detail": "\"{{name}}\" will no longer require unlock before switching.",
+      "action": "Remove"
+    },
+    "errors": {
+      "removeFailed": "Failed to remove profile password",
+      "tooShort": "Password too short (min {{min}} characters)",
+      "mismatch": "Passwords do not match",
+      "saveFailed": "Failed to save profile password",
+      "incorrect": "Incorrect password",
+      "deleteFailed": "Profile deletion failed."
+    },
+    "title": "Manage Profiles",
+    "description": "Each profile maintains isolated settings, API keys, and configurations. Switching profiles will clear active application state and reload.",
+    "badge": {
+      "active": "ACTIVE",
+      "locked": "LOCKED"
+    },
+    "aria": {
+      "removePassword": "Remove password for {{name}}",
+      "setPassword": "Set password for {{name}}",
+      "switchTo": "Switch to {{name}}",
+      "delete": "Delete {{name}}"
+    },
+    "actions": {
+      "removePassword": "Remove Password",
+      "setPassword": "Set Password",
+      "switchTo": "Switch To",
+      "createProfile": "Create Profile"
+    },
+    "deleteProfile": {
+      "title": "Delete profile?",
+      "detail": "\"{{name}}\" will be removed. Its Conversation Vault, renderer records, profile-scoped local settings, API keys, and password verifier will be purged. Shared global caches are retained.",
+      "action": "Delete"
+    },
+    "newProfilePlaceholder": "New Profile Name",
+    "dialog": {
+      "titleSet": "Set Password for {{name}}",
+      "titleUnlock": "Unlock {{name}}",
+      "description": "This password protects switching into this local profile.",
+      "labelSet": "Profile password",
+      "labelUnlock": "Unlock password",
+      "labelConfirm": "Confirm profile password",
+      "savePassword": "Save Password"
+    }
+  },
+  "providers": {
+    "errors": {
+      "loadFailed": "Failed to load provider settings.",
+      "saveFailed": "Failed to save provider settings.",
+      "enableWithoutKey": "Cannot enable provider without an API key."
+    },
+    "title": "Fallback Providers",
+    "description": "Configure API keys for fallback providers. These will only be used if explicitly enabled and when Venice models are unavailable or you request a specific fallback model.",
+    "deferredNotice": "Deferred in this release (no key entry, routing, or traffic): {{deferred}}. Provider keys are replaced or removed manually; scheduled key rotation is not implemented.",
+    "autoFallback": {
+      "title": "Automatic Fallback Router",
+      "description": "Automatically route requests to fallback providers if Venice is unavailable or returns an error.",
+      "enableAria": "Enable Automatic Fallback",
+      "orderingLabel": "Fallback Ordering (comma-separated provider IDs)",
+      "orderingPlaceholder": "together, groq, anthropic",
+      "orderingNotice": "Providers will be tried in this exact order. Ensure you have enabled them below. Available: {{available}}"
+    },
+    "badge": {
+      "deferred": "Deferred"
+    },
+    "aria": {
+      "enable": "Enable {{label}}"
+    },
+    "status": {
+      "keyConfigured": "API Key Configured"
+    },
+    "actions": {
+      "removeKey": "Remove Key"
+    },
+    "inputs": {
+      "keyPlaceholder": "Enter API Key"
+    }
+  },
+  "errors": {
+    "persistSafety": "Failed to persist safety setting."
+  },
+  "updates": {
+    "available": "Update available: v{{version}}",
+    "upToDate": "App is up to date.",
+    "downloading": "Downloading update: {{percent}}%",
+    "downloaded": "Update downloaded and ready to install.",
+    "error": "Update error: {{error}}",
+    "checking": "Checking for updates...",
+    "devBuild": "Development build — update checks run only in packaged production builds.",
+    "checkFailed": "Update check failed: {{error}}",
+    "checkCompleted": "Update check completed.",
+    "installFailed": "Install failed: {{error}}"
+  },
+  "jinaKeys": {
+    "savedElectron": "Jina API key saved securely.",
+    "savedWeb": "Jina API key saved for this browser session.",
+    "saveFailed": "Failed to save Jina API key.",
+    "deleteConfirm": {
+      "title": "Delete Jina API key?",
+      "electron": "This will remove your Jina API key from OS secure storage.",
+      "web": "This will remove the in-memory Jina API key for this browser session."
+    },
+    "deleted": "Jina API key deleted.",
+    "deleteFailed": "Failed to delete Jina API key.",
+    "testSuccess": "Jina connection successful{{status}}.",
+    "testFailed": "Jina connection failed: {{message}}",
+    "testError": "Jina test connection failed."
+  },
+  "header": {
+    "title": "Config",
+    "description": {
+      "electron": "Manage API endpoints, defaults, and appearance styles.",
+      "web": "Configure default prompts and styling templates."
+    }
+  },
+  "tabs": {
+    "languageRegion": "Language & Region",
+    "profiles": "Profiles",
+    "apiKeys": "Venice API Key",
+    "providers": "Fallback Providers",
+    "defaults": "Defaults & Behavior",
+    "safety": "Safety",
+    "vault": "Conversation Vault",
+    "appearance": "Appearance",
+    "data": "Data & Storage",
+    "backupSync": "Backup & Sync",
+    "about": "About & Legal",
+    "updates": "Updates",
+    "config": "Local Config",
+    "audioSpeech": "Audio & Speech"
+  },
+  "updatesPanel": {
+    "title": "Application Updates",
+    "description": "Check for desktop application updates securely via GitHub Releases.",
+    "status": "Status:",
+    "checking": "Checking...",
+    "checkForUpdates": "Check for updates",
+    "restartAndInstall": "Restart and Install"
   }
 }

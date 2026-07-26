@@ -1,14 +1,14 @@
 {
-  "title": "Research",
-  "searchAndScrape": "Search & Scrape",
-  "provider": "Provider",
-  "veniceProvider": "Venice Search",
-  "jinaProvider": "Jina Search",
-  "autoProvider": "Auto Provider",
-  "socialDiscovery": "Social Discovery",
-  "queryPlaceholder": "Enter research topic or URL to scrape...",
-  "results": "Search Results",
-  "sources": "Sources",
-  "timeline": "Timeline",
-  "noResults": "No research results found for query."
+  "title": "リサーチ",
+  "searchAndScrape": "__MISSING__:searchAndScrape",
+  "provider": "__MISSING__:provider",
+  "veniceProvider": "__MISSING__:veniceProvider",
+  "jinaProvider": "__MISSING__:jinaProvider",
+  "autoProvider": "__MISSING__:autoProvider",
+  "socialDiscovery": "__MISSING__:socialDiscovery",
+  "queryPlaceholder": "入力：research topic or URL to scrape...",
+  "results": "__MISSING__:results",
+  "sources": "__MISSING__:sources",
+  "timeline": "__MISSING__:timeline",
+  "noResults": "__MISSING__:noResults"
 }

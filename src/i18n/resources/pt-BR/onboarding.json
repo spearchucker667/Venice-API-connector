@@ -1,31 +1,31 @@
 {
-  "welcomeTitle": "Welcome to Venice Forge",
-  "welcomeSubtitle": "The private local workbench.",
-  "welcomeDescription": "A local desktop workbench that stores app data on this device and sends requests to the remote providers you configure.",
-  "privacyNote": "Your data remains local. API keys are stored in secure OS storage.",
-  "getStarted": "Get Started",
-  "createProfile": "Create Profile",
-  "continue": "Continue",
-  "languageSelectorLabel": "Application Language",
-  "systemLanguageOption": "System language ({{language}})",
-  "selectLanguage": "Select language",
-  "stepIndicator": "Onboarding step {{current}} of {{total}}",
+  "welcomeTitle": "__MISSING__:welcomeTitle",
+  "welcomeSubtitle": "__MISSING__:welcomeSubtitle",
+  "welcomeDescription": "__MISSING__:welcomeDescription",
+  "privacyNote": "__MISSING__:privacyNote",
+  "getStarted": "__MISSING__:getStarted",
+  "createProfile": "__MISSING__:createProfile",
+  "continue": "__MISSING__:continue",
+  "languageSelectorLabel": "__MISSING__:languageSelectorLabel",
+  "systemLanguageOption": "__MISSING__:systemLanguageOption",
+  "selectLanguage": "__MISSING__:selectLanguage",
+  "stepIndicator": "__MISSING__:stepIndicator",
   "steps": {
     "welcome": {
-      "title": "Welcome to Venice Forge",
-      "description": "A local desktop workbench that stores app data on this device and sends requests to the remote providers you configure."
+      "title": "__MISSING__:steps.welcome.title",
+      "description": "__MISSING__:steps.welcome.description"
     },
     "profiles": {
-      "title": "Profiles",
-      "description": "Create profiles for separate renderer settings and libraries. Some desktop vault files and shared caches remain machine-level."
+      "title": "__MISSING__:steps.profiles.title",
+      "description": "__MISSING__:steps.profiles.description"
     },
     "security": {
-      "title": "Secure by Default",
-      "description": "Passwords and secrets are encrypted via OS native keychain (macOS) or Credential Manager (Windows). Never stored in plaintext."
+      "title": "__MISSING__:steps.security.title",
+      "description": "__MISSING__:steps.security.description"
     },
     "safety": {
-      "title": "Family Safe Mode",
-      "description": "A master password is required before Family Safe Mode can be turned on or off. Family Safe Mode also forces provider safe_mode where supported."
+      "title": "__MISSING__:steps.safety.title",
+      "description": "__MISSING__:steps.safety.description"
     }
   }
 }

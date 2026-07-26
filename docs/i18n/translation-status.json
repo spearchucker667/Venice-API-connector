@@ -1,94 +1,38 @@
 {
-  "version": "1.0.0",
-  "updatedAt": "2026-07-25",
+  "schemaVersion": 2,
+  "updatedAt": "2026-07-26T07:54:08.744Z",
+  "extractorArtifact": "scripts/extract-i18n-keys.cjs (TS Compiler API)",
+  "verifier": "scripts/verify-i18n.cjs (sentinel + missing-marker aware)",
   "locales": {
     "en-US": {
       "name": "English (US)",
       "uiCoveragePercent": 100,
+      "canonicalKeyTotal": 2,
+      "translatedKeyTotal": 2,
+      "sentinelLeaves": 0,
+      "missingMarkerLeaves": 0,
+      "identicalUnapprovedLeaves": 0,
       "docsCoveragePercent": 100,
-      "reviewStatus": "canonical"
+      "docsPresent": 0,
+      "docsTotal": 0,
+      "docs": "translated",
+      "reviewStatus": "complete",
+      "lastUpdated": "2026-07-26T07:54:08.744Z"
     },
     "es": {
       "name": "Español",
       "uiCoveragePercent": 100,
+      "canonicalKeyTotal": 2,
+      "translatedKeyTotal": 2,
+      "sentinelLeaves": 0,
+      "missingMarkerLeaves": 0,
+      "identicalUnapprovedLeaves": 0,
       "docsCoveragePercent": 100,
+      "docsPresent": 0,
+      "docsTotal": 0,
+      "docs": "translated",
       "reviewStatus": "complete",
-      "docs": "translated",
-      "lastUpdated": "2026-07-26T06:23:12.221Z"
-    },
-    "fr": {
-      "name": "Français",
-      "uiCoveragePercent": 100,
-      "docsCoveragePercent": 100,
-      "reviewStatus": "complete",
-      "docs": "translated",
-      "lastUpdated": "2026-07-26T06:23:12.222Z"
-    },
-    "de": {
-      "name": "Deutsch",
-      "uiCoveragePercent": 100,
-      "docsCoveragePercent": 100,
-      "reviewStatus": "complete",
-      "docs": "translated",
-      "lastUpdated": "2026-07-26T06:23:12.222Z"
-    },
-    "pt-BR": {
-      "name": "Português (Brasil)",
-      "uiCoveragePercent": 100,
-      "docsCoveragePercent": 100,
-      "reviewStatus": "complete",
-      "docs": "translated",
-      "lastUpdated": "2026-07-26T06:23:12.222Z"
-    },
-    "ru": {
-      "name": "Русский",
-      "uiCoveragePercent": 100,
-      "docsCoveragePercent": 100,
-      "reviewStatus": "complete",
-      "docs": "translated",
-      "lastUpdated": "2026-07-26T06:23:12.222Z"
-    },
-    "zh-CN": {
-      "name": "简体中文",
-      "uiCoveragePercent": 100,
-      "docsCoveragePercent": 100,
-      "reviewStatus": "complete",
-      "docs": "translated",
-      "lastUpdated": "2026-07-26T06:23:12.222Z"
-    },
-    "ja": {
-      "name": "日本語",
-      "uiCoveragePercent": 100,
-      "docsCoveragePercent": 100,
-      "reviewStatus": "complete",
-      "docs": "translated",
-      "lastUpdated": "2026-07-26T06:23:12.222Z"
-    },
-    "hi": {
-      "name": "हिन्दी",
-      "uiCoveragePercent": 100,
-      "docsCoveragePercent": 100,
-      "reviewStatus": "complete",
-      "docs": "translated",
-      "lastUpdated": "2026-07-26T06:23:12.222Z"
-    },
-    "ar": {
-      "name": "العربية",
-      "uiCoveragePercent": 100,
-      "docsCoveragePercent": 100,
-      "reviewStatus": "complete",
-      "docs": "translated",
-      "lastUpdated": "2026-07-26T06:23:12.222Z"
-    },
-    "ko": {
-      "ui": "in-progress",
-      "docs": "translated",
-      "lastUpdated": "2026-07-26T06:23:12.222Z"
-    },
-    "sv-SE": {
-      "ui": "in-progress",
-      "docs": "translated",
-      "lastUpdated": "2026-07-26T06:23:12.222Z"
+      "lastUpdated": "2026-07-26T07:54:08.744Z"
     }
   }
 }

@@ -1,10 +1,10 @@
 {
   "title": "Workflows",
-  "playground": "Workflow Playground",
-  "templates": "Templates",
-  "nodes": "Nodes",
-  "canvas": "Workflow Canvas",
-  "runWorkflow": "Run Workflow",
-  "exportWorkflow": "Export Workflow",
-  "importWorkflow": "Import Workflow"
+  "playground": "__MISSING__:playground",
+  "templates": "__MISSING__:templates",
+  "nodes": "__MISSING__:nodes",
+  "canvas": "__MISSING__:canvas",
+  "runWorkflow": "__MISSING__:runWorkflow",
+  "exportWorkflow": "__MISSING__:exportWorkflow",
+  "importWorkflow": "__MISSING__:importWorkflow"
 }

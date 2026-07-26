@@ -80,28 +80,94 @@
     "switchTab": "Switch tab"
   },
   "tabs": {
-    "chat": { "label": "Chat", "subtitle": "Conversational AI" },
-    "character-chats": { "label": "Character Chats", "subtitle": "Conversations with hosted and local characters" },
-    "history": { "label": "History", "subtitle": "Browse past conversations" },
-    "image": { "label": "Image Studio", "subtitle": "Generate images from text" },
-    "media": { "label": "Media Studio", "subtitle": "Browse, tag, edit, and export your generated media" },
-    "image-inspector": { "label": "Image Inspector", "subtitle": "Analyze and reconstruct images" },
-    "prompts": { "label": "Prompts", "subtitle": "Browse and manage your prompt library" },
-    "scenes": { "label": "Scene Composer", "subtitle": "Compose complex image generation scenes" },
-    "audio": { "label": "Audio Studio", "subtitle": "Text-to-speech and transcription" },
-    "music": { "label": "Music Studio", "subtitle": "Generate music and sound" },
-    "video": { "label": "Video Studio", "subtitle": "Generate video clips" },
-    "embeddings": { "label": "Embeddings", "subtitle": "Vector representations of text" },
-    "search": { "label": "Research", "subtitle": "Deep research and web scraping" },
-    "characters": { "label": "Characters", "subtitle": "Configure roleplay characters" },
-    "character-creator": { "label": "Character Creator", "subtitle": "Turn a rough idea into a complete, editable character card" },
-    "rp-studio": { "label": "RP Studio", "subtitle": "Roleplay character and scenario workshop" },
-    "workflows": { "label": "Workflow Templates", "subtitle": "Build reusable automation chains" },
-    "documents": { "label": "Documents", "subtitle": "Managed documents and scoped workspace tools" },
-    "privacy": { "label": "Privacy", "subtitle": "Manage storage and privacy settings" },
-    "playground": { "label": "Playground", "subtitle": "Build workflows by chatting" },
-    "settings": { "label": "Config", "subtitle": "App configuration" },
-    "status": { "label": "Status", "subtitle": "App status and diagnostics" }
+    "chat": {
+      "label": "Chat",
+      "subtitle": "Conversational AI"
+    },
+    "character-chats": {
+      "label": "Character Chats",
+      "subtitle": "Conversations with hosted and local characters"
+    },
+    "history": {
+      "label": "History",
+      "subtitle": "Browse past conversations"
+    },
+    "image": {
+      "label": "Image Studio",
+      "subtitle": "Generate images from text"
+    },
+    "media": {
+      "label": "Media Studio",
+      "subtitle": "Browse, tag, edit, and export your generated media"
+    },
+    "image-inspector": {
+      "label": "Image Inspector",
+      "subtitle": "Analyze and reconstruct images"
+    },
+    "prompts": {
+      "label": "Prompts",
+      "subtitle": "Browse and manage your prompt library"
+    },
+    "scenes": {
+      "label": "Scene Composer",
+      "subtitle": "Compose complex image generation scenes"
+    },
+    "audio": {
+      "label": "Audio Studio",
+      "subtitle": "Text-to-speech and transcription"
+    },
+    "music": {
+      "label": "Music Studio",
+      "subtitle": "Generate music and sound"
+    },
+    "video": {
+      "label": "Video Studio",
+      "subtitle": "Generate video clips"
+    },
+    "embeddings": {
+      "label": "Embeddings",
+      "subtitle": "Vector representations of text"
+    },
+    "search": {
+      "label": "Research",
+      "subtitle": "Deep research and web scraping"
+    },
+    "characters": {
+      "label": "Characters",
+      "subtitle": "Configure roleplay characters"
+    },
+    "character-creator": {
+      "label": "Character Creator",
+      "subtitle": "Turn a rough idea into a complete, editable character card"
+    },
+    "rp-studio": {
+      "label": "RP Studio",
+      "subtitle": "Roleplay character and scenario workshop"
+    },
+    "workflows": {
+      "label": "Workflow Templates",
+      "subtitle": "Build reusable automation chains"
+    },
+    "documents": {
+      "label": "Documents",
+      "subtitle": "Managed documents and scoped workspace tools"
+    },
+    "privacy": {
+      "label": "Privacy",
+      "subtitle": "Manage storage and privacy settings"
+    },
+    "playground": {
+      "label": "Playground",
+      "subtitle": "Build workflows by chatting"
+    },
+    "settings": {
+      "label": "Config",
+      "subtitle": "App configuration"
+    },
+    "status": {
+      "label": "Status",
+      "subtitle": "App status and diagnostics"
+    }
   },
   "groups": {
     "conversation": "Conversation",

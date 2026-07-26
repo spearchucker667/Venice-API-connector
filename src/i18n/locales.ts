@@ -98,6 +98,44 @@ export const SUPPORTED_LOCALE_CODES: SupportedLocale[] = Object.keys(
 ) as SupportedLocale[];
 
 /**
+ * Normalizes alias and legacy locale codes to canonical BCP 47 supported locale codes.
+ */
+export function normalizeLocaleCode(input?: string): SupportedLocale | undefined {
+  if (!input) return undefined;
+  const trimmed = input.trim();
+  if (trimmed in SUPPORTED_LOCALES) return trimmed as SupportedLocale;
+
+  const lower = trimmed.toLowerCase();
+  const aliasMap: Record<string, SupportedLocale> = {
+    en: 'en-US',
+    'en-us': 'en-US',
+    zh: 'zh-CN',
+    'zh-cn': 'zh-CN',
+    'zh-hans': 'zh-CN',
+    sv: 'sv-SE',
+    se: 'sv-SE',
+    'sv-se': 'sv-SE',
+    pt: 'pt-BR',
+    'pt-br': 'pt-BR',
+    es: 'es',
+    fr: 'fr',
+    de: 'de',
+    ru: 'ru',
+    ja: 'ja',
+    hi: 'hi',
+    ar: 'ar',
+    ko: 'ko',
+  };
+
+  if (aliasMap[lower]) return aliasMap[lower];
+
+  const prefix = lower.split('-')[0];
+  if (aliasMap[prefix]) return aliasMap[prefix];
+
+  return undefined;
+}
+
+/**
  * Resolves system browser language against supported application locales.
  */
 export function resolveSystemLocale(navLanguages?: readonly string[]): SupportedLocale {
@@ -105,28 +143,8 @@ export function resolveSystemLocale(navLanguages?: readonly string[]): Supported
 
   for (const lang of languages) {
     if (!lang) continue;
-    const normalized = lang.trim();
-
-    // Exact match (e.g. 'en-US', 'pt-BR', 'zh-CN')
-    if (normalized in SUPPORTED_LOCALES) {
-      return normalized as SupportedLocale;
-    }
-
-    // Case-insensitive exact match
-    const lower = normalized.toLowerCase();
-    for (const code of SUPPORTED_LOCALE_CODES) {
-      if (code.toLowerCase() === lower) {
-        return code;
-      }
-    }
-
-    // Language prefix match (e.g. 'es-ES' -> 'es', 'fr-FR' -> 'fr', 'zh-TW' -> 'zh-CN', 'pt-PT' -> 'pt-BR')
-    const prefix = lower.split('-')[0];
-    for (const code of SUPPORTED_LOCALE_CODES) {
-      if (code.toLowerCase().split('-')[0] === prefix) {
-        return code;
-      }
-    }
+    const normalized = normalizeLocaleCode(lang);
+    if (normalized) return normalized;
   }
 
   return DEFAULT_LOCALE;
@@ -136,8 +154,9 @@ export function resolveSystemLocale(navLanguages?: readonly string[]): Supported
  * Resolves the effective SupportedLocale given a user setting (either an explicit locale or 'system').
  */
 export function resolveEffectiveLocale(setting: LocaleSetting, navLanguages?: readonly string[]): SupportedLocale {
-  if (setting !== 'system' && setting in SUPPORTED_LOCALES) {
-    return setting as SupportedLocale;
+  if (setting !== 'system') {
+    const normalized = normalizeLocaleCode(setting);
+    if (normalized) return normalized;
   }
   return resolveSystemLocale(navLanguages);
 }

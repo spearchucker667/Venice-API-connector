@@ -21,7 +21,8 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [user/IMAGE_INSPECTOR.md](user/IMAGE_INSPECTOR.md) — Image-to-prompt analysis, supported inputs, text-based source discovery, privacy, and troubleshooting.
 - [i18n/TRANSLATION_GUIDE.md](i18n/TRANSLATION_GUIDE.md) — Translation guidelines and key conventions.
 - [i18n/GLOSSARY.md](i18n/GLOSSARY.md) — Internationalization terminology glossary.
-- [i18n/translation-status.json](i18n/translation-status.json) — Machine-readable translation coverage and review status metadata.
+- [i18n/translation-status.json](i18n/translation-status.json) — Machine-readable translation coverage and review status metadata (schema v2 — per-locale `sentinelLeaves`, `missingMarkerLeaves`, `identicalUnapprovedLeaves`, `docsCoveragePercent`, and `reviewStatus`).
+- [Development/i18n-tooling.md](DEVELOPMENT/i18n-tooling.md) — `i18n:extract` / `i18n:sync-catalogs` / `i18n:coverage` workflow and the AST-driven extractor / safe-sync / sentinel-aware verifier contract.
 - [audits/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md](audits/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md) — Multilingual AI system prompt and instruction audit.
 - [LEGAL.md](../LEGAL.md) — Root legal notice, copyright statement, and trademark disclaimers.
 - [PRIVACY.md](../PRIVACY.md) — User privacy model summary.
@@ -128,6 +129,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [audits/TODO/Venice_Forge_Findings_2026-07-22.json](audits/TODO/Venice_Forge_Findings_2026-07-22.json) — Machine-readable July 22 snapshot findings plus remediation disposition metadata.
 - [summary_of_work.md](summary_of_work.md) — Active session ledger (recent sessions only).
 - July 17 03:10 deep-scan audit evidence was processed; remediated live status remains in `ROADMAP.md` and `summary_of_work.md`.
+- [audits/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md](audits/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md) — `VF-I18N-REMEDIATION-20260725-01` foundation-phase final report (discrepancy freeze, AST extractor, safe sync tool, sentinel-aware verifier, and obsolete-script lockdown; remaining risks and deferred work itemised).
 
 ---
 
