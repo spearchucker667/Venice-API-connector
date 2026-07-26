@@ -139,3 +139,6 @@ __MACOSX/
 .AppleDouble/
 ._*
 _REPO_EXTRACT_METADATA/
+artifacts/i18n/catalog-sync-report.json
+artifacts/i18n/source-key-inventory.json
+artifacts/i18n/source-key-inventory.md
