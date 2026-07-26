@@ -1,5 +1,7 @@
 # Venice Forge 2026-07-20 Remediation Report
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 Plan: `gamora-black-bolt-power-girl.md` (2026-07-20). This report tracks verification and remediation of findings VF-20260720-001 through VF-20260720-013.
 
 ## Repository State

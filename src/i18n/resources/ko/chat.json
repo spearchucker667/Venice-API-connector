@@ -16,5 +16,57 @@
   "folders": "폴더",
   "unfiled": "미분류",
   "attachFile": "파일 첨부",
-  "managedDocument": "관리 문서"
+  "managedDocument": "관리 문서",
+  "composer": {
+    "visionUnsupportedTitle": "AI는 시각 능력이 없습니다",
+    "visionUnsupportedDetail": "'{{model}}'은 이미지 첨부 파일을 읽을 수 없습니다. 비전 지원 모델을 선택하거나 먼저 이미지/PDF를 텍스트로 변환하세요.",
+    "attachTitle": "파일 첨부(또는 드래그/붙여넣기)",
+    "attachmentLimitTitle": "첨부파일 한도에 도달했습니다.",
+    "attachmentLimitDetail": "메시지당 최대 {{max}}개의 파일을 첨부할 수 있습니다.",
+    "tooManyAttachmentsTitle": "첨부파일이 너무 많습니다.",
+    "tooManyAttachmentsDetail": "{{requested}} 파일 중 {{added}}만 추가되었습니다. 메시지당 파일 수는 {{max}}개로 제한됩니다.",
+    "attachmentNote": "첨부노트",
+    "attachmentFailed": "첨부 실패",
+    "attachmentAlt": "첨부파일 {{number}}",
+    "removeAttachment": "첨부파일 삭제 {{name}}",
+    "disabledPlaceholder": "시작하려면 API 키를 연결하세요…",
+    "dropPlaceholder": "첨부할 파일 드롭",
+    "placeholder": "무엇이든 물어보세요 — 보내려면 Enter를 누르고 줄 바꿈을 하려면 Shift+Enter를 누르세요. 텍스트 없이 보내려면 파일을 첨부하세요.",
+    "messageInput": "메시지 입력",
+    "attachFile": "파일첨부",
+    "stopGenerating": "생성 중지",
+    "sendMessage": "메시지 보내기"
+  },
+  "memory": {
+    "disabledLabel": "메모리 꺼짐",
+    "disabledTitle": "설정에서 메모리 검색이 비활성화되어 있습니다.",
+    "loadingLabel": "메모리…",
+    "loadingTitle": "이 메시지와 관련된 메모리를 검색하는 중입니다.",
+    "activeLabel": "메모리 활성",
+    "activeTitle": "이 메시지에는 관련 메모리 컨텍스트가 포함됩니다.",
+    "failedLabel": "메모리 실패",
+    "failedTitle": "메모리 검색에 실패했습니다. 메시지가 메모리 컨텍스트 없이 전송되었습니다."
+  },
+  "controls": {
+    "autoRead": "자동 읽기",
+    "citations": "인용",
+    "scrape": "긁다",
+    "xSearch": "X 검색",
+    "searchInStream": "스트림에서 검색",
+    "documentTools": "문서 도구",
+    "newChatShortcut": "새 채팅(⌘N)",
+    "systemPromptPlaceholder": "선택 과목. 앱 작성 시스템 메시지를 추가하지 않으려면 비워 두세요.",
+    "temperature": "온도",
+    "topP": "탑P",
+    "maxTokens": "최대 토큰",
+    "veniceDefaultPrompt": "베니스 기본 프롬프트",
+    "disableThinking": "사고 비활성화",
+    "stripThinking": "스트립 사고",
+    "searchMode": "검색: {{mode}}",
+    "searchModes": {
+      "off": "끄다",
+      "on": "~에",
+      "auto": "자동"
+    }
+  }
 }

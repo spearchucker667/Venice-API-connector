@@ -1,58 +1,186 @@
-import { useId, useState, useRef, useEffect, useMemo } from 'react'
-import { useSettingsStore } from '../../stores/settings-store'
-import { useModels } from '../../hooks/use-models'
-import { selectHasVeniceKey, useAuthStore } from '../../stores/auth-store'
-import { useMusic } from '../../hooks/use-music'
-import { GenerationLoadingIndicator } from '../generation/GenerationLoadingIndicator'
-import { Label, TextArea, PrimaryButton, ErrorText, ExamplePrompts } from '../ui/shared'
-import { GenerationView } from '../ui/generation-view'
-import { cn, generateId } from '../../lib/utils'
-import { toast } from '../../stores/toast-store'
-import { useMediaStore } from '../../stores/media-store'
-import type { MusicQueueRequest } from '../../types/venice'
-import { getPromptStartersForCategory } from '../../services/promptStarterService'
-import { getAudioExtension } from '../../utils/image'
-import { ModelSelect } from '../ModelSelect'
-import type { ModelInfo } from '../../types/venice'
-import { Trans } from 'react-i18next';
+import { useId, useState, useRef, useEffect, useMemo } from "react";
+import { useSettingsStore } from "../../stores/settings-store";
+import { useModels } from "../../hooks/use-models";
+import { selectHasVeniceKey, useAuthStore } from "../../stores/auth-store";
+import { useMusic } from "../../hooks/use-music";
+import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
+import {
+  Label,
+  TextArea,
+  PrimaryButton,
+  ErrorText,
+  ExamplePrompts,
+} from "../ui/shared";
+import { GenerationView } from "../ui/generation-view";
+import { cn, generateId } from "../../lib/utils";
+import { toast } from "../../stores/toast-store";
+import { useMediaStore } from "../../stores/media-store";
+import type { MusicQueueRequest } from "../../types/venice";
+import { getPromptStartersForCategory } from "../../services/promptStarterService";
+import { getAudioExtension } from "../../utils/image";
+import { ModelSelect } from "../ModelSelect";
+import type { ModelInfo } from "../../types/venice";
+import { Trans, useTranslation } from "react-i18next";
 
 // Model capabilities
 interface MusicModelConfig {
-  lyrics: boolean
-  lyricsRequired: boolean
-  instrumental: boolean
-  voice: boolean
-  duration: boolean
-  durationOptions: number[]
-  minDuration: number
-  maxDuration: number
-  defaultDuration: number
+  lyrics: boolean;
+  lyricsRequired: boolean;
+  instrumental: boolean;
+  voice: boolean;
+  duration: boolean;
+  durationOptions: number[];
+  minDuration: number;
+  maxDuration: number;
+  defaultDuration: number;
 }
 
 const MODEL_CONFIGS: Record<string, MusicModelConfig> = {
-  'ace-step-1.5': { lyrics: true, lyricsRequired: false, instrumental: false, voice: false, duration: true, durationOptions: [60, 90, 120, 150, 180, 210], minDuration: 60, maxDuration: 210, defaultDuration: 60 },
-  'elevenlabs-music': { lyrics: true, lyricsRequired: false, instrumental: true, voice: true, duration: true, durationOptions: [], minDuration: 3, maxDuration: 600, defaultDuration: 60 },
-  'minimax-music-2.0': { lyrics: true, lyricsRequired: true, instrumental: false, voice: false, duration: false, durationOptions: [], minDuration: 0, maxDuration: 0, defaultDuration: 0 },
-  'stable-audio-2.5': { lyrics: false, lyricsRequired: false, instrumental: false, voice: false, duration: true, durationOptions: [], minDuration: 1, maxDuration: 180, defaultDuration: 30 },
-  'elevenlabs-sound-effects': { lyrics: false, lyricsRequired: false, instrumental: false, voice: false, duration: true, durationOptions: [], minDuration: 1, maxDuration: 30, defaultDuration: 5 },
-  'mmaudio-v2': { lyrics: false, lyricsRequired: false, instrumental: false, voice: false, duration: true, durationOptions: [], minDuration: 1, maxDuration: 30, defaultDuration: 5 },
-  'ace-step-15': { lyrics: true, lyricsRequired: false, instrumental: false, voice: false, duration: true, durationOptions: [60, 90, 120, 150, 180, 210], minDuration: 60, maxDuration: 210, defaultDuration: 60 },
-  'minimax-music-v2': { lyrics: true, lyricsRequired: true, instrumental: false, voice: false, duration: false, durationOptions: [], minDuration: 0, maxDuration: 0, defaultDuration: 0 },
-  'stable-audio-25': { lyrics: false, lyricsRequired: false, instrumental: false, voice: false, duration: true, durationOptions: [], minDuration: 1, maxDuration: 180, defaultDuration: 30 },
-  'stable-audio': { lyrics: false, lyricsRequired: false, instrumental: false, voice: false, duration: true, durationOptions: [], minDuration: 1, maxDuration: 180, defaultDuration: 30 },
-}
+  "ace-step-1.5": {
+    lyrics: true,
+    lyricsRequired: false,
+    instrumental: false,
+    voice: false,
+    duration: true,
+    durationOptions: [60, 90, 120, 150, 180, 210],
+    minDuration: 60,
+    maxDuration: 210,
+    defaultDuration: 60,
+  },
+  "elevenlabs-music": {
+    lyrics: true,
+    lyricsRequired: false,
+    instrumental: true,
+    voice: true,
+    duration: true,
+    durationOptions: [],
+    minDuration: 3,
+    maxDuration: 600,
+    defaultDuration: 60,
+  },
+  "minimax-music-2.0": {
+    lyrics: true,
+    lyricsRequired: true,
+    instrumental: false,
+    voice: false,
+    duration: false,
+    durationOptions: [],
+    minDuration: 0,
+    maxDuration: 0,
+    defaultDuration: 0,
+  },
+  "stable-audio-2.5": {
+    lyrics: false,
+    lyricsRequired: false,
+    instrumental: false,
+    voice: false,
+    duration: true,
+    durationOptions: [],
+    minDuration: 1,
+    maxDuration: 180,
+    defaultDuration: 30,
+  },
+  "elevenlabs-sound-effects": {
+    lyrics: false,
+    lyricsRequired: false,
+    instrumental: false,
+    voice: false,
+    duration: true,
+    durationOptions: [],
+    minDuration: 1,
+    maxDuration: 30,
+    defaultDuration: 5,
+  },
+  "mmaudio-v2": {
+    lyrics: false,
+    lyricsRequired: false,
+    instrumental: false,
+    voice: false,
+    duration: true,
+    durationOptions: [],
+    minDuration: 1,
+    maxDuration: 30,
+    defaultDuration: 5,
+  },
+  "ace-step-15": {
+    lyrics: true,
+    lyricsRequired: false,
+    instrumental: false,
+    voice: false,
+    duration: true,
+    durationOptions: [60, 90, 120, 150, 180, 210],
+    minDuration: 60,
+    maxDuration: 210,
+    defaultDuration: 60,
+  },
+  "minimax-music-v2": {
+    lyrics: true,
+    lyricsRequired: true,
+    instrumental: false,
+    voice: false,
+    duration: false,
+    durationOptions: [],
+    minDuration: 0,
+    maxDuration: 0,
+    defaultDuration: 0,
+  },
+  "stable-audio-25": {
+    lyrics: false,
+    lyricsRequired: false,
+    instrumental: false,
+    voice: false,
+    duration: true,
+    durationOptions: [],
+    minDuration: 1,
+    maxDuration: 180,
+    defaultDuration: 30,
+  },
+  "stable-audio": {
+    lyrics: false,
+    lyricsRequired: false,
+    instrumental: false,
+    voice: false,
+    duration: true,
+    durationOptions: [],
+    minDuration: 1,
+    maxDuration: 180,
+    defaultDuration: 30,
+  },
+};
 
-export function getMusicModelConfig(modelId: string, modelInfo?: ModelInfo): MusicModelConfig {
-  const key = Object.keys(MODEL_CONFIGS).find((k) => modelId.toLowerCase().includes(k))
-  const fallback = key ? MODEL_CONFIGS[key] : { lyrics: false, lyricsRequired: false, instrumental: false, voice: false, duration: false, durationOptions: [], minDuration: 0, maxDuration: 0, defaultDuration: 0 }
-  const spec = modelInfo?.model_spec
+export function getMusicModelConfig(
+  modelId: string,
+  modelInfo?: ModelInfo,
+): MusicModelConfig {
+  const key = Object.keys(MODEL_CONFIGS).find((k) =>
+    modelId.toLowerCase().includes(k),
+  );
+  const fallback = key
+    ? MODEL_CONFIGS[key]
+    : {
+        lyrics: false,
+        lyricsRequired: false,
+        instrumental: false,
+        voice: false,
+        duration: false,
+        durationOptions: [],
+        minDuration: 0,
+        maxDuration: 0,
+        defaultDuration: 0,
+      };
+  const spec = modelInfo?.model_spec;
   const options = Array.isArray(spec?.duration_options)
-    ? spec.duration_options.filter((value) => Number.isFinite(value) && value > 0).sort((a, b) => a - b)
-    : fallback.durationOptions
-  const minDuration = spec?.min_duration ?? options[0] ?? fallback.minDuration
-  const maxDuration = spec?.max_duration ?? options.at(-1) ?? fallback.maxDuration
-  const defaultDuration = spec?.default_duration ?? options[0] ?? fallback.defaultDuration
-  const duration = options.length > 0 || (minDuration > 0 && maxDuration >= minDuration)
+    ? spec.duration_options
+        .filter((value) => Number.isFinite(value) && value > 0)
+        .sort((a, b) => a - b)
+    : fallback.durationOptions;
+  const minDuration = spec?.min_duration ?? options[0] ?? fallback.minDuration;
+  const maxDuration =
+    spec?.max_duration ?? options.at(-1) ?? fallback.maxDuration;
+  const defaultDuration =
+    spec?.default_duration ?? options[0] ?? fallback.defaultDuration;
+  const duration =
+    options.length > 0 || (minDuration > 0 && maxDuration >= minDuration);
   return {
     lyrics: spec?.supports_lyrics ?? fallback.lyrics,
     lyricsRequired: spec?.lyrics_required ?? fallback.lyricsRequired,
@@ -62,255 +190,497 @@ export function getMusicModelConfig(modelId: string, modelInfo?: ModelInfo): Mus
     durationOptions: options,
     minDuration,
     maxDuration,
-    defaultDuration: duration ? Math.min(maxDuration, Math.max(minDuration, defaultDuration || minDuration)) : 0,
-  }
+    defaultDuration: duration
+      ? Math.min(
+          maxDuration,
+          Math.max(minDuration, defaultDuration || minDuration),
+        )
+      : 0,
+  };
 }
 
 export function MusicView() {
-  const promptId = useId()
-  const lyricsId = useId()
-  const hasVeniceKey = useAuthStore(selectHasVeniceKey)
-  const selectedModel = useSettingsStore((s) => s.selectedModels.music)
-  const setSelectedModel = useSettingsStore((s) => s.setSelectedModel)
-  const { data: models } = useModels('music')
-  const model = selectedModel || models?.[0]?.id || ''
-  const modelInfo = models?.find((item) => item.id === model)
-  const config = useMemo(() => getMusicModelConfig(model, modelInfo), [model, modelInfo])
+  const { t: tRuntime } = useTranslation("common");
+  const promptId = useId();
+  const lyricsId = useId();
+  const hasVeniceKey = useAuthStore(selectHasVeniceKey);
+  const selectedModel = useSettingsStore((s) => s.selectedModels.music);
+  const setSelectedModel = useSettingsStore((s) => s.setSelectedModel);
+  const { data: models } = useModels("music");
+  const model = selectedModel || models?.[0]?.id || "";
+  const modelInfo = models?.find((item) => item.id === model);
+  const config = useMemo(
+    () => getMusicModelConfig(model, modelInfo),
+    [model, modelInfo],
+  );
 
-  const [prompt, setPrompt] = useState('')
-  const [starters, setStarters] = useState<string[]>(() => getPromptStartersForCategory('music', 4))
-  const [lyrics, setLyrics] = useState('')
-  const [duration, setDuration] = useState(30)
-  const [instrumental, setInstrumental] = useState(false)
-  const [playbackError, setPlaybackError] = useState<string | null>(null)
+  const [prompt, setPrompt] = useState("");
+  const [starters, setStarters] = useState(() =>
+    getPromptStartersForCategory("music", 4),
+  );
+  const [lyrics, setLyrics] = useState("");
+  const [duration, setDuration] = useState(30);
+  const [instrumental, setInstrumental] = useState(false);
+  const [playbackError, setPlaybackError] = useState<string | null>(null);
 
-  const { queue, isQueueing, status, audioUrl, error, reset, cancel, elapsedMs, queueId, resultMediaId, mimeType, lastRequest } = useMusic()
-  const isProcessing = status === 'queued' || status === 'processing'
-  const savedQueueIdsRef = useRef<Set<string>>(new Set())
-  const queueAlreadySaved = useMediaStore((state) => Boolean(
-    resultMediaId || (queueId && state.items.some((media) => media.queueId === queueId)),
-  ))
+  const {
+    queue,
+    isQueueing,
+    status,
+    audioUrl,
+    error,
+    reset,
+    cancel,
+    elapsedMs,
+    queueId,
+    resultMediaId,
+    mimeType,
+    lastRequest,
+  } = useMusic();
+  const isProcessing = status === "queued" || status === "processing";
+  const savedQueueIdsRef = useRef<Set<string>>(new Set());
+  const queueAlreadySaved = useMediaStore((state) =>
+    Boolean(
+      resultMediaId ||
+      (queueId && state.items.some((media) => media.queueId === queueId)),
+    ),
+  );
 
   useEffect(() => {
-    if (!audioUrl) setPlaybackError(null)
-  }, [audioUrl])
+    if (!audioUrl) setPlaybackError(null);
+  }, [audioUrl]);
 
   useEffect(() => {
-    if (config.duration) setDuration(config.defaultDuration)
-  }, [model, config.defaultDuration, config.duration])
+    if (config.duration) setDuration(config.defaultDuration);
+  }, [model, config.defaultDuration, config.duration]);
 
   const handleGenerate = () => {
-    if (!prompt.trim()) return
-    setPlaybackError(null)
+    if (!prompt.trim()) return;
+    setPlaybackError(null);
     const req: MusicQueueRequest = {
       model,
       prompt: prompt.trim(),
-    }
-    if (config.lyrics && lyrics.trim()) req.lyrics_prompt = lyrics.trim()
-    if (config.duration) req.duration_seconds = duration
-    if (config.instrumental && instrumental) req.force_instrumental = true
-    queue(req)
-  }
+    };
+    if (config.lyrics && lyrics.trim()) req.lyrics_prompt = lyrics.trim();
+    if (config.duration) req.duration_seconds = duration;
+    if (config.instrumental && instrumental) req.force_instrumental = true;
+    queue(req);
+  };
 
   const controls = (
     <>
       <div>
-        <Label><Trans i18nKey="common:surface.componentsMusicMusicView.text.model" /></Label>
+        <Label>
+          <Trans i18nKey="common:surface.componentsMusicMusicView.text.model" />
+        </Label>
         <ModelSelect
           value={model}
-          onChange={(value) => setSelectedModel('music', value)}
+          onChange={(value) => setSelectedModel("music", value)}
           models={models ?? []}
           ariaLabel="Music model"
           getLabel={(item) => item.model_spec?.name || item.name || item.id}
         />
         {config.duration && (
-          <p className="mt-1 text-[12px] text-text-muted" data-testid="music-duration-limits">
-            <Trans i18nKey="common:surface.componentsMusicMusicView.description.duration" /> {config.durationOptions.length > 0
-              ? config.durationOptions.map((value) => `${value}s`).join(', ')
-              : `${config.minDuration}s–${config.maxDuration}s`}
+          <p
+            className="mt-1 text-[12px] text-text-muted"
+            data-testid="music-duration-limits"
+          >
+            <Trans i18nKey="common:surface.componentsMusicMusicView.description.duration" />{" "}
+            {config.durationOptions.length > 0
+              ? config.durationOptions.map((value) => `${value}s`).join(", ")
+              : tRuntime(
+                  "runtimeGenerated.components.music.musicView.text.value1SValue2S",
+                  { value1: config.minDuration, value2: config.maxDuration },
+                )}
           </p>
         )}
       </div>
       <div>
-        <Label htmlFor={promptId}><Trans i18nKey="common:surface.componentsMusicMusicView.text.prompt" /></Label>
-        <TextArea id={promptId} value={prompt} onChange={setPrompt} placeholder="An upbeat electronic track with a driving bassline and ethereal synths…" rows={4} />
+        <Label htmlFor={promptId}>
+          <Trans i18nKey="common:surface.componentsMusicMusicView.text.prompt" />
+        </Label>
+        <TextArea
+          id={promptId}
+          value={prompt}
+          onChange={setPrompt}
+          placeholder={tRuntime(
+            "runtimeGenerated.components.music.musicView.attribute.anUpbeatElectronicTrackWithADrivingBasslineAndEthereal",
+          )}
+          rows={4}
+        />
       </div>
 
       {config.lyrics && (
         <div>
-          <Label htmlFor={lyricsId}><Trans i18nKey="common:surface.componentsMusicMusicView.text.lyrics" /></Label>
-          <TextArea id={lyricsId} value={lyrics} onChange={setLyrics} placeholder="Optional lyrics or vocal direction…" rows={3} />
+          <Label htmlFor={lyricsId}>
+            <Trans i18nKey="common:surface.componentsMusicMusicView.text.lyrics" />
+          </Label>
+          <TextArea
+            id={lyricsId}
+            value={lyrics}
+            onChange={setLyrics}
+            placeholder={tRuntime(
+              "runtimeGenerated.components.music.musicView.attribute.optionalLyricsOrVocalDirection",
+            )}
+            rows={3}
+          />
         </div>
       )}
 
       {config.duration && (
         <div>
-          <Label hint={`${duration}s`}><Trans i18nKey="common:surface.componentsMusicMusicView.text.duration" /></Label>
+          <Label
+            hint={tRuntime(
+              "runtimeGenerated.components.music.musicView.attribute.durationS",
+              { duration: duration },
+            )}
+          >
+            <Trans i18nKey="common:surface.componentsMusicMusicView.text.duration" />
+          </Label>
           {config.durationOptions.length > 0 ? (
-            <select aria-label="Music duration" value={duration} onChange={(e) => setDuration(Number(e.target.value))} className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-[14px] text-text-primary">
-              {config.durationOptions.map((value) => <option key={value} value={value}>{value} <Trans i18nKey="common:surface.componentsMusicMusicView.option.seconds" /></option>)}
+            <select
+              aria-label={tRuntime(
+                "runtimeGenerated.components.music.musicView.attribute.musicDuration",
+              )}
+              value={duration}
+              onChange={(e) => setDuration(Number(e.target.value))}
+              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-[14px] text-text-primary"
+            >
+              {config.durationOptions.map((value) => (
+                <option key={value} value={value}>
+                  {value}{" "}
+                  <Trans i18nKey="common:surface.componentsMusicMusicView.option.seconds" />
+                </option>
+              ))}
             </select>
           ) : (
-            <input aria-label="Music duration" type="range" min={config.minDuration} max={config.maxDuration} step={1} value={duration} onChange={(e) => setDuration(Number(e.target.value))} className="w-full" />
+            <input
+              aria-label={tRuntime(
+                "runtimeGenerated.components.music.musicView.attribute.musicDuration",
+              )}
+              type="range"
+              min={config.minDuration}
+              max={config.maxDuration}
+              step={1}
+              value={duration}
+              onChange={(e) => setDuration(Number(e.target.value))}
+              className="w-full"
+            />
           )}
         </div>
       )}
 
       {config.instrumental && (
         <div className="flex items-center justify-between">
-          <Label><Trans i18nKey="common:surface.componentsMusicMusicView.text.instrumentalOnly" /></Label>
+          <Label>
+            <Trans i18nKey="common:surface.componentsMusicMusicView.text.instrumentalOnly" />
+          </Label>
           <button
             onClick={() => setInstrumental(!instrumental)}
             aria-pressed={instrumental}
-            className={cn('w-9 h-5 rounded-full transition-colors relative', instrumental ? 'bg-accent' : 'bg-surface-elevated')}
+            className={cn(
+              "w-9 h-5 rounded-full transition-colors relative",
+              instrumental ? "bg-accent" : "bg-surface-elevated",
+            )}
           >
-            <div className={cn('absolute top-[2px] w-[16px] h-[16px] rounded-full bg-accent-fg transition-all', instrumental ? 'left-[20px]' : 'left-[2px]')} />
+            <div
+              className={cn(
+                "absolute top-[2px] w-[16px] h-[16px] rounded-full bg-accent-fg transition-all",
+                instrumental ? "left-[20px]" : "left-[2px]",
+              )}
+            />
           </button>
         </div>
       )}
 
       <div className="flex flex-wrap gap-1">
-        {config.lyrics && <Tag><Trans i18nKey="common:surface.componentsMusicMusicView.text.lyrics" /></Tag>}
-        {config.instrumental && <Tag><Trans i18nKey="common:surface.componentsMusicMusicView.text.instrumental" /></Tag>}
-        {config.voice && <Tag><Trans i18nKey="common:surface.componentsMusicMusicView.text.voice" /></Tag>}
-        {config.duration && <Tag><Trans i18nKey="common:surface.componentsMusicMusicView.text.customDuration" /></Tag>}
+        {config.lyrics && (
+          <Tag>
+            <Trans i18nKey="common:surface.componentsMusicMusicView.text.lyrics" />
+          </Tag>
+        )}
+        {config.instrumental && (
+          <Tag>
+            <Trans i18nKey="common:surface.componentsMusicMusicView.text.instrumental" />
+          </Tag>
+        )}
+        {config.voice && (
+          <Tag>
+            <Trans i18nKey="common:surface.componentsMusicMusicView.text.voice" />
+          </Tag>
+        )}
+        {config.duration && (
+          <Tag>
+            <Trans i18nKey="common:surface.componentsMusicMusicView.text.customDuration" />
+          </Tag>
+        )}
       </div>
 
       <PrimaryButton
         onClick={handleGenerate}
-        disabled={!prompt.trim() || !hasVeniceKey || isQueueing || isProcessing || (config.lyricsRequired && !lyrics.trim())}
+        disabled={
+          !prompt.trim() ||
+          !hasVeniceKey ||
+          isQueueing ||
+          isProcessing ||
+          (config.lyricsRequired && !lyrics.trim())
+        }
         loading={isQueueing || isProcessing}
         size="lg"
       >
-        {isProcessing ? (status === 'queued' ? 'Queued…' : 'Generating…') : 'Generate Music'}
+        {isProcessing
+          ? status === "queued"
+            ? tRuntime(
+                "runtimeGenerated.components.music.musicView.text.queued",
+              )
+            : tRuntime(
+                "runtimeGenerated.components.music.musicView.text.generating",
+              )
+          : tRuntime(
+              "runtimeGenerated.components.music.musicView.text.generateMusic",
+            )}
       </PrimaryButton>
       {error && (
         <div className="flex items-center justify-between gap-2">
           <ErrorText>{error}</ErrorText>
-          <button onClick={reset} className="text-[13px] text-text-secondary hover:text-text-primary underline underline-offset-2 shrink-0 transition-colors"><Trans i18nKey="common:surface.componentsMusicMusicView.action.reset" /></button>
+          <button
+            onClick={reset}
+            className="text-[13px] text-text-secondary hover:text-text-primary underline underline-offset-2 shrink-0 transition-colors"
+          >
+            <Trans i18nKey="common:surface.componentsMusicMusicView.action.reset" />
+          </button>
         </div>
       )}
     </>
-  )
+  );
 
   const output = (
     <div className="flex flex-col h-full">
-        {audioUrl ? (
-          <div className="animate-fade-in flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <Label><Trans i18nKey="common:surface.componentsMusicMusicView.text.output" /></Label>
-              <div className="flex items-center gap-3">
-                {(() => {
-                  const alreadySaved = queueAlreadySaved || (!!queueId && savedQueueIdsRef.current.has(queueId))
-                  return (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (resultMediaId || (queueId && (savedQueueIdsRef.current.has(queueId) || useMediaStore.getState().items.some((media) => media.queueId === queueId)))) {
-                      toast.success('Already in Media Studio')
-                      return
+      {audioUrl ? (
+        <div className="animate-fade-in flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <Label>
+              <Trans i18nKey="common:surface.componentsMusicMusicView.text.output" />
+            </Label>
+            <div className="flex items-center gap-3">
+              {(() => {
+                const alreadySaved =
+                  queueAlreadySaved ||
+                  (!!queueId && savedQueueIdsRef.current.has(queueId));
+                return (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (
+                        resultMediaId ||
+                        (queueId &&
+                          (savedQueueIdsRef.current.has(queueId) ||
+                            useMediaStore
+                              .getState()
+                              .items.some(
+                                (media) => media.queueId === queueId,
+                              )))
+                      ) {
+                        toast.success(
+                          tRuntime(
+                            "runtimeGenerated.components.music.musicView.notification.alreadyInMediaStudio",
+                          ),
+                        );
+                        return;
+                      }
+                      const item = {
+                        id: generateId(),
+                        image: audioUrl,
+                        prompt: lastRequest?.prompt ?? prompt.trim(),
+                        model: lastRequest?.model ?? model,
+                        timestamp: Date.now(),
+                        mediaType: "audio" as const,
+                        operation: "music-generate" as const,
+                        parentId: null,
+                        childrenIds: [] as string[],
+                        tags: [] as string[],
+                        note: "",
+                        favorite: false,
+                        queueId: queueId ?? undefined,
+                        downloadUrl: audioUrl,
+                        mimeType:
+                          mimeType ??
+                          audioUrl.match(/^data:([^;,]+)[;,]/i)?.[1],
+                      };
+                      if (queueId) savedQueueIdsRef.current.add(queueId);
+                      void useMediaStore.getState().upsert(item, {
+                        attachActiveProject: true,
+                        source: "generated",
+                      });
+                      toast.success(
+                        tRuntime(
+                          "runtimeGenerated.components.music.musicView.notification.savedToMediaStudio",
+                        ),
+                      );
+                    }}
+                    disabled={alreadySaved}
+                    className={cn(
+                      "text-[14px] flex items-center gap-1.5 transition-opacity",
+                      alreadySaved
+                        ? "text-text-muted cursor-default"
+                        : "text-accent hover:opacity-85",
+                    )}
+                    title={
+                      alreadySaved
+                        ? tRuntime(
+                            "runtimeGenerated.components.music.musicView.attribute.alreadySavedToMediaStudio",
+                          )
+                        : tRuntime(
+                            "runtimeGenerated.components.music.musicView.attribute.saveToMediaStudio",
+                          )
                     }
-                    const item = {
-                      id: generateId(),
-                      image: audioUrl,
-                      prompt: lastRequest?.prompt ?? prompt.trim(),
-                      model: lastRequest?.model ?? model,
-                      timestamp: Date.now(),
-                      mediaType: 'audio' as const,
-                      operation: 'music-generate' as const,
-                      parentId: null,
-                      childrenIds: [] as string[],
-                      tags: [] as string[],
-                      note: '',
-                      favorite: false,
-                      queueId: queueId ?? undefined,
-                      downloadUrl: audioUrl,
-                      mimeType: mimeType ?? audioUrl.match(/^data:([^;,]+)[;,]/i)?.[1],
+                    aria-label={
+                      alreadySaved
+                        ? tRuntime(
+                            "runtimeGenerated.components.music.musicView.attribute.alreadySavedToMediaStudio",
+                          )
+                        : tRuntime(
+                            "runtimeGenerated.components.music.musicView.attribute.saveToMediaStudio",
+                          )
                     }
-                    if (queueId) savedQueueIdsRef.current.add(queueId)
-                    void useMediaStore.getState().upsert(item, {
-                      attachActiveProject: true,
-                      source: 'generated',
-                    })
-                    toast.success('Saved to Media Studio')
-                  }}
-                  disabled={alreadySaved}
-                  className={cn(
-                    'text-[14px] flex items-center gap-1.5 transition-opacity',
-                    alreadySaved
-                      ? 'text-text-muted cursor-default'
-                      : 'text-accent hover:opacity-85',
-                  )}
-                  title={alreadySaved ? 'Already saved to Media Studio' : 'Save to Media Studio'}
-                  aria-label={alreadySaved ? 'Already saved to Media Studio' : 'Save to Media Studio'}
+                  >
+                    <svg
+                      width="11"
+                      height="11"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+                      <polyline points="17 21 17 13 7 13 7 21" />
+                      <polyline points="7 3 7 8 15 8" />
+                    </svg>
+                    {alreadySaved
+                      ? tRuntime(
+                          "runtimeGenerated.components.music.musicView.text.saved",
+                        )
+                      : tRuntime(
+                          "runtimeGenerated.components.music.musicView.text.saveToMediaStudio",
+                        )}
+                  </button>
+                );
+              })()}
+              <a
+                href={audioUrl}
+                download={`venice-music${getAudioExtension(mimeType, audioUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[14px] text-text-muted hover:text-text-muted transition-colors flex items-center gap-1.5"
+              >
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
-                  {alreadySaved ? 'Saved' : 'Save to Media Studio'}
-                </button>
-                  )
-                })()}
-                <a href={audioUrl} download={`venice-music${getAudioExtension(mimeType, audioUrl)}`} target="_blank" rel="noopener noreferrer" className="text-[14px] text-text-muted hover:text-text-muted transition-colors flex items-center gap-1.5">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
-                  <Trans i18nKey="common:surface.componentsMusicMusicView.text.download" /></a>
-              </div>
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                </svg>
+                <Trans i18nKey="common:surface.componentsMusicMusicView.text.download" />
+              </a>
             </div>
-            <audio
-              controls
-              src={audioUrl}
-              className="w-full"
-              onError={(e) => {
-                const target = e.currentTarget
-                const code = target.error?.code
-                // MediaError constants: MEDIA_ERR_SRC_NOT_SUPPORTED = 4, MEDIA_ERR_DECODE = 3
-                if (code === 4) {
-                  setPlaybackError('This audio format is not supported by your browser.')
-                } else if (code === 3) {
-                  setPlaybackError('Failed to decode audio. The file may be corrupted.')
-                } else {
-                  setPlaybackError('Failed to play audio. Please try downloading it.')
-                }
-              }}
-            />
-            {playbackError && <ErrorText>{playbackError}</ErrorText>}
-            <div className="bg-surface-elevated border border-border rounded-lg p-4">
-              <p className="text-[15px] text-text-muted leading-relaxed">{prompt}</p>
-              {lyrics && <p className="text-[14px] text-text-muted mt-2 italic">{lyrics}</p>}
-            </div>
-            <button onClick={reset} className="self-start text-[14px] text-text-muted hover:text-text-muted transition-colors"><Trans i18nKey="common:surface.componentsMusicMusicView.action.generateAnother" /></button>
           </div>
-        ) : (
-          <div className="flex items-center justify-center flex-1 text-text-muted text-[15px]">
-            {isProcessing ? (
-              <GenerationLoadingIndicator 
-                state={status === 'queued' ? 'queued' : 'generating'}
-                label={status === 'queued' ? 'Queued — waiting for a slot' : 'Composing your track'}
-                detail={elapsedMs > 0 ? `${formatElapsedMusic(elapsedMs)} · typically 20s–90s` : undefined}
-                showCancel={true}
-                onCancel={cancel}
-              />
-            ) : !prompt ? (
-              <ExamplePrompts
-                items={starters}
-                onPick={setPrompt}
-                onShuffle={() => setStarters(getPromptStartersForCategory('music', 4))}
-              />
-            ) : (
-              <span><Trans i18nKey="common:surface.componentsMusicMusicView.text.pressGenerateToCreateYourTrack" /></span>
+          <audio
+            controls
+            src={audioUrl}
+            className="w-full"
+            onError={(e) => {
+              const target = e.currentTarget;
+              const code = target.error?.code;
+              // MediaError constants: MEDIA_ERR_SRC_NOT_SUPPORTED = 4, MEDIA_ERR_DECODE = 3
+              if (code === 4) {
+                setPlaybackError(
+                  "This audio format is not supported by your browser.",
+                );
+              } else if (code === 3) {
+                setPlaybackError(
+                  "Failed to decode audio. The file may be corrupted.",
+                );
+              } else {
+                setPlaybackError(
+                  "Failed to play audio. Please try downloading it.",
+                );
+              }
+            }}
+          />
+          {playbackError && <ErrorText>{playbackError}</ErrorText>}
+          <div className="bg-surface-elevated border border-border rounded-lg p-4">
+            <p className="text-[15px] text-text-muted leading-relaxed">
+              {prompt}
+            </p>
+            {lyrics && (
+              <p className="text-[14px] text-text-muted mt-2 italic">
+                {lyrics}
+              </p>
             )}
           </div>
-        )}
+          <button
+            onClick={reset}
+            className="self-start text-[14px] text-text-muted hover:text-text-muted transition-colors"
+          >
+            <Trans i18nKey="common:surface.componentsMusicMusicView.action.generateAnother" />
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center flex-1 text-text-muted text-[15px]">
+          {isProcessing ? (
+            <GenerationLoadingIndicator
+              state={status === "queued" ? "queued" : "generating"}
+              label={
+                status === "queued"
+                  ? tRuntime(
+                      "runtimeGenerated.components.music.musicView.attribute.queuedWaitingForASlot",
+                    )
+                  : tRuntime(
+                      "runtimeGenerated.components.music.musicView.attribute.composingYourTrack",
+                    )
+              }
+              detail={
+                elapsedMs > 0
+                  ? `${formatElapsedMusic(elapsedMs)} · typically 20s–90s`
+                  : undefined
+              }
+              showCancel={true}
+              onCancel={cancel}
+            />
+          ) : !prompt ? (
+            <ExamplePrompts
+              items={starters}
+              onPick={setPrompt}
+              onShuffle={() =>
+                setStarters(getPromptStartersForCategory("music", 4))
+              }
+            />
+          ) : (
+            <span>
+              <Trans i18nKey="common:surface.componentsMusicMusicView.text.pressGenerateToCreateYourTrack" />
+            </span>
+          )}
+        </div>
+      )}
     </div>
-  )
+  );
 
-  return <GenerationView controls={controls} output={output} />
+  return <GenerationView controls={controls} output={output} />;
 }
 
 // MUSIC_EXAMPLES migrated to dynamic prompt starters
 
 function formatElapsedMusic(ms: number): string {
-  const s = Math.floor(ms / 1000)
-  const m = Math.floor(s / 60)
-  return m > 0 ? `${m}m ${s % 60}s` : `${s}s`
+  const s = Math.floor(ms / 1000);
+  const m = Math.floor(s / 60);
+  return m > 0 ? `${m}m ${s % 60}s` : `${s}s`;
 }
 
 function Tag({ children }: { children: React.ReactNode }) {
@@ -318,5 +688,5 @@ function Tag({ children }: { children: React.ReactNode }) {
     <span className="text-[12px] text-text-secondary bg-surface-elevated border border-border rounded px-1.5 py-0.5">
       {children}
     </span>
-  )
+  );
 }

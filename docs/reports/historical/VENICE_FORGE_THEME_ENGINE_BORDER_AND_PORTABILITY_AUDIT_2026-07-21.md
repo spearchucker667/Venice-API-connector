@@ -1,5 +1,7 @@
 # Venice Forge Theme Engine, Border System, and Theme Portability Audit and Remediation Report
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 **Date:** July 21, 2026  
 **Repository Path:** `/Users/super_user/Projects/Venice_Forge`  
 **GitHub Repository:** `spearchucker667/Venice_Forge`  

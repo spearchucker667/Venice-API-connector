@@ -241,6 +241,7 @@ The renderer UI is grouped by feature. The canonical tab order is owned by
 | File / area | Purpose |
 |-------------|---------|
 | `desktopBridge.ts` + `.test.ts` | Secure transport abstraction (IPC in Electron, proxy in web); single renderer entry point |
+| `src/i18n/` + `src/i18n/runtimeTranslator.ts` | Twelve bundled locale catalogs, locale metadata/status, runtime translation helpers, RTL/LTR direction, and formatting |
 | `veniceClient.ts` (canonical) | Single Venice HTTP entry point with safety guard |
 | `modelService.ts` / `modelClassification.ts` | Live model list and capability classification |
 | `storageService.ts` + `dbMigrations.ts` | IndexedDB store set controlled by `STORE_NAMES`; `ENCRYPTED_STORES` for AES-GCM |
@@ -305,6 +306,7 @@ The renderer UI is grouped by feature. The canonical tab order is owned by
 | Content safety | `src/shared/safety/` | Child-exploitation safety guard; runs at every enforcement boundary |
 | Theme engine | `src/theme/` | Token-based CSS variables + Tailwind v4 `@theme` integration |
 | Media Studio | `src/components/gallery/` + `src/stores/media-store.ts` + `src/stores/image-workspace-store.ts` + `src/services/mediaMigration.ts` + `electron/services/mediaService.ts` | Local-first generated-media library. Renderer reads from the encrypted `images` IDB store, enriches in place into a canonical `MediaItem` shape, and renders a searchable / filterable / sortable / batch-selectable grid. A transient non-persisted handoff store routes production actions to Image Studio. Electron adds 5 IPC channels (export, import, reveal, meta, thumb) with strict path-containment validation. See [`MEDIA_STUDIO.md`](MEDIA_STUDIO.md). |
+| Generated-media custody | `electron/services/generatedMediaStore.ts` + `electron/services/generatedMediaRecoveryQueue.ts` + `electron/services/generatedMediaExport.ts` | Main-owned SHA-256 blobs, restart journals, integrity-gated native export, and bounded process-local recovery for validated image writes that fail because storage is full, read-only, busy, or unavailable. |
 
 ## Source Organization (Post-Merge)
 

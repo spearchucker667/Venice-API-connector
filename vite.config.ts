@@ -43,11 +43,11 @@ export default defineConfig(() => {
             // lazy views. Keep it out of the startup entry so adding prompts cannot
             // silently consume the main-app bundle budget.
             if (id.endsWith('/src/data/promptStarters.ts')) return 'prompt-starters';
-            // Translation catalogs are immutable application data. Keep each locale
-            // in its own bounded chunk so the catalog set cannot be absorbed into an
-            // unrelated feature chunk and obscure that feature's bundle cost.
-            const localeCatalog = id.match(/\/src\/i18n\/resources\/([^/]+)\//);
-            if (localeCatalog) return `i18n-${localeCatalog[1]}`;
+            // Translation catalogs are immutable application data. Split them by
+            // locale and namespace so larger scripts remain inside the generic
+            // chunk budget without being absorbed into unrelated feature chunks.
+            const localeCatalog = id.match(/\/src\/i18n\/resources\/([^/]+)\/([^/.]+)\.json$/);
+            if (localeCatalog) return `i18n-${localeCatalog[1]}-${localeCatalog[2]}`;
             if (id.includes('node_modules')) {
               if (id.includes('/pdfjs-dist/')) return 'vendor-pdfjs';
               if (id.includes('/mammoth/') || id.includes('/@xmldom/') || id.includes('/argparse/') || id.includes('/base64-js/') || id.includes('/bluebird/') || id.includes('/dingbat-to-unicode/') || id.includes('/jszip/') || id.includes('/lop/') || id.includes('/path-is-absolute/') || id.includes('/underscore/') || id.includes('/xmlbuilder/') || id.includes('/pako/') || id.includes('/sax/')) return 'vendor-documents';

@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /** @fileoverview Unified chat history storage abstraction.
  *  In Electron, delegates to the main-process filesystem store via IPC.
  *  In the browser, falls back to IndexedDB via StorageService.
@@ -18,12 +19,15 @@ function makeId(): string {
 export function createConversation(
   model: string,
   systemPrompt: string,
-  options?: { parentConversationId?: string; forkedFromMessageIds?: string[] }
+  options?: { parentConversationId?: string; forkedFromMessageIds?: string[] },
 ): Conversation {
   const now = Date.now();
   return {
     id: makeId(),
-    title: "New Chat",
+    title: translateRuntime(
+      "runtimeGenerated.services.chatstorage.metadata.newChat",
+      "New Chat",
+    ),
     createdAt: now,
     updatedAt: now,
     model,
@@ -45,17 +49,23 @@ export async function listConversations(): Promise<Conversation[]> {
 }
 
 /** Retrieves a single conversation by id. */
-export async function getConversation(id: string): Promise<Conversation | null> {
+export async function getConversation(
+  id: string,
+): Promise<Conversation | null> {
   if (isElectron()) {
     const result = await desktopChat.get(id);
     return result.ok ? result.conversation : null;
   }
-  const items = await StorageService.getItems<Conversation & { id: string }>(FALLBACK_STORE);
+  const items = await StorageService.getItems<Conversation & { id: string }>(
+    FALLBACK_STORE,
+  );
   return items.find((c) => c.id === id) ?? null;
 }
 
 /** Persists a conversation. */
-export async function saveConversation(conversation: Conversation): Promise<boolean> {
+export async function saveConversation(
+  conversation: Conversation,
+): Promise<boolean> {
   const payload = { ...conversation, updatedAt: Date.now() };
   if (isElectron()) {
     const result = await desktopChat.save(payload);
@@ -79,7 +89,7 @@ export async function deleteConversation(id: string): Promise<boolean> {
  */
 export async function appendMessage(
   conversation: Conversation,
-  message: ConversationMessage
+  message: ConversationMessage,
 ): Promise<Conversation> {
   const updated: Conversation = {
     ...conversation,
@@ -91,7 +101,9 @@ export async function appendMessage(
 }
 
 /** Creates a user-visible title from the first user message, capped at 40 chars. */
-export function deriveTitle(messages: Array<{ role: string; content: string }>): string {
+export function deriveTitle(
+  messages: Array<{ role: string; content: string }>,
+): string {
   const firstUser = messages.find((m) => m.role === "user");
   if (!firstUser) return "New Chat";
   const text = firstUser.content.trim().replace(/\s+/g, " ");

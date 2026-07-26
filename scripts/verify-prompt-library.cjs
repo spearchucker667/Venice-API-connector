@@ -126,8 +126,8 @@ if (store) {
 }
 
 if (tabs) {
-  check("src/config/tabs.ts declares 'prompts' in TAB_IDS", /'prompts'/.test(tabs));
-  check("src/config/tabs.ts declares a `prompts` entry in TAB_REGISTRY", /id:\s*'prompts'/.test(tabs));
+  check("src/config/tabs.ts declares 'prompts' in TAB_IDS", /["']prompts["']/.test(tabs));
+  check("src/config/tabs.ts declares a `prompts` entry in TAB_REGISTRY", /id:\s*["']prompts["']/.test(tabs));
 }
 
 if (app) {

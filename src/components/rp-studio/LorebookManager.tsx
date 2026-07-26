@@ -1,3 +1,4 @@
+import { translateRuntime } from "../../i18n/runtimeTranslator";
 /**
  * @fileoverview Lorebook Manager — list lorebooks, edit entries inline.
  *
@@ -7,7 +8,15 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLorebookStore } from "../../stores/lorebook-store";
-import { GhostButton, Label, PrimaryButton, TextArea, ErrorText, EmptyState, PillGroup } from "../ui/shared";
+import {
+  GhostButton,
+  Label,
+  PrimaryButton,
+  TextArea,
+  ErrorText,
+  EmptyState,
+  PillGroup,
+} from "../ui/shared";
 import { Spinner } from "../ui/spinner";
 import { formatRelativeTime, truncate } from "./_shared";
 import {
@@ -18,16 +27,43 @@ import {
   type LorebookInsertionMode,
   type LorebookV1,
 } from "../../types/rp";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
+const INSERTION_MODES: Array<{ value: LorebookInsertionMode; label: string }> =
+  [
+    {
+      value: "before_char",
+      get label() {
+        return translateRuntime(
+          "runtimeGenerated.components.rpStudio.lorebookmanager.metadata.beforeChar",
+          "Before char",
+        );
+      },
+    },
+    {
+      value: "after_char",
+      get label() {
+        return translateRuntime(
+          "runtimeGenerated.components.rpStudio.lorebookmanager.metadata.afterChar",
+          "After char",
+        );
+      },
+    },
+    {
+      value: "at_depth",
+      get label() {
+        return translateRuntime(
+          "runtimeGenerated.components.rpStudio.lorebookmanager.metadata.atDepth",
+          "At depth",
+        );
+      },
+    },
+  ];
 
-const INSERTION_MODES: Array<{ value: LorebookInsertionMode; label: string }> = [
-  { value: "before_char", label: "Before char" },
-  { value: "after_char", label: "After char" },
-  { value: "at_depth", label: "At depth" },
-];
-
-export function LorebookManager({ disabled = false }: { disabled?: boolean } = {}) {
+export function LorebookManager({
+  disabled = false,
+}: { disabled?: boolean } = {}) {
+  const { t: tRuntime } = useTranslation("common");
   const load = useLorebookStore((s) => s.load);
   const hasLoaded = useLorebookStore((s) => s.hasLoaded);
   const isLoading = useLorebookStore((s) => s.isLoading);
@@ -47,7 +83,8 @@ export function LorebookManager({ disabled = false }: { disabled?: boolean } = {
 
   useEffect(() => {
     return () => {
-      if (confirmTimerRef.current !== null) clearTimeout(confirmTimerRef.current);
+      if (confirmTimerRef.current !== null)
+        clearTimeout(confirmTimerRef.current);
     };
   }, []);
 
@@ -68,11 +105,22 @@ export function LorebookManager({ disabled = false }: { disabled?: boolean } = {
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return lorebooks;
-    return lorebooks.filter((l) => l.name.toLowerCase().includes(q) || l.description.toLowerCase().includes(q));
+    return lorebooks.filter(
+      (l) =>
+        l.name.toLowerCase().includes(q) ||
+        l.description.toLowerCase().includes(q),
+    );
   }, [lorebooks, searchQuery]);
 
   if (editingId) {
-    return <LorebookEditor key={editingId} lorebookId={editingId} onClose={() => setEditingId(null)} disabled={disabled} />;
+    return (
+      <LorebookEditor
+        key={editingId}
+        lorebookId={editingId}
+        onClose={() => setEditingId(null)}
+        disabled={disabled}
+      />
+    );
   }
 
   return (
@@ -81,8 +129,12 @@ export function LorebookManager({ disabled = false }: { disabled?: boolean } = {
         <input
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search lorebooks…"
-          aria-label="Search lorebooks"
+          placeholder={tRuntime(
+            "runtimeGenerated.components.rpStudio.lorebookmanager.attribute.searchLorebooks",
+          )}
+          aria-label={tRuntime(
+            "runtimeGenerated.components.rpStudio.lorebookmanager.attribute.searchLorebooks2",
+          )}
           className="flex-1 min-w-[12rem] bg-surface border border-border rounded-lg px-3 py-1.5 text-[13.5px] text-text-primary outline-none focus:border-accent transition-colors placeholder:text-text-muted"
         />
         <PrimaryButton
@@ -93,17 +145,30 @@ export function LorebookManager({ disabled = false }: { disabled?: boolean } = {
             if (blank) setEditingId(blank);
           }}
         >
-          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.newLorebook" /></PrimaryButton>
+          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.newLorebook" />
+        </PrimaryButton>
       </div>
 
-      {error && <div className="px-4 py-3"><ErrorText>{error}</ErrorText></div>}
+      {error && (
+        <div className="px-4 py-3">
+          <ErrorText>{error}</ErrorText>
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto px-4 py-4">
         {isLoading && !hasLoaded ? (
           <div className="flex items-center justify-center h-full text-text-muted gap-2 text-[13px]">
-            <Spinner className="text-text-muted" /> <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.loading" /></div>
+            <Spinner className="text-text-muted" />{" "}
+            <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.loading" />
+          </div>
         ) : filtered.length === 0 ? (
-          <EmptyState>{hasLoaded ? "No lorebooks yet" : ""}</EmptyState>
+          <EmptyState>
+            {hasLoaded
+              ? tRuntime(
+                  "runtimeGenerated.components.rpStudio.lorebookmanager.text.noLorebooksYet",
+                )
+              : ""}
+          </EmptyState>
         ) : (
           <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
             {filtered.map((l) => (
@@ -111,12 +176,18 @@ export function LorebookManager({ disabled = false }: { disabled?: boolean } = {
                 key={l.id}
                 className="flex flex-col gap-1.5 bg-surface border border-border hover:border-accent/40 rounded-xl p-3 transition-colors"
               >
-                <div className="text-[14px] font-semibold text-text-primary truncate">{l.name}</div>
+                <div className="text-[14px] font-semibold text-text-primary truncate">
+                  {l.name}
+                </div>
                 {l.description && (
-                  <p className="text-[12.5px] text-text-secondary line-clamp-2">{truncate(l.description, 180)}</p>
+                  <p className="text-[12.5px] text-text-secondary line-clamp-2">
+                    {truncate(l.description, 180)}
+                  </p>
                 )}
                 <div className="text-[12px] text-text-muted mt-0.5">
-                  {l.entries.length} {l.entries.length === 1 ? "entry" : "entries"} · {formatRelativeTime(l.updatedAt)}
+                  {l.entries.length}{" "}
+                  {l.entries.length === 1 ? "entry" : "entries"} ·{" "}
+                  {formatRelativeTime(l.updatedAt)}
                 </div>
                 <div className="flex items-center gap-1.5 mt-2">
                   <button
@@ -124,22 +195,38 @@ export function LorebookManager({ disabled = false }: { disabled?: boolean } = {
                     onClick={() => setEditingId(l.id)}
                     className="flex-1 text-[12px] py-1.5 rounded-md border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors"
                   >
-                    <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.action.edit" /></button>
+                    <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.action.edit" />
+                  </button>
                   {confirmingDelete === l.id ? (
                     <button
                       type="button"
-                      onClick={() => { void remove(l.id); cancelConfirm(); }}
+                      onClick={() => {
+                        void remove(l.id);
+                        cancelConfirm();
+                      }}
                       className="text-[12px] py-1.5 px-2 rounded-md text-rose-300 border border-rose-500/30 hover:bg-rose-500/10"
                     >
-                      <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.action.delete" /></button>
+                      <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.action.delete" />
+                    </button>
                   ) : (
                     <button
                       type="button"
                       onClick={() => armConfirm(l.id)}
-                      aria-label={`Delete ${l.name}`}
+                      aria-label={tRuntime(
+                        "runtimeGenerated.components.rpStudio.lorebookmanager.attribute.deleteValue1",
+                        { value1: l.name },
+                      )}
                       className="text-text-muted hover:text-rose-300 p-1.5"
                     >
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <svg
+                        width="11"
+                        height="11"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      >
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
                       </svg>
@@ -155,15 +242,32 @@ export function LorebookManager({ disabled = false }: { disabled?: boolean } = {
   );
 }
 
-export function LorebookEditor({ lorebookId, onClose, disabled = false }: { lorebookId: string; onClose: () => void; disabled?: boolean }) {
+export function LorebookEditor({
+  lorebookId,
+  onClose,
+  disabled = false,
+}: {
+  lorebookId: string;
+  onClose: () => void;
+  disabled?: boolean;
+}) {
+  const { t: tRuntime } = useTranslation("common");
   const lorebooks = useLorebookStore((s) => s.lorebooks);
   const upsert = useLorebookStore((s) => s.upsert);
-  const initial = useMemo(() => lorebooks.find((l) => l.id === lorebookId), [lorebooks, lorebookId]);
+  const initial = useMemo(
+    () => lorebooks.find((l) => l.id === lorebookId),
+    [lorebooks, lorebookId],
+  );
   const [draft, setDraft] = useState<LorebookV1 | null>(initial ?? null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!draft) return <EmptyState><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.lorebookNotFound" /></EmptyState>;
+  if (!draft)
+    return (
+      <EmptyState>
+        <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.lorebookNotFound" />
+      </EmptyState>
+    );
 
   const update = <K extends keyof LorebookV1>(key: K, value: LorebookV1[K]) =>
     setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
@@ -185,11 +289,17 @@ export function LorebookEditor({ lorebookId, onClose, disabled = false }: { lore
   };
 
   const updateEntry = (idx: number, patch: Partial<LorebookEntryV1>) => {
-    update("entries", draft.entries.map((e, i) => (i === idx ? { ...e, ...patch } : e)));
+    update(
+      "entries",
+      draft.entries.map((e, i) => (i === idx ? { ...e, ...patch } : e)),
+    );
   };
 
   const removeEntry = (idx: number) => {
-    update("entries", draft.entries.filter((_, i) => i !== idx));
+    update(
+      "entries",
+      draft.entries.filter((_, i) => i !== idx),
+    );
   };
 
   const handleSave = async () => {
@@ -215,23 +325,48 @@ export function LorebookEditor({ lorebookId, onClose, disabled = false }: { lore
         <button
           type="button"
           onClick={onClose}
-          aria-label="Back"
+          aria-label={tRuntime(
+            "runtimeGenerated.components.rpStudio.lorebookmanager.attribute.back",
+          )}
           className="text-text-secondary hover:text-text-primary p-2 rounded-md hover:bg-surface-elevated"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          >
             <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
-        <h2 className="text-[15px] font-semibold text-text-primary truncate">{draft.name}</h2>
+        <h2 className="text-[15px] font-semibold text-text-primary truncate">
+          {draft.name}
+        </h2>
         <div className="ml-auto">
-          <PrimaryButton size="sm" loading={saving} disabled={disabled} onClick={handleSave}><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.save" /></PrimaryButton>
+          <PrimaryButton
+            size="sm"
+            loading={saving}
+            disabled={disabled}
+            onClick={handleSave}
+          >
+            <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.save" />
+          </PrimaryButton>
         </div>
       </div>
-      {error && <div className="px-4 py-3"><ErrorText>{error}</ErrorText></div>}
+      {error && (
+        <div className="px-4 py-3">
+          <ErrorText>{error}</ErrorText>
+        </div>
+      )}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <Label htmlFor="lb-name"><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.name" /></Label>
+            <Label htmlFor="lb-name">
+              <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.name" />
+            </Label>
             <input
               id="lb-name"
               value={draft.name}
@@ -241,13 +376,20 @@ export function LorebookEditor({ lorebookId, onClose, disabled = false }: { lore
             />
           </div>
           <div>
-            <Label htmlFor="lb-tags"><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.tagsCommaSeparated" /></Label>
+            <Label htmlFor="lb-tags">
+              <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.tagsCommaSeparated" />
+            </Label>
             <input
               id="lb-tags"
               value={draft.tags.join(", ")}
               onChange={(e) => {
                 const tags = Array.from(
-                  new Set(e.target.value.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean)),
+                  new Set(
+                    e.target.value
+                      .split(",")
+                      .map((t) => t.trim().toLowerCase())
+                      .filter(Boolean),
+                  ),
                 ).slice(0, MAX_TAGS);
                 update("tags", tags);
               }}
@@ -256,7 +398,9 @@ export function LorebookEditor({ lorebookId, onClose, disabled = false }: { lore
           </div>
         </div>
         <div>
-          <Label htmlFor="lb-desc"><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.description" /></Label>
+          <Label htmlFor="lb-desc">
+            <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.description" />
+          </Label>
           <TextArea
             value={draft.description}
             onChange={(v) => update("description", v)}
@@ -266,13 +410,21 @@ export function LorebookEditor({ lorebookId, onClose, disabled = false }: { lore
         </div>
 
         <div className="flex items-center justify-between">
-          <Label hint={`${draft.entries.length}/${MAX_LOREBOOK_ENTRIES}`}><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.entries" /></Label>
-          <GhostButton onClick={addEntry} disabled={draft.entries.length >= MAX_LOREBOOK_ENTRIES}>
-            <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.addEntry" /></GhostButton>
+          <Label hint={`${draft.entries.length}/${MAX_LOREBOOK_ENTRIES}`}>
+            <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.entries" />
+          </Label>
+          <GhostButton
+            onClick={addEntry}
+            disabled={draft.entries.length >= MAX_LOREBOOK_ENTRIES}
+          >
+            <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.addEntry" />
+          </GhostButton>
         </div>
 
         {draft.entries.length === 0 ? (
-          <div className="text-[12px] text-text-muted italic"><Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.noEntriesYet" /></div>
+          <div className="text-[12px] text-text-muted italic">
+            <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.text.noEntriesYet" />
+          </div>
         ) : (
           <div className="space-y-2">
             {draft.entries.map((entry, i) => (
@@ -299,9 +451,17 @@ function EntryRow({
   onChange: (patch: Partial<LorebookEntryV1>) => void;
   onRemove: () => void;
 }) {
+  const { t: tRuntime } = useTranslation("common");
   const [keysText, setKeysText] = useState(entry.keys.join(", "));
   const parseKeys = (value: string) =>
-    Array.from(new Set(value.split(",").map((k) => k.trim().toLowerCase()).filter(Boolean)));
+    Array.from(
+      new Set(
+        value
+          .split(",")
+          .map((k) => k.trim().toLowerCase())
+          .filter(Boolean),
+      ),
+    );
   return (
     <div className="bg-surface-elevated border border-border rounded-lg p-3 space-y-2">
       <div className="flex items-center gap-2">
@@ -312,25 +472,55 @@ function EntryRow({
             setKeysText(next);
             onChange({ keys: parseKeys(next) });
           }}
-          placeholder="trigger keys (comma-separated)"
+          placeholder={tRuntime(
+            "runtimeGenerated.components.rpStudio.lorebookmanager.attribute.triggerKeysCommaSeparated",
+          )}
           className="flex-1 bg-surface border border-border rounded-md px-2 py-1 text-[12.5px] text-text-primary outline-none focus:border-accent transition-colors placeholder:text-text-muted"
         />
         <label className="flex items-center gap-1.5 text-[12px] text-text-secondary">
-          <input type="checkbox" checked={entry.enabled} onChange={(e) => onChange({ enabled: e.target.checked })} className="accent-[var(--color-accent)]" />
-          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.label.enabled" /></label>
+          <input
+            type="checkbox"
+            checked={entry.enabled}
+            onChange={(e) => onChange({ enabled: e.target.checked })}
+            className="accent-[var(--color-accent)]"
+          />
+          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.label.enabled" />
+        </label>
         <label className="flex items-center gap-1.5 text-[12px] text-text-secondary">
-          <input type="checkbox" checked={entry.constant} onChange={(e) => onChange({ constant: e.target.checked })} className="accent-[var(--color-accent)]" />
-          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.label.always" /></label>
+          <input
+            type="checkbox"
+            checked={entry.constant}
+            onChange={(e) => onChange({ constant: e.target.checked })}
+            className="accent-[var(--color-accent)]"
+          />
+          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.label.always" />
+        </label>
         <label className="flex items-center gap-1.5 text-[12px] text-text-secondary">
-          <input type="checkbox" checked={entry.matchWholeWords} onChange={(e) => onChange({ matchWholeWords: e.target.checked })} className="accent-[var(--color-accent)]" />
-          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.label.wholeWords" /></label>
+          <input
+            type="checkbox"
+            checked={entry.matchWholeWords}
+            onChange={(e) => onChange({ matchWholeWords: e.target.checked })}
+            className="accent-[var(--color-accent)]"
+          />
+          <Trans i18nKey="common:surface.componentsRpStudioLorebookmanager.label.wholeWords" />
+        </label>
         <button
           type="button"
           onClick={onRemove}
-          aria-label="Remove entry"
+          aria-label={tRuntime(
+            "runtimeGenerated.components.rpStudio.lorebookmanager.attribute.removeEntry",
+          )}
           className="text-text-muted hover:text-rose-300 p-2"
         >
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          >
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
@@ -340,36 +530,52 @@ function EntryRow({
         <PillGroup
           options={INSERTION_MODES}
           value={entry.insertionMode}
-          onChange={(v) => onChange({ insertionMode: v as LorebookInsertionMode })}
+          onChange={(v) =>
+            onChange({ insertionMode: v as LorebookInsertionMode })
+          }
           ariaLabel="Insertion mode"
         />
         {entry.insertionMode === "at_depth" && (
           <input
             type="number"
             value={entry.depth ?? 0}
-            onChange={(e) => onChange({ depth: Math.max(0, parseInt(e.target.value, 10) || 0) })}
+            onChange={(e) =>
+              onChange({
+                depth: Math.max(0, parseInt(e.target.value, 10) || 0),
+              })
+            }
             min={0}
             max={50}
             className="w-20 bg-surface border border-border rounded-md px-2 py-1 text-[12.5px] text-text-primary outline-none focus:border-accent transition-colors"
-            aria-label="Depth"
+            aria-label={tRuntime(
+              "runtimeGenerated.components.rpStudio.lorebookmanager.attribute.depth",
+            )}
           />
         )}
         <input
           type="number"
           value={entry.order}
-          onChange={(e) => onChange({ order: parseInt(e.target.value, 10) || 0 })}
+          onChange={(e) =>
+            onChange({ order: parseInt(e.target.value, 10) || 0 })
+          }
           min={0}
           max={1000}
           className="w-20 bg-surface border border-border rounded-md px-2 py-1 text-[12.5px] text-text-primary outline-none focus:border-accent transition-colors"
-          aria-label="Order"
+          aria-label={tRuntime(
+            "runtimeGenerated.components.rpStudio.lorebookmanager.attribute.order",
+          )}
         />
       </div>
       <TextArea
         value={entry.content}
-        onChange={(v) => onChange({ content: v.slice(0, MAX_LOREBOOK_ENTRY_CHARS) })}
+        onChange={(v) =>
+          onChange({ content: v.slice(0, MAX_LOREBOOK_ENTRY_CHARS) })
+        }
         rows={3}
         maxLength={MAX_LOREBOOK_ENTRY_CHARS}
-        placeholder="Injected content…"
+        placeholder={tRuntime(
+          "runtimeGenerated.components.rpStudio.lorebookmanager.attribute.injectedContent",
+        )}
         ariaLabel="Content"
       />
     </div>

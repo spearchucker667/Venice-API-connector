@@ -204,6 +204,7 @@ npm run verify:workspace-contracts
 npm run verify:model-aware-recipes
 npm run verify:media-studio-power-tools
 npm run verify:status-diagnostics
+npm run verify:storage-privacy   # VERIFY-050
 npm run verify:research-workspace   # VERIFY-051
 ```
 
@@ -292,6 +293,8 @@ When Swagger, live metadata, and implementation disagree, record the evidence an
 * Preserve PNG transparency for background-removal output.
 * Validate source MIME, size, dimensions, and duration locally before paid requests when constraints are known.
 * Never double-prefix data URLs, truncate base64, serialize `Blob` as text, or send renderer-only object URLs to remote APIs.
+* Generated-image persistence failures must retain a user-accessible result. Desktop recovery custody stays main-process-only, bounded by item count/bytes/time, identified by opaque IDs, and contains no prompt, credential, signed URL, or renderer-selected path.
+* Retry and Save As recovery channels must remain main-frame-only and revalidate opaque IDs. Successful retry replaces volatile renderer data with the canonical stable media URL before gallery metadata is considered saved.
 
 ---
 
@@ -375,6 +378,17 @@ Every defect report must provide:
 Classify findings as confirmed defect, missing feature, documentation drift, verifier drift, security risk, migration risk, performance risk, false positive, not reproducible, or blocked by missing evidence.
 
 For repository-wide audits, trace renderer, IPC, main process, proxy, persistence, migration, and tests. Distinguish active code from archived/generated/dead files. Verify that UI is reachable and persistence survives restart where claimed.
+
+---
+
+## 14A. Runtime Localization Contracts
+
+* `src/i18n/resources/en-US/` is the canonical source-language catalog. All visible app-authored prose must resolve through scoped translation keys or the reviewed runtime translation helper.
+* Keep catalog structure, runtime-surface coverage, and linguistic approval separate. Complete key coverage does not mean native-speaker approval.
+* Non-English catalogs remain `isProductionComplete: false` until `docs/i18n/native-review-status.json` records a qualified reviewer and date; never relabel first-pass machine output as native-reviewed.
+* Preserve interpolation variables, API fields, model IDs, protocol tokens, filenames, and other canonical machine values exactly. Translate presentation, never transport/state contracts.
+* Do not add broad hardcoded-string allowlists or raise the zero-debt baseline to accept new prose. Run `npm run verify:i18n` and `npm run verify:i18n-hardcoded-regressions` after visible UI changes.
+* Generated reports under `artifacts/i18n/` are disposable validation output, not documentation or status authority.
 
 ---
 

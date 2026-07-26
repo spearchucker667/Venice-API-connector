@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /** @fileoverview State for the local RP chat store.
  *
  *  Distinct from the existing `chat-store`, which is the single-threaded
@@ -44,27 +45,39 @@ export interface RpChatState {
     modelId: string;
     scenario?: string;
     adult?: boolean;
-    greeting?: { mode: "primary" | "alternate" | "random" | "none"; characterId: string; index?: number; content?: string };
+    greeting?: {
+      mode: "primary" | "alternate" | "random" | "none";
+      characterId: string;
+      index?: number;
+      content?: string;
+    };
   }) => Promise<string | null>;
   setActive: (id: string | null) => void;
   setStreaming: (s: boolean) => void;
   upsert: (chat: RpChatV1) => Promise<RpChatV1 | null>;
   remove: (id: string) => Promise<boolean>;
-  appendUserMessage: (chatId: string, content: string) => Promise<RpMessageV1 | null>;
+  appendUserMessage: (
+    chatId: string,
+    content: string,
+  ) => Promise<RpMessageV1 | null>;
   appendCharacterMessage: (
     chatId: string,
     characterId: string,
     content: string,
     reasoning?: string,
   ) => Promise<RpMessageV1 | null>;
-  appendNarratorMessage: (chatId: string, content: string) => Promise<RpMessageV1 | null>;
+  appendNarratorMessage: (
+    chatId: string,
+    content: string,
+  ) => Promise<RpMessageV1 | null>;
   getById: (id: string) => RpChatV1 | undefined;
   getActive: () => RpChatV1 | undefined;
 }
 
 function newMessageId(): string {
   try {
-    const crypto = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+    const crypto = (globalThis as { crypto?: { randomUUID?: () => string } })
+      .crypto;
     if (crypto && typeof crypto.randomUUID === "function") {
       return `m_${crypto.randomUUID()}`;
     }
@@ -89,11 +102,19 @@ const chatLocks = new Map<string, Promise<unknown>>();
 /** Acquires the lock for `chatId`, runs `work`, releases the lock, and
  *  returns the work's result. Subsequent calls for the same chatId wait
  *  for the in-flight append to complete before starting. */
-async function withChatLock<T>(chatId: string, work: () => Promise<T>): Promise<T> {
+async function withChatLock<T>(
+  chatId: string,
+  work: () => Promise<T>,
+): Promise<T> {
   const prev = chatLocks.get(chatId) ?? Promise.resolve();
   let release: () => void = () => undefined;
-  const next = new Promise<void>((resolve) => { release = resolve; });
-  chatLocks.set(chatId, prev.then(() => next));
+  const next = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  chatLocks.set(
+    chatId,
+    prev.then(() => next),
+  );
   try {
     await prev;
     return await work();
@@ -124,32 +145,84 @@ export const useRpChatStore = create<RpChatState>((set, get) => ({
     }
   },
 
-  createChat: async ({ title, characterIds, personaId, lorebookIds, modelId, scenario, adult, greeting }) => {
+  createChat: async ({
+    title,
+    characterIds,
+    personaId,
+    lorebookIds,
+    modelId,
+    scenario,
+    adult,
+    greeting,
+  }) => {
     const id = svcGenerateId();
     const now = Date.now();
     const safeIds = characterIds.slice(0, MAX_ACTIVE_CHARACTERS);
     const chat: RpChatV1 = {
       schema: "RpChatV1",
       id,
-      title: title?.trim() || "New RP",
+      title:
+        title?.trim() ||
+        translateRuntime(
+          "runtimeGenerated.stores.rpChatStore.metadata.newRp",
+          "New RP",
+        ),
       characterIds: safeIds,
       ...(personaId ? { personaId } : {}),
       lorebookIds: [...lorebookIds],
       modelId,
       ...(scenario ? { scenario } : {}),
-      messages: greeting?.content ? [{ id: newMessageId(), role: "character", characterId: greeting.characterId, content: greeting.content, createdAt: now }] : [],
+      messages: greeting?.content
+        ? [
+            {
+              id: newMessageId(),
+              role: "character",
+              characterId: greeting.characterId,
+              content: greeting.content,
+              createdAt: now,
+            },
+          ]
+        : [],
       adult: adult === true,
-      metadata: { pinned: false, archived: false, tags: [], ...(greeting ? { greetingSelection: { mode: greeting.mode, characterId: greeting.characterId, ...(greeting.index !== undefined ? { index: greeting.index } : {}) } } : {}) },
+      metadata: {
+        pinned: false,
+        archived: false,
+        tags: [],
+        ...(greeting
+          ? {
+              greetingSelection: {
+                mode: greeting.mode,
+                characterId: greeting.characterId,
+                ...(greeting.index !== undefined
+                  ? { index: greeting.index }
+                  : {}),
+              },
+            }
+          : {}),
+      },
       createdAt: now,
       updatedAt: now,
     };
     try {
       const saved = await svcSave(chat);
-      set((s) => ({ chats: [saved, ...s.chats], activeChatId: id, error: null }));
+      set((s) => ({
+        chats: [saved, ...s.chats],
+        activeChatId: id,
+        error: null,
+      }));
       return id;
     } catch (e) {
       set({ error: safeDiagnostic(e) });
-      toast.error("Could not create RP chat", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.rpChatStore.notification.couldNotCreateRpChat",
+          "Could not create RP chat",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.rpChatStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
       return null;
     }
   },
@@ -162,7 +235,13 @@ export const useRpChatStore = create<RpChatState>((set, get) => ({
     if (!normalized) {
       const msg = "Invalid RP chat data.";
       set({ error: msg });
-      toast.error("Could not save RP chat", msg);
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.rpChatStore.notification.couldNotSaveRpChat",
+          "Could not save RP chat",
+        ),
+        msg,
+      );
       return null;
     }
     const stamped: RpChatV1 = { ...normalized, updatedAt: Date.now() };
@@ -178,7 +257,16 @@ export const useRpChatStore = create<RpChatState>((set, get) => ({
       return saved;
     } catch (e) {
       set({ error: safeDiagnostic(e) });
-      toast.error("Could not save RP chat", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.rpChatStore.notification.couldNotSaveRpChat",
+          "Could not save RP chat",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.rpChatStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
       return null;
     }
   },
@@ -187,7 +275,16 @@ export const useRpChatStore = create<RpChatState>((set, get) => ({
     try {
       const ok = await svcDelete(id);
       if (!ok) {
-        toast.error("Could not delete RP chat", "Storage rejected the request.");
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.rpChatStore.notification.couldNotDeleteRpChat",
+            "Could not delete RP chat",
+          ),
+          translateRuntime(
+            "runtimeGenerated.stores.rpChatStore.notification.storageRejectedTheRequest",
+            "Storage rejected the request.",
+          ),
+        );
         return false;
       }
       set((s) => ({
@@ -197,7 +294,16 @@ export const useRpChatStore = create<RpChatState>((set, get) => ({
       return true;
     } catch (e) {
       set({ error: safeDiagnostic(e) });
-      toast.error("Could not delete RP chat", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.rpChatStore.notification.couldNotDeleteRpChat",
+          "Could not delete RP chat",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.rpChatStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
       return false;
     }
   },
@@ -206,13 +312,29 @@ export const useRpChatStore = create<RpChatState>((set, get) => ({
     return withChatLock(chatId, async () => {
       const chat = get().chats.find((c) => c.id === chatId);
       if (!chat) return null;
-      const msg: RpMessageV1 = { id: newMessageId(), role: "user", content, createdAt: Date.now() };
+      const msg: RpMessageV1 = {
+        id: newMessageId(),
+        role: "user",
+        content,
+        createdAt: Date.now(),
+      };
       try {
         const saved = await svcAppend(chat, msg);
-        set((s) => ({ chats: s.chats.map((c) => (c.id === chatId ? saved : c)) }));
+        set((s) => ({
+          chats: s.chats.map((c) => (c.id === chatId ? saved : c)),
+        }));
         return msg;
       } catch {
-        toast.error("Could not save message", "Please try again.");
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.rpChatStore.notification.couldNotSaveMessage",
+            "Could not save message",
+          ),
+          translateRuntime(
+            "runtimeGenerated.stores.rpChatStore.notification.pleaseTryAgain",
+            "Please try again.",
+          ),
+        );
         return null;
       }
     });
@@ -232,10 +354,21 @@ export const useRpChatStore = create<RpChatState>((set, get) => ({
       };
       try {
         const saved = await svcAppend(chat, msg);
-        set((s) => ({ chats: s.chats.map((c) => (c.id === chatId ? saved : c)) }));
+        set((s) => ({
+          chats: s.chats.map((c) => (c.id === chatId ? saved : c)),
+        }));
         return msg;
       } catch {
-        toast.error("Could not save message", "Please try again.");
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.rpChatStore.notification.couldNotSaveMessage",
+            "Could not save message",
+          ),
+          translateRuntime(
+            "runtimeGenerated.stores.rpChatStore.notification.pleaseTryAgain",
+            "Please try again.",
+          ),
+        );
         return null;
       }
     });
@@ -245,13 +378,29 @@ export const useRpChatStore = create<RpChatState>((set, get) => ({
     return withChatLock(chatId, async () => {
       const chat = get().chats.find((c) => c.id === chatId);
       if (!chat) return null;
-      const msg: RpMessageV1 = { id: newMessageId(), role: "narrator", content, createdAt: Date.now() };
+      const msg: RpMessageV1 = {
+        id: newMessageId(),
+        role: "narrator",
+        content,
+        createdAt: Date.now(),
+      };
       try {
         const saved = await svcAppend(chat, msg);
-        set((s) => ({ chats: s.chats.map((c) => (c.id === chatId ? saved : c)) }));
+        set((s) => ({
+          chats: s.chats.map((c) => (c.id === chatId ? saved : c)),
+        }));
         return msg;
       } catch {
-        toast.error("Could not save message", "Please try again.");
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.rpChatStore.notification.couldNotSaveMessage",
+            "Could not save message",
+          ),
+          translateRuntime(
+            "runtimeGenerated.stores.rpChatStore.notification.pleaseTryAgain",
+            "Please try again.",
+          ),
+        );
         return null;
       }
     });

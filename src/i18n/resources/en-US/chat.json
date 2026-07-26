@@ -16,5 +16,57 @@
   "folders": "Folders",
   "unfiled": "Unfiled",
   "attachFile": "Attach File",
-  "managedDocument": "Managed Document"
+  "managedDocument": "Managed Document",
+  "composer": {
+    "visionUnsupportedTitle": "AI is not vision capable",
+    "visionUnsupportedDetail": "“{{model}}” cannot read image attachments. Select a vision-capable model or convert the image/PDF to text first.",
+    "attachTitle": "Attach file (or drag/paste)",
+    "attachmentLimitTitle": "Attachment limit reached",
+    "attachmentLimitDetail": "You can attach up to {{max}} files per message.",
+    "tooManyAttachmentsTitle": "Too many attachments",
+    "tooManyAttachmentsDetail": "Only {{added}} of {{requested}} files were added. The limit is {{max}} files per message.",
+    "attachmentNote": "Attachment note",
+    "attachmentFailed": "Attachment failed",
+    "attachmentAlt": "Attachment {{number}}",
+    "removeAttachment": "Remove attachment {{name}}",
+    "disabledPlaceholder": "Connect an API key to start…",
+    "dropPlaceholder": "Drop file to attach",
+    "placeholder": "Ask anything — Enter to send, Shift+Enter for newline. Attach a file to send without text.",
+    "messageInput": "Message input",
+    "attachFile": "Attach file",
+    "stopGenerating": "Stop generating",
+    "sendMessage": "Send message"
+  },
+  "memory": {
+    "disabledLabel": "Memory off",
+    "disabledTitle": "Memory retrieval is disabled in Settings.",
+    "loadingLabel": "Memory…",
+    "loadingTitle": "Retrieving relevant memory for this message.",
+    "activeLabel": "Memory active",
+    "activeTitle": "Relevant memory context will be included with this message.",
+    "failedLabel": "Memory failed",
+    "failedTitle": "Memory retrieval failed. Your message was sent without memory context."
+  },
+  "controls": {
+    "autoRead": "Auto-Read",
+    "citations": "Citations",
+    "scrape": "Scrape",
+    "xSearch": "X search",
+    "searchInStream": "Search in stream",
+    "documentTools": "Document Tools",
+    "newChatShortcut": "New Chat (⌘N)",
+    "systemPromptPlaceholder": "Optional. Leave empty to avoid adding an app-authored system message.",
+    "temperature": "Temperature",
+    "topP": "Top P",
+    "maxTokens": "Max Tokens",
+    "veniceDefaultPrompt": "Venice default prompt",
+    "disableThinking": "Disable thinking",
+    "stripThinking": "Strip thinking",
+    "searchMode": "Search: {{mode}}",
+    "searchModes": {
+      "off": "off",
+      "on": "on",
+      "auto": "auto"
+    }
+  }
 }

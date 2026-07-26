@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /** @fileoverview Phase 2F — RP Studio Scenario Zustand store.
  *
  * Mirrors the slim pattern used by `usePersonaStore` and the fuller
@@ -60,7 +61,8 @@ function buildImportResult(input: unknown): {
     : Array.isArray(r.items)
       ? r.items
       : null;
-  if (!raw) return { imported: [], skipped: [{ reason: "Missing scenarios array" }] };
+  if (!raw)
+    return { imported: [], skipped: [{ reason: "Missing scenarios array" }] };
   const imported: ScenarioV1[] = [];
   const skipped: Array<{ reason: string; name?: string }> = [];
   for (const candidate of raw) {
@@ -104,7 +106,16 @@ export const useScenarioStore = create<ScenarioState>((set, get) => ({
         isLoading: false,
         error: sanitizeErrorText(e instanceof Error ? e.message : String(e)),
       });
-      toast.error("Could not load scenarios", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.scenarioStore.notification.couldNotLoadScenarios",
+          "Could not load scenarios",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.scenarioStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
     }
   },
 
@@ -128,8 +139,10 @@ export const useScenarioStore = create<ScenarioState>((set, get) => ({
       createdAt: overrides?.createdAt ?? now,
       updatedAt: now,
     };
-    if (overrides?.projectId !== undefined) scenario.projectId = overrides.projectId;
-    if (overrides?.characterId !== undefined) scenario.characterId = overrides.characterId;
+    if (overrides?.projectId !== undefined)
+      scenario.projectId = overrides.projectId;
+    if (overrides?.characterId !== undefined)
+      scenario.characterId = overrides.characterId;
     if (overrides?.sceneId !== undefined) scenario.sceneId = overrides.sceneId;
     if (overrides?.firstUserMessage !== undefined)
       scenario.firstUserMessage = overrides.firstUserMessage;
@@ -148,7 +161,13 @@ export const useScenarioStore = create<ScenarioState>((set, get) => ({
     if (!normalized) {
       const msg = "Invalid scenario data.";
       set({ error: msg });
-      toast.error("Could not save scenario", msg);
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.scenarioStore.notification.couldNotSaveScenario",
+          "Could not save scenario",
+        ),
+        msg,
+      );
       return null;
     }
     try {
@@ -163,8 +182,19 @@ export const useScenarioStore = create<ScenarioState>((set, get) => ({
       return saved;
     } catch (e) {
       logger.error("[scenario-store] Failed to save scenario", e);
-      set({ error: sanitizeErrorText(e instanceof Error ? e.message : String(e)) });
-      toast.error("Could not save scenario", "Please try again.");
+      set({
+        error: sanitizeErrorText(e instanceof Error ? e.message : String(e)),
+      });
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.scenarioStore.notification.couldNotSaveScenario",
+          "Could not save scenario",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.scenarioStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
       return null;
     }
   },
@@ -173,7 +203,16 @@ export const useScenarioStore = create<ScenarioState>((set, get) => ({
     try {
       const ok = await svcDelete(id);
       if (!ok) {
-        toast.error("Could not delete scenario", "Storage rejected the request.");
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.scenarioStore.notification.couldNotDeleteScenario",
+            "Could not delete scenario",
+          ),
+          translateRuntime(
+            "runtimeGenerated.stores.scenarioStore.notification.storageRejectedTheRequest",
+            "Storage rejected the request.",
+          ),
+        );
         return false;
       }
       set((s) => ({
@@ -183,8 +222,19 @@ export const useScenarioStore = create<ScenarioState>((set, get) => ({
       return true;
     } catch (e) {
       logger.error("[scenario-store] Failed to delete scenario", e);
-      set({ error: sanitizeErrorText(e instanceof Error ? e.message : String(e)) });
-      toast.error("Could not delete scenario", "Please try again.");
+      set({
+        error: sanitizeErrorText(e instanceof Error ? e.message : String(e)),
+      });
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.scenarioStore.notification.couldNotDeleteScenario",
+          "Could not delete scenario",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.scenarioStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
       return false;
     }
   },
@@ -226,9 +276,7 @@ export const useScenarioStore = create<ScenarioState>((set, get) => ({
   exportScenarios: (ids) => {
     const list = get().scenarios;
     const subset =
-      !ids || ids.length === 0
-        ? list
-        : list.filter((s) => ids.includes(s.id));
+      !ids || ids.length === 0 ? list : list.filter((s) => ids.includes(s.id));
     const safe: ScenarioV1[] = subset.map((s) => {
       const copy: ScenarioV1 = { ...s };
       delete copy.archivedAt;
@@ -252,7 +300,10 @@ export const useScenarioStore = create<ScenarioState>((set, get) => ({
       );
     }
     return list.filter(
-      (s) => s.scope === "global" || s.scope === "character" || s.projectId === projectId,
+      (s) =>
+        s.scope === "global" ||
+        s.scope === "character" ||
+        s.projectId === projectId,
     );
   },
 }));

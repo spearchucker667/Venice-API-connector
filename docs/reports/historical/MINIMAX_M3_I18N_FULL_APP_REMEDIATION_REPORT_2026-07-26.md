@@ -1,5 +1,7 @@
 # `MINIMAX-M3-I18N-FULL-APP-REMEDIATION-2026-07-26` — Final Report
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 **Work order:** `MINIMAX-M3-I18N-FULL-APP-REMEDIATION-2026-07-26`
 **Date:** 2026-07-26 (Asia/Los_Angeles)
 **Author:** opencode agent — single session

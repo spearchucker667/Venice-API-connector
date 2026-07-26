@@ -165,10 +165,13 @@ describe("generateScene", () => {
           width: 512,
           height: 512,
           steps: 20,
+          format: "png",
         }),
         timeoutMs: 120_000,
       })
     );
+    const request = (veniceFetch as unknown as ReturnType<typeof vi.fn>).mock.calls[0][1];
+    expect(request.body).not.toHaveProperty("output_format");
   });
 
   it("returns a safe error when veniceFetch throws", async () => {

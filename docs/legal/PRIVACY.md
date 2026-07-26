@@ -59,6 +59,13 @@ privacy or complete safety protection.
   it contains sanitized timing/status metadata only. Safe diagnostics exclude
   API keys, bearer tokens, raw prompt content, base64 media, and full local
   absolute paths.
+- **Generated media:** desktop generated images, audio, and video use the
+  main-owned SHA-256 blob store and stable `venice-media://` identifiers rather
+  than persistent data URLs. When a validated generated image cannot reach
+  disk, a process-local recovery queue may retain media bytes and integrity
+  metadata for up to 30 minutes, bounded to eight items / 128 MiB. It stores no
+  prompt, credential, signed URL, or renderer-selected destination and is
+  cleared on process exit.
 - **No cloud sync:** Venice Forge does not sync your local data to a Venice
   Forge-operated cloud service.
 - **Renderer encryption boundary:** encrypted renderer stores use a
@@ -113,6 +120,9 @@ Direct source-image web matching is not currently exposed. The former potential-
   protections.
 - Legacy desktop `chat-history/*.json` files, generated exports, and user-made
   backups are user-controlled files and may be plaintext.
+- Memory-only generated-image recovery cannot survive complete application exit;
+  users should retry or use Save As before closing the app when primary storage
+  is unavailable.
 - Family Safe Mode is not a guarantee that all unsafe or unlawful content will
   be blocked.
 - Upstream provider privacy behavior, retention, and safety policies remain

@@ -22,25 +22,23 @@
 
 import { useMemo } from "react";
 import { useStatusStore } from "../../stores/status-store";
-import {
-  StatusIndicator,
-} from "./StatusIndicator";
+import { StatusIndicator } from "./StatusIndicator";
 import type { AppStatusItem, AppStatusSnapshot } from "../../types/status";
 import { STATUS_SEVERITIES } from "../../types/status";
 import { isElectron } from "../../services/desktopBridge";
-import { Trans } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 /** Ordered list of categories shown in the cluster. The order is
  *  stable so the user can build muscle memory for the location. */
-const CLUSTER_ORDER: Array<{ key: keyof AppStatusSnapshot; label: string }> = [
-  { key: "api", label: "API" },
-  { key: "apiKey", label: "Key" },
-  { key: "model", label: "Model" },
-  { key: "storage", label: "Storage" },
-  { key: "safety", label: "Safety" },
-  { key: "provider", label: "Research" },
-  { key: "project", label: "Project" },
-  { key: "desktop", label: "Mode" },
+const CLUSTER_ORDER: Array<{ key: keyof AppStatusSnapshot }> = [
+  { key: "api" },
+  { key: "apiKey" },
+  { key: "model" },
+  { key: "storage" },
+  { key: "safety" },
+  { key: "provider" },
+  { key: "project" },
+  { key: "desktop" },
 ];
 
 export interface HeaderStatusClusterProps {
@@ -51,34 +49,51 @@ export interface HeaderStatusClusterProps {
   compact?: boolean;
 }
 
-export function HeaderStatusCluster({ status: statusOverride, compact = false }: HeaderStatusClusterProps) {
-  const status = useStatusStore((s) => s.status)
-  const openDrawer = useStatusStore((s) => s.openDrawer)
+export function HeaderStatusCluster({
+  status: statusOverride,
+  compact = false,
+}: HeaderStatusClusterProps) {
+  const { t } = useTranslation("common");
+  const status = useStatusStore((s) => s.status);
+  const openDrawer = useStatusStore((s) => s.openDrawer);
 
-  const snapshot = statusOverride ?? status
+  const snapshot = statusOverride ?? status;
   const items = useMemo(() => {
-    return CLUSTER_ORDER.map(({ key, label }) => {
-      const it: AppStatusItem = snapshot[key]
-      return { key, label, item: it }
-    })
-  }, [snapshot])
-  const worst = useMemo(() => items.reduce((current, candidate) => (
-    STATUS_SEVERITIES.indexOf(candidate.item.severity) < STATUS_SEVERITIES.indexOf(current.item.severity)
-      ? candidate
-      : current
-  )), [items])
+    return CLUSTER_ORDER.map(({ key }) => {
+      const it: AppStatusItem = snapshot[key];
+      return { key, label: t(`statusCluster.categories.${key}`), item: it };
+    });
+  }, [snapshot, t]);
+  const worst = useMemo(
+    () =>
+      items.reduce((current, candidate) =>
+        STATUS_SEVERITIES.indexOf(candidate.item.severity) <
+        STATUS_SEVERITIES.indexOf(current.item.severity)
+          ? candidate
+          : current,
+      ),
+    [items],
+  );
 
   return (
     <div
       role="group"
-      aria-label="App status cluster"
+      aria-label={t("statusCluster.aria.cluster")}
       data-testid="header-status-cluster"
       data-app-mode={isElectron() ? "desktop" : "web"}
       className="flex min-w-0 items-center"
     >
       <div className="hidden 2xl:flex flex-nowrap items-center gap-1.5">
         {items.map(({ key, label, item }) => (
-          <StatusIndicator key={key} id={key} label={label} severity={item.severity} summary={item.summary} compact={compact} onClick={() => openDrawer(key)} />
+          <StatusIndicator
+            key={key}
+            id={key}
+            label={label}
+            severity={item.severity}
+            summary={t(item.summary.key, item.summary.values)}
+            compact={compact}
+            onClick={() => openDrawer(key)}
+          />
         ))}
       </div>
       <button
@@ -87,11 +102,15 @@ export function HeaderStatusCluster({ status: statusOverride, compact = false }:
         data-severity={worst.item.severity}
         onClick={() => openDrawer(worst.key)}
         className="2xl:hidden inline-flex items-center gap-1.5 rounded-md border border-border bg-surface-elevated px-2 py-1 text-xs text-text-secondary"
-        aria-label={`Open app status. Highest severity: ${worst.label} ${worst.item.severity}`}
-        title={worst.item.summary}
+        aria-label={t("statusCluster.aria.openHighest", {
+          category: worst.label,
+          severity: t(`statusCluster.severities.${worst.item.severity}`),
+        })}
+        title={t(worst.item.summary.key, worst.item.summary.values)}
       >
         <span aria-hidden className="h-2 w-2 rounded-full bg-accent" />
-        <Trans i18nKey="common:surface.componentsStatusHeaderstatuscluster.action.status" /></button>
+        {t("statusCluster.status")}
+      </button>
     </div>
-  )
+  );
 }

@@ -258,5 +258,18 @@
     "toggleInspector": "切换检查器",
     "toggleHint": "按 ⌘K 切换",
     "navigateHint": "按 ↑↓ 导航 · 按 Enter 选择"
+  },
+  "header": {
+    "openMenu": "打开菜单",
+    "toggleSidebar": "切换侧边栏",
+    "selectModel": "选择型号...",
+    "selectedModel": "选定型号",
+    "toggleTaskCenter": "切换任务中心",
+    "tasks": "任务",
+    "checkingApiKey": "检查 API 密钥",
+    "apiKeyConnectedManage": "API密钥已连接、管理",
+    "connectApiKey": "连接 API 密钥",
+    "checkingKey": "正在检查密钥...",
+    "connected": "已连接"
   }
 }

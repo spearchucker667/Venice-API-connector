@@ -1,5 +1,7 @@
 # Venice Forge Chat Folders, Agent Media, Documents, and Video — Final Implementation Report
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 > **Status:** Implementation closure evidence for the 2026-07-19 work order.
 > The authoritative task ledger remains [`../ROADMAP.md`](../../ROADMAP.md) and command
 > evidence remains [`../summary_of_work.md`](../../summary_of_work.md). This report

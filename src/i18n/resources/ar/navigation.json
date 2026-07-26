@@ -258,5 +258,18 @@
     "toggleInspector": "تبديل المفتش",
     "toggleHint": "⌘K للتبديل",
     "navigateHint": "↑↓ للتنقل · Enter للاختيار"
+  },
+  "header": {
+    "openMenu": "فتح القائمة",
+    "toggleSidebar": "تبديل الشريط الجانبي",
+    "selectModel": "اختر الموديل…",
+    "selectedModel": "النموذج المحدد",
+    "toggleTaskCenter": "تبديل مركز المهام",
+    "tasks": "المهام",
+    "checkingApiKey": "التحقق من مفتاح API",
+    "apiKeyConnectedManage": "مفتاح API متصل، وإدارته",
+    "connectApiKey": "ربط مفتاح API",
+    "checkingKey": "التحقق من المفتاح…",
+    "connected": "متصل"
   }
 }

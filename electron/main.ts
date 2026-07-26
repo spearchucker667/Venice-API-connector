@@ -24,7 +24,13 @@ import { startBridgeServer, stopBridgeServer, validateHeadlessBridgeToken } from
 import { stopSyncWatcher } from "./services/syncFolderWatcher";
 import { isValidBridgeHost } from "./utils/bridgeHost";
 import { getCharacterImageCacheDir, ALLOWED_CONTENT_TYPES } from "./services/characterImageCache";
-import { createGeneratedMediaResponse, GENERATED_MEDIA_SCHEME } from './services/generatedMediaStore';
+import {
+  auditGeneratedMediaIntegrity,
+  createGeneratedMediaResponse,
+  GENERATED_MEDIA_SCHEME,
+  recoverPendingGeneratedMediaWrites,
+  startGeneratedMediaIntegrityMonitor,
+} from './services/generatedMediaStore';
 import { readRegularFileNoFollow } from "./utils/secureFile";
 import { createShutdownCoordinator } from "./services/appShutdownCoordinator";
 import { migrateLegacyFolders } from "./services/chatFolderService";
@@ -338,7 +344,21 @@ if (!gotLock) {
     }
   });
 
-  app.whenReady().then(() => {
+  app.whenReady().then(async () => {
+    try {
+      const recovery = await recoverPendingGeneratedMediaWrites();
+      if (recovery.recovered > 0 || recovery.failed > 0) {
+        logInfo('Generated media startup recovery', recovery);
+      }
+    } catch (error) {
+      logError('Generated media startup recovery could not run', error);
+    }
+    void auditGeneratedMediaIntegrity()
+      .then((result) => {
+        if (result.failed > 0) logError('Generated media startup integrity audit found failures', result);
+      })
+      .catch((error) => logError('Generated media startup integrity audit failed', error));
+    startGeneratedMediaIntegrityMonitor();
     protocol.handle(GENERATED_MEDIA_SCHEME, async (request) => {
       const parsedUrl = new URL(request.url);
       const id = parsedUrl.hostname || parsedUrl.pathname.replace(/^\/+/, '');

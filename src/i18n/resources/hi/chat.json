@@ -16,5 +16,57 @@
   "folders": "फ़ोल्डर",
   "unfiled": "अवर्गीकृत",
   "attachFile": "फ़ाइल संलग्न करें",
-  "managedDocument": "प्रबंधित दस्तावेज़"
+  "managedDocument": "प्रबंधित दस्तावेज़",
+  "composer": {
+    "visionUnsupportedTitle": "एआई दृष्टि सक्षम नहीं है",
+    "visionUnsupportedDetail": "\"{{model}}\" छवि अनुलग्नकों को नहीं पढ़ सकता। एक दृष्टि-सक्षम मॉडल चुनें या पहले छवि/पीडीएफ को टेक्स्ट में बदलें।",
+    "attachTitle": "फ़ाइल संलग्न करें (या खींचें/पेस्ट करें)",
+    "attachmentLimitTitle": "अनुलग्नक की सीमा पूरी हो गई",
+    "attachmentLimitDetail": "आप प्रति संदेश {{max}} तक फ़ाइलें संलग्न कर सकते हैं।",
+    "tooManyAttachmentsTitle": "बहुत सारे अनुलग्नक",
+    "tooManyAttachmentsDetail": "{{requested}} में से केवल {{added}} फ़ाइलें जोड़ी गईं। सीमा प्रति संदेश {{max}} फ़ाइलें है।",
+    "attachmentNote": "अनुलग्नक नोट",
+    "attachmentFailed": "अनुलग्नक विफल रहा",
+    "attachmentAlt": "अनुलग्नक {{number}}",
+    "removeAttachment": "अनुलग्नक हटाएं {{name}}",
+    "disabledPlaceholder": "प्रारंभ करने के लिए एक API कुंजी कनेक्ट करें...",
+    "dropPlaceholder": "संलग्न करने के लिए फ़ाइल छोड़ें",
+    "placeholder": "कुछ भी पूछें - भेजने के लिए Enter, नई लाइन के लिए Shift+Enter। बिना पाठ के भेजने के लिए फ़ाइल संलग्न करें.",
+    "messageInput": "संदेश इनपुट",
+    "attachFile": "फ़ाइल जोड़ें",
+    "stopGenerating": "उत्पादन बंद करो",
+    "sendMessage": "मेसेज भेजें"
+  },
+  "memory": {
+    "disabledLabel": "मेमोरी बंद",
+    "disabledTitle": "सेटिंग्स में मेमोरी पुनर्प्राप्ति अक्षम है।",
+    "loadingLabel": "याद…",
+    "loadingTitle": "इस संदेश के लिए प्रासंगिक स्मृति पुनर्प्राप्त की जा रही है.",
+    "activeLabel": "स्मृति सक्रिय",
+    "activeTitle": "इस संदेश के साथ प्रासंगिक स्मृति संदर्भ शामिल किया जाएगा.",
+    "failedLabel": "मेमोरी विफल रही",
+    "failedTitle": "स्मृति पुनर्प्राप्ति विफल रही. आपका संदेश स्मृति प्रसंग के बिना भेजा गया था."
+  },
+  "controls": {
+    "autoRead": "ऑटो-पढ़ने के लिए",
+    "citations": "उद्धरण",
+    "scrape": "खरोंच",
+    "xSearch": "एक्स खोज",
+    "searchInStream": "स्ट्रीम में खोजें",
+    "documentTools": "दस्तावेज़ उपकरण",
+    "newChatShortcut": "नई चैट (⌘N)",
+    "systemPromptPlaceholder": "वैकल्पिक। ऐप-लिखित सिस्टम संदेश जोड़ने से बचने के लिए इसे खाली छोड़ दें।",
+    "temperature": "तापमान",
+    "topP": "शीर्ष पी",
+    "maxTokens": "अधिकतम टोकन",
+    "veniceDefaultPrompt": "वेनिस डिफ़ॉल्ट प्रॉम्प्ट",
+    "disableThinking": "सोच को अक्षम करें",
+    "stripThinking": "पट्टी सोच",
+    "searchMode": "खोजें: {{mode}}",
+    "searchModes": {
+      "off": "बंद",
+      "on": "पर",
+      "auto": "ऑटो"
+    }
+  }
 }

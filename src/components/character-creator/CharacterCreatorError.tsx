@@ -4,7 +4,7 @@
 
 import { AlertCircle, RotateCcw, ArrowLeft, Copy } from "lucide-react";
 import { toast } from "../../stores/toast-store";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 interface Props {
   error: string;
@@ -19,9 +19,14 @@ export function CharacterCreatorError({
   onReturnToDraft,
   hasDraftWork = false,
 }: Props) {
+  const { t: tRuntime } = useTranslation("common");
   const handleCopyError = () => {
     navigator.clipboard.writeText(error);
-    toast.success("Error details copied to clipboard");
+    toast.success(
+      tRuntime(
+        "runtimeGenerated.components.characterCreator.charactercreatorerror.notification.errorDetailsCopiedToClipboard",
+      ),
+    );
   };
 
   return (
@@ -30,21 +35,28 @@ export function CharacterCreatorError({
         <AlertCircle className="w-8 h-8" />
       </div>
 
-      <h2 className="text-lg font-bold text-text-primary mb-2"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.heading.characterCreatorError" /></h2>
+      <h2 className="text-lg font-bold text-text-primary mb-2">
+        <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.heading.characterCreatorError" />
+      </h2>
       <p className="text-xs text-text-muted mb-4 max-w-md">
-        <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.description.anErrorOccurredDuringGenerationOrCard" /></p>
+        <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.description.anErrorOccurredDuringGenerationOrCard" />
+      </p>
 
       {/* Error Details Box */}
       <div className="w-full bg-surface/60 rounded-xl border border-rose-500/20 p-4 mb-6 text-left">
         <div className="flex items-center justify-between text-xs text-rose-400 font-bold mb-1">
-          <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.diagnosticMessage" /></span>
+          <span>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.diagnosticMessage" />
+          </span>
           <button
             type="button"
             onClick={handleCopyError}
             className="hover:underline flex items-center gap-1 text-[11px] font-medium"
           >
             <Copy className="w-3 h-3" />
-            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.copy" /></span>
+            <span>
+              <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.copy" />
+            </span>
           </button>
         </div>
         <p className="text-xs text-text-secondary font-mono break-all line-clamp-4">
@@ -61,7 +73,9 @@ export function CharacterCreatorError({
             className="px-4 py-2 rounded-xl bg-surface border border-border hover:bg-surface-elevated text-xs font-medium text-text-secondary flex items-center gap-1.5 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.returnToDraft" /></span>
+            <span>
+              <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.returnToDraft" />
+            </span>
           </button>
         )}
         <button
@@ -70,7 +84,9 @@ export function CharacterCreatorError({
           className="px-5 py-2 rounded-xl bg-accent text-accent-contrast font-medium text-xs flex items-center gap-1.5 hover:opacity-90 transition-opacity"
         >
           <RotateCcw className="w-4 h-4" />
-          <span><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.retryOperation" /></span>
+          <span>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorerror.text.retryOperation" />
+          </span>
         </button>
       </div>
     </div>

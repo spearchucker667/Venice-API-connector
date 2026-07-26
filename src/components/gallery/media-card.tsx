@@ -2,15 +2,33 @@
  * thumbnail, title, badges, and quick action buttons. */
 
 import { memo, useState } from "react";
-import { Heart, Star, Trash2, Image as ImageIcon, Play, Music, Lock, Unlock } from "lucide-react";
+import {
+  Heart,
+  Star,
+  Trash2,
+  Image as ImageIcon,
+  Play,
+  Music,
+  Lock,
+  Unlock,
+} from "lucide-react";
 import { Badge } from "../ui/shared";
 import { useMediaThumb } from "../../hooks/useMediaThumb";
-import { mediaItemSource, formatDimensions, formatDuration, isVideoItem, isAudioItem } from "../../utils/mediaItem";
+import {
+  mediaItemSource,
+  formatDimensions,
+  formatDuration,
+  isVideoItem,
+  isAudioItem,
+} from "../../utils/mediaItem";
 import { cn } from "../../lib/utils";
 import type { MediaItem } from "../../types/media";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
-const OP_TONE: Record<string, "emerald" | "sky" | "violet" | "amber" | "pink" | "slate" | "rose" | "teal"> = {
+const OP_TONE: Record<
+  string,
+  "emerald" | "sky" | "violet" | "amber" | "pink" | "slate" | "rose" | "teal"
+> = {
   generate: "slate",
   upscale: "emerald",
   edit: "violet",
@@ -57,6 +75,7 @@ function MediaCardImpl({
   onVaultToggle,
   onDelete,
 }: MediaCardProps) {
+  const { t: tRuntime } = useTranslation("common");
   const [thumbFailed, setThumbFailed] = useState(false);
   const { url, loading } = useMediaThumb(item);
   const isVideo = isVideoItem(item);
@@ -69,7 +88,11 @@ function MediaCardImpl({
     <article
       className={cn(
         "mesh-card media-card-virtualized group relative flex flex-col overflow-hidden rounded-xl",
-        active ? "border-accent ring-2 ring-accent/40" : selected ? "border-accent/60" : "border-border hover:border-accent/40",
+        active
+          ? "border-accent ring-2 ring-accent/40"
+          : selected
+            ? "border-accent/60"
+            : "border-border hover:border-accent/40",
       )}
     >
       <button
@@ -85,7 +108,13 @@ function MediaCardImpl({
           onSelect(item, !multiSelectMode);
         }}
         className="relative block aspect-square w-full overflow-hidden bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
-        aria-label={`Open ${isVideo ? "video" : "image"}: ${item.prompt || "untitled"}`}
+        aria-label={tRuntime(
+          "runtimeGenerated.components.gallery.mediaCard.attribute.openValue1Value2",
+          {
+            value1: isVideo ? "video" : "image",
+            value2: item.prompt || "untitled",
+          },
+        )}
       >
         {url && !thumbFailed ? (
           // Always use <img> for thumbnails — the URL from useMediaThumb is a
@@ -94,7 +123,16 @@ function MediaCardImpl({
           // failures and media-src CSP violations.
           <img
             src={url}
-            alt={item.prompt || (isVideo ? "Generated video" : "Generated image")}
+            alt={
+              item.prompt ||
+              (isVideo
+                ? tRuntime(
+                    "runtimeGenerated.components.gallery.mediaCard.attribute.generatedVideo",
+                  )
+                : tRuntime(
+                    "runtimeGenerated.components.gallery.mediaCard.attribute.generatedImage",
+                  ))
+            }
             className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
             onError={() => setThumbFailed(true)}
           />
@@ -103,14 +141,33 @@ function MediaCardImpl({
           // durable URL as an img src.
           <img
             src={fallbackSrc}
-            alt={item.prompt || "Generated image"}
+            alt={
+              item.prompt ||
+              tRuntime(
+                "runtimeGenerated.components.gallery.mediaCard.attribute.generatedImage",
+              )
+            }
             className="h-full w-full object-cover"
             onError={() => setThumbFailed(true)}
           />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-text-muted">
-            {isVideo ? <Play className="h-6 w-6" /> : isAudio ? <Music className="h-6 w-6" /> : <ImageIcon className="h-6 w-6" />}
-            <span className="text-[12px]">{loading ? "Loading…" : "Preview unavailable"}</span>
+            {isVideo ? (
+              <Play className="h-6 w-6" />
+            ) : isAudio ? (
+              <Music className="h-6 w-6" />
+            ) : (
+              <ImageIcon className="h-6 w-6" />
+            )}
+            <span className="text-[12px]">
+              {loading
+                ? tRuntime(
+                    "runtimeGenerated.components.gallery.mediaCard.text.loading",
+                  )
+                : tRuntime(
+                    "runtimeGenerated.components.gallery.mediaCard.text.previewUnavailable",
+                  )}
+            </span>
           </div>
         )}
 
@@ -125,7 +182,9 @@ function MediaCardImpl({
           <span
             className={cn(
               "absolute left-2 top-2 grid h-5 w-5 place-items-center rounded border bg-surface/80 text-[12px] font-bold",
-              selected ? "border-accent bg-accent text-accent-fg" : "border-border text-text-muted",
+              selected
+                ? "border-accent bg-accent text-accent-fg"
+                : "border-border text-text-muted",
             )}
             aria-hidden="true"
           >
@@ -136,7 +195,9 @@ function MediaCardImpl({
         {item.favorite && (
           <span className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-md bg-overlay px-1.5 py-0.5 text-[12px] text-rose-200 backdrop-blur">
             <Heart className="h-3 w-3 fill-current" />
-            <span><Trans i18nKey="common:surface.componentsGalleryMediaCard.text.favorite" /></span>
+            <span>
+              <Trans i18nKey="common:surface.componentsGalleryMediaCard.text.favorite" />
+            </span>
           </span>
         )}
 
@@ -149,13 +210,41 @@ function MediaCardImpl({
 
       <div className="flex flex-col gap-1.5 p-3">
         <div className="flex items-center gap-1.5">
-          <Badge tone={OP_TONE[item.operation] ?? "slate"}>{OP_LABEL[item.operation] ?? "Item"}</Badge>
-          {isVideo ? <Badge tone="rose"><Trans i18nKey="common:surface.componentsGalleryMediaCard.text.video" /></Badge> : isAudio ? <Badge tone="sky"><Trans i18nKey="common:surface.componentsGalleryMediaCard.text.audio" /></Badge> : <Badge tone="slate"><Trans i18nKey="common:surface.componentsGalleryMediaCard.text.image" /></Badge>}
+          <Badge tone={OP_TONE[item.operation] ?? "slate"}>
+            {OP_LABEL[item.operation] ??
+              tRuntime(
+                "runtimeGenerated.components.gallery.mediaCard.text.item",
+              )}
+          </Badge>
+          {isVideo ? (
+            <Badge tone="rose">
+              <Trans i18nKey="common:surface.componentsGalleryMediaCard.text.video" />
+            </Badge>
+          ) : isAudio ? (
+            <Badge tone="sky">
+              <Trans i18nKey="common:surface.componentsGalleryMediaCard.text.audio" />
+            </Badge>
+          ) : (
+            <Badge tone="slate">
+              <Trans i18nKey="common:surface.componentsGalleryMediaCard.text.image" />
+            </Badge>
+          )}
           {dims && <Badge tone="slate">{dims}</Badge>}
-          {typeof item.seed === "number" && <Badge tone="amber"><Trans i18nKey="common:surface.componentsGalleryMediaCard.text.seed" /> {item.seed}</Badge>}
+          {typeof item.seed === "number" && (
+            <Badge tone="amber">
+              <Trans i18nKey="common:surface.componentsGalleryMediaCard.text.seed" />{" "}
+              {item.seed}
+            </Badge>
+          )}
         </div>
-        <p className="line-clamp-2 text-[12.5px] text-text-primary" title={item.prompt}>
-          {item.prompt || "Untitled"}
+        <p
+          className="line-clamp-2 text-[12.5px] text-text-primary"
+          title={item.prompt}
+        >
+          {item.prompt ||
+            tRuntime(
+              "runtimeGenerated.components.gallery.mediaCard.text.untitled",
+            )}
         </p>
         <p className="truncate text-[12px] text-text-muted" title={item.model}>
           {item.model}
@@ -171,7 +260,10 @@ function MediaCardImpl({
               </span>
             ))}
             {item.tags.length > 3 && (
-              <span className="text-[12px] text-text-muted">+{item.tags.length - 3} <Trans i18nKey="common:surface.componentsGalleryMediaCard.text.more" /></span>
+              <span className="text-[12px] text-text-muted">
+                +{item.tags.length - 3}{" "}
+                <Trans i18nKey="common:surface.componentsGalleryMediaCard.text.more" />
+              </span>
             )}
           </div>
         )}
@@ -180,7 +272,15 @@ function MediaCardImpl({
           <button
             type="button"
             onClick={() => onToggleFavorite(item)}
-            aria-label={item.favorite ? "Unfavorite" : "Mark as favorite"}
+            aria-label={
+              item.favorite
+                ? tRuntime(
+                    "runtimeGenerated.components.gallery.mediaCard.attribute.unfavorite",
+                  )
+                : tRuntime(
+                    "runtimeGenerated.components.gallery.mediaCard.attribute.markAsFavorite",
+                  )
+            }
             className={cn(
               "rounded-md border px-2 py-1 text-[12px] transition-colors",
               item.favorite
@@ -193,7 +293,15 @@ function MediaCardImpl({
           <button
             type="button"
             onClick={() => onVaultToggle(item)}
-            aria-label={item.vaultHidden ? "Remove from Vault" : "Move to Vault"}
+            aria-label={
+              item.vaultHidden
+                ? tRuntime(
+                    "runtimeGenerated.components.gallery.mediaCard.attribute.removeFromVault",
+                  )
+                : tRuntime(
+                    "runtimeGenerated.components.gallery.mediaCard.attribute.moveToVault",
+                  )
+            }
             className={cn(
               "rounded-md border px-2 py-1 text-[12px] transition-colors",
               item.vaultHidden
@@ -201,12 +309,18 @@ function MediaCardImpl({
                 : "border-border text-text-secondary hover:border-accent hover:text-accent",
             )}
           >
-            {item.vaultHidden ? <Unlock className="h-3 w-3" /> : <Lock className="h-3 w-3" />}
+            {item.vaultHidden ? (
+              <Unlock className="h-3 w-3" />
+            ) : (
+              <Lock className="h-3 w-3" />
+            )}
           </button>
           <button
             type="button"
             onClick={() => onDelete(item)}
-            aria-label="Delete"
+            aria-label={tRuntime(
+              "runtimeGenerated.components.gallery.mediaCard.attribute.delete",
+            )}
             className="ml-auto rounded-md border border-danger/30 px-2 py-1 text-[12px] text-danger hover:bg-danger/10"
           >
             <Trash2 className="h-3 w-3" />

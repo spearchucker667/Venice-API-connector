@@ -1,3 +1,4 @@
+import { translateRuntime } from "../../i18n/runtimeTranslator";
 /**
  * @fileoverview RP Studio orchestrator — sub-tab bar + the active view.
  *
@@ -26,7 +27,7 @@ import { PillGroup } from "../ui/shared";
 import { useRendererConfigHydrated } from "../../safetyHydration";
 import { isElectron } from "../../services/desktopBridge";
 import { useCharacterCardStore } from "../../stores/character-card-store";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 const CharacterEditor = lazy(async () => {
   const module = await import("./CharacterEditor");
@@ -34,29 +35,76 @@ const CharacterEditor = lazy(async () => {
 });
 
 const SUB_TABS = [
-  { id: "library", label: "Characters" },
-  { id: "personas", label: "Personas" },
-  { id: "lorebooks", label: "Lorebooks" },
-  { id: "chats", label: "Chats" },
-  { id: "scenes", label: "Scenes" },
+  {
+    id: "library",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.rpStudio.rpstudioview.metadata.characters",
+        "Characters",
+      );
+    },
+  },
+  {
+    id: "personas",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.rpStudio.rpstudioview.metadata.personas",
+        "Personas",
+      );
+    },
+  },
+  {
+    id: "lorebooks",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.rpStudio.rpstudioview.metadata.lorebooks",
+        "Lorebooks",
+      );
+    },
+  },
+  {
+    id: "chats",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.rpStudio.rpstudioview.metadata.chats",
+        "Chats",
+      );
+    },
+  },
+  {
+    id: "scenes",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.rpStudio.rpstudioview.metadata.scenes",
+        "Scenes",
+      );
+    },
+  },
 ] as const;
 type SubTab = (typeof SUB_TABS)[number]["id"];
 
 type SceneSubView = "generate" | "gallery";
 
 export function RpStudioView() {
+  const { t: tRuntime } = useTranslation("common");
   const [sub, setSub] = useState<SubTab>("library");
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
   const [openChatId, setOpenChatId] = useState<string | null>(null);
   const [openSceneChatId, setOpenSceneChatId] = useState<string | null>(null);
-  const [debugAssembly, setDebugAssembly] = useState<PromptAssemblyResult | null>(null);
+  const [debugAssembly, setDebugAssembly] =
+    useState<PromptAssemblyResult | null>(null);
   const [sceneView, setSceneView] = useState<SceneSubView>("generate");
   const hydrated = useRendererConfigHydrated();
   const showHydrationBanner = isElectron() && !hydrated;
-  const externallyEditingCardId = useCharacterCardStore((state) => state.editingId);
+  const externallyEditingCardId = useCharacterCardStore(
+    (state) => state.editingId,
+  );
 
   useEffect(() => {
-    if (externallyEditingCardId) { setSub("library"); setEditingCardId(externallyEditingCardId); }
+    if (externallyEditingCardId) {
+      setSub("library");
+      setEditingCardId(externallyEditingCardId);
+    }
   }, [externallyEditingCardId]);
 
   useEffect(() => {
@@ -68,7 +116,9 @@ export function RpStudioView() {
   return (
     <div className="flex flex-col h-full min-h-0">
       <div className="flex items-center gap-1 px-3 py-2 soft-separator-y mesh-header mesh-surface overflow-x-auto">
-        <div className="text-[12px] uppercase tracking-[0.08em] text-text-muted font-semibold mr-2 shrink-0"><Trans i18nKey="common:surface.componentsRpStudioRpstudioview.text.rpStudio" /></div>
+        <div className="text-[12px] uppercase tracking-[0.08em] text-text-muted font-semibold mr-2 shrink-0">
+          <Trans i18nKey="common:surface.componentsRpStudioRpstudioview.text.rpStudio" />
+        </div>
         {SUB_TABS.map((t) => (
           <button
             key={t.id}
@@ -90,14 +140,28 @@ export function RpStudioView() {
         >
           <span aria-hidden="true">⏳</span>
           <span>
-            <Trans i18nKey="common:surface.componentsRpStudioRpstudioview.text.localConfigIsStillLoadingRpStudio" /></span>
+            <Trans i18nKey="common:surface.componentsRpStudioRpstudioview.text.localConfigIsStillLoadingRpStudio" />
+          </span>
         </div>
       )}
 
       {sub === "scenes" && (
         <div className="px-3 py-1.5 soft-separator-y mesh-surface">
           <PillGroup
-            options={[{ value: "generate", label: "Generate" }, { value: "gallery", label: "Gallery" }]}
+            options={[
+              {
+                value: "generate",
+                label: tRuntime(
+                  "runtimeGenerated.components.rpStudio.rpstudioview.metadata.generate",
+                ),
+              },
+              {
+                value: "gallery",
+                label: tRuntime(
+                  "runtimeGenerated.components.rpStudio.rpstudioview.metadata.gallery",
+                ),
+              },
+            ]}
             value={sceneView}
             onChange={(v) => setSceneView(v as SceneSubView)}
             ariaLabel="Scenes sub-view"
@@ -106,33 +170,62 @@ export function RpStudioView() {
       )}
 
       <div className="flex-1 min-h-0 relative">
-        {sub === "library" && (editingCardId ? (
-          <Suspense fallback={<div className="flex h-full items-center justify-center text-[12px] text-text-muted" role="status"><Trans i18nKey="common:surface.componentsRpStudioRpstudioview.text.loadingStCardStudio" /></div>}>
-            <CharacterEditor cardId={editingCardId} onClose={() => setEditingCardId(null)} disabled={showHydrationBanner} />
-          </Suspense>
-        ) : (
-          <CharacterLibrary onEdit={(id) => setEditingCardId(id)} />
-        ))}
-        {sub === "personas" && <PersonaManager disabled={showHydrationBanner} />}
-        {sub === "lorebooks" && <LorebookManager disabled={showHydrationBanner} />}
-        {sub === "chats" && (openChatId ? (
-          <RpChatView
-            chatId={openChatId}
-            onBack={() => setOpenChatId(null)}
-            onOpenScene={(id) => { setOpenSceneChatId(id); setSceneView("generate"); setSub("scenes"); }}
-            onOpenDebug={(assembly) => setDebugAssembly(assembly)}
-          />
-        ) : (
-          <RpChatList onOpen={(id) => setOpenChatId(id)} />
-        ))}
+        {sub === "library" &&
+          (editingCardId ? (
+            <Suspense
+              fallback={
+                <div
+                  className="flex h-full items-center justify-center text-[12px] text-text-muted"
+                  role="status"
+                >
+                  <Trans i18nKey="common:surface.componentsRpStudioRpstudioview.text.loadingStCardStudio" />
+                </div>
+              }
+            >
+              <CharacterEditor
+                cardId={editingCardId}
+                onClose={() => setEditingCardId(null)}
+                disabled={showHydrationBanner}
+              />
+            </Suspense>
+          ) : (
+            <CharacterLibrary onEdit={(id) => setEditingCardId(id)} />
+          ))}
+        {sub === "personas" && (
+          <PersonaManager disabled={showHydrationBanner} />
+        )}
+        {sub === "lorebooks" && (
+          <LorebookManager disabled={showHydrationBanner} />
+        )}
+        {sub === "chats" &&
+          (openChatId ? (
+            <RpChatView
+              chatId={openChatId}
+              onBack={() => setOpenChatId(null)}
+              onOpenScene={(id) => {
+                setOpenSceneChatId(id);
+                setSceneView("generate");
+                setSub("scenes");
+              }}
+              onOpenDebug={(assembly) => setDebugAssembly(assembly)}
+            />
+          ) : (
+            <RpChatList onOpen={(id) => setOpenChatId(id)} />
+          ))}
         {sub === "scenes" && sceneView === "generate" && (
-          <SceneGenerator filterChatId={openSceneChatId ?? undefined} disabled={showHydrationBanner} />
+          <SceneGenerator
+            filterChatId={openSceneChatId ?? undefined}
+            disabled={showHydrationBanner}
+          />
         )}
         {sub === "scenes" && sceneView === "gallery" && <AssetGallery />}
       </div>
 
       {debugAssembly && (
-        <PromptDebugDrawer assembly={debugAssembly} onClose={() => setDebugAssembly(null)} />
+        <PromptDebugDrawer
+          assembly={debugAssembly}
+          onClose={() => setDebugAssembly(null)}
+        />
       )}
     </div>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import { Field } from "../../components/Field";
 import { copyText } from "../../utils/download";
 import { toast } from "../../stores/toast-store";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 export function ScrapeTab({
   url,
@@ -12,7 +12,7 @@ export function ScrapeTab({
   provider,
   setProvider,
   scrapeOutput,
-  setScrapeOutput
+  setScrapeOutput,
 }: {
   url: string;
   setUrl: (val: string) => void;
@@ -23,11 +23,18 @@ export function ScrapeTab({
   scrapeOutput: string;
   setScrapeOutput: (val: string) => void;
 }) {
+  const { t: tRuntime } = useTranslation("common");
   return (
     <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg flex flex-col gap-4">
-      <h3 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsSearchScrapetab.heading.webScrape" /></h3>
-      
-      <Field label="URL to scrape">
+      <h3 className="text-[14.5px] font-medium text-text-primary">
+        <Trans i18nKey="common:surface.componentsSearchScrapetab.heading.webScrape" />
+      </h3>
+
+      <Field
+        label={tRuntime(
+          "runtimeGenerated.components.search.scrapetab.attribute.urlToScrape",
+        )}
+      >
         <input
           value={url}
           onChange={(e) => setUrl(e.target.value)}
@@ -36,10 +43,24 @@ export function ScrapeTab({
         />
       </Field>
 
-      <Field label="Reader provider">
-        <select value={provider} onChange={(event) => setProvider(event.target.value as "venice" | "jina")} className="w-full bg-surface border border-border rounded-lg px-3.5 py-2 text-[14px] text-text-primary outline-none focus:border-accent">
-          <option value="venice"><Trans i18nKey="common:surface.componentsSearchScrapetab.option.veniceWebScrape" /></option>
-          <option value="jina"><Trans i18nKey="common:surface.componentsSearchScrapetab.option.jinaReader" /></option>
+      <Field
+        label={tRuntime(
+          "runtimeGenerated.components.search.scrapetab.attribute.readerProvider",
+        )}
+      >
+        <select
+          value={provider}
+          onChange={(event) =>
+            setProvider(event.target.value as "venice" | "jina")
+          }
+          className="w-full bg-surface border border-border rounded-lg px-3.5 py-2 text-[14px] text-text-primary outline-none focus:border-accent"
+        >
+          <option value="venice">
+            <Trans i18nKey="common:surface.componentsSearchScrapetab.option.veniceWebScrape" />
+          </option>
+          <option value="jina">
+            <Trans i18nKey="common:surface.componentsSearchScrapetab.option.jinaReader" />
+          </option>
         </select>
       </Field>
 
@@ -49,23 +70,36 @@ export function ScrapeTab({
           onClick={runScrape}
           disabled={loading === "scrape" || !url.trim()}
         >
-          {loading === "scrape" ? "Scraping…" : "Scrape"}
+          {loading === "scrape"
+            ? tRuntime(
+                "runtimeGenerated.components.search.scrapetab.text.scraping",
+              )
+            : tRuntime(
+                "runtimeGenerated.components.search.scrapetab.text.scrape",
+              )}
         </button>
         <button
           className="px-3.5 py-2 rounded-lg text-[13px] font-medium bg-surface border border-border text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
           onClick={() => {
             copyText(scrapeOutput);
-            toast.success("Scraped output copied!");
+            toast.success(
+              tRuntime(
+                "runtimeGenerated.components.search.scrapetab.notification.scrapedOutputCopied",
+              ),
+            );
           }}
           disabled={!scrapeOutput}
         >
-          <Trans i18nKey="common:surface.componentsSearchScrapetab.action.copy" /></button>
+          <Trans i18nKey="common:surface.componentsSearchScrapetab.action.copy" />
+        </button>
       </div>
 
       <textarea
         value={scrapeOutput}
         onChange={(e) => setScrapeOutput(e.target.value)}
-        placeholder="Scraped text will appear here..."
+        placeholder={tRuntime(
+          "runtimeGenerated.components.search.scrapetab.attribute.scrapedTextWillAppearHere",
+        )}
         className="w-full flex-1 bg-surface border border-border rounded-lg px-3.5 py-2.5 text-[13px] text-text-secondary outline-none font-mono focus:border-accent transition-all min-h-[220px] placeholder:text-text-muted/50"
       />
     </div>

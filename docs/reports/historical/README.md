@@ -1,5 +1,7 @@
 # Historical Reports Directory
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 This directory contains report governance for Venice Forge.
 
 ## Current Sources

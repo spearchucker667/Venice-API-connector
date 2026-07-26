@@ -1,183 +1,266 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useInspectorStore } from '../../stores/inspector-store'
-import { useSettingsStore } from '../../stores/settings-store'
-import { useChatStore } from '../../stores/chat-store'
-import { cn } from '../../lib/utils'
+import { translateRuntime } from "../../i18n/runtimeTranslator";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useInspectorStore } from "../../stores/inspector-store";
+import { useSettingsStore } from "../../stores/settings-store";
+import { useChatStore } from "../../stores/chat-store";
+import { cn } from "../../lib/utils";
 import {
   exportRedactedInspectorLogs,
   matchesInspectorFilter,
   type InspectorLogFilter,
-} from '../../services/inspectorTelemetry'
-import { Trans } from 'react-i18next';
+} from "../../services/inspectorTelemetry";
+import { Trans, useTranslation } from "react-i18next";
 
 const FILTER_CHIPS: Array<{ id: InspectorLogFilter; label: string }> = [
-  { id: 'all', label: 'All' },
-  { id: 'blocked', label: 'Blocked' },
-  { id: 'error', label: 'Errored' },
-  { id: 'aborted', label: 'Aborted' },
-  { id: 'venice', label: 'Venice' },
-  { id: 'jina', label: 'Jina' },
-  { id: 'local', label: 'Local-only' },
-]
+  {
+    id: "all",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.layout.inspectorPane.metadata.all",
+        "All",
+      );
+    },
+  },
+  {
+    id: "blocked",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.layout.inspectorPane.metadata.blocked",
+        "Blocked",
+      );
+    },
+  },
+  {
+    id: "error",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.layout.inspectorPane.metadata.errored",
+        "Errored",
+      );
+    },
+  },
+  {
+    id: "aborted",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.layout.inspectorPane.metadata.aborted",
+        "Aborted",
+      );
+    },
+  },
+  { id: "venice", label: "Venice" },
+  {
+    id: "jina",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.layout.inspectorPane.metadata.jina",
+        "Jina",
+      );
+    },
+  },
+  {
+    id: "local",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.layout.inspectorPane.metadata.localOnly",
+        "Local-only",
+      );
+    },
+  },
+];
 
 export function InspectorPane() {
-  const showInspector = useSettingsStore((s) => s.showInspector)
-  const setShowInspector = useSettingsStore((s) => s.setShowInspector)
-  const inspectorWidth = useSettingsStore((s) => s.inspectorWidth)
-  const setInspectorWidth = useSettingsStore((s) => s.setInspectorWidth)
-  const logs = useInspectorStore((s) => s.logs)
-  const clearLogs = useInspectorStore((s) => s.clearLogs)
-  const [selectedLogId, setSelectedLogId] = useState<string | null>(null)
-  const [activeFilter, setActiveFilter] = useState<InspectorLogFilter>('all')
-  const previouslyFocusedRef = useRef<HTMLElement | null>(null)
+  const { t: tRuntime } = useTranslation("common");
+  const showInspector = useSettingsStore((s) => s.showInspector);
+  const setShowInspector = useSettingsStore((s) => s.setShowInspector);
+  const inspectorWidth = useSettingsStore((s) => s.inspectorWidth);
+  const setInspectorWidth = useSettingsStore((s) => s.setInspectorWidth);
+  const logs = useInspectorStore((s) => s.logs);
+  const clearLogs = useInspectorStore((s) => s.clearLogs);
+  const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
+  const [activeFilter, setActiveFilter] = useState<InspectorLogFilter>("all");
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
-  const [inspectorTab, setInspectorTab] = useState<'traffic' | 'prompt-layers'>('traffic')
+  const [inspectorTab, setInspectorTab] = useState<"traffic" | "prompt-layers">(
+    "traffic",
+  );
 
-  const activeConversationId = useChatStore((s) => s.activeConversationId)
-  const conversations = useChatStore((s) => s.conversations)
-  const globalSystemPrompt = useChatStore((s) => s.systemPrompt)
-  const activeConversation = conversations.find((c) => c.id === activeConversationId)
+  const activeConversationId = useChatStore((s) => s.activeConversationId);
+  const conversations = useChatStore((s) => s.conversations);
+  const globalSystemPrompt = useChatStore((s) => s.systemPrompt);
+  const activeConversation = conversations.find(
+    (c) => c.id === activeConversationId,
+  );
 
   const systemPromptLayers = useMemo(() => {
-    if (!activeConversation) return []
-    const layers: Array<{ id: string; label: string; content: string; active: boolean; source: string }> = []
-    
+    if (!activeConversation) return [];
+    const layers: Array<{
+      id: string;
+      label: string;
+      content: string;
+      active: boolean;
+      source: string;
+    }> = [];
+
     // Layer 1: Venice Default (API-side, not visible but noted)
-    const veniceParams = useChatStore.getState().veniceParams
+    const veniceParams = useChatStore.getState().veniceParams;
     layers.push({
-      id: 'venice-default',
-      label: 'Venice API Default',
-      content: veniceParams.include_venice_system_prompt !== false 
-        ? '(Venice applies its own default system prompt when include_venice_system_prompt is true)'
-        : '(Suppressed — include_venice_system_prompt is false)',
+      id: "venice-default",
+      label: tRuntime(
+        "runtimeGenerated.components.layout.inspectorPane.metadata.veniceApiDefault",
+      ),
+      content:
+        veniceParams.include_venice_system_prompt !== false
+          ? "(Venice applies its own default system prompt when include_venice_system_prompt is true)"
+          : "(Suppressed — include_venice_system_prompt is false)",
       active: veniceParams.include_venice_system_prompt !== false,
-      source: 'venice-api'
-    })
-    
+      source: "venice-api",
+    });
+
     // Layer 2: Global App System Prompt
     layers.push({
-      id: 'global',
-      label: 'Global App System Prompt',
-      content: globalSystemPrompt || '(empty)',
+      id: "global",
+      label: tRuntime(
+        "runtimeGenerated.components.layout.inspectorPane.metadata.globalAppSystemPrompt",
+      ),
+      content: globalSystemPrompt || "(empty)",
       active: !!globalSystemPrompt && !activeConversation.metadata?.character,
-      source: 'settings'
-    })
-    
+      source: "settings",
+    });
+
     // Layer 3: Character System Prompt (if character conversation)
     if (activeConversation.metadata?.character?.systemPrompt) {
       layers.push({
-        id: 'character',
-        label: 'Character System Prompt',
+        id: "character",
+        label: tRuntime(
+          "runtimeGenerated.components.layout.inspectorPane.metadata.characterSystemPrompt",
+        ),
         content: activeConversation.metadata.character.systemPrompt,
         active: true,
-        source: 'character'
-      })
+        source: "character",
+      });
     }
-    
+
     // Layer 4: Conversation Override
-    const mode = activeConversation.metadata?.systemPromptMode ?? 'inherit'
+    const mode = activeConversation.metadata?.systemPromptMode ?? "inherit";
     if (activeConversation.systemPrompt) {
       layers.push({
-        id: 'conversation',
-        label: `Conversation Override (mode: ${mode})`,
+        id: "conversation",
+        label: tRuntime(
+          "runtimeGenerated.components.layout.inspectorPane.metadata.conversationOverrideModeMode",
+          { mode: mode },
+        ),
         content: activeConversation.systemPrompt,
-        active: mode !== 'disabled',
-        source: 'conversation'
-      })
+        active: mode !== "disabled",
+        source: "conversation",
+      });
     }
-    
-    return layers
-  }, [activeConversation, globalSystemPrompt])
+
+    return layers;
+  }, [activeConversation, globalSystemPrompt, tRuntime]);
 
   useEffect(() => {
-    if (!showInspector) return
-    previouslyFocusedRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    if (!showInspector) return;
+    previouslyFocusedRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setShowInspector(false)
-    }
-    window.addEventListener('keydown', closeOnEscape)
+      if (event.key === "Escape") setShowInspector(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
     return () => {
-      window.removeEventListener('keydown', closeOnEscape)
-      if (previouslyFocusedRef.current?.isConnected) previouslyFocusedRef.current.focus()
-    }
-  }, [showInspector, setShowInspector])
+      window.removeEventListener("keydown", closeOnEscape);
+      if (previouslyFocusedRef.current?.isConnected)
+        previouslyFocusedRef.current.focus();
+    };
+  }, [showInspector, setShowInspector]);
 
-  const dragRef = useRef<{ startX: number; startWidth: number } | null>(null)
-  const [dragWidth, setDragWidth] = useState<number | null>(null)
+  const dragRef = useRef<{ startX: number; startWidth: number } | null>(null);
+  const [dragWidth, setDragWidth] = useState<number | null>(null);
 
   const handlePointerDown = (e: React.PointerEvent) => {
-    e.currentTarget.setPointerCapture(e.pointerId)
-    dragRef.current = { startX: e.clientX, startWidth: inspectorWidth }
-  }
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragRef.current = { startX: e.clientX, startWidth: inspectorWidth };
+  };
 
   const handlePointerMove = (e: React.PointerEvent) => {
-    if (!dragRef.current) return
-    const delta = dragRef.current.startX - e.clientX
-    const newWidth = Math.max(300, Math.min(800, dragRef.current.startWidth + delta))
-    setDragWidth(newWidth)
-  }
+    if (!dragRef.current) return;
+    const delta = dragRef.current.startX - e.clientX;
+    const newWidth = Math.max(
+      300,
+      Math.min(800, dragRef.current.startWidth + delta),
+    );
+    setDragWidth(newWidth);
+  };
 
   const handlePointerUp = (e: React.PointerEvent) => {
-    if (!dragRef.current) return
-    e.currentTarget.releasePointerCapture(e.pointerId)
-    if (dragWidth !== null) setInspectorWidth(dragWidth)
-    dragRef.current = null
-    setDragWidth(null)
-  }
+    if (!dragRef.current) return;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    if (dragWidth !== null) setInspectorWidth(dragWidth);
+    dragRef.current = null;
+    setDragWidth(null);
+  };
 
   const filteredLogs = useMemo(
     () => logs.filter((log) => matchesInspectorFilter(log, activeFilter)),
     [logs, activeFilter],
-  )
+  );
 
-  if (!showInspector) return null
+  if (!showInspector) return null;
 
   const selectedLog =
-    filteredLogs.find((l) => l.id === selectedLogId) || filteredLogs[0]
+    filteredLogs.find((l) => l.id === selectedLogId) || filteredLogs[0];
 
   const handleExport = () => {
-    const exportPayload = exportRedactedInspectorLogs(logs)
-    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' })
-    const objectUrl = URL.createObjectURL(blob)
-    const downloadAnchor = document.createElement('a')
-    downloadAnchor.setAttribute('href', objectUrl)
+    const exportPayload = exportRedactedInspectorLogs(logs);
+    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], {
+      type: "application/json",
+    });
+    const objectUrl = URL.createObjectURL(blob);
+    const downloadAnchor = document.createElement("a");
+    downloadAnchor.setAttribute("href", objectUrl);
     downloadAnchor.setAttribute(
-      'download',
+      "download",
       `venice_forge_traffic_logs_${Date.now()}.json`,
-    )
-    document.body.appendChild(downloadAnchor)
-    downloadAnchor.click()
-    downloadAnchor.remove()
-    URL.revokeObjectURL(objectUrl)
-  }
+    );
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    URL.revokeObjectURL(objectUrl);
+  };
 
   return (
     <aside
       className="relative soft-separator-x mesh-surface flex flex-col h-full shrink-0 min-w-0 shell-region"
-      aria-label="Developer traffic inspector"
+      aria-label={tRuntime(
+        "runtimeGenerated.components.layout.inspectorPane.attribute.developerTrafficInspector",
+      )}
       style={{ width: dragWidth ?? inspectorWidth }}
     >
-      <div 
+      <div
         role="separator"
         tabIndex={0}
         aria-orientation="vertical"
         aria-valuemin={300}
         aria-valuemax={800}
         aria-valuenow={inspectorWidth}
-        aria-label="Resize Inspector"
+        aria-label={tRuntime(
+          "runtimeGenerated.components.layout.inspectorPane.attribute.resizeInspector",
+        )}
         className="absolute left-0 top-0 bottom-0 w-1.5 -ml-[0.75px] cursor-col-resize hover:bg-accent/50 focus-visible:bg-accent z-50 transition-colors outline-none"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
         onKeyDown={(e) => {
-          if (e.key === 'ArrowLeft') {
+          if (e.key === "ArrowLeft") {
             e.preventDefault();
             setInspectorWidth(Math.min(800, inspectorWidth + 20));
-          } else if (e.key === 'ArrowRight') {
+          } else if (e.key === "ArrowRight") {
             e.preventDefault();
             setInspectorWidth(Math.max(300, inspectorWidth - 20));
-          } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
+          } else if (e.key === "Enter" || e.key === " " || e.key === "Escape") {
             e.preventDefault();
             setInspectorWidth(400); // Default reset
           }
@@ -201,14 +284,19 @@ export function InspectorPane() {
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
           </svg>
           <span className="text-[14px] font-semibold text-text-primary">
-            <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.trafficInspector" /></span>
+            <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.trafficInspector" />
+          </span>
         </div>
         <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={clearLogs}
-            title="Clear all logs"
-            aria-label="Clear all inspector logs"
+            title={tRuntime(
+              "runtimeGenerated.components.layout.inspectorPane.attribute.clearAllLogs",
+            )}
+            aria-label={tRuntime(
+              "runtimeGenerated.components.layout.inspectorPane.attribute.clearAllInspectorLogs",
+            )}
             className="p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-elevated rounded transition-colors cursor-pointer"
           >
             <svg
@@ -226,8 +314,12 @@ export function InspectorPane() {
           <button
             type="button"
             onClick={handleExport}
-            title="Export redacted logs as JSON"
-            aria-label="Export redacted inspector logs as JSON"
+            title={tRuntime(
+              "runtimeGenerated.components.layout.inspectorPane.attribute.exportRedactedLogsAsJson",
+            )}
+            aria-label={tRuntime(
+              "runtimeGenerated.components.layout.inspectorPane.attribute.exportRedactedInspectorLogsAsJson",
+            )}
             className="p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-elevated rounded transition-colors cursor-pointer"
           >
             <svg
@@ -245,8 +337,12 @@ export function InspectorPane() {
           <button
             type="button"
             onClick={() => setShowInspector(false)}
-            title="Close Inspector"
-            aria-label="Close traffic inspector"
+            title={tRuntime(
+              "runtimeGenerated.components.layout.inspectorPane.attribute.closeInspector",
+            )}
+            aria-label={tRuntime(
+              "runtimeGenerated.components.layout.inspectorPane.attribute.closeTrafficInspector",
+            )}
             className="p-1.5 text-text-muted hover:text-text-primary hover:bg-surface-elevated rounded transition-colors cursor-pointer"
           >
             <svg
@@ -266,371 +362,491 @@ export function InspectorPane() {
       </div>
 
       <div className="flex px-3 gap-1 soft-separator-y pb-2 pt-2">
-        {(['traffic', 'prompt-layers'] as const).map((tab) => (
+        {(["traffic", "prompt-layers"] as const).map((tab) => (
           <button
             key={tab}
             type="button"
             onClick={() => setInspectorTab(tab)}
             className={cn(
-              'px-3 py-1 rounded-md text-[12px] font-medium transition-colors cursor-pointer',
+              "px-3 py-1 rounded-md text-[12px] font-medium transition-colors cursor-pointer",
               inspectorTab === tab
-                ? 'bg-accent/20 text-accent'
-                : 'text-text-muted hover:text-text-primary hover:bg-surface-elevated'
+                ? "bg-accent/20 text-accent"
+                : "text-text-muted hover:text-text-primary hover:bg-surface-elevated",
             )}
           >
-            {tab === 'traffic' ? 'Traffic' : 'Prompt Layers'}
+            {tab === "traffic"
+              ? tRuntime(
+                  "runtimeGenerated.components.layout.inspectorPane.text.traffic",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.layout.inspectorPane.text.promptLayers",
+                )}
           </button>
         ))}
       </div>
 
-      {inspectorTab === 'traffic' ? (
+      {inspectorTab === "traffic" ? (
         <>
           <div className="px-2 py-2 soft-separator-y flex flex-wrap gap-1">
-        {FILTER_CHIPS.map((chip) => (
-          <button
-            key={chip.id}
-            type="button"
-            onClick={() => setActiveFilter(chip.id)}
-            className={cn(
-              'px-2 py-0.5 rounded-full text-[12px] font-medium transition-colors cursor-pointer',
-              activeFilter === chip.id
-                ? 'bg-accent/20 text-accent'
-                : 'bg-surface-elevated/50 text-text-muted hover:text-text-primary',
-            )}
-          >
-            {chip.label}
-          </button>
-        ))}
-      </div>
+            {FILTER_CHIPS.map((chip) => (
+              <button
+                key={chip.id}
+                type="button"
+                onClick={() => setActiveFilter(chip.id)}
+                className={cn(
+                  "px-2 py-0.5 rounded-full text-[12px] font-medium transition-colors cursor-pointer",
+                  activeFilter === chip.id
+                    ? "bg-accent/20 text-accent"
+                    : "bg-surface-elevated/50 text-text-muted hover:text-text-primary",
+                )}
+              >
+                {chip.label}
+              </button>
+            ))}
+          </div>
 
-      <div className="flex-1 flex min-h-0">
-        <div className="w-[180px] soft-separator-x overflow-y-auto flex flex-col shrink-0">
-          {filteredLogs.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center p-4 text-[12px] text-text-muted text-center">
-              <span><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.noRequestsCapturedYet" /></span>
-              <span className="text-[12px] mt-1 opacity-60">
-                <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.sendChatOrGenerateImagesToInspect" /></span>
-            </div>
-          ) : (
-            filteredLogs.map((log) => {
-              const isSelected = selectedLog?.id === log.id
-              const isBlocked = log.status === 451 || log.callOutcome === 'blocked'
-              const isError =
-                log.callOutcome === 'error' ||
-                (log.status && (log.status < 200 || log.status >= 300) && log.status !== 451)
-              return (
-                <button
-                  key={log.id}
-                  onClick={() => setSelectedLogId(log.id)}
-                  className={cn(
-                    'text-left p-2.5 soft-separator-y transition-colors w-full cursor-pointer flex flex-col gap-0.5',
-                    isSelected
-                      ? 'bg-accent/10 text-accent font-medium'
-                      : 'hover:bg-surface-elevated/40 text-text-secondary',
-                  )}
-                >
-                  <div className="flex items-center justify-between text-[12px]">
-                    <span className="font-mono truncate uppercase select-none">
-                      {log.method}
-                    </span>
-                    <span
-                      className={cn(
-                        'font-mono px-1 rounded-[3px] text-[12px] select-none font-bold',
-                        isBlocked
-                          ? 'bg-warning/20 text-warning'
-                          : isError
-                            ? 'bg-danger/20 text-danger'
-                            : 'bg-accent/20 text-accent',
-                      )}
-                    >
-                      {log.status || '...'}
-                    </span>
-                  </div>
-                  <span
-                    className="text-[12px] font-mono truncate font-semibold select-all"
-                    title={log.endpoint}
-                  >
-                    {log.endpoint}
+          <div className="flex-1 flex min-h-0">
+            <div className="w-[180px] soft-separator-x overflow-y-auto flex flex-col shrink-0">
+              {filteredLogs.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center p-4 text-[12px] text-text-muted text-center">
+                  <span>
+                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.noRequestsCapturedYet" />
                   </span>
-                  <div className="flex items-center justify-between text-[12px] text-text-muted font-mono select-none">
-                    <span className="uppercase">{log.transport}</span>
-                    {log.durationMs !== undefined ? <span>{log.durationMs}ms</span> : null}
-                  </div>
-                  {log.guardOutcome ? (
-                    <span className="text-[12px] text-text-muted font-mono select-none">
-                      <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.guard" /> {log.guardOutcome}
-                    </span>
-                  ) : null}
-                </button>
-              )
-            })
-          )}
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3 min-w-0">
-          {selectedLog ? (
-            <div className="space-y-4 text-[12px] min-w-0">
-              <div className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono select-all text-[12px] space-y-0.5">
-                <div>
-                  <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.time" /></span>{' '}
-                  {new Date(selectedLog.timestamp).toLocaleTimeString()}
-                </div>
-                <div>
-                  <span className="text-text-muted font-bold">URL:</span>{' '}
-                  {selectedLog.endpoint}
-                </div>
-                <div>
-                  <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.method" /></span>{' '}
-                  {selectedLog.method}
-                </div>
-                <div>
-                  <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.transport" /></span>{' '}
-                  {selectedLog.transport}
-                </div>
-                <div>
-                  <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.status" /></span>{' '}
-                  {selectedLog.status || 'Pending...'}
-                </div>
-                {selectedLog.callOutcome ? (
-                  <div>
-                    <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.outcome" /></span>{' '}
-                    {selectedLog.callOutcome}
-                  </div>
-                ) : null}
-                {selectedLog.guardOutcome ? (
-                  <div>
-                    <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.guard4ba3843" /></span>{' '}
-                    {selectedLog.guardOutcome}
-                  </div>
-                ) : null}
-                {selectedLog.previewDurationMs !== undefined ? (
-                  <div>
-                    <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.preview" /></span>{' '}
-                    {selectedLog.previewDurationMs}ms
-                  </div>
-                ) : null}
-                {selectedLog.durationMs !== undefined ? (
-                  <div>
-                    <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.latency" /></span>{' '}
-                    {selectedLog.durationMs}ms
-                  </div>
-                ) : null}
-                {selectedLog.errorClass && selectedLog.errorClass !== 'none' ? (
-                  <div>
-                    <span className="text-text-muted font-bold"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.errorClass" /></span>{' '}
-                    {selectedLog.errorClass}
-                  </div>
-                ) : null}
-              </div>
-
-              {selectedLog.safetyDecision && (
-                <div className="border border-warning/40 bg-warning/5 rounded-md p-2.5 space-y-1.5">
-                  <div className="flex items-center gap-1.5 text-warning font-semibold select-none">
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    >
-                      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" />
-                    </svg>
-                    <span><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.localSafetyEvaluation" /></span>
-                  </div>
-                  <div className="font-mono text-[12px] space-y-0.5 select-text">
-                    {(() => {
-                      const d = selectedLog.safetyDecision as Record<string, unknown> | null
-                      if (!d) return null
-                      if (d.mode === 'family') {
-                        const allowed = d.action === 'allow'
-                        return (
-                          <>
-                            <div>
-                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.mode" /></span>{' '}
-                              <span className="text-accent font-bold">
-                                <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.familySafeModeRendererEvaluated" /></span>
-                            </div>
-                            <div>
-                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.result" /></span>{' '}
-                              <span
-                                className={
-                                  allowed ? 'text-accent font-bold' : 'text-danger font-bold'
-                                }
-                              >
-                                {allowed ? 'ALLOW' : 'BLOCKED'}
-                              </span>
-                            </div>
-                            {d.reasonCode ? (
-                              <div>
-                                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.reasonCode" /></span>{' '}
-                                {String(d.reasonCode)}
-                              </div>
-                            ) : null}
-                          </>
-                        )
-                      }
-                      if (d.mode === 'adult') {
-                        return (
-                          <>
-                            <div>
-                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.mode" /></span>{' '}
-                              <span className="text-warning font-bold">
-                                <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.adultModeLocalFilterSkipped" /></span>
-                            </div>
-                            <div>
-                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.reasonCode" /></span>{' '}
-                              {String(d.reasonCode ?? 'LOCAL_FAMILY_SAFE_MODE_DISABLED')}
-                            </div>
-                          </>
-                        )
-                      }
-                      if (d.mode === 'electron-main-authoritative') {
-                        return (
-                          <>
-                            <div>
-                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.mode" /></span>{' '}
-                              <span className="text-text-secondary font-bold">
-                                <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.electronMainProcessAuthoritative" /></span>
-                            </div>
-                            <div className="text-text-muted">
-                              <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.theLocalFamilySafeGuardIsEnforced" /></div>
-                          </>
-                        )
-                      }
-                      const legacy = selectedLog.safetyDecision as unknown as {
-                        allow?: boolean
-                        action?: string
-                        reasonCode?: string
-                        signals?: Array<{
-                          category: string
-                          source: string
-                          severity: string
-                          confidence: number
-                        }>
-                      }
-                      const allow = legacy.allow !== false
-                      return (
-                        <>
-                          <div>
-                            <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.result" /></span>{' '}
-                            <span
-                              className={
-                                allow ? 'text-accent font-bold' : 'text-danger font-bold'
-                              }
-                            >
-                              {allow ? 'ALLOW' : 'BLOCKED'}
-                            </span>
-                          </div>
-                          {legacy.action ? (
-                            <div>
-                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.action" /></span> {legacy.action}
-                            </div>
-                          ) : null}
-                          {legacy.reasonCode ? (
-                            <div>
-                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.reasonCode" /></span>{' '}
-                              {legacy.reasonCode}
-                            </div>
-                          ) : null}
-                          {legacy.signals && legacy.signals.length > 0 ? (
-                            <div>
-                              <span className="text-text-muted"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.signals" /></span>
-                              <div className="pl-2 flex flex-col gap-0.5 mt-0.5 text-text-secondary">
-                                {legacy.signals.map((s, idx) => (
-                                  <div key={idx}>
-                                    • [{s.category}<Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.sourceQuot" />{s.source}<Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.quotSeverity" />{' '}
-                                    {s.severity}<Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.confidence" /> {s.confidence})
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ) : null}
-                        </>
-                      )
-                    })()}
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-1">
-                <span className="font-semibold text-text-secondary select-none">
-                  <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.requestHeaders" /></span>
-                <pre className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono text-[12px] overflow-x-auto select-all max-h-36">
-                  {JSON.stringify(selectedLog.requestHeaders, null, 2)}
-                </pre>
-              </div>
-
-              <div className="space-y-1">
-                <span className="font-semibold text-text-secondary select-none">
-                  <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.requestBody" /></span>
-                <pre className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono text-[12px] overflow-x-auto select-all max-h-48">
-                  {selectedLog.requestBody
-                    ? JSON.stringify(selectedLog.requestBody, null, 2)
-                    : '[Empty]'}
-                </pre>
-              </div>
-
-              {selectedLog.error ? (
-                <div className="space-y-1">
-                  <span className="font-semibold text-danger select-none"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.error" /></span>
-                  <pre className="p-2 bg-danger/5 border border-danger/20 rounded-md font-mono text-[12px] overflow-x-auto text-danger select-all max-h-48 whitespace-pre-wrap">
-                    {selectedLog.error}
-                  </pre>
+                  <span className="text-[12px] mt-1 opacity-60">
+                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.sendChatOrGenerateImagesToInspect" />
+                  </span>
                 </div>
               ) : (
-                <div className="space-y-1">
-                  <span className="font-semibold text-text-secondary select-none">
-                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.responseBody" /></span>
-                  <pre className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono text-[12px] overflow-x-auto select-all max-h-60">
-                    {selectedLog.responseBody
-                      ? JSON.stringify(selectedLog.responseBody, null, 2)
-                      : '[Pending or Empty]'}
-                  </pre>
+                filteredLogs.map((log) => {
+                  const isSelected = selectedLog?.id === log.id;
+                  const isBlocked =
+                    log.status === 451 || log.callOutcome === "blocked";
+                  const isError =
+                    log.callOutcome === "error" ||
+                    (log.status &&
+                      (log.status < 200 || log.status >= 300) &&
+                      log.status !== 451);
+                  return (
+                    <button
+                      key={log.id}
+                      onClick={() => setSelectedLogId(log.id)}
+                      className={cn(
+                        "text-left p-2.5 soft-separator-y transition-colors w-full cursor-pointer flex flex-col gap-0.5",
+                        isSelected
+                          ? "bg-accent/10 text-accent font-medium"
+                          : "hover:bg-surface-elevated/40 text-text-secondary",
+                      )}
+                    >
+                      <div className="flex items-center justify-between text-[12px]">
+                        <span className="font-mono truncate uppercase select-none">
+                          {log.method}
+                        </span>
+                        <span
+                          className={cn(
+                            "font-mono px-1 rounded-[3px] text-[12px] select-none font-bold",
+                            isBlocked
+                              ? "bg-warning/20 text-warning"
+                              : isError
+                                ? "bg-danger/20 text-danger"
+                                : "bg-accent/20 text-accent",
+                          )}
+                        >
+                          {log.status || "..."}
+                        </span>
+                      </div>
+                      <span
+                        className="text-[12px] font-mono truncate font-semibold select-all"
+                        title={log.endpoint}
+                      >
+                        {log.endpoint}
+                      </span>
+                      <div className="flex items-center justify-between text-[12px] text-text-muted font-mono select-none">
+                        <span className="uppercase">{log.transport}</span>
+                        {log.durationMs !== undefined ? (
+                          <span>{log.durationMs}ms</span>
+                        ) : null}
+                      </div>
+                      {log.guardOutcome ? (
+                        <span className="text-[12px] text-text-muted font-mono select-none">
+                          <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.guard" />{" "}
+                          {log.guardOutcome}
+                        </span>
+                      ) : null}
+                    </button>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-3 min-w-0">
+              {selectedLog ? (
+                <div className="space-y-4 text-[12px] min-w-0">
+                  <div className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono select-all text-[12px] space-y-0.5">
+                    <div>
+                      <span className="text-text-muted font-bold">
+                        <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.time" />
+                      </span>{" "}
+                      {new Date(selectedLog.timestamp).toLocaleTimeString()}
+                    </div>
+                    <div>
+                      <span className="text-text-muted font-bold">URL:</span>{" "}
+                      {selectedLog.endpoint}
+                    </div>
+                    <div>
+                      <span className="text-text-muted font-bold">
+                        <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.method" />
+                      </span>{" "}
+                      {selectedLog.method}
+                    </div>
+                    <div>
+                      <span className="text-text-muted font-bold">
+                        <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.transport" />
+                      </span>{" "}
+                      {selectedLog.transport}
+                    </div>
+                    <div>
+                      <span className="text-text-muted font-bold">
+                        <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.status" />
+                      </span>{" "}
+                      {selectedLog.status ||
+                        tRuntime(
+                          "runtimeGenerated.components.layout.inspectorPane.text.pending",
+                        )}
+                    </div>
+                    {selectedLog.callOutcome ? (
+                      <div>
+                        <span className="text-text-muted font-bold">
+                          <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.outcome" />
+                        </span>{" "}
+                        {selectedLog.callOutcome}
+                      </div>
+                    ) : null}
+                    {selectedLog.guardOutcome ? (
+                      <div>
+                        <span className="text-text-muted font-bold">
+                          <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.guard4ba3843" />
+                        </span>{" "}
+                        {selectedLog.guardOutcome}
+                      </div>
+                    ) : null}
+                    {selectedLog.previewDurationMs !== undefined ? (
+                      <div>
+                        <span className="text-text-muted font-bold">
+                          <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.preview" />
+                        </span>{" "}
+                        {selectedLog.previewDurationMs}ms
+                      </div>
+                    ) : null}
+                    {selectedLog.durationMs !== undefined ? (
+                      <div>
+                        <span className="text-text-muted font-bold">
+                          <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.latency" />
+                        </span>{" "}
+                        {selectedLog.durationMs}ms
+                      </div>
+                    ) : null}
+                    {selectedLog.errorClass &&
+                    selectedLog.errorClass !== "none" ? (
+                      <div>
+                        <span className="text-text-muted font-bold">
+                          <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.errorClass" />
+                        </span>{" "}
+                        {selectedLog.errorClass}
+                      </div>
+                    ) : null}
+                  </div>
+
+                  {selectedLog.safetyDecision && (
+                    <div className="border border-warning/40 bg-warning/5 rounded-md p-2.5 space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-warning font-semibold select-none">
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        >
+                          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" />
+                        </svg>
+                        <span>
+                          <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.localSafetyEvaluation" />
+                        </span>
+                      </div>
+                      <div className="font-mono text-[12px] space-y-0.5 select-text">
+                        {(() => {
+                          const d = selectedLog.safetyDecision as Record<
+                            string,
+                            unknown
+                          > | null;
+                          if (!d) return null;
+                          if (d.mode === "family") {
+                            const allowed = d.action === "allow";
+                            return (
+                              <>
+                                <div>
+                                  <span className="text-text-muted">
+                                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.mode" />
+                                  </span>{" "}
+                                  <span className="text-accent font-bold">
+                                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.familySafeModeRendererEvaluated" />
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-text-muted">
+                                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.result" />
+                                  </span>{" "}
+                                  <span
+                                    className={
+                                      allowed
+                                        ? "text-accent font-bold"
+                                        : "text-danger font-bold"
+                                    }
+                                  >
+                                    {allowed
+                                      ? tRuntime(
+                                          "runtimeGenerated.components.layout.inspectorPane.text.allow",
+                                        )
+                                      : tRuntime(
+                                          "runtimeGenerated.components.layout.inspectorPane.text.blocked",
+                                        )}
+                                  </span>
+                                </div>
+                                {d.reasonCode ? (
+                                  <div>
+                                    <span className="text-text-muted">
+                                      <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.reasonCode" />
+                                    </span>{" "}
+                                    {String(d.reasonCode)}
+                                  </div>
+                                ) : null}
+                              </>
+                            );
+                          }
+                          if (d.mode === "adult") {
+                            return (
+                              <>
+                                <div>
+                                  <span className="text-text-muted">
+                                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.mode" />
+                                  </span>{" "}
+                                  <span className="text-warning font-bold">
+                                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.adultModeLocalFilterSkipped" />
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="text-text-muted">
+                                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.reasonCode" />
+                                  </span>{" "}
+                                  {String(
+                                    d.reasonCode ??
+                                      "LOCAL_FAMILY_SAFE_MODE_DISABLED",
+                                  )}
+                                </div>
+                              </>
+                            );
+                          }
+                          if (d.mode === "electron-main-authoritative") {
+                            return (
+                              <>
+                                <div>
+                                  <span className="text-text-muted">
+                                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.mode" />
+                                  </span>{" "}
+                                  <span className="text-text-secondary font-bold">
+                                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.electronMainProcessAuthoritative" />
+                                  </span>
+                                </div>
+                                <div className="text-text-muted">
+                                  <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.theLocalFamilySafeGuardIsEnforced" />
+                                </div>
+                              </>
+                            );
+                          }
+                          const legacy =
+                            selectedLog.safetyDecision as unknown as {
+                              allow?: boolean;
+                              action?: string;
+                              reasonCode?: string;
+                              signals?: Array<{
+                                category: string;
+                                source: string;
+                                severity: string;
+                                confidence: number;
+                              }>;
+                            };
+                          const allow = legacy.allow !== false;
+                          return (
+                            <>
+                              <div>
+                                <span className="text-text-muted">
+                                  <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.result" />
+                                </span>{" "}
+                                <span
+                                  className={
+                                    allow
+                                      ? "text-accent font-bold"
+                                      : "text-danger font-bold"
+                                  }
+                                >
+                                  {allow
+                                    ? tRuntime(
+                                        "runtimeGenerated.components.layout.inspectorPane.text.allow",
+                                      )
+                                    : tRuntime(
+                                        "runtimeGenerated.components.layout.inspectorPane.text.blocked",
+                                      )}
+                                </span>
+                              </div>
+                              {legacy.action ? (
+                                <div>
+                                  <span className="text-text-muted">
+                                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.action" />
+                                  </span>{" "}
+                                  {legacy.action}
+                                </div>
+                              ) : null}
+                              {legacy.reasonCode ? (
+                                <div>
+                                  <span className="text-text-muted">
+                                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.reasonCode" />
+                                  </span>{" "}
+                                  {legacy.reasonCode}
+                                </div>
+                              ) : null}
+                              {legacy.signals && legacy.signals.length > 0 ? (
+                                <div>
+                                  <span className="text-text-muted">
+                                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.signals" />
+                                  </span>
+                                  <div className="pl-2 flex flex-col gap-0.5 mt-0.5 text-text-secondary">
+                                    {legacy.signals.map((s, idx) => (
+                                      <div key={idx}>
+                                        • [{s.category}
+                                        <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.sourceQuot" />
+                                        {s.source}
+                                        <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.quotSeverity" />{" "}
+                                        {s.severity}
+                                        <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.confidence" />{" "}
+                                        {s.confidence})
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              ) : null}
+                            </>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="space-y-1">
+                    <span className="font-semibold text-text-secondary select-none">
+                      <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.requestHeaders" />
+                    </span>
+                    <pre className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono text-[12px] overflow-x-auto select-all max-h-36">
+                      {JSON.stringify(selectedLog.requestHeaders, null, 2)}
+                    </pre>
+                  </div>
+
+                  <div className="space-y-1">
+                    <span className="font-semibold text-text-secondary select-none">
+                      <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.requestBody" />
+                    </span>
+                    <pre className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono text-[12px] overflow-x-auto select-all max-h-48">
+                      {selectedLog.requestBody
+                        ? JSON.stringify(selectedLog.requestBody, null, 2)
+                        : tRuntime(
+                            "runtimeGenerated.components.layout.inspectorPane.text.empty",
+                          )}
+                    </pre>
+                  </div>
+
+                  {selectedLog.error ? (
+                    <div className="space-y-1">
+                      <span className="font-semibold text-danger select-none">
+                        <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.error" />
+                      </span>
+                      <pre className="p-2 bg-danger/5 border border-danger/20 rounded-md font-mono text-[12px] overflow-x-auto text-danger select-all max-h-48 whitespace-pre-wrap">
+                        {selectedLog.error}
+                      </pre>
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      <span className="font-semibold text-text-secondary select-none">
+                        <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.responseBody" />
+                      </span>
+                      <pre className="p-2 soft-panel mesh-surface-elevated/40 rounded-md font-mono text-[12px] overflow-x-auto select-all max-h-60">
+                        {selectedLog.responseBody
+                          ? JSON.stringify(selectedLog.responseBody, null, 2)
+                          : tRuntime(
+                              "runtimeGenerated.components.layout.inspectorPane.text.pendingOrEmpty",
+                            )}
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex-1 flex items-center justify-center text-text-muted select-none">
+                  <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.selectARequestToViewDetails" />
                 </div>
               )}
             </div>
-          ) : (
-            <div className="flex-1 flex items-center justify-center text-text-muted select-none">
-              <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.selectARequestToViewDetails" /></div>
-          )}
-        </div>
-      </div>
+          </div>
         </>
       ) : (
         <div className="flex-1 overflow-y-auto p-3 space-y-3">
           {!activeConversation ? (
             <div className="text-[12px] text-text-muted text-center py-8">
-              <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.noActiveConversationOpenAChatTo" /></div>
+              <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.noActiveConversationOpenAChatTo" />
+            </div>
           ) : (
             <>
               <div className="text-[11px] text-text-muted/60 uppercase tracking-wider font-semibold mb-2">
-                <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.active" /> {activeConversation.title || 'Untitled'}
+                <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.active" />{" "}
+                {activeConversation.title ||
+                  tRuntime(
+                    "runtimeGenerated.components.layout.inspectorPane.text.untitled",
+                  )}
               </div>
               {systemPromptLayers.map((layer, i) => (
                 <div
                   key={layer.id}
                   className={`rounded-lg border p-3 space-y-1.5 ${
-                    layer.active ? 'border-accent/30 bg-accent/5' : 'border-border/40 bg-surface-elevated/30 opacity-50'
+                    layer.active
+                      ? "border-accent/30 bg-accent/5"
+                      : "border-border/40 bg-surface-elevated/30 opacity-50"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-[12px] font-semibold text-text-secondary">
                       {i + 1}. {layer.label}
                     </span>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
-                      layer.active 
-                        ? 'bg-green-500/20 text-green-400' 
-                        : 'bg-text-muted/10 text-text-muted'
-                    }`}>
-                      {layer.active ? 'Active' : 'Inactive'}
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
+                        layer.active
+                          ? "bg-green-500/20 text-green-400"
+                          : "bg-text-muted/10 text-text-muted"
+                      }`}
+                    >
+                      {layer.active
+                        ? tRuntime(
+                            "runtimeGenerated.components.layout.inspectorPane.text.active",
+                          )
+                        : tRuntime(
+                            "runtimeGenerated.components.layout.inspectorPane.text.inactive",
+                          )}
                     </span>
                   </div>
                   <pre className="text-[11px] text-text-muted whitespace-pre-wrap break-words font-mono leading-relaxed max-h-[200px] overflow-y-auto bg-surface/50 rounded p-2">
                     {layer.content}
                   </pre>
-                  <div className="text-[10px] text-text-muted/50"><Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.source" /> {layer.source}</div>
+                  <div className="text-[10px] text-text-muted/50">
+                    <Trans i18nKey="common:surface.componentsLayoutInspectorPane.text.source" />{" "}
+                    {layer.source}
+                  </div>
                 </div>
               ))}
             </>
@@ -638,5 +854,5 @@ export function InspectorPane() {
         </div>
       )}
     </aside>
-  )
+  );
 }

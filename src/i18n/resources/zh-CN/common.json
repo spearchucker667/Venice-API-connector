@@ -1,5 +1,5 @@
 {
-  "appName": "Venice Forge",
+  "appName": "威尼斯锻造厂",
   "appSubtitle": "私有本地工作台。",
   "actions": {
     "save": "保存",
@@ -59,19 +59,19 @@
     "auto": "自动",
     "idle": "空闲"
   },
-  "conversations": "conv-1",
-  "character_cards": "card-1",
+  "conversations": "转换-1",
+  "character_cards": "卡1",
   "rp_chats": "rpchat-1",
-  "tombstones": "conv-1",
-  "cancelled": "failed",
-  "failed": "failed",
-  "repair": "complete",
-  "isAdult": "true",
-  "isPro": "true",
-  "isWebEnabled": "true",
+  "tombstones": "转换-1",
+  "cancelled": "失败的",
+  "failed": "失败的",
+  "repair": "完全的",
+  "isAdult": "真的",
+  "isPro": "真的",
+  "isWebEnabled": "真的",
   "stable-audio": "q1",
   "video-model": "q2",
-  "promptLibrary": "lib-1",
+  "promptLibrary": "库-1",
   "surface": {
     "app": {
       "text": {
@@ -530,7 +530,7 @@
         "jsonJson": "JSON (.json)",
         "csvCsv": "CSV (.csv)",
         "htmlHtml": "HTML (.html)",
-        "wordDocx": "Word (.docx)",
+        "wordDocx": "字 (.docx)",
         "pdfPdf": "PDF (.pdf)"
       },
       "action": {
@@ -1217,7 +1217,7 @@
         "specialSettings": "特殊设置",
         "urlScrapingProvider": "URL 抓取提供程序",
         "enableThoughts": "启用思想",
-        "topP": "Top P",
+        "topP": "顶P",
         "sourcedContextFiles": "源文件和上下文文件",
         "noSourcedOrContextFilesUploaded": "未上传源文件或上下文文件",
         "reApply": "重新应用",
@@ -1302,7 +1302,7 @@
         "chooseLorebook": "选择知识手册...",
         "useChatDefault": "使用聊天默认值",
         "brave": "勇敢",
-        "google": "Google",
+        "google": "谷歌",
         "noCompatibleLiveModel": "没有兼容的实时模型",
         "vision": "· 视觉 ·",
         "context": "上下文",
@@ -1733,7 +1733,7 @@
     "componentsDiagnosticspreview": {
       "text": {
         "noRequestsYet": "尚无请求",
-        "cfRay": "CF-RAY"
+        "cfRay": "CF射线"
       }
     },
     "componentsErrorboundary": {
@@ -1778,7 +1778,7 @@
     },
     "componentsCharacterCreatorCharactercreatorready": {
       "text": {
-        "charaCardV2": "chara_card_v2",
+        "charaCardV2": "Chara_card_v2",
         "errorsMustResolve": "错误（必须解决）",
         "warningsOptional": "警告（可选）",
         "returnToDraft": "返回草稿",
@@ -1983,5 +1983,2534 @@
         "noResults": "无结果"
       }
     }
+  },
+  "promptStarters": {
+    "writing-rsa-email": "起草一封礼貌而坚定的电子邮件，要求房东修理暖气。",
+    "writing-cover-letter": "为专注于远程协作的高级全栈工程师角色编写量身定制的求职信模板。",
+    "writing-scifi-hook": "为科幻小说创作一个引人入胜的开头，其中重力在每个城市的表现都不同。",
+    "writing-newsletter-intro": "起草一份引人入胜的时事通讯介绍，讨论自主代理车队的社会影响。",
+    "writing-press-release": "创建正式的新闻稿模板，宣布隐私第一的网络抓取工具开源。",
+    "writing-linkedin-post": "起草一篇专业的 LinkedIn 帖子，总结从构建离线优先 Electron 应用程序中学到的主要经验教训。",
+    "writing-blog-outline": "为标题为“保护现代电子应用程序中的预加载桥”的技术博客文章生成详细的大纲。",
+    "writing-sabbatical-request": "撰写一份专业提案，请求 3 个月的教育休假来研究分布式系统。",
+    "writing-speech-intro": "写一篇 3 分钟的介绍性演讲，介绍本地优先软件和数据主权的重要性。",
+    "writing-bug-report": "为开源项目中的错误报告编写完整的模板，以鼓励快速解决。",
+    "writing-refusal-letter": "起草专业回应拒绝供应商提案，同时为未来合作敞开大门。",
+    "writing-haiku-comp": "创作三首俳句，捕捉从模拟硬件到量子计算的转变。",
+    "coding-rest-graphql": "比较 REST 和 GraphQL — 各自何时表现出色？",
+    "coding-debounce-ts": "在 TypeScript for React 中编写一个健壮的、类型齐全的去抖钩子，并支持立即调用。",
+    "coding-sql-recursive": "通过查询组织层次结构的示例解释递归 CTE 在 SQL 中的工作原理。",
+    "coding-refactor-lru": "将简单的 Node.js 内存缓存重构为具有过期支持的线程安全 LRU 缓存。",
+    "coding-rust-error": "展示如何使用“thiserror”和“anyhow”包在 Rust 中实现自定义错误处理。",
+    "coding-git-bisect": "解释如何使用“git bisect”来定位回归提交，包括自动脚本执行。",
+    "coding-docker-multi": "创建一个最小的、安全的多阶段 Dockerfile，用于打包 TypeScript Node.js 微服务。",
+    "coding-csp-rules": "编写严格的内容安全策略 (CSP) 标头配置，允许本地 WASM 执行但阻止内联评估。",
+    "coding-vitest-mocking": "演示如何在 Vitest 中模拟全局窗口对象和异步获取调用。",
+    "coding-css-flex-grid": "解释 CSS Grid 和 Flexbox 布局之间的架构差异，以及每种布局的具体布局用例。",
+    "coding-sse-parse": "展示如何在没有外部依赖的情况下使用普通 JavaScript 编写服务器发送事件 (SSE) 的流解析器。",
+    "coding-indexeddb-transaction": "提供浏览器原生 IndexedDB 中稳健的事务管理和错误回滚的示例。",
+    "learning-rsa-metaphor": "使用 10 岁孩子可以理解的比喻解释 RSA 加密的工作原理。",
+    "learning-pid-controller": "用简单直观的术语解释 PID 温度控制器背后的数学原理。",
+    "learning-monad-metaphor": "使用日常现实世界的类比来解释函数式编程中的 Monad 是什么。",
+    "learning-special-relativity": "狭义相对论中的时间膨胀是什么？使用涉及时钟的思想实验来解释它。",
+    "learning-inflation-basics": "解释中央银行如何利用利率来控制通货膨胀以及涉及哪些经济权衡。",
+    "learning-photosynthesis": "将光合作用的光依赖性反应描述为逐步的装配线过程。",
+    "learning-platonic-cave": "解释柏拉图的洞穴寓言并讨论它与现代社交媒体回声室的关系。",
+    "learning-blockchain-proof": "在不使用技术术语的情况下解释工作量证明和权益证明共识算法之间的区别。",
+    "learning-turing-complete": "“图灵完备”系统意味着什么？给出一个简单的解释和一个不明显的例子。",
+    "learning-habermas-public": "总结尤尔根·哈贝马斯的“公共领域”概念及其与互联网时代的相关性。",
+    "learning-plate-tectonics": "板块构造如何驱动火山活动？解释俯冲带和热点之间的差异。",
+    "learning-music-scales": "解释数学频率与音阶或和声之间的关系。",
+    "research-fusion-status": "商业核聚变能源研究的最新里程碑和剩余的工程障碍是什么？",
+    "research-dns-sec": "分析传统DNS协议的安全漏洞以及DNSSEC如何解决这些漏洞。",
+    "research-solid-battery": "总结电动汽车固态电池技术的现状，重点关注能量密度和生命周期。",
+    "research-roman-concrete": "研究古罗马海洋混凝土的化学配方以及为什么它比现代波特兰水泥更耐用。",
+    "research-browser-privacy": "比较第三方cookie拦截、浏览器指纹防御、分区等隐私保护机制。",
+    "research-green-hydrogen": "与直接电池电气化相比，分析绿色氢气生产的能源效率和经济效率。",
+    "research-graphene-scaling": "目前阻碍商业电子产品单层石墨烯规模化的制造限制是什么？",
+    "research-zero-knowledge": "在可信设置要求、证明大小和计算开销方面比较 zk-SNARK 和 zk-STARK。",
+    "research-microbiome-brain": "总结连接人类肠道微生物组与中枢神经系统功能的主要生物学途径。",
+    "research-deep-sea-mining": "国际水域深海多金属结核开采的环境和经济风险是什么？",
+    "research-compiler-optimizations": "研究循环展开、死代码消除和寄存器分配优化如何在编译器内工作。",
+    "research-cfc-ozone": "追溯《蒙特利尔议定书》之后臭氧层恢复的历史时间线和化学过程。",
+    "creative-llm-pi-projects": "使用法学硕士和 Raspberry Pi 集体讨论五个新颖的业余项目想法。",
+    "creative-time-travel-game": "设计以递归时间旅行悖论为中心的调查益智游戏的核心游戏循环。",
+    "creative-steampunk-ai": "写一篇关于蒸汽朋克城市的简短概念描述，其中市政决策是通过机械微分分析仪进行的。",
+    "creative-product-name": "集思广益，为本地化的点对点网状网络实用程序想出十个独特的、令人回味的品牌名称。",
+    "creative-card-game": "为仅使用 18 张纸牌以网络路由为主题的微型纸牌游戏创建规则和获胜条件。",
+    "creative-synth-podcast": "概述一个虚构的音频剧播客的宣传内容，详细介绍搁浅的深空通信浮标的日记条目。",
+    "creative-culinary-fusion": "发明五种创意融合菜肴，将日本传统发酵技术与墨西哥街头美食概念融为一体。",
+    "creative-speculative-ui": "描述使用空间 3D 节点画布管理个人隐私策略的创新用户界面设计。",
+    "creative-robot-sports": "集思广益，设计一项全新运动，专门展示腿式机器人和无人机的协调极限。",
+    "creative-magic-system": "设计一个奇幻魔法系统，其中施法受到热力学定律和动量守恒的约束。",
+    "creative-smart-mirror": "集思广益，设计出三个与本地日历和环境天气 API 交互的智能镜子的创意应用程序。",
+    "creative-metaphor-database": "创建一个扩展的比喻，将数据库规范化与组织庞大的市政图书馆进行比较。",
+    "productivity-time-box": "创建针对深度工作软件开发计划进行优化的可定制的每周时间限制模板。",
+    "productivity-meeting-agenda": "起草每周异步优先工程同步的议程模板，旨在解决架构瓶颈。",
+    "productivity-habit-stack": "设计一个 30 天的习惯堆积框架，以过渡到一致的晨练和阅读习惯。",
+    "productivity-notion-layout": "概述旨在跟踪个人知识和书签的 Notion 工作区的数据库模式和布局结构。",
+    "productivity-prioritization": "解释如何应用艾森豪威尔矩阵来确定优先级冲突的工程经理的任务优先级。",
+    "productivity-onboarding": "创建一个清单，用于让新的远程软件工程师加入复杂的遗留整体代码库。",
+    "productivity-markdown-journal": "设计一个轻量级的每日 Markdown 日记提示系统，帮助跟踪每日目标、阻碍因素和感激之情。",
+    "productivity-inbox-zero": "起草一个使用自动标签和键盘快捷键实现和维护收件箱清零的分步系统。",
+    "productivity-postmortem": "创建一个标准模板，用于在关键生产中断后编写软件事后分析。",
+    "productivity-learning-sprint": "概述为期 4 周的学习冲刺计划，以掌握 Rust WebAssembly 编译的基础知识。",
+    "productivity-presentation-deck": "起草 10 分钟演示文稿的逐张幻灯片结构，为当地法学硕士客户确保种子资金。",
+    "productivity-dependency-audit": "创建一个行动计划，每月对生产代码存储库中的开源库依赖项进行审核。",
+    "analysis-p2p-mesh": "对在高密度城市地区部署分散的点对点网状网络进行 SWOT 分析。",
+    "analysis-sqlite-pg": "比较具有同步功能的离线优先桌面应用程序的 SQLite 与 PostgreSQL 的架构权衡。",
+    "analysis-fallacy-media": "列出现代媒体报道中发现的五种常见逻辑谬误，并提供如何发现它们的指南。",
+    "analysis-cloud-vs-local": "分析云托管无服务器计算与自托管裸机服务器的长期成本效益权衡。",
+    "analysis-electron-tauri": "对 Electron 与 Tauri 在内存占用、构建大小和安全模型方面进行详细的比较分析。",
+    "analysis-monolith-micro": "确定关键指标，显示成长中的初创公司何时应从整体架构过渡到微服务架构。",
+    "analysis-privacy-shield": "分析 GDPR 合规要求对日志记录和遥测实践的法律和技术影响。",
+    "analysis-rsa-vs-ecc": "对 RSA 与椭圆曲线加密 (ECC) 的密钥大小和签名速度进行比较技术分析。",
+    "analysis-dns-over-https": "分析采用 DNS-over-HTTPS (DoH) 的隐私优势和网络性能权衡。",
+    "analysis-open-licensing": "比较 MIT 与 GPLv3 许可证的法律条件、copyleft 属性和商业使用权限。",
+    "analysis-ci-caching": "分析从 GitHub Actions CI 管道中的缓存策略获得的构建时间优化。",
+    "analysis-work-automation": "评估人工智能自主代理工作流程对管理团队生产力和资源需求的预期影响。",
+    "image-serene-mountain": "黄金时段的宁静高山湖泊，水面上薄雾缭绕，如画般",
+    "image-dewdrop-spiderweb": "蜘蛛网上露珠的宏观照片，日出照明",
+    "image-cyberpunk-market": "夜间赛博朋克街头市场，霓虹灯倒映在水坑里",
+    "image-fox-mushroom": "狐狸在蘑菇下读书的儿童读物插图",
+    "image-steampunk-airship": "蒸汽朋克飞艇停靠在云满天空的浮动平台上，复古插画风格",
+    "image-bioluminescent-forest": "夜间的未来生物发光森林，发光植物，空灵的蓝色和紫色色调，详细的数字艺术",
+    "image-watercolor-cafe": "熙熙攘攘的欧洲街头咖啡馆充满活力的水彩画，阳光明媚的日子，松散的艺术笔触",
+    "image-astronaut-portrait": "宇航员看着地球的特写肖像，遮阳板中的倒影，超现实、详细的宇航服",
+    "image-overgrown-ruins": "一座寺庙的古遗址，长满了巨大的树根，午后的阳光穿过树叶，喜怒无常",
+    "image-minimalist-desert": "夜间沙漠景观、新月、星星、温暖的赤土和深蓝色色调的极简主义矢量艺术",
+    "image-cozy-cabin": "一幅油画，描绘了冬季暴风雪期间树林中舒适的小屋，温暖的琥珀色光线从窗户照射进来",
+    "image-floating-island": "一座奇特的浮岛，有一座小灯塔，周围环绕着蓬松的白云，3D 粘土动画风格",
+    "image-midcentury-abstract": "抽象几何构图灵感源自中世纪现代设计、柔和的复古调色板",
+    "image-castle-dragon": "一条雄伟的龙栖息在中世纪城堡塔顶，薄雾，戏剧性的电影灯光",
+    "image-surreal-whale": "鲸鱼飞过充满漂浮热气球的多云天空的超现实数字艺术",
+    "image-retro-lab": "一个复古未来派实验室，里面有装有发光液体的玻璃瓶、铜线圈、模拟表盘、戏剧性的阴影",
+    "image-sketch-cat": "一只困猫蜷缩在一堆旧皮革装订书上的铅笔素描，柔软的交叉影线",
+    "image-coral-reef": "色彩缤纷的珊瑚礁充满了异国情调的鱼类，阳光透过清澈的绿松石水，水下照片",
+    "image-hacker-setup": "赛博朋克黑客设置有多个发光显示器，到处都是电线，黑暗的房间有网络蓝色的环境光",
+    "image-stained-glass": "彩色玻璃窗描绘着生命之树，明亮的阳光在石地板上投射出彩色图案",
+    "audio-welcome-vf": "欢迎来到威尼斯锻造厂。语音的未来就在这里，它可以讲各种语言。",
+    "audio-library-book": "在一座坐落在两山之间的安静小镇里，一座小图书馆里藏着一本非常古老的书。",
+    "audio-octopus-brains": "你可知道？一只章鱼有九个大脑——一个位于中央，另外一个位于手臂。",
+    "audio-safety-protocols": "在部署本地 LLM 代理集群之前，请确保所有安全协议均已完全启用。",
+    "audio-quick-brown-fox": "敏捷的棕色狐狸跳过了那只懒狗。只是一个经典的声音测试来检查所有语音频率。",
+    "audio-hyperloop-depart": "乘客请注意，前往东部航站楼的超级高铁过境走廊将在三分钟后出发。",
+    "audio-hydrothermal-vents": "在海洋深处，热液喷口支撑着从未见过阳光的独特生态系统。",
+    "audio-study-stars": "为了了解宇宙，我们必须研究恒星、原子以及它们之间的空间。",
+    "audio-step-forward": "只要我们知道自己正在走哪条路，向前迈出一步就可以改变历史的进程。",
+    "audio-digital-archive": "欢迎来到数字档案馆。请说明您的凭据或插入您的授权模块。",
+    "audio-whispering-leaves": "随着秋季暴风雨的临近，树叶的沙沙声和远处的雷声充满了夜晚的空气。",
+    "audio-getting-started": "取得成功的秘诀在于开始行动，并结合每天专注工作的习惯。",
+    "audio-compilation-complete": "我们的系统已成功完成编译过程。所有模块参数均为标称参数。",
+    "audio-kepler-transmission": "公元二十二四十二年，人类收到了来自开普勒系统的第一个经过验证的传输。",
+    "audio-complex-problem": "对于每一个复杂的问题，都有一个简单、简洁、但完全错误的解决方案。",
+    "music-lofi-hiphop": "低保真嘻哈节奏，带有黑胶爆裂声和雨声 — 80 bpm，柔和",
+    "music-cinematic-orchestral": "电影般的管弦乐构建——缓慢的弦乐升华为胜利的铜管乐",
+    "music-synthwave-retro": "带有复古琶音、温暖打击垫、门控混响鼓的 Synthwave — 105 bpm",
+    "music-acoustic-folk": "原声民谣指弹、柔和的女声、亲密的房间声音",
+    "music-indie-pop": "欢快的独立流行歌曲，带有朗朗上口的电吉他连复段和拍手声 — 120 bpm",
+    "music-dark-ambient": "具有慢速合成脉冲和金属纹理的黑暗环境无人机 — 太空氛围",
+    "music-heavy-metal": "80年代重金属吉他独奏、快速双低音鼓、高能摇滚赞歌",
+    "music-jazz-piano": "轻松的爵士钢琴三重奏，配有直立低音和柔软的刷子鼓 — 深夜休息室",
+    "music-industrial-techno": "赛博朋克工业技术，带有扭曲的低音线和沉重的底鼓 — 130 bpm",
+    "music-japanese-flute": "带有环境弦垫的传统日本长笛（尺八）——宁静的冥想",
+    "music-edm-drop": "高能量 EDM 带有渐进式合成和弦和低音低音 — 节日风格",
+    "music-chillstep": "Chillout chillstep 曲目，具有音调弯曲的声带和柔和的低音 - 90 bpm",
+    "music-delta-blues": "带有单块节奏的 Delta 布鲁斯滑音吉他，原始而深情",
+    "music-chiptune-retro": "未来派chiptune 8位游戏音乐，欢快的旋律，复古的音效",
+    "music-reggae-dub": "雷鬼配音曲目，具有沉重的另类和弦、深沉的低音线和回声效果",
+    "embeddings-fox-dog": "敏捷的棕色狐狸跳过了那只懒狗。",
+    "embeddings-meaning-vector": "嵌入将文本转换为可以按含义搜索的向量。",
+    "embeddings-sf-bridges": "旧金山是加利福尼亚州北部的一座城市，以雾和桥梁而闻名。",
+    "embeddings-ai-simulation": "人工智能是机器对人类智能过程的模拟。",
+    "embeddings-quantum-computing": "量子计算利用叠加和纠缠来执行复杂的运算。",
+    "embeddings-dna-helix": "DNA双螺旋结构于1953年由沃森和克里克首次发现。",
+    "embeddings-db-index": "数据库索引是一种提高数据检索操作速度的数据结构。",
+    "embeddings-clean-code": "干净的代码总是看起来像是由关心的人编写的。",
+    "embeddings-photosynthesis": "光合作用是植物将光能转化为化学能的过程。",
+    "embeddings-cryptographic-hash": "加密哈希函数将任意二进制数据映射到固定大小的签名。",
+    "embeddings-spacetime-curve": "广义相对论将引力描述为时空的曲率。",
+    "embeddings-offline-first": "在离线优先的应用程序中，数据在同步到云之前存储在本地。",
+    "embeddings-regex-match": "正则表达式是用于匹配字符串中的字符组合的模式。",
+    "embeddings-vector-space": "向量空间是由向量集合形成的数学结构。",
+    "embeddings-microservices": "微服务架构将应用程序构建为松散耦合服务的集合。"
+  },
+  "statusCluster": {
+    "categories": {
+      "api": "应用程序编程接口",
+      "apiKey": "钥匙",
+      "model": "模型",
+      "storage": "贮存",
+      "safety": "安全",
+      "provider": "研究",
+      "project": "项目",
+      "desktop": "模式"
+    },
+    "severities": {
+      "ok": "好的",
+      "warn": "警告",
+      "error": "错误",
+      "unknown": "未知"
+    },
+    "aria": {
+      "cluster": "应用状态集群",
+      "openHighest": "打开应用程序状态。最高严重性：{{category}} {{severity}}"
+    },
+    "status": "地位"
+  },
+  "runtimeGenerated": {
+    "app": {
+      "attribute": {
+        "closeMenu": "关闭菜单"
+      }
+    },
+    "components": {
+      "charactersview": {
+        "attribute": {
+          "adultCharacter": "成人角色",
+          "averageRating": "平均评分",
+          "ratingCount": "评分数",
+          "totalImports": "进口总额",
+          "openOnVenice": "威尼斯开幕",
+          "closeCharacterDetails": "关闭角色详细信息",
+          "characterSections": "人物部分",
+          "characterChatModel": "人物聊天模型",
+          "searchCharacters": "搜索字符...",
+          "searchCharacters2": "搜索字符"
+        },
+        "text": {
+          "unfavorite": "不喜欢",
+          "favorite": "最喜欢的",
+          "v1Imported": "V1进口",
+          "v2Json": "V2 JSON",
+          "v2Png": "V2 PNG",
+          "vfNative": "VF本机",
+          "noDescription": "无描述",
+          "unknownAuthor": "作者未知",
+          "noDescriptionProvided": "没有提供描述。",
+          "loading": "加载中…",
+          "loadMore": "加载更多"
+        },
+        "notification": {
+          "refreshedValue1": "已刷新{{value1}}",
+          "duplicatedValue1ToLocal": "将{{value1}}复制到本地",
+          "exportFailed": "导出失败"
+        },
+        "metadata": {
+          "deleteValue1": "删除{{value1}}吗？",
+          "featured": "精选",
+          "mostImported": "最进口",
+          "highestRated": "最高评价",
+          "highlyRated": "高度评价",
+          "highlyRatedRecent": "高度评价和最近",
+          "mostRecent": "最近的",
+          "mostRated": "最受好评",
+          "descending": "降序",
+          "ascending": "升序"
+        }
+      },
+      "modelselect": {
+        "attribute": {
+          "highFidelity": "高保真度",
+          "standardFidelity": "标准保真度",
+          "anonymousInference": "匿名推理",
+          "privateInference": "私人推论"
+        },
+        "text": {
+          "value1K": "{{value1}} k"
+        }
+      },
+      "thememaker": {
+        "metadata": {
+          "veniceParityDark": "威尼斯平价黑暗",
+          "forgeGraphite": "锻造石墨",
+          "forgeDaylight": "锻造日光",
+          "forgeCopper": "锻造铜",
+          "forgeDracula": "锻造德古拉",
+          "gruvboxDark": "GruvBox 深色",
+          "rosepine": "玫瑰松",
+          "forgeNord": "北锻造",
+          "forgeTokyo": "锻造东京",
+          "forgeCatppuccin": "锻造卡布奇辛",
+          "forgeSolarizedDark": "锻造晒黑",
+          "forgeSolarizedLight": "锻造日光灯",
+          "forgeOneDark": "锻造一暗",
+          "forgeMonokai": "锻造物联网",
+          "forgeGithubLight": "打造 GitHub Light",
+          "obsidianBloom": "黑曜石花",
+          "harborFog": "港口雾",
+          "circuitMint": "电路铸币厂",
+          "amberArchive": "琥珀档案馆",
+          "neonDusk": "霓虹黄昏",
+          "auroraBoreal": "北极光",
+          "sakuraTerminal": "樱花客运站",
+          "basaltNoir": "黑色玄武岩",
+          "solarAsh": "太阳灰",
+          "cyberOrchid": "网络兰花",
+          "arcticGlass": "北极玻璃",
+          "desertCopperfield": "沙漠科波菲尔",
+          "toxicLimewire": "有毒石灰线",
+          "midnightVelvet": "午夜天鹅绒",
+          "porcelainDaybreak": "瓷黎明",
+          "synthwaveHarbor": "合成波港",
+          "mossCircuit": "莫斯赛道",
+          "emberMonastery": "余烬修道院",
+          "glacialInk": "冰川墨水",
+          "ultravioletRain": "紫外线雨",
+          "customTheme": "自定义主题",
+          "placeholder": "占位符"
+        },
+        "notification": {
+          "createdNewCustomThemeValue1": "创建了新的自定义主题“ {{value1}} ”",
+          "failedToCreateThemeValue1": "未能创建主题： {{value1}}",
+          "themeValue1SavedSuccessfully": "主题“ {{value1}} ”已成功保存",
+          "failedToSaveThemeValue1": "无法保存主题： {{value1}}",
+          "failedToDeleteThemeValue1": "无法删除主题： {{value1}}",
+          "themeExportedSuccessfully": "主题导出成功",
+          "failedToExportTheme": "导出主题失败",
+          "failedToImportTheme": "导入主题失败",
+          "themeValue1ImportedAndApplied": "导入并应用主题“ {{value1}} ”",
+          "failedToImportThemeValue1": "无法导入主题： {{value1}}"
+        },
+        "attribute": {
+          "themeName": "主题名称",
+          "value1ColorPicker": "{{value1}}颜色选择器"
+        }
+      },
+      "audio": {
+        "audioView": {
+          "notification": {
+            "ttsFailed": "TTS 失败",
+            "transcriptionFailed": "转录失败"
+          },
+          "text": {
+            "textToSpeech": "文字转语音",
+            "transcribe": "录制",
+            "clickToSelectAudioFile": "单击选择音频文件"
+          },
+          "attribute": {
+            "enterTextToConvertToSpeech": "输入文本以转换为语音...",
+            "synthesizingSpeech": "合成语音...",
+            "transcribingAudio": "正在转录音频..."
+          }
+        }
+      },
+      "characterCreator": {
+        "charactercreatordrafteditor": {
+          "text": {
+            "untitledCharacter": "无标题角色",
+            "hideAiDesignProcess": "隐藏人工智能设计流程",
+            "viewAiDesignProcessLog": "查看AI设计流程日志",
+            "revisingDraft": "修改草案...",
+            "reviseWholeDraft": "修改整个草稿"
+          },
+          "metadata": {
+            "overview": "概述",
+            "identity": "身份",
+            "behavior": "行为",
+            "conversation": "对话",
+            "advancedPrompting": "高级提示",
+            "lore": "知识",
+            "appearance": "外貌",
+            "metadata": "元数据"
+          },
+          "attribute": {
+            "start10UserHello10CharGreetings": "<START>{{user}} ：您好！ {{char}} ：问候...",
+            "avatarPreview": "头像预览",
+            "triggerKeywordsEGGothamBatcave": "触发关键词（例如 Gotham、Batcave）",
+            "loreDetailContentTriggeredWhenAnyKeywordAppearsInConversation": "当对话中出现任何关键字时触发传说详细内容...",
+            "eGMakeHerLessHostileGiveHimADry": "例如，让她减少敌意，给他一种冷幽默感，或者将场景移至 20 年代的柏林......"
+          }
+        },
+        "charactercreatorerror": {
+          "notification": {
+            "errorDetailsCopiedToClipboard": "错误详细信息已复制到剪贴板"
+          }
+        },
+        "charactercreatorlocalpickermodal": {
+          "attribute": {
+            "searchByCharacterNameTagOrDescription": "按角色名称、标签或描述搜索..."
+          },
+          "text": {
+            "noLocalCharactersFoundInYourLibrary": "在您的库中找不到本地字符。",
+            "noCharactersMatchYourSearchFilter": "没有字符符合您的搜索过滤器。",
+            "noDescriptionProvided": "没有提供描述。"
+          }
+        },
+        "charactercreatormascot": {
+          "attribute": {
+            "characterCreatorMascot": "角色创造者吉祥物"
+          }
+        },
+        "charactercreatorprocesspanel": {
+          "notification": {
+            "designProcessSummaryCopiedToClipboard": "设计过程摘要复制到剪贴板",
+            "couldNotCopyToClipboard": "无法复制到剪贴板"
+          },
+          "text": {
+            "copied": "已复制",
+            "copyLog": "复制日志",
+            "value1Value2": "{{value1}} ： {{value2}}"
+          }
+        },
+        "charactercreatorready": {
+          "text": {
+            "characterReadyForApproval": "角色已准备好等待批准",
+            "validationIssuesDetected": "检测到验证问题",
+            "reviewTheValidationPreviewAndExplicitlyApproveCreationToAdd": "查看验证预览并明确批准创建以添加到本地库。",
+            "resolveValidationErrorsBeforeApprovingCharacterCardCreation": "在批准角色卡创建之前解决验证错误。",
+            "noDescriptionSpecified": "未指定描述",
+            "thisDraftWasLoadedFromAnExistingCharacterYouCan": "该草稿是从现有角色加载的。您可以就地更新角色或保存为新副本。",
+            "thisWillCreateANewLocalCharacterFromTheCurrent": "这将从当前草案中创建一个新的本地角色。创建后您可以继续编辑它。",
+            "updateCharacter": "更新角色",
+            "createCharacter": "创建角色",
+            "updateStartChat": "更新并开始聊天",
+            "createStartChat": "创建并开始聊天"
+          }
+        },
+        "charactercreatorview": {
+          "metadata": {
+            "analyzingImage": "分析图像"
+          },
+          "notification": {
+            "couldNotLoadDraft": "无法加载草稿",
+            "draftDuplicated": "草稿重复",
+            "couldNotDuplicateDraft": "无法复制草稿",
+            "draftDeleted": "草稿已删除",
+            "couldNotDeleteDraft": "无法删除草稿",
+            "autosaveFailed": "自动保存失败",
+            "cannotSaveDraftWhilePendingChangesFailedToPersist": "当挂起的更改未能保留时，无法保存草稿。",
+            "draftSavedLocally": "草稿保存在本地",
+            "couldNotSaveDraft": "无法保存草稿",
+            "cannotReviseDraftWhilePendingChangesFailedToPersist": "当挂起的更改未能保留时，无法修改草稿。",
+            "draftRevised": "修订草案",
+            "cannotRegenerateFieldWhilePendingChangesFailedToPersist": "当挂起的更改无法持久时，无法重新生成字段。",
+            "fieldFieldRegenerated": "重新生成字段“ {{field}}",
+            "cannotValidateDraftWhilePendingChangesFailedToPersist": "当挂起的更改无法持久时，无法验证草稿。",
+            "cannotApproveCharacterWhilePendingChangesFailedToPersist": "当挂起的更改无法持久时，无法批准角色。",
+            "characterUpdated": "人物更新了！",
+            "characterCreated": "角色创建！",
+            "value1SavedToLocalLibrary": "“ {{value1}} ”保存到本地库。",
+            "cannotExportCardWhilePendingChangesFailedToPersist": "当挂起的更改未能保留时，无法导出卡。",
+            "characterCardExported": "人物卡导出",
+            "exportFailed": "导出失败",
+            "exportedCharacterCardJson": "导出的角色卡 JSON",
+            "cardImportedIntoCharacterCreator": "导入到Character Creator中的卡片",
+            "importedCard": "进口卡",
+            "importFailed": "导入失败",
+            "couldNotParseCardFile": "无法解析卡片文件",
+            "couldNotLoadCharacter": "无法加载角色"
+          }
+        },
+        "charactercreatorwelcome": {
+          "attribute": {
+            "exampleIWantABroodingNocturnalDetectiveWhoProtectsA": "示例：我想要一个沉思的夜间侦探，他可以保护腐败的城市而不杀人。",
+            "eGNeoGothicMetropolis1920sNoir": "例如新哥特式大都市、20 年代黑色",
+            "eGGrittyMelancholicSatirical": "例如坚韧、忧郁、讽刺",
+            "eGReluctantAllyMysteriousInformant": "例如，不情愿的盟友、神秘的线人",
+            "duplicateDraft": "重复草稿",
+            "deleteDraft": "删除草稿"
+          }
+        }
+      },
+      "characters": {
+        "characteravatar": {
+          "attribute": {
+            "displaynameAvatar": "{{displayName}}头像"
+          }
+        }
+      },
+      "chat": {
+        "characterchatsview": {
+          "attribute": {
+            "newCharacterChat": "新角色聊天",
+            "chooseOrStartACharacterChat": "选择或开始角色聊天",
+            "searchCharacterChats": "搜索角色聊天记录",
+            "searchLocalCharacters": "搜索本地字符...",
+            "newCharacterChat2": "新角色聊天",
+            "selectALocalCharacterOrBrowseHostedCharactersToLaunch": "选择本地角色或浏览托管角色以启动聊天。",
+            "filterLocalCharacters": "过滤本地字符..."
+          },
+          "text": {
+            "characterChat": "人物聊天",
+            "local": "当地的",
+            "hosted": "主办",
+            "v1Imported": "V1进口",
+            "v2Json": "V2 JSON",
+            "v2Png": "V2 PNG",
+            "localCharacter": "地方特色",
+            "localCharacter2": "地方特色",
+            "noLocalCharactersCreatedYet": "尚未创建本地角色。",
+            "noCharactersMatchPickerquery": "没有字符匹配“ {{pickerQuery}} ”。"
+          }
+        },
+        "characterscenecard": {
+          "text": {
+            "unableToGenerateScene": "无法生成场景。"
+          },
+          "attribute": {
+            "generatedScene": "生成的场景"
+          }
+        },
+        "chatttsplayer": {
+          "attribute": {
+            "pauseSpeech": "暂停讲话",
+            "playSpeech": "播放演讲",
+            "stopSpeech": "停止讲话",
+            "restartSpeech": "重启演讲"
+          }
+        },
+        "historyview": {
+          "notification": {
+            "importFailed": "导入失败",
+            "unableToSelectBackup": "无法选择备份",
+            "conversationDeleted": "对话已删除",
+            "untitled": "无题",
+            "conversationRestored": "对话已恢复",
+            "failedToRestore": "恢复失败",
+            "movedConversations": "移动对话",
+            "movedValue1ConversationValue2ToTargetname": "已将{{value1}}对话{{value2}}移至{{targetName}} 。",
+            "failedToMoveConversations": "无法移动对话",
+            "conversationsDeleted": "对话已删除",
+            "value1SelectedConversationValue2Removed": "{{value1}}选定的对话{{value2}}已删除。",
+            "someConversationsWereNotDeleted": "有些对话没有被删除",
+            "value1SelectedConversationValue2RemainBecauseStorageDeletionFailed": "由于存储删除失败， {{value1}}所选对话{{value2}}仍保留。",
+            "thisConversationHasNoFactsOrSummaryToUse": "这段对话没有事实或摘要可供使用。",
+            "contextInjectedIntoActiveChat": "上下文注入到活动聊天中",
+            "privacyGateRemainsClosed": "隐私门仍然关闭",
+            "privacyGateWasNotEnabled": "隐私门未启用",
+            "unknownError": "未知错误"
+          },
+          "metadata": {
+            "importEncryptedFolderBackup": "导入加密文件夹备份？",
+            "unlockBackup": "解锁备份",
+            "undo": "撤消",
+            "deleteValue1ConversationValue2": "删除{{value1}}对话{{value2}}吗？",
+            "openPrivacyGate": "打开隐私门",
+            "enableFolderPrivacyGate": "启用文件夹隐私门",
+            "exportFolder": "导出文件夹"
+          },
+          "attribute": {
+            "searchByTitleOrMessageContent": "按标题或消息内容搜索...",
+            "deselectFolderConversations": "取消选择文件夹对话",
+            "selectAllConversationsInFolder": "选择文件夹中的所有对话",
+            "moveFolderUp": "上移文件夹",
+            "moveValue1FolderUp": "将{{value1}}文件夹向上移动",
+            "moveFolderDown": "下移文件夹",
+            "moveValue1FolderDown": "将{{value1}}文件夹向下移动",
+            "renameFolder": "重命名文件夹",
+            "deleteFolder": "删除文件夹",
+            "deselect": "取消选择",
+            "select": "选择",
+            "deselectConversation": "取消选择对话",
+            "selectConversation": "选择对话",
+            "injectContextIntoActiveChat": "将上下文注入活动聊天中",
+            "deleteConversation": "删除对话",
+            "deselectUnfiledConversations": "取消选择未归档的对话",
+            "selectAllUnfiledConversations": "选择所有未归档的对话",
+            "folderName": "文件夹名称...",
+            "privacyAccessGateNotPerFolderEncryptionAtRest": "隐私门禁；静态时不按文件夹加密"
+          },
+          "text": {
+            "deselectAllVisible": "取消选择所有可见的",
+            "selectAllVisible": "选择所有可见的",
+            "folderselectedcountSelected": "· 已选择{{folderSelectedCount}}",
+            "selected": "已选择",
+            "select": "选择",
+            "unfiledselectedcountSelected": "· 已选择{{unfiledSelectedCount}}"
+          }
+        },
+        "chatView": {
+          "notification": {
+            "modelUnavailable": "型号不可用",
+            "thePreviouslySelectedModelIsUnavailableThisChatNowUses": "之前选择的型号不可用。此聊天现在使用{{resolvedDefault}} 。",
+            "priorContextSkipped": "先前的上下文被跳过",
+            "factPermanentlyForgotten": "事实被永久遗忘。",
+            "failedToForgetFact": "未能忘记事实"
+          },
+          "metadata": {
+            "forgetThisFact": "忘记这个事实了吗？",
+            "deleteFromHere": "从这里删除？",
+            "removedFromChat": "已从聊天中删除",
+            "removednameStaysInMediaStudioClickUndoToReAttach": "{{removedName}}保留在 Media Studio 中。单击撤消重新附加。",
+            "undo": "撤消",
+            "regenerateFromHere": "从这里重生？"
+          },
+          "attribute": {
+            "searchCurrentConversation": "搜索当前对话",
+            "searchThisConversation": "搜索此对话",
+            "previousMatch": "上一场比赛",
+            "nextMatch": "下一场比赛",
+            "closeConversationSearch": "关闭对话搜索",
+            "cancel": "取消",
+            "chatContextSettings": "聊天上下文设置",
+            "chatContext": "聊天上下文",
+            "stopChattingAsThisCharacter": "停止以该角色聊天",
+            "value1Value2Tokens": "~ {{value1}} / {{value2}}令牌"
+          },
+          "text": {
+            "value0Matches": "0 场比赛",
+            "value1OfValue2": "{{value1}}共{{value2}}",
+            "pickAModelInTheHeaderAboveThenStartA": "在上面的标题中选择一个模型，然后开始对话。流媒体、网络搜索和引文都是内置的。",
+            "connectAVeniceApiKeyFromTheHeaderAboveTo": "从上面的标头连接 Venice API 密钥即可开始。",
+            "thisCharacter": "这个角色",
+            "viewList": "查看列表",
+            "editText": "编辑文本",
+            "memoryOn": "内存开启",
+            "memoryOff": "内存关闭",
+            "value1Prior": "{{value1}}之前",
+            "priorOff": "事先关闭",
+            "remove": "消除",
+            "add": "添加",
+            "untitled": "无题",
+            "localCharacter": "地方特色",
+            "value1": "· {{value1}}"
+          }
+        },
+        "messageBubble": {
+          "text": {
+            "copied": "已复制",
+            "copy": "复制",
+            "allow": "允许",
+            "blocked": "封锁",
+            "noArguments": "无参数"
+          },
+          "attribute": {
+            "copied": "已复制",
+            "copy": "复制",
+            "editMessage": "编辑留言",
+            "forkChatFromHere": "从这里分叉聊天",
+            "deleteFromHere": "从这里删除",
+            "regenerateFromHere": "从这里重生",
+            "regenerate": "再生",
+            "createScene": "创建场景",
+            "delete": "删除",
+            "attachmentValue1": "附件{{value1}}",
+            "editMessageText": "编辑消息文本",
+            "value1Value2": "{{value1}} （ {{value2}} ）",
+            "attachmentWasPartiallyOmittedDueToContextBudget": "由于上下文预算，附件被部分省略",
+            "aiAvatar": "人工智能头像",
+            "thinking": "思维…",
+            "removeFromChat": "从聊天中删除",
+            "tokensUsedForThisMessage": "用于此消息的令牌"
+          }
+        }
+      },
+      "documents": {
+        "documentagentview": {
+          "notification": {
+            "managedDocumentCreated": "已创建托管文档",
+            "workingGroupValue1Created": "创建工作组“ {{value1}} ”",
+            "approvedEditAppliedAsANewRevision": "已批准的编辑作为新修订应用",
+            "proposalRejectedWithoutChanges": "提案未经修改被拒绝"
+          },
+          "attribute": {
+            "searchDocuments": "搜索文档...",
+            "documentChangeProposal": "文档变更提案",
+            "searchWorkspaceText": "搜索工作区文本...",
+            "eGNotesMd": "例如notes.md",
+            "eGQ3Architecture": "例如Q3架构"
+          },
+          "text": {
+            "fileContentInspector": "文件内容检查器"
+          }
+        }
+      },
+      "embeddings": {
+        "embeddingsView": {
+          "attribute": {
+            "enterTextToEmbed": "输入要嵌入的文本...",
+            "model": "模型",
+            "dimensions": "方面",
+            "tokens": "代币"
+          },
+          "text": {
+            "showFirstPreviewCount": "显示第{{PREVIEW_COUNT}}个",
+            "showAllDimsValues": "显示所有{{dims}}值"
+          }
+        }
+      },
+      "gallery": {
+        "compareView": {
+          "text": {
+            "allSharedFieldsMatch": "所有共享字段都匹配",
+            "changedcountFieldValue2Differ": "{{changedCount}}字段{{value2}}不同"
+          },
+          "attribute": {
+            "closeCompareView": "关闭比较视图"
+          },
+          "metadata": {
+            "model": "模型",
+            "prompt": "迅速的",
+            "negative": "消极的",
+            "width": "宽度",
+            "height": "高度",
+            "aspect": "方面",
+            "resolution": "解决",
+            "quality": "质量",
+            "seed": "种子",
+            "steps": "步骤",
+            "cfg": "CFG",
+            "style": "风格",
+            "project": "项目",
+            "operation": "手术",
+            "type": "类型",
+            "favorite": "最喜欢的",
+            "tags": "标签",
+            "created": "已创建",
+            "rModel": "R：型号",
+            "rPrompt": "R：提示",
+            "rNegative": "R：阴性",
+            "rWidth": "R：宽度",
+            "rHeight": "R：高度",
+            "rAspect": "R：方面",
+            "rResolution": "R：分辨率",
+            "rSeed": "R：种子",
+            "rSteps": "R：步骤",
+            "rCfg": "R：CFG",
+            "rVariants": "R：变体",
+            "rStyle": "R：风格",
+            "rQuality": "R：质量"
+          }
+        },
+        "galleryView": {
+          "notification": {
+            "favoritedValue1OfValue2": "收藏了{{value1}} （共{{value2}}",
+            "favoritedValue1ItemValue2": "收藏的{{value1}}项{{value2}}",
+            "noneOfTheSelectedItemsHaveARecipe": "所有选定的项目都没有配方。",
+            "copiedValue1RecipeValue2": "已复制{{value1}}食谱{{value2}}",
+            "couldNotCopyToClipboard": "无法复制到剪贴板。",
+            "failedToUpdateMediaItem": "无法更新媒体项目",
+            "removedFromMediaStudio": "从媒体工作室中删除",
+            "failedToDelete": "删除失败",
+            "removedValue1OfValue2SomeFailed": "删除了{{value1}}的{{value2}} （部分失败）",
+            "removedValue1ItemValue2": "已删除{{value1}}项{{value2}}",
+            "batchDeleteFailed": "批量删除失败",
+            "updatedValue1OfValue2": "更新了{{value1}}的{{value2}}",
+            "removedFavorites": "已删除收藏夹",
+            "markedAsFavorites": "标记为收藏夹",
+            "clearedFavorites": "清除收藏夹",
+            "taggedValue1OfValue2": "已标记{{value1}} （共{{value2}}",
+            "taggedValue1ItemValue2": "已标记的{{value1}}项{{value2}}",
+            "enterATagFirst": "首先输入一个标签。",
+            "assignedValue1OfValue2Firstreason": "分配了{{value1}}的{{value2}} ( {{firstReason}} )",
+            "assignedValue1ItemValue2": "分配的{{value1}}项{{value2}}",
+            "selectAtLeastOneMediaItem": "至少选择一项媒体项目。",
+            "loadedSettingsIntoImageStudio": "将设置加载到 Image Studio 中",
+            "thisMediaItemHasNoReusableRecipe": "该媒体项目没有可重复使用的配方",
+            "recipeLoadedIntoImageStudio": "配方已加载到 Image Studio 中",
+            "openingImageToolsForUpscale": "开启高档图像工具",
+            "openingImageToolsForEditing": "打开图像工具进行编辑",
+            "sentToImageStudio": "发送至图像工作室",
+            "couldNotSendToImageStudio": "无法发送到 Image Studio",
+            "sentToImageTools": "发送到图像工具",
+            "couldNotSendToImageTools": "无法发送到图像工具",
+            "createdNewChatWithPromptCopied": "创建了新的聊天并复制了提示",
+            "couldNotSendToChat": "无法发送至聊天室",
+            "sentToVideoStudio": "发送到视频工作室",
+            "couldNotSendToVideoStudio": "无法发送到会声会影",
+            "promptCopied": "提示已复制",
+            "couldNotCopyPrompt": "无法复制提示",
+            "negativeCopied": "负片复印",
+            "couldNotCopyNegative": "无法复制负片",
+            "noSeedRecorded": "没有记录种子",
+            "seedCopied": "复制种子",
+            "setUpAMasterPasswordInSettingsSecurityFirst": "首先在“设置”&gt;“安全”中设置主密码"
+          },
+          "metadata": {
+            "addTag": "添加标签",
+            "deleteThisValue1": "删除这个{{value1}}吗？",
+            "deleteValue1ItemValue2": "删除{{value1}}项{{value2}}吗？"
+          },
+          "text": {
+            "exitVault": "退出金库",
+            "vault": "避难所",
+            "imagesAndVideosGeneratedInImageStudioAndVideoStudio": "在 Image Studio 和 Video Studio 中生成的图像和视频将自动显示在此处。",
+            "tryADifferentSearchOrFilterOrLoadOlderItems": "尝试不同的搜索或过滤器，或加载较旧的项目以扩展结果集。",
+            "tryADifferentSearchFilterOrSort": "尝试不同的搜索、过滤或排序。",
+            "loadingOlderMedia": "正在加载旧媒体...",
+            "loadMoreValue1Remaining": "加载更多（剩余{{value1}} ）"
+          },
+          "attribute": {
+            "doubleClickToInspect": "双击检查",
+            "heroLandscape": "英雄、风景……"
+          }
+        },
+        "mediaCard": {
+          "attribute": {
+            "openValue1Value2": "打开{{value1}} : {{value2}}",
+            "generatedVideo": "生成的视频",
+            "generatedImage": "生成的图像",
+            "unfavorite": "不喜欢",
+            "markAsFavorite": "标记为最爱",
+            "removeFromVault": "从保管库中删除",
+            "moveToVault": "移至保管库",
+            "delete": "删除"
+          },
+          "text": {
+            "loading": "加载中…",
+            "previewUnavailable": "预览不可用",
+            "item": "物品",
+            "untitled": "无题"
+          }
+        },
+        "mediaDetailDialog": {
+          "attribute": {
+            "mediaDetail": "媒体详情",
+            "previous": "以前的",
+            "generatedImagePreview": "生成的图像预览",
+            "next": "下一个",
+            "openValue1": "打开{{value1}}"
+          },
+          "text": {
+            "video": "视频",
+            "audio": "声音的",
+            "image": "图像",
+            "favorited": "已收藏",
+            "favorite": "最喜欢的",
+            "untitled": "无题",
+            "noTags": "没有标签"
+          }
+        },
+        "mediaInspector": {
+          "notification": {
+            "savedRecipeToPromptLibrary": "已将配方保存到提示库",
+            "couldNotSaveRecipe": "无法保存食谱",
+            "aiCharacterCreatorLaunched": "AI角色创建器推出",
+            "mediaSaved": "媒体已保存",
+            "mediaDownloadFailed": "媒体下载失败"
+          },
+          "attribute": {
+            "mediaInspector": "媒体督察",
+            "loadThisImageSSettingsIntoImageStudioNoGeneration": "将此图像的设置加载到 Image Studio（无生成）",
+            "loadTheGenerationRecipePromptModelSeedDimensionsEtcInto": "将生成配方（提示、模型、种子、尺寸等）加载到适当的工作室中",
+            "regenerateUsingThisImageSSettingsNewRandomSeed": "使用此图像的设置重新生成（新的随机种子）",
+            "regenerateUsingTheSameSeedAsThisImage": "使用与此图像相同的种子重新生成",
+            "openThisImageInTheImageEditor": "在图像编辑器中打开此图像",
+            "saveTheMainProcessMediaFileWithANativeDialog": "使用本机对话框保存主进程媒体文件",
+            "copyPromptText": "复制提示文字",
+            "copyNegativePrompt": "复制否定提示",
+            "copySeedValue1": "复制种子 ( {{value1}} )",
+            "copyMetadataAsJson": "将元数据复制为 JSON",
+            "saveRecipeToPromptLibrary": "将配方保存到提示库",
+            "copyGenerationRecipeAsJson": "将生成配方复制为 JSON",
+            "downloadGenerationRecipeAsAJsonFile": "将生成配方下载为 JSON 文件",
+            "disabledInternalPromptEnhancerEnabledIsFalseInConfigYaml": "已禁用：config.yaml 中的internal_prompt_enhancer.enabled 为 false",
+            "enhancePromptViaInternalLlm": "通过内部法学硕士增强提示",
+            "remixPromptViaInternalLlm": "通过内部 LLM 进行混音提示",
+            "addATagAndPressEnter": "添加标签并按 Enter 键",
+            "removeTag": "删除标签",
+            "value1Chars": "{{value1}}个字符",
+            "captureAQuickReminderOrSeedValue": "捕获快速提醒或种子值...",
+            "missingReferences": "缺少参考文献",
+            "upscaleEnhanceThisImage": "高档/增强此形象"
+          },
+          "text": {
+            "untitled": "无题",
+            "favorited": "已收藏",
+            "markAsFavorite": "标记为最爱",
+            "enhancing": "增强…",
+            "enhance": "提高",
+            "remixing": "混音…",
+            "remix": "混音",
+            "enhanced": "增强型",
+            "remixed": "混音版",
+            "enhancing2": "增强",
+            "remixing2": "混音",
+            "thisItemReferencesRecordsThatNoLongerExistClearThe": "该项目引用不再存在的记录。清除陈旧的指针以修复沿袭。",
+            "thisItemSParentRecordIsMissingClearTheParent": "该项目的父记录丢失。清除父链接以修复谱系。",
+            "value1ChildValue2CouldNotBeResolvedClearTheStale": "无法解析{{value1}}子项{{value2}} 。清除过时的指针{{value3}}以修复沿袭。",
+            "childrenidsValue1": "儿童 ID： {{value1}}",
+            "childrenidsValue1Missing": "childIds: {{value1}}缺失",
+            "value1MissingRef": "1 缺少参考",
+            "value1MissingRefs": "{{value1}}缺少参考"
+          }
+        },
+        "mediaToolbar": {
+          "metadata": {
+            "unassign": "取消分配",
+            "all": "全部",
+            "images": "图片",
+            "videos": "视频",
+            "audio": "声音的",
+            "favorites": "收藏夹",
+            "upscaled": "升级版",
+            "edited": "已编辑",
+            "hasRecipe": "有食谱",
+            "noRecipe": "没有食谱",
+            "hasSeed": "有种子",
+            "noSeed": "无种子",
+            "unscoped": "无范围",
+            "newest": "最新",
+            "oldest": "最古老的",
+            "model": "模型",
+            "size": "尺寸",
+            "project": "项目"
+          },
+          "attribute": {
+            "searchPromptsModelsTagsNotes": "搜索提示、模型、标签、注释……",
+            "searchMedia": "搜索媒体",
+            "clearSearch": "清除搜索"
+          },
+          "text": {
+            "exitSelect": "退出选择",
+            "select": "选择",
+            "unfavorite": "不喜欢",
+            "favorite": "最喜欢的"
+          }
+        },
+        "recipeComparison": {
+          "attribute": {
+            "recipeComparison": "配方比较"
+          },
+          "text": {
+            "identical": "完全相同的",
+            "changedcountFieldValue2WillChange": "{{changedCount}}字段{{value2}}将更改"
+          },
+          "metadata": {
+            "model": "模型",
+            "prompt": "迅速的",
+            "negativePrompt": "负面提示",
+            "width": "宽度",
+            "height": "高度",
+            "aspectRatio": "纵横比",
+            "resolution": "解决",
+            "quality": "质量",
+            "style": "风格",
+            "steps": "步骤",
+            "cfgScale": "CFG量表",
+            "variants": "变体",
+            "seed": "种子"
+          }
+        },
+        "recipeCompatibilityCard": {
+          "attribute": {
+            "sendTheOriginalRecipeToImageStudioWithoutSanitization": "将原始配方发送至 Image Studio，无需消毒"
+          },
+          "text": {
+            "hideComparison": "隐藏比较",
+            "showComparison": "显示比较"
+          }
+        }
+      },
+      "imageInspector": {
+        "imageinspectorview": {
+          "notification": {
+            "imageInspectorUploadIsOnlySupportedInTheDesktopApp": "仅桌面应用程序支持图像检查器上传。",
+            "failedToProcessImage": "处理图像失败",
+            "unknownError": "未知错误",
+            "noImageFoundOnClipboard": "剪贴板上找不到图像"
+          },
+          "metadata": {
+            "deleteImageInspection": "删除图像检查？",
+            "value1Value2": "{{value1}} — {{value2}}",
+            "quick": "快的",
+            "standard": "标准",
+            "maximum": "最大限度",
+            "forensic": "法医",
+            "genericNaturalLanguage": "通用自然语言",
+            "veniceImageStudio": "威尼斯影像工作室",
+            "flux": "通量",
+            "midjourney": "中途"
+          },
+          "attribute": {
+            "pasteFromClipboard": "从剪贴板粘贴",
+            "openImageInspectionValue1": "打开图像检查{{value1}}",
+            "deleteImageInspectionValue1": "删除图像检查{{value1}}",
+            "cancelAnalysisBeforeDeleting": "删除前取消分析",
+            "deleteInspection": "删除检查",
+            "target": "目标",
+            "selectAVisionModel": "选择视觉模型...",
+            "eGFocusOnLightingAndComposition": "例如，专注于灯光和构图......",
+            "analyzingImageContents": "分析图像内容..."
+          },
+          "text": {
+            "noSummaryAvailable": "没有可用的摘要。",
+            "subject": "主题",
+            "theSelectedVisionModelCouldNotAnalyzeThisImage": "所选的视觉模型无法分析该图像。"
+          }
+        }
+      },
+      "image": {
+        "imagePage": {
+          "text": {
+            "generate": "产生"
+          }
+        },
+        "imageView": {
+          "metadata": {
+            "value1Value2": "{{value1}} × {{value2}}"
+          }
+        }
+      },
+      "layout": {
+        "apiKeyDialog": {
+          "notification": {
+            "keySavedSecurely": "安全保存密钥"
+          },
+          "attribute": {
+            "closeDialog": "关闭对话框"
+          },
+          "text": {
+            "heldInMemoryForThisLocalDevelopmentSessionOnly": "仅为本次本地开发会议保留在内存中。",
+            "connect": "连接"
+          }
+        },
+        "inspectorPane": {
+          "metadata": {
+            "veniceApiDefault": "威尼斯 API 默认值",
+            "globalAppSystemPrompt": "全球应用系统提示",
+            "characterSystemPrompt": "字符系统提示",
+            "conversationOverrideModeMode": "对话覆盖（模式： {{mode}} ）",
+            "all": "全部",
+            "blocked": "被阻止",
+            "errored": "出错了",
+            "aborted": "中止",
+            "jina": "吉娜",
+            "localOnly": "仅限本地"
+          },
+          "attribute": {
+            "developerTrafficInspector": "开发商交通督察",
+            "resizeInspector": "调整大小检查器",
+            "clearAllLogs": "清除所有日志",
+            "clearAllInspectorLogs": "清除所有检查员日志",
+            "exportRedactedLogsAsJson": "将编辑日志导出为 JSON",
+            "exportRedactedInspectorLogsAsJson": "将编辑检查器日志导出为 JSON",
+            "closeInspector": "关闭检查器",
+            "closeTrafficInspector": "关闭交通督察"
+          },
+          "text": {
+            "traffic": "交通",
+            "promptLayers": "提示层",
+            "pending": "待办的...",
+            "allow": "允许",
+            "blocked": "封锁",
+            "empty": "[空的]",
+            "pendingOrEmpty": "[待处理或空]",
+            "untitled": "无题",
+            "active": "积极的",
+            "inactive": "不活跃"
+          }
+        },
+        "memoryPanel": {
+          "notification": {
+            "indexRebuiltSuccessfullyIndexedValue1Conversations": "索引重建成功！已索引的{{value1}}对话。",
+            "rebuildFailedValue1": "重建失败： {{value1}}",
+            "indexRebuildFailed": "索引重建失败",
+            "failedToOpenVaultFolder": "无法打开保管库文件夹。",
+            "migrationCompletedMigratedValue1FailedValue2SkippedValue3": "迁移完成！已迁移： {{value1}} ，失败： {{value2}} ，已跳过： {{value3}}",
+            "migrationFailedValue1": "迁移失败： {{value1}}",
+            "migrationFailed": "迁移失败",
+            "factForgottenSuccessfully": "成功忘记事实。",
+            "failedToForgetFact": "未能忘记事实。"
+          },
+          "metadata": {
+            "forgetThisFact": "忘记这个事实了吗？"
+          },
+          "text": {
+            "migrating": "正在迁移...",
+            "migrateNow": "立即迁移",
+            "indexing": "索引...",
+            "rebuildIndex": "重建索引"
+          }
+        },
+        "sidebar": {
+          "attribute": {
+            "primaryNavigation": "主要导航",
+            "closeMenu": "关闭菜单",
+            "sections": "部分",
+            "confirmDelete": "确认删除"
+          }
+        }
+      },
+      "music": {
+        "musicView": {
+          "text": {
+            "value1SValue2S": "{{value1}} s – {{value2}} s",
+            "queued": "排队…",
+            "generating": "生成…",
+            "generateMusic": "生成音乐",
+            "saved": "已保存",
+            "saveToMediaStudio": "保存到媒体工作室"
+          },
+          "attribute": {
+            "anUpbeatElectronicTrackWithADrivingBasslineAndEthereal": "欢快的电子曲目，带有强劲的低音线和空灵的合成器……",
+            "optionalLyricsOrVocalDirection": "可选歌词或声乐指导...",
+            "durationS": "{{duration}}秒",
+            "musicDuration": "音乐时长",
+            "alreadySavedToMediaStudio": "已保存到 Media Studio",
+            "saveToMediaStudio": "保存到媒体工作室",
+            "queuedWaitingForASlot": "Queued — 等待一个槽位",
+            "composingYourTrack": "创作你的曲目"
+          },
+          "notification": {
+            "alreadyInMediaStudio": "已在媒体工作室",
+            "savedToMediaStudio": "保存到媒体工作室"
+          }
+        }
+      },
+      "notifications": {
+        "progresstoast": {
+          "attribute": {
+            "value1Progress": "{{value1}}进度",
+            "dismissNotification": "关闭通知"
+          }
+        },
+        "toastitem": {
+          "attribute": {
+            "dismissNotification": "关闭通知"
+          }
+        },
+        "toastviewport": {
+          "attribute": {
+            "notifications": "通知"
+          }
+        }
+      },
+      "playground": {
+        "agentModelPicker": {
+          "metadata": {
+            "recommendedForAgents": "推荐给代理商",
+            "capable": "有能力的",
+            "other": "其他"
+          },
+          "attribute": {
+            "searchModels": "搜索型号...",
+            "showingAllModels": "显示所有型号",
+            "showingOnlySchemaCapableModels": "仅显示支持模式的模型"
+          },
+          "text": {
+            "all": "全部",
+            "capable": "有能力的",
+            "value1Ctx": "· {{value1}} ctx"
+          }
+        },
+        "playgroundChat": {
+          "attribute": {
+            "thinking": "思维…",
+            "working": "在职的…",
+            "agentIsWorking": "代理正在工作...",
+            "describeAWorkflowOrChange": "描述工作流程或变更..."
+          }
+        },
+        "playgroundView": {
+          "notification": {
+            "workflowCompleted": "工作流程完成",
+            "workflowFailed": "工作流程失败"
+          },
+          "metadata": {
+            "clearPlayground": "清理操场？"
+          },
+          "attribute": {
+            "clearConversation": "清晰的对话",
+            "unlink": "取消链接",
+            "resetCanvas": "重置画布",
+            "runTheWorkflowInline": "内联运行工作流程",
+            "updateValue1": "更新“ {{value1}} ”",
+            "saveAsNewWorkflow": "另存为新工作流程",
+            "saveAsANewWorkflow": "另存为新工作流程",
+            "openInWorkflowsTab": "在“工作流程”选项卡中打开"
+          },
+          "text": {
+            "update": "更新",
+            "save": "节省"
+          }
+        }
+      },
+      "privacy": {
+        "storageprivacydashboard": {
+          "text": {
+            "refreshing": "清爽...",
+            "refreshInventory": "刷新库存",
+            "previewOnly": "仅预览",
+            "runAction": "运行动作"
+          },
+          "metadata": {
+            "runDestructiveAction": "进行破坏性行动？"
+          }
+        }
+      },
+      "prompts": {
+        "promptcreatemodal": {
+          "attribute": {
+            "createNewPrompt": "创建新提示",
+            "saveReusablePromptContentAndMetadataToYourEncryptedPrompt": "将可重复使用的提示内容和元数据保存到加密的提示库中。",
+            "closeCreatePromptDialog": "关闭创建提示对话框",
+            "eGDarkFantasyPortrait": "例如，黑暗幻想肖像",
+            "eGDarkFantasyPortraitLighting": "例如黑暗幻想、肖像照明",
+            "enterPromptTextHere": "在此输入提示文字...",
+            "optionalNegativePrompt": "可选的否定提示..."
+          },
+          "metadata": {
+            "image": "图像",
+            "negative": "消极的",
+            "chat": "聊天",
+            "system": "系统",
+            "research": "研究",
+            "character": "特点",
+            "workflow": "工作流程",
+            "recipe": "食谱",
+            "general": "一般的"
+          }
+        },
+        "promptlibraryview": {
+          "attribute": {
+            "searchPrompts": "搜索提示...",
+            "tagsCommaSeparated": "标签，逗号分隔",
+            "optionalDescription": "可选描述",
+            "typeValue1ToConfirm": "输入“ {{value1}} ”进行确认"
+          },
+          "metadata": {
+            "allKinds": "各种",
+            "allScopes": "所有范围",
+            "global": "全球的",
+            "project": "项目",
+            "newest": "最新",
+            "oldest": "最古老的",
+            "title": "标题",
+            "kind": "种类",
+            "favorite": "最喜欢的",
+            "allTags": "所有标签",
+            "t": "# {{t}}",
+            "workflowValue1": "工作流程： {{value1}}",
+            "image": "图像",
+            "negative": "消极的",
+            "chat": "聊天",
+            "system": "系统",
+            "research": "研究",
+            "character": "特点",
+            "workflow": "工作流程",
+            "recipe": "食谱",
+            "general": "一般的"
+          },
+          "text": {
+            "noPromptsMatchTheCurrentFilters": "没有提示与当前过滤器匹配。",
+            "project": "项目",
+            "global": "全球的",
+            "selectAPromptToViewItsDetails": "选择一个提示以查看其详细信息。",
+            "noPromptSelectedCreateANewOneToGetStarted": "未选择提示。创建一个新的以开始。",
+            "favorited": "★ 已收藏",
+            "favorite": "☆ 最爱",
+            "unarchive": "取消归档",
+            "archive": "档案",
+            "projectValue1": "项目： {{value1}}",
+            "saving": "保存...",
+            "saveMetadata": "保存元数据",
+            "saveNewVersion": "保存新版本",
+            "hide": "隐藏",
+            "show": "展示"
+          },
+          "notification": {
+            "newVersionSaved": "新版本已保存",
+            "promptDeleted": "提示已删除",
+            "workflowCreated": "已创建工作流程",
+            "promptCreated": "已创建提示",
+            "thePendingActionFailedYourUnsavedChangesWerePreserved": "待处理的操作失败。您未保存的更改已被保留。",
+            "metadataSaved": "元数据已保存",
+            "failedToSaveMetadata": "保存元数据失败",
+            "versionContentIsEmpty": "版本内容为空",
+            "failedToSaveVersion": "保存版本失败",
+            "sentToImageStudio": "发送至图像工作室",
+            "sentToChat": "发送至聊天"
+          }
+        }
+      },
+      "research": {
+        "researchworkspaceview": {
+          "metadata": {
+            "researchTitle": "研究课题",
+            "deleteSession": "删除会话？",
+            "workflowValue1": "工作流程： {{value1}}",
+            "workflowGeneratedFromResearchSessionValue1": "研究会话“ {{value1}} ”生成的工作流程",
+            "reviewResearchSummary": "回顾研究总结"
+          },
+          "notification": {
+            "searchFinishedWithValue1Warnings": "搜索完成，但出现{{value1}}警告",
+            "searchFailed": "搜索失败",
+            "scrapeFailed": "抓取失败",
+            "attachmentNote": "附件说明",
+            "fileSAddedToResearchSources": "添加到研究来源的文件",
+            "fileUploadFailed": "文件上传失败",
+            "summarySavedToPromptLibrary": "摘要保存到提示库",
+            "researchWorkflowCreated": "创建研究工作流程"
+          },
+          "attribute": {
+            "researchSessions": "研究会议",
+            "createResearchSession": "创建研究会议",
+            "expandResearchSessions": "扩大研究会议",
+            "collapseResearchSessions": "折叠研究会议",
+            "removeValue1FromFavorites": "从收藏夹中删除{{value1}}",
+            "addValue1ToFavorites": "将{{value1}}添加到收藏夹",
+            "archiveSession": "存档会议",
+            "deleteSession": "删除会话",
+            "searchQuery": "搜索查询...",
+            "runResearchSearch": "运行研究搜索",
+            "scrapeUrl": "抓取网址",
+            "removeSourceValue1": "删除源{{value1}}",
+            "summarizeTheFinding": "总结发现",
+            "addSupportingDetailsAndCitations": "添加支持细节和引文",
+            "removeFindingValue1": "删除查找结果{{value1}}"
+          },
+          "text": {
+            "processing": "加工...",
+            "uploadDocument": "上传文件",
+            "noExcerptAvailable": "没有可用的摘录。"
+          }
+        }
+      },
+      "rpStudio": {
+        "assetgallery": {
+          "metadata": {
+            "allChats": "所有聊天记录"
+          },
+          "text": {
+            "noAssetsYet": "还没有资产"
+          },
+          "attribute": {
+            "deleteAsset": "删除资产"
+          }
+        },
+        "characterbookeditor": {
+          "attribute": {
+            "bookExtensionData": "图书扩展数据",
+            "entryExtensionData": "条目扩展数据"
+          }
+        },
+        "charactereditor": {
+          "notification": {
+            "fileLoadedSourced": "文件已加载并来源",
+            "loadedValue1IntoFieldlabelAndSavedInsideCharacterFile": "将“ {{value1}} ”加载到{{fieldLabel}}中并保存在字符文件中。",
+            "reAppliedSourcedFile": "重新应用源文件",
+            "reLoadedValue1ContentIntoValue2": "将“ {{value1}} ”内容重新加载到{{value2}}中。",
+            "workflowCreated": "已创建工作流程",
+            "savedToPromptLibrary": "保存到提示库",
+            "promptValue1Created": "提示“ {{value1}} ”已创建。",
+            "couldNotSaveToPromptLibrary": "无法保存到提示库",
+            "safetyGuardBlockedThePrompt": "保安挡住了提示。",
+            "pleaseTryAgain": "请再试一次。",
+            "rpChatStarted": "RP 聊天开始",
+            "openingValue1InRpStudio": "在 RP Studio 中打开“ {{value1}} ”。",
+            "couldNotStartRpChat": "无法启动 RP 聊天",
+            "storageRejectedTheRequest": "存储拒绝了请求。",
+            "chatStarted": "聊天开始",
+            "openingValue1InChat": "在聊天中打开“ {{value1}} ”。",
+            "couldNotStartChat": "无法开始聊天",
+            "sceneAttached": "附场景",
+            "linkedValue1ToThisCharacter": "将“ {{value1}} ”链接到该角色。",
+            "sceneLinked": "场景联动。",
+            "couldNotAttachScene": "无法附加场景",
+            "promptAttached": "附提示",
+            "promptLinked": "提示已链接。",
+            "couldNotAttachPrompt": "无法附加提示",
+            "scenarioCreated": "场景已创建",
+            "openTheRpStudioToEditIt": "打开 RP Studio 进行编辑。",
+            "versionSaved": "版本已保存",
+            "characterSnapshotCreated": "角色快照已创建。",
+            "versionRestored": "版本已恢复",
+            "characterRevertedToSavedVersion": "角色恢复到保存的版本。",
+            "testChatSaved": "测试聊天已保存",
+            "theDisposableTurnWasPromotedToARealLocalConversation": "这种一次性的转变被提升为真正的本地对话。"
+          },
+          "metadata": {
+            "deleteCharacter": "删除角色？",
+            "workflowValue1": "工作流程： {{value1}}",
+            "untitled": "无题",
+            "disposableCardTest": "一次性卡片测试"
+          },
+          "attribute": {
+            "backToLibrary": "返回图书馆",
+            "estimatedTokensValue1OfValue2": "{{value1}}的估计令牌{{value2}}",
+            "stCardStudioSteps": "ST卡工作室步骤",
+            "aShortSummaryShownInTheLibraryGrid": "图书馆网格中显示的简短摘要。",
+            "displayOnlyNeverIncludedInModelPrompts": "仅显示 - 从未包含在模型提示中",
+            "addATagAndPressEnter": "添加标签并按 Enter...",
+            "removeTagT": "删除标签{{t}}",
+            "anOpenerSceneShownToTheModelOnTheFirst": "第一回合向模型展示的开场场景。",
+            "theCharacterSPersonaVoiceAndBehaviouralRules": "角色的性格、声音和行为规则。",
+            "optionalHigherLevelGuidanceForTheModelSteeringRulesOutput": "可选的模型更高级别指导（指导规则、输出样式）。",
+            "greetingShownOnTheFirstAssistantTurn": "第一个助理回合中显示问候语。",
+            "alternateGreetingValue1": "备用问候语{{value1}}",
+            "exampleValue1Speaker": "{{value1}}扬声器示例",
+            "speaker": "扬声器",
+            "whatTheySay": "他们说什么……",
+            "moveExampleValue1Up": "将示例{{value1}}向上移动",
+            "moveExampleValue1Down": "向下移动示例{{value1}}",
+            "removeExample": "删除示例",
+            "losslessSillytavernMesExampleCompatibilityText": "无损 SillyTavern mes_example 兼容性文本",
+            "urlScrapingProvider": "URL 抓取提供商",
+            "temperature": "温度",
+            "topP": "顶P",
+            "removeFileValue1": "删除文件{{value1}}",
+            "genreSettingRolePersonalityRelationship": "类型、背景、角色、个性、关系……",
+            "visionModelCapabilitySummary": "视觉模型能力总结",
+            "optionalDirection": "可选方向",
+            "stCardExportReport": "ST卡出口报告",
+            "characterVersionComparison": "人物版本对比",
+            "savingCharacter": "保存角色"
+          },
+          "text": {
+            "untitled": "无题",
+            "unarchive": "取消归档",
+            "archive": "档案",
+            "stepValue1OfValue2Value3YourLocalDraftRemainsAutosaved": "{{value1}} {{value2}} ： {{value3}} 。当您在步骤之间移动时，您的本地草稿仍会自动保存。",
+            "showingAllSteps110SelectAStepTabAbove": "显示所有步骤 (1-10)。选择上面的步骤选项卡以关注特定字段。",
+            "recoveredLocalDraft": "回收的当地草稿",
+            "savingLocalDraft": "保存本地草稿...",
+            "draftSavedLocallyNotSynced": "草稿保存在本地（未同步）",
+            "replace": "代替",
+            "upload": "上传",
+            "veniceForgeLocal": "威尼斯熔炉当地",
+            "noGreetingText": "无问候文字",
+            "value1": "· {{value1}}",
+            "testing": "测试...",
+            "runDisposableTest": "运行一次性测试",
+            "analyzing": "正在分析……",
+            "analyzeImage": "分析图像",
+            "generating": "生成…",
+            "synthesizeFromImageText": "由图像+文本合成",
+            "generateFromText": "从文本生成",
+            "noDirectDescription": "没有直接描述",
+            "noDescription": "无描述",
+            "generatingProposal": "生成提案...",
+            "generateProposal": "生成提案",
+            "value1Value2": "· {{value1}} × {{value2}}",
+            "none": "没有任何",
+            "targetFieldValue1": "· 目标字段： {{value1}}",
+            "generalContextFile": "· 通用上下文文件"
+          }
+        },
+        "characterlibrary": {
+          "notification": {
+            "importFailed": "导入失败",
+            "couldNotInspectTheSelectedCard": "无法检查所选卡。",
+            "theCardWasNotImported": "该卡未导入。",
+            "characterImported": "角色导入",
+            "theCompatibilityPayloadAndAvatarWerePreserved": "保留了兼容性有效负载和头像。",
+            "exportFailed": "导出失败",
+            "theCardWasNotExported": "该卡未导出。",
+            "characterExported": "角色导出",
+            "savedAVerifiedV2Value1Card": "已保存经过验证的 V2 {{value1}}卡。",
+            "importUndone": "导入未完成",
+            "undoFailed": "撤消失败",
+            "chatStarted": "聊天开始",
+            "openingValue1InChat": "在聊天中打开“ {{value1}} ”。",
+            "couldNotStartChat": "无法开始聊天",
+            "pleaseTryAgain": "请再试一次。"
+          },
+          "metadata": {
+            "value1ExistingCharacter": "{{value1}}现有角色？",
+            "standard": "标准",
+            "adult": "成人"
+          },
+          "attribute": {
+            "searchCharacters": "搜索字符...",
+            "searchCharacters2": "搜索字符",
+            "autoCreatePrompt": "自动创建提示...",
+            "characterValue1": "字符{{value1}}",
+            "deleteValue1": "删除{{value1}}"
+          },
+          "text": {
+            "untitled": "无题",
+            "noCharactersYet": "还没有角色",
+            "notSpecified": "未指定",
+            "importing": "输入…",
+            "import": "进口"
+          }
+        },
+        "lorebookmanager": {
+          "attribute": {
+            "searchLorebooks": "搜索传说书...",
+            "searchLorebooks2": "搜索传说书",
+            "deleteValue1": "删除{{value1}}",
+            "back": "后退",
+            "triggerKeysCommaSeparated": "触发键（以逗号分隔）",
+            "removeEntry": "删除条目",
+            "depth": "深度",
+            "order": "命令",
+            "injectedContent": "注入的内容..."
+          },
+          "text": {
+            "noLorebooksYet": "还没有传说书"
+          },
+          "metadata": {
+            "beforeChar": "字符前",
+            "afterChar": "字符后",
+            "atDepth": "在深度"
+          }
+        },
+        "personamanager": {
+          "attribute": {
+            "searchPersonas": "搜索人物角色...",
+            "searchPersonas2": "搜索人物角色",
+            "deleteValue1": "删除{{value1}}",
+            "back": "后退",
+            "personaPreview": "角色预览",
+            "eGTheWanderer": "例如《流浪者》",
+            "howTheModelShouldWriteTheUser": "模型应该如何编写用户。",
+            "addTag": "添加标签..."
+          },
+          "text": {
+            "noPersonasYet": "还没有人物角色",
+            "deactivate": "停用",
+            "setActive": "设置为活动状态",
+            "replaceImage": "替换图片",
+            "addImage": "添加图片"
+          }
+        },
+        "promptdebugdrawer": {
+          "attribute": {
+            "promptDebugDrawer": "提示调试抽屉"
+          },
+          "text": {
+            "budgetExceeded": "超出预算",
+            "withinBudget": "在预算范围内",
+            "value1": "· {{value1}}"
+          },
+          "metadata": {
+            "trace": "痕迹",
+            "system": "系统",
+            "recent": "最近的",
+            "user": "用户"
+          }
+        },
+        "rpchatlist": {
+          "metadata": {
+            "all": "全部",
+            "standard": "标准"
+          },
+          "text": {
+            "noRpChatsYet": "还没有 RP 聊天记录"
+          },
+          "attribute": {
+            "deleteValue1": "删除{{value1}}",
+            "newRpChat": "新 RP 聊天",
+            "leaveBlankToUseTheFirstCharacterSScenario": "留空以使用第一个角色的场景。"
+          }
+        },
+        "rpchatview": {
+          "attribute": {
+            "back": "后退",
+            "streaming": "流媒体…",
+            "describeASceneAsTheNarrator": "作为叙述者描述一个场景...",
+            "sendAMessageValue1": "发送消息{{value1}} ..."
+          },
+          "text": {
+            "value1WillRespondFirst": "{{value1}}将首先响应。"
+          }
+        },
+        "rpstudioview": {
+          "metadata": {
+            "generate": "产生",
+            "gallery": "画廊",
+            "characters": "人物",
+            "personas": "角色",
+            "lorebooks": "传说书",
+            "chats": "聊天记录",
+            "scenes": "场景"
+          }
+        },
+        "scenegenerator": {
+          "notification": {
+            "sceneGenerated": "场景生成",
+            "savedToRpAssets": "保存到 RP 资产。"
+          },
+          "attribute": {
+            "leaveBlankToExtractFromChat": "留空以从聊天中提取",
+            "extractsFromTheMostRecentNonSystemMessage": "摘自最近的非系统消息。",
+            "thingsToAvoid": "要避免的事情……"
+          },
+          "text": {
+            "thisChat": "（本次聊天）"
+          }
+        },
+        "shared": {
+          "metadata": {
+            "characters": "人物",
+            "personas": "角色",
+            "lorebooks": "传说书",
+            "chats": "聊天记录",
+            "scenes": "场景"
+          }
+        }
+      },
+      "scenes": {
+        "scenecomposerview": {
+          "metadata": {
+            "untitledScene": "无题场景",
+            "workflowValue1": "工作流程： {{value1}}",
+            "vValue1": "v {{value1}}",
+            "subject": "主题",
+            "character": "特点",
+            "location": "地点",
+            "mood": "情绪",
+            "style": "风格",
+            "camera": "相机",
+            "lighting": "灯光",
+            "composition": "作品",
+            "negative": "消极的"
+          },
+          "attribute": {
+            "searchScenes": "搜索场景...",
+            "optionalDescription": "可选描述",
+            "tagsCommaSeparated": "标签，逗号分隔",
+            "modelEGFluxDev": "模型（例如 Flux-dev）",
+            "width": "宽度",
+            "height": "高度",
+            "aspectEG169": "宽高比（例如 16:9）",
+            "optionalLabel": "可选标签",
+            "componentContent": "成分内容...",
+            "typeValue1ToConfirm": "输入“ {{value1}} ”进行确认"
+          },
+          "text": {
+            "noSavedScenesYetClickNewToCreateOne": "尚未保存场景。单击“新建”创建一个。",
+            "noScenesMatchTheCurrentFilters": "没有场景与当前过滤器匹配。",
+            "value1OutputValue2": "{{value1}}输出{{value2}}",
+            "project": "项目",
+            "global": "全球的",
+            "selectASceneToCompose": "选择要构图的场景。",
+            "noSceneSelectedCreateANewOneToGetStarted": "未选择场景。创建一个新的以开始。",
+            "modelDoesNotSupportReferences": "模型不支持引用",
+            "favorited": "★ 已收藏",
+            "favorite": "☆ 最爱",
+            "unarchive": "取消归档",
+            "archive": "档案",
+            "projectValue1": "项目： {{value1}}",
+            "off": "离开",
+            "hide": "隐藏",
+            "show": "展示",
+            "value1MediaRefValue2": "· {{value1}}媒体参考{{value2}}",
+            "value1PromptRefValue2": "· {{value1}}提示参考{{value2}}"
+          },
+          "notification": {
+            "newVersionSaved": "新版本已保存",
+            "sceneDeleted": "场景已删除",
+            "workflowCreated": "已创建工作流程",
+            "sceneMetadataSaved": "场景元数据已保存",
+            "addAtLeastOneComponentWithContent": "添加至少一个包含内容的组件",
+            "sceneHasNoPromptContent": "场景无提示内容",
+            "sentToImageStudio": "发送至图像工作室",
+            "recipeCopiedToClipboard": "食谱已复制到剪贴板"
+          }
+        }
+      },
+      "search": {
+        "airesearchtab": {
+          "attribute": {
+            "researchQuestion": "研究问题",
+            "whatAreTheLatestChangesInSafetyPoliciesOfFrontier": "前沿AI实验室安全政策有何最新变化？",
+            "searchProvider": "搜索提供商",
+            "veniceSearchEngine": "威尼斯搜索引擎",
+            "runMode": "运行模式",
+            "synthesizedAnswersWillBeStreamedHere": "综合答案将在这里传输......"
+          },
+          "text": {
+            "researching": "正在研究……",
+            "startResearch": "开始研究"
+          },
+          "notification": {
+            "answerCopied": "答案已复制！",
+            "evidenceSourcesCopied": "证据来源已复制！"
+          }
+        },
+        "profilediscoverytab": {
+          "attribute": {
+            "targetName": "目标名称",
+            "consentingPersonOrBrandName": "同意人或品牌名称",
+            "username": "@用户名",
+            "knownWebsite": "已知网站",
+            "knownOrganization": "已知组织",
+            "githubInc": "GitHub 公司",
+            "knownLocation": "已知位置",
+            "sanFranciscoCa": "加利福尼亚州旧金山",
+            "maxSearchDepth": "最大搜索深度"
+          },
+          "text": {
+            "discovering": "发现……",
+            "discoverProfiles": "发现个人资料",
+            "unknownIdentity": "身份不明"
+          }
+        },
+        "researchproviderstatus": {
+          "metadata": {
+            "apiKeyConfigured": "API 密钥已配置",
+            "veniceApiKeyMissing": "威尼斯 API 密钥丢失",
+            "jinaAi": "艾吉娜",
+            "jinaApiKeyOptionalUnauthenticatedUseSupported": "Jina API密钥可选（支持未经身份验证的使用）",
+            "disabledByConfig": "通过配置禁用",
+            "genericScrape": "通用刮擦",
+            "enabledNoKeyRequired": "已启用（无需密钥）",
+            "liveBrowser": "实时浏览器",
+            "desktopAvailable": "桌面可用",
+            "webModeUnavailable": "网页模式不可用"
+          },
+          "attribute": {
+            "configured": "已配置",
+            "missing": "丢失的",
+            "testFailed": "测试失败",
+            "disabled": "残疾人",
+            "unavailable": "不可用"
+          }
+        },
+        "scrapetab": {
+          "attribute": {
+            "urlToScrape": "要抓取的网址",
+            "readerProvider": "读者提供者",
+            "scrapedTextWillAppearHere": "抓取的文本将出现在此处..."
+          },
+          "text": {
+            "scraping": "刮…",
+            "scrape": "刮"
+          },
+          "notification": {
+            "scrapedOutputCopied": "复制了抓取的输出！"
+          }
+        },
+        "searchscrapeview": {
+          "attribute": {
+            "researchingAndSynthesizing": "研究和综合…",
+            "readingWebPage": "正在阅读网页...",
+            "searchingTheWeb": "正在网上搜索...",
+            "parsingDocument": "正在解析文档...",
+            "researchTaskInProgress": "研究任务正在进行中……"
+          },
+          "metadata": {
+            "untitled": "无题"
+          },
+          "notification": {
+            "savedToActiveResearchSession": "保存到活动研究会话"
+          }
+        },
+        "searchtab": {
+          "attribute": {
+            "query": "询问",
+            "latestModelRoutingBestPractices": "最新模型路由最佳实践",
+            "provider": "提供者"
+          },
+          "text": {
+            "searching": "正在寻找...",
+            "search": "搜索",
+            "untitledResult": "无标题结果"
+          }
+        },
+        "textparsertab": {
+          "text": {
+            "parsing": "正在解析...",
+            "parseDocument": "解析文档"
+          },
+          "attribute": {
+            "extractedDocumentText": "提取的文档文本..."
+          }
+        }
+      },
+      "settings": {
+        "safetypanel": {
+          "attribute": {
+            "veniceApiSafeMode": "威尼斯 API 安全模式"
+          }
+        }
+      },
+      "status": {
+        "diagnosticsdrawer": {
+          "notification": {
+            "safeDiagnosticsCopiedToClipboard": "安全诊断已复制到剪贴板",
+            "couldNotCopySafeDiagnostics": "无法复制安全诊断",
+            "diagnosticsRefreshed": "诊断已刷新",
+            "diagnosticsRefreshFailed": "诊断刷新失败",
+            "livecountLiveModelsRefreshed": "{{liveCount}}个现场模特已刷新"
+          },
+          "attribute": {
+            "diagnostics": "诊断",
+            "closeDiagnostics": "关闭诊断",
+            "close": "关闭",
+            "includeRedactedPromptExcerptsInSafeDiagnostics": "在安全诊断中包含经过编辑的提示摘录"
+          },
+          "text": {
+            "refreshing": "清爽…",
+            "refreshDiagnostics": "刷新诊断",
+            "openConfig": "打开配置",
+            "refreshingModels": "刷新模型...",
+            "refreshModels": "刷新模型",
+            "openStatus": "开放状态"
+          },
+          "metadata": {
+            "overview": "概述",
+            "apiKey": "API密钥",
+            "model": "模型",
+            "storage": "贮存",
+            "privacy": "隐私",
+            "project": "项目",
+            "safety": "安全",
+            "research": "研究",
+            "mode": "模式",
+            "repair": "维修"
+          }
+        },
+        "taskcenterdrawer": {
+          "attribute": {
+            "taskCenter": "任务中心",
+            "closeTaskCenter": "关闭任务中心"
+          }
+        }
+      },
+      "ui": {
+        "logo": {
+          "attribute": {
+            "veniceForgeLogo": "威尼斯锻造标志"
+          }
+        },
+        "modalRequests": {
+          "attribute": {
+            "confirmPassphrase": "确认密码",
+            "titleConfirmation": "{{title}}确认"
+          },
+          "text": {
+            "hidePassphrase": "隐藏密码",
+            "showPassphrase": "显示密码"
+          }
+        },
+        "select": {
+          "attribute": {
+            "search": "搜索...",
+            "searchOptions": "搜索选项"
+          }
+        }
+      },
+      "video": {
+        "videoView": {
+          "notification": {
+            "unsupportedImageTypeValue1UsePngJpegOrWebp": "不支持的图像类型： {{value1}} 。使用 PNG、JPEG 或 WEBP。",
+            "failedToReadImage": "读取图像失败",
+            "pleaseChooseAPngJpegOrWebpImageUnderThe": "请选择尺寸限制以下的 PNG、JPEG 或 WEBP 图片。",
+            "alreadyInMediaStudio": "已在媒体工作室",
+            "savedToMediaStudio": "保存到媒体工作室",
+            "saveToMediaStudioFailed": "保存到 Media Studio 失败",
+            "videoSaved": "视频已保存",
+            "videoDownloadFailed": "视频下载失败"
+          },
+          "attribute": {
+            "loading": "加载中...",
+            "selectModel": "选择型号...",
+            "aCinematicDroneShotOverMistyMountainsAtSunrise": "一架电影无人机在日出时飞越迷雾重重的山脉...",
+            "lowQualityBlurry": "质量低，模糊……",
+            "reference": "参考",
+            "removeReferenceImage": "删除参考图像",
+            "chooseReferenceImage": "选择参考图像",
+            "generateAudioEnabled": "启用生成音频",
+            "generateAudioDisabled": "生成音频已禁用",
+            "resetVideoGenerationForm": "重置视频生成形式",
+            "alreadySavedToMediaStudio": "已保存到 Media Studio",
+            "saveToMediaStudio": "保存到媒体工作室",
+            "generateAnotherVideo": "生成另一个视频",
+            "retrievingVideo": "正在检索视频...",
+            "savingSecurely": "安全保存...",
+            "videoQueued": "视频正在排队...",
+            "renderingVideo": "渲染视频..."
+          },
+          "text": {
+            "queued": "排队...",
+            "processing": "加工...",
+            "generateVideo": "生成视频",
+            "saved": "已保存",
+            "saveToMediaStudio": "保存到媒体工作室"
+          }
+        }
+      },
+      "workflows": {
+        "workflowtemplatesview": {
+          "metadata": {
+            "newWorkflow": "新的工作流程",
+            "newPromptStep": "新提示步骤"
+          },
+          "notification": {
+            "workflowImagePromptLoaded": "工作流程图像提示已加载",
+            "reviewTheModelAndSettingsThenGenerate": "检查模型和设置，然后生成。",
+            "workflowsImported": "导入的工作流程",
+            "failedToImportWorkflows": "导入工作流程失败"
+          },
+          "attribute": {
+            "searchWorkflows": "搜索工作流程...",
+            "searchWorkflows2": "搜索工作流程",
+            "workflowTemplates": "工作流程模板",
+            "favorite": "最喜欢的",
+            "tagsCommaSeparated": "标签（逗号分隔）...",
+            "workflowStepTitle": "工作流程步骤标题",
+            "workflowStepKind": "工作流程步骤类型",
+            "workflowStepTarget": "工作流程步骤目标",
+            "workflowStepPrompt": "工作流程步骤提示",
+            "describeTheImageToGenerate": "描述要生成的图像...",
+            "enterThePromptOrInstructionsForThisStep": "输入此步骤的提示或说明..."
+          },
+          "text": {
+            "global": "全球的",
+            "project": "项目",
+            "unfavorite": "不喜欢",
+            "favorite": "最喜欢的",
+            "untitledVersion": "无标题版本",
+            "openValue1": "打开{{value1}}",
+            "execute": "执行"
+          }
+        }
+      }
+    },
+    "config": {
+      "configschema": {
+        "metadata": {
+          "pathExceedsPathMaxLengthCharactersRejected": "路径超过{{PATH_MAX_LENGTH}}个字符；被拒绝了。",
+          "pathValueLooksLikeAUrlLocalFilePathsOnly": "路径“ {{value}} ”看起来像一个 URL。仅本地文件路径。",
+          "pathContainsControlCharactersRejected": "路径包含控制字符；被拒绝了。",
+          "keyLengthExceedsKeyMaxLengthRejected": "密钥长度超过{{KEY_MAX_LENGTH}} ；被拒绝了。",
+          "themeEntryMustBeAnObjectSkipped": "主题条目必须是一个对象；跳过了。",
+          "invalidModeValue1Skipped": "无效模式“ {{value1}} ”；跳过了。",
+          "displayNameMustBeANonEmptyStringSkipped": "display_name 必须是非空字符串；跳过了。",
+          "displayNameExceedsThemeNameMaxLengthCharsSkipped": "display_name 超过{{THEME_NAME_MAX_LENGTH}}个字符；跳过了。",
+          "tokensMustBeAnObjectSkipped": "令牌必须是一个对象；跳过了。",
+          "unknownThemeTokenIgnored": "未知主题令牌；被忽略。",
+          "invalidColorValueThemeSkipped": "颜色值无效；主题已跳过。",
+          "missingRequiredThemeTokenReqThemeSkipped": "缺少必需的主题令牌： {{req}} ；主题已跳过。",
+          "unknownConfigVersionValue1Expected1FallingBackToDefaults": "未知的配置版本“ {{value1}} ”；预期 1. 回到默认状态。",
+          "themesFileRootMustBeAMappingUsingBuiltIn": "主题文件根必须是一个映射；仅使用内置主题。",
+          "unknownThemesVersionValue1Expected1SkippingFile": "未知主题版本“ {{value1}} ”；预期 1. 跳过文件。",
+          "themesBlockMustBeAMappingUsingBuiltInThemes": "主题块必须是一个映射；仅使用内置主题。",
+          "themeNameMustBe1128CharactersSkipped": "主题名称必须为 1..128 个字符；跳过了。"
+        }
+      }
+    },
+    "hooks": {
+      "useChat": {
+        "metadata": {
+          "generateAnImage": "生成图像"
+        },
+        "notification": {
+          "memoryRetrievalUnavailable": "内存检索不可用",
+          "sendingYourMessageWithoutMemoryContext": "在没有记忆上下文的情况下发送消息。",
+          "attachmentContextTruncated": "附件上下文被截断",
+          "totalAttachmentTextExceededValue1KbSomeAttachmentsWereOmitted": "附件文本总数超过了{{value1}} KB。此邮件中省略了一些附件。"
+        }
+      },
+      "useDataStorageActions": {
+        "metadata": {
+          "clearLocalSettings": "清除本地设置？",
+          "deleteAllIndexeddbHistory": "删除所有 IndexedDB 历史记录？"
+        },
+        "notification": {
+          "localSettingsCleared": "本地设置已清除。",
+          "indexeddbDataClearedSuccessfully": "IndexedDB数据清除成功。",
+          "encryptedBackupExportedSuccessfully": "加密备份导出成功。",
+          "exportFailedPleaseTryAgain": "导出失败。请再试一次。"
+        }
+      }
+    },
+    "lib": {
+      "workflowValidator": {
+        "metadata": {
+          "workflowIsEmpty": "工作流程为空。",
+          "unknownNodeTypeValue1": "未知节点类型： {{value1}}",
+          "value1MissingRequiredValue2": "{{value1}} ：缺少必需的“ {{value2}} ”。",
+          "value1DoesNotAcceptInputs": "{{value1}}不接受输入。",
+          "value1NoUpstreamInputConnected": "{{value1}} ：没有连接上游输入。",
+          "value1HasNoOutputAndCannotFeedAnotherNode": "{{value1}}没有输出，无法为另一个节点提供数据。",
+          "edgeSourceValue1DoesNotExist": "边源{{value1}}不存在。",
+          "edgeTargetValue1DoesNotExist": "边缘目标{{value1}}不存在。",
+          "selfLoopsAreNotAllowed": "不允许自循环。",
+          "value1Value2CannotConnectToValue3Value4": "{{value1}} ( {{value2}} ) 无法连接到{{value3}} ( {{value4}} )。",
+          "value1OutputsValue2Value3ExpectsValue4ConversionMayBeLossy": "{{value1}}输出{{value2}} ； {{value3}}需要{{value4}} 。转换可能是有损的。",
+          "workflowContainsACycle": "工作流包含一个循环。",
+          "setParamsKMustBeStringNumberBooleanGotValue2": "set_params: &quot; {{k}} &quot; 必须是 string|number|boolean，得到{{value2}} 。",
+          "addNodeUnknownParamKForLabel": "add_node: {{label}}的未知参数“ {{k}} ”。",
+          "labelParamKMustBeOneOfValue3GotV": "{{label}} ：参数“ {{k}} ”必须是 [ {{value3}} ] 之一，得到“ {{v}} ”。",
+          "labelParamKMustBeTGotValue4": "{{label}} ：参数“ {{k}} ”必须是{{t}} ，得到{{value4}} 。",
+          "labelParamKMustBeValue3GotV": "{{label}} ：参数“ {{k}} ”必须 &gt;= {{value3}} ，得到{{v}} 。",
+          "labelParamKMustBeValue3GotV2": "{{label}} ：参数“ {{k}} ”必须 &lt;= {{value3}} ，得到{{v}} 。"
+        }
+      },
+      "workflowSchema": {
+        "metadata": {
+          "input": "输入",
+          "staticTextProvidedByTheUserStartingPointOfA": "用户提供的静态文本。工作流程的起点。",
+          "theTextValue": "文本值。",
+          "output": "输出",
+          "displaysWhateverItsUpstreamNodeProducedAcceptsAnyKind": "显示其上游节点产生的任何内容。接受任何种类。",
+          "llm": "法学硕士",
+          "runAVeniceChatCompletionAcceptsUpstreamTextAsContext": "运行威尼斯聊天完成。接受上游文本作为上下文。",
+          "veniceChatModelId": "威尼斯聊天模型 id。",
+          "instructionUseInputToPositionUpstreamTextOrLeaveEmpty": "操作说明。使用{{input}}定位上游文本，或留空以追加。",
+          "samplingTemperature": "取样温度。",
+          "maxOutputTokens": "最大输出令牌。",
+          "enableVeniceWebSearch": "启用威尼斯网络搜索。",
+          "imageGen": "图像生成",
+          "generateAnImageFromATextPrompt": "根据文本提示生成图像。",
+          "veniceImageModelId": "威尼斯图像模型 ID。",
+          "imagePromptUseInputToPositionUpstreamText": "图片提示。使用{{input}}定位上游文本。",
+          "whatToAvoid": "要避免什么。",
+          "denoisingSteps": "去噪步骤。",
+          "imageWidthInPixels": "图像宽度（以像素为单位）。",
+          "imageHeightInPixels": "图像高度（以像素为单位）。",
+          "stylePresetName": "样式预设名称。",
+          "omitWatermarkIfAllowed": "如果允许，请省略水印。",
+          "textToSpeech": "文字转语音",
+          "narrateTextIntoSpeechAudio": "将文本叙述为语音音频。",
+          "ttsModelId": "TTS 模型 ID。",
+          "textToSpeakUseInputToPositionUpstreamText": "文字来说话。使用{{input}}定位上游文本。",
+          "voiceId": "语音ID。",
+          "playbackSpeed": "播放速度。",
+          "audioFormat": "音频格式。",
+          "musicGen": "音乐一代",
+          "generateAMusicClipFromATextPrompt": "根据文本提示生成音乐剪辑。",
+          "musicModelId": "音乐型号 ID。",
+          "musicPrompt": "音乐提示。",
+          "durationInSeconds": "持续时间（以秒为单位）。",
+          "forceInstrumental": "力量工具。",
+          "optionalLyrics": "可选歌词。",
+          "videoGen": "视频生成器",
+          "generateAShortVideoFromATextPrompt": "根据文本提示生成短视频。",
+          "videoModelId": "视频型号 ID。",
+          "videoPrompt": "视频提示。",
+          "aspectRatio": "纵横比。",
+          "clipDurationEmptyMeansModelDefault": "剪辑持续时间。空表示模型默认。",
+          "resolutionEmptyMeansModelDefault": "解决。空表示模型默认。"
+        }
+      }
+    },
+    "research": {
+      "providers": {
+        "generichttpscrapeprovider": {
+          "metadata": {
+            "genericHttp": "通用HTTP"
+          }
+        },
+        "jinaresearchprovider": {
+          "metadata": {
+            "jinaAi": "艾吉娜"
+          }
+        }
+      }
+    },
+    "services": {
+      "backgroundtasktoastbridge": {
+        "metadata": {
+          "queued": "排队...",
+          "cancel": "取消",
+          "completedSuccessfully": "成功完成。",
+          "open": "打开",
+          "titleFailed": "{{title}}失败",
+          "anErrorOccurred": "发生错误。",
+          "retry": "重试",
+          "dismiss": "解雇"
+        }
+      },
+      "backupimportservice": {
+        "metadata": {
+          "legacyVersion2BackupAuthenticatedSourceCryptoContentCountAnd": "旧版本 2 备份：经过身份验证的源、加密、内容计数和排除元数据不可用。",
+          "backupAppVersionValue1DiffersFromThisAppVersionAppversion": "备份应用程序版本{{value1}}与此应用程序版本{{appVersion}}不同。",
+          "thisBackupIncludesMediaRecords": "此备份包括媒体记录。",
+          "excludedByDesignValue1": "按设计排除： {{value1}} 。"
+        }
+      },
+      "charactercards": {
+        "charactercardadapter": {
+          "metadata": {
+            "fieldWasTruncatedToMaxCharacters": "字段被截断为{{max}}个字符。",
+            "secretLikeContentWasRedacted": "类似秘密的内容已被编辑。",
+            "extensionDataExceededTheMaximumDepth": "扩展数据超出了最大深度。",
+            "nonJsonExtensionValueWasRemoved": "非 JSON 扩展值已被删除。",
+            "unsafeObjectKeyWasRemoved": "不安全的对象键已被删除。",
+            "extensionDataExceededThe1MibLimit": "扩展数据超出了 1 MiB 限制。",
+            "onlyTheFirstMaxLorebookEntriesCharacterBookEntriesWere": "仅保留前{{MAX_LOREBOOK_ENTRIES}}个字符簿条目。",
+            "onlyCharacterCardV2SpecVersion20IsSupported": "仅支持角色卡 V2 规范版本 2.0。",
+            "keyMustBeAString": "{{key}}必须是字符串。",
+            "alternateGreetingsMustBeAnArray": "alternate_greetings 必须是一个数组。",
+            "tagsMustBeAnArray": "标签必须是一个数组。",
+            "extensionsMustBeAPlainJsonObject": "扩展必须是纯 JSON 对象。",
+            "formatValidButANameIsRequiredBeforeChat": "格式有效，但聊天前需要输入姓名。",
+            "descriptionIsRecommendedForVeniceForgeAuthoring": "建议为 Venice Forge 创作提供描述。",
+            "aPrimaryGreetingIsRecommendedForChatReadiness": "建议使用主要问候语以做好聊天准备。"
+          }
+        }
+      },
+      "chatpromptcompiler": {
+        "metadata": {
+          "contextTruncated": "上下文被截断",
+          "removedRemovedcountOldTurnwordToFitWithinContextLimitsStart": "删除了{{removedCount}}旧的{{turnWord}}以适应上下文限制。开始新的聊天或使用具有较大上下文窗口的模型来保留完整的历史记录。",
+          "theConversationRequiresValue1TokensButOnlyValue2AreAvailable": "该对话需要 ~ {{value1}}令牌，但在保留输出令牌后只有{{value2}}可用。",
+          "thisRequestReservesValue1OutputTokensSoTheCustomPrompt": "此请求保留{{value1}}输出令牌，以便自定义提示和当前对话适合所选模型。",
+          "estkKOfTotalkKEstimatedTokensAreInUse": "{{estK}} K 个估计令牌正在使用中，共{{totalK}} K 个。"
+        }
+      },
+      "chatstorage": {
+        "metadata": {
+          "newChat": "新聊天"
+        }
+      },
+      "chatttscontroller": {
+        "notification": {
+          "ttsPlaybackFailed": "TTS 播放失败",
+          "noTextToSpeakInThisMessage": "此消息中没有文字可讲。",
+          "noSpeakableTextRemainingInMessage": "消息中没有剩余可朗读文本。",
+          "ttsPlaybackErrorUnableToLoadAudioElement": "TTS 播放错误：无法加载音频元素。",
+          "ttsFailed": "TTS 失败",
+          "ttsRestartFailed": "TTS 重启失败"
+        }
+      },
+      "desktopbridge": {
+        "metadata": {
+          "requestFailed": "请求失败",
+          "jinaConnectionSuccessful": "吉娜连接成功",
+          "jinaReturnedValue1": "吉娜返回了{{value1}}",
+          "networkErrorTestingJinaApiKey": "网络错误测试 Jina API 密钥"
+        }
+      },
+      "imageinspectoranalysis": {
+        "metadata": {
+          "notProvidedByModel": "不按型号提供。"
+        }
+      },
+      "replaceimportservice": {
+        "metadata": {
+          "replaceImportFailedAndAutomaticRollbackAlsoFailedUseThe": "替换导入失败，自动回滚也失败。使用保留的恢复备份。",
+          "replaceImportFailedTheOriginalProfileDataWasRestoredAutomatically": "替换导入失败。原始配置文件数据已自动恢复。"
+        }
+      },
+      "researchservice": {
+        "metadata": {
+          "searchQueryIsEmpty": "搜索查询为空",
+          "untitledResult": "无标题结果",
+          "searchFailed": "搜索失败",
+          "invalidOrUnsafeUrl": "无效或不安全的网址",
+          "value1DoesNotSupportScraping": "{{value1}}不支持抓取",
+          "scrapeFailed": "抓取失败"
+        }
+      },
+      "researchsummaries": {
+        "metadata": {
+          "sourceIdNotFoundInSession": "在会话中未找到源{{id}}",
+          "findingIdNotFoundInSession": "在会话中找不到{{id}}",
+          "researchSummaryValue1": "研究摘要： {{value1}}"
+        }
+      },
+      "rp": {
+        "promptbuilderservice": {
+          "metadata": {
+            "safetyPreamble": "安全序言",
+            "modelIdentity": "模特身份",
+            "personaValue1": "角色： {{value1}}",
+            "persona": "人格面具",
+            "characterValue1": "字符： {{value1}}",
+            "scenario": "设想",
+            "lorebookValue1": "传说书： {{value1}}",
+            "lorebookValue1BeforeChar": "Lorebook {{value1}} （在字符之前）",
+            "lorebookValue1AfterChar": "Lorebook {{value1}} （字符后）",
+            "lorebookValue1AtDepth": "传说书{{value1}} （深度）",
+            "memoryBlock": "内存块",
+            "recentMessagesValue1": "最近的消息 ( {{value1}} )",
+            "postHistoryInstruction": "后历史指导",
+            "activeTurnValue1": "活动回合： {{value1}}",
+            "activeTurnInstruction": "主动转向指令",
+            "userMessage": "用户留言"
+          }
+        }
+      },
+      "rphelpers": {
+        "metadata": {
+          "value1SystemPrompt": "{{value1}} — 系统提示符",
+          "savedFromCharacterCardValue1OnValue2": "从{{value2}}的角色卡“ {{value1}} ”保存。",
+          "chatWithValue1": "与{{value1}}聊天"
+        }
+      },
+      "rppromptcompiler": {
+        "metadata": {
+          "exampleDialoguesValue1": "对话示例 ( {{value1}} )"
+        }
+      },
+      "rptokencounter": {
+        "metadata": {
+          "characterExceedsTheSupportedContextBudgetByValue1EstimatedTokens": "字符超出了支持的上下文预算{{value1}}个估计令牌。"
+        }
+      },
+      "storagemaintenance": {
+        "metadata": {
+          "refreshInventory": "刷新库存",
+          "recountAllLocalDataAndCheckForIssues": "重新计算所有本地数据并检查是否存在问题。",
+          "clearModelCache": "清除模型缓存",
+          "removeTheLocalCacheOfAvailableVeniceModelsTheyWill": "删除可用 Venice 模型的本地缓存。它们将在下次使用时重新获取。",
+          "clearCharacterImageCache": "清除字符图像缓存",
+          "deleteLocallyCachedVeniceCharacterAvatarImagesTheyWillBe": "删除本地缓存的威尼斯人物头像图像。它们将根据需要重新获取。",
+          "analyzeOrphanReferences": "分析孤儿参考文献",
+          "reviewItemsThatReferToMissingProjectsNoRecordsAre": "查看涉及缺失项目的项目。没有记录被更改。"
+        }
+      },
+      "storageprivacyservice": {
+        "metadata": {
+          "rpStudio": "RP工作室",
+          "apiKeys": "API 密钥",
+          "characterImageCache": "字符图像缓存",
+          "categoryItemValue2RefersToMissingProject": "{{category}}项“ {{value2}} ”指的是缺少的项目",
+          "value1ItemHasAMissingTargetReference": "{{value1}}项缺少{{target}}引用"
+        }
+      },
+      "syncpacketimporter": {
+        "metadata": {
+          "value1ConflictFromValue2": "{{value1}} （与{{value2}}冲突）"
+        }
+      },
+      "taskmediacatalog": {
+        "metadata": {
+          "value1Generation": "{{value1}}一代"
+        }
+      },
+      "workflowcompiler": {
+        "metadata": {
+          "referencedPromptValue1NotFoundInContext": "在上下文中找不到引用的提示{{value1}} 。",
+          "referencedSceneValue1NotFoundInContext": "在上下文中找不到引用的场景{{value1}} 。",
+          "referencedCharacterValue1NotFoundInContext": "在上下文中找不到引用的字符{{value1}} 。",
+          "unsupportedStepKindValue1": "不支持的步骤类型： {{value1}}"
+        }
+      },
+      "workflowrunner": {
+        "metadata": {
+          "duplicateOutputKeyValue1UsesTheLastStepValueAll": "重复的输出键&#39; {{value1}} &#39;使用最后一步的值；所有操作仍将运行。",
+          "sendPromptToValue1": "发送提示至{{value1}}",
+          "sendRecipeToValue1": "将食谱发送至{{value1}}",
+          "sendSceneToValue1": "将场景发送到{{value1}}",
+          "selectMedia": "选择媒体",
+          "openRpContext": "打开 RP 上下文",
+          "showNote": "显示备注",
+          "openValue1": "打开{{value1}}"
+        }
+      }
+    },
+    "stores": {
+      "characterCardStore": {
+        "notification": {
+          "couldNotLoadCharacters": "无法加载字符",
+          "pleaseTryAgain": "请再试一次。",
+          "couldNotSaveCharacter": "无法保存角色",
+          "couldNotDeleteCharacter": "无法删除字符",
+          "storageRejectedTheRequest": "存储拒绝了请求。"
+        }
+      },
+      "chatFolderStore": {
+        "notification": {
+          "failedToLoadChatFolders": "无法加载聊天文件夹",
+          "folderCreated": "文件夹已创建",
+          "failedToCreateFolder": "创建文件夹失败",
+          "folderRenamed": "文件夹已重命名",
+          "failedToRenameFolder": "重命名文件夹失败",
+          "failedToReorderFolders": "无法对文件夹重新排序",
+          "folderIsLocked": "文件夹被锁定",
+          "unlockValue1BeforeMovingConversationsIntoIt": "在将对话移入其中之前先解锁“ {{value1}} ”。",
+          "failedToMoveConversation": "无法移动对话",
+          "failedToMoveConversations": "无法移动对话",
+          "folderDeleted": "文件夹已删除",
+          "failedToDeleteFolder": "删除文件夹失败",
+          "failedToReadFolderBackupPreview": "无法读取文件夹备份预览",
+          "unknownError": "未知错误",
+          "folderBackupExported": "文件夹备份导出",
+          "encryptedBackupSaved": "已保存加密备份",
+          "failedToExportFolderBackup": "导出文件夹备份失败",
+          "failedToPreviewFolderImport": "无法预览文件夹导入",
+          "folderBackupImported": "导入文件夹备份",
+          "failedToImportFolderBackup": "导入文件夹备份失败",
+          "folderPrivacyGateEnabled": "文件夹隐私门已启用",
+          "failedToLockFolder": "无法锁定文件夹",
+          "folderPrivacyGateOpened": "文件夹隐私门已打开",
+          "failedToUnlockFolder": "文件夹解锁失败"
+        }
+      },
+      "chatStore": {
+        "metadata": {
+          "newChat": "新聊天",
+          "chatWithValue1": "与{{value1}}聊天",
+          "chatGeneratedMedia": "聊天生成的媒体",
+          "value1Fork": "{{value1}} — 叉子"
+        },
+        "notification": {
+          "systemPromptExceedsMaximumLength": "系统提示超出最大长度",
+          "systemPromptApproachingLengthLimit": "系统提示接近长度限制"
+        }
+      },
+      "imageInspectorStore": {
+        "notification": {
+          "couldNotLoadSessionId": "无法加载会话{{id}}",
+          "loadASessionBeforeStartingAnalysis": "在开始分析之前加载会话。",
+          "noActiveSessionForSearch": "没有用于搜索的活动会话。",
+          "noQueryAvailableToSearch": "没有可供搜索的查询。",
+          "foundValue1SearchResultsViaValue2": "通过{{value1}} {{value2}}搜索结果",
+          "noSearchResultsReturnedFromValue1": "{{value1}}未返回任何搜索结果"
+        },
+        "metadata": {
+          "newSession": "新会议",
+          "searchResult": "搜索结果"
+        }
+      },
+      "lorebookStore": {
+        "notification": {
+          "couldNotLoadLorebooks": "无法加载传说书",
+          "pleaseTryAgain": "请再试一次。",
+          "couldNotSaveLorebook": "无法保存传说书",
+          "couldNotDeleteLorebook": "无法删除传说书",
+          "storageRejectedTheRequest": "存储拒绝了请求。"
+        }
+      },
+      "mediaStore": {
+        "metadata": {
+          "deleteMediaInUse": "删除正在使用的媒体？"
+        },
+        "notification": {
+          "tagUpdatePartiallyFailed": "标签更新部分失败",
+          "couldNotUpdateTagsForValue1ItemS": "无法更新{{value1}}项的标签。",
+          "tagRemovalPartiallyFailed": "标签删除部分失败",
+          "couldNotRemoveTagForValue1ItemS": "无法删除{{value1}}项的标签。"
+        }
+      },
+      "personaStore": {
+        "notification": {
+          "couldNotSavePersona": "无法保存角色",
+          "couldNotDeletePersona": "无法删除角色",
+          "storageRejectedTheRequest": "存储拒绝了请求。"
+        }
+      },
+      "rpChatStore": {
+        "metadata": {
+          "newRp": "新RP"
+        },
+        "notification": {
+          "couldNotCreateRpChat": "无法创建 RP 聊天",
+          "pleaseTryAgain": "请再试一次。",
+          "couldNotSaveRpChat": "无法保存 RP 聊天记录",
+          "couldNotDeleteRpChat": "无法删除 RP 聊天记录",
+          "storageRejectedTheRequest": "存储拒绝了请求。",
+          "couldNotSaveMessage": "无法保存消息"
+        }
+      },
+      "scenarioStore": {
+        "notification": {
+          "couldNotLoadScenarios": "无法加载场景",
+          "pleaseTryAgain": "请再试一次。",
+          "couldNotSaveScenario": "无法保存场景",
+          "couldNotDeleteScenario": "无法删除场景",
+          "storageRejectedTheRequest": "存储拒绝了请求。"
+        }
+      },
+      "sceneAssetStore": {
+        "notification": {
+          "couldNotLoadAssets": "无法加载资源",
+          "pleaseTryAgain": "请再试一次。",
+          "couldNotSaveAsset": "无法保存资产",
+          "couldNotDeleteAsset": "无法删除资产",
+          "storageRejectedTheRequest": "存储拒绝了请求。"
+        }
+      },
+      "storagePrivacyStore": {
+        "notification": {
+          "failedToRefreshStorageInventory": "刷新存储库存失败",
+          "noInventoryDataToCopyRefreshFirst": "没有要复制的库存数据。先刷新一下。",
+          "safePrivacySummaryCopiedToClipboard": "安全隐私摘要已复制到剪贴板",
+          "failedToCopyPrivacySummary": "无法复制隐私摘要",
+          "noInventoryDataToExportRefreshFirst": "没有要导出的库存数据。先刷新一下。",
+          "safePrivacySummaryDownloaded": "下载安全隐私摘要",
+          "maintenanceActionPartiallyFailedValue1": "维护操作部分失败： {{value1}}",
+          "maintenanceActionCompleted": "维护动作已完成",
+          "maintenanceActionFailed": "维护操作失败"
+        }
+      },
+      "workflowTemplateStore": {
+        "metadata": {
+          "initialVersion": "初始版本",
+          "versionNextversionnumber": "版本{{nextVersionNumber}}"
+        }
+      }
+    },
+    "types": {
+      "characterCardSpec": {
+        "metadata": {
+          "formatValidButANameIsRequiredBeforeChat": "格式有效，但聊天前需要输入姓名。",
+          "descriptionIsRecommendedForVeniceForgeAuthoring": "建议为 Venice Forge 创作提供描述。",
+          "aPrimaryGreetingIsRecommendedForChatReadiness": "建议使用主要问候语以做好聊天准备。"
+        }
+      },
+      "project": {
+        "metadata": {
+          "recipeIsMissingAPrompt": "食谱缺少提示。",
+          "recipeIsMissingATargetModel": "配方缺少目标模型。",
+          "modelValue1IsNotInTheKnownRegistryDefaultsApplied": "模型“ {{value1}} ”不在已知注册表中 - 应用默认值。",
+          "value1DoesNotSupportANegativePromptItWillBe": "{{value1}}不支持否定提示——它将被删除。",
+          "value1DoesNotSupportASeedItWillBeDropped": "{{value1}}不支持种子 — 它将被丢弃。",
+          "value1DoesNotSupportMultipleVariantsValueWillBeDropped": "{{value1}}不支持多个变体 - 值将被删除。",
+          "value1DoesNotSupportStepsValueWillBeDropped": "{{value1}}不支持步骤 - 值将被删除。",
+          "value1DoesNotSupportCfgScaleValueWillBeDropped": "{{value1}}不支持 CFG 缩放 — 值将被丢弃。",
+          "value1DoesNotSupportAStylePresetValueWillBe": "{{value1}}不支持样式预设 — 值将被删除。",
+          "value1UsesPixelSizingAspectRatioWillBeDropped": "{{value1}}使用像素大小 - 纵横比将被丢弃。",
+          "value1DoesNotSupportAResolutionPresetValueWillBe": "{{value1}}不支持分辨率预设 — 值将被丢弃。",
+          "dimensionsOriginalpairAreNotSupportedDefaultedToFinalpair": "不支持维度{{originalPair}} - 默认为{{finalPair}} 。",
+          "aspectRatioValue1IsNotSupportedDefaultedToValue2": "不支持宽高比“ {{value1}} ” - 默认为{{value2}} 。",
+          "resolutionValue1IsNotSupportedDefaultedToValue2": "不支持分辨率“ {{value1}} ” — 默认为{{value2}} 。"
+        }
+      },
+      "workflow": {
+        "metadata": {
+          "initialVersion": "初始版本"
+        }
+      },
+      "provider": {
+        "metadata": {
+          "primaryPrivateLocalFirstMultimodalPlatform": "主要的、私有的、本地优先的多式联运平台。",
+          "fastOpenSourceModelInference": "快速、开源的模型推理。",
+          "ultraFastLpuInferenceEngine": "超高速 LPU 推理引擎。",
+          "highPerformanceLlmApis": "高性能 LLM API。",
+          "notImplementedNoCredentialsOrRequestsAreAccepted": "未实施。不接受任何凭证或请求。",
+          "geminiDeveloperApiAiStudio": "Gemini 开发者 API（AI Studio）。",
+          "mistralAiModelsAndEndpoints": "Mistral AI 模型和端点。",
+          "claudeAndOtherSafeFoundationModels": "克劳德和其他安全基础模型。",
+          "searchGroundedAndFastLlmApis": "基于搜索的快速 LLM API。"
+        }
+      }
+    },
+    "constants": {
+      "prompttemplates": {
+        "metadata": {
+          "animeIllustration": "动漫插图",
+          "cinematicFilm": "电影胶片",
+          "value35mmCameraFilmLookNaturalLightingMovieSceneGrain": "35 毫米相机胶片效果，自然光，电影场景颗粒",
+          "minimalistVectorArt": "极简主义矢量艺术",
+          "cleanFlatColorVectorDesignSvgStyle": "干净的平面色彩矢量设计，SVG 风格",
+          "oilPainting": "油画",
+          "classicalTexturedCanvasBrushstrokes": "古典纹理画布笔触",
+          "goldenHour": "黄金时段",
+          "warmLowAngleSunsetGlow": "温暖的低角度夕阳余辉",
+          "studioPortrait": "工作室肖像",
+          "professionalMultiPointStudioKeyLighting": "专业多点演播室重点照明",
+          "neonCyberpunk": "霓虹赛博朋克",
+          "vibrantNeonBluesAndMagentasWithDarkShadows": "充满活力的霓虹蓝色和洋红色，带有深色阴影",
+          "extremeCloseUp": "极端特写",
+          "tightFocusOnFacialDetailsOrSmallSubjects": "密切关注面部细节或小主题",
+          "aerialDroneView": "无人机鸟瞰图",
+          "highAltitudeBirdSEyePerspective": "高空鸟瞰",
+          "ruleOfThirdsWide": "三分法则宽",
+          "balancedOffCenterCinematicFocalPoint": "平衡的偏心电影焦点",
+          "photorealistic8k": "逼真的 8k",
+          "maximizesResolutionSkinTexturesAndMaterialRealism": "最大化分辨率、皮肤纹理和材质真实感",
+          "standardNegative": "标准阴性",
+          "standardPromptsToAvoidDistortionsAndLowQuality": "标准提示以避免失真和低质量"
+        }
+      }
+    },
+    "shared": {
+      "legal": {
+        "metadata": {
+          "welcomeToVeniceForge": "欢迎来到威尼斯锻造厂"
+        }
+      }
+    },
+    "utils": {
+      "imageprocessor": {
+        "metadata": {
+          "landscapesNature": "风景与自然",
+          "animeMangaIllustration": "动漫/漫画/插图",
+          "cinematicFilm": "电影/电影",
+          "portraitsPeople": "肖像/人物",
+          "productCommercialStudio": "产品 / 商业工作室"
+        }
+      }
+    }
+  },
+  "statusDiagnostics": {
+    "actions": {
+      "openConfig": "打开配置",
+      "openStatus": "开放状态"
+    },
+    "external": "{{message}}",
+    "api": {
+      "notChecked": "Venice API 密钥尚未经过检查。",
+      "checking": "检查 Venice 安全存储配置...",
+      "inspectionFailed": "威尼斯安全存储检查失败。",
+      "notConfigured": "未配置 Venice API 密钥。添加一个密钥以启用生成。",
+      "openConfigDetail": "打开“配置”选项卡以连接您的 Venice API 密钥。",
+      "connectivityUnverified": "API 密钥已配置，但尚未验证实时威尼斯连接。",
+      "testConnectivityDetail": "使用 API 密钥测试操作来验证 /models 连接。"
+    },
+    "apiKey": {
+      "notChecked": "Venice API 密钥尚未经过检查。",
+      "checking": "检查 Venice API 密钥配置...",
+      "inspectionFailed": "安全存储检查失败。",
+      "secure": "Venice API 密钥配置在安全存储中。原始密钥被隐藏。",
+      "memoryOnly": "密钥仅存在于内存中。原始密钥被隐藏并排除在诊断和导出之外。",
+      "missing": "没有 Venice API 密钥。图像、音频和聊天生成被阻止。",
+      "addKeyDetail": "通过标题或“配置”选项卡中的 API 密钥按钮添加密钥。"
+    },
+    "model": {
+      "notRequested": "尚未请求型号目录。",
+      "loading": "正在加载模型目录...",
+      "loaded": "已加载{{count}}个模型。",
+      "selectionUnavailable": "所选模型“ {{modelId}} ”不存在于当前目录 ( {{modelType}} ) 中。",
+      "cached": "使用{{timestamp}}中的缓存模型目录。",
+      "loadFailed": "无法加载模型目录。"
+    },
+    "storage": {
+      "unavailable": "IndexedDB 不可用。当地的历史和媒体不会持续下去。",
+      "permissionsDetail": "禁用存储的浏览器模式。检查站点权限。",
+      "web": "Web 模式：记录保留在浏览器 IndexedDB 中（静态加密）。",
+      "siteDataDetail": "清除站点数据将删除本地保管库。",
+      "desktop": "桌面 IndexedDB 可以访问。记录在静态时被加密。"
+    },
+    "project": {
+      "allProjects": "所有项目模式均处于活动状态（无范围视图）。",
+      "missing": "活动项目 ID 丢失或未知。商店将在下次互动时修复。",
+      "archived": "活动项目“ {{projectName}} ”已存档。切换到所有项目进行修复。",
+      "valid": "活动项目“ {{projectName}} ”有效。"
+    },
+    "safety": {
+      "on": {
+        "on": "本地守卫：开启·威尼斯安全模式：开启",
+        "off": "本地守卫：开启·威尼斯安全模式：关闭"
+      },
+      "off": {
+        "on": "本地警卫：关闭·威尼斯安全模式：打开",
+        "off": "本地警卫：关闭·威尼斯安全模式：关闭"
+      }
+    },
+    "provider": {
+      "disabled": "研究工作区处于活动状态（ {{count}}个会话）。吉娜是残疾人。",
+      "enabled": "研究工作区处于活动状态（ {{count}}个会话）。吉娜启用。",
+      "missingKey": "研究工作区处于活动状态（ {{count}}个会话）。 Jina 已启用，但未配置密钥。"
+    },
+    "desktop": {
+      "desktop": "桌面模式：电子主进程+预载桥可达。",
+      "web": "Web 模式：API 密钥位于服务器 .env 中。仅桌面功能（文件系统、显示、系统 shell）不可用。"
+    },
+    "diagnostics": {
+      "operational": "所有系统均可运行。没有检测到问题。",
+      "issues": "记录了{{count}}个检查；最严重的严重性： {{severity}} 。"
+    }
+  },
+  "imageCapabilities": {
+    "toolsTab": "编辑/高档/背景删除",
+    "sizes": "{{count}}个尺寸",
+    "ratios": "{{count}}比率",
+    "ratiosResolutions": "{{ratios}}比率 × {{resolutions}}分辨率",
+    "fixedDimensions": "固定{{width}} × {{height}}",
+    "fixedSize": "固定尺寸",
+    "unknownSizing": "尺寸未知",
+    "negativePrompt": "负面提示",
+    "noNegativePrompt": "无负面提示",
+    "seed": "种子",
+    "noSeed": "无种子",
+    "variants": "变体",
+    "singleOutput": "单路输出",
+    "noSteps": "没有步骤",
+    "noCfg": "无CFG",
+    "noStylePreset": "没有预设样式",
+    "references_one": "{{count}}参考",
+    "references_other": "{{count}}篇参考文献",
+    "noReferences": "没有参考文献",
+    "quality": "质量"
+  },
+  "runtimeSlashLabels": {
+    "cancelReset": "取消/重置",
+    "shortDescriptionSummary": "简短描述/摘要",
+    "settingWorld": "设定/世界",
+    "generalPg": "普通/PG",
+    "matureDarkThemes": "成熟/黑暗主题",
+    "documentNamePath": "文档名称/路径",
+    "characterPersonaReferences": "角色/角色参考"
   }
 }

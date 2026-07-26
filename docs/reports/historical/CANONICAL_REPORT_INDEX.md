@@ -1,5 +1,7 @@
 # Canonical Report Index
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 This index maps retained audit and report artifacts to their current authority. Historical reports are evidence only. If any report conflicts with live source, package scripts, workflow files, `docs/summary_of_work.md`, or `docs/ROADMAP.md`, rerun validation and trust the live repository.
 
 ## Authority and Evidence Routing

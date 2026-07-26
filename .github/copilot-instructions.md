@@ -175,12 +175,17 @@ All Venice API requests go through `src/services/veniceClient.ts` — `veniceFet
 
 **Zustand 5 lightweight slice stores** (auth, chat, playground, settings, toast, workflow, media, rp-*, inspector, etc.). Reducer-based state has been fully migrated. Side effects live in services. See `AGENTS.md` "State" and the individual `src/stores/*.ts` + `src/stores/*-store.ts` files.
 
+### Runtime localization
+
+`src/i18n/resources/en-US/` is the source-language catalog. Visible app-authored prose must use scoped keys or the reviewed runtime translation helper. Structural catalog/runtime coverage is distinct from linguistic review: non-English catalogs remain production-incomplete until `docs/i18n/native-review-status.json` records a qualified reviewer and date. Never raise the zero-debt hardcoded-string baseline or add broad allowlists to accept new prose. After visible UI changes run `npm run verify:i18n` and `npm run verify:i18n-hardcoded-regressions`; treat `artifacts/i18n/` as disposable validation output.
+
 ### Storage (current)
 
 Renderer IndexedDB (via `src/services/storageService.ts` + `STORE_NAMES`): multiple stores including conversations, settings, images/media, memories, files, character cards, personas, lorebooks, rp-chats, rp-assets. `ENCRYPTED_STORES` use AES-GCM. Desktop chat history uses atomic JSON files under userData/chat-history/. Secrets: OS `safeStorage` (Electron) or server `.env` (web). See `AGENTS.md` and `docs/DEVELOPMENT/CONFIG.md`.
 
 - Exports/imports are versioned JSON; secret-like fields are redacted on export; import merges by ID (additive, never destructive).
 - See `src/services/exportImport.ts`, `src/services/storageService.ts`.
+- Generated desktop media uses main-owned SHA-256 blobs and stable `venice-media://` URLs. Failed validated image writes may use only the bounded main-process recovery queue and opaque retry/Save As IDs; never persist large data URLs or expose renderer-selected paths.
 
 ### IPC surface (Electron)
 

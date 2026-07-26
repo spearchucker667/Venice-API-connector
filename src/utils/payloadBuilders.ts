@@ -375,7 +375,7 @@ export function buildImagePayload(
     cfg_scale: normalized.cfg,
     hide_watermark: normalized.disableWatermark,
     return_binary: false,
-    output_format: "png",
+    format: "png",
   };
 
   // Sizing: pick exactly one shape. Caller decides via aspectRatio.

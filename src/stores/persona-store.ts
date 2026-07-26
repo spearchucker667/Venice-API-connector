@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /** @fileoverview State for the user's local persona library.
  *  A "persona" describes the user side of the RP — name, role, brief
  *  background, optional style hints. */
@@ -13,7 +14,10 @@ import {
 import type { UserPersonaV1, PersonaExport } from "../types/rp";
 import { RP_PERSONA_EXPORT_VERSION } from "../types/rp";
 import { toast } from "./toast-store";
-import { getActivePersonaId, setActivePersonaId } from "../services/rp/personaPreferenceService";
+import {
+  getActivePersonaId,
+  setActivePersonaId,
+} from "../services/rp/personaPreferenceService";
 import { redactErrorMessage } from "../shared/redaction";
 
 export interface PersonaState {
@@ -50,8 +54,16 @@ export const usePersonaStore = create<PersonaState>((set, get) => ({
       const items = await listPersonas();
       const sorted = items.slice().sort((a, b) => b.updatedAt - a.updatedAt);
       const persistedId = await getActivePersonaId();
-      const activePersonaId = persistedId && sorted.some((p) => p.id === persistedId) ? persistedId : null;
-      set({ personas: sorted, isLoading: false, hasLoaded: true, activePersonaId });
+      const activePersonaId =
+        persistedId && sorted.some((p) => p.id === persistedId)
+          ? persistedId
+          : null;
+      set({
+        personas: sorted,
+        isLoading: false,
+        hasLoaded: true,
+        activePersonaId,
+      });
     } catch (e) {
       set({ isLoading: false, error: redactErrorMessage(e) });
     }
@@ -84,7 +96,13 @@ export const usePersonaStore = create<PersonaState>((set, get) => ({
     if (!normalized) {
       const msg = "Invalid persona data.";
       set({ error: msg });
-      toast.error("Could not save persona", msg);
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.personaStore.notification.couldNotSavePersona",
+          "Could not save persona",
+        ),
+        msg,
+      );
       return null;
     }
     try {
@@ -100,7 +118,13 @@ export const usePersonaStore = create<PersonaState>((set, get) => ({
     } catch (e) {
       const msg = redactErrorMessage(e);
       set({ error: msg });
-      toast.error("Could not save persona", msg);
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.personaStore.notification.couldNotSavePersona",
+          "Could not save persona",
+        ),
+        msg,
+      );
       return null;
     }
   },
@@ -109,7 +133,16 @@ export const usePersonaStore = create<PersonaState>((set, get) => ({
     try {
       const ok = await svcDelete(id);
       if (!ok) {
-        toast.error("Could not delete persona", "Storage rejected the request.");
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.personaStore.notification.couldNotDeletePersona",
+            "Could not delete persona",
+          ),
+          translateRuntime(
+            "runtimeGenerated.stores.personaStore.notification.storageRejectedTheRequest",
+            "Storage rejected the request.",
+          ),
+        );
         return false;
       }
       set((s) => ({
@@ -120,17 +153,28 @@ export const usePersonaStore = create<PersonaState>((set, get) => ({
     } catch (e) {
       const msg = redactErrorMessage(e);
       set({ error: msg });
-      toast.error("Could not delete persona", msg);
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.personaStore.notification.couldNotDeletePersona",
+          "Could not delete persona",
+        ),
+        msg,
+      );
       return false;
     }
   },
 
   importPersonas: async (json) => {
     let parsed: unknown;
-    try { parsed = JSON.parse(json); } catch { return 0; }
+    try {
+      parsed = JSON.parse(json);
+    } catch {
+      return 0;
+    }
     if (!parsed || typeof parsed !== "object") return 0;
     const p = parsed as Record<string, unknown>;
-    if (p.version !== RP_PERSONA_EXPORT_VERSION || p.app !== "Venice Forge") return 0;
+    if (p.version !== RP_PERSONA_EXPORT_VERSION || p.app !== "Venice Forge")
+      return 0;
     const arr = Array.isArray(p.personas) ? p.personas : [];
     let count = 0;
     for (const raw of arr) {

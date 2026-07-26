@@ -1,10 +1,18 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /** @fileoverview Electron vs. web mode abstraction — never call window.veniceForge directly from modules. */
 
 // Code Owner: fayeblade (@spearchucker667)
 import "../types/desktop";
-import type { EncryptedBackupManifestTransport, ProviderSettingsSnapshot, SyncRuntimeStatus, VeniceForgeDiagnostics, VeniceForgeRequest, VeniceForgeResponse } from "../types/desktop";
+import type {
+  EncryptedBackupManifestTransport,
+  ProviderSettingsSnapshot,
+  SyncRuntimeStatus,
+  VeniceForgeDiagnostics,
+  VeniceForgeRequest,
+  VeniceForgeResponse,
+} from "../types/desktop";
 import type { ApiConnectivityStatus } from "../types/api-connectivity";
 import type { Conversation } from "../types/conversation";
 import type {
@@ -38,7 +46,9 @@ import { getActiveProfileId } from "./activeProfile";
  */
 
 export function isElectron(): boolean {
-  return typeof window !== "undefined" && window.veniceForge?.isDesktop === true;
+  return (
+    typeof window !== "undefined" && window.veniceForge?.isDesktop === true
+  );
 }
 
 /**
@@ -64,7 +74,10 @@ function createSignalId(): string {
  * @param signal The optional AbortSignal to observe.
  * @returns A cleanup function that removes the abort listener, or undefined if no signal was provided.
  */
-function attachAbort(signalId: string, signal?: AbortSignal): (() => void) | undefined {
+function attachAbort(
+  signalId: string,
+  signal?: AbortSignal,
+): (() => void) | undefined {
   if (!signal) return undefined;
   const abort = () => {
     window.veniceForge?.venice.abort(signalId).catch(() => {});
@@ -82,8 +95,14 @@ export const desktopVenice = {
    * @param signal An optional abort signal for cancellation.
    * @returns A promise resolving to the Venice API response.
    */
-  async request(input: VeniceForgeRequest, signal?: AbortSignal): Promise<VeniceForgeResponse> {
-    if (!isElectron()) throw new Error("Venice desktop transport is only available in desktop mode.");
+  async request(
+    input: VeniceForgeRequest,
+    signal?: AbortSignal,
+  ): Promise<VeniceForgeResponse> {
+    if (!isElectron())
+      throw new Error(
+        "Venice desktop transport is only available in desktop mode.",
+      );
     const signalId = input.signalId || createSignalId();
     const cleanup = attachAbort(signalId, signal);
     try {
@@ -106,18 +125,33 @@ export const desktopVenice = {
    */
   async streamChat(
     input: VeniceForgeRequest,
-    onDelta: (chunk: { content: string; reasoning: string; providerRequestId?: string; usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number } }) => void,
-    signal?: AbortSignal
+    onDelta: (chunk: {
+      content: string;
+      reasoning: string;
+      providerRequestId?: string;
+      usage?: {
+        prompt_tokens: number;
+        completion_tokens: number;
+        total_tokens: number;
+      };
+    }) => void,
+    signal?: AbortSignal,
   ): Promise<VeniceForgeResponse> {
-    if (!isElectron()) throw new Error("Venice desktop transport is only available in desktop mode.");
+    if (!isElectron())
+      throw new Error(
+        "Venice desktop transport is only available in desktop mode.",
+      );
     const signalId = input.signalId || createSignalId();
     const cleanup = attachAbort(signalId, signal);
     try {
-      return await window.veniceForge!.venice.streamChat({
-        ...input,
-        signalId,
-        profileId: getActiveProfileId(),
-      }, onDelta);
+      return await window.veniceForge!.venice.streamChat(
+        {
+          ...input,
+          signalId,
+          profileId: getActiveProfileId(),
+        },
+        onDelta,
+      );
     } finally {
       cleanup?.();
     }
@@ -147,10 +181,16 @@ const _webSessionVeniceApiKey = {
 };
 
 if (typeof window !== "undefined") {
-  window.addEventListener("beforeunload", () => _webSessionVeniceApiKey.clear());
+  window.addEventListener("beforeunload", () =>
+    _webSessionVeniceApiKey.clear(),
+  );
 }
 
-export async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}, timeoutMs = 10000): Promise<Response> {
+export async function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+  timeoutMs = 10000,
+): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -167,11 +207,14 @@ export const desktopApiKey = {
    * @returns A promise resolving to true if a key is present.
    */
   async isConfigured(): Promise<boolean> {
-    if (isElectron()) return window.veniceForge!.apiKey.isConfigured(getActiveProfileId());
+    if (isElectron())
+      return window.veniceForge!.apiKey.isConfigured(getActiveProfileId());
     try {
       const response = await fetchWithTimeout("/api/session-key");
       if (!response.ok) return _webSessionVeniceApiKey.isConfigured;
-      const payload = await response.json().catch(() => null) as { configured?: unknown } | null;
+      const payload = (await response.json().catch(() => null)) as {
+        configured?: unknown;
+      } | null;
       return payload?.configured === true;
     } catch {
       return _webSessionVeniceApiKey.isConfigured;
@@ -184,7 +227,8 @@ export const desktopApiKey = {
    * @returns A promise resolving to an ok flag.
    */
   async set(key: string): Promise<{ ok: boolean }> {
-    if (isElectron()) return window.veniceForge!.apiKey.set(key, getActiveProfileId());
+    if (isElectron())
+      return window.veniceForge!.apiKey.set(key, getActiveProfileId());
     const response = await fetchWithTimeout("/api/session-key", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -201,8 +245,13 @@ export const desktopApiKey = {
    * @returns A promise resolving to an ok flag.
    */
   async delete(profileId?: string): Promise<{ ok: boolean }> {
-    if (isElectron()) return window.veniceForge!.apiKey.delete(profileId ?? getActiveProfileId());
-    const response = await fetchWithTimeout("/api/session-key", { method: "DELETE" });
+    if (isElectron())
+      return window.veniceForge!.apiKey.delete(
+        profileId ?? getActiveProfileId(),
+      );
+    const response = await fetchWithTimeout("/api/session-key", {
+      method: "DELETE",
+    });
     if (!response.ok) return { ok: false };
     _webSessionVeniceApiKey.clear();
     return { ok: true };
@@ -212,38 +261,72 @@ export const desktopApiKey = {
    * Tests the configured API key by listing models.
    * @returns A promise resolving to the test result, status, and message.
    */
-  async test(): Promise<{ ok: boolean; status?: number; message: string; connectivity?: ApiConnectivityStatus }> {
-    if (isElectron()) return window.veniceForge!.apiKey.test(getActiveProfileId());
+  async test(): Promise<{
+    ok: boolean;
+    status?: number;
+    message: string;
+    connectivity?: ApiConnectivityStatus;
+  }> {
+    if (isElectron())
+      return window.veniceForge!.apiKey.test(getActiveProfileId());
     try {
       const { response } = await veniceFetch("/models", { retry: false });
       const checkedAt = new Date().toISOString();
       const connectivity: ApiConnectivityStatus = response.ok
-        ? { ok: true, kind: "verified", checkedAt, statusCode: response.status, endpoint: "models" }
-        : {
-            ok: false,
-            kind: response.status === 401 || response.status === 403 ? "invalid-api-key" : "catalog-failure",
+        ? {
+            ok: true,
+            kind: "verified",
             checkedAt,
             statusCode: response.status,
-            safeMessage: response.status === 401 || response.status === 403
-              ? "API key was found, but Venice rejected it. Re-enter the key in Config."
-              : "Model catalog failed to load from Venice. Chat may still work if a model is already selected.",
+            endpoint: "models",
+          }
+        : {
+            ok: false,
+            kind:
+              response.status === 401 || response.status === 403
+                ? "invalid-api-key"
+                : "catalog-failure",
+            checkedAt,
+            statusCode: response.status,
+            safeMessage:
+              response.status === 401 || response.status === 403
+                ? "API key was found, but Venice rejected it. Re-enter the key in Config."
+                : "Model catalog failed to load from Venice. Chat may still work if a model is already selected.",
             retryable: [408, 429, 500, 502, 503, 504].includes(response.status),
           };
-      return { ok: response.ok, status: response.status, message: response.statusText, connectivity };
+      return {
+        ok: response.ok,
+        status: response.status,
+        message: response.statusText,
+        connectivity,
+      };
     } catch (err) {
-      const status = err && typeof err === "object" && "status" in err ? (err as { status: number }).status : undefined;
+      const status =
+        err && typeof err === "object" && "status" in err
+          ? (err as { status: number }).status
+          : undefined;
       return {
         ok: false,
         status,
-        message: err instanceof Error ? err.message : "Request failed",
+        message:
+          err instanceof Error
+            ? err.message
+            : translateRuntime(
+                "runtimeGenerated.services.desktopbridge.metadata.requestFailed",
+                "Request failed",
+              ),
         connectivity: {
           ok: false,
-          kind: status === 404 || status === 502 ? "proxy-failure" : "network-failure",
+          kind:
+            status === 404 || status === 502
+              ? "proxy-failure"
+              : "network-failure",
           checkedAt: new Date().toISOString(),
           statusCode: status,
-          safeMessage: status === 404 || status === 502
-            ? "Local web proxy failed before Venice could respond. Check the dev server."
-            : "Network request failed before Venice responded. Check connection, proxy, VPN, or firewall.",
+          safeMessage:
+            status === 404 || status === 502
+              ? "Local web proxy failed before Venice could respond. Check the dev server."
+              : "Network request failed before Venice responded. Check connection, proxy, VPN, or firewall.",
           retryable: true,
         },
       };
@@ -254,17 +337,33 @@ export const desktopApiKey = {
 /** Bridge interface for fallback provider API keys. */
 export const desktopProviderApiKey = {
   async isConfigured(providerId: string): Promise<boolean> {
-    if (isElectron()) return window.veniceForge!.providerApiKey.isConfigured(providerId, getActiveProfileId());
+    if (isElectron())
+      return window.veniceForge!.providerApiKey.isConfigured(
+        providerId,
+        getActiveProfileId(),
+      );
     return false; // For now, no web session mock for fallback providers
   },
 
-  async set(providerId: string, key: string): Promise<{ ok: boolean; error?: string }> {
-    if (isElectron()) return window.veniceForge!.providerApiKey.set(providerId, key, getActiveProfileId());
+  async set(
+    providerId: string,
+    key: string,
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (isElectron())
+      return window.veniceForge!.providerApiKey.set(
+        providerId,
+        key,
+        getActiveProfileId(),
+      );
     return { ok: false, error: "Not supported in web mode" };
   },
 
   async delete(providerId: string): Promise<{ ok: boolean; error?: string }> {
-    if (isElectron()) return window.veniceForge!.providerApiKey.delete(providerId, getActiveProfileId());
+    if (isElectron())
+      return window.veniceForge!.providerApiKey.delete(
+        providerId,
+        getActiveProfileId(),
+      );
     return { ok: false, error: "Not supported in web mode" };
   },
 };
@@ -285,7 +384,8 @@ export const desktopProviderSettings = {
     return {
       enabledProviders: state.enabledProviders,
       autoFallbackEnabled: state.autoFallbackEnabled,
-      fallbackOrdering: state.fallbackOrdering as ProviderSettingsSnapshot["fallbackOrdering"],
+      fallbackOrdering:
+        state.fallbackOrdering as ProviderSettingsSnapshot["fallbackOrdering"],
       nativeFallbackModels: {},
     };
   },
@@ -294,7 +394,11 @@ export const desktopProviderSettings = {
     enabledProviders?: Record<string, boolean>;
     autoFallbackEnabled?: boolean;
     fallbackOrdering?: string[];
-  }): Promise<{ ok: boolean; settings?: ProviderSettingsSnapshot; error?: string }> {
+  }): Promise<{
+    ok: boolean;
+    settings?: ProviderSettingsSnapshot;
+    error?: string;
+  }> {
     if (isElectron()) return window.veniceForge!.providerSettings.update(input);
     return { ok: true, settings: await this.get() };
   },
@@ -306,11 +410,19 @@ export const desktopTts = {
     options: { text: string; model?: string; voice?: string; speed?: number },
     cacheEnabled: boolean,
   ) {
-    if (!isElectron()) return Promise.resolve({ ok: false as const, error: "Text-to-speech is available in the desktop app." });
+    if (!isElectron())
+      return Promise.resolve({
+        ok: false as const,
+        error: "Text-to-speech is available in the desktop app.",
+      });
     return window.veniceForge!.tts.synthesize(options, cacheEnabled);
   },
   clearCache() {
-    if (!isElectron()) return Promise.resolve({ ok: false as const, error: "The TTS cache is available in the desktop app." });
+    if (!isElectron())
+      return Promise.resolve({
+        ok: false as const,
+        error: "The TTS cache is available in the desktop app.",
+      });
     return window.veniceForge!.tts.clearCache();
   },
 };
@@ -367,8 +479,16 @@ export const desktopApp = {
    * Proxies a generic scrape request through the main process to enforce SSRF safety.
    * @param url The URL to scrape.
    */
-  proxyScrape(url: string): Promise<{ ok: boolean; data?: { url: string; finalUrl: string; contentType: string; body: string }; error?: string }> {
-    if (!isElectron()) return Promise.resolve({ ok: false, error: "Only available in desktop mode" });
+  proxyScrape(url: string): Promise<{
+    ok: boolean;
+    data?: { url: string; finalUrl: string; contentType: string; body: string };
+    error?: string;
+  }> {
+    if (!isElectron())
+      return Promise.resolve({
+        ok: false,
+        error: "Only available in desktop mode",
+      });
     return window.veniceForge!.app.proxyScrape(url);
   },
 };
@@ -376,38 +496,57 @@ export const desktopApp = {
 /** Proxies background task commands to the persistent main-process manager. */
 export const desktopBackgroundTask = {
   subscribe(): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return Promise.resolve({ ok: false, error: "Not in Electron" });
+    if (!isElectron())
+      return Promise.resolve({ ok: false, error: "Not in Electron" });
     return window.veniceForge!.backgroundTask.subscribe();
   },
   unsubscribe(): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return Promise.resolve({ ok: false, error: "Not in Electron" });
+    if (!isElectron())
+      return Promise.resolve({ ok: false, error: "Not in Electron" });
     return window.veniceForge!.backgroundTask.unsubscribe();
   },
-  create(input: BackgroundTaskCreateInput): Promise<{ ok: boolean; task?: BackgroundTask; error?: string }> {
-    if (!isElectron()) return Promise.resolve({ ok: false, error: "Not in Electron" });
+  create(
+    input: BackgroundTaskCreateInput,
+  ): Promise<{ ok: boolean; task?: BackgroundTask; error?: string }> {
+    if (!isElectron())
+      return Promise.resolve({ ok: false, error: "Not in Electron" });
     return window.veniceForge!.backgroundTask.create(input);
   },
-  update(taskId: string, updates: Partial<BackgroundTask>): Promise<{ ok: boolean; task?: BackgroundTask | null; error?: string }> {
-    if (!isElectron()) return Promise.resolve({ ok: false, error: "Not in Electron" });
+  update(
+    taskId: string,
+    updates: Partial<BackgroundTask>,
+  ): Promise<{ ok: boolean; task?: BackgroundTask | null; error?: string }> {
+    if (!isElectron())
+      return Promise.resolve({ ok: false, error: "Not in Electron" });
     return window.veniceForge!.backgroundTask.update(taskId, updates);
   },
   list(): Promise<{ ok: boolean; tasks?: BackgroundTask[]; error?: string }> {
-    if (!isElectron()) return Promise.resolve({ ok: false, error: "Not in Electron" });
+    if (!isElectron())
+      return Promise.resolve({ ok: false, error: "Not in Electron" });
     return window.veniceForge!.backgroundTask.list();
   },
-  cancel(taskId: string): Promise<{ ok: boolean; task?: BackgroundTask | null; error?: string }> {
-    if (!isElectron()) return Promise.resolve({ ok: false, error: "Not in Electron" });
+  cancel(
+    taskId: string,
+  ): Promise<{ ok: boolean; task?: BackgroundTask | null; error?: string }> {
+    if (!isElectron())
+      return Promise.resolve({ ok: false, error: "Not in Electron" });
     return window.veniceForge!.backgroundTask.cancel(taskId);
   },
-  retry(taskId: string): Promise<{ ok: boolean; task?: BackgroundTask | null; error?: string }> {
-    if (!isElectron()) return Promise.resolve({ ok: false, error: "Not in Electron" });
+  retry(
+    taskId: string,
+  ): Promise<{ ok: boolean; task?: BackgroundTask | null; error?: string }> {
+    if (!isElectron())
+      return Promise.resolve({ ok: false, error: "Not in Electron" });
     return window.veniceForge!.backgroundTask.retry(taskId);
   },
   clear(taskId: string): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return Promise.resolve({ ok: false, error: "Not in Electron" });
+    if (!isElectron())
+      return Promise.resolve({ ok: false, error: "Not in Electron" });
     return window.veniceForge!.backgroundTask.clear(taskId);
   },
-  onUpdate(callback: (envelope: BackgroundTaskIpcEnvelope) => void): () => void {
+  onUpdate(
+    callback: (envelope: BackgroundTaskIpcEnvelope) => void,
+  ): () => void {
     if (!isElectron()) return () => {};
     return window.veniceForge!.backgroundTask.onUpdate(callback);
   },
@@ -418,25 +557,40 @@ export const desktopBackgroundTask = {
 export const desktopImageInspector = {
   chooseImage() {
     if (!isElectron()) {
-      return Promise.resolve({ ok: false as const, error: "Image Inspector is only available in the desktop app." });
+      return Promise.resolve({
+        ok: false as const,
+        error: "Image Inspector is only available in the desktop app.",
+      });
     }
     return window.veniceForge!.imageInspector.chooseImage();
   },
   ingestClipboardImage() {
     if (!isElectron()) {
-      return Promise.resolve({ ok: false as const, error: "Image Inspector is only available in the desktop app." });
+      return Promise.resolve({
+        ok: false as const,
+        error: "Image Inspector is only available in the desktop app.",
+      });
     }
     return window.veniceForge!.imageInspector.ingestClipboardImage();
   },
-  resolveMediaInput(input: { mediaId: string; type?: "app-media" | "attachment" }) {
+  resolveMediaInput(input: {
+    mediaId: string;
+    type?: "app-media" | "attachment";
+  }) {
     if (!isElectron()) {
-      return Promise.resolve({ ok: false as const, error: "Image Inspector is only available in the desktop app." });
+      return Promise.resolve({
+        ok: false as const,
+        error: "Image Inspector is only available in the desktop app.",
+      });
     }
     return window.veniceForge!.imageInspector.resolveMediaInput(input);
   },
   readMediaDataUrl(input: { mediaId: string }) {
     if (!isElectron()) {
-      return Promise.resolve({ ok: false as const, error: "Image Inspector is only available in the desktop app." });
+      return Promise.resolve({
+        ok: false as const,
+        error: "Image Inspector is only available in the desktop app.",
+      });
     }
     return window.veniceForge!.imageInspector.readMediaDataUrl(input);
   },
@@ -444,10 +598,17 @@ export const desktopImageInspector = {
 
 /** Handles JSON file export and import, falling back to browser downloads in web mode. */
 export const desktopFiles = {
-  async saveGeneratedMedia(mediaId: string, suggestedName?: string): Promise<boolean> {
+  async saveGeneratedMedia(
+    mediaId: string,
+    suggestedName?: string,
+  ): Promise<boolean> {
     if (!isElectron()) return false;
-    const result = await window.veniceForge!.files.saveGeneratedMedia({ mediaId, suggestedName });
-    if (!result.ok) throw new Error(result.error || "Generated media could not be saved.");
+    const result = await window.veniceForge!.files.saveGeneratedMedia({
+      mediaId,
+      suggestedName,
+    });
+    if (!result.ok)
+      throw new Error(result.error || "Generated media could not be saved.");
     return !result.canceled;
   },
   /**
@@ -456,8 +617,12 @@ export const desktopFiles = {
    * @param defaultPath The suggested filename.
    * @returns A promise resolving to true if the save succeeded.
    */
-  async exportJson(data: unknown, defaultPath = "venice-forge-export.json"): Promise<boolean> {
-    const json = typeof data === "string" ? data : JSON.stringify(data, null, 2);
+  async exportJson(
+    data: unknown,
+    defaultPath = "venice-forge-export.json",
+  ): Promise<boolean> {
+    const json =
+      typeof data === "string" ? data : JSON.stringify(data, null, 2);
     if (!isElectron()) {
       const blob = new Blob([json], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -468,7 +633,10 @@ export const desktopFiles = {
       setTimeout(() => URL.revokeObjectURL(url), 60_000);
       return true;
     }
-    const result = await window.veniceForge!.files.saveJsonFile(json, defaultPath);
+    const result = await window.veniceForge!.files.saveJsonFile(
+      json,
+      defaultPath,
+    );
     return result.ok;
   },
 
@@ -490,16 +658,29 @@ export const desktopFiles = {
 
         input.addEventListener("change", () => {
           const file = input.files?.[0];
-          if (!file) { cleanup(); resolve(null); return; }
+          if (!file) {
+            cleanup();
+            resolve(null);
+            return;
+          }
           const reader = new FileReader();
-          reader.onload = () => { cleanup(); resolve(String(reader.result)); };
-          reader.onerror = () => { cleanup(); resolve(null); };
+          reader.onload = () => {
+            cleanup();
+            resolve(String(reader.result));
+          };
+          reader.onerror = () => {
+            cleanup();
+            resolve(null);
+          };
           reader.readAsText(file);
         });
 
         // `cancel` fires in Chrome 113+/Firefox 91+ when the user dismisses
         // the picker without selecting a file.
-        input.addEventListener("cancel", () => { cleanup(); resolve(null); });
+        input.addEventListener("cancel", () => {
+          cleanup();
+          resolve(null);
+        });
 
         document.body.appendChild(input);
         input.click();
@@ -507,7 +688,8 @@ export const desktopFiles = {
     }
     const result = await window.veniceForge!.files.loadJsonFile();
     if (result.canceled) return null;
-    if (!result.ok) throw new Error(result.error || "Failed to import JSON file.");
+    if (!result.ok)
+      throw new Error(result.error || "Failed to import JSON file.");
     if (!result.data) throw new Error("Selected JSON file is empty.");
     return result.data;
   },
@@ -523,7 +705,10 @@ export const desktopFiles = {
       setTimeout(() => URL.revokeObjectURL(url), 60_000);
       return true;
     }
-    const result = await window.veniceForge!.files.saveYamlFile(data, defaultPath);
+    const result = await window.veniceForge!.files.saveYamlFile(
+      data,
+      defaultPath,
+    );
     return result.ok;
   },
 
@@ -541,14 +726,27 @@ export const desktopFiles = {
 
         input.addEventListener("change", () => {
           const file = input.files?.[0];
-          if (!file) { cleanup(); resolve(null); return; }
+          if (!file) {
+            cleanup();
+            resolve(null);
+            return;
+          }
           const reader = new FileReader();
-          reader.onload = () => { cleanup(); resolve(String(reader.result)); };
-          reader.onerror = () => { cleanup(); resolve(null); };
+          reader.onload = () => {
+            cleanup();
+            resolve(String(reader.result));
+          };
+          reader.onerror = () => {
+            cleanup();
+            resolve(null);
+          };
           reader.readAsText(file);
         });
 
-        input.addEventListener("cancel", () => { cleanup(); resolve(null); });
+        input.addEventListener("cancel", () => {
+          cleanup();
+          resolve(null);
+        });
 
         document.body.appendChild(input);
         input.click();
@@ -556,7 +754,8 @@ export const desktopFiles = {
     }
     const result = await window.veniceForge!.files.loadYamlFile();
     if (result.canceled) return null;
-    if (!result.ok) throw new Error(result.error || "Failed to import YAML file.");
+    if (!result.ok)
+      throw new Error(result.error || "Failed to import YAML file.");
     if (!result.data) throw new Error("Selected YAML file is empty.");
     return result.data;
   },
@@ -564,7 +763,13 @@ export const desktopFiles = {
 
 /** Reads a local file via the main process (desktop only). */
 export const desktopFileReader = {
-  async readLocalFile(): Promise<{ ok: boolean; canceled?: boolean; content?: string; filename?: string; error?: string }> {
+  async readLocalFile(): Promise<{
+    ok: boolean;
+    canceled?: boolean;
+    content?: string;
+    filename?: string;
+    error?: string;
+  }> {
     if (!isElectron()) return { ok: false, error: "Not running in Electron" };
     return window.veniceForge!.files.readLocalFile();
   },
@@ -576,7 +781,10 @@ export const desktopSync = {
     if (isElectron()) return window.veniceForge!.sync.chooseSyncFolder();
     return { ok: false, error: "Not in Electron" };
   },
-  async getSyncFolder(): Promise<({ ok: true; path?: string | null } & SyncRuntimeStatus) | { ok: false; error: string }> {
+  async getSyncFolder(): Promise<
+    | ({ ok: true; path?: string | null } & SyncRuntimeStatus)
+    | { ok: false; error: string }
+  > {
     if (isElectron()) return window.veniceForge!.sync.getSyncFolder();
     return { ok: false, error: "Not in Electron" };
   },
@@ -584,12 +792,23 @@ export const desktopSync = {
     if (isElectron()) return window.veniceForge!.sync.setSyncFolder(params);
     return { ok: false, error: "Not in Electron" };
   },
-  async startSync(params: { password: string; profileId: string; includeMedia?: boolean }) {
+  async startSync(params: {
+    password: string;
+    profileId: string;
+    includeMedia?: boolean;
+  }) {
     if (isElectron()) return window.veniceForge!.sync.startSync(params);
     return { ok: false, error: "Not in Electron" };
   },
-  async applyRemoteMutation(params: { storeName: string; id: string; recordJson?: string; delete?: boolean; remoteApplyToken: string }) {
-    if (isElectron()) return window.veniceForge!.sync.applyRemoteMutation(params);
+  async applyRemoteMutation(params: {
+    storeName: string;
+    id: string;
+    recordJson?: string;
+    delete?: boolean;
+    remoteApplyToken: string;
+  }) {
+    if (isElectron())
+      return window.veniceForge!.sync.applyRemoteMutation(params);
     return { ok: false, error: "Not in Electron" };
   },
   async stopSync() {
@@ -602,50 +821,114 @@ export const desktopSync = {
   },
   async getStatus(): Promise<{ ok: boolean } & SyncRuntimeStatus> {
     if (isElectron()) return window.veniceForge!.sync.getStatus();
-    return { ok: true, configured: false, mainWatcher: "stopped" as const, rendererSessionAttached: false, authenticated: false };
+    return {
+      ok: true,
+      configured: false,
+      mainWatcher: "stopped" as const,
+      rendererSessionAttached: false,
+      authenticated: false,
+    };
   },
-  async setRendererSessionAttached(params: { attached: boolean }): Promise<{ ok: boolean; error?: string }> {
-    if (isElectron()) return window.veniceForge!.sync.setRendererSessionAttached(params);
+  async setRendererSessionAttached(params: {
+    attached: boolean;
+  }): Promise<{ ok: boolean; error?: string }> {
+    if (isElectron())
+      return window.veniceForge!.sync.setRendererSessionAttached(params);
     return { ok: true };
   },
-  async setEmissionSuppressed(params: { suppressed: boolean }): Promise<{ ok: boolean; error?: string }> {
-    if (isElectron()) return window.veniceForge!.sync.setEmissionSuppressed(params);
+  async setEmissionSuppressed(params: {
+    suppressed: boolean;
+  }): Promise<{ ok: boolean; error?: string }> {
+    if (isElectron())
+      return window.veniceForge!.sync.setEmissionSuppressed(params);
     return { ok: true };
   },
-  async writePacket(params: { storeName: string; id: string; recordJson: string }): Promise<{ ok: boolean; error?: string }> {
+  async writePacket(params: {
+    storeName: string;
+    id: string;
+    recordJson: string;
+  }): Promise<{ ok: boolean; error?: string }> {
     if (isElectron()) return window.veniceForge!.sync.writePacket(params);
     return { ok: false, error: "Not supported in Web" };
   },
-  async acknowledgeOperation(params: { operationId: string; ok: boolean }): Promise<{ ok: boolean; error?: string }> {
-    if (isElectron()) return window.veniceForge!.sync.acknowledgeOperation(params);
+  async acknowledgeOperation(params: {
+    operationId: string;
+    ok: boolean;
+  }): Promise<{ ok: boolean; error?: string }> {
+    if (isElectron())
+      return window.veniceForge!.sync.acknowledgeOperation(params);
     return { ok: false, error: "Not supported in Web" };
   },
-  onRemoteChange(callback: (event: { storeName: string; id: string; operationId: string; recordJson: string; remoteApplyToken: string }) => void) {
+  onRemoteChange(
+    callback: (event: {
+      storeName: string;
+      id: string;
+      operationId: string;
+      recordJson: string;
+      remoteApplyToken: string;
+    }) => void,
+  ) {
     if (isElectron()) return window.veniceForge!.sync.onRemoteChange(callback);
     return () => {};
   },
-  async beginBackupExport(): Promise<{ ok: boolean; profileId?: string; deviceId?: string; token?: string; error?: string }> {
+  async beginBackupExport(): Promise<{
+    ok: boolean;
+    profileId?: string;
+    deviceId?: string;
+    token?: string;
+    error?: string;
+  }> {
     if (isElectron()) return window.veniceForge!.sync.beginBackupExport();
     return { ok: false, error: "Not supported in Web" };
   },
-  async encryptBackup(payload: string, password: string, token: string): Promise<{ ok: boolean; data?: { salt: string, iv: string, ciphertext: string }; error?: string }> {
-    if (isElectron()) return window.veniceForge!.sync.encryptBackup({ payload, password, token });
+  async encryptBackup(
+    payload: string,
+    password: string,
+    token: string,
+  ): Promise<{
+    ok: boolean;
+    data?: { salt: string; iv: string; ciphertext: string };
+    error?: string;
+  }> {
+    if (isElectron())
+      return window.veniceForge!.sync.encryptBackup({
+        payload,
+        password,
+        token,
+      });
     return { ok: false, error: "Not supported in Web" };
   },
-  async decryptBackup(ciphertext: string, salt: string, iv: string, password: string): Promise<{ ok: boolean; data?: string; error?: string }> {
-    if (isElectron()) return window.veniceForge!.sync.decryptBackup({ ciphertext, salt, iv, password });
+  async decryptBackup(
+    ciphertext: string,
+    salt: string,
+    iv: string,
+    password: string,
+  ): Promise<{ ok: boolean; data?: string; error?: string }> {
+    if (isElectron())
+      return window.veniceForge!.sync.decryptBackup({
+        ciphertext,
+        salt,
+        iv,
+        password,
+      });
     return { ok: false, error: "Not supported in Web" };
   },
-  async createReplaceImportRecovery(params: { manifest: EncryptedBackupManifestTransport; password: string }) {
-    if (isElectron()) return window.veniceForge!.sync.createReplaceImportRecovery(params);
+  async createReplaceImportRecovery(params: {
+    manifest: EncryptedBackupManifestTransport;
+    password: string;
+  }) {
+    if (isElectron())
+      return window.veniceForge!.sync.createReplaceImportRecovery(params);
     return { ok: false, error: "Not supported in Web" };
   },
   async getLatestReplaceImportRecovery() {
-    if (isElectron()) return window.veniceForge!.sync.getLatestReplaceImportRecovery();
+    if (isElectron())
+      return window.veniceForge!.sync.getLatestReplaceImportRecovery();
     return { ok: false, error: "Not supported in Web" };
   },
   async loadReplaceImportRecovery(params: { id: string; password: string }) {
-    if (isElectron()) return window.veniceForge!.sync.loadReplaceImportRecovery(params);
+    if (isElectron())
+      return window.veniceForge!.sync.loadReplaceImportRecovery(params);
     return { ok: false, error: "Not supported in Web" };
   },
 };
@@ -655,17 +938,56 @@ export const desktopSync = {
  *  download anchor (export) or to a "desktop-only" error (reveal / meta /
  *  thumb — those are explicit desktop affordances). */
 export const desktopMedia = {
+  /** Persists generated image bytes in the main-owned content-addressed blob
+   * store. Renderer code receives only the stable media identifier and URL. */
+  async persistGeneratedImage(dataUrl: string): Promise<{
+    ok: boolean;
+    media?: {
+      id: string;
+      url: string;
+      mimeType: string;
+      byteCount: number;
+      sha256: string;
+    };
+    error?: string;
+    errorKind?: string;
+    retryable?: boolean;
+    recoveryId?: string;
+  }> {
+    if (!isElectron()) {
+      return { ok: false, error: "Durable generated-image storage is only available in desktop mode." };
+    }
+    return window.veniceForge!.files.persistGeneratedImage({ dataUrl });
+  },
+
+  async retryGeneratedImage(recoveryId: string) {
+    if (!isElectron()) return { ok: false, error: "Generated-image recovery is only available in desktop mode." };
+    return window.veniceForge!.files.retryGeneratedImage({ recoveryId });
+  },
+
+  async saveGeneratedImageRecovery(recoveryId: string, suggestedName?: string) {
+    if (!isElectron()) return { ok: false, canceled: false, error: "Generated-image recovery is only available in desktop mode." };
+    return window.veniceForge!.files.saveGeneratedImageRecovery({ recoveryId, suggestedName });
+  },
+
   /**
    * Exports a base64-encoded image to disk. In Electron, this writes under
    * `<Pictures>/Venice Forge/Media Studio/<subfolder>/<filename.png>`
    * via the main process. In web mode, this falls back to a browser
    * download with the given default filename.
    */
-  async exportMedia(input: { base64Data: string; filename: string; subfolder?: string }): Promise<{ ok: boolean; filePath?: string; error?: string }> {
+  async exportMedia(input: {
+    base64Data: string;
+    filename: string;
+    subfolder?: string;
+  }): Promise<{ ok: boolean; filePath?: string; error?: string }> {
     if (!isElectron()) {
       try {
         const blob = await (async () => {
-          const raw = input.base64Data.replace(/^data:image\/[a-zA-Z0-9.+-]+;base64,/, "");
+          const raw = input.base64Data.replace(
+            /^data:image\/[a-zA-Z0-9.+-]+;base64,/,
+            "",
+          );
           const bytes = Uint8Array.from(atob(raw), (c) => c.charCodeAt(0));
           return new Blob([bytes], { type: "image/png" });
         })();
@@ -677,7 +999,10 @@ export const desktopMedia = {
         setTimeout(() => URL.revokeObjectURL(url), 60_000);
         return { ok: true };
       } catch (err) {
-        return { ok: false, error: err instanceof Error ? err.message : String(err) };
+        return {
+          ok: false,
+          error: err instanceof Error ? err.message : String(err),
+        };
       }
     }
     return window.veniceForge!.files.exportMedia(input);
@@ -687,42 +1012,84 @@ export const desktopMedia = {
    *  Desktop-only. Arbitrary user-library paths are rejected by the main
    *  process; user-selected imports require a main-process dialog flow. */
   async importMedia(input: { filePath: string }): Promise<{
-    ok: boolean; canceled?: boolean; dataUrl?: string; filePath?: string;
-    filename?: string; bytes?: number; contentType?: string; error?: string;
+    ok: boolean;
+    canceled?: boolean;
+    dataUrl?: string;
+    filePath?: string;
+    filename?: string;
+    bytes?: number;
+    contentType?: string;
+    error?: string;
   }> {
-    if (!isElectron()) return { ok: false, error: "Import from disk is only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Import from disk is only available in desktop mode.",
+      };
     return window.veniceForge!.files.importMedia(input);
   },
 
   /** Reveals a file in the OS file manager. Desktop-only. The path is
    *  validated against the reveal-safe base directories in the main
    *  process before the OS shell is invoked. */
-  async revealMedia(input: { filePath: string }): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Reveal in folder is only available in desktop mode." };
+  async revealMedia(input: {
+    filePath: string;
+  }): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Reveal in folder is only available in desktop mode.",
+      };
     return window.veniceForge!.files.revealMedia(input);
   },
 
   /** Returns filesystem metadata for a reveal-safe path. Desktop-only. */
   async readMediaMeta(input: { filePath: string }): Promise<{
-    ok: boolean; filePath?: string; bytes?: number; mtime?: number; isFile?: boolean; error?: string;
+    ok: boolean;
+    filePath?: string;
+    bytes?: number;
+    mtime?: number;
+    isFile?: boolean;
+    error?: string;
   }> {
-    if (!isElectron()) return { ok: false, error: "Filesystem metadata reads are only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Filesystem metadata reads are only available in desktop mode.",
+      };
     return window.veniceForge!.files.readMediaMeta(input);
   },
 
   /** Generates (or returns cached) sha256-keyed thumbnail. Desktop-only. */
-  async generateMediaThumb(input: { sha256: string; source: string; maxDimension?: number }): Promise<{
-    ok: boolean; filePath?: string; url?: string; error?: string;
+  async generateMediaThumb(input: {
+    sha256: string;
+    source: string;
+    maxDimension?: number;
+  }): Promise<{
+    ok: boolean;
+    filePath?: string;
+    url?: string;
+    error?: string;
   }> {
-    if (!isElectron()) return { ok: false, error: "Server-side thumbnails are only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Server-side thumbnails are only available in desktop mode.",
+      };
     return window.veniceForge!.files.generateMediaThumb(input);
   },
 
   /** Saves a base64-encoded image to a sanitized subfolder under
    *  <Pictures>/Venice Forge/. Desktop-only; web mode falls back to
    *  a browser download. */
-  async saveRoutedImage(base64Data: string, filename: string, subfolder: string): Promise<{
-    ok: boolean; filePath?: string; error?: string;
+  async saveRoutedImage(
+    base64Data: string,
+    filename: string,
+    subfolder: string,
+  ): Promise<{
+    ok: boolean;
+    filePath?: string;
+    error?: string;
   }> {
     if (!isElectron()) {
       const a = document.createElement("a");
@@ -731,7 +1098,11 @@ export const desktopMedia = {
       a.click();
       return { ok: true };
     }
-    return window.veniceForge!.files.saveRoutedImage(base64Data, filename, subfolder);
+    return window.veniceForge!.files.saveRoutedImage(
+      base64Data,
+      filename,
+      subfolder,
+    );
   },
 };
 
@@ -739,7 +1110,9 @@ export const desktopMedia = {
  *  Desktop: asks the main process to fetch and cache the image, returning a
  *  local file:// URL. Web: falls back to the direct allowlisted URL. */
 export const desktopCharacterImage = {
-  async getCachedUrl(url: string): Promise<{ ok: boolean; url?: string; error?: string }> {
+  async getCachedUrl(
+    url: string,
+  ): Promise<{ ok: boolean; url?: string; error?: string }> {
     if (!isElectron()) {
       // Web mode has no local file cache; the URL has already been validated
       // by resolveCharacterImageUrl, so we can hand it straight to the browser.
@@ -748,78 +1121,202 @@ export const desktopCharacterImage = {
     return window.veniceForge!.files.getCharacterImage(url);
   },
 
-  async clearCache(): Promise<{ ok: boolean; deletedCount?: number; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Character image cache is only available in desktop mode." };
+  async clearCache(): Promise<{
+    ok: boolean;
+    deletedCount?: number;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Character image cache is only available in desktop mode.",
+      };
     return window.veniceForge!.files.clearCharacterImageCache();
   },
 
-  async getInventory(): Promise<{ ok: boolean; count?: number; totalBytes?: number; error?: string }> {
+  async getInventory(): Promise<{
+    ok: boolean;
+    count?: number;
+    totalBytes?: number;
+    error?: string;
+  }> {
     if (!isElectron()) return { ok: true, count: 0, totalBytes: 0 };
     return window.veniceForge!.files.getCharacterImageCacheInventory();
   },
 };
 
 export const desktopChatFolders = {
-  async list(): Promise<{ ok: boolean; folders: import("../shared/chatFolderContracts").ChatFolder[]; error?: string }> {
-    if (!isElectron()) return { ok: false, folders: [], error: "Chat folders are only available in desktop mode." };
+  async list(): Promise<{
+    ok: boolean;
+    folders: import("../shared/chatFolderContracts").ChatFolder[];
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        folders: [],
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.list();
   },
-  async create(input: import("../shared/chatFolderContracts").CreateChatFolderInput): Promise<{ ok: boolean; folder?: import("../shared/chatFolderContracts").ChatFolder; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async create(
+    input: import("../shared/chatFolderContracts").CreateChatFolderInput,
+  ): Promise<{
+    ok: boolean;
+    folder?: import("../shared/chatFolderContracts").ChatFolder;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.create(input);
   },
-  async rename(input: import("../shared/chatFolderContracts").RenameChatFolderInput): Promise<{ ok: boolean; folder?: import("../shared/chatFolderContracts").ChatFolder; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async rename(
+    input: import("../shared/chatFolderContracts").RenameChatFolderInput,
+  ): Promise<{
+    ok: boolean;
+    folder?: import("../shared/chatFolderContracts").ChatFolder;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.rename(input);
   },
-  async reorder(input: import("../shared/chatFolderContracts").ReorderChatFoldersInput): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async reorder(
+    input: import("../shared/chatFolderContracts").ReorderChatFoldersInput,
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.reorder(input);
   },
-  async moveConversation(input: import("../shared/chatFolderContracts").MoveConversationToFolderInput): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async moveConversation(
+    input: import("../shared/chatFolderContracts").MoveConversationToFolderInput,
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.moveConversation(input);
   },
-  async moveConversations(input: import("../shared/chatFolderContracts").MoveConversationsToFolderInput): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async moveConversations(
+    input: import("../shared/chatFolderContracts").MoveConversationsToFolderInput,
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.moveConversations(input);
   },
-  async delete(input: import("../shared/chatFolderContracts").DeleteChatFolderInput): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async delete(
+    input: import("../shared/chatFolderContracts").DeleteChatFolderInput,
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.delete(input);
   },
-  async getBackupPreview(input: import("../shared/chatFolderContracts").FolderBackupPreviewInput): Promise<{ ok: boolean; preview?: import("../shared/chatFolderContracts").FolderBackupPreview; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async getBackupPreview(
+    input: import("../shared/chatFolderContracts").FolderBackupPreviewInput,
+  ): Promise<{
+    ok: boolean;
+    preview?: import("../shared/chatFolderContracts").FolderBackupPreview;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.getBackupPreview(input);
   },
-  async exportBackup(input: import("../shared/chatFolderContracts").ExportFolderBackupInput): Promise<import("../shared/chatFolderContracts").ExportFolderBackupResult> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." } as any;
+  async exportBackup(
+    input: import("../shared/chatFolderContracts").ExportFolderBackupInput,
+  ): Promise<import("../shared/chatFolderContracts").ExportFolderBackupResult> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      } as any;
     return window.veniceForge!.chatFolders.exportBackup(input);
   },
-  async pickImportFile(): Promise<import("../shared/chatFolderContracts").PickFolderImportFileResult> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async pickImportFile(): Promise<
+    import("../shared/chatFolderContracts").PickFolderImportFileResult
+  > {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.pickImportFile();
   },
-  async previewImport(input: import("../shared/chatFolderContracts").PreviewFolderImportInput): Promise<{ ok: boolean; preview?: import("../shared/chatFolderContracts").FolderImportPreview; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async previewImport(
+    input: import("../shared/chatFolderContracts").PreviewFolderImportInput,
+  ): Promise<{
+    ok: boolean;
+    preview?: import("../shared/chatFolderContracts").FolderImportPreview;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.previewImport(input);
   },
-  async importBackup(input: import("../shared/chatFolderContracts").ImportFolderBackupInput): Promise<import("../shared/chatFolderContracts").FolderImportResult> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." } as any;
+  async importBackup(
+    input: import("../shared/chatFolderContracts").ImportFolderBackupInput,
+  ): Promise<import("../shared/chatFolderContracts").FolderImportResult> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      } as any;
     return window.veniceForge!.chatFolders.importBackup(input);
   },
-  async lock(input: import("../shared/chatFolderContracts").LockFolderInput): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async lock(
+    input: import("../shared/chatFolderContracts").LockFolderInput,
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.lock(input);
   },
-  async unlock(input: import("../shared/chatFolderContracts").UnlockFolderInput): Promise<{ ok: boolean; error?: string; retryAfter?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async unlock(
+    input: import("../shared/chatFolderContracts").UnlockFolderInput,
+  ): Promise<{ ok: boolean; error?: string; retryAfter?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.unlock(input);
   },
-  async getLockState(input: { folderId: string }): Promise<{ ok: boolean; lockState?: import("../shared/chatFolderContracts").FolderLockState; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat folders are only available in desktop mode." };
+  async getLockState(input: { folderId: string }): Promise<{
+    ok: boolean;
+    lockState?: import("../shared/chatFolderContracts").FolderLockState;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat folders are only available in desktop mode.",
+      };
     return window.veniceForge!.chatFolders.getLockState(input);
-  }
+  },
 };
 
 /** Conversation vault: next-generation conversation persistence with
@@ -833,52 +1330,129 @@ export const desktopConversations = {
     model?: string;
     dateFrom?: number;
     dateTo?: number;
-  }): Promise<{ ok: boolean; records: import("../types/conversationVault").ConversationRecordV1[]; error?: string }> {
-    if (!isElectron()) return { ok: false, records: [], error: "Conversation vault is only available in desktop mode." };
+  }): Promise<{
+    ok: boolean;
+    records: import("../types/conversationVault").ConversationRecordV1[];
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        records: [],
+        error: "Conversation vault is only available in desktop mode.",
+      };
     return window.veniceForge!.conversations.list(filter);
   },
-  async get(id: string): Promise<{ ok: boolean; record: import("../types/conversationVault").ConversationRecordV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, record: null, error: "Conversation vault is only available in desktop mode." };
+  async get(id: string): Promise<{
+    ok: boolean;
+    record: import("../types/conversationVault").ConversationRecordV1 | null;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        record: null,
+        error: "Conversation vault is only available in desktop mode.",
+      };
     return window.veniceForge!.conversations.get(id);
   },
   async save(
     record: import("../types/conversationVault").ConversationRecordV1,
     origin: MutationOrigin = "local-user",
   ): Promise<{ ok: boolean; id: string; error?: string }> {
-    if (!isElectron()) return { ok: false, id: record.id, error: "Conversation vault is only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        id: record.id,
+        error: "Conversation vault is only available in desktop mode.",
+      };
     return window.veniceForge!.conversations.save(record, origin);
   },
-  async delete(id: string, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Conversation vault is only available in desktop mode." };
+  async delete(
+    id: string,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Conversation vault is only available in desktop mode.",
+      };
     return window.veniceForge!.conversations.delete(id, origin);
   },
-  async pullContext(input: { message: string; maxItems?: number; maxTokens?: number; includeArchived?: boolean; excludeConversationIds?: string[]; characterId?: string }): Promise<{
-    ok: boolean; context: import("../types/conversationVault").PulledMemoryContext; error?: string;
+  async pullContext(input: {
+    message: string;
+    maxItems?: number;
+    maxTokens?: number;
+    includeArchived?: boolean;
+    excludeConversationIds?: string[];
+    characterId?: string;
+  }): Promise<{
+    ok: boolean;
+    context: import("../types/conversationVault").PulledMemoryContext;
+    error?: string;
   }> {
-    if (!isElectron()) return { ok: false, context: { injectedText: "", facts: [], summaries: [], tokenEstimate: 0 }, error: "Conversation vault is only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        context: {
+          injectedText: "",
+          facts: [],
+          summaries: [],
+          tokenEstimate: 0,
+        },
+        error: "Conversation vault is only available in desktop mode.",
+      };
     return window.veniceForge!.conversations.pullContext(input);
   },
   async detectLegacyHistory(): Promise<boolean> {
     if (!isElectron()) return false;
     return window.veniceForge!.conversations.detectLegacyHistory();
   },
-  async rebuildIndex(): Promise<{ ok: boolean; itemsIndexed: number; error?: string }> {
-    if (!isElectron()) return { ok: false, itemsIndexed: 0, error: "Conversation vault is only available in desktop mode." };
+  async rebuildIndex(): Promise<{
+    ok: boolean;
+    itemsIndexed: number;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        itemsIndexed: 0,
+        error: "Conversation vault is only available in desktop mode.",
+      };
     return window.veniceForge!.conversations.rebuildIndex();
   },
   async openConversationsFolder(): Promise<{ ok: boolean }> {
     if (!isElectron()) return { ok: false };
     return window.veniceForge!.conversations.openConversationsFolder();
   },
-  async migrateLegacyHistory(): Promise<{ ok: boolean; migrated: number; failed: number; skipped: number; error?: string }> {
-    if (!isElectron()) return { ok: false, migrated: 0, failed: 0, skipped: 0, error: "Conversation vault is only available in desktop mode." };
+  async migrateLegacyHistory(): Promise<{
+    ok: boolean;
+    migrated: number;
+    failed: number;
+    skipped: number;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        migrated: 0,
+        failed: 0,
+        skipped: 0,
+        error: "Conversation vault is only available in desktop mode.",
+      };
     return window.veniceForge!.conversations.migrateLegacyHistory();
   },
 };
 
 /** Handles chat history persistence via the main-process filesystem store. */
 export const desktopChat = {
-  async list(): Promise<{ ok: boolean; conversations: Conversation[]; truncated: boolean; totalScanned: number; error?: string }> {
+  async list(): Promise<{
+    ok: boolean;
+    conversations: Conversation[];
+    truncated: boolean;
+    totalScanned: number;
+    error?: string;
+  }> {
     if (!isElectron()) {
       return {
         ok: false,
@@ -913,16 +1487,39 @@ export const desktopChat = {
     }
     return window.veniceForge!.chat.listPage(params);
   },
-  async get(id: string): Promise<{ ok: boolean; conversation: Conversation | null; error?: string }> {
-    if (!isElectron()) return { ok: false, conversation: null, error: "Chat filesystem storage is only available in desktop mode." };
+  async get(id: string): Promise<{
+    ok: boolean;
+    conversation: Conversation | null;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        conversation: null,
+        error: "Chat filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.chat.get(id);
   },
-  async save(conversation: Conversation, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat filesystem storage is only available in desktop mode." };
+  async save(
+    conversation: Conversation,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.chat.save(conversation, origin);
   },
-  async delete(id: string, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Chat filesystem storage is only available in desktop mode." };
+  async delete(
+    id: string,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Chat filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.chat.delete(id, origin);
   },
 };
@@ -934,86 +1531,214 @@ export const desktopChat = {
  * expected to fall back to the IndexedDB path inside the renderer service.
  */
 export const desktopCharacterCards = {
-  async list(): Promise<{ ok: boolean; cards: CharacterCardV1[]; error?: string }> {
+  async list(): Promise<{
+    ok: boolean;
+    cards: CharacterCardV1[];
+    error?: string;
+  }> {
     if (!isElectron()) {
-      return { ok: false, cards: [], error: "Character card filesystem storage is only available in desktop mode." };
+      return {
+        ok: false,
+        cards: [],
+        error:
+          "Character card filesystem storage is only available in desktop mode.",
+      };
     }
     return window.veniceForge!.characterCards.list();
   },
-  async get(id: string): Promise<{ ok: boolean; card: CharacterCardV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, card: null, error: "Character card filesystem storage is only available in desktop mode." };
+  async get(
+    id: string,
+  ): Promise<{ ok: boolean; card: CharacterCardV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        card: null,
+        error:
+          "Character card filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.characterCards.get(id);
   },
-  async save(card: CharacterCardV1, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; card: CharacterCardV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, card: null, error: "Character card filesystem storage is only available in desktop mode." };
+  async save(
+    card: CharacterCardV1,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; card: CharacterCardV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        card: null,
+        error:
+          "Character card filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.characterCards.save(card, origin);
   },
-  async delete(id: string, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Character card filesystem storage is only available in desktop mode." };
+  async delete(
+    id: string,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error:
+          "Character card filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.characterCards.delete(id, origin);
   },
   async chooseImportFile() {
-    if (!isElectron()) return { ok: false, error: "Desktop file import is only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Desktop file import is only available in desktop mode.",
+      };
     return window.veniceForge!.characterCards.chooseImportFile();
   },
   async consumeImportCandidate(handle: string) {
-    if (!isElectron()) return { ok: false, error: "Desktop file import is only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Desktop file import is only available in desktop mode.",
+      };
     return window.veniceForge!.characterCards.consumeImportCandidate(handle);
   },
-  async applyImport(payload: import("../types/character-card-files").CharacterCardImportApplyOptions) {
-    if (!isElectron()) return { ok: false, error: "Desktop file import is only available in desktop mode." };
+  async applyImport(
+    payload: import("../types/character-card-files").CharacterCardImportApplyOptions,
+  ) {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Desktop file import is only available in desktop mode.",
+      };
     return window.veniceForge!.characterCards.applyImport(payload);
   },
   async undoImport(payload: { handle: string }) {
-    if (!isElectron()) return { ok: false, error: "Desktop import undo is only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Desktop import undo is only available in desktop mode.",
+      };
     return window.veniceForge!.characterCards.undoImport(payload);
   },
-  async exportJson(payload: { cardId: string; profile?: "standard" | "privacy-reduced" }) {
-    if (!isElectron()) return { ok: false, error: "Desktop file export is only available in desktop mode." };
+  async exportJson(payload: {
+    cardId: string;
+    profile?: "standard" | "privacy-reduced";
+  }) {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Desktop file export is only available in desktop mode.",
+      };
     return window.veniceForge!.characterCards.exportJson(payload);
   },
-  async exportPng(payload: { cardId: string; profile?: "standard" | "privacy-reduced" }) {
-    if (!isElectron()) return { ok: false, error: "Desktop file export is only available in desktop mode." };
+  async exportPng(payload: {
+    cardId: string;
+    profile?: "standard" | "privacy-reduced";
+  }) {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Desktop file export is only available in desktop mode.",
+      };
     return window.veniceForge!.characterCards.exportPng(payload);
   },
 };
 
 /** Character RP Studio: user persona bridge. */
 export const desktopPersonas = {
-  async list(): Promise<{ ok: boolean; personas: UserPersonaV1[]; error?: string }> {
-    if (!isElectron()) return { ok: false, personas: [], error: "Persona filesystem storage is only available in desktop mode." };
+  async list(): Promise<{
+    ok: boolean;
+    personas: UserPersonaV1[];
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        personas: [],
+        error: "Persona filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.personas.list();
   },
-  async get(id: string): Promise<{ ok: boolean; persona: UserPersonaV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, persona: null, error: "Persona filesystem storage is only available in desktop mode." };
+  async get(
+    id: string,
+  ): Promise<{ ok: boolean; persona: UserPersonaV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        persona: null,
+        error: "Persona filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.personas.get(id);
   },
-  async save(persona: UserPersonaV1, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; persona: UserPersonaV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, persona: null, error: "Persona filesystem storage is only available in desktop mode." };
+  async save(
+    persona: UserPersonaV1,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; persona: UserPersonaV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        persona: null,
+        error: "Persona filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.personas.save(persona, origin);
   },
-  async delete(id: string, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Persona filesystem storage is only available in desktop mode." };
+  async delete(
+    id: string,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Persona filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.personas.delete(id, origin);
   },
 };
 
 /** Character RP Studio: lorebook bridge. */
 export const desktopLorebooks = {
-  async list(): Promise<{ ok: boolean; lorebooks: LorebookV1[]; error?: string }> {
-    if (!isElectron()) return { ok: false, lorebooks: [], error: "Lorebook filesystem storage is only available in desktop mode." };
+  async list(): Promise<{
+    ok: boolean;
+    lorebooks: LorebookV1[];
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        lorebooks: [],
+        error: "Lorebook filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.lorebooks.list();
   },
-  async get(id: string): Promise<{ ok: boolean; lorebook: LorebookV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, lorebook: null, error: "Lorebook filesystem storage is only available in desktop mode." };
+  async get(
+    id: string,
+  ): Promise<{ ok: boolean; lorebook: LorebookV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        lorebook: null,
+        error: "Lorebook filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.lorebooks.get(id);
   },
-  async save(lorebook: LorebookV1, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; lorebook: LorebookV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, lorebook: null, error: "Lorebook filesystem storage is only available in desktop mode." };
+  async save(
+    lorebook: LorebookV1,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; lorebook: LorebookV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        lorebook: null,
+        error: "Lorebook filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.lorebooks.save(lorebook, origin);
   },
-  async delete(id: string, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Lorebook filesystem storage is only available in desktop mode." };
+  async delete(
+    id: string,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Lorebook filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.lorebooks.delete(id, origin);
   },
 };
@@ -1021,59 +1746,146 @@ export const desktopLorebooks = {
 /** Character RP Studio: multi-character chat bridge. */
 export const desktopRpChats = {
   async list(): Promise<{ ok: boolean; chats: RpChatV1[]; error?: string }> {
-    if (!isElectron()) return { ok: false, chats: [], error: "RP chat filesystem storage is only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        chats: [],
+        error: "RP chat filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.rpChats.list();
   },
-  async get(id: string): Promise<{ ok: boolean; chat: RpChatV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, chat: null, error: "RP chat filesystem storage is only available in desktop mode." };
+  async get(
+    id: string,
+  ): Promise<{ ok: boolean; chat: RpChatV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        chat: null,
+        error: "RP chat filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.rpChats.get(id);
   },
-  async save(chat: RpChatV1, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; chat: RpChatV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, chat: null, error: "RP chat filesystem storage is only available in desktop mode." };
+  async save(
+    chat: RpChatV1,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; chat: RpChatV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        chat: null,
+        error: "RP chat filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.rpChats.save(chat, origin);
   },
-  async delete(id: string, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "RP chat filesystem storage is only available in desktop mode." };
+  async delete(
+    id: string,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "RP chat filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.rpChats.delete(id, origin);
   },
 };
 
 /** Character RP Studio: routed asset bridge. */
 export const desktopRpAssets = {
-  async list(chatId?: string): Promise<{ ok: boolean; assets: RpAssetV1[]; error?: string }> {
-    if (!isElectron()) return { ok: false, assets: [], error: "RP asset filesystem storage is only available in desktop mode." };
+  async list(
+    chatId?: string,
+  ): Promise<{ ok: boolean; assets: RpAssetV1[]; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        assets: [],
+        error: "RP asset filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.rpAssets.list(chatId);
   },
-  async get(id: string): Promise<{ ok: boolean; asset: RpAssetV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, asset: null, error: "RP asset filesystem storage is only available in desktop mode." };
+  async get(
+    id: string,
+  ): Promise<{ ok: boolean; asset: RpAssetV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        asset: null,
+        error: "RP asset filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.rpAssets.get(id);
   },
-  async save(asset: RpAssetV1, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; asset: RpAssetV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, asset: null, error: "RP asset filesystem storage is only available in desktop mode." };
+  async save(
+    asset: RpAssetV1,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; asset: RpAssetV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        asset: null,
+        error: "RP asset filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.rpAssets.save(asset, origin);
   },
-  async delete(id: string, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "RP asset filesystem storage is only available in desktop mode." };
+  async delete(
+    id: string,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "RP asset filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.rpAssets.delete(id, origin);
   },
 };
 
 /** Phase 2F RP Studio Polish — standalone scenario bridge. */
 export const desktopScenarios = {
-  async list(): Promise<{ ok: boolean; scenarios: ScenarioV1[]; error?: string }> {
-    if (!isElectron()) return { ok: false, scenarios: [], error: "Scenario filesystem storage is only available in desktop mode." };
+  async list(): Promise<{
+    ok: boolean;
+    scenarios: ScenarioV1[];
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        scenarios: [],
+        error: "Scenario filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.scenarios.list();
   },
-  async get(id: string): Promise<{ ok: boolean; scenario: ScenarioV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, scenario: null, error: "Scenario filesystem storage is only available in desktop mode." };
+  async get(
+    id: string,
+  ): Promise<{ ok: boolean; scenario: ScenarioV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        scenario: null,
+        error: "Scenario filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.scenarios.get(id);
   },
-  async save(scenario: ScenarioV1, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; scenario: ScenarioV1 | null; error?: string }> {
-    if (!isElectron()) return { ok: false, scenario: null, error: "Scenario filesystem storage is only available in desktop mode." };
+  async save(
+    scenario: ScenarioV1,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; scenario: ScenarioV1 | null; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        scenario: null,
+        error: "Scenario filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.scenarios.save(scenario, origin);
   },
-  async delete(id: string, origin: MutationOrigin = "local-user"): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Scenario filesystem storage is only available in desktop mode." };
+  async delete(
+    id: string,
+    origin: MutationOrigin = "local-user",
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Scenario filesystem storage is only available in desktop mode.",
+      };
     return window.veniceForge!.scenarios.delete(id, origin);
   },
 };
@@ -1081,18 +1893,22 @@ export const desktopScenarios = {
 /** Manages the Jina API key across desktop secure storage and server-side web session state. */
 export const desktopJinaApiKey = {
   async isConfigured(): Promise<boolean> {
-    if (isElectron()) return window.veniceForge!.jinaApiKey.isConfigured(getActiveProfileId());
+    if (isElectron())
+      return window.veniceForge!.jinaApiKey.isConfigured(getActiveProfileId());
     try {
       const response = await fetchWithTimeout("/api/session-jina-key");
       if (!response.ok) return false;
-      const payload = await response.json().catch(() => null) as { configured?: unknown } | null;
+      const payload = (await response.json().catch(() => null)) as {
+        configured?: unknown;
+      } | null;
       return payload?.configured === true;
     } catch {
       return false;
     }
   },
   async set(key: string): Promise<{ ok: boolean }> {
-    if (isElectron()) return window.veniceForge!.jinaApiKey.set(key, getActiveProfileId());
+    if (isElectron())
+      return window.veniceForge!.jinaApiKey.set(key, getActiveProfileId());
     const response = await fetchWithTimeout("/api/session-jina-key", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1101,50 +1917,96 @@ export const desktopJinaApiKey = {
     return { ok: response.ok };
   },
   async delete(profileId?: string): Promise<{ ok: boolean }> {
-    if (isElectron()) return window.veniceForge!.jinaApiKey.delete(profileId ?? getActiveProfileId());
-    const response = await fetchWithTimeout("/api/session-jina-key", { method: "DELETE" });
+    if (isElectron())
+      return window.veniceForge!.jinaApiKey.delete(
+        profileId ?? getActiveProfileId(),
+      );
+    const response = await fetchWithTimeout("/api/session-jina-key", {
+      method: "DELETE",
+    });
     return { ok: response.ok };
   },
   async test(): Promise<{ ok: boolean; status?: number; message: string }> {
-    if (isElectron()) return window.veniceForge!.jinaApiKey.test(getActiveProfileId());
+    if (isElectron())
+      return window.veniceForge!.jinaApiKey.test(getActiveProfileId());
     try {
       const resp = await fetchWithTimeout("/api/proxy-jina", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Venice-Forge-Family-Safe-Mode": String(useSettingsStore.getState().localFamilySafeModeEnabled),
+          "X-Venice-Forge-Family-Safe-Mode": String(
+            useSettingsStore.getState().localFamilySafeModeEnabled,
+          ),
         },
         body: JSON.stringify({
           url: "https://r.jina.ai/https://example.com",
           headers: {},
-        })
+        }),
       });
       if (resp.ok) {
-        return { ok: true, status: resp.status, message: "Jina connection successful" };
+        return {
+          ok: true,
+          status: resp.status,
+          message: translateRuntime(
+            "runtimeGenerated.services.desktopbridge.metadata.jinaConnectionSuccessful",
+            "Jina connection successful",
+          ),
+        };
       }
-      return { ok: false, status: resp.status, message: `Jina returned ${resp.status}` };
+      return {
+        ok: false,
+        status: resp.status,
+        message: translateRuntime(
+          "runtimeGenerated.services.desktopbridge.metadata.jinaReturnedValue1",
+          "Jina returned {{value1}}",
+          { value1: resp.status },
+        ),
+      };
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      return { ok: false, status: 0, message: msg || "Network error testing Jina API key" };
+      return {
+        ok: false,
+        status: 0,
+        message:
+          msg ||
+          translateRuntime(
+            "runtimeGenerated.services.desktopbridge.metadata.networkErrorTestingJinaApiKey",
+            "Network error testing Jina API key",
+          ),
+      };
     }
   },
 };
 
 /** Handles application updates, falling back to no-op in web mode. */
 export const desktopUpdates = {
-  checkForUpdates(): Promise<{ ok: boolean; version?: string; error?: string }> {
-    if (!isElectron()) return Promise.resolve({ ok: false, error: "Auto-updates are only available in desktop mode." });
+  checkForUpdates(): Promise<{
+    ok: boolean;
+    version?: string;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return Promise.resolve({
+        ok: false,
+        error: "Auto-updates are only available in desktop mode.",
+      });
     return window.veniceForge!.updates.checkForUpdates();
   },
   downloadUpdate(): Promise<{ ok: boolean; error?: string }> {
-    if (!isElectron()) return Promise.resolve({ ok: false, error: "Auto-updates are only available in desktop mode." });
+    if (!isElectron())
+      return Promise.resolve({
+        ok: false,
+        error: "Auto-updates are only available in desktop mode.",
+      });
     return window.veniceForge!.updates.downloadUpdate();
   },
   installUpdate(): Promise<{ ok: boolean }> {
     if (!isElectron()) return Promise.resolve({ ok: false });
     return window.veniceForge!.updates.installUpdate();
   },
-  onUpdateAvailable(callback: (info: import("electron-updater").UpdateInfo) => void): () => void {
+  onUpdateAvailable(
+    callback: (info: import("electron-updater").UpdateInfo) => void,
+  ): () => void {
     if (!isElectron()) return () => {};
     return window.veniceForge!.updates.onUpdateAvailable(callback);
   },
@@ -1152,7 +2014,9 @@ export const desktopUpdates = {
     if (!isElectron()) return () => {};
     return window.veniceForge!.updates.onUpdateNotAvailable(callback);
   },
-  onDownloadProgress(callback: (progress: import("electron-updater").ProgressInfo) => void): () => void {
+  onDownloadProgress(
+    callback: (progress: import("electron-updater").ProgressInfo) => void,
+  ): () => void {
     if (!isElectron()) return () => {};
     return window.veniceForge!.updates.onDownloadProgress(callback);
   },
@@ -1173,7 +2037,13 @@ export const desktopJina = {
     headers?: Record<string, string>;
     timeoutMs?: number;
     profileId?: string;
-  }): Promise<{ ok: boolean; status?: number; body?: unknown; contentType?: string; error?: string }> {
+  }): Promise<{
+    ok: boolean;
+    status?: number;
+    body?: unknown;
+    contentType?: string;
+    error?: string;
+  }> {
     // The desktop bridge always stamps the request with the active profile id
     // so the main process reads the per-profile Jina credential rather than
     // silently falling back to the default profile's key. Web mode is
@@ -1193,7 +2063,14 @@ export const desktopJina = {
       callOutcome: "pending",
     });
 
-    const finishLog = <T extends { ok: boolean; status?: number; body?: unknown; error?: string }>(
+    const finishLog = <
+      T extends {
+        ok: boolean;
+        status?: number;
+        body?: unknown;
+        error?: string;
+      },
+    >(
       result: T,
     ): T => {
       useInspectorStore.getState().updateLog(
@@ -1203,14 +2080,20 @@ export const desktopJina = {
           durationMs: Date.now() - startedAt,
           guardOutcome: "deferred",
           error: result.error,
-          responseBody: result.body === undefined ? undefined : sanitizeInspectorResponse(result.body),
+          responseBody:
+            result.body === undefined
+              ? undefined
+              : sanitizeInspectorResponse(result.body),
         }),
       );
       return result;
     };
 
     if (isElectron()) {
-      const result = await window.veniceForge!.jina.request({ ...input, profileId: getActiveProfileId() });
+      const result = await window.veniceForge!.jina.request({
+        ...input,
+        profileId: getActiveProfileId(),
+      });
       return finishLog(result);
     }
 
@@ -1219,7 +2102,7 @@ export const desktopJina = {
       () => controller.abort(),
       typeof input.timeoutMs === "number" && input.timeoutMs > 0
         ? Math.min(input.timeoutMs, 180000)
-        : 30000
+        : 30000,
     );
 
     try {
@@ -1229,7 +2112,9 @@ export const desktopJina = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Venice-Forge-Family-Safe-Mode": String(useSettingsStore.getState().localFamilySafeModeEnabled),
+          "X-Venice-Forge-Family-Safe-Mode": String(
+            useSettingsStore.getState().localFamilySafeModeEnabled,
+          ),
         },
         body: JSON.stringify({ ...input, headers }),
         signal: controller.signal,
@@ -1249,7 +2134,11 @@ export const desktopJina = {
       });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      return finishLog({ ok: false, status: 0, error: msg || "Jina proxy request failed" });
+      return finishLog({
+        ok: false,
+        status: 0,
+        error: msg || "Jina proxy request failed",
+      });
     } finally {
       clearTimeout(timeout);
     }
@@ -1261,43 +2150,92 @@ export const desktopJina = {
 export const desktopConfig = {
   /** Returns the sanitized config + status. */
   async get(): Promise<{ ok: boolean; payload?: unknown; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Local config is only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Local config is only available in desktop mode.",
+      };
     return window.veniceForge!.config.get();
   },
   /** Initializes the local master YAML config with defaults if absent. */
-  async initialize(): Promise<{ ok: boolean; status?: unknown; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Local config is only available in desktop mode." };
+  async initialize(): Promise<{
+    ok: boolean;
+    status?: unknown;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Local config is only available in desktop mode.",
+      };
     return window.veniceForge!.config.initialize();
   },
   /** Reloads the config from disk. */
   async reload(): Promise<{ ok: boolean; status?: unknown; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Local config is only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Local config is only available in desktop mode.",
+      };
     return window.veniceForge!.config.reload();
   },
   /** Returns just the config status (cheap to call). */
-  async getStatus(): Promise<{ ok: boolean; status?: unknown; paths?: unknown; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Local config is only available in desktop mode." };
+  async getStatus(): Promise<{
+    ok: boolean;
+    status?: unknown;
+    paths?: unknown;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Local config is only available in desktop mode.",
+      };
     return window.veniceForge!.config.getStatus();
   },
   /** Opens the active config folder in the OS file manager. */
   async openFolder(): Promise<{ ok: boolean; path: string; error?: string }> {
-    if (!isElectron()) return { ok: false, path: "", error: "Local config is only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        path: "",
+        error: "Local config is only available in desktop mode.",
+      };
     return window.veniceForge!.config.openFolder();
   },
   /** Writes a sanitized patch (non-secret values only). The renderer cannot
    *  set plaintext API keys via this method — those go through the existing
    *  `apiKey:set` / `jinaApiKey:set` IPC channels. */
-  async writeSanitized(patch: unknown): Promise<{ ok: boolean; error?: string; redactedFields?: string[] }> {
-    if (!isElectron()) return { ok: false, error: "Local config is only available in desktop mode." };
+  async writeSanitized(
+    patch: unknown,
+  ): Promise<{ ok: boolean; error?: string; redactedFields?: string[] }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Local config is only available in desktop mode.",
+      };
     return window.veniceForge!.config.writeSanitized(patch);
   },
   /** Exports a sanitized config template through a trusted desktop save dialog. */
-  async exportTemplate(): Promise<{ ok: boolean; canceled?: boolean; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Local config is only available in desktop mode." };
+  async exportTemplate(): Promise<{
+    ok: boolean;
+    canceled?: boolean;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Local config is only available in desktop mode.",
+      };
     return window.veniceForge!.config.exportTemplate();
   },
   /** Loads the merged themes file (built-in + local). */
-  async loadMergedThemes(): Promise<{ ok: boolean; themes?: Record<string, unknown>; warnings?: unknown[]; error?: string }> {
+  async loadMergedThemes(): Promise<{
+    ok: boolean;
+    themes?: Record<string, unknown>;
+    warnings?: unknown[];
+    error?: string;
+  }> {
     if (!isElectron()) return { ok: false, themes: {}, warnings: [] };
     return window.veniceForge!.config.loadMergedThemes();
   },
@@ -1317,26 +2255,39 @@ export const desktopConfig = {
     return window.veniceForge!.config.onThemeUpdated(callback);
   },
   /** Removes any secure-store API keys. */
-  async resetSecureStoreKeys(): Promise<{ ok: boolean; removed?: { venice: boolean; jina: boolean }; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Local config is only available in desktop mode." };
+  async resetSecureStoreKeys(): Promise<{
+    ok: boolean;
+    removed?: { venice: boolean; jina: boolean };
+    error?: string;
+  }> {
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Local config is only available in desktop mode.",
+      };
     return window.veniceForge!.config.resetSecureStoreKeys();
   },
 };
 
-
 export const desktopCredentials = {
-  async set(key: string, value: string): Promise<{ ok: boolean; error?: string }> {
+  async set(
+    key: string,
+    value: string,
+  ): Promise<{ ok: boolean; error?: string }> {
     if (!isElectron()) return { ok: false, error: "Not available in web" };
     return window.veniceForge!.credentials.set(key, value);
   },
-  async get(key: string): Promise<{ ok: boolean; value: string | null; error?: string }> {
-    if (!isElectron()) return { ok: false, value: null, error: "Not available in web" };
+  async get(
+    key: string,
+  ): Promise<{ ok: boolean; value: string | null; error?: string }> {
+    if (!isElectron())
+      return { ok: false, value: null, error: "Not available in web" };
     return window.veniceForge!.credentials.get(key);
   },
   async delete(key: string): Promise<{ ok: boolean; error?: string }> {
     if (!isElectron()) return { ok: false, error: "Not available in web" };
     return window.veniceForge!.credentials.delete(key);
-  }
+  },
 };
 
 export const desktopMasterPassword = {
@@ -1348,8 +2299,14 @@ export const desktopMasterPassword = {
     if (!isElectron()) return { ok: false, error: "Not available in web" };
     return window.veniceForge!.masterPassword.set(password);
   },
-  async verify(password: string): Promise<{ ok: boolean; verified: boolean; lockedOutSeconds?: number; error?: string }> {
-    if (!isElectron()) return { ok: false, verified: false, error: "Not available in web" };
+  async verify(password: string): Promise<{
+    ok: boolean;
+    verified: boolean;
+    lockedOutSeconds?: number;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return { ok: false, verified: false, error: "Not available in web" };
     return window.veniceForge!.masterPassword.verify(password);
   },
   async clear(): Promise<{ ok: boolean; error?: string }> {
@@ -1359,20 +2316,42 @@ export const desktopMasterPassword = {
 };
 
 export const desktopProfilePassword = {
-  async activate(profileId: string, password?: string): Promise<{ ok: boolean; verified: boolean; profileId?: string; lockedOutSeconds?: number; error?: string }> {
-    if (!isElectron()) return { ok: false, verified: false, error: "Not available in web" };
+  async activate(
+    profileId: string,
+    password?: string,
+  ): Promise<{
+    ok: boolean;
+    verified: boolean;
+    profileId?: string;
+    lockedOutSeconds?: number;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return { ok: false, verified: false, error: "Not available in web" };
     return window.veniceForge!.profilePassword.activate(profileId, password);
   },
   async isSet(profileId: string): Promise<boolean> {
     if (!isElectron()) return false;
     return window.veniceForge!.profilePassword.isSet(profileId);
   },
-  async set(profileId: string, password: string): Promise<{ ok: boolean; error?: string }> {
+  async set(
+    profileId: string,
+    password: string,
+  ): Promise<{ ok: boolean; error?: string }> {
     if (!isElectron()) return { ok: false, error: "Not available in web" };
     return window.veniceForge!.profilePassword.set(profileId, password);
   },
-  async verify(profileId: string, password: string): Promise<{ ok: boolean; verified: boolean; lockedOutSeconds?: number; error?: string }> {
-    if (!isElectron()) return { ok: false, verified: false, error: "Not available in web" };
+  async verify(
+    profileId: string,
+    password: string,
+  ): Promise<{
+    ok: boolean;
+    verified: boolean;
+    lockedOutSeconds?: number;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return { ok: false, verified: false, error: "Not available in web" };
     return window.veniceForge!.profilePassword.verify(profileId, password);
   },
   async clear(profileId: string): Promise<{ ok: boolean; error?: string }> {
@@ -1383,61 +2362,181 @@ export const desktopProfilePassword = {
 
 export const desktopProfilePurge = {
   async purge(profileId: string) {
-    if (!isElectron()) return { ok: false, error: "Profile vault purge is only available in desktop mode." };
+    if (!isElectron())
+      return {
+        ok: false,
+        error: "Profile vault purge is only available in desktop mode.",
+      };
     return window.veniceForge!.profilePurge.purge(profileId);
   },
 };
 
-const documentAgentUnavailable = { ok: false as const, error: "Document Agent tools are only available in desktop mode." };
+const documentAgentUnavailable = {
+  ok: false as const,
+  error: "Document Agent tools are only available in desktop mode.",
+};
 
 export const desktopDocumentAgent = {
   documents: {
-    create(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["documents"]["create"]>[0]) {
-      return isElectron() ? window.veniceForge!.documentAgent.documents.create(input) : Promise.resolve(documentAgentUnavailable);
+    create(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["documents"]["create"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.documents.create(input)
+        : Promise.resolve(documentAgentUnavailable);
     },
     list(projectId: string) {
-      return isElectron() ? window.veniceForge!.documentAgent.documents.list(projectId) : Promise.resolve(documentAgentUnavailable);
+      return isElectron()
+        ? window.veniceForge!.documentAgent.documents.list(projectId)
+        : Promise.resolve(documentAgentUnavailable);
     },
-    read(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["documents"]["read"]>[0]) {
-      return isElectron() ? window.veniceForge!.documentAgent.documents.read(input) : Promise.resolve(documentAgentUnavailable);
+    read(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["documents"]["read"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.documents.read(input)
+        : Promise.resolve(documentAgentUnavailable);
     },
     listRevisions(documentId: string) {
-      return isElectron() ? window.veniceForge!.documentAgent.documents.listRevisions(documentId) : Promise.resolve(documentAgentUnavailable);
+      return isElectron()
+        ? window.veniceForge!.documentAgent.documents.listRevisions(documentId)
+        : Promise.resolve(documentAgentUnavailable);
     },
-    proposeEdits(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["documents"]["proposeEdits"]>[0]) {
-      return isElectron() ? window.veniceForge!.documentAgent.documents.proposeEdits(input) : Promise.resolve(documentAgentUnavailable);
+    proposeEdits(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["documents"]["proposeEdits"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.documents.proposeEdits(input)
+        : Promise.resolve(documentAgentUnavailable);
     },
-    proposeRestore(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["documents"]["proposeRestore"]>[0]) {
-      return isElectron() ? window.veniceForge!.documentAgent.documents.proposeRestore(input) : Promise.resolve(documentAgentUnavailable);
+    proposeRestore(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["documents"]["proposeRestore"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.documents.proposeRestore(input)
+        : Promise.resolve(documentAgentUnavailable);
     },
-    export(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["documents"]["export"]>[0]) {
-      return isElectron() ? window.veniceForge!.documentAgent.documents.export(input) : Promise.resolve(documentAgentUnavailable);
+    export(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["documents"]["export"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.documents.export(input)
+        : Promise.resolve(documentAgentUnavailable);
     },
   },
   attachments: {
-    promote(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["attachments"]["promote"]>[0]) {
-      return isElectron() ? window.veniceForge!.documentAgent.attachments.promote(input) : Promise.resolve(documentAgentUnavailable);
+    promote(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["attachments"]["promote"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.attachments.promote(input)
+        : Promise.resolve(documentAgentUnavailable);
     },
   },
   approvals: {
-    list() { return isElectron() ? window.veniceForge!.documentAgent.approvals.list() : Promise.resolve(documentAgentUnavailable); },
-    decide(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["approvals"]["decide"]>[0]) {
-      return isElectron() ? window.veniceForge!.documentAgent.approvals.decide(input) : Promise.resolve(documentAgentUnavailable);
+    list() {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.approvals.list()
+        : Promise.resolve(documentAgentUnavailable);
+    },
+    decide(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["approvals"]["decide"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.approvals.decide(input)
+        : Promise.resolve(documentAgentUnavailable);
     },
   },
   workspace: {
-    choose(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["workspace"]["choose"]>[0]) { return isElectron() ? window.veniceForge!.documentAgent.workspace.choose(input) : Promise.resolve(documentAgentUnavailable); },
-    revoke(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["workspace"]["revoke"]>[0]) { return isElectron() ? window.veniceForge!.documentAgent.workspace.revoke(input) : Promise.resolve({ ok: false }); },
-    list(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["workspace"]["list"]>[0]) { return isElectron() ? window.veniceForge!.documentAgent.workspace.list(input) : Promise.resolve(documentAgentUnavailable); },
-    read(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["workspace"]["read"]>[0]) { return isElectron() ? window.veniceForge!.documentAgent.workspace.read(input) : Promise.resolve(documentAgentUnavailable); },
-    search(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["workspace"]["search"]>[0]) { return isElectron() ? window.veniceForge!.documentAgent.workspace.search(input) : Promise.resolve(documentAgentUnavailable); },
+    choose(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["workspace"]["choose"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.workspace.choose(input)
+        : Promise.resolve(documentAgentUnavailable);
+    },
+    revoke(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["workspace"]["revoke"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.workspace.revoke(input)
+        : Promise.resolve({ ok: false });
+    },
+    list(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["workspace"]["list"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.workspace.list(input)
+        : Promise.resolve(documentAgentUnavailable);
+    },
+    read(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["workspace"]["read"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.workspace.read(input)
+        : Promise.resolve(documentAgentUnavailable);
+    },
+    search(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["workspace"]["search"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.workspace.search(input)
+        : Promise.resolve(documentAgentUnavailable);
+    },
   },
 };
 
 /** Proxies Character Creator desktop operations. */
 export const desktopCharacterCreator = {
-  async exportCard(payload: { card: unknown; format: "json" | "png"; avatarDataUrl?: string }): Promise<{ ok: boolean; canceled?: boolean; filename?: string; error?: string }> {
-    if (!isElectron()) return { ok: false, error: "Desktop export only available in Electron" };
-    return (window as unknown as { veniceForge: { characterCreator: { exportCard: (p: unknown) => Promise<{ ok: boolean; canceled?: boolean; filename?: string; error?: string }> } } }).veniceForge.characterCreator.exportCard(payload);
+  async exportCard(payload: {
+    card: unknown;
+    format: "json" | "png";
+    avatarDataUrl?: string;
+  }): Promise<{
+    ok: boolean;
+    canceled?: boolean;
+    filename?: string;
+    error?: string;
+  }> {
+    if (!isElectron())
+      return { ok: false, error: "Desktop export only available in Electron" };
+    return (
+      window as unknown as {
+        veniceForge: {
+          characterCreator: {
+            exportCard: (p: unknown) => Promise<{
+              ok: boolean;
+              canceled?: boolean;
+              filename?: string;
+              error?: string;
+            }>;
+          };
+        };
+      }
+    ).veniceForge.characterCreator.exportCard(payload);
   },
 };

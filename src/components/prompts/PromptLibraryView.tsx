@@ -1,3 +1,4 @@
+import { translateRuntime } from "../../i18n/runtimeTranslator";
 /** @fileoverview Phase 2D — Prompt Library view.
  *
  * Renders the user's saved prompts as a list + detail editor. The view
@@ -21,7 +22,12 @@ import { useEffect, useMemo, useState } from "react";
 import { usePromptLibraryStore } from "../../stores/prompt-library-store";
 import { useWorkflowTemplateStore } from "../../stores/workflow-template-store";
 import type { WorkflowStep } from "../../types/workflow";
-import type { PromptKind, PromptLibraryItem, PromptScope, PromptVersion } from "../../types/prompt-library";
+import type {
+  PromptKind,
+  PromptLibraryItem,
+  PromptScope,
+  PromptVersion,
+} from "../../types/prompt-library";
 import { useSettingsStore } from "../../stores/settings-store";
 import { useProjectStore } from "../../stores/project-store";
 import { toast } from "../../stores/toast-store";
@@ -31,18 +37,90 @@ import { useChatStore } from "../../stores/chat-store";
 import { PromptCreateModal } from "./PromptCreateModal";
 import { Select } from "../ui/select";
 import { ConfirmModal } from "../ConfirmModal";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 const KIND_OPTIONS: Array<{ value: PromptKind; label: string }> = [
-  { value: "image", label: "Image" },
-  { value: "negative", label: "Negative" },
-  { value: "chat", label: "Chat" },
-  { value: "system", label: "System" },
-  { value: "research", label: "Research" },
-  { value: "character", label: "Character" },
-  { value: "workflow", label: "Workflow" },
-  { value: "recipe", label: "Recipe" },
-  { value: "general", label: "General" },
+  {
+    value: "image",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.prompts.promptlibraryview.metadata.image",
+        "Image",
+      );
+    },
+  },
+  {
+    value: "negative",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.prompts.promptlibraryview.metadata.negative",
+        "Negative",
+      );
+    },
+  },
+  {
+    value: "chat",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.prompts.promptlibraryview.metadata.chat",
+        "Chat",
+      );
+    },
+  },
+  {
+    value: "system",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.prompts.promptlibraryview.metadata.system",
+        "System",
+      );
+    },
+  },
+  {
+    value: "research",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.prompts.promptlibraryview.metadata.research",
+        "Research",
+      );
+    },
+  },
+  {
+    value: "character",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.prompts.promptlibraryview.metadata.character",
+        "Character",
+      );
+    },
+  },
+  {
+    value: "workflow",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.prompts.promptlibraryview.metadata.workflow",
+        "Workflow",
+      );
+    },
+  },
+  {
+    value: "recipe",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.prompts.promptlibraryview.metadata.recipe",
+        "Recipe",
+      );
+    },
+  },
+  {
+    value: "general",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.prompts.promptlibraryview.metadata.general",
+        "General",
+      );
+    },
+  },
 ];
 
 type SortKey = "newest" | "oldest" | "title" | "kind" | "favorite";
@@ -51,11 +129,13 @@ export function reconcileSelectedPrompt(
   selectedId: string | null,
   visiblePrompts: readonly PromptLibraryItem[],
 ): string | null {
-  if (selectedId && visiblePrompts.some((prompt) => prompt.id === selectedId)) return selectedId;
+  if (selectedId && visiblePrompts.some((prompt) => prompt.id === selectedId))
+    return selectedId;
   return visiblePrompts[0]?.id ?? null;
 }
 
 export function PromptLibraryView() {
+  const { t: tRuntime } = useTranslation("common");
   const ensureLoaded = usePromptLibraryStore((s) => s.ensureLoaded);
   const hydrated = usePromptLibraryStore((s) => s.hydrated);
   const prompts = usePromptLibraryStore((s) => s.prompts);
@@ -80,7 +160,9 @@ export function PromptLibraryView() {
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [hasDirtyEdits, setHasDirtyEdits] = useState(false);
-  const [pendingDiscardAction, setPendingDiscardAction] = useState<(() => void | Promise<void>) | null>(null);
+  const [pendingDiscardAction, setPendingDiscardAction] = useState<
+    (() => void | Promise<void>) | null
+  >(null);
 
   const handleSetActivePrompt = (id: string | null) => {
     if (hasDirtyEdits && id !== activePromptId) {
@@ -117,12 +199,15 @@ export function PromptLibraryView() {
         );
       })
       .filter((p) => (favoritesOnly ? p.favorite : true))
-      .filter((p) => (tagFilter ? p.tags.includes(tagFilter.toLowerCase()) : true))
+      .filter((p) =>
+        tagFilter ? p.tags.includes(tagFilter.toLowerCase()) : true,
+      )
       .filter((p) => {
         if (!q) return true;
         if (p.title.toLowerCase().includes(q)) return true;
         if ((p.description ?? "").toLowerCase().includes(q)) return true;
-        if (p.versions.some((v) => v.content.toLowerCase().includes(q))) return true;
+        if (p.versions.some((v) => v.content.toLowerCase().includes(q)))
+          return true;
         return false;
       })
       .sort((a, b) => {
@@ -165,10 +250,10 @@ export function PromptLibraryView() {
   useEffect(() => {
     const reconciled = reconcileSelectedPrompt(activePromptId, filtered);
     if (reconciled !== activePromptId) {
-       // Wait, we shouldn't prompt during auto-reconciliation, but we must update state.
-       // It's safer to just let it reconcile if it was deleted.
-       setActivePrompt(reconciled);
-       setHasDirtyEdits(false);
+      // Wait, we shouldn't prompt during auto-reconciliation, but we must update state.
+      // It's safer to just let it reconcile if it was deleted.
+      setActivePrompt(reconciled);
+      setHasDirtyEdits(false);
     }
   }, [activePromptId, filtered, setActivePrompt]);
 
@@ -180,25 +265,30 @@ export function PromptLibraryView() {
       >
         <div className="px-3 py-2 soft-separator-y mesh-header mesh-surface space-y-2">
           <div className="flex items-center gap-2">
-            <h2 className="text-[14px] font-semibold"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.heading.promptLibrary" /></h2>
+            <h2 className="text-[14px] font-semibold">
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.heading.promptLibrary" />
+            </h2>
             <button
               type="button"
               onClick={() => setIsCreateModalOpen(true)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  setIsCreateModalOpen(true)
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setIsCreateModalOpen(true);
                 }
               }}
               className="ml-auto rounded-md border border-border px-2 py-1 text-[12px] hover:border-accent hover:text-accent"
               data-testid="prompt-library-new"
             >
-              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.new" /></button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.new" />
+            </button>
           </div>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search prompts…"
+            placeholder={tRuntime(
+              "runtimeGenerated.components.prompts.promptlibraryview.attribute.searchPrompts",
+            )}
             className="w-full rounded-md border border-border bg-background px-2 py-1 text-[12.5px] focus:outline-none focus:border-accent"
             data-testid="prompt-library-search"
           />
@@ -207,7 +297,12 @@ export function PromptLibraryView() {
               value={kindFilter}
               onChange={(v) => setKindFilter(v as PromptKind | "all")}
               options={[
-                { value: "all", label: "All kinds" },
+                {
+                  value: "all",
+                  label: tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.metadata.allKinds",
+                  ),
+                },
                 ...KIND_OPTIONS,
               ]}
               className="w-[120px]"
@@ -217,9 +312,24 @@ export function PromptLibraryView() {
               value={scopeFilter}
               onChange={(v) => setScopeFilter(v as PromptScope | "all")}
               options={[
-                { value: "all", label: "All scopes" },
-                { value: "global", label: "Global" },
-                { value: "project", label: "Project" },
+                {
+                  value: "all",
+                  label: tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.metadata.allScopes",
+                  ),
+                },
+                {
+                  value: "global",
+                  label: tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.metadata.global",
+                  ),
+                },
+                {
+                  value: "project",
+                  label: tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.metadata.project",
+                  ),
+                },
               ]}
               className="w-[120px]"
               data-testid="prompt-library-scope-filter"
@@ -228,11 +338,36 @@ export function PromptLibraryView() {
               value={sort}
               onChange={(v) => setSort(v as SortKey)}
               options={[
-                { value: "newest", label: "Newest" },
-                { value: "oldest", label: "Oldest" },
-                { value: "title", label: "Title" },
-                { value: "kind", label: "Kind" },
-                { value: "favorite", label: "Favorite" },
+                {
+                  value: "newest",
+                  label: tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.metadata.newest",
+                  ),
+                },
+                {
+                  value: "oldest",
+                  label: tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.metadata.oldest",
+                  ),
+                },
+                {
+                  value: "title",
+                  label: tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.metadata.title",
+                  ),
+                },
+                {
+                  value: "kind",
+                  label: tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.metadata.kind",
+                  ),
+                },
+                {
+                  value: "favorite",
+                  label: tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.metadata.favorite",
+                  ),
+                },
               ]}
               className="w-[120px]"
               data-testid="prompt-library-sort"
@@ -242,8 +377,19 @@ export function PromptLibraryView() {
                 value={tagFilter}
                 onChange={(v) => setTagFilter(v)}
                 options={[
-                  { value: "", label: "All tags" },
-                  ...allTags.map((t) => ({ value: t, label: `#${t}` })),
+                  {
+                    value: "",
+                    label: tRuntime(
+                      "runtimeGenerated.components.prompts.promptlibraryview.metadata.allTags",
+                    ),
+                  },
+                  ...allTags.map((t) => ({
+                    value: t,
+                    label: tRuntime(
+                      "runtimeGenerated.components.prompts.promptlibraryview.metadata.t",
+                      { t: t },
+                    ),
+                  })),
                 ]}
                 searchable
                 className="w-[120px]"
@@ -260,7 +406,8 @@ export function PromptLibraryView() {
               }`}
               data-testid="prompt-library-favorites-filter"
             >
-              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.favorites" /></button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.favorites" />
+            </button>
             <button
               type="button"
               onClick={() => setShowArchived((value) => !value)}
@@ -272,20 +419,41 @@ export function PromptLibraryView() {
               }`}
               data-testid="prompt-library-archive-filter"
             >
-              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.archive" /></button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.archive" />
+            </button>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto" data-testid="prompt-library-list">
+        <div
+          className="flex-1 overflow-y-auto"
+          data-testid="prompt-library-list"
+        >
           {!hydrated ? (
-            <p className="p-3 text-text-muted text-[12px]"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.loading" /></p>
+            <p className="p-3 text-text-muted text-[12px]">
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.loading" />
+            </p>
           ) : filtered.length === 0 ? (
-            <div className="p-3 text-text-muted text-[12px]" data-testid="prompt-library-empty">
-              {prompts.length === 0
-                ? <>
-                    <p><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.noSavedPromptsYet" /></p>
-                    <p className="mt-1"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.clickThe" /> <strong className="text-text-primary"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.new" /></strong> <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.buttonAboveToCreateYourFirstPrompt" /></p>
-                  </>
-                : "No prompts match the current filters."}
+            <div
+              className="p-3 text-text-muted text-[12px]"
+              data-testid="prompt-library-empty"
+            >
+              {prompts.length === 0 ? (
+                <>
+                  <p>
+                    <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.noSavedPromptsYet" />
+                  </p>
+                  <p className="mt-1">
+                    <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.clickThe" />{" "}
+                    <strong className="text-text-primary">
+                      <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.new" />
+                    </strong>{" "}
+                    <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.description.buttonAboveToCreateYourFirstPrompt" />
+                  </p>
+                </>
+              ) : (
+                tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.noPromptsMatchTheCurrentFilters",
+                )
+              )}
             </div>
           ) : (
             <ul className="divide-y divide-border">
@@ -309,13 +477,24 @@ export function PromptLibraryView() {
                       </span>
                     </div>
                     <div className="text-[12px] text-text-muted mt-0.5 truncate">
-                      {p.scope === "project" ? "Project" : "Global"} ·{" "}
-                      {p.versions.length} <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.version" />{p.versions.length === 1 ? "" : "s"}
+                      {p.scope === "project"
+                        ? tRuntime(
+                            "runtimeGenerated.components.prompts.promptlibraryview.text.project",
+                          )
+                        : tRuntime(
+                            "runtimeGenerated.components.prompts.promptlibraryview.text.global",
+                          )}{" "}
+                      · {p.versions.length}{" "}
+                      <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.version" />
+                      {p.versions.length === 1 ? "" : "s"}
                     </div>
                     {p.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1">
                         {p.tags.map((t) => (
-                          <span key={t} className="text-[12px] text-accent bg-accent/10 px-1.5 py-0.5 rounded-full border border-accent/20">
+                          <span
+                            key={t}
+                            className="text-[12px] text-accent bg-accent/10 px-1.5 py-0.5 rounded-full border border-accent/20"
+                          >
                             #{t}
                           </span>
                         ))}
@@ -340,7 +519,11 @@ export function PromptLibraryView() {
             }}
             onAddVersion={async (input) => {
               await addPromptVersion(active.id, input);
-              toast.success("New version saved");
+              toast.success(
+                tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.notification.newVersionSaved",
+                ),
+              );
             }}
             onSetCurrentVersion={async (versionId) => {
               await setCurrentVersion(active.id, versionId);
@@ -353,18 +536,28 @@ export function PromptLibraryView() {
               else await archivePrompt(active.id);
             }}
             onDelete={async () => {
-              const deletedIndex = filtered.findIndex((prompt) => prompt.id === active.id);
-              const replacement = filtered[deletedIndex + 1]?.id
-                ?? filtered[deletedIndex - 1]?.id
-                ?? null;
+              const deletedIndex = filtered.findIndex(
+                (prompt) => prompt.id === active.id,
+              );
+              const replacement =
+                filtered[deletedIndex + 1]?.id ??
+                filtered[deletedIndex - 1]?.id ??
+                null;
               await deletePrompt(active.id);
               setHasDirtyEdits(false);
               setActivePrompt(replacement);
-              toast.success("Prompt deleted");
+              toast.success(
+                tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.notification.promptDeleted",
+                ),
+              );
             }}
             onCreateWorkflow={async () => {
               const w = await createWorkflow({
-                title: `Workflow: ${active.title}`,
+                title: tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.metadata.workflowValue1",
+                  { value1: active.title },
+                ),
                 steps: [
                   {
                     kind: "prompt",
@@ -378,7 +571,11 @@ export function PromptLibraryView() {
               });
               setActiveWorkflow(w.id);
               setActiveTab("workflows");
-              toast.success("Workflow created");
+              toast.success(
+                tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.notification.workflowCreated",
+                ),
+              );
             }}
           />
         ) : (
@@ -387,8 +584,12 @@ export function PromptLibraryView() {
             data-testid="prompt-library-empty-detail"
           >
             {hydrated && prompts.length > 0
-              ? "Select a prompt to view its details."
-              : "No prompt selected. Create a new one to get started."}
+              ? tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.selectAPromptToViewItsDetails",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.noPromptSelectedCreateANewOneToGetStarted",
+                )}
           </div>
         )}
       </section>
@@ -403,7 +604,11 @@ export function PromptLibraryView() {
               });
               setHasDirtyEdits(false);
               setActivePrompt(created.id);
-              toast.success("Prompt created");
+              toast.success(
+                tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.notification.promptCreated",
+                ),
+              );
             };
 
             if (hasDirtyEdits) {
@@ -426,7 +631,11 @@ export function PromptLibraryView() {
                 await pendingDiscardAction();
                 setPendingDiscardAction(null);
               } catch {
-                toast.error("The pending action failed. Your unsaved changes were preserved.");
+                toast.error(
+                  tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.notification.thePendingActionFailedYourUnsavedChangesWerePreserved",
+                  ),
+                );
               }
             })();
           }}
@@ -454,7 +663,15 @@ interface PromptDetailProps {
     content: string;
     negativeContent?: string;
     notes?: string;
-    sourceType?: "manual" | "chat" | "image" | "media" | "recipe" | "research" | "import" | "system";
+    sourceType?:
+      | "manual"
+      | "chat"
+      | "image"
+      | "media"
+      | "recipe"
+      | "research"
+      | "import"
+      | "system";
     sourceId?: string;
   }) => Promise<void>;
   onSetCurrentVersion: (versionId: string) => Promise<void>;
@@ -465,7 +682,19 @@ interface PromptDetailProps {
 }
 
 function PromptDetail(props: PromptDetailProps) {
-  const { item, projects, onDirtyChange, onUpdate, onAddVersion, onSetCurrentVersion, onToggleFavorite, onArchive, onDelete, onCreateWorkflow } = props;
+  const { t: tRuntime } = useTranslation("common");
+  const {
+    item,
+    projects,
+    onDirtyChange,
+    onUpdate,
+    onAddVersion,
+    onSetCurrentVersion,
+    onToggleFavorite,
+    onArchive,
+    onDelete,
+    onCreateWorkflow,
+  } = props;
   const current: PromptVersion =
     item.versions.find((v) => v.id === item.currentVersionId) ??
     item.versions[item.versions.length - 1]!;
@@ -475,7 +704,9 @@ function PromptDetail(props: PromptDetailProps) {
   const [kind, setKind] = useState<PromptKind>(item.kind);
   const [tagsInput, setTagsInput] = useState(item.tags.join(", "));
   const [content, setContent] = useState(current.content);
-  const [negativeContent, setNegativeContent] = useState(current.negativeContent ?? "");
+  const [negativeContent, setNegativeContent] = useState(
+    current.negativeContent ?? "",
+  );
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [confirmDeleteText, setConfirmDeleteText] = useState("");
@@ -490,9 +721,20 @@ function PromptDetail(props: PromptDetailProps) {
     title.trim() !== item.title ||
     description.trim() !== (item.description ?? "") ||
     kind !== item.kind ||
-    Array.from(new Set(tagsInput.split(",").map((t) => t.trim().toLowerCase()).filter((t) => t.length > 0))).sort().join(",") !== [...item.tags].sort().join(",");
+    Array.from(
+      new Set(
+        tagsInput
+          .split(",")
+          .map((t) => t.trim().toLowerCase())
+          .filter((t) => t.length > 0),
+      ),
+    )
+      .sort()
+      .join(",") !== [...item.tags].sort().join(",");
 
-  const isContentDirty = content !== current.content || negativeContent !== (current.negativeContent ?? "");
+  const isContentDirty =
+    content !== current.content ||
+    negativeContent !== (current.negativeContent ?? "");
 
   useEffect(() => {
     onDirtyChange?.(isMetadataDirty || isContentDirty);
@@ -505,9 +747,9 @@ function PromptDetail(props: PromptDetailProps) {
     setTagsInput(item.tags.join(", "));
     setContent(current.content);
     setNegativeContent(current.negativeContent ?? "");
-  // Reset only when selection identity changes; adding editable field values
-  // would overwrite local unsaved changes after each persisted store update.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Reset only when selection identity changes; adding editable field values
+    // would overwrite local unsaved changes after each persisted store update.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item.id, current.id]);
 
   const persistMetadata = async () => {
@@ -523,9 +765,17 @@ function PromptDetail(props: PromptDetailProps) {
         kind,
         tags: Array.from(new Set(tags)),
       });
-      toast.success("Metadata saved");
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.prompts.promptlibraryview.notification.metadataSaved",
+        ),
+      );
     } catch {
-      toast.error("Failed to save metadata");
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.prompts.promptlibraryview.notification.failedToSaveMetadata",
+        ),
+      );
     } finally {
       setIsSavingMetadata(false);
     }
@@ -533,7 +783,11 @@ function PromptDetail(props: PromptDetailProps) {
 
   const saveNewVersion = async () => {
     if (!content.trim()) {
-      toast.error("Version content is empty");
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.prompts.promptlibraryview.notification.versionContentIsEmpty",
+        ),
+      );
       return;
     }
     setIsSavingVersion(true);
@@ -544,14 +798,21 @@ function PromptDetail(props: PromptDetailProps) {
         sourceType: "manual",
       });
     } catch {
-      toast.error("Failed to save version");
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.prompts.promptlibraryview.notification.failedToSaveVersion",
+        ),
+      );
     } finally {
       setIsSavingVersion(false);
     }
   };
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col" data-testid="prompt-library-detail">
+    <div
+      className="flex-1 min-h-0 flex flex-col"
+      data-testid="prompt-library-detail"
+    >
       <header className="px-4 py-3 soft-separator-y mesh-header mesh-surface space-y-2">
         <div className="flex items-center gap-2">
           <input
@@ -566,7 +827,13 @@ function PromptDetail(props: PromptDetailProps) {
             className="rounded-md border border-border px-2 py-1 text-[12px]"
             data-testid="prompt-library-favorite"
           >
-            {item.favorite ? "★ Favorited" : "☆ Favorite"}
+            {item.favorite
+              ? tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.favorited",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.favorite",
+                )}
           </button>
           <button
             type="button"
@@ -574,18 +841,39 @@ function PromptDetail(props: PromptDetailProps) {
             className="rounded-md border border-border px-2 py-1 text-[12px]"
             data-testid="prompt-library-archive"
           >
-            {item.archivedAt ? "Unarchive" : "Archive"}
+            {item.archivedAt
+              ? tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.unarchive",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.archive",
+                )}
           </button>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-[12px] text-text-muted">
           <span>
             v{current.version} of {item.versions.length} ·{" "}
             {item.scope === "project"
-              ? `Project: ${projects.find((p) => p.id === item.projectId)?.name ?? "(unknown)"}`
-              : "Global"}
+              ? tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.projectValue1",
+                  {
+                    value1:
+                      projects.find((p) => p.id === item.projectId)?.name ??
+                      "(unknown)",
+                  },
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.global",
+                )}
           </span>
-          <span><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.created" /> {new Date(item.createdAt).toLocaleString()}</span>
-          <span><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.updated" /> {new Date(item.updatedAt).toLocaleString()}</span>
+          <span>
+            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.created" />{" "}
+            {new Date(item.createdAt).toLocaleString()}
+          </span>
+          <span>
+            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.updated" />{" "}
+            {new Date(item.updatedAt).toLocaleString()}
+          </span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Select
@@ -597,7 +885,9 @@ function PromptDetail(props: PromptDetailProps) {
           <input
             value={tagsInput}
             onChange={(e) => setTagsInput(e.target.value)}
-            placeholder="tags, comma separated"
+            placeholder={tRuntime(
+              "runtimeGenerated.components.prompts.promptlibraryview.attribute.tagsCommaSeparated",
+            )}
             className="rounded-md border border-border bg-background px-1.5 py-0.5 text-[12px] flex-1 min-w-[200px]"
             data-testid="prompt-library-tags"
           />
@@ -605,16 +895,24 @@ function PromptDetail(props: PromptDetailProps) {
             type="button"
             disabled={!isMetadataDirty || isSavingMetadata}
             onClick={() => void persistMetadata()}
-            className={`rounded-md border px-2 py-0.5 text-[12px] transition-colors ${isMetadataDirty ? 'border-accent text-accent' : 'border-border text-text-muted'} ${isSavingMetadata ? 'opacity-50' : ''}`}
+            className={`rounded-md border px-2 py-0.5 text-[12px] transition-colors ${isMetadataDirty ? "border-accent text-accent" : "border-border text-text-muted"} ${isSavingMetadata ? "opacity-50" : ""}`}
             data-testid="prompt-library-save-metadata"
           >
-            {isSavingMetadata ? "Saving..." : "Save metadata"}
+            {isSavingMetadata
+              ? tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.saving",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.saveMetadata",
+                )}
           </button>
         </div>
         <input
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Optional description"
+          placeholder={tRuntime(
+            "runtimeGenerated.components.prompts.promptlibraryview.attribute.optionalDescription",
+          )}
           className="w-full rounded-md border border-border bg-background px-2 py-1 text-[12px]"
           data-testid="prompt-library-description"
         />
@@ -622,7 +920,9 @@ function PromptDetail(props: PromptDetailProps) {
 
       <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-3">
         <div>
-          <label className="text-[12px] uppercase tracking-wide text-text-muted"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.label.content" /></label>
+          <label className="text-[12px] uppercase tracking-wide text-text-muted">
+            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.label.content" />
+          </label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
@@ -632,7 +932,8 @@ function PromptDetail(props: PromptDetailProps) {
         </div>
         <div>
           <label className="text-[12px] uppercase tracking-wide text-text-muted">
-            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.label.negativeContent" /></label>
+            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.label.negativeContent" />
+          </label>
           <textarea
             value={negativeContent}
             onChange={(e) => setNegativeContent(e.target.value)}
@@ -645,12 +946,20 @@ function PromptDetail(props: PromptDetailProps) {
             type="button"
             disabled={!isContentDirty || isSavingVersion}
             onClick={saveNewVersion}
-            className={`rounded-md border px-2 py-1 text-[12px] transition-colors ${isContentDirty ? 'border-accent text-accent' : 'border-border text-text-muted'} ${isSavingVersion ? 'opacity-50' : ''}`}
+            className={`rounded-md border px-2 py-1 text-[12px] transition-colors ${isContentDirty ? "border-accent text-accent" : "border-border text-text-muted"} ${isSavingVersion ? "opacity-50" : ""}`}
             data-testid="prompt-library-save-version"
           >
-            {isSavingVersion ? "Saving..." : "Save new version"}
+            {isSavingVersion
+              ? tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.saving",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.saveNewVersion",
+                )}
           </button>
-          {(item.kind === "image" || item.kind === "general" || item.kind === "recipe") && (
+          {(item.kind === "image" ||
+            item.kind === "general" ||
+            item.kind === "recipe") && (
             <button
               type="button"
               onClick={() => {
@@ -665,25 +974,37 @@ function PromptDetail(props: PromptDetailProps) {
                   operation: "generate",
                 });
                 useSettingsStore.getState().setActiveTab("image");
-                toast.success("Sent to Image Studio");
+                toast.success(
+                  tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.notification.sentToImageStudio",
+                  ),
+                );
               }}
               className="rounded-md border border-border px-2 py-1 text-[12px]"
               data-testid="prompt-library-use-image"
             >
-              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.useInImageStudio" /></button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.useInImageStudio" />
+            </button>
           )}
-          {(item.kind === "chat" || item.kind === "system" || item.kind === "general") && (
+          {(item.kind === "chat" ||
+            item.kind === "system" ||
+            item.kind === "general") && (
             <button
               type="button"
               onClick={() => {
                 useSettingsStore.getState().setActiveTab("chat");
                 useChatStore.setState({ systemPrompt: content });
-                toast.success("Sent to Chat");
+                toast.success(
+                  tRuntime(
+                    "runtimeGenerated.components.prompts.promptlibraryview.notification.sentToChat",
+                  ),
+                );
               }}
               className="rounded-md border border-border px-2 py-1 text-[12px]"
               data-testid="prompt-library-use-chat"
             >
-              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.useInChat" /></button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.useInChat" />
+            </button>
           )}
           <button
             type="button"
@@ -691,28 +1012,43 @@ function PromptDetail(props: PromptDetailProps) {
             className="rounded-md border border-border px-2 py-1 text-[12px]"
             data-testid="prompt-library-create-workflow"
           >
-            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.createWorkflow" /></button>
+            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.createWorkflow" />
+          </button>
           <button
             type="button"
-            onClick={async () => { await copyText(content); }}
+            onClick={async () => {
+              await copyText(content);
+            }}
             className="rounded-md border border-border px-2 py-1 text-[12px]"
             data-testid="prompt-library-copy"
           >
-            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.copy" /></button>
+            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.copy" />
+          </button>
           <button
             type="button"
             onClick={() => setShowVersionHistory((value) => !value)}
             className="rounded-md border border-border px-2 py-1 text-[12px]"
             data-testid="prompt-library-toggle-history"
           >
-            {showVersionHistory ? "Hide" : "Show"} <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.history" />{item.versions.length})
+            {showVersionHistory
+              ? tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.hide",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.text.show",
+                )}{" "}
+            <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.history" />
+            {item.versions.length})
           </button>
           {confirmDelete ? (
             <div className="flex items-center gap-2">
               <input
                 value={confirmDeleteText}
                 onChange={(e) => setConfirmDeleteText(e.target.value)}
-                placeholder={`Type "${item.title}" to confirm`}
+                placeholder={tRuntime(
+                  "runtimeGenerated.components.prompts.promptlibraryview.attribute.typeValue1ToConfirm",
+                  { value1: item.title },
+                )}
                 className="rounded-md border border-red-500/40 bg-background px-2 py-1 text-[12px]"
                 data-testid="prompt-library-delete-confirm"
               />
@@ -723,7 +1059,8 @@ function PromptDetail(props: PromptDetailProps) {
                 className="rounded-md border border-red-500/60 text-red-300 px-2 py-1 text-[12px] disabled:opacity-50"
                 data-testid="prompt-library-delete"
               >
-                <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.delete" /></button>
+                <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.delete" />
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -732,7 +1069,8 @@ function PromptDetail(props: PromptDetailProps) {
                 }}
                 className="rounded-md border border-border px-2 py-1 text-[12px]"
               >
-                <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.cancel" /></button>
+                <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.cancel" />
+              </button>
             </div>
           ) : (
             <button
@@ -741,7 +1079,8 @@ function PromptDetail(props: PromptDetailProps) {
               className="rounded-md border border-red-500/40 text-red-300 px-2 py-1 text-[12px]"
               data-testid="prompt-library-delete-arm"
             >
-              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.delete" /></button>
+              <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.delete" />
+            </button>
           )}
         </div>
         {showVersionHistory && (
@@ -763,7 +1102,9 @@ function PromptDetail(props: PromptDetailProps) {
                       {new Date(v.createdAt).toLocaleString()}
                     </span>
                     {v.id === item.currentVersionId && (
-                      <span className="text-accent text-[12px]"><Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.current" /></span>
+                      <span className="text-accent text-[12px]">
+                        <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.text.current" />
+                      </span>
                     )}
                     <button
                       type="button"
@@ -772,10 +1113,13 @@ function PromptDetail(props: PromptDetailProps) {
                       className="ml-auto rounded-md border border-border px-2 py-0.5 text-[12px] disabled:opacity-50"
                       data-testid={`prompt-library-use-version-${v.version}`}
                     >
-                      <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.useThisVersion" /></button>
+                      <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.action.useThisVersion" />
+                    </button>
                   </div>
                   {v.notes && (
-                    <p className="text-[12px] text-text-muted mt-0.5">{v.notes}</p>
+                    <p className="text-[12px] text-text-muted mt-0.5">
+                      {v.notes}
+                    </p>
                   )}
                   <pre className="text-[12px] text-text-secondary whitespace-pre-wrap mt-1 line-clamp-3">
                     {v.content}

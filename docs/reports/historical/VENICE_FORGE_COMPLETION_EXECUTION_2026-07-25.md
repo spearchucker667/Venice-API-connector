@@ -1,5 +1,7 @@
 # Venice Forge — Master Feature-Completion Execution Log
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 **Execution date:** 2026-07-25  
 **Target repository:** `spearchucker667/Venice_Forge`  
 **GitHub:** `spearchucker667/Venice_Forge`  

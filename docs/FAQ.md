@@ -129,6 +129,14 @@ Built-in themes expose the complete semantic token contract. Forge Dracula has e
 
 ## Data & Storage
 
+### What happens if an image is generated but local storage is full or read-only?
+
+The generation result remains visible. In desktop mode, validated bytes are retained temporarily by the Electron main process and the image displays **Retry Save**. After freeing space or restoring permissions, retry writes the image into the SHA-256 media store and replaces the temporary data URL with a stable `venice-media://` URL. Download also opens native Save As so another writable volume can be selected. Recovery custody is limited to eight items, 128 MiB total, and 30 minutes; it cannot survive complete application exit when no writable destination exists.
+
+### Are all bundled translations native-speaker reviewed?
+
+No. English is the source language. All 12 catalogs cover the runtime UI, and Arabic has RTL support, but the 11 non-English catalogs are first-pass machine translations pending qualified, dated native review. The Config language UI and `docs/i18n/translation-status.json` preserve that distinction instead of treating key coverage as linguistic approval.
+
 ### Where is my data stored?
 - **Conversations (desktop):** Current records live in the encrypted Conversation Vault under the OS app-data folder. Legacy `chat-history/*.json` files may still exist after upgrades or as backups and are plaintext until migrated or deleted by the user.
   - Windows vault: `%APPDATA%\Venice Forge\conversations\`

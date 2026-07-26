@@ -16,5 +16,57 @@
   "folders": "Carpetas",
   "unfiled": "Sin archivar",
   "attachFile": "Adjuntar archivo",
-  "managedDocument": "Documento gestionado"
+  "managedDocument": "Documento gestionado",
+  "composer": {
+    "visionUnsupportedTitle": "La IA no tiene capacidad de visión",
+    "visionUnsupportedDetail": "“{{model}}” no puede leer archivos adjuntos de imágenes. Seleccione un modelo con capacidad de visión o convierta la imagen/PDF a texto primero.",
+    "attachTitle": "Adjuntar archivo (o arrastrar/pegar)",
+    "attachmentLimitTitle": "Se alcanzó el límite de archivos adjuntos",
+    "attachmentLimitDetail": "Puede adjuntar hasta {{max}} archivos por mensaje.",
+    "tooManyAttachmentsTitle": "Demasiados archivos adjuntos",
+    "tooManyAttachmentsDetail": "Solo se agregaron {{added}} de {{requested}} archivos. El límite es {{max}} archivos por mensaje.",
+    "attachmentNote": "Nota adjunta",
+    "attachmentFailed": "Error al adjuntar",
+    "attachmentAlt": "Adjunto {{number}}",
+    "removeAttachment": "Eliminar archivo adjunto {{name}}",
+    "disabledPlaceholder": "Conecte una clave API para comenzar...",
+    "dropPlaceholder": "Soltar archivo para adjuntar",
+    "placeholder": "Preguntar cualquier cosa: Intro para enviar, Mayús+Intro para nueva línea. Adjunte un archivo para enviar sin texto.",
+    "messageInput": "Entrada de mensaje",
+    "attachFile": "Adjuntar archivo",
+    "stopGenerating": "dejar de generar",
+    "sendMessage": "enviar mensaje"
+  },
+  "memory": {
+    "disabledLabel": "Memoria apagada",
+    "disabledTitle": "La recuperación de memoria está deshabilitada en Configuración.",
+    "loadingLabel": "Memoria…",
+    "loadingTitle": "Recuperando memoria relevante para este mensaje.",
+    "activeLabel": "Memoria activa",
+    "activeTitle": "El contexto de memoria relevante se incluirá con este mensaje.",
+    "failedLabel": "Error de memoria",
+    "failedTitle": "Falló la recuperación de la memoria. Su mensaje fue enviado sin contexto de memoria."
+  },
+  "controls": {
+    "autoRead": "Lectura automática",
+    "citations": "Citas",
+    "scrape": "Raspar",
+    "xSearch": "búsqueda x",
+    "searchInStream": "Buscar en flujo",
+    "documentTools": "Herramientas de documentos",
+    "newChatShortcut": "Nuevo chat (⌘N)",
+    "systemPromptPlaceholder": "Opcional. Déjelo vacío para evitar agregar un mensaje del sistema creado por la aplicación.",
+    "temperature": "Temperatura",
+    "topP": "P superior",
+    "maxTokens": "Fichas máximas",
+    "veniceDefaultPrompt": "Mensaje predeterminado de Venecia",
+    "disableThinking": "Desactivar el pensamiento",
+    "stripThinking": "Pensando en la tira",
+    "searchMode": "Buscar: {{mode}}",
+    "searchModes": {
+      "off": "apagado",
+      "on": "en",
+      "auto": "Automático"
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /** @fileoverview Service for importing decrypted sync packets (manual or remote sync). */
 
 import StorageService from "./storageService";
@@ -59,14 +60,24 @@ export interface SyncConflictProvenance {
 
 export const SYNC_CONFLICT_META_KEY = "_meta";
 
-export function readSyncConflictProvenance(record: unknown): SyncConflictProvenance | null {
+export function readSyncConflictProvenance(
+  record: unknown,
+): SyncConflictProvenance | null {
   if (!record || typeof record !== "object") return null;
   const meta = (record as Record<string, unknown>)[SYNC_CONFLICT_META_KEY];
   if (!meta || typeof meta !== "object") return null;
   const candidate = meta as Partial<SyncConflictProvenance>;
   if (candidate.kind !== "sync-conflict") return null;
-  if (candidate.winningSource !== "local" && candidate.winningSource !== "imported") return null;
-  if (candidate.losingSource !== "local" && candidate.losingSource !== "imported") return null;
+  if (
+    candidate.winningSource !== "local" &&
+    candidate.winningSource !== "imported"
+  )
+    return null;
+  if (
+    candidate.losingSource !== "local" &&
+    candidate.losingSource !== "imported"
+  )
+    return null;
   if (typeof candidate.conflictIdentity !== "string") return null;
   if (typeof candidate.originalRecordId !== "string") return null;
   return {
@@ -74,16 +85,36 @@ export function readSyncConflictProvenance(record: unknown): SyncConflictProvena
     conflictIdentity: candidate.conflictIdentity,
     originalRecordId: candidate.originalRecordId,
     winningSource: candidate.winningSource,
-    winningRevisionId: typeof candidate.winningRevisionId === "string" ? candidate.winningRevisionId : null,
-    winningDeviceId: typeof candidate.winningDeviceId === "string" ? candidate.winningDeviceId : "",
+    winningRevisionId:
+      typeof candidate.winningRevisionId === "string"
+        ? candidate.winningRevisionId
+        : null,
+    winningDeviceId:
+      typeof candidate.winningDeviceId === "string"
+        ? candidate.winningDeviceId
+        : "",
     losingSource: candidate.losingSource,
-    losingRevisionId: typeof candidate.losingRevisionId === "string" ? candidate.losingRevisionId : null,
-    losingDeviceId: typeof candidate.losingDeviceId === "string" ? candidate.losingDeviceId : "",
-    recordedAt: typeof candidate.recordedAt === "string" ? candidate.recordedAt : new Date(0).toISOString(),
+    losingRevisionId:
+      typeof candidate.losingRevisionId === "string"
+        ? candidate.losingRevisionId
+        : null,
+    losingDeviceId:
+      typeof candidate.losingDeviceId === "string"
+        ? candidate.losingDeviceId
+        : "",
+    recordedAt:
+      typeof candidate.recordedAt === "string"
+        ? candidate.recordedAt
+        : new Date(0).toISOString(),
   };
 }
 
-export const IMPORTABLE_STORES = new Set<string>(STORE_NAMES.filter((storeName) => storeName !== "diagnostics" && storeName !== "characterCardDrafts"));
+export const IMPORTABLE_STORES = new Set<string>(
+  STORE_NAMES.filter(
+    (storeName) =>
+      storeName !== "diagnostics" && storeName !== "characterCardDrafts",
+  ),
+);
 
 /** Saves a record to a specific store, routing to IPC if needed in Desktop mode. */
 export async function saveStoreRecord(
@@ -101,7 +132,8 @@ export async function saveStoreRecord(
       recordJson: JSON.stringify(recordObject),
       remoteApplyToken: remoteApplyToken ?? "",
     });
-    if (!result.ok) throw new Error(result.error || "Remote sync save was rejected.");
+    if (!result.ok)
+      throw new Error(result.error || "Remote sync save was rejected.");
     return;
   }
   if (isElectron()) {
@@ -132,10 +164,15 @@ export async function saveStoreRecord(
 
   // Web mode OR IndexedDB-only stores
   if (origin === "remote-sync") {
-    await StorageService.saveImportedItem(storeName, record as Record<string, unknown>);
+    await StorageService.saveImportedItem(
+      storeName,
+      record as Record<string, unknown>,
+    );
     return;
   }
-  await StorageService.saveItem(storeName, record as Record<string, unknown>, { origin });
+  await StorageService.saveItem(storeName, record as Record<string, unknown>, {
+    origin,
+  });
 }
 
 /** Deletes a record from a specific store, routing to IPC if needed in Desktop mode. */
@@ -152,7 +189,8 @@ export async function deleteStoreRecord(
       delete: true,
       remoteApplyToken: remoteApplyToken ?? "",
     });
-    if (!result.ok) throw new Error(result.error || "Remote sync delete was rejected.");
+    if (!result.ok)
+      throw new Error(result.error || "Remote sync delete was rejected.");
     return;
   }
   if (isElectron()) {
@@ -186,7 +224,9 @@ export async function deleteStoreRecord(
 }
 
 /** Fetches records from a specific store, routing to IPC if needed in Desktop mode. */
-export async function fetchStoreRecords(storeName: SyncStoreName): Promise<SyncableRecord[]> {
+export async function fetchStoreRecords(
+  storeName: SyncStoreName,
+): Promise<SyncableRecord[]> {
   if (isElectron()) {
     switch (storeName) {
       case "conversations": {
@@ -220,10 +260,10 @@ export async function fetchStoreRecords(storeName: SyncStoreName): Promise<Synca
     }
   }
 
-  return await StorageService.getItems(storeName) as SyncableRecord[];
+  return (await StorageService.getItems(storeName)) as SyncableRecord[];
 }
 
-/** 
+/**
  * Validates, decrypts, and applies a single decrypted packet.
  * @param storeName The store to apply to.
  * @param id The record ID.
@@ -237,9 +277,12 @@ export async function importDecryptedPacket(
   remoteApplyToken?: string,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
-    const importOrigin: MutationOrigin = !isElectron() || remoteApplyToken ? "remote-sync" : "manual-import";
-    if (!IMPORTABLE_STORES.has(storeName)) return { ok: false, error: "Store is not allowed for import." };
-    if (!/^[a-zA-Z0-9_.:-]{1,256}$/.test(id) || id.includes("..")) return { ok: false, error: "Invalid record ID." };
+    const importOrigin: MutationOrigin =
+      !isElectron() || remoteApplyToken ? "remote-sync" : "manual-import";
+    if (!IMPORTABLE_STORES.has(storeName))
+      return { ok: false, error: "Store is not allowed for import." };
+    if (!/^[a-zA-Z0-9_.:-]{1,256}$/.test(id) || id.includes(".."))
+      return { ok: false, error: "Invalid record ID." };
 
     if (storeName === "tombstones") {
       const parsed = JSON.parse(recordJson);
@@ -255,32 +298,53 @@ export async function importDecryptedPacket(
       try {
         await TombstoneService.saveTombstone(validation.tombstone);
       } catch (err: unknown) {
-        return { ok: false, error: `tombstone-save: ${err instanceof Error ? err.message : "unknown"}` };
+        return {
+          ok: false,
+          error: `tombstone-save: ${err instanceof Error ? err.message : "unknown"}`,
+        };
       }
       try {
-        await deleteStoreRecord(validation.tombstone.storeName, validation.tombstone.recordId, importOrigin, remoteApplyToken);
+        await deleteStoreRecord(
+          validation.tombstone.storeName,
+          validation.tombstone.recordId,
+          importOrigin,
+          remoteApplyToken,
+        );
       } catch (err: unknown) {
-        return { ok: false, error: `tombstone-delete: ${err instanceof Error ? err.message : "unknown"}` };
+        return {
+          ok: false,
+          error: `tombstone-delete: ${err instanceof Error ? err.message : "unknown"}`,
+        };
       }
       return { ok: true };
     }
 
     const imported = JSON.parse(recordJson) as SyncableRecord;
-    if (!imported || typeof imported !== "object" || imported.id !== id) return { ok: false, error: "Record ID mismatch." };
-    
+    if (!imported || typeof imported !== "object" || imported.id !== id)
+      return { ok: false, error: "Record ID mismatch." };
+
     // Check against tombstone locally
     const tombstoneId = `${storeName}:${id}`;
-    const localTombstone = await StorageService.getItem("tombstones", tombstoneId) as { deletedAt: number } | null;
-    
+    const localTombstone = (await StorageService.getItem(
+      "tombstones",
+      tombstoneId,
+    )) as { deletedAt: number } | null;
+
     const importedUpdatedAt = toEpochMilliseconds(imported.updatedAt);
     if (imported.updatedAt !== undefined && importedUpdatedAt === null) {
-      return { ok: false, error: "Imported record has an invalid updatedAt timestamp." };
+      return {
+        ok: false,
+        error: "Imported record has an invalid updatedAt timestamp.",
+      };
     }
     const importedUpdateEpoch = importedUpdatedAt ?? 0;
     const localDeletedAt = toEpochMilliseconds(localTombstone?.deletedAt);
 
     if (localTombstone && localDeletedAt === null) {
-      return { ok: false, error: "Local tombstone has an invalid deletedAt timestamp." };
+      return {
+        ok: false,
+        error: "Local tombstone has an invalid deletedAt timestamp.",
+      };
     }
     if (localDeletedAt !== null && localDeletedAt >= importedUpdateEpoch) {
       // Local tombstone is newer, meaning it was deleted recently. Reject the
@@ -289,11 +353,16 @@ export async function importDecryptedPacket(
     }
 
     const localRecords = await fetchStoreRecords(storeName);
-    const local = localRecords.find(r => r.id === id);
+    const local = localRecords.find((r) => r.id === id);
 
     if (!local) {
       // Record doesn't exist locally, so save it
-      await saveStoreRecord(storeName, imported, importOrigin, remoteApplyToken);
+      await saveStoreRecord(
+        storeName,
+        imported,
+        importOrigin,
+        remoteApplyToken,
+      );
     } else {
       // Both exist, check for divergence
       let isConflict = false;
@@ -315,17 +384,27 @@ export async function importDecryptedPacket(
         isConflict = localUpdate !== importUpdate;
       } else {
         isConflict = !!(
-          imported.deviceId && local.deviceId && imported.deviceId !== local.deviceId &&
-          imported.revisionId && local.revisionId && 
+          imported.deviceId &&
+          local.deviceId &&
+          imported.deviceId !== local.deviceId &&
+          imported.revisionId &&
+          local.revisionId &&
           imported.revisionId !== local.revisionId &&
-          imported.baseRevisionId !== local.revisionId && 
+          imported.baseRevisionId !== local.revisionId &&
           local.baseRevisionId !== imported.revisionId
         );
       }
-        
-        
+
       if (isConflict) {
-        const preserveStores = ["character_cards", "promptLibrary", "personas", "lorebooks", "rpScenarios", "projects", "scenes"];
+        const preserveStores = [
+          "character_cards",
+          "promptLibrary",
+          "personas",
+          "lorebooks",
+          "rpScenarios",
+          "projects",
+          "scenes",
+        ];
         const mergeStores = ["chats", "rp_chats", "conversations"];
 
         if (preserveStores.includes(storeName)) {
@@ -339,31 +418,65 @@ export async function importDecryptedPacket(
             remoteRevisionId: loser.revisionId,
           });
           const newId = `${id}_conflict_${conflictIdentity.slice(0, 16)}`;
-          const localDeviceRef = typeof local.deviceId === "string" ? local.deviceId : "this-device";
-          const importedDeviceRef = typeof imported.deviceId === "string" ? imported.deviceId : "remote";
+          const localDeviceRef =
+            typeof local.deviceId === "string" ? local.deviceId : "this-device";
+          const importedDeviceRef =
+            typeof imported.deviceId === "string"
+              ? imported.deviceId
+              : "remote";
           const conflictRecord = {
             ...loser,
             id: newId,
-            name: loser.name ? `${loser.name} (Conflict from ${loser.deviceId || "Remote"})` : undefined,
-            title: loser.title ? `${loser.title} (Conflict from ${loser.deviceId || "Remote"})` : undefined,
+            name: loser.name
+              ? `${loser.name} (Conflict from ${loser.deviceId || "Remote"})`
+              : undefined,
+            title: loser.title
+              ? translateRuntime(
+                  "runtimeGenerated.services.syncpacketimporter.metadata.value1ConflictFromValue2",
+                  "{{value1}} (Conflict from {{value2}})",
+                  { value1: loser.title, value2: loser.deviceId || "Remote" },
+                )
+              : undefined,
             [SYNC_CONFLICT_META_KEY]: {
               kind: "sync-conflict",
               conflictIdentity,
               originalRecordId: id,
               winningSource: importedWins ? "imported" : "local",
               winningRevisionId: winner.revisionId ?? null,
-              winningDeviceId: importedWins ? importedDeviceRef : localDeviceRef,
+              winningDeviceId: importedWins
+                ? importedDeviceRef
+                : localDeviceRef,
               losingSource: importedWins ? "local" : "imported",
               losingRevisionId: loser.revisionId ?? null,
               losingDeviceId: importedWins ? localDeviceRef : importedDeviceRef,
               recordedAt: new Date().toISOString(),
             },
           };
-          await saveStoreRecord(storeName, conflictRecord, importOrigin, remoteApplyToken);
+          await saveStoreRecord(
+            storeName,
+            conflictRecord,
+            importOrigin,
+            remoteApplyToken,
+          );
           if (storeName === "character_cards") {
-            const { mergeCharacterCardConflict } = await import("./characterCards/characterCardSyncMerge");
-            await saveStoreRecord(storeName, mergeCharacterCardConflict(winner as unknown as Record<string, unknown>, loser as unknown as Record<string, unknown>), importOrigin, remoteApplyToken);
-          } else if (importedWins) await saveStoreRecord(storeName, imported, importOrigin, remoteApplyToken);
+            const { mergeCharacterCardConflict } =
+              await import("./characterCards/characterCardSyncMerge");
+            await saveStoreRecord(
+              storeName,
+              mergeCharacterCardConflict(
+                winner as unknown as Record<string, unknown>,
+                loser as unknown as Record<string, unknown>,
+              ),
+              importOrigin,
+              remoteApplyToken,
+            );
+          } else if (importedWins)
+            await saveStoreRecord(
+              storeName,
+              imported,
+              importOrigin,
+              remoteApplyToken,
+            );
         } else if (mergeStores.includes(storeName)) {
           // Message-level append merge
           const localMessages = local.messages || [];
@@ -377,8 +490,15 @@ export async function importDecryptedPacket(
             localMessages as Array<Record<string, unknown>>,
             importedMessages as Array<Record<string, unknown>>,
           );
-          const divergenceByMsgId = new Map<string, { local: Record<string, unknown>; imported: Record<string, unknown> }>();
-          for (const divergence of divergences) divergenceByMsgId.set(divergence.id, divergence);
+          const divergenceByMsgId = new Map<
+            string,
+            {
+              local: Record<string, unknown>;
+              imported: Record<string, unknown>;
+            }
+          >();
+          for (const divergence of divergences)
+            divergenceByMsgId.set(divergence.id, divergence);
 
           // Treat the conversation itself as a conflict whenever any of its
           // messages were edited on both sides. Manual imports and remote
@@ -410,8 +530,14 @@ export async function importDecryptedPacket(
               const conflictIdentity = await createConflictIdentity({
                 storeName,
                 recordId: `${id}:msg:${divergence.id}`,
-                sourceDeviceId: typeof divergence.local.deviceId === "string" ? divergence.local.deviceId : "this-device",
-                remoteRevisionId: typeof divergence.imported.revisionId === "string" ? divergence.imported.revisionId : undefined,
+                sourceDeviceId:
+                  typeof divergence.local.deviceId === "string"
+                    ? divergence.local.deviceId
+                    : "this-device",
+                remoteRevisionId:
+                  typeof divergence.imported.revisionId === "string"
+                    ? divergence.imported.revisionId
+                    : undefined,
               });
               const newMsgId = `${divergence.id}_conflict_${conflictIdentity.slice(0, 16)}`;
               const forkedMessage = {
@@ -422,53 +548,103 @@ export async function importDecryptedPacket(
                   conflictIdentity,
                   originalRecordId: divergence.id,
                   winningSource: "local",
-                  winningRevisionId: typeof divergence.local.revisionId === "string" ? divergence.local.revisionId : null,
-                  winningDeviceId: typeof divergence.local.deviceId === "string" ? divergence.local.deviceId : "this-device",
+                  winningRevisionId:
+                    typeof divergence.local.revisionId === "string"
+                      ? divergence.local.revisionId
+                      : null,
+                  winningDeviceId:
+                    typeof divergence.local.deviceId === "string"
+                      ? divergence.local.deviceId
+                      : "this-device",
                   losingSource: "imported",
-                  losingRevisionId: typeof divergence.imported.revisionId === "string" ? divergence.imported.revisionId : null,
-                  losingDeviceId: typeof divergence.imported.deviceId === "string" ? divergence.imported.deviceId : "remote",
+                  losingRevisionId:
+                    typeof divergence.imported.revisionId === "string"
+                      ? divergence.imported.revisionId
+                      : null,
+                  losingDeviceId:
+                    typeof divergence.imported.deviceId === "string"
+                      ? divergence.imported.deviceId
+                      : "remote",
                   recordedAt: new Date().toISOString(),
                 },
               };
               forkedDivergentMessages.push(forkedMessage);
             }
-            const localMsgIds = new Set(localMessages.map((m: Record<string, unknown>) => m.id));
+            const localMsgIds = new Set(
+              localMessages.map((m: Record<string, unknown>) => m.id),
+            );
             const freshImportedMessages = importedMessages.filter(
               (m: Record<string, unknown>) =>
-                !localMsgIds.has(m.id as string) && !divergentLocalIds.has(m.id as string),
+                !localMsgIds.has(m.id as string) &&
+                !divergentLocalIds.has(m.id as string),
             );
             const mergedRecord = {
               ...local,
-              messages: [...localMessages, ...forkedDivergentMessages, ...freshImportedMessages].sort(compareSyncMessages),
+              messages: [
+                ...localMessages,
+                ...forkedDivergentMessages,
+                ...freshImportedMessages,
+              ].sort(compareSyncMessages),
               divergedMessageIds: divergences.map((d) => d.id),
-              updatedAt: Math.max(toEpochMilliseconds(local.updatedAt) ?? 0, importedUpdateEpoch),
+              updatedAt: Math.max(
+                toEpochMilliseconds(local.updatedAt) ?? 0,
+                importedUpdateEpoch,
+              ),
             };
-            await saveStoreRecord(storeName, mergedRecord, importOrigin, remoteApplyToken);
+            await saveStoreRecord(
+              storeName,
+              mergedRecord,
+              importOrigin,
+              remoteApplyToken,
+            );
           } else {
-            const localMsgIds = new Set(localMessages.map((m: Record<string, unknown>) => m.id));
+            const localMsgIds = new Set(
+              localMessages.map((m: Record<string, unknown>) => m.id),
+            );
             const newMessages = importedMessages.filter(
               (m: Record<string, unknown>) =>
-                !localMsgIds.has(m.id as string) && !divergenceByMsgId.has(m.id as string),
+                !localMsgIds.has(m.id as string) &&
+                !divergenceByMsgId.has(m.id as string),
             );
             if (newMessages.length > 0) {
               const mergedRecord = {
                 ...local,
-                messages: [...localMessages, ...newMessages].sort(compareSyncMessages),
-                updatedAt: Math.max(toEpochMilliseconds(local.updatedAt) ?? 0, importedUpdateEpoch),
+                messages: [...localMessages, ...newMessages].sort(
+                  compareSyncMessages,
+                ),
+                updatedAt: Math.max(
+                  toEpochMilliseconds(local.updatedAt) ?? 0,
+                  importedUpdateEpoch,
+                ),
               };
-              await saveStoreRecord(storeName, mergedRecord, importOrigin, remoteApplyToken);
+              await saveStoreRecord(
+                storeName,
+                mergedRecord,
+                importOrigin,
+                remoteApplyToken,
+              );
             }
           }
         } else {
           // No conflict merge logic, just LWW
           if (compareSyncRecords(imported, local) > 0) {
-            await saveStoreRecord(storeName, imported, importOrigin, remoteApplyToken);
+            await saveStoreRecord(
+              storeName,
+              imported,
+              importOrigin,
+              remoteApplyToken,
+            );
           }
         }
       } else {
         // No conflict, just use last-write-wins
         if (compareSyncRecords(imported, local) > 0) {
-          await saveStoreRecord(storeName, imported, importOrigin, remoteApplyToken);
+          await saveStoreRecord(
+            storeName,
+            imported,
+            importOrigin,
+            remoteApplyToken,
+          );
         }
       }
     }

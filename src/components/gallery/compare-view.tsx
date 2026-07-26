@@ -1,3 +1,4 @@
+import { translateRuntime } from "../../i18n/runtimeTranslator";
 /** @fileoverview Phase 2B Media Studio compare mode.
  *
  * Side-by-side field diff for 2-4 selected media items. Pure, non-mutating
@@ -11,9 +12,12 @@
 
 import { useMemo } from "react";
 import type { MediaItem } from "../../types/media";
-import { extractGenerationRecipe, type GenerationRecipe } from "../../types/project";
+import {
+  extractGenerationRecipe,
+  type GenerationRecipe,
+} from "../../types/project";
 import { MEDIA_SELECTION_MAX } from "../../stores/media-selection-store";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 export interface CompareField {
   /** Canonical field key, e.g. `model`, `prompt`, `seed`. */
@@ -48,43 +52,296 @@ interface RecipeCompare {
 
 /** Internal fields. The order here is the column order in the table. */
 const ITEM_FIELDS: Array<{ key: keyof MediaItem | string; label: string }> = [
-  { key: "model", label: "Model" },
-  { key: "prompt", label: "Prompt" },
-  { key: "negative", label: "Negative" },
-  { key: "width", label: "Width" },
-  { key: "height", label: "Height" },
-  { key: "aspectRatio", label: "Aspect" },
-  { key: "resolution", label: "Resolution" },
-  { key: "quality", label: "Quality" },
-  { key: "seed", label: "Seed" },
-  { key: "steps", label: "Steps" },
-  { key: "cfg", label: "CFG" },
-  { key: "style", label: "Style" },
-  { key: "projectId", label: "Project" },
-  { key: "operation", label: "Operation" },
-  { key: "mediaType", label: "Type" },
-  { key: "favorite", label: "Favorite" },
-  { key: "tags", label: "Tags" },
-  { key: "timestamp", label: "Created" },
+  {
+    key: "model",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.model",
+        "Model",
+      );
+    },
+  },
+  {
+    key: "prompt",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.prompt",
+        "Prompt",
+      );
+    },
+  },
+  {
+    key: "negative",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.negative",
+        "Negative",
+      );
+    },
+  },
+  {
+    key: "width",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.width",
+        "Width",
+      );
+    },
+  },
+  {
+    key: "height",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.height",
+        "Height",
+      );
+    },
+  },
+  {
+    key: "aspectRatio",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.aspect",
+        "Aspect",
+      );
+    },
+  },
+  {
+    key: "resolution",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.resolution",
+        "Resolution",
+      );
+    },
+  },
+  {
+    key: "quality",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.quality",
+        "Quality",
+      );
+    },
+  },
+  {
+    key: "seed",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.seed",
+        "Seed",
+      );
+    },
+  },
+  {
+    key: "steps",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.steps",
+        "Steps",
+      );
+    },
+  },
+  {
+    key: "cfg",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.cfg",
+        "CFG",
+      );
+    },
+  },
+  {
+    key: "style",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.style",
+        "Style",
+      );
+    },
+  },
+  {
+    key: "projectId",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.project",
+        "Project",
+      );
+    },
+  },
+  {
+    key: "operation",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.operation",
+        "Operation",
+      );
+    },
+  },
+  {
+    key: "mediaType",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.type",
+        "Type",
+      );
+    },
+  },
+  {
+    key: "favorite",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.favorite",
+        "Favorite",
+      );
+    },
+  },
+  {
+    key: "tags",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.tags",
+        "Tags",
+      );
+    },
+  },
+  {
+    key: "timestamp",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.created",
+        "Created",
+      );
+    },
+  },
 ];
 
-const RECIPE_FIELDS: Array<{ key: keyof RecipeCompare | string; label: string }> = [
-  { key: "model", label: "R: Model" },
-  { key: "prompt", label: "R: Prompt" },
-  { key: "negativePrompt", label: "R: Negative" },
-  { key: "width", label: "R: Width" },
-  { key: "height", label: "R: Height" },
-  { key: "aspectRatio", label: "R: Aspect" },
-  { key: "resolution", label: "R: Resolution" },
-  { key: "seed", label: "R: Seed" },
-  { key: "steps", label: "R: Steps" },
-  { key: "cfgScale", label: "R: CFG" },
-  { key: "variants", label: "R: Variants" },
-  { key: "style", label: "R: Style" },
-  { key: "quality", label: "R: Quality" },
+const RECIPE_FIELDS: Array<{
+  key: keyof RecipeCompare | string;
+  label: string;
+}> = [
+  {
+    key: "model",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rModel",
+        "R: Model",
+      );
+    },
+  },
+  {
+    key: "prompt",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rPrompt",
+        "R: Prompt",
+      );
+    },
+  },
+  {
+    key: "negativePrompt",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rNegative",
+        "R: Negative",
+      );
+    },
+  },
+  {
+    key: "width",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rWidth",
+        "R: Width",
+      );
+    },
+  },
+  {
+    key: "height",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rHeight",
+        "R: Height",
+      );
+    },
+  },
+  {
+    key: "aspectRatio",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rAspect",
+        "R: Aspect",
+      );
+    },
+  },
+  {
+    key: "resolution",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rResolution",
+        "R: Resolution",
+      );
+    },
+  },
+  {
+    key: "seed",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rSeed",
+        "R: Seed",
+      );
+    },
+  },
+  {
+    key: "steps",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rSteps",
+        "R: Steps",
+      );
+    },
+  },
+  {
+    key: "cfgScale",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rCfg",
+        "R: CFG",
+      );
+    },
+  },
+  {
+    key: "variants",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rVariants",
+        "R: Variants",
+      );
+    },
+  },
+  {
+    key: "style",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rStyle",
+        "R: Style",
+      );
+    },
+  },
+  {
+    key: "quality",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.compareView.metadata.rQuality",
+        "R: Quality",
+      );
+    },
+  },
 ];
 
-function normalise(value: unknown): string | number | boolean | null | undefined {
+function normalise(
+  value: unknown,
+): string | number | boolean | null | undefined {
   if (value === undefined) return undefined;
   if (value === null) return null;
   if (typeof value === "string") {
@@ -107,13 +364,17 @@ function buildCompareRows(
 ): CompareField[] {
   const rows: CompareField[] = [];
   for (const { key, label } of ITEM_FIELDS) {
-    const values = items.map((it) => normalise((it as unknown as Record<string, unknown>)[key as string]));
+    const values = items.map((it) =>
+      normalise((it as unknown as Record<string, unknown>)[key as string]),
+    );
     rows.push(buildRow(key, label, values));
   }
   for (const { key, label } of RECIPE_FIELDS) {
     const values = recipes.map((recipe) => {
       if (!recipe) return undefined;
-      return normalise((recipe as unknown as Record<string, unknown>)[key as string]);
+      return normalise(
+        (recipe as unknown as Record<string, unknown>)[key as string],
+      );
     });
     rows.push(buildRow(`r_${String(key)}`, label, values));
   }
@@ -125,7 +386,9 @@ function buildRow(
   label: string,
   values: Array<string | number | boolean | null | undefined>,
 ): CompareField {
-  const present = values.filter((v) => v !== undefined && v !== null && v !== "");
+  const present = values.filter(
+    (v) => v !== undefined && v !== null && v !== "",
+  );
   // A row is "same" only when:
   //   - at least one item has a value, AND
   //   - every item has a value, AND
@@ -159,56 +422,92 @@ export interface CompareViewProps {
 /** Renders the side-by-side comparison table. Returns null when `items`
  *  is outside the 2..4 range. */
 export function CompareView({ items, className, onClose }: CompareViewProps) {
+  const { t: tRuntime } = useTranslation("common");
   const recipes = useMemo(
     () => items.map((it) => extractGenerationRecipe(it)),
     [items],
   );
-  const rows = useMemo(() => buildCompareRows(items, recipes), [items, recipes]);
+  const rows = useMemo(
+    () => {
+      void tRuntime;
+      return buildCompareRows(items, recipes);
+    },
+    [items, recipes, tRuntime],
+  );
 
   if (items.length < 2 || items.length > MEDIA_SELECTION_MAX) {
     return (
       <div className={className} data-testid="compare-view-disabled">
         <p className="text-[12px] text-text-muted">
-          <Trans i18nKey="common:surface.componentsGalleryCompareView.description.select2To" /> {MEDIA_SELECTION_MAX} <Trans i18nKey="common:surface.componentsGalleryCompareView.description.itemsToCompare" />{items.length} <Trans i18nKey="common:surface.componentsGalleryCompareView.description.selected" /></p>
+          <Trans i18nKey="common:surface.componentsGalleryCompareView.description.select2To" />{" "}
+          {MEDIA_SELECTION_MAX}{" "}
+          <Trans i18nKey="common:surface.componentsGalleryCompareView.description.itemsToCompare" />
+          {items.length}{" "}
+          <Trans i18nKey="common:surface.componentsGalleryCompareView.description.selected" />
+        </p>
         {onClose && (
           <button
             type="button"
             onClick={onClose}
             className="mt-1.5 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
           >
-            <Trans i18nKey="common:surface.componentsGalleryCompareView.action.close" /></button>
+            <Trans i18nKey="common:surface.componentsGalleryCompareView.action.close" />
+          </button>
         )}
       </div>
     );
   }
 
-  const headerLabels = items.map((it) => it.prompt?.slice(0, 40) || it.id.slice(0, 8));
+  const headerLabels = items.map(
+    (it) => it.prompt?.slice(0, 40) || it.id.slice(0, 8),
+  );
   const changedCount = rows.filter((r) => !r.same).length;
 
   return (
-    <div className={className} data-testid="compare-view" data-changed={changedCount}>
+    <div
+      className={className}
+      data-testid="compare-view"
+      data-changed={changedCount}
+    >
       <div className="flex items-center justify-between text-[12px] uppercase tracking-wide text-text-secondary">
-        <span><Trans i18nKey="common:surface.componentsGalleryCompareView.text.compare" /> {items.length} <Trans i18nKey="common:surface.componentsGalleryCompareView.text.items" /></span>
+        <span>
+          <Trans i18nKey="common:surface.componentsGalleryCompareView.text.compare" />{" "}
+          {items.length}{" "}
+          <Trans i18nKey="common:surface.componentsGalleryCompareView.text.items" />
+        </span>
         <span aria-live="polite">
           {changedCount === 0
-            ? "All shared fields match"
-            : `${changedCount} field${changedCount === 1 ? "" : "s"} differ`}
+            ? tRuntime(
+                "runtimeGenerated.components.gallery.compareView.text.allSharedFieldsMatch",
+              )
+            : tRuntime(
+                "runtimeGenerated.components.gallery.compareView.text.changedcountFieldValue2Differ",
+                {
+                  changedCount: changedCount,
+                  value2: changedCount === 1 ? "" : "s",
+                },
+              )}
         </span>
         {onClose && (
           <button
             type="button"
             onClick={onClose}
             className="ml-2 rounded-md border border-border px-2 py-1.5 min-h-[32px] text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-            aria-label="Close compare view"
+            aria-label={tRuntime(
+              "runtimeGenerated.components.gallery.compareView.attribute.closeCompareView",
+            )}
           >
-            <Trans i18nKey="common:surface.componentsGalleryCompareView.action.close" /></button>
+            <Trans i18nKey="common:surface.componentsGalleryCompareView.action.close" />
+          </button>
         )}
       </div>
       <div className="mt-1.5 overflow-auto rounded-md border border-border/60 max-h-[60vh]">
         <table className="w-full text-[12px]">
           <thead className="bg-surface/60 sticky top-0 z-10">
             <tr>
-              <th className="text-left px-2 py-1 font-medium"><Trans i18nKey="common:surface.componentsGalleryCompareView.column.field" /></th>
+              <th className="text-left px-2 py-1 font-medium">
+                <Trans i18nKey="common:surface.componentsGalleryCompareView.column.field" />
+              </th>
               {headerLabels.map((label, idx) => (
                 <th
                   key={items[idx]?.id ?? idx}

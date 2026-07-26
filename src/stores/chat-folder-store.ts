@@ -1,4 +1,5 @@
-import { create } from 'zustand';
+import { translateRuntime } from "../i18n/runtimeTranslator";
+import { create } from "zustand";
 import type {
   ChatFolder,
   ChatFolderKind,
@@ -10,9 +11,9 @@ import type {
   LockFolderInput,
   PreviewFolderImportInput,
   UnlockFolderInput,
-} from '../shared/chatFolderContracts';
-import { desktopChatFolders } from '../services/desktopBridge';
-import { toast } from './toast-store';
+} from "../shared/chatFolderContracts";
+import { desktopChatFolders } from "../services/desktopBridge";
+import { toast } from "./toast-store";
 
 export interface ChatFolderState {
   folders: ChatFolder[];
@@ -22,19 +23,31 @@ export interface ChatFolderState {
   createFolder: (name: string, kind: ChatFolderKind) => Promise<void>;
   renameFolder: (id: string, name: string) => Promise<void>;
   reorderFolders: (folderIds: string[], kind: ChatFolderKind) => Promise<void>;
-  moveConversation: (conversationId: string, destinationFolderId: string | null) => Promise<void>;
-  moveConversations: (conversationIds: string[], destinationFolderId: string | null) => Promise<void>;
+  moveConversation: (
+    conversationId: string,
+    destinationFolderId: string | null,
+  ) => Promise<void>;
+  moveConversations: (
+    conversationIds: string[],
+    destinationFolderId: string | null,
+  ) => Promise<void>;
   deleteFolder: (id: string, deleteChats: boolean) => Promise<void>;
   getBackupPreview: (folderId: string) => Promise<FolderBackupPreview | null>;
-  exportFolderBackup: (input: ExportFolderBackupInput) => Promise<string | null>;
-  pickImportFile: () => Promise<import('../shared/chatFolderContracts').PickFolderImportFileResult>;
+  exportFolderBackup: (
+    input: ExportFolderBackupInput,
+  ) => Promise<string | null>;
+  pickImportFile: () => Promise<
+    import("../shared/chatFolderContracts").PickFolderImportFileResult
+  >;
   previewImport: (
     input: PreviewFolderImportInput,
   ) => Promise<FolderImportPreview | null>;
   importFolderBackup: (
     input: ImportFolderBackupInput,
   ) => Promise<{ ok: boolean; folderId?: string; error?: string }>;
-  lockFolder: (input: LockFolderInput) => Promise<{ ok: boolean; error?: string; retryAfter?: string }>;
+  lockFolder: (
+    input: LockFolderInput,
+  ) => Promise<{ ok: boolean; error?: string; retryAfter?: string }>;
   unlockFolder: (
     input: UnlockFolderInput,
   ) => Promise<{ ok: boolean; error?: string; retryAfter?: string }>;
@@ -43,13 +56,13 @@ export interface ChatFolderState {
 
 export function selectStandardFolders(state: ChatFolderState): ChatFolder[] {
   return state.folders
-    .filter((folder) => folder.kind === 'standard')
+    .filter((folder) => folder.kind === "standard")
     .sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
 export function selectCharacterFolders(state: ChatFolderState): ChatFolder[] {
   return state.folders
-    .filter((folder) => folder.kind === 'character')
+    .filter((folder) => folder.kind === "character")
     .sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
@@ -73,7 +86,9 @@ export const useChatFolderStore = create<ChatFolderState>((set, get) => ({
           }
           // Merge per-kind loads on top of the existing cache so calling
           // `loadFolders('standard')` does not wipe out character folders.
-          const folderMap = new Map(prev.folders.map((folder) => [folder.id, folder]));
+          const folderMap = new Map(
+            prev.folders.map((folder) => [folder.id, folder]),
+          );
           for (const folder of next) folderMap.set(folder.id, folder);
           const merged = Array.from(folderMap.values()).sort(
             (a, b) => a.sortOrder - b.sortOrder,
@@ -84,7 +99,13 @@ export const useChatFolderStore = create<ChatFolderState>((set, get) => ({
         throw new Error(res.error);
       }
     } catch (err) {
-      toast.error('Failed to load chat folders', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToLoadChatFolders",
+          "Failed to load chat folders",
+        ),
+        String(err),
+      );
     } finally {
       set({ isLoading: false });
     }
@@ -94,13 +115,29 @@ export const useChatFolderStore = create<ChatFolderState>((set, get) => ({
     try {
       const res = await desktopChatFolders.create({ name, kind });
       if (res.ok && res.folder) {
-        set((state) => ({ folders: [...state.folders, res.folder!].sort((a, b) => a.sortOrder - b.sortOrder) }));
-        toast.success('Folder created', name);
+        set((state) => ({
+          folders: [...state.folders, res.folder!].sort(
+            (a, b) => a.sortOrder - b.sortOrder,
+          ),
+        }));
+        toast.success(
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.folderCreated",
+            "Folder created",
+          ),
+          name,
+        );
       } else {
         throw new Error(res.error);
       }
     } catch (err) {
-      toast.error('Failed to create folder', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToCreateFolder",
+          "Failed to create folder",
+        ),
+        String(err),
+      );
     }
   },
 
@@ -110,14 +147,26 @@ export const useChatFolderStore = create<ChatFolderState>((set, get) => ({
       if (res.ok && res.folder) {
         const renamed = res.folder;
         set((state) => ({
-          folders: state.folders.map(f => f.id === id ? renamed : f)
+          folders: state.folders.map((f) => (f.id === id ? renamed : f)),
         }));
-        toast.success('Folder renamed', name);
+        toast.success(
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.folderRenamed",
+            "Folder renamed",
+          ),
+          name,
+        );
       } else {
         throw new Error(res.error);
       }
     } catch (err) {
-      toast.error('Failed to rename folder', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToRenameFolder",
+          "Failed to rename folder",
+        ),
+        String(err),
+      );
     }
   },
 
@@ -126,80 +175,156 @@ export const useChatFolderStore = create<ChatFolderState>((set, get) => ({
       const res = await desktopChatFolders.reorder({ folderIds, kind });
       if (res.ok) {
         set((state) => {
-          const folderMap = new Map(state.folders.filter(f => f.kind === kind).map(f => [f.id, f]));
-          const unchanged = state.folders.filter(f => f.kind !== kind);
-          
-          const newFolders = folderIds.map((id, index) => {
-            const f = folderMap.get(id);
-            if (f) {
-              f.sortOrder = index + 1;
-              return f;
-            }
-            return null;
-          }).filter(Boolean) as ChatFolder[];
-          
-          return { folders: [...unchanged, ...newFolders].sort((a, b) => a.sortOrder - b.sortOrder) };
+          const folderMap = new Map(
+            state.folders.filter((f) => f.kind === kind).map((f) => [f.id, f]),
+          );
+          const unchanged = state.folders.filter((f) => f.kind !== kind);
+
+          const newFolders = folderIds
+            .map((id, index) => {
+              const f = folderMap.get(id);
+              if (f) {
+                f.sortOrder = index + 1;
+                return f;
+              }
+              return null;
+            })
+            .filter(Boolean) as ChatFolder[];
+
+          return {
+            folders: [...unchanged, ...newFolders].sort(
+              (a, b) => a.sortOrder - b.sortOrder,
+            ),
+          };
         });
       } else {
         throw new Error(res.error);
       }
     } catch (err) {
-      toast.error('Failed to reorder folders', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToReorderFolders",
+          "Failed to reorder folders",
+        ),
+        String(err),
+      );
       await get().loadFolders(); // rollback
     }
   },
 
-moveConversation: async (conversationId: string, destinationFolderId: string | null) => {
-  if (destinationFolderId !== null) {
-    const cached = useChatFolderStore.getState().folders.find((f) => f.id === destinationFolderId);
-    if (cached && cached.lockState === 'locked') {
-      toast.error('Folder is locked', `Unlock "${cached.name}" before moving conversations into it.`);
-      throw new Error('Folder is locked');
+  moveConversation: async (
+    conversationId: string,
+    destinationFolderId: string | null,
+  ) => {
+    if (destinationFolderId !== null) {
+      const cached = useChatFolderStore
+        .getState()
+        .folders.find((f) => f.id === destinationFolderId);
+      if (cached && cached.lockState === "locked") {
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.folderIsLocked",
+            "Folder is locked",
+          ),
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.unlockValue1BeforeMovingConversationsIntoIt",
+            'Unlock "{{value1}}" before moving conversations into it.',
+            { value1: cached.name },
+          ),
+        );
+        throw new Error("Folder is locked");
+      }
     }
-  }
-  try {
-    const res = await desktopChatFolders.moveConversation({ conversationId, folderId: destinationFolderId });
+    try {
+      const res = await desktopChatFolders.moveConversation({
+        conversationId,
+        folderId: destinationFolderId,
+      });
       if (res.ok) {
         // We don't update chat-store here, the caller should trigger conversation reload
       } else {
         throw new Error(res.error);
       }
     } catch (err) {
-      toast.error('Failed to move conversation', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToMoveConversation",
+          "Failed to move conversation",
+        ),
+        String(err),
+      );
       throw err;
     }
   },
 
-moveConversations: async (conversationIds: string[], destinationFolderId: string | null) => {
-  if (destinationFolderId !== null) {
-    const cached = useChatFolderStore.getState().folders.find((f) => f.id === destinationFolderId);
-    if (cached && cached.lockState === 'locked') {
-      toast.error('Folder is locked', `Unlock "${cached.name}" before moving conversations into it.`);
-      throw new Error('Folder is locked');
+  moveConversations: async (
+    conversationIds: string[],
+    destinationFolderId: string | null,
+  ) => {
+    if (destinationFolderId !== null) {
+      const cached = useChatFolderStore
+        .getState()
+        .folders.find((f) => f.id === destinationFolderId);
+      if (cached && cached.lockState === "locked") {
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.folderIsLocked",
+            "Folder is locked",
+          ),
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.unlockValue1BeforeMovingConversationsIntoIt",
+            'Unlock "{{value1}}" before moving conversations into it.',
+            { value1: cached.name },
+          ),
+        );
+        throw new Error("Folder is locked");
+      }
     }
-  }
-  try {
-    const res = await desktopChatFolders.moveConversations({ conversationIds, folderId: destinationFolderId });
-    if (!res.ok) throw new Error(res.error ?? 'Failed to move conversations');
+    try {
+      const res = await desktopChatFolders.moveConversations({
+        conversationIds,
+        folderId: destinationFolderId,
+      });
+      if (!res.ok) throw new Error(res.error ?? "Failed to move conversations");
     } catch (err) {
-      toast.error('Failed to move conversations', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToMoveConversations",
+          "Failed to move conversations",
+        ),
+        String(err),
+      );
       throw err;
     }
   },
 
   deleteFolder: async (id: string, deleteChats: boolean) => {
     try {
-      const res = await desktopChatFolders.delete({ folderId: id, deleteConversations: deleteChats });
+      const res = await desktopChatFolders.delete({
+        folderId: id,
+        deleteConversations: deleteChats,
+      });
       if (res.ok) {
         set((state) => ({
-          folders: state.folders.filter(f => f.id !== id)
+          folders: state.folders.filter((f) => f.id !== id),
         }));
-        toast.success('Folder deleted');
+        toast.success(
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.folderDeleted",
+            "Folder deleted",
+          ),
+        );
       } else {
         throw new Error(res.error);
       }
     } catch (err) {
-      toast.error('Failed to delete folder', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToDeleteFolder",
+          "Failed to delete folder",
+        ),
+        String(err),
+      );
       throw err;
     }
   },
@@ -210,10 +335,26 @@ moveConversations: async (conversationIds: string[], destinationFolderId: string
       if (res.ok && res.preview) {
         return res.preview;
       }
-      toast.error('Failed to read folder backup preview', res.error ?? 'Unknown error');
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToReadFolderBackupPreview",
+          "Failed to read folder backup preview",
+        ),
+        res.error ??
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.unknownError",
+            "Unknown error",
+          ),
+      );
       return null;
     } catch (err) {
-      toast.error('Failed to read folder backup preview', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToReadFolderBackupPreview",
+          "Failed to read folder backup preview",
+        ),
+        String(err),
+      );
       return null;
     }
   },
@@ -222,13 +363,29 @@ moveConversations: async (conversationIds: string[], destinationFolderId: string
     try {
       const res = await desktopChatFolders.exportBackup(input);
       if (res.ok) {
-        toast.success('Folder backup exported', res.fileName ?? 'Encrypted backup saved');
+        toast.success(
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.folderBackupExported",
+            "Folder backup exported",
+          ),
+          res.fileName ??
+            translateRuntime(
+              "runtimeGenerated.stores.chatFolderStore.notification.encryptedBackupSaved",
+              "Encrypted backup saved",
+            ),
+        );
         return res.fileName ?? null;
       }
       if (res.canceled) return null;
-      throw new Error(res.error ?? 'Unknown error');
+      throw new Error(res.error ?? "Unknown error");
     } catch (err) {
-      toast.error('Failed to export folder backup', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToExportFolderBackup",
+          "Failed to export folder backup",
+        ),
+        String(err),
+      );
       throw err;
     }
   },
@@ -241,10 +398,26 @@ moveConversations: async (conversationIds: string[], destinationFolderId: string
       if (res.ok && res.preview) {
         return res.preview;
       }
-      toast.error('Failed to preview folder import', res.error ?? 'Unknown error');
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToPreviewFolderImport",
+          "Failed to preview folder import",
+        ),
+        res.error ??
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.unknownError",
+            "Unknown error",
+          ),
+      );
       return null;
     } catch (err) {
-      toast.error('Failed to preview folder import', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToPreviewFolderImport",
+          "Failed to preview folder import",
+        ),
+        String(err),
+      );
       return null;
     }
   },
@@ -253,14 +426,25 @@ moveConversations: async (conversationIds: string[], destinationFolderId: string
     try {
       const res = await desktopChatFolders.importBackup(input);
       if (res.ok) {
-        toast.success('Folder backup imported');
+        toast.success(
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.folderBackupImported",
+            "Folder backup imported",
+          ),
+        );
         // Reload folders so the menu reflects the merged state.
         await get().loadFolders();
         return res;
       }
-      throw new Error(res.error ?? 'Unknown error');
+      throw new Error(res.error ?? "Unknown error");
     } catch (err) {
-      toast.error('Failed to import folder backup', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToImportFolderBackup",
+          "Failed to import folder backup",
+        ),
+        String(err),
+      );
       throw err;
     }
   },
@@ -269,14 +453,25 @@ moveConversations: async (conversationIds: string[], destinationFolderId: string
     try {
       const res = await desktopChatFolders.lock(input);
       if (res.ok) {
-        toast.success('Folder privacy gate enabled');
+        toast.success(
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.folderPrivacyGateEnabled",
+            "Folder privacy gate enabled",
+          ),
+        );
         return res;
       }
       // Lock failures may include a structured retry-after; the caller renders
       // the backoff dialog so the toast here is intentionally quiet.
       return res;
     } catch (err) {
-      toast.error('Failed to lock folder', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToLockFolder",
+          "Failed to lock folder",
+        ),
+        String(err),
+      );
       throw err;
     }
   },
@@ -285,12 +480,23 @@ moveConversations: async (conversationIds: string[], destinationFolderId: string
     try {
       const res = await desktopChatFolders.unlock(input);
       if (res.ok) {
-        toast.success('Folder privacy gate opened');
+        toast.success(
+          translateRuntime(
+            "runtimeGenerated.stores.chatFolderStore.notification.folderPrivacyGateOpened",
+            "Folder privacy gate opened",
+          ),
+        );
         return res;
       }
       return res;
     } catch (err) {
-      toast.error('Failed to unlock folder', String(err));
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.chatFolderStore.notification.failedToUnlockFolder",
+          "Failed to unlock folder",
+        ),
+        String(err),
+      );
       throw err;
     }
   },
@@ -305,5 +511,5 @@ moveConversations: async (conversationIds: string[], destinationFolderId: string
     } catch {
       return null;
     }
-  }
+  },
 }));

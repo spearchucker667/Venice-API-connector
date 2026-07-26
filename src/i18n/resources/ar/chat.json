@@ -16,5 +16,57 @@
   "folders": "المجلدات",
   "unfiled": "غير مصنف",
   "attachFile": "إرفاق ملف",
-  "managedDocument": "مستند مُدار"
+  "managedDocument": "مستند مُدار",
+  "composer": {
+    "visionUnsupportedTitle": "الذكاء الاصطناعي ليس قادرًا على الرؤية",
+    "visionUnsupportedDetail": "لا يمكن لـ \"{{model}}\" قراءة مرفقات الصور. حدد نموذجًا قادرًا على الرؤية أو قم بتحويل الصورة/ملف PDF إلى نص أولاً.",
+    "attachTitle": "إرفاق ملف (أو سحب/لصق)",
+    "attachmentLimitTitle": "تم الوصول إلى حد المرفقات",
+    "attachmentLimitDetail": "يمكنك إرفاق ما يصل إلى {{max}} من الملفات لكل رسالة.",
+    "tooManyAttachmentsTitle": "عدد كبير جدًا من المرفقات",
+    "tooManyAttachmentsDetail": "تمت إضافة {{added}} فقط من {{requested}} من الملفات. الحد هو {{max}} ملفات لكل رسالة.",
+    "attachmentNote": "مذكرة مرفقة",
+    "attachmentFailed": "فشل المرفق",
+    "attachmentAlt": "المرفق {{number}}",
+    "removeAttachment": "إزالة المرفق {{name}}",
+    "disabledPlaceholder": "قم بتوصيل مفتاح API للبدء...",
+    "dropPlaceholder": "قم بإسقاط الملف لإرفاقه",
+    "placeholder": "اسأل أي شيء — أدخل للإرسال، Shift+Enter للسطر الجديد. إرفاق ملف لإرساله بدون نص.",
+    "messageInput": "إدخال الرسالة",
+    "attachFile": "إرفاق الملف",
+    "stopGenerating": "توقف عن التوليد",
+    "sendMessage": "أرسل رسالة"
+  },
+  "memory": {
+    "disabledLabel": "الذاكرة معطلة",
+    "disabledTitle": "تم تعطيل استرجاع الذاكرة في الإعدادات.",
+    "loadingLabel": "ذاكرة…",
+    "loadingTitle": "استرداد الذاكرة ذات الصلة لهذه الرسالة.",
+    "activeLabel": "الذاكرة نشطة",
+    "activeTitle": "سيتم تضمين سياق الذاكرة ذات الصلة مع هذه الرسالة.",
+    "failedLabel": "فشلت الذاكرة",
+    "failedTitle": "فشل استرداد الذاكرة. تم إرسال رسالتك بدون سياق الذاكرة."
+  },
+  "controls": {
+    "autoRead": "القراءة التلقائية",
+    "citations": "الاستشهادات",
+    "scrape": "كشط",
+    "xSearch": "بحث X",
+    "searchInStream": "البحث في الدفق",
+    "documentTools": "أدوات الوثيقة",
+    "newChatShortcut": "دردشة جديدة (⌘N)",
+    "systemPromptPlaceholder": "خياري. اتركه فارغًا لتجنب إضافة رسالة نظام مؤلفة من خلال التطبيق.",
+    "temperature": "درجة حرارة",
+    "topP": "أعلى ص",
+    "maxTokens": "رموز ماكس",
+    "veniceDefaultPrompt": "موجه البندقية الافتراضي",
+    "disableThinking": "تعطيل التفكير",
+    "stripThinking": "قطاع التفكير",
+    "searchMode": "البحث: {{mode}}",
+    "searchModes": {
+      "off": "عن",
+      "on": "على",
+      "auto": "آلي"
+    }
+  }
 }

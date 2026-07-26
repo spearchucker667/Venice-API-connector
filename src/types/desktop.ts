@@ -141,6 +141,24 @@ export interface VeniceForgeApp {
 
 /** Exposes file dialog helpers for importing and exporting JSON data. */
 export interface VeniceForgeFiles {
+  persistGeneratedImage(input: { dataUrl: string }): Promise<{
+    ok: boolean;
+    media?: { id: string; url: string; mimeType: string; byteCount: number; sha256: string };
+    error?: string;
+    errorKind?: string;
+    retryable?: boolean;
+    recoveryId?: string;
+  }>;
+  retryGeneratedImage(input: { recoveryId: string }): Promise<{
+    ok: boolean;
+    media?: { id: string; url: string; mimeType: string; byteCount: number; sha256: string };
+    error?: string;
+    errorKind?: string;
+    retryable?: boolean;
+  }>;
+  saveGeneratedImageRecovery(input: { recoveryId: string; suggestedName?: string }): Promise<{
+    ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string;
+  }>;
   saveGeneratedMedia(input: { mediaId: string; suggestedName?: string }): Promise<{
     ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string;
   }>;

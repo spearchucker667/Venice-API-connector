@@ -1,3 +1,4 @@
+import { translateRuntime } from "../../i18n/runtimeTranslator";
 /** @fileoverview Phase 2C diagnostics drawer.
  *
  * A right-side drawer rendered when the user clicks a status
@@ -38,20 +39,114 @@ import type {
   AppStatusSnapshot,
   StatusSeverity,
 } from "../../types/status";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
-const SECTION_ORDER: Array<{ key: keyof AppStatusSnapshot; label: string }> = [
-  { key: "diagnostics", label: "Overview" },
-  { key: "api", label: "API" },
-  { key: "apiKey", label: "API Key" },
-  { key: "model", label: "Model" },
-  { key: "storage", label: "Storage" },
-  { key: "storage", label: "Privacy" },
-  { key: "project", label: "Project" },
-  { key: "safety", label: "Safety" },
-  { key: "provider", label: "Research" },
-  { key: "desktop", label: "Mode" },
-  { key: "diagnostics", label: "Repair" },
+const SECTION_ORDER: Array<{
+  id: string;
+  key: keyof AppStatusSnapshot;
+  label: string;
+}> = [
+  {
+    id: "diagnostics-overview",
+    key: "diagnostics",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.status.diagnosticsdrawer.metadata.overview",
+        "Overview",
+      );
+    },
+  },
+  { id: "api-api", key: "api", label: "API" },
+  {
+    id: "apiKey-api-key",
+    key: "apiKey",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.status.diagnosticsdrawer.metadata.apiKey",
+        "API Key",
+      );
+    },
+  },
+  {
+    id: "model-model",
+    key: "model",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.status.diagnosticsdrawer.metadata.model",
+        "Model",
+      );
+    },
+  },
+  {
+    id: "storage-storage",
+    key: "storage",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.status.diagnosticsdrawer.metadata.storage",
+        "Storage",
+      );
+    },
+  },
+  {
+    id: "storage-privacy",
+    key: "storage",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.status.diagnosticsdrawer.metadata.privacy",
+        "Privacy",
+      );
+    },
+  },
+  {
+    id: "project-project",
+    key: "project",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.status.diagnosticsdrawer.metadata.project",
+        "Project",
+      );
+    },
+  },
+  {
+    id: "safety-safety",
+    key: "safety",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.status.diagnosticsdrawer.metadata.safety",
+        "Safety",
+      );
+    },
+  },
+  {
+    id: "provider-research",
+    key: "provider",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.status.diagnosticsdrawer.metadata.research",
+        "Research",
+      );
+    },
+  },
+  {
+    id: "desktop-mode",
+    key: "desktop",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.status.diagnosticsdrawer.metadata.mode",
+        "Mode",
+      );
+    },
+  },
+  {
+    id: "diagnostics-repair",
+    key: "diagnostics",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.status.diagnosticsdrawer.metadata.repair",
+        "Repair",
+      );
+    },
+  },
 ];
 
 const SEVERITY_BADGE: Record<StatusSeverity, string> = {
@@ -69,14 +164,17 @@ const SEVERITY_LABEL: Record<StatusSeverity, string> = {
 };
 
 function SeverityBadge({ severity }: { severity: StatusSeverity }) {
+  const { t } = useTranslation("common");
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[12px] font-medium ${SEVERITY_BADGE[severity]}`}
       data-severity-badge={severity}
     >
-      {SEVERITY_LABEL[severity]}
+      {t(`statusCluster.severities.${severity}`, {
+        defaultValue: SEVERITY_LABEL[severity],
+      })}
     </span>
-  )
+  );
 }
 
 interface SectionProps {
@@ -88,12 +186,13 @@ interface SectionProps {
 }
 
 function Section({ sectionId, title, item, focused, children }: SectionProps) {
-  const ref = useRef<HTMLElement | null>(null)
+  const { t } = useTranslation("common");
+  const ref = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (focused && ref.current) {
-      ref.current.scrollIntoView({ block: "start" })
+      ref.current.scrollIntoView({ block: "start" });
     }
-  }, [focused])
+  }, [focused]);
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
@@ -109,107 +208,137 @@ function Section({ sectionId, title, item, focused, children }: SectionProps) {
         <SeverityBadge severity={item.severity} />
       </header>
       <p className="text-[12.5px] text-text-primary leading-relaxed">
-        {item.summary}
+        {t(item.summary.key, item.summary.values)}
       </p>
       {item.detail && (
         <p className="text-[12px] text-text-muted leading-relaxed">
-          {item.detail}
+          {t(item.detail.key, item.detail.values)}
         </p>
       )}
       {children}
     </section>
-  )
+  );
 }
 
 function safeRouteTab(id: string): TabId | null {
-  return isTabId(id) ? (id as TabId) : null
+  return isTabId(id) ? (id as TabId) : null;
 }
 
 export function DiagnosticsDrawer() {
-  const drawerRef = useRef<HTMLDivElement>(null)
-  const drawerOpen = useStatusStore((s) => s.drawerOpen)
-  const closeDrawer = useStatusStore((s) => s.closeDrawer)
-  useFocusTrap(drawerRef, drawerOpen, closeDrawer)
-  const status = useStatusStore((s) => s.status)
-  const focusedSectionId = useStatusStore((s) => s.focusedSectionId)
-  const setFocusedSection = useStatusStore((s) => s.setFocusedSection)
-  const refresh = useStatusStore((s) => s.refresh)
-  const isRefreshing = useStatusStore((s) => s.isRefreshing)
-  const lastRefreshedAt = useStatusStore((s) => s.lastRefreshedAt)
-  const setActiveTab = useSettingsStore((s) => s.setActiveTab)
+  const { t: tRuntime } = useTranslation("common");
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const drawerOpen = useStatusStore((s) => s.drawerOpen);
+  const closeDrawer = useStatusStore((s) => s.closeDrawer);
+  useFocusTrap(drawerRef, drawerOpen, closeDrawer);
+  const status = useStatusStore((s) => s.status);
+  const focusedSectionId = useStatusStore((s) => s.focusedSectionId);
+  const setFocusedSection = useStatusStore((s) => s.setFocusedSection);
+  const refresh = useStatusStore((s) => s.refresh);
+  const isRefreshing = useStatusStore((s) => s.isRefreshing);
+  const lastRefreshedAt = useStatusStore((s) => s.lastRefreshedAt);
+  const setActiveTab = useSettingsStore((s) => s.setActiveTab);
 
   // The model status is the only category that benefits from a
   // manual catalog refresh. We use the existing useModels hook so
   // we do not introduce a parallel model service.
-  const models = useModels("text", { enabled: drawerOpen })
+  const models = useModels("text", { enabled: drawerOpen });
 
   // Track a small transient status string for the "Copy safe
   // diagnostics" button so the test can observe the click handler
   // without depending on global toast side-effects.
-  const [lastCopyAt, setLastCopyAt] = useState<string | null>(null)
+  const [lastCopyAt, setLastCopyAt] = useState<string | null>(null);
 
   const handleCopySafeDiagnostics = useCallback(async () => {
     // Use the snapshot from the status store so the user gets the
     // exact same data they see in the drawer. The service builder
     // re-runs only when the underlying stores have changed (via
     // the store's `recompute` action), so this is cheap.
-    const currentStatus = useStatusStore.getState().status
-    const safe = computeSafeDiagnosticsSnapshot(currentStatus)
-    const json = serialiseSafeDiagnosticsSnapshot(safe)
-    const ok = await copyText(json)
+    const currentStatus = useStatusStore.getState().status;
+    const safe = computeSafeDiagnosticsSnapshot(currentStatus);
+    const json = serialiseSafeDiagnosticsSnapshot(safe);
+    const ok = await copyText(json);
     if (ok) {
-      setLastCopyAt(new Date().toISOString())
-      toast.success("Safe diagnostics copied to clipboard")
+      setLastCopyAt(new Date().toISOString());
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.status.diagnosticsdrawer.notification.safeDiagnosticsCopiedToClipboard",
+        ),
+      );
     } else {
-      toast.error("Could not copy safe diagnostics")
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.status.diagnosticsdrawer.notification.couldNotCopySafeDiagnostics",
+        ),
+      );
     }
-  }, [])
+  }, [tRuntime]);
 
   const handleRefresh = useCallback(async () => {
     try {
-      await refresh()
-      toast.success("Diagnostics refreshed")
+      await refresh();
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.status.diagnosticsdrawer.notification.diagnosticsRefreshed",
+        ),
+      );
     } catch {
-      toast.error("Diagnostics refresh failed")
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.status.diagnosticsdrawer.notification.diagnosticsRefreshFailed",
+        ),
+      );
     }
-  }, [refresh])
+  }, [refresh, tRuntime]);
 
   // We deliberately do NOT auto-trigger a /models refetch here —
   // the existing useModels hook keeps a 5-minute cache and the
   // user can pull-to-refresh via the dedicated "Refresh Models"
   // button below. The hook's existing error state is surfaced via
   // the Models state.
-  const modelsError = models.error ? redactErrorMessage(models.error) : null
+  const modelsError = models.error ? redactErrorMessage(models.error) : null;
   const refreshModels = useCallback(async () => {
-    const result = await models.refetch()
-    useStatusStore.getState().recompute()
+    const result = await models.refetch();
+    useStatusStore.getState().recompute();
     if (result.isSuccess) {
-      const catalog = useModelCatalogRuntimeStore.getState()
-      const liveCount = catalog.countsByType.text ?? catalog.totalCount
-      toast.success(`${liveCount} live models refreshed`)
+      const catalog = useModelCatalogRuntimeStore.getState();
+      const liveCount = catalog.countsByType.text ?? catalog.totalCount;
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.status.diagnosticsdrawer.notification.livecountLiveModelsRefreshed",
+          { liveCount: liveCount },
+        ),
+      );
     } else {
-      toast.error(redactErrorMessage(result.error ?? "Model catalog refresh failed"))
+      toast.error(
+        redactErrorMessage(result.error ?? "Model catalog refresh failed"),
+      );
     }
-  }, [models])
+  }, [models, tRuntime]);
 
   // Build a unique ordered list of (id, label, item) for the
   // sections we actually want to render. The SECTION_ORDER has
   // a duplicate "diagnostics" key (Overview + Repair) so we
   // dedupe to a stable order.
   const sections = useMemo(() => {
-    const seen = new Set<string>()
-    const out: Array<{ key: keyof AppStatusSnapshot; label: string; item: AppStatusItem }> = []
-    for (const { key, label } of SECTION_ORDER) {
-      if (seen.has(`${key}::${label}`)) continue
-      seen.add(`${key}::${label}`)
-      const item = status[key]
-      if (!item) continue
-      out.push({ key, label, item })
+    void tRuntime;
+    const seen = new Set<string>();
+    const out: Array<{
+      id: string;
+      key: keyof AppStatusSnapshot;
+      label: string;
+      item: AppStatusItem;
+    }> = [];
+    for (const { id, key, label } of SECTION_ORDER) {
+      if (seen.has(id)) continue;
+      seen.add(id);
+      const item = status[key];
+      if (!item) continue;
+      out.push({ id, key, label, item });
     }
-    return out
-  }, [status])
+    return out;
+  }, [status, tRuntime]);
 
-  if (!drawerOpen) return null
+  if (!drawerOpen) return null;
 
   return (
     <div
@@ -217,13 +346,17 @@ export function DiagnosticsDrawer() {
       className="fixed inset-0 z-[170] flex justify-end"
       role="dialog"
       aria-modal="true"
-      aria-label="Diagnostics"
+      aria-label={tRuntime(
+        "runtimeGenerated.components.status.diagnosticsdrawer.attribute.diagnostics",
+      )}
       data-testid="diagnostics-drawer"
     >
       {/* Backdrop click closes the drawer. */}
       <button
         type="button"
-        aria-label="Close diagnostics"
+        aria-label={tRuntime(
+          "runtimeGenerated.components.status.diagnosticsdrawer.attribute.closeDiagnostics",
+        )}
         data-testid="diagnostics-backdrop"
         onClick={closeDrawer}
         className="flex-1 bg-overlay backdrop-blur-sm"
@@ -235,18 +368,23 @@ export function DiagnosticsDrawer() {
         <header className="flex items-center justify-between gap-2">
           <div>
             <h2 className="text-[14px] font-semibold text-text-primary">
-              <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.heading.diagnostics" /></h2>
+              <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.heading.diagnostics" />
+            </h2>
             <p className="text-[12px] text-text-muted mt-0.5">
-              <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.appHealthModelCatalogStorageSafetyAnd" /></p>
+              <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.appHealthModelCatalogStorageSafetyAnd" />
+            </p>
           </div>
           <button
             type="button"
             onClick={closeDrawer}
-            aria-label="Close"
+            aria-label={tRuntime(
+              "runtimeGenerated.components.status.diagnosticsdrawer.attribute.close",
+            )}
             data-testid="diagnostics-close"
             className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
           >
-            <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.close" /></button>
+            <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.close" />
+          </button>
         </header>
 
         <div className="flex flex-wrap items-center gap-1.5">
@@ -257,7 +395,13 @@ export function DiagnosticsDrawer() {
             data-testid="diagnostics-refresh"
             className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-50"
           >
-            {isRefreshing ? "Refreshing…" : "Refresh Diagnostics"}
+            {isRefreshing
+              ? tRuntime(
+                  "runtimeGenerated.components.status.diagnosticsdrawer.text.refreshing",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.status.diagnosticsdrawer.text.refreshDiagnostics",
+                )}
           </button>
           <button
             type="button"
@@ -265,9 +409,13 @@ export function DiagnosticsDrawer() {
             data-testid="diagnostics-copy-safe"
             className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
           >
-            <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.copySafeDiagnostics" /></button>
+            <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.copySafeDiagnostics" />
+          </button>
           {lastCopyedAt(lastCopyAt) && (
-            <span className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.text.copiedAt" /> {lastCopyedAt(lastCopyAt)}</span>
+            <span className="text-[12px] text-text-muted">
+              <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.text.copiedAt" />{" "}
+              {lastCopyedAt(lastCopyAt)}
+            </span>
           )}
         </div>
 
@@ -286,23 +434,31 @@ export function DiagnosticsDrawer() {
             type="checkbox"
             checked={useSettingsStore.getState().diagnosticsIncludePrompts}
             onChange={(e) =>
-              useSettingsStore.getState().setDiagnosticsIncludePrompts(e.target.checked)
+              useSettingsStore
+                .getState()
+                .setDiagnosticsIncludePrompts(e.target.checked)
             }
-            aria-label="Include redacted prompt excerpts in safe diagnostics"
+            aria-label={tRuntime(
+              "runtimeGenerated.components.status.diagnosticsdrawer.attribute.includeRedactedPromptExcerptsInSafeDiagnostics",
+            )}
             className="mt-0.5"
           />
           <span>
-            <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.text.includeRedactedPromptExcerptsInSafeDiagnostics" /><span className="block text-[11px] text-text-muted">
-              <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.text.truncated80CharsAndSecretStrippedPrompt" /></span>
+            <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.text.includeRedactedPromptExcerptsInSafeDiagnostics" />
+            <span className="block text-[11px] text-text-muted">
+              <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.text.truncated80CharsAndSecretStrippedPrompt" />
+            </span>
           </span>
         </label>
 
         {lastRefreshedAt && (
-          <p className="text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.lastRefresh" /> {lastRefreshedAt}</p>
+          <p className="text-[12px] text-text-muted">
+            <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.lastRefresh" />{" "}
+            {lastRefreshedAt}
+          </p>
         )}
 
-        {sections.map(({ key, label, item }) => {
-          const sectionId = `${String(key)}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`
+        {sections.map(({ id: sectionId, key, label, item }) => {
           return (
             <Section
               key={sectionId}
@@ -317,14 +473,17 @@ export function DiagnosticsDrawer() {
                 <button
                   type="button"
                   onClick={() => {
-                    const tab = safeRouteTab(item.actionTargetTabId!)
-                    if (tab) setActiveTab(tab)
-                    closeDrawer()
+                    const tab = safeRouteTab(item.actionTargetTabId!);
+                    if (tab) setActiveTab(tab);
+                    closeDrawer();
                   }}
                   data-testid="diagnostics-action-apiKey"
                   className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                 >
-                  {item.actionLabel ?? "Open Config"}
+                  {(item.actionLabelKey && tRuntime(item.actionLabelKey)) ??
+                    tRuntime(
+                      "runtimeGenerated.components.status.diagnosticsdrawer.text.openConfig",
+                    )}
                 </button>
               )}
               {key === "api" && (
@@ -334,7 +493,13 @@ export function DiagnosticsDrawer() {
                   data-testid="diagnostics-action-api-refresh"
                   className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                 >
-                  {models.isFetching ? "Refreshing models…" : "Refresh Models"}
+                  {models.isFetching
+                    ? tRuntime(
+                        "runtimeGenerated.components.status.diagnosticsdrawer.text.refreshingModels",
+                      )
+                    : tRuntime(
+                        "runtimeGenerated.components.status.diagnosticsdrawer.text.refreshModels",
+                      )}
                 </button>
               )}
               {key === "model" && (
@@ -345,11 +510,18 @@ export function DiagnosticsDrawer() {
                     data-testid="diagnostics-action-model-refresh"
                     className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                   >
-                    {models.isFetching ? "Refreshing models…" : "Refresh Models"}
+                    {models.isFetching
+                      ? tRuntime(
+                          "runtimeGenerated.components.status.diagnosticsdrawer.text.refreshingModels",
+                        )
+                      : tRuntime(
+                          "runtimeGenerated.components.status.diagnosticsdrawer.text.refreshModels",
+                        )}
                   </button>
                   {modelsError && (
                     <p className="text-[12px] text-danger break-words">
-                      <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.lastRefreshError" /> {modelsError}
+                      <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.lastRefreshError" />{" "}
+                      {modelsError}
                     </p>
                   )}
                 </div>
@@ -358,26 +530,28 @@ export function DiagnosticsDrawer() {
                 <button
                   type="button"
                   onClick={() => {
-                    const tab = safeRouteTab(item.actionTargetTabId!)
-                    if (tab) setActiveTab(tab)
-                    closeDrawer()
+                    const tab = safeRouteTab(item.actionTargetTabId!);
+                    if (tab) setActiveTab(tab);
+                    closeDrawer();
                   }}
                   data-testid="diagnostics-action-storage"
                   className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                 >
-                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openStatus" /></button>
+                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openStatus" />
+                </button>
               )}
               {key === "storage" && label === "Privacy" && (
                 <button
                   type="button"
                   onClick={() => {
-                    setActiveTab("privacy" as Tab)
-                    closeDrawer()
+                    setActiveTab("privacy" as Tab);
+                    closeDrawer();
                   }}
                   data-testid="diagnostics-action-privacy"
                   className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                 >
-                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openPrivacyDashboard" /></button>
+                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openPrivacyDashboard" />
+                </button>
               )}
               {key === "project" && (
                 <button
@@ -385,69 +559,77 @@ export function DiagnosticsDrawer() {
                   onClick={() => {
                     const tab = safeRouteTab(
                       item.actionTargetTabId ?? "status",
-                    )
-                    if (tab) setActiveTab(tab)
-                    closeDrawer()
+                    );
+                    if (tab) setActiveTab(tab);
+                    closeDrawer();
                   }}
                   data-testid="diagnostics-action-project"
                   className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                 >
-                  {item.actionLabel ?? "Open Status"}
+                  {(item.actionLabelKey && tRuntime(item.actionLabelKey)) ??
+                    tRuntime(
+                      "runtimeGenerated.components.status.diagnosticsdrawer.text.openStatus",
+                    )}
                 </button>
               )}
               {key === "safety" && item.actionTargetTabId && (
                 <button
                   type="button"
                   onClick={() => {
-                    const tab = safeRouteTab(item.actionTargetTabId!)
-                    if (tab) setActiveTab(tab)
-                    closeDrawer()
+                    const tab = safeRouteTab(item.actionTargetTabId!);
+                    if (tab) setActiveTab(tab);
+                    closeDrawer();
                   }}
                   data-testid="diagnostics-action-safety"
                   className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                 >
-                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openConfig" /></button>
+                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openConfig" />
+                </button>
               )}
               {key === "provider" && item.actionTargetTabId && (
                 <button
                   type="button"
                   onClick={() => {
-                    const tab = safeRouteTab(item.actionTargetTabId!)
-                    if (tab) setActiveTab(tab)
-                    closeDrawer()
+                    const tab = safeRouteTab(item.actionTargetTabId!);
+                    if (tab) setActiveTab(tab);
+                    closeDrawer();
                   }}
                   data-testid="diagnostics-action-provider"
                   className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                 >
-                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openConfig" /></button>
+                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.openConfig" />
+                </button>
               )}
               {key === "desktop" && !isElectron() && (
                 <p className="text-[12px] text-text-muted">
-                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.webModeFilesystemRevealsAndTheSystem" /></p>
+                  <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.webModeFilesystemRevealsAndTheSystem" />
+                </p>
               )}
               {key === "diagnostics" && label === "Repair" && (
                 <div className="space-y-1.5">
                   <p className="text-[12px] text-text-muted">
-                    <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.phase2cShipsReadOnlyDiagnosticsDestructive" /></p>
+                    <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.description.phase2cShipsReadOnlyDiagnosticsDestructive" />
+                  </p>
                   <button
                     type="button"
                     onClick={() => setFocusedSection("model")}
                     data-testid="diagnostics-action-jump-model"
                     className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                   >
-                    <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.jumpToModel" /></button>
+                    <Trans i18nKey="common:surface.componentsStatusDiagnosticsdrawer.action.jumpToModel" />
+                  </button>
                 </div>
               )}
             </Section>
-          )
+          );
         })}
       </aside>
     </div>
-  )
+  );
 }
 
 function lastCopyedAt(iso: string | null): string | null {
-  if (!iso) return null
+  if (!iso) return null;
   // Trim to HH:MM:SS so the UI is compact.
-  return iso.slice(11, 19)
+  return iso.slice(11, 19);
 }

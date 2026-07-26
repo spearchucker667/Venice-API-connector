@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 import { redactErrorMessage } from "../shared/redaction";
 import { isPromptSecretLike } from "../types/prompt-library";
 import type {
@@ -23,16 +24,27 @@ export class ImageInspectorAnalysisError extends Error {
 
 function record(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
-    ? value as Record<string, unknown>
+    ? (value as Record<string, unknown>)
     : null;
 }
 
-function stringValue(value: unknown, maxLength = MAX_TEXT_CHARS): string | null {
+function stringValue(
+  value: unknown,
+  maxLength = MAX_TEXT_CHARS,
+): string | null {
   return typeof value === "string" ? value.slice(0, maxLength) : null;
 }
 
-function stringList(value: unknown, maxItems = MAX_LIST_ITEMS, maxLength = 2_000): string[] | null {
-  if (!Array.isArray(value) || value.length > maxItems || !value.every((item) => typeof item === "string")) {
+function stringList(
+  value: unknown,
+  maxItems = MAX_LIST_ITEMS,
+  maxLength = 2_000,
+): string[] | null {
+  if (
+    !Array.isArray(value) ||
+    value.length > maxItems ||
+    !value.every((item) => typeof item === "string")
+  ) {
     return null;
   }
   return value.map((item) => item.slice(0, maxLength));
@@ -69,7 +81,9 @@ export function extractImageInspectorContent(response: unknown): string {
     : "";
 }
 
-export function validateImageInspectorAnalysis(value: unknown): ImageInspectorAnalysis | null {
+export function validateImageInspectorAnalysis(
+  value: unknown,
+): ImageInspectorAnalysis | null {
   const raw = record(value);
   if (!raw || raw.schemaVersion !== 1) return null;
 
@@ -103,11 +117,14 @@ export function validateImageInspectorAnalysis(value: unknown): ImageInspectorAn
     const subject = record(value);
     const description = stringValue(subject?.description);
     const attributes = stringList(subject?.attributes, 64, 500);
-    return description === null || !attributes ? null : { description, attributes };
+    return description === null || !attributes
+      ? null
+      : { description, attributes };
   });
   if (subjects.some((subject) => subject === null)) return null;
 
-  if (!Array.isArray(raw.visibleText) || raw.visibleText.length > 64) return null;
+  if (!Array.isArray(raw.visibleText) || raw.visibleText.length > 64)
+    return null;
   const visibleText = raw.visibleText.map((value) => {
     const item = record(value);
     const text = stringValue(item?.text, 2_000);
@@ -116,7 +133,8 @@ export function validateImageInspectorAnalysis(value: unknown): ImageInspectorAn
   });
   if (visibleText.some((item) => item === null)) return null;
 
-  if (!Array.isArray(raw.sourceClues) || raw.sourceClues.length > 64) return null;
+  if (!Array.isArray(raw.sourceClues) || raw.sourceClues.length > 64)
+    return null;
   const sourceClues = raw.sourceClues.map((value) => {
     const item = record(value);
     const type = stringValue(item?.type, 100);
@@ -125,7 +143,8 @@ export function validateImageInspectorAnalysis(value: unknown): ImageInspectorAn
   });
   if (sourceClues.some((item) => item === null)) return null;
 
-  if (!Array.isArray(raw.searchQueries) || raw.searchQueries.length > 16) return null;
+  if (!Array.isArray(raw.searchQueries) || raw.searchQueries.length > 16)
+    return null;
   const searchQueries = raw.searchQueries.map((value) => {
     const item = record(value);
     const query = stringValue(item?.query, 500);
@@ -147,7 +166,12 @@ export function validateImageInspectorAnalysis(value: unknown): ImageInspectorAn
   ]);
   const positive = stringValue(prompt?.positive, 20_000);
   const negative = stringValue(prompt?.negative, 20_000);
-  if (typeof target !== "string" || !validTargets.has(target as PromptTarget) || positive === null || negative === null) {
+  if (
+    typeof target !== "string" ||
+    !validTargets.has(target as PromptTarget) ||
+    positive === null ||
+    negative === null
+  ) {
     return null;
   }
   const replicationPrompt: ReplicationPrompt = {
@@ -173,7 +197,13 @@ export function validateImageInspectorAnalysis(value: unknown): ImageInspectorAn
   const confidence = record(raw.confidence);
   const overall = confidence?.overall;
   const uncertainties = stringList(confidence?.uncertainties, 64, 2_000);
-  if (typeof overall !== "number" || overall < 0 || overall > 1 || !uncertainties) return null;
+  if (
+    typeof overall !== "number" ||
+    overall < 0 ||
+    overall > 1 ||
+    !uncertainties
+  )
+    return null;
 
   return {
     schemaVersion: 1,
@@ -196,31 +226,48 @@ export function validateImageInspectorAnalysis(value: unknown): ImageInspectorAn
   };
 }
 
-function normalizeImageInspectorAnalysis(value: unknown, expectedTarget: PromptTarget): unknown {
+function normalizeImageInspectorAnalysis(
+  value: unknown,
+  expectedTarget: PromptTarget,
+): unknown {
   const raw = record(value);
   if (!raw) return value;
-  const hasAnalysisDetail = (
+  const hasAnalysisDetail =
     (Array.isArray(raw.subjects) && raw.subjects.length > 0) ||
     typeof raw.replicationPrompt === "string" ||
     record(raw.replicationPrompt) !== null ||
-    ["composition", "lighting", "color", "environment", "style", "technical", "mood"]
-      .some((key) => raw[key] !== undefined)
-  );
+    [
+      "composition",
+      "lighting",
+      "color",
+      "environment",
+      "style",
+      "technical",
+      "mood",
+    ].some((key) => raw[key] !== undefined);
   if (!hasAnalysisDetail) return value;
 
   const normalizeStrings = (candidate: unknown): string[] =>
     Array.isArray(candidate)
       ? candidate.filter((item): item is string => typeof item === "string")
       : [];
-  const normalizeDescriptions = (candidate: unknown): Array<{ description: string; attributes: string[] }> =>
+  const normalizeDescriptions = (
+    candidate: unknown,
+  ): Array<{ description: string; attributes: string[] }> =>
     Array.isArray(candidate)
       ? candidate.flatMap((item) => {
-          if (typeof item === "string") return [{ description: item, attributes: [] }];
+          if (typeof item === "string")
+            return [{ description: item, attributes: [] }];
           const subject = record(item);
           const description = stringValue(subject?.description);
           return description === null
             ? []
-            : [{ description, attributes: normalizeStrings(subject?.attributes) }];
+            : [
+                {
+                  description,
+                  attributes: normalizeStrings(subject?.attributes),
+                },
+              ];
         })
       : [];
   const normalizePairs = (
@@ -231,44 +278,84 @@ function normalizeImageInspectorAnalysis(value: unknown, expectedTarget: PromptT
   ): Array<Record<string, string>> =>
     Array.isArray(candidate)
       ? candidate.flatMap((item) => {
-          if (typeof item === "string") return [{ [firstKey]: item, [secondKey]: secondDefault }];
+          if (typeof item === "string")
+            return [{ [firstKey]: item, [secondKey]: secondDefault }];
           const pair = record(item);
           const first = stringValue(pair?.[firstKey], 2_000);
           const second = stringValue(pair?.[secondKey], 2_000) ?? secondDefault;
-          return first === null ? [] : [{ [firstKey]: first, [secondKey]: second }];
+          return first === null
+            ? []
+            : [{ [firstKey]: first, [secondKey]: second }];
         })
       : [];
 
   const promptRaw = raw.replicationPrompt;
   const prompt = record(promptRaw);
-  const positive = typeof promptRaw === "string"
-    ? promptRaw
-    : stringValue(prompt?.positive, 20_000);
-  const negativePrompt = stringValue(raw.negativePrompt, 20_000)
-    ?? stringValue(prompt?.negative, 20_000)
-    ?? "";
+  const positive =
+    typeof promptRaw === "string"
+      ? promptRaw
+      : stringValue(prompt?.positive, 20_000);
+  const negativePrompt =
+    stringValue(raw.negativePrompt, 20_000) ??
+    stringValue(prompt?.negative, 20_000) ??
+    "";
   const confidenceRaw = raw.confidence;
   const confidence = record(confidenceRaw);
-  const overall = typeof confidenceRaw === "number"
-    ? confidenceRaw
-    : confidence?.overall;
+  const overall =
+    typeof confidenceRaw === "number" ? confidenceRaw : confidence?.overall;
 
   return {
     ...raw,
     schemaVersion: raw.schemaVersion ?? 1,
     subjects: normalizeDescriptions(raw.subjects),
-    composition: descriptionObject(raw.composition) ?? { description: "Not provided by model." },
-    lighting: descriptionObject(raw.lighting) ?? { description: "Not provided by model." },
-    color: descriptionObject(raw.color) ?? { description: "Not provided by model." },
-    environment: descriptionObject(raw.environment) ?? { description: "Not provided by model." },
-    style: descriptionObject(raw.style) ?? { description: "Not provided by model." },
-    technical: descriptionObject(raw.technical) ?? { description: "Not provided by model." },
-    mood: descriptionObject(raw.mood) ?? { description: "Not provided by model." },
+    composition: descriptionObject(raw.composition) ?? {
+      description: translateRuntime(
+        "runtimeGenerated.services.imageinspectoranalysis.metadata.notProvidedByModel",
+        "Not provided by model.",
+      ),
+    },
+    lighting: descriptionObject(raw.lighting) ?? {
+      description: translateRuntime(
+        "runtimeGenerated.services.imageinspectoranalysis.metadata.notProvidedByModel",
+        "Not provided by model.",
+      ),
+    },
+    color: descriptionObject(raw.color) ?? {
+      description: translateRuntime(
+        "runtimeGenerated.services.imageinspectoranalysis.metadata.notProvidedByModel",
+        "Not provided by model.",
+      ),
+    },
+    environment: descriptionObject(raw.environment) ?? {
+      description: translateRuntime(
+        "runtimeGenerated.services.imageinspectoranalysis.metadata.notProvidedByModel",
+        "Not provided by model.",
+      ),
+    },
+    style: descriptionObject(raw.style) ?? {
+      description: translateRuntime(
+        "runtimeGenerated.services.imageinspectoranalysis.metadata.notProvidedByModel",
+        "Not provided by model.",
+      ),
+    },
+    technical: descriptionObject(raw.technical) ?? {
+      description: translateRuntime(
+        "runtimeGenerated.services.imageinspectoranalysis.metadata.notProvidedByModel",
+        "Not provided by model.",
+      ),
+    },
+    mood: descriptionObject(raw.mood) ?? {
+      description: translateRuntime(
+        "runtimeGenerated.services.imageinspectoranalysis.metadata.notProvidedByModel",
+        "Not provided by model.",
+      ),
+    },
     visibleText: normalizePairs(raw.visibleText, "text", "type", "text"),
     sourceClues: normalizePairs(raw.sourceClues, "type", "value", "unknown"),
     replicationPrompt: {
       ...prompt,
-      target: typeof prompt?.target === "string" ? prompt.target : expectedTarget,
+      target:
+        typeof prompt?.target === "string" ? prompt.target : expectedTarget,
       positive: positive ?? stringValue(raw.summary, 20_000) ?? "",
       negative: stringValue(prompt?.negative, 20_000) ?? negativePrompt,
       cameraHints: normalizeStrings(prompt?.cameraHints),
@@ -276,7 +363,12 @@ function normalizeImageInspectorAnalysis(value: unknown, expectedTarget: PromptT
       colorHints: normalizeStrings(prompt?.colorHints),
     },
     negativePrompt,
-    searchQueries: normalizePairs(raw.searchQueries, "query", "type", "descriptive"),
+    searchQueries: normalizePairs(
+      raw.searchQueries,
+      "query",
+      "type",
+      "descriptive",
+    ),
     confidence: {
       overall: typeof overall === "number" ? overall : 0,
       uncertainties: normalizeStrings(confidence?.uncertainties),
@@ -322,7 +414,9 @@ export function parseImageInspectorAnalysis(
   return analysis;
 }
 
-export function buildImageInspectorResponseFormat(target: PromptTarget): Record<string, unknown> {
+export function buildImageInspectorResponseFormat(
+  target: PromptTarget,
+): Record<string, unknown> {
   const description = {
     type: "object",
     additionalProperties: false,
@@ -334,81 +428,105 @@ export function buildImageInspectorResponseFormat(target: PromptTarget): Record<
     type: "object",
     additionalProperties: false,
     properties: {
-        schemaVersion: { type: "integer", const: 1 },
-        summary: { type: "string" },
-        subjects: {
-          type: "array",
-          items: {
-            type: "object",
-            additionalProperties: false,
-            properties: { description: { type: "string" }, attributes: stringArray },
-            required: ["description", "attributes"],
-          },
-        },
-        composition: description,
-        lighting: description,
-        color: description,
-        environment: description,
-        style: description,
-        technical: description,
-        mood: description,
-        visibleText: {
-          type: "array",
-          items: {
-            type: "object",
-            additionalProperties: false,
-            properties: { text: { type: "string" }, type: { type: "string" } },
-            required: ["text", "type"],
-          },
-        },
-        sourceClues: {
-          type: "array",
-          items: {
-            type: "object",
-            additionalProperties: false,
-            properties: { type: { type: "string" }, value: { type: "string" } },
-            required: ["type", "value"],
-          },
-        },
-        replicationPrompt: {
+      schemaVersion: { type: "integer", const: 1 },
+      summary: { type: "string" },
+      subjects: {
+        type: "array",
+        items: {
           type: "object",
           additionalProperties: false,
           properties: {
-            target: { type: "string", enum: [target] },
-            positive: { type: "string" },
-            negative: { type: "string" },
-            aspectRatioHint: { type: "string" },
-            cameraHints: stringArray,
-            lightingHints: stringArray,
-            colorHints: stringArray,
+            description: { type: "string" },
+            attributes: stringArray,
           },
-          required: ["target", "positive", "negative", "cameraHints", "lightingHints", "colorHints"],
+          required: ["description", "attributes"],
         },
-        negativePrompt: { type: "string" },
-        searchQueries: {
-          type: "array",
-          items: {
-            type: "object",
-            additionalProperties: false,
-            properties: { query: { type: "string" }, type: { type: "string" } },
-            required: ["query", "type"],
-          },
-        },
-        confidence: {
+      },
+      composition: description,
+      lighting: description,
+      color: description,
+      environment: description,
+      style: description,
+      technical: description,
+      mood: description,
+      visibleText: {
+        type: "array",
+        items: {
           type: "object",
           additionalProperties: false,
-          properties: {
-            overall: { type: "number", minimum: 0, maximum: 1 },
-            uncertainties: stringArray,
-          },
-          required: ["overall", "uncertainties"],
+          properties: { text: { type: "string" }, type: { type: "string" } },
+          required: ["text", "type"],
         },
-        warnings: stringArray,
+      },
+      sourceClues: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: { type: { type: "string" }, value: { type: "string" } },
+          required: ["type", "value"],
+        },
+      },
+      replicationPrompt: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          target: { type: "string", enum: [target] },
+          positive: { type: "string" },
+          negative: { type: "string" },
+          aspectRatioHint: { type: "string" },
+          cameraHints: stringArray,
+          lightingHints: stringArray,
+          colorHints: stringArray,
+        },
+        required: [
+          "target",
+          "positive",
+          "negative",
+          "cameraHints",
+          "lightingHints",
+          "colorHints",
+        ],
+      },
+      negativePrompt: { type: "string" },
+      searchQueries: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: { query: { type: "string" }, type: { type: "string" } },
+          required: ["query", "type"],
+        },
+      },
+      confidence: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          overall: { type: "number", minimum: 0, maximum: 1 },
+          uncertainties: stringArray,
+        },
+        required: ["overall", "uncertainties"],
+      },
+      warnings: stringArray,
     },
     required: [
-      "schemaVersion", "summary", "subjects", "composition", "lighting", "color",
-      "environment", "style", "technical", "mood", "visibleText", "sourceClues",
-      "replicationPrompt", "negativePrompt", "searchQueries", "confidence", "warnings",
+      "schemaVersion",
+      "summary",
+      "subjects",
+      "composition",
+      "lighting",
+      "color",
+      "environment",
+      "style",
+      "technical",
+      "mood",
+      "visibleText",
+      "sourceClues",
+      "replicationPrompt",
+      "negativePrompt",
+      "searchQueries",
+      "confidence",
+      "warnings",
     ],
   };
   return {

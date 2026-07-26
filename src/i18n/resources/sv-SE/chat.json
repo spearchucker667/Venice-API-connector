@@ -16,5 +16,57 @@
   "folders": "Mappar",
   "unfiled": "Oarkiverade",
   "attachFile": "Bifoga fil",
-  "managedDocument": "Hanterat dokument"
+  "managedDocument": "Hanterat dokument",
+  "composer": {
+    "visionUnsupportedTitle": "AI klarar inte av syn",
+    "visionUnsupportedDetail": "\"{{model}}\" kan inte läsa bildbilagor. Välj en vision-kapabel modell eller konvertera bilden/PDF-filen till text först.",
+    "attachTitle": "Bifoga fil (eller dra/klistra in)",
+    "attachmentLimitTitle": "Gränsen för bifogade filer har nåtts",
+    "attachmentLimitDetail": "Du kan bifoga upp till {{max}} filer per meddelande.",
+    "tooManyAttachmentsTitle": "För många bilagor",
+    "tooManyAttachmentsDetail": "Endast {{added}} av {{requested}} filer lades till. Gränsen är {{max}} filer per meddelande.",
+    "attachmentNote": "Bifogad notering",
+    "attachmentFailed": "Bilaga misslyckades",
+    "attachmentAlt": "Bilaga {{number}}",
+    "removeAttachment": "Ta bort bilaga {{name}}",
+    "disabledPlaceholder": "Anslut en API-nyckel för att starta...",
+    "dropPlaceholder": "Släpp fil för att bifoga",
+    "placeholder": "Fråga vad som helst — Enter för att skicka, Skift+Enter för ny rad. Bifoga en fil att skicka utan text.",
+    "messageInput": "Meddelandeinmatning",
+    "attachFile": "Bifoga fil",
+    "stopGenerating": "Sluta generera",
+    "sendMessage": "Skicka meddelande"
+  },
+  "memory": {
+    "disabledLabel": "Minnet av",
+    "disabledTitle": "Minneshämtning är inaktiverad i Inställningar.",
+    "loadingLabel": "Minne…",
+    "loadingTitle": "Hämtar relevant minne för detta meddelande.",
+    "activeLabel": "Minnet är aktivt",
+    "activeTitle": "Relevant minneskontext kommer att inkluderas i detta meddelande.",
+    "failedLabel": "Minnet misslyckades",
+    "failedTitle": "Minneshämtning misslyckades. Ditt meddelande skickades utan minneskontext."
+  },
+  "controls": {
+    "autoRead": "Automatisk läsning",
+    "citations": "Citat",
+    "scrape": "Skrapa",
+    "xSearch": "X sökning",
+    "searchInStream": "Sök i stream",
+    "documentTools": "Dokumentverktyg",
+    "newChatShortcut": "Ny chatt (⌘N)",
+    "systemPromptPlaceholder": "Frivillig. Lämna tomt för att undvika att lägga till ett app-författat systemmeddelande.",
+    "temperature": "Temperatur",
+    "topP": "Topp P",
+    "maxTokens": "Maximalt antal token",
+    "veniceDefaultPrompt": "Venedig standardprompt",
+    "disableThinking": "Inaktivera tänkande",
+    "stripThinking": "Strip tänkande",
+    "searchMode": "Sök: {{mode}}",
+    "searchModes": {
+      "off": "av",
+      "on": "på",
+      "auto": "Automatiskt"
+    }
+  }
 }

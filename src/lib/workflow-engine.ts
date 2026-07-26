@@ -115,7 +115,7 @@ async function executeNode(
         width: data.width ?? 1024,
         height: data.height ?? 1024,
         hide_watermark: data.hideWatermark ?? true,
-        output_format: 'png',
+        format: 'png',
       }
       if (data.aspectRatio) body.aspect_ratio = data.aspectRatio
       const resp = await venice<ImageGenerateResponse>('/image/generate', {

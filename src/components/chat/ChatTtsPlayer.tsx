@@ -1,6 +1,10 @@
-import { useState, useEffect } from 'react';
-import { chatTtsController, type TtsPlaybackState } from '../../services/chatTtsController';
-import { GenerationLoadingIndicator } from '../generation/GenerationLoadingIndicator';
+import { useTranslation } from "react-i18next";
+import { useState, useEffect } from "react";
+import {
+  chatTtsController,
+  type TtsPlaybackState,
+} from "../../services/chatTtsController";
+import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
 
 interface ChatTtsPlayerProps {
   messageId: string;
@@ -8,24 +12,31 @@ interface ChatTtsPlayerProps {
   className?: string;
 }
 
-export function ChatTtsPlayer({ messageId, text, className = '' }: ChatTtsPlayerProps) {
-  const [state, setState] = useState<TtsPlaybackState>('idle');
+export function ChatTtsPlayer({
+  messageId,
+  text,
+  className = "",
+}: ChatTtsPlayerProps) {
+  const { t: tRuntime } = useTranslation("common");
+  const [state, setState] = useState<TtsPlaybackState>("idle");
   const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = chatTtsController.subscribe((newState, currentMessageId) => {
-      setState(newState);
-      setActiveMessageId(currentMessageId);
-    });
+    const unsubscribe = chatTtsController.subscribe(
+      (newState, currentMessageId) => {
+        setState(newState);
+        setActiveMessageId(currentMessageId);
+      },
+    );
     return () => {
       unsubscribe();
     };
   }, []);
 
   const isActive = activeMessageId === messageId;
-  const isPlaying = isActive && state === 'playing';
-  const isLoading = isActive && state === 'loading';
-  const isPaused = isActive && state === 'paused';
+  const isPlaying = isActive && state === "playing";
+  const isLoading = isActive && state === "loading";
+  const isPaused = isActive && state === "paused";
 
   const handlePlayPause = () => {
     if (isPlaying) {
@@ -48,34 +59,83 @@ export function ChatTtsPlayer({ messageId, text, className = '' }: ChatTtsPlayer
       <button
         onClick={handlePlayPause}
         className="p-1.5 text-text-muted/60 hover:text-text-secondary transition-colors rounded-md hover:bg-surface-elevated cursor-pointer disabled:opacity-50"
-        title={isPlaying ? "Pause speech" : "Play speech"}
+        title={
+          isPlaying
+            ? tRuntime(
+                "runtimeGenerated.components.chat.chatttsplayer.attribute.pauseSpeech",
+              )
+            : tRuntime(
+                "runtimeGenerated.components.chat.chatttsplayer.attribute.playSpeech",
+              )
+        }
         disabled={isLoading}
       >
         {isLoading ? (
           <GenerationLoadingIndicator size="sm" state="generating" />
         ) : isPlaying ? (
-          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+          <svg
+            aria-hidden="true"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+          </svg>
         ) : (
-          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg
+            aria-hidden="true"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M8 5v14l11-7z" />
+          </svg>
         )}
       </button>
-      
+
       {(isPlaying || isPaused || isLoading) && (
         <>
           <button
             onClick={handleStop}
             className="p-1.5 text-text-muted/60 hover:text-danger transition-colors rounded-md hover:bg-surface-elevated cursor-pointer"
-            title="Stop speech"
+            title={tRuntime(
+              "runtimeGenerated.components.chat.chatttsplayer.attribute.stopSpeech",
+            )}
           >
-            <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
+            <svg
+              aria-hidden="true"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path d="M6 6h12v12H6z" />
+            </svg>
           </button>
-          
+
           <button
             onClick={handleRestart}
             className="p-1.5 text-text-muted/60 hover:text-text-secondary transition-colors rounded-md hover:bg-surface-elevated cursor-pointer"
-            title="Restart speech"
+            title={tRuntime(
+              "runtimeGenerated.components.chat.chatttsplayer.attribute.restartSpeech",
+            )}
           >
-            <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <svg
+              aria-hidden="true"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
           </button>
         </>
       )}

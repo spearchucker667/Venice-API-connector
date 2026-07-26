@@ -1,3 +1,4 @@
+import { translateRuntime } from "../../i18n/runtimeTranslator";
 /**
  * @fileoverview Local utilities shared by the RP Studio sub-components.
  *
@@ -8,11 +9,51 @@ import type { RpRole } from "../../types/rp";
 import { Badge } from "../ui/shared";
 
 export const RP_SUB_TABS = [
-  { id: "library", label: "Characters" },
-  { id: "personas", label: "Personas" },
-  { id: "lorebooks", label: "Lorebooks" },
-  { id: "chats", label: "Chats" },
-  { id: "scenes", label: "Scenes" },
+  {
+    id: "library",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.rpStudio.shared.metadata.characters",
+        "Characters",
+      );
+    },
+  },
+  {
+    id: "personas",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.rpStudio.shared.metadata.personas",
+        "Personas",
+      );
+    },
+  },
+  {
+    id: "lorebooks",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.rpStudio.shared.metadata.lorebooks",
+        "Lorebooks",
+      );
+    },
+  },
+  {
+    id: "chats",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.rpStudio.shared.metadata.chats",
+        "Chats",
+      );
+    },
+  },
+  {
+    id: "scenes",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.rpStudio.shared.metadata.scenes",
+        "Scenes",
+      );
+    },
+  },
 ] as const;
 
 export type RpSubTabId = (typeof RP_SUB_TABS)[number]["id"];
@@ -53,7 +94,9 @@ export function roleLabel(role: RpRole, characterName?: string): string {
   }
 }
 
-export function roleBadgeTone(role: RpRole): "slate" | "emerald" | "violet" | "amber" | "sky" | "pink" {
+export function roleBadgeTone(
+  role: RpRole,
+): "slate" | "emerald" | "violet" | "amber" | "sky" | "pink" {
   switch (role) {
     case "system":
       return "slate";
@@ -68,19 +111,36 @@ export function roleBadgeTone(role: RpRole): "slate" | "emerald" | "violet" | "a
   }
 }
 
-export function RolePill({ role, characterName }: { role: RpRole; characterName?: string }) {
-  return <Badge tone={roleBadgeTone(role)}>{roleLabel(role, characterName)}</Badge>;
+export function RolePill({
+  role,
+  characterName,
+}: {
+  role: RpRole;
+  characterName?: string;
+}) {
+  return (
+    <Badge tone={roleBadgeTone(role)}>{roleLabel(role, characterName)}</Badge>
+  );
 }
 
-const SAFE_AVATAR_MIME_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
-const SAFE_AVATAR_DATA_URI = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=\s]+$/i;
+const SAFE_AVATAR_MIME_TYPES = new Set([
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+]);
+const SAFE_AVATAR_DATA_URI =
+  /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=\s]+$/i;
 const RAW_BASE64_RE = /^[A-Za-z0-9+/=\s]+$/;
 
-export function avatarDataUri(avatar: { data: string; mimeType: string } | undefined): string | undefined {
+export function avatarDataUri(
+  avatar: { data: string; mimeType: string } | undefined,
+): string | undefined {
   if (!avatar) return undefined;
   if (SAFE_AVATAR_DATA_URI.test(avatar.data)) return avatar.data;
   // Reject URLs, file paths, and other non-base64 payloads outright.
   if (!RAW_BASE64_RE.test(avatar.data)) return undefined;
-  const safeMime = SAFE_AVATAR_MIME_TYPES.has(avatar.mimeType) ? avatar.mimeType : "image/png";
+  const safeMime = SAFE_AVATAR_MIME_TYPES.has(avatar.mimeType)
+    ? avatar.mimeType
+    : "image/png";
   return `data:${safeMime};base64,${avatar.data}`;
 }

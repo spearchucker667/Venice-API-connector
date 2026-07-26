@@ -4,25 +4,50 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Heart, Trash2, Tag as TagIcon, NotebookPen, Sparkles,
-  Copy, Wand2, Shuffle, Settings, RefreshCw, Repeat, Maximize2, ImagePlus, Download,
+  Heart,
+  Trash2,
+  Tag as TagIcon,
+  NotebookPen,
+  Sparkles,
+  Copy,
+  Wand2,
+  Shuffle,
+  Settings,
+  RefreshCw,
+  Repeat,
+  Maximize2,
+  ImagePlus,
+  Download,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { GhostButton, Label, TextArea, Badge } from "../ui/shared";
-import { mediaCapabilities, normalizedTags, splitTags } from "../../utils/mediaItem";
-import { enhancePrompt, remixPrompt } from "../../services/prompt-enhancer-service";
+import {
+  mediaCapabilities,
+  normalizedTags,
+  splitTags,
+} from "../../utils/mediaItem";
+import {
+  enhancePrompt,
+  remixPrompt,
+} from "../../services/prompt-enhancer-service";
 import { useConfigStore } from "../../stores/config-store";
 import { useModels } from "../../hooks/use-models";
 import type { MediaItem } from "../../types/media";
-import { extractGenerationRecipe, type GenerationRecipe } from "../../types/project";
+import {
+  extractGenerationRecipe,
+  type GenerationRecipe,
+} from "../../types/project";
 import { RecipeCompatibilityCard } from "./recipe-compatibility-card";
-import { usePromptLibraryStore, resolvePromptProjectId } from "../../stores/prompt-library-store";
+import {
+  usePromptLibraryStore,
+  resolvePromptProjectId,
+} from "../../stores/prompt-library-store";
 import { toast } from "../../stores/toast-store";
 import { copyText } from "../../stores/media-send-to";
 import { useSettingsStore } from "../../stores/settings-store";
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
 import { desktopFiles, isElectron } from "../../services/desktopBridge";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 interface MediaInspectorProps {
   item: MediaItem;
@@ -41,7 +66,10 @@ interface MediaInspectorProps {
    *  No generation. */
   onUseSettings?: (item: MediaItem) => void;
   /** Regenerate using the stored metadata, optionally keeping the original seed. */
-  onRegenerate?: (item: MediaItem, opts?: { sameSeed?: boolean; promptOverride?: string }) => void;
+  onRegenerate?: (
+    item: MediaItem,
+    opts?: { sameSeed?: boolean; promptOverride?: string },
+  ) => void;
   /** Enhance / upscale the selected item via the existing image-tools flow. */
   onUpscale?: (item: MediaItem) => void;
   /** Apply a remixed prompt to the Image Studio (no auto-generation). */
@@ -82,6 +110,7 @@ export function MediaInspector({
   onExportRecipe,
   currentModel,
 }: MediaInspectorProps) {
+  const { t: tRuntime } = useTranslation("common");
   const [tagDraft, setTagDraft] = useState("");
   const [noteDraft, setNoteDraft] = useState(item.note);
   const [showRecipeComparison, setShowRecipeComparison] = useState(false);
@@ -99,10 +128,18 @@ export function MediaInspector({
     return { supportsVision: match.model_spec?.capabilities?.supportsVision };
   }, [item.model, modelsQuery.data]);
   const capabilities = useMemo(
-    () => mediaCapabilities({ model: item.model, liveCapabilities: liveVisionSupports }),
+    () =>
+      mediaCapabilities({
+        model: item.model,
+        liveCapabilities: liveVisionSupports,
+      }),
     [item.model, liveVisionSupports],
   );
-  const hasAnyCapability = capabilities.upscale || capabilities.edit || capabilities.video || capabilities.vision;
+  const hasAnyCapability =
+    capabilities.upscale ||
+    capabilities.edit ||
+    capabilities.video ||
+    capabilities.vision;
 
   useEffect(() => {
     setNoteDraft(item.note);
@@ -129,7 +166,10 @@ export function MediaInspector({
   // records cannot be displayed and the previous behaviour was to hide
   // the section silently. We now surface a "Missing" row with a single-
   // click recovery action that prunes the stale reference.
-  const hasDanglingParent = item.parentId !== null && item.parentId !== undefined && parentItem === null;
+  const hasDanglingParent =
+    item.parentId !== null &&
+    item.parentId !== undefined &&
+    parentItem === null;
   const hasDanglingChildren = missingChildIds.length > 0;
   const hasAnyDangling = hasDanglingParent || hasDanglingChildren;
 
@@ -138,7 +178,9 @@ export function MediaInspector({
   };
 
   const handleClearDanglingChildren = async () => {
-    const filtered = item.childrenIds.filter((id) => !missingChildIds.includes(id));
+    const filtered = item.childrenIds.filter(
+      (id) => !missingChildIds.includes(id),
+    );
     if (filtered.length === item.childrenIds.length) return;
     await onPatch(item.id, { childrenIds: filtered });
   };
@@ -154,7 +196,9 @@ export function MediaInspector({
   // Prompt-enhancer config (renderer-bound snapshot of internal_prompt_enhancer).
   // When `enabled` is false, the Enhance / Remix / Upscale prompt-affecting
   // actions are disabled in the inspector.
-  const enhancerConfig = useConfigStore((s) => s.config?.internal_prompt_enhancer ?? null);
+  const enhancerConfig = useConfigStore(
+    (s) => s.config?.internal_prompt_enhancer ?? null,
+  );
   const enhancerEnabled = enhancerConfig?.enabled !== false;
 
   const hasSeed = typeof item.seed === "number" && Number.isInteger(item.seed);
@@ -175,10 +219,12 @@ export function MediaInspector({
   const handleCopyMetadata = useCallback(() => {
     const meta: Record<string, unknown> = {};
     if (item.model) meta.model = item.model;
-    if (item.width || item.height) meta.dimensions = `${item.width ?? "?"}×${item.height ?? "?"}`;
+    if (item.width || item.height)
+      meta.dimensions = `${item.width ?? "?"}×${item.height ?? "?"}`;
     if (typeof item.seed === "number") meta.seed = item.seed;
     if (item.style) meta.style = item.style;
-    if (item.steps !== undefined && item.steps !== null) meta.steps = item.steps;
+    if (item.steps !== undefined && item.steps !== null)
+      meta.steps = item.steps;
     if (item.cfg !== undefined && item.cfg !== null) meta.cfg = item.cfg;
     if (item.source) meta.source = item.source;
     if (item.negative) meta.negative = item.negative;
@@ -188,15 +234,17 @@ export function MediaInspector({
   }, [item]);
 
   const handleCopyRecipe = useCallback(() => {
-    if (generationRecipe) void copyText(JSON.stringify(generationRecipe, null, 2));
+    if (generationRecipe)
+      void copyText(JSON.stringify(generationRecipe, null, 2));
   }, [generationRecipe]);
 
   const handleSaveRecipeToLibrary = useCallback(async () => {
     if (!generationRecipe) return;
     try {
-      const firstLine = (generationRecipe.prompt || item.prompt || "Image recipe")
-        .split("\n")[0]
-        ?.slice(0, 80) || "Image recipe";
+      const firstLine =
+        (generationRecipe.prompt || item.prompt || "Image recipe")
+          .split("\n")[0]
+          ?.slice(0, 80) || "Image recipe";
       await usePromptLibraryStore.getState().createPrompt({
         title: firstLine,
         kind: "recipe",
@@ -204,14 +252,25 @@ export function MediaInspector({
         negativeContent: generationRecipe.negativePrompt ?? item.negative,
         scope: "global",
         projectId: resolvePromptProjectId(item.projectId ?? null),
-        modelHints: generationRecipe.model ? [generationRecipe.model] : undefined,
+        modelHints: generationRecipe.model
+          ? [generationRecipe.model]
+          : undefined,
         source: { type: "media", sourceId: item.id },
       });
-      toast.success("Saved recipe to Prompt Library");
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.gallery.mediaInspector.notification.savedRecipeToPromptLibrary",
+        ),
+      );
     } catch (err) {
-      toast.fromError(err, "Could not save recipe");
+      toast.fromError(
+        err,
+        tRuntime(
+          "runtimeGenerated.components.gallery.mediaInspector.notification.couldNotSaveRecipe",
+        ),
+      );
     }
-  }, [generationRecipe, item.prompt, item.negative, item.id, item.projectId]);
+  }, [generationRecipe, item.prompt, item.negative, item.id, item.projectId, tRuntime]);
 
   const handleExportRecipe = useCallback(() => {
     if (!generationRecipe) return;
@@ -268,7 +327,14 @@ export function MediaInspector({
     } catch {
       setEnhanceState(null);
     }
-  }, [item.prompt, item.negative, item.model, item.seed, enhancerEnabled, enhancerConfig]);
+  }, [
+    item.prompt,
+    item.negative,
+    item.model,
+    item.seed,
+    enhancerEnabled,
+    enhancerConfig,
+  ]);
 
   const handleRemix = useCallback(async () => {
     if (!item.prompt) return;
@@ -289,28 +355,53 @@ export function MediaInspector({
     } catch {
       setEnhanceState(null);
     }
-  }, [item.prompt, item.negative, item.model, item.seed, enhancerEnabled, enhancerConfig]);
+  }, [
+    item.prompt,
+    item.negative,
+    item.model,
+    item.seed,
+    enhancerEnabled,
+    enhancerConfig,
+  ]);
 
   const handleApplyEnhance = useCallback(async () => {
     if (!enhanceState || !enhanceState.result) return;
     await onPatch(item.id, {
       prompt: enhanceState.result,
-      enhancedPrompt: enhanceState.mode === "enhance" ? enhanceState.result : item.enhancedPrompt,
+      enhancedPrompt:
+        enhanceState.mode === "enhance"
+          ? enhanceState.result
+          : item.enhancedPrompt,
       originalPrompt: item.originalPrompt || item.prompt,
-      remixPrompt: enhanceState.mode === "remix" ? enhanceState.result : item.remixPrompt,
+      remixPrompt:
+        enhanceState.mode === "remix" ? enhanceState.result : item.remixPrompt,
     });
     setEnhanceState(null);
-  }, [enhanceState, onPatch, item.id, item.enhancedPrompt, item.originalPrompt, item.prompt, item.remixPrompt]);
+  }, [
+    enhanceState,
+    onPatch,
+    item.id,
+    item.enhancedPrompt,
+    item.originalPrompt,
+    item.prompt,
+    item.remixPrompt,
+  ]);
 
   const handleApplyRemixToStudio = useCallback(() => {
-    if (!enhanceState || enhanceState.mode !== "remix" || !enhanceState.result) return;
+    if (!enhanceState || enhanceState.mode !== "remix" || !enhanceState.result)
+      return;
     if (onApplyRemix) onApplyRemix(item, enhanceState.result);
     setEnhanceState(null);
   }, [enhanceState, onApplyRemix, item]);
 
   const handleRemixAndGenerate = useCallback(() => {
-    if (!enhanceState || enhanceState.mode !== "remix" || !enhanceState.result) return;
-    if (onRegenerate) onRegenerate(item, { sameSeed: false, promptOverride: enhanceState.result });
+    if (!enhanceState || enhanceState.mode !== "remix" || !enhanceState.result)
+      return;
+    if (onRegenerate)
+      onRegenerate(item, {
+        sameSeed: false,
+        promptOverride: enhanceState.result,
+      });
     setEnhanceState(null);
   }, [enhanceState, onRegenerate, item]);
 
@@ -334,26 +425,40 @@ export function MediaInspector({
     if (onOpenImageTools) onOpenImageTools(item);
   }, [onOpenImageTools, item]);
 
-  const hasMetadata = typeof item.seed === "number" || item.source || item.style ||
-    item.steps !== undefined || item.cfg !== undefined || item.aspectRatio;
+  const hasMetadata =
+    typeof item.seed === "number" ||
+    item.source ||
+    item.style ||
+    item.steps !== undefined ||
+    item.cfg !== undefined ||
+    item.aspectRatio;
 
   return (
     <aside
       className="flex h-full w-full flex-col gap-4 overflow-y-auto soft-separator-x mesh-surface px-4 py-4"
-      aria-label="Media inspector"
+      aria-label={tRuntime(
+        "runtimeGenerated.components.gallery.mediaInspector.attribute.mediaInspector",
+      )}
     >
       <div className="flex items-start justify-between gap-2">
         <div>
           <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em] text-text-muted">
-            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.inspector" /></h3>
-          <p className="mt-1 line-clamp-2 text-[13px] text-text-primary">{item.prompt || "Untitled"}</p>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.inspector" />
+          </h3>
+          <p className="mt-1 line-clamp-2 text-[13px] text-text-primary">
+            {item.prompt ||
+              tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.text.untitled",
+              )}
+          </p>
         </div>
         <button
           type="button"
           onClick={onClose}
           className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
         >
-          <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.close" /></button>
+          <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.close" />
+        </button>
       </div>
 
       <section className="space-y-1.5">
@@ -368,12 +473,22 @@ export function MediaInspector({
                 : "border-border text-text-secondary hover:border-accent hover:text-accent",
             )}
           >
-            <Heart className={cn("h-3.5 w-3.5", item.favorite && "fill-current")} />
-            {item.favorite ? "Favorited" : "Mark as favorite"}
+            <Heart
+              className={cn("h-3.5 w-3.5", item.favorite && "fill-current")}
+            />
+            {item.favorite
+              ? tRuntime(
+                  "runtimeGenerated.components.gallery.mediaInspector.text.favorited",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.gallery.mediaInspector.text.markAsFavorite",
+                )}
           </button>
           <GhostButton onClick={() => onDelete(item)} ariaLabel="Delete">
             <span className="inline-flex items-center gap-1.5 text-danger">
-              <Trash2 className="h-3.5 w-3.5" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.delete" /></span>
+              <Trash2 className="h-3.5 w-3.5" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.delete" />
+            </span>
           </GhostButton>
         </div>
       </section>
@@ -383,42 +498,56 @@ export function MediaInspector({
         <section>
           <Label>
             <span className="inline-flex items-center gap-1">
-              <Sparkles className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.parameters" /></span>
+              <Sparkles className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.parameters" />
+            </span>
           </Label>
           <div className="space-y-1 text-[12px] text-text-secondary">
             {typeof item.seed === "number" && (
               <div className="flex justify-between">
-                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.seed" /></span>
+                <span className="text-text-muted">
+                  <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.seed" />
+                </span>
                 <span className="font-mono">{item.seed}</span>
               </div>
             )}
             {item.source && (
               <div className="flex justify-between">
-                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.source" /></span>
+                <span className="text-text-muted">
+                  <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.source" />
+                </span>
                 <span>{item.source}</span>
               </div>
             )}
             {item.style && (
               <div className="flex justify-between">
-                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.style" /></span>
+                <span className="text-text-muted">
+                  <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.style" />
+                </span>
                 <span>{item.style}</span>
               </div>
             )}
             {item.steps !== undefined && item.steps !== null && (
               <div className="flex justify-between">
-                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.steps" /></span>
+                <span className="text-text-muted">
+                  <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.steps" />
+                </span>
                 <span>{String(item.steps)}</span>
               </div>
             )}
             {item.cfg !== undefined && item.cfg !== null && (
               <div className="flex justify-between">
-                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.cfg" /></span>
+                <span className="text-text-muted">
+                  <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.cfg" />
+                </span>
                 <span>{String(item.cfg)}</span>
               </div>
             )}
             {item.aspectRatio && (
               <div className="flex justify-between">
-                <span className="text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.aspect" /></span>
+                <span className="text-text-muted">
+                  <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.aspect" />
+                </span>
                 <span>{item.aspectRatio}</span>
               </div>
             )}
@@ -429,7 +558,9 @@ export function MediaInspector({
       {/* ── Enhanced / original prompts ─────────────────────────────── */}
       {currentModel && generationRecipe && (
         <section data-testid="inspector-recipe-compatibility">
-          <Label><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.recipeCompatibility" /></Label>
+          <Label>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.recipeCompatibility" />
+          </Label>
           <RecipeCompatibilityCard
             recipe={generationRecipe}
             currentModel={currentModel}
@@ -442,7 +573,9 @@ export function MediaInspector({
       )}
       {item.enhancedPrompt && (
         <section>
-          <Label><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.enhancedPrompt" /></Label>
+          <Label>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.enhancedPrompt" />
+          </Label>
           <p className="rounded-md border border-border bg-surface-elevated p-2 text-[12px] text-text-primary">
             {item.enhancedPrompt}
           </p>
@@ -450,7 +583,9 @@ export function MediaInspector({
       )}
       {item.originalPrompt && item.originalPrompt !== item.prompt && (
         <section>
-          <Label><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.originalPrompt" /></Label>
+          <Label>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.originalPrompt" />
+          </Label>
           <p className="rounded-md border border-border bg-surface-elevated p-2 text-[12px] text-text-muted">
             {item.originalPrompt}
           </p>
@@ -458,7 +593,9 @@ export function MediaInspector({
       )}
       {item.remixPrompt && (
         <section>
-          <Label><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.remixPrompt" /></Label>
+          <Label>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.remixPrompt" />
+          </Label>
           <p className="rounded-md border border-border bg-surface-elevated p-2 text-[12px] text-text-primary">
             {item.remixPrompt}
           </p>
@@ -467,17 +604,23 @@ export function MediaInspector({
 
       {/* ── Action buttons ──────────────────────────────────────────── */}
       <section>
-        <Label><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.actions" /></Label>
+        <Label>
+          <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.actions" />
+        </Label>
         <div className="flex flex-wrap gap-1.5">
           {onUseSettings && (
             <button
               type="button"
               onClick={handleUseSettingsClick}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title="Load this image's settings into Image Studio (no generation)"
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.loadThisImageSSettingsIntoImageStudioNoGeneration",
+              )}
               data-testid="inspector-use-settings"
             >
-              <Settings className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.useSettings" /></button>
+              <Settings className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.useSettings" />
+            </button>
           )}
           {item.mediaType === "image" && (
             <button
@@ -488,144 +631,224 @@ export function MediaInspector({
                   sourceMediaId: item.id,
                 });
                 useSettingsStore.getState().setActiveTab("character-creator");
-                toast.success("AI Character Creator launched");
+                toast.success(
+                  tRuntime(
+                    "runtimeGenerated.components.gallery.mediaInspector.notification.aiCharacterCreatorLaunched",
+                  ),
+                );
                 onClose();
               }}
               className="inline-flex items-center gap-1 rounded-md border border-accent px-2 py-1 text-[12px] text-accent hover:bg-accent/10"
               data-testid="inspector-create-st-card"
             >
-              <ImagePlus className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.createStCard" /></button>
+              <ImagePlus className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.createStCard" />
+            </button>
           )}
           {onUseRecipe && (
             <button
               type="button"
               onClick={() => onUseRecipe(item)}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title="Load the generation recipe (prompt, model, seed, dimensions, etc.) into the appropriate studio"
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.loadTheGenerationRecipePromptModelSeedDimensionsEtcInto",
+              )}
               data-testid="inspector-use-recipe"
             >
-              <Settings className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.useRecipe" /></button>
+              <Settings className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.useRecipe" />
+            </button>
           )}
           {onRegenerate && (
             <button
               type="button"
               onClick={handleRegenerateClick}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title="Regenerate using this image's settings (new random seed)"
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.regenerateUsingThisImageSSettingsNewRandomSeed",
+              )}
               data-testid="inspector-regenerate"
             >
-              <RefreshCw className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.regenerate" /></button>
+              <RefreshCw className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.regenerate" />
+            </button>
           )}
           {onRegenerate && hasSeed && (
             <button
               type="button"
               onClick={handleRegenerateSameSeedClick}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title="Regenerate using the same seed as this image"
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.regenerateUsingTheSameSeedAsThisImage",
+              )}
               data-testid="inspector-regenerate-same-seed"
             >
-              <Repeat className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.sameSeed" /></button>
+              <Repeat className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.sameSeed" />
+            </button>
           )}
           {onUpscale && capabilities.upscale && (
             <button
               type="button"
               onClick={handleUpscaleClick}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title="Upscale / enhance this image"
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.upscaleEnhanceThisImage",
+              )}
               data-testid="inspector-upscale"
             >
-              <Maximize2 className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.upscale" /></button>
+              <Maximize2 className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.upscale" />
+            </button>
           )}
           {onOpenImageTools && capabilities.edit && (
             <button
               type="button"
               onClick={handleEditClick}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title="Open this image in the image editor"
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.openThisImageInTheImageEditor",
+              )}
               data-testid="inspector-edit"
             >
-              <ImagePlus className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.edit" /></button>
+              <ImagePlus className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.edit" />
+            </button>
           )}
           {item.generatedMediaId && isElectron() && (
             <button
               type="button"
-              onClick={() => void desktopFiles.saveGeneratedMedia(
-                item.generatedMediaId!,
-                item.mediaType === "video" ? "venice-video.mp4" : item.mediaType === "audio" ? "venice-audio" : "venice-image",
-              ).then((saved) => {
-                if (saved) toast.success("Media saved");
-              }).catch((error) => toast.fromError(error, "Media download failed"))}
+              onClick={() =>
+                void desktopFiles
+                  .saveGeneratedMedia(
+                    item.generatedMediaId!,
+                    item.mediaType === "video"
+                      ? "venice-video.mp4"
+                      : item.mediaType === "audio"
+                        ? "venice-audio"
+                        : "venice-image",
+                  )
+                  .then((saved) => {
+                    if (saved)
+                      toast.success(
+                        tRuntime(
+                          "runtimeGenerated.components.gallery.mediaInspector.notification.mediaSaved",
+                        ),
+                      );
+                  })
+                  .catch((error) =>
+                    toast.fromError(
+                      error,
+                      tRuntime(
+                        "runtimeGenerated.components.gallery.mediaInspector.notification.mediaDownloadFailed",
+                      ),
+                    ),
+                  )
+              }
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title="Save the main-process media file with a native dialog"
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.saveTheMainProcessMediaFileWithANativeDialog",
+              )}
               data-testid="inspector-download-generated-media"
             >
-              <Download className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.downloadMedia" /></button>
+              <Download className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.downloadMedia" />
+            </button>
           )}
           <button
             type="button"
             onClick={handleCopyPrompt}
             className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-            title="Copy prompt text"
+            title={tRuntime(
+              "runtimeGenerated.components.gallery.mediaInspector.attribute.copyPromptText",
+            )}
             data-testid="inspector-copy-prompt"
           >
-            <Copy className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyPrompt" /></button>
+            <Copy className="h-3 w-3" />{" "}
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyPrompt" />
+          </button>
           {item.negative && (
             <button
               type="button"
               onClick={handleCopyNegative}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title="Copy negative prompt"
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.copyNegativePrompt",
+              )}
               data-testid="inspector-copy-negative"
             >
-              <Copy className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyNegative" /></button>
+              <Copy className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyNegative" />
+            </button>
           )}
           {hasSeed && (
             <button
               type="button"
               onClick={handleCopySeed}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title={`Copy seed (${item.seed})`}
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.copySeedValue1",
+                { value1: item.seed },
+              )}
               data-testid="inspector-copy-seed"
             >
-              <Copy className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copySeed" /></button>
+              <Copy className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copySeed" />
+            </button>
           )}
           <button
             type="button"
             onClick={handleCopyMetadata}
             className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-            title="Copy metadata as JSON"
+            title={tRuntime(
+              "runtimeGenerated.components.gallery.mediaInspector.attribute.copyMetadataAsJson",
+            )}
             data-testid="inspector-copy-metadata"
           >
-            <Copy className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyMetadata" /></button>
+            <Copy className="h-3 w-3" />{" "}
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyMetadata" />
+          </button>
           {generationRecipe && (
             <button
               type="button"
               onClick={() => void handleSaveRecipeToLibrary()}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title="Save recipe to Prompt Library"
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.saveRecipeToPromptLibrary",
+              )}
               data-testid="inspector-save-recipe-to-library"
             >
-              <NotebookPen className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.saveRecipe" /></button>
+              <NotebookPen className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.saveRecipe" />
+            </button>
           )}
           {generationRecipe && (
             <button
               type="button"
               onClick={handleCopyRecipe}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title="Copy generation recipe as JSON"
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.copyGenerationRecipeAsJson",
+              )}
               data-testid="inspector-copy-recipe"
             >
-              <Copy className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyRecipe" /></button>
+              <Copy className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.copyRecipe" />
+            </button>
           )}
           {generationRecipe && (
             <button
               type="button"
               onClick={handleExportRecipe}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
-              title="Download generation recipe as a JSON file"
+              title={tRuntime(
+                "runtimeGenerated.components.gallery.mediaInspector.attribute.downloadGenerationRecipeAsAJsonFile",
+              )}
               data-testid="inspector-export-recipe"
             >
-              <Download className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.exportRecipe" /></button>
+              <Download className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.exportRecipe" />
+            </button>
           )}
           {item.prompt && (
             <>
@@ -636,12 +859,23 @@ export function MediaInspector({
                 className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-40"
                 title={
                   !enhancerEnabled
-                    ? "Disabled: internal_prompt_enhancer.enabled is false in config.yaml"
-                    : "Enhance prompt via internal LLM"
+                    ? tRuntime(
+                        "runtimeGenerated.components.gallery.mediaInspector.attribute.disabledInternalPromptEnhancerEnabledIsFalseInConfigYaml",
+                      )
+                    : tRuntime(
+                        "runtimeGenerated.components.gallery.mediaInspector.attribute.enhancePromptViaInternalLlm",
+                      )
                 }
                 data-testid="inspector-enhance"
               >
-                <Wand2 className="h-3 w-3" /> {enhanceState?.loading && enhanceState?.mode === "enhance" ? "Enhancing…" : "Enhance"}
+                <Wand2 className="h-3 w-3" />{" "}
+                {enhanceState?.loading && enhanceState?.mode === "enhance"
+                  ? tRuntime(
+                      "runtimeGenerated.components.gallery.mediaInspector.text.enhancing",
+                    )
+                  : tRuntime(
+                      "runtimeGenerated.components.gallery.mediaInspector.text.enhance",
+                    )}
               </button>
               <button
                 type="button"
@@ -650,12 +884,23 @@ export function MediaInspector({
                 className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-40"
                 title={
                   !enhancerEnabled
-                    ? "Disabled: internal_prompt_enhancer.enabled is false in config.yaml"
-                    : "Remix prompt via internal LLM"
+                    ? tRuntime(
+                        "runtimeGenerated.components.gallery.mediaInspector.attribute.disabledInternalPromptEnhancerEnabledIsFalseInConfigYaml",
+                      )
+                    : tRuntime(
+                        "runtimeGenerated.components.gallery.mediaInspector.attribute.remixPromptViaInternalLlm",
+                      )
                 }
                 data-testid="inspector-remix"
               >
-                <Shuffle className="h-3 w-3" /> {enhanceState?.loading && enhanceState?.mode === "remix" ? "Remixing…" : "Remix"}
+                <Shuffle className="h-3 w-3" />{" "}
+                {enhanceState?.loading && enhanceState?.mode === "remix"
+                  ? tRuntime(
+                      "runtimeGenerated.components.gallery.mediaInspector.text.remixing",
+                    )
+                  : tRuntime(
+                      "runtimeGenerated.components.gallery.mediaInspector.text.remix",
+                    )}
               </button>
             </>
           )}
@@ -666,13 +911,24 @@ export function MediaInspector({
       {enhanceState && !enhanceState.loading && enhanceState.result && (
         <section className="rounded-md border border-accent/40 bg-accent/[0.04] p-2.5">
           <h4 className="mb-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-accent">
-            {enhanceState.mode === "enhance" ? "Enhanced" : "Remixed"} <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.prompt" /></h4>
+            {enhanceState.mode === "enhance"
+              ? tRuntime(
+                  "runtimeGenerated.components.gallery.mediaInspector.text.enhanced",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.gallery.mediaInspector.text.remixed",
+                )}{" "}
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.prompt" />
+          </h4>
           <div className="space-y-2">
             <p className="rounded-md border border-border bg-surface-elevated p-2 text-[12px] text-text-primary">
               {enhanceState.result}
             </p>
             <p className="text-[12px] text-text-muted">
-              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.originalLdquo" />{item.prompt}<Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.rdquo" /></p>
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.originalLdquo" />
+              {item.prompt}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.rdquo" />
+            </p>
             <div className="flex flex-wrap gap-1.5">
               {enhanceState.mode === "enhance" ? (
                 <>
@@ -682,13 +938,15 @@ export function MediaInspector({
                     className="inline-flex items-center gap-1 rounded-md border border-accent px-2.5 py-1 text-[12px] text-accent hover:bg-accent/10"
                     data-testid="inspector-apply-enhance"
                   >
-                    <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.apply" /></button>
+                    <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.apply" />
+                  </button>
                   <button
                     type="button"
                     onClick={() => setEnhanceState(null)}
                     className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                   >
-                    <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.cancel" /></button>
+                    <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.cancel" />
+                  </button>
                 </>
               ) : (
                 <>
@@ -699,7 +957,8 @@ export function MediaInspector({
                       className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                       data-testid="inspector-remix-apply-to-studio"
                     >
-                      <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.applyToImageStudio" /></button>
+                      <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.applyToImageStudio" />
+                    </button>
                   )}
                   {onApplyRemix && onRegenerate && (
                     <button
@@ -708,7 +967,8 @@ export function MediaInspector({
                       className="inline-flex items-center gap-1 rounded-md border border-accent px-2.5 py-1 text-[12px] text-accent hover:bg-accent/10"
                       data-testid="inspector-remix-and-generate"
                     >
-                      <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.remixAmpGenerate" /></button>
+                      <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.remixAmpGenerate" />
+                    </button>
                   )}
                   {onApplyRemix && (
                     <button
@@ -725,14 +985,16 @@ export function MediaInspector({
                       className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                       data-testid="inspector-remix-save"
                     >
-                      <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.saveRemix" /></button>
+                      <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.saveRemix" />
+                    </button>
                   )}
                   <button
                     type="button"
                     onClick={() => setEnhanceState(null)}
                     className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
                   >
-                    <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.cancel" /></button>
+                    <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.cancel" />
+                  </button>
                 </>
               )}
             </div>
@@ -744,7 +1006,15 @@ export function MediaInspector({
       {enhanceState?.loading && (
         <section className="rounded-md border border-border p-2.5">
           <p className="text-[12px] text-text-muted">
-            {enhanceState.mode === "enhance" ? "Enhancing" : "Remixing"} <Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.promptViaInternalLlm" /></p>
+            {enhanceState.mode === "enhance"
+              ? tRuntime(
+                  "runtimeGenerated.components.gallery.mediaInspector.text.enhancing2",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.gallery.mediaInspector.text.remixing2",
+                )}{" "}
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.promptViaInternalLlm" />
+          </p>
         </section>
       )}
 
@@ -752,21 +1022,42 @@ export function MediaInspector({
         <section>
           <Label>
             <span className="inline-flex items-center gap-1">
-              <Sparkles className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.modelCapabilities" /></span>
+              <Sparkles className="h-3 w-3" />{" "}
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.modelCapabilities" />
+            </span>
           </Label>
           <div className="flex flex-wrap gap-1">
-            {capabilities.upscale && <Badge tone="emerald"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.upscale" /></Badge>}
-            {capabilities.edit && <Badge tone="violet"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.edit" /></Badge>}
-            {capabilities.video && <Badge tone="sky"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.video" /></Badge>}
-            {capabilities.vision && <Badge tone="amber"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.vision" /></Badge>}
+            {capabilities.upscale && (
+              <Badge tone="emerald">
+                <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.upscale" />
+              </Badge>
+            )}
+            {capabilities.edit && (
+              <Badge tone="violet">
+                <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.edit" />
+              </Badge>
+            )}
+            {capabilities.video && (
+              <Badge tone="sky">
+                <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.video" />
+              </Badge>
+            )}
+            {capabilities.vision && (
+              <Badge tone="amber">
+                <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.vision" />
+              </Badge>
+            )}
           </div>
           <p className="mt-1.5 text-[12px] text-text-muted">
-            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.theseEndpointsAreRecognisedForTheSource" /></p>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.theseEndpointsAreRecognisedForTheSource" />
+          </p>
         </section>
       )}
 
       <section>
-        <Label htmlFor="media-tags"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.tags" /></Label>
+        <Label htmlFor="media-tags">
+          <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.tags" />
+        </Label>
         <div className="flex gap-1.5">
           <input
             id="media-tags"
@@ -779,7 +1070,9 @@ export function MediaInspector({
                 void handleAddTags();
               }
             }}
-            placeholder="Add a tag and press Enter"
+            placeholder={tRuntime(
+              "runtimeGenerated.components.gallery.mediaInspector.attribute.addATagAndPressEnter",
+            )}
             className="flex-1 rounded-md border border-border bg-surface-elevated px-2 py-1.5 text-[12px] text-text-primary focus:border-accent focus:outline-none"
           />
           <button
@@ -787,7 +1080,9 @@ export function MediaInspector({
             onClick={() => void handleAddTags()}
             className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1.5 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
           >
-            <TagIcon className="h-3.5 w-3.5" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.add" /></button>
+            <TagIcon className="h-3.5 w-3.5" />{" "}
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.add" />
+          </button>
         </div>
         {item.tags.length > 0 ? (
           <div className="mt-2 flex flex-wrap gap-1.5">
@@ -796,7 +1091,9 @@ export function MediaInspector({
                 type="button"
                 key={tag}
                 onClick={() => void handleRemoveTag(tag)}
-                title="Remove tag"
+                title={tRuntime(
+                  "runtimeGenerated.components.gallery.mediaInspector.attribute.removeTag",
+                )}
                 className="inline-flex items-center gap-1 rounded-md border border-border bg-surface-elevated px-1.5 py-0.5 text-[12px] text-text-secondary hover:border-rose-400/40 hover:text-rose-300"
               >
                 #{tag}
@@ -805,17 +1102,29 @@ export function MediaInspector({
             ))}
           </div>
         ) : (
-          <p className="mt-1.5 text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.noTagsYet" /></p>
+          <p className="mt-1.5 text-[12px] text-text-muted">
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.description.noTagsYet" />
+          </p>
         )}
       </section>
 
       <section>
-        <Label htmlFor="media-note" hint={`${noteDraft.length} chars`}>Note</Label>
+        <Label
+          htmlFor="media-note"
+          hint={tRuntime(
+            "runtimeGenerated.components.gallery.mediaInspector.attribute.value1Chars",
+            { value1: noteDraft.length },
+          )}
+        >
+          Note
+        </Label>
         <TextArea
           value={noteDraft}
           onChange={setNoteDraft}
           rows={4}
-          placeholder="Capture a quick reminder or seed value…"
+          placeholder={tRuntime(
+            "runtimeGenerated.components.gallery.mediaInspector.attribute.captureAQuickReminderOrSeedValue",
+          )}
           ariaLabel="Inspector note"
           maxLength={2000}
         />
@@ -826,21 +1135,31 @@ export function MediaInspector({
             disabled={noteDraft === item.note}
             className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-[12px] text-text-secondary transition-colors hover:border-accent hover:text-accent disabled:opacity-30"
           >
-            <NotebookPen className="h-3 w-3" /> <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.saveNote" /></button>
+            <NotebookPen className="h-3 w-3" />{" "}
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.saveNote" />
+          </button>
         </div>
       </section>
 
       {parentItem && (
         <section>
           <h4 className="mb-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-text-muted">
-            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.parent" /></h4>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.parent" />
+          </h4>
           <button
             type="button"
             onClick={() => onOpenParent(parentItem)}
             className="flex w-full items-center gap-2 rounded-md border border-border bg-surface-elevated p-2 text-left hover:border-accent"
           >
-            <span className="line-clamp-1 text-[12px] text-text-primary">{parentItem.prompt || "Untitled"}</span>
-            <span className="ml-auto text-[12px] text-text-muted"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.view" /></span>
+            <span className="line-clamp-1 text-[12px] text-text-primary">
+              {parentItem.prompt ||
+                tRuntime(
+                  "runtimeGenerated.components.gallery.mediaInspector.text.untitled",
+                )}
+            </span>
+            <span className="ml-auto text-[12px] text-text-muted">
+              <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.view" />
+            </span>
           </button>
         </section>
       )}
@@ -848,7 +1167,8 @@ export function MediaInspector({
       {childrenItems.length > 0 && (
         <section>
           <h4 className="mb-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-text-muted">
-            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.children" />{childrenItems.length})
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.children" />
+            {childrenItems.length})
           </h4>
           <ul className="space-y-1.5">
             {childrenItems.map((child) => (
@@ -858,8 +1178,15 @@ export function MediaInspector({
                   onClick={() => onOpenChild(child)}
                   className="flex w-full items-center gap-2 rounded-md border border-border bg-surface-elevated p-2 text-left hover:border-accent"
                 >
-                  <span className="line-clamp-1 text-[12px] text-text-primary">{child.prompt || "Untitled"}</span>
-                  <span className="ml-auto text-[12px] text-text-muted">{child.operation}</span>
+                  <span className="line-clamp-1 text-[12px] text-text-primary">
+                    {child.prompt ||
+                      tRuntime(
+                        "runtimeGenerated.components.gallery.mediaInspector.text.untitled",
+                      )}
+                  </span>
+                  <span className="ml-auto text-[12px] text-text-muted">
+                    {child.operation}
+                  </span>
                 </button>
               </li>
             ))}
@@ -869,42 +1196,77 @@ export function MediaInspector({
 
       {hasAnyDangling && (
         <section
-          aria-label="Missing references"
+          aria-label={tRuntime(
+            "runtimeGenerated.components.gallery.mediaInspector.attribute.missingReferences",
+          )}
           className="rounded-md border border-amber-400/30 bg-amber-500/[0.06] p-2.5"
         >
           <h4 className="mb-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-amber-200/90">
-            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.missingReferences" /></h4>
+            <Trans i18nKey="common:surface.componentsGalleryMediaInspector.heading.missingReferences" />
+          </h4>
           <p className="mb-2 text-[12px] text-text-secondary">
             {hasDanglingParent && hasDanglingChildren
-              ? "This item references records that no longer exist. Clear the stale pointers to repair the lineage."
+              ? tRuntime(
+                  "runtimeGenerated.components.gallery.mediaInspector.text.thisItemReferencesRecordsThatNoLongerExistClearThe",
+                )
               : hasDanglingParent
-                ? "This item's parent record is missing. Clear the parent link to repair the lineage."
-                : `${missingChildIds.length} child ${missingChildIds.length === 1 ? "reference" : "references"} could not be resolved. Clear the stale pointer${missingChildIds.length === 1 ? "" : "s"} to repair the lineage.`}
+                ? tRuntime(
+                    "runtimeGenerated.components.gallery.mediaInspector.text.thisItemSParentRecordIsMissingClearTheParent",
+                  )
+                : tRuntime(
+                    "runtimeGenerated.components.gallery.mediaInspector.text.value1ChildValue2CouldNotBeResolvedClearTheStale",
+                    {
+                      value1: missingChildIds.length,
+                      value2:
+                        missingChildIds.length === 1
+                          ? "reference"
+                          : "references",
+                      value3: missingChildIds.length === 1 ? "" : "s",
+                    },
+                  )}
           </p>
           {hasDanglingParent && (
             <div className="mb-1.5 flex items-center gap-2 text-[12px] text-text-muted">
-              <span className="font-mono"><Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.parentid" />{item.parentId}</span>
+              <span className="font-mono">
+                <Trans i18nKey="common:surface.componentsGalleryMediaInspector.text.parentid" />
+                {item.parentId}
+              </span>
               <button
                 type="button"
                 onClick={() => void handleClearDanglingParent()}
                 className="ml-auto rounded-md border border-amber-400/40 px-2 py-1 text-amber-200/90 hover:border-amber-300 hover:text-amber-100"
               >
-                <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.clearParentLink" /></button>
+                <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.clearParentLink" />
+              </button>
             </div>
           )}
           {hasDanglingChildren && (
             <div className="flex items-center gap-2 text-[12px] text-text-muted">
               <span className="line-clamp-1 font-mono">
                 {missingChildIds.length === 1
-                  ? `childrenIds: ${missingChildIds[0]}`
-                  : `childrenIds: ${missingChildIds.length} missing`}
+                  ? tRuntime(
+                      "runtimeGenerated.components.gallery.mediaInspector.text.childrenidsValue1",
+                      { value1: missingChildIds[0] },
+                    )
+                  : tRuntime(
+                      "runtimeGenerated.components.gallery.mediaInspector.text.childrenidsValue1Missing",
+                      { value1: missingChildIds.length },
+                    )}
               </span>
               <button
                 type="button"
                 onClick={() => void handleClearDanglingChildren()}
                 className="ml-auto rounded-md border border-amber-400/40 px-2 py-1 text-amber-200/90 hover:border-amber-300 hover:text-amber-100"
               >
-                <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.clear" /> {missingChildIds.length === 1 ? "1 missing ref" : `${missingChildIds.length} missing refs`}
+                <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.clear" />{" "}
+                {missingChildIds.length === 1
+                  ? tRuntime(
+                      "runtimeGenerated.components.gallery.mediaInspector.text.value1MissingRef",
+                    )
+                  : tRuntime(
+                      "runtimeGenerated.components.gallery.mediaInspector.text.value1MissingRefs",
+                      { value1: missingChildIds.length },
+                    )}
               </button>
             </div>
           )}

@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /**
  * @fileoverview Phase 2F — RP cross-feature helper service.
  *
@@ -19,8 +20,16 @@ import { usePromptLibraryStore } from "../stores/prompt-library-store";
 import { useRpChatStore } from "../stores/rp-chat-store";
 import { useSettingsStore } from "../stores/settings-store";
 import { useChatStore } from "../stores/chat-store";
-import { isPromptSecretLike, redactPromptSecrets } from "../types/prompt-library";
-import type { CharacterCardV1, ScenarioV1, UserPersonaV1, LorebookV1 } from "../types/rp";
+import {
+  isPromptSecretLike,
+  redactPromptSecrets,
+} from "../types/prompt-library";
+import type {
+  CharacterCardV1,
+  ScenarioV1,
+  UserPersonaV1,
+  LorebookV1,
+} from "../types/rp";
 import { CARD_FIELD_MAX, MAX_AVATAR_BYTES, MAX_TAGS } from "../types/rp";
 import { FALLBACK_MODELS } from "../constants/venice";
 
@@ -51,14 +60,18 @@ function safeStringField(input: string | undefined, max: number): string {
   return redactPromptSecrets(safeShort(input, max));
 }
 
-function mimeToType(mime: string): "image/png" | "image/jpeg" | "image/webp" | null {
+function mimeToType(
+  mime: string,
+): "image/png" | "image/jpeg" | "image/webp" | null {
   if (mime === "image/png") return "image/png";
   if (mime === "image/jpeg" || mime === "image/jpg") return "image/jpeg";
   if (mime === "image/webp") return "image/webp";
   return null;
 }
 
-function parseDataUrl(dataUrl: string): { mime: string; bytes: number; data: string } | null {
+function parseDataUrl(
+  dataUrl: string,
+): { mime: string; bytes: number; data: string } | null {
   if (!dataUrl || !dataUrl.startsWith("data:")) return null;
   const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
   if (!match) return null;
@@ -76,9 +89,10 @@ const SVG_DATA_URL = /^data:image\/svg\+xml/i;
  *  `useCharacterCardStore.upsert` to save. */
 export function blankCharacterCard(): CharacterCardV1 {
   const now = Date.now();
-  const id = typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
-    ? crypto.randomUUID()
-    : `c_${now.toString(36)}_${Math.floor(Math.random() * 1e9).toString(36)}`;
+  const id =
+    typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID()
+      : `c_${now.toString(36)}_${Math.floor(Math.random() * 1e9).toString(36)}`;
   return {
     schema: "CharacterCardV1",
     id,
@@ -97,7 +111,9 @@ export function blankCharacterCard(): CharacterCardV1 {
  *  is taken from the media image (data URL only). Returns the new
  *  card id, or null if the media image could not be coerced into a
  *  valid avatar. */
-export async function createCharacterFromMedia(media: MediaImageLike | null | undefined): Promise<string | null> {
+export async function createCharacterFromMedia(
+  media: MediaImageLike | null | undefined,
+): Promise<string | null> {
   if (!media || typeof media.image !== "string" || media.image.length === 0) {
     return null;
   }
@@ -111,7 +127,9 @@ export async function createCharacterFromMedia(media: MediaImageLike | null | un
   if (parsed.bytes > MAX_AVATAR_BYTES) return null;
   const card = blankCharacterCard();
   card.avatar = { data: parsed.data, mimeType: mime, byteLength: parsed.bytes };
-  card.name = safeStringField(media.prompt?.split(/[.\n]/)[0]?.trim() ?? "", 200) || card.name;
+  card.name =
+    safeStringField(media.prompt?.split(/[.\n]/)[0]?.trim() ?? "", 200) ||
+    card.name;
   card.description = safeStringField(media.prompt, CARD_FIELD_MAX);
   card.systemPrompt = `Describe ${card.name}. Stay in character.`;
   const metadata: Record<string, unknown> = { source: "media" };
@@ -126,14 +144,22 @@ export async function createCharacterFromMedia(media: MediaImageLike | null | un
 /** Create a new character card linked to a scene-composer scene. The
  *  `metadata.sceneId` and `metadata.attachedSceneId` keys are set so
  *  downstream consumers can resolve the lineage. Returns the new id. */
-export async function createCharacterFromScene(scene: ScenarioV1 | { id: string; name: string; content: string; description?: string }): Promise<string | null> {
+export async function createCharacterFromScene(
+  scene:
+    | ScenarioV1
+    | { id: string; name: string; content: string; description?: string },
+): Promise<string | null> {
   if (!scene || typeof scene.id !== "string") return null;
   const card = blankCharacterCard();
   card.name = safeStringField(scene.name, 200) || card.name;
   card.description = safeStringField(scene.description ?? "", CARD_FIELD_MAX);
   card.systemPrompt = safeStringField(scene.content, CARD_FIELD_MAX);
   card.scenario = safeStringField(scene.content, CARD_FIELD_MAX);
-  card.metadata = { source: "scene", sourceSceneId: scene.id, attachedSceneId: scene.id };
+  card.metadata = {
+    source: "scene",
+    sourceSceneId: scene.id,
+    attachedSceneId: scene.id,
+  };
   const saved = await useCharacterCardStore.getState().upsert(card);
   return saved?.id ?? null;
 }
@@ -141,7 +167,10 @@ export async function createCharacterFromScene(scene: ScenarioV1 | { id: string;
 /** Attach a scene id to an existing character card. Stores the id in
  *  `metadata.attachedSceneId` (and the legacy `metadata.sceneId` for
  *  back-compat with code that read it before the renames). */
-export async function attachSceneToCharacter(characterId: string, sceneId: string): Promise<CharacterCardV1 | null> {
+export async function attachSceneToCharacter(
+  characterId: string,
+  sceneId: string,
+): Promise<CharacterCardV1 | null> {
   const store = useCharacterCardStore.getState();
   const card = store.getById(characterId);
   if (!card) return null;
@@ -155,7 +184,10 @@ export async function attachSceneToCharacter(characterId: string, sceneId: strin
 }
 
 /** Attach a prompt-library item id to a character card. */
-export async function attachPromptToCharacter(characterId: string, promptId: string): Promise<CharacterCardV1 | null> {
+export async function attachPromptToCharacter(
+  characterId: string,
+  promptId: string,
+): Promise<CharacterCardV1 | null> {
   const store = useCharacterCardStore.getState();
   const card = store.getById(characterId);
   if (!card) return null;
@@ -170,7 +202,9 @@ export async function attachPromptToCharacter(characterId: string, promptId: str
 
 /** Persist a character card's system prompt to the Prompt Library.
  *  Returns the new prompt id, or null on failure. */
-export async function saveCharacterPromptToLibrary(characterId: string): Promise<string | null> {
+export async function saveCharacterPromptToLibrary(
+  characterId: string,
+): Promise<string | null> {
   const card = useCharacterCardStore.getState().getById(characterId);
   if (!card) return null;
   const content = (card.systemPrompt ?? "").trim();
@@ -178,12 +212,20 @@ export async function saveCharacterPromptToLibrary(characterId: string): Promise
   const projectId = useSettingsStore.getState().activeProjectId ?? null;
   try {
     const created = await usePromptLibraryStore.getState().createPrompt({
-      title: `${card.name} — system prompt`,
+      title: translateRuntime(
+        "runtimeGenerated.services.rphelpers.metadata.value1SystemPrompt",
+        "{{value1}} — system prompt",
+        { value1: card.name },
+      ),
       kind: "character",
       content,
       scope: projectId ? "project" : "global",
       projectId,
-      description: `Saved from character card "${card.name}" on ${new Date().toISOString()}.`,
+      description: translateRuntime(
+        "runtimeGenerated.services.rphelpers.metadata.savedFromCharacterCardValue1OnValue2",
+        'Saved from character card "{{value1}}" on {{value2}}.',
+        { value1: card.name, value2: new Date().toISOString() },
+      ),
       tags: ["character", ...(card.tags ?? []).slice(0, MAX_TAGS - 1)],
       modelHints: card.modelId ? [card.modelId] : undefined,
       source: { type: "manual", sourceId: card.id },
@@ -197,7 +239,14 @@ export async function saveCharacterPromptToLibrary(characterId: string): Promise
 /** Create a new RP chat seeded with the given character. The chat is
  *  routed to the rp-studio tab; the caller can re-fetch the chat
  *  via `useRpChatStore.getById`. Returns the new chat id or null. */
-export async function startChatForCharacter(characterId: string, opts?: { title?: string; modelId?: string; greeting?: "primary" | "random" | "none" | { alternateIndex: number } }): Promise<string | null> {
+export async function startChatForCharacter(
+  characterId: string,
+  opts?: {
+    title?: string;
+    modelId?: string;
+    greeting?: "primary" | "random" | "none" | { alternateIndex: number };
+  },
+): Promise<string | null> {
   const card = useCharacterCardStore.getState().getById(characterId);
   if (!card) return null;
   const settings = useSettingsStore.getState();
@@ -210,15 +259,23 @@ export async function startChatForCharacter(characterId: string, opts?: { title?
   const personaId = usePersonaStore.getState().activePersonaId;
   const lorebookIds = useLorebookStore
     .getState()
-    .lorebooks
-    .filter((lb: LorebookV1) => {
+    .lorebooks.filter((lb: LorebookV1) => {
       if (lb.scope === "character") return lb.characterId === card.id;
-      if (lb.scope === "project") return lb.projectId != null && lb.projectId === settings.activeProjectId;
+      if (lb.scope === "project")
+        return (
+          lb.projectId != null && lb.projectId === settings.activeProjectId
+        );
       return true;
     })
     .map((lb) => lb.id);
   const chatId = await useRpChatStore.getState().createChat({
-    title: opts?.title ?? `Chat with ${card.name}`,
+    title:
+      opts?.title ??
+      translateRuntime(
+        "runtimeGenerated.services.rphelpers.metadata.chatWithValue1",
+        "Chat with {{value1}}",
+        { value1: card.name },
+      ),
     characterIds: [card.id],
     personaId,
     lorebookIds,
@@ -227,15 +284,35 @@ export async function startChatForCharacter(characterId: string, opts?: { title?
     adult: card.adult === true,
     greeting: (() => {
       const choice = opts?.greeting ?? "primary";
-      if (choice === "none") return { mode: "none" as const, characterId: card.id };
-      if (choice === "primary") return { mode: "primary" as const, characterId: card.id, ...(card.firstMessage ? { content: card.firstMessage } : {}) };
+      if (choice === "none")
+        return { mode: "none" as const, characterId: card.id };
+      if (choice === "primary")
+        return {
+          mode: "primary" as const,
+          characterId: card.id,
+          ...(card.firstMessage ? { content: card.firstMessage } : {}),
+        };
       if (choice === "random") {
-        const greetings = [card.firstMessage, ...(card.alternateGreetings ?? [])].filter((value): value is string => Boolean(value));
-        const index = greetings.length ? Math.floor(Math.random() * greetings.length) : -1;
-        return { mode: "random" as const, characterId: card.id, ...(index >= 0 ? { index, content: greetings[index] } : {}) };
+        const greetings = [
+          card.firstMessage,
+          ...(card.alternateGreetings ?? []),
+        ].filter((value): value is string => Boolean(value));
+        const index = greetings.length
+          ? Math.floor(Math.random() * greetings.length)
+          : -1;
+        return {
+          mode: "random" as const,
+          characterId: card.id,
+          ...(index >= 0 ? { index, content: greetings[index] } : {}),
+        };
       }
       const content = card.alternateGreetings?.[choice.alternateIndex];
-      return { mode: "alternate" as const, characterId: card.id, index: choice.alternateIndex, ...(content ? { content } : {}) };
+      return {
+        mode: "alternate" as const,
+        characterId: card.id,
+        index: choice.alternateIndex,
+        ...(content ? { content } : {}),
+      };
     })(),
   });
   if (chatId) {
@@ -249,7 +326,10 @@ export async function startChatForCharacter(characterId: string, opts?: { title?
  *  The character's system prompt is persisted as the conversation system
  *  prompt and the chat is opened in the Character Chats workspace. Returns the
  *  new conversation id or null. */
-export async function startNormalChatForCharacter(characterId: string, opts?: { modelId?: string }): Promise<string | null> {
+export async function startNormalChatForCharacter(
+  characterId: string,
+  opts?: { modelId?: string },
+): Promise<string | null> {
   const card = useCharacterCardStore.getState().getById(characterId);
   if (!card) return null;
   const settings = useSettingsStore.getState();
@@ -259,7 +339,9 @@ export async function startNormalChatForCharacter(characterId: string, opts?: { 
     card.modelId ??
     settings.selectedModels["chat"] ??
     fallbackTextId;
-  const convId = useChatStore.getState().createLocalCharacterConversation(card, modelId);
+  const convId = useChatStore
+    .getState()
+    .createLocalCharacterConversation(card, modelId);
   if (convId) {
     settings.setActiveTab("character-chats");
   }

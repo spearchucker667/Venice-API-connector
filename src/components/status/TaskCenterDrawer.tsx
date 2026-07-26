@@ -6,7 +6,7 @@ import { getActiveProfileId } from "../../services/activeProfile";
 import type { BackgroundTaskStatus } from "../../types/background-task";
 import { useSettingsStore } from "../../stores/settings-store";
 import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 const STATUS_BADGE: Record<BackgroundTaskStatus, string> = {
   idle: "bg-surface-muted text-text-muted border-border",
@@ -19,6 +19,7 @@ const STATUS_BADGE: Record<BackgroundTaskStatus, string> = {
 };
 
 export function TaskCenterDrawer() {
+  const { t: tRuntime } = useTranslation("common");
   const open = useTaskUIStore((s) => s.taskCenterOpen);
   const close = useTaskUIStore((s) => s.closeTaskCenter);
 
@@ -37,14 +38,15 @@ export function TaskCenterDrawer() {
     if (open) {
       window.addEventListener("keydown", handleEscape, { capture: true });
     }
-    return () => window.removeEventListener("keydown", handleEscape, { capture: true });
+    return () =>
+      window.removeEventListener("keydown", handleEscape, { capture: true });
   }, [open, close]);
 
   const rawTasks = useBackgroundTaskStore((s) => s.tasks);
   const currentProfileId = getActiveProfileId();
-  
+
   const tasks = Object.values(rawTasks)
-    .filter(t => t.profileId === currentProfileId)
+    .filter((t) => t.profileId === currentProfileId)
     .sort((a, b) => b.updatedAt - a.updatedAt);
 
   const cancelTask = useBackgroundTaskStore((s) => s.cancelTask);
@@ -54,10 +56,10 @@ export function TaskCenterDrawer() {
   const handleOpenTask = (taskId: string) => {
     const task = rawTasks[taskId];
     if (!task) return;
-    if (task.type === 'video' || task.type === 'music') {
+    if (task.type === "video" || task.type === "music") {
       const projectId = task.metadata?.projectId as string;
       if (projectId) useSettingsStore.getState().setActiveProjectId(projectId);
-      useSettingsStore.getState().setActiveTab('media');
+      useSettingsStore.getState().setActiveTab("media");
     }
     close();
   };
@@ -74,63 +76,104 @@ export function TaskCenterDrawer() {
       <div
         ref={containerRef}
         role="dialog"
-        aria-label="Task Center"
+        aria-label={tRuntime(
+          "runtimeGenerated.components.status.taskcenterdrawer.attribute.taskCenter",
+        )}
         aria-modal="true"
         className="fixed inset-y-0 right-0 z-[100] flex w-full max-w-sm flex-col soft-separator-l bg-surface-base shadow-2xl transition-transform duration-300 ease-out"
       >
         <div className="flex shrink-0 items-center justify-between soft-separator-b p-4">
           <div>
-            <h2 className="text-lg font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.heading.taskCenter" /></h2>
+            <h2 className="text-lg font-semibold text-text-primary">
+              <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.heading.taskCenter" />
+            </h2>
             <p className="text-sm text-text-secondary mt-0.5">
-              <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.description.recentBackgroundGenerations" /></p>
+              <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.description.recentBackgroundGenerations" />
+            </p>
           </div>
           <button
             type="button"
             onClick={close}
-            aria-label="Close task center"
+            aria-label={tRuntime(
+              "runtimeGenerated.components.status.taskcenterdrawer.attribute.closeTaskCenter",
+            )}
             className="rounded-md p-1.5 text-text-secondary hover:bg-surface-elevated hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-accent)]"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
 
-        <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4" tabIndex={-1}>
+        <div
+          ref={scrollRef}
+          className="flex-1 overflow-y-auto p-4 space-y-4"
+          tabIndex={-1}
+        >
           {tasks.length === 0 ? (
-            <p className="text-center text-sm text-text-muted mt-8"><Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.description.noRecentTasks" /></p>
+            <p className="text-center text-sm text-text-muted mt-8">
+              <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.description.noRecentTasks" />
+            </p>
           ) : (
-            tasks.map(task => {
-              const typeLabel = task.type.charAt(0).toUpperCase() + task.type.slice(1);
-              const isRunning = task.status === 'queued' || task.status === 'processing';
-              const cancellationUnsupported = task.metadata?.cancellationUnsupported === true;
-              const providerStr = task.providerId ? ` via ${task.providerId}` : '';
-              const modelStr = task.modelId ? ` (${task.modelId})` : '';
+            tasks.map((task) => {
+              const typeLabel =
+                task.type.charAt(0).toUpperCase() + task.type.slice(1);
+              const isRunning =
+                task.status === "queued" || task.status === "processing";
+              const cancellationUnsupported =
+                task.metadata?.cancellationUnsupported === true;
+              const providerStr = task.providerId
+                ? ` via ${task.providerId}`
+                : "";
+              const modelStr = task.modelId ? ` (${task.modelId})` : "";
 
               return (
-                <div key={task.id} className="rounded-lg border border-border bg-surface-elevated p-3">
+                <div
+                  key={task.id}
+                  className="rounded-lg border border-border bg-surface-elevated p-3"
+                >
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
-                      <GenerationLoadingIndicator 
-                        size="sm" 
+                      <GenerationLoadingIndicator
+                        size="sm"
                         state={
-                          task.status === 'processing' ? 'generating' : 
-                          task.status === 'aborted' ? 'cancelled' : 
-                          task.status === 'timeout' ? 'failed' : 
-                          task.status === 'idle' ? 'queued' :
-                          task.status
+                          task.status === "processing"
+                            ? "generating"
+                            : task.status === "aborted"
+                              ? "cancelled"
+                              : task.status === "timeout"
+                                ? "failed"
+                                : task.status === "idle"
+                                  ? "queued"
+                                  : task.status
                         }
                       />
                       <h3 className="font-medium text-sm text-text-primary truncate">
-                        {typeLabel} <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.heading.generation" /></h3>
+                        {typeLabel}{" "}
+                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.heading.generation" />
+                      </h3>
                     </div>
-                    <span className={`shrink-0 inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wider ${STATUS_BADGE[task.status]}`}>
-                      {task.type === 'video' && task.stage ? task.stage : task.status}
+                    <span
+                      className={`shrink-0 inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wider ${STATUS_BADGE[task.status]}`}
+                    >
+                      {task.type === "video" && task.stage
+                        ? task.stage
+                        : task.status}
                     </span>
                   </div>
                   {(providerStr || modelStr) && (
                     <p className="text-xs text-text-muted mt-1 truncate">
-                      {providerStr}{modelStr}
+                      {providerStr}
+                      {modelStr}
                     </p>
                   )}
                   {task.error && (
@@ -138,7 +181,7 @@ export function TaskCenterDrawer() {
                       {task.error}
                     </p>
                   )}
-                  
+
                   <div className="flex flex-wrap gap-2 mt-3">
                     {isRunning && !cancellationUnsupported && (
                       <button
@@ -146,34 +189,41 @@ export function TaskCenterDrawer() {
                         onClick={() => cancelTask(task.id)}
                         className="rounded bg-surface-base px-2 py-1 text-xs font-medium text-text-primary hover:bg-surface-muted transition-colors border border-border"
                       >
-                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.cancel" /></button>
+                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.cancel" />
+                      </button>
                     )}
                     {isRunning && cancellationUnsupported && (
                       <span className="px-2 py-1 text-xs text-warning">
-                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.text.cancellationUnavailable" /></span>
+                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.text.cancellationUnavailable" />
+                      </span>
                     )}
-                    {(task.status === 'failed' || task.status === 'timeout' || task.status === 'aborted') && (
+                    {(task.status === "failed" ||
+                      task.status === "timeout" ||
+                      task.status === "aborted") && (
                       <button
                         type="button"
                         onClick={() => retryTask(task.id)}
                         className="rounded bg-surface-base px-2 py-1 text-xs font-medium text-text-primary hover:bg-surface-muted transition-colors border border-border"
                       >
-                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.retry" /></button>
+                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.retry" />
+                      </button>
                     )}
-                    {task.status === 'completed' && task.resultUrl && (
+                    {task.status === "completed" && task.resultUrl && (
                       <button
                         type="button"
                         onClick={() => handleOpenTask(task.id)}
                         className="rounded bg-surface-base px-2 py-1 text-xs font-medium text-text-primary hover:bg-surface-muted transition-colors border border-border"
                       >
-                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.open" /></button>
+                        <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.open" />
+                      </button>
                     )}
                     <button
                       type="button"
                       onClick={() => clearTask(task.id)}
                       className="rounded bg-surface-base px-2 py-1 text-xs font-medium text-danger hover:bg-danger/10 transition-colors border border-border"
                     >
-                      <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.clear" /></button>
+                      <Trans i18nKey="common:surface.componentsStatusTaskcenterdrawer.action.clear" />
+                    </button>
                   </div>
                 </div>
               );

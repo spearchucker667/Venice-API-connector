@@ -6,7 +6,7 @@
 
 1. Update `version` in `package.json`.
 2. Run `npm install` so `package-lock.json` stays in sync.
-3. Update `docs/audits/CHANGELOG.md` with the new version section.
+3. Prepare release notes from the validated entries in `docs/summary_of_work.md`; do not recreate the retired duplicate `docs/audits/CHANGELOG.md` ledger.
 4. Confirm `README.md`, `AGENTS.md`, [LEGAL.md](../../LEGAL.md), [SECURITY.md](../../SECURITY.md), `SUPPORT.md`, `PRIVACY.md`, [repository-settings.md](repository-settings.md), and this checklist match the release.
 
    - Validate Family Safe Mode and Adult Mode independently, including proof that Adult Mode does not invoke the local rule engine and that Venice API Safe Mode changes only the provider request parameter.
@@ -94,6 +94,8 @@ For local single-architecture builds, use:
 - [ ] Invalid key returns a clean `401`/`403` style message.
 - [ ] Model refresh succeeds after a valid key is saved.
 - [ ] Chat and image generation work.
+- [ ] Image generation uses endpoint-correct payload fields; durable save, Retry Save, alternate-volume Save As, restart journal recovery, corruption detection, full-storage, and permission-denial behavior match the generated-media contract.
+- [ ] Select all 12 bundled locales; confirm no unresolved keys, Arabic RTL, locale-aware formatting, and truthful first-pass/native-review status. Do not label non-English catalogs native-complete without dated reviewer evidence.
 - [ ] Image Inspector accepts valid PNG, JPEG, and WebP inputs with current live vision metadata; structured analysis, target-specific prompts, cancellation, persisted failures, and the shared loading animation behave correctly.
 - [ ] Image Inspector direct image search remains fail-closed unless a supported image-byte provider is configured; legacy query-derived results remain labeled, and exported Traffic Inspector data contains no raw image bytes, base64 media, complete prompts, credentials, or local absolute paths.
 - [ ] Batch run completes successfully.
@@ -124,7 +126,7 @@ For local single-architecture builds, use:
    - Verify export/import and settings persistence.
 5. Review the draft release on GitHub, then click **Publish release**.
 6. Note whether artifacts are signed or unsigned.
-7. Update the GitHub Release notes from `docs/audits/CHANGELOG.md`.
+7. Update the GitHub Release notes from the validated release-scope entries in `docs/summary_of_work.md` and retain unfinished acceptance work only in `docs/ROADMAP.md`.
 
 ---
 

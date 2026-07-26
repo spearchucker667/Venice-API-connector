@@ -21,7 +21,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [user/IMAGE_INSPECTOR.md](user/IMAGE_INSPECTOR.md) — Image-to-prompt analysis, supported inputs, text-based source discovery, privacy, and troubleshooting.
 - [i18n/TRANSLATION_GUIDE.md](i18n/TRANSLATION_GUIDE.md) — Translation guidelines and key conventions.
 - [i18n/GLOSSARY.md](i18n/GLOSSARY.md) — Internationalization terminology glossary.
-- [i18n/translation-status.json](i18n/translation-status.json) — Machine-readable catalog coverage and review metadata (schema v3); catalog completeness and native-language approval are separate gates.
+- [i18n/translation-status.json](i18n/translation-status.json) — Machine-readable structural, runtime-surface, and linguistic-review metadata (schema v4); the three dimensions are independent gates.
 - [i18n/native-review-status.json](i18n/native-review-status.json) — Per-locale qualified-review state, reviewer/date evidence, and production-completion input.
 - [i18n/identical-value-allowlist.json](i18n/identical-value-allowlist.json) — Locale-specific technical, format, brand, and cognate values allowed to remain identical to en-US; entries never constitute native review.
 - [Development/i18n-tooling.md](DEVELOPMENT/i18n-tooling.md) — `i18n:extract` / `i18n:sync-catalogs` / `i18n:coverage` workflow and the AST-driven extractor / safe-sync / sentinel-aware verifier contract.
@@ -138,6 +138,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [audits/Records/Function_calling_todo.md](audits/Records/Function_calling_todo.md) — Retained Document Agent implementation and acceptance specification; unfinished product scope is tracked in `ROADMAP.md`.
 - [audits/Records/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md](audits/Records/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md) — Retained multilingual prompt-language audit evidence.
 - [audits/Records/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md](audits/Records/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md) — Retained i18n foundation-phase remediation report.
+- [reports/historical/RUNTIME_I18N_FULL_UI_REMEDIATION_REPORT_2026-07-26.md](reports/historical/RUNTIME_I18N_FULL_UI_REMEDIATION_REPORT_2026-07-26.md) — Completed runtime-localization architecture remediation evidence: zero-debt expanded scanner, stable prompt/status contracts, full first-pass catalog sweep, rendered locale/RTL QA, validation, and external review limits.
 - [audits/Records/Venice_Forge_Extensive_Scan_2026-07-22.md](audits/Records/Venice_Forge_Extensive_Scan_2026-07-22.md) — Retained July 22 repository scan and remediation addendum.
 - [audits/Records/Venice_Forge_Findings_2026-07-22.json](audits/Records/Venice_Forge_Findings_2026-07-22.json) — Machine-readable July 22 snapshot findings and dispositions.
 - [reports/historical/README.md](reports/historical/README.md) — Guideline explaining audit history and historical report rules.

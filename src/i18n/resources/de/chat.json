@@ -16,5 +16,57 @@
   "folders": "Ordner",
   "unfiled": "Nicht abgelegt",
   "attachFile": "Datei anhängen",
-  "managedDocument": "Verwaltetes Dokument"
+  "managedDocument": "Verwaltetes Dokument",
+  "composer": {
+    "visionUnsupportedTitle": "KI ist nicht visionär",
+    "visionUnsupportedDetail": "„{{model}}“ kann Bildanhänge nicht lesen. Wählen Sie ein visionsfähiges Modell aus oder konvertieren Sie das Bild/PDF zunächst in Text.",
+    "attachTitle": "Datei anhängen (oder per Drag/Paste)",
+    "attachmentLimitTitle": "Anhangslimit erreicht",
+    "attachmentLimitDetail": "Sie können bis zu {{max}} Dateien pro Nachricht anhängen.",
+    "tooManyAttachmentsTitle": "Zu viele Anhänge",
+    "tooManyAttachmentsDetail": "Es wurden nur {{added}} von {{requested}} Dateien hinzugefügt. Das Limit beträgt {{max}} Dateien pro Nachricht.",
+    "attachmentNote": "Anhangshinweis",
+    "attachmentFailed": "Der Anhang ist fehlgeschlagen",
+    "attachmentAlt": "Anhang {{number}}",
+    "removeAttachment": "Anhang {{name}} entfernen",
+    "disabledPlaceholder": "Verbinden Sie einen API-Schlüssel, um zu beginnen …",
+    "dropPlaceholder": "Datei zum Anhängen ablegen",
+    "placeholder": "Fragen Sie alles – Enter zum Senden, Umschalt+Enter für Zeilenumbruch. Hängen Sie eine Datei an, um sie ohne Text zu senden.",
+    "messageInput": "Nachrichteneingabe",
+    "attachFile": "Datei anhängen",
+    "stopGenerating": "Hören Sie auf zu generieren",
+    "sendMessage": "Nachricht senden"
+  },
+  "memory": {
+    "disabledLabel": "Speicher aus",
+    "disabledTitle": "Der Speicherabruf ist in den Einstellungen deaktiviert.",
+    "loadingLabel": "Erinnerung…",
+    "loadingTitle": "Relevanten Speicher für diese Nachricht abrufen.",
+    "activeLabel": "Speicher aktiv",
+    "activeTitle": "Der relevante Speicherkontext wird in diese Nachricht eingefügt.",
+    "failedLabel": "Der Speicher ist ausgefallen",
+    "failedTitle": "Der Speicherabruf ist fehlgeschlagen. Ihre Nachricht wurde ohne Speicherkontext gesendet."
+  },
+  "controls": {
+    "autoRead": "Automatisch lesen",
+    "citations": "Zitate",
+    "scrape": "Kratzen",
+    "xSearch": "X-Suche",
+    "searchInStream": "Im Stream suchen",
+    "documentTools": "Dokumentwerkzeuge",
+    "newChatShortcut": "Neuer Chat (⌘N)",
+    "systemPromptPlaceholder": "Optional. Leer lassen, um das Hinzufügen einer von der App erstellten Systemmeldung zu vermeiden.",
+    "temperature": "Temperatur",
+    "topP": "Top P",
+    "maxTokens": "Maximale Token",
+    "veniceDefaultPrompt": "Standardaufforderung in Venedig",
+    "disableThinking": "Denken deaktivieren",
+    "stripThinking": "Strip-Denken",
+    "searchMode": "Suche: {{mode}}",
+    "searchModes": {
+      "off": "aus",
+      "on": "An",
+      "auto": "Auto"
+    }
+  }
 }

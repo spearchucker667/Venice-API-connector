@@ -17,6 +17,10 @@
 /.design-captures/
 /.impeccable/
 /scripts/dev-tools/venice-styles.json
+# Local i18n browser captures and resumable translation-run output. Canonical
+# status lives under docs/i18n/ and historical reports under docs/reports/.
+/artifacts/i18n/runtime-matrix-*.png
+/artifacts/i18n/synced-catalog-translation-report.json
 # =============================================================================
 # Build resources
 #

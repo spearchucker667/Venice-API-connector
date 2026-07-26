@@ -56,19 +56,19 @@
     "untitledLowercase": "(namnlös)",
     "working": "Arbetar…",
     "restoring": "Återställer…",
-    "auto": "Auto",
+    "auto": "Bil",
     "idle": "Vänteläge"
   },
-  "conversations": "conv-1",
-  "character_cards": "card-1",
+  "conversations": "konv-1",
+  "character_cards": "kort-1",
   "rp_chats": "rpchat-1",
-  "tombstones": "conv-1",
+  "tombstones": "konv-1",
   "cancelled": "misslyckad",
   "failed": "misslyckades",
   "repair": "slutförd",
-  "isAdult": "true",
-  "isPro": "true",
-  "isWebEnabled": "true",
+  "isAdult": "sann",
+  "isPro": "sann",
+  "isWebEnabled": "sann",
   "stable-audio": "q1",
   "video-model": "q2",
   "promptLibrary": "lib-1",
@@ -185,7 +185,7 @@
         "voice": "Röst",
         "download": "Ladda ner",
         "text": "Text",
-        "format": "Format",
+        "format": "Formatera",
         "speed": "Hastighet",
         "generateSpeech": "Generera tal",
         "transcribe": "Transkribera",
@@ -298,7 +298,7 @@
         "describe": "Beskriv",
         "review": "Granska",
         "recentUnfinishedDrafts": "Nyligen oavslutade utkast",
-        "rev": "Rev",
+        "rev": "Varv",
         "duplicate": "Duplicera"
       },
       "description": {
@@ -553,7 +553,7 @@
       },
       "label": {
         "accessPreset": "Åtkomstförinställning",
-        "format": "Format",
+        "format": "Formatera",
         "initialContent": "Inledande innehåll",
         "workingGroupName": "Arbetsgruppsnamn"
       }
@@ -707,7 +707,7 @@
         "missingReferences": "Saknade referenser"
       },
       "description": {
-        "originalLdquo": "Original: “",
+        "originalLdquo": "Original: &quot;",
         "rdquo": "”",
         "promptViaInternalLlm": "prompt via intern LLM...",
         "theseEndpointsAreRecognisedForTheSource": "Dessa slutpunkter känns igen för källmodellen. Om du kör samma operation på det här objektet igen kommer de att användas.",
@@ -918,7 +918,7 @@
     "componentsPlaygroundPlaygroundView": {
       "text": {
         "playground": "Lekplats",
-        "agent": "Agent",
+        "agent": "Ombud",
         "n": "n ·",
         "running": "Körs...",
         "openInWorkflows": "Öppna i arbetsflöden",
@@ -1306,7 +1306,7 @@
         "10ExportWorkflow": "10. Exportera och arbetsflöde"
       },
       "item": {
-        "tokens": "tokens"
+        "tokens": "polletter"
       }
     },
     "componentsRpStudioCharacterlibrary": {
@@ -1326,7 +1326,7 @@
         "loadingCharacters": "Laddar tecken...",
         "createYourFirstCharacter": "Skapa ditt första tecken",
         "name": "Namn",
-        "format": "Format",
+        "format": "Formatera",
         "creator": "Skapare",
         "greetings": "Hälsningar",
         "loreEntries": "Lore-poster",
@@ -1738,7 +1738,7 @@
     },
     "componentsThemepreview": {
       "text": {
-        "forge": "Forge",
+        "forge": "Smedja",
         "status": "Status",
         "activeItem": "Aktiv post",
         "inactiveItem": "Inaktiv post",
@@ -1773,7 +1773,7 @@
     },
     "componentsCharacterCreatorCharactercreatorready": {
       "text": {
-        "charaCardV2": "chara_card_v2",
+        "charaCardV2": "chara_kort_v2",
         "errorsMustResolve": "Fel (måste lösas)",
         "warningsOptional": "Varningar (valfritt)",
         "returnToDraft": "Återgå till utkast",
@@ -1820,7 +1820,7 @@
       "column": {
         "field": "Fält",
         "original": "Original",
-        "sanitized": "Sanitized"
+        "sanitized": "Sanerat"
       }
     },
     "galleryRecipeCompatibilityCard": {
@@ -1878,7 +1878,7 @@
         "whatShouldIBuild": "Vad ska jag bygga?",
         "describeAWorkflowInPlainLanguageI": "Beskriv ett arbetsflöde i klarspråk. Jag sätter ihop den på duken i realtid.",
         "noMessage": "(inget meddelande)",
-        "patch": "patch",
+        "patch": "lappa",
         "applied": "tillämpad"
       },
       "action": {
@@ -1983,5 +1983,2534 @@
         "noResults": "Inga resultat"
       }
     }
+  },
+  "promptStarters": {
+    "writing-rsa-email": "Skriv ett artigt men bestämt mejl och be min hyresvärd att fixa uppvärmningen.",
+    "writing-cover-letter": "Skriv en skräddarsydd mall för följebrev för en roll som Senior Full Stack Engineer med fokus på fjärrsamarbete.",
+    "writing-scifi-hook": "Komponera en övertygande öppningskrok för en sci-fi-roman där gravitationen beter sig olika i varje stad.",
+    "writing-newsletter-intro": "Utarbeta ett engagerande nyhetsbrev som diskuterar de samhälleliga effekterna av autonoma agentflottor.",
+    "writing-press-release": "Skapa en formell pressrelease-mall som tillkännager öppen källkod för en webbskrapa som är först med sekretess.",
+    "writing-linkedin-post": "Utforma ett professionellt LinkedIn-inlägg som sammanfattar viktiga lärdomar från att bygga en offline-first Electron-applikation.",
+    "writing-blog-outline": "Skapa en detaljerad översikt för ett tekniskt blogginlägg med titeln \"Säkring av förladdningsbryggor i moderna elektronappar\".",
+    "writing-sabbatical-request": "Skriv ett professionellt förslag som begär ett 3-månaders utbildningssabbatsår för att studera distribuerade system.",
+    "writing-speech-intro": "Skriv ett 3-minuters introduktionsanförande om vikten av lokal-först mjukvara och datasuveränitet.",
+    "writing-bug-report": "Skriv en grundlig mall för en felrapport i ett projekt med öppen källkod för att uppmuntra snabb lösning.",
+    "writing-refusal-letter": "Utarbeta ett professionellt svar som avslår ett leverantörsförslag samtidigt som du håller dörren öppen för framtida samarbete.",
+    "writing-haiku-comp": "Komponera tre haikus som fångar övergången från analog hårdvara till kvantberäkning.",
+    "coding-rest-graphql": "Jämför REST och GraphQL — när lyser varje?",
+    "coding-debounce-ts": "Skriv en robust, fullskriven debounce-hook i TypeScript for React med stöd för omedelbar anrop.",
+    "coding-sql-recursive": "Förklara hur rekursiva CTE:er fungerar i SQL med ett exempel på att fråga en organisationshierarki.",
+    "coding-refactor-lru": "Refaktorera en enkel Node.js-minnescache till en trådsäker LRU-cache med utgångsstöd.",
+    "coding-rust-error": "Visa hur man implementerar anpassad felhantering i Rust med hjälp av \"thiserror\" och \"anyhow\" lådorna.",
+    "coding-git-bisect": "Förklara hur man använder \"git bisect\" för att lokalisera en regressionsbekräftelse, inklusive automatiserad skriptkörning.",
+    "coding-docker-multi": "Skapa en minimal, säker flerstegs Dockerfil för att paketera en TypeScript Node.js-mikrotjänst.",
+    "coding-csp-rules": "Skriv en strikt Content Security Policy (CSP) headerkonfiguration som tillåter lokal WASM-körning men blockerar inline-eval.",
+    "coding-vitest-mocking": "Demonstrera hur man hånar globala fönsterobjekt och asynkrona hämtningsanrop i Vitest.",
+    "coding-css-flex-grid": "Förklara de arkitektoniska skillnaderna mellan CSS Grid- och Flexbox-layouter, med specifika layoutanvändningsfall för var och en.",
+    "coding-sse-parse": "Visa hur man skriver en strömparser för Server-Sent Events (SSE) i vanilla JavaScript utan externa beroenden.",
+    "coding-indexeddb-transaction": "Ge ett exempel på robust transaktionshantering och felåterställning i webbläsarnative IndexedDB.",
+    "learning-rsa-metaphor": "Förklara hur RSA-kryptering fungerar med en metafor som en 10-åring kunde förstå.",
+    "learning-pid-controller": "Förklara matematiken bakom en PID-temperaturregulator i enkla, intuitiva termer.",
+    "learning-monad-metaphor": "Förklara vad en monad är i funktionell programmering med hjälp av en vardaglig analogi.",
+    "learning-special-relativity": "Vad är tidsutvidgning i speciell relativitet? Förklara det med hjälp av ett tankeexperiment som involverar klockor.",
+    "learning-inflation-basics": "Förklara hur centralbanker använder räntor för att kontrollera inflationen och vilka ekonomiska avvägningar som är inblandade.",
+    "learning-photosynthesis": "Beskriv fotosyntesens ljusberoende reaktioner som en steg-för-steg löpande process.",
+    "learning-platonic-cave": "Förklara Platons allegori om grottan och diskutera hur den förhåller sig till moderna ekokammare i sociala medier.",
+    "learning-blockchain-proof": "Förklara skillnaden mellan Proof of Work och Proof of Stake konsensusalgoritmer utan att använda teknisk jargong.",
+    "learning-turing-complete": "Vad betyder det att ett system är \"Turing Complete\"? Ge en enkel förklaring och ett icke-uppenbart exempel.",
+    "learning-habermas-public": "Sammanfatta Jürgen Habermas koncept om 'den offentliga sfären' och dess relevans för interneteran.",
+    "learning-plate-tectonics": "Hur driver plattektoniken vulkanisk aktivitet? Förklara skillnaderna mellan subduktionszoner och hot spots.",
+    "learning-music-scales": "Förklara sambandet mellan matematiska frekvenser och musikaliska skalor eller harmoni.",
+    "research-fusion-status": "Vilka är de senaste milstolparna och de återstående tekniska hindren inom kommersiell forskning om kärnfusionsenergi?",
+    "research-dns-sec": "Analysera säkerhetssårbarheterna i det traditionella DNS-protokollet och hur DNSSEC adresserar dem.",
+    "research-solid-battery": "Sammanfatta det nuvarande tillståndet för solid-state batteriteknik för elfordon, med fokus på energitäthet och livscykel.",
+    "research-roman-concrete": "Undersök den kemiska formuleringen av antik romersk marin betong och varför den håller längre än modern Portlandcement.",
+    "research-browser-privacy": "Jämför integritetsskyddsmekanismerna för blockering av cookies från tredje part, försvar av webbläsares fingeravtryck och partitionering.",
+    "research-green-hydrogen": "Analysera den energiska och ekonomiska effektiviteten av produktion av grönt väte jämfört med direkt batterielektrifiering.",
+    "research-graphene-scaling": "Vilka är de nuvarande tillverkningsbegränsningarna som förhindrar skalningen av monolagergrafen för kommersiell elektronik?",
+    "research-zero-knowledge": "Jämför zk-SNARKs och zk-STARKs när det gäller pålitliga installationskrav, provstorlek och beräkningsoverhead.",
+    "research-microbiome-brain": "Sammanfatta de primära biologiska vägarna som kopplar den mänskliga tarmmikrobiomet till centrala nervsystemets funktioner.",
+    "research-deep-sea-mining": "Vilka är de miljömässiga och ekonomiska insatserna med djuphavsbrytning av polymetalliska knölar i internationellt vatten?",
+    "research-compiler-optimizations": "Undersök hur loopavrullning, eliminering av döda koder och optimering av registertilldelning fungerar i kompilatorer.",
+    "research-cfc-ozone": "Spåra den historiska tidslinjen och den kemiska processen för ozonlagrets återhämtning efter Montrealprotokollet.",
+    "creative-llm-pi-projects": "Brainstorma fem nya sidoprojektidéer med hjälp av LLM:er och en Raspberry Pi.",
+    "creative-time-travel-game": "Designa den centrala spelslingan för ett undersökande pusselspel centrerat på rekursiva tidsreseparadoxer.",
+    "creative-steampunk-ai": "Skriv en kort konceptuell beskrivning av en steampunk-stad där kommunala beslut dirigeras genom mekaniska differentialanalysatorer.",
+    "creative-product-name": "Brainstorma tio distinkta, suggestiva varumärkesnamn för ett lokaliserat, peer-to-peer mesh-nätverksverktyg.",
+    "creative-card-game": "Skapa regler och vinstvillkor för ett mikrokortspel som spelas med endast 18 kort med tema kring nätverksrouting.",
+    "creative-synth-podcast": "Beskriv en pitch för en fiktiv ljuddramapodcast som beskriver dagboksanteckningarna för en strandad djuprymdkommunikationsboj.",
+    "creative-culinary-fusion": "Uppfinn fem kreativa fusionsrätter som blandar traditionell japansk jäsningsteknik med mexikanska street food-koncept.",
+    "creative-speculative-ui": "Beskriv en innovativ design för användargränssnitt för att hantera personlig integritetspolicy med hjälp av en rumslig 3D-nodduk.",
+    "creative-robot-sports": "Brainstorma en helt ny sport designad speciellt för att visa upp koordinationsgränserna för benrobotar och drönare.",
+    "creative-magic-system": "Designa ett magiskt fantasisystem där spellcasting begränsas av termodynamiska lagar och bevarande av momentum.",
+    "creative-smart-mirror": "Brainstorma tre kreativa applikationer för en smart spegel som interagerar med lokala kalender och API:er för omgivande väder.",
+    "creative-metaphor-database": "Skapa en utökad metafor som jämför databasnormalisering med att organisera ett vidsträckt kommunalt bibliotek.",
+    "productivity-time-box": "Skapa en anpassningsbar veckovis tidsblockerande mall optimerad för scheman för djupgående mjukvaruutveckling.",
+    "productivity-meeting-agenda": "Utforma en agendamall för en veckovis asynkron-först teknisk synkronisering som syftar till att lösa arkitektoniska flaskhalsar.",
+    "productivity-habit-stack": "Designa ett 30-dagars ramverk för att övergå till en konsekvent morgonträning och läsrutin.",
+    "productivity-notion-layout": "Beskriv databasschemat och layoutstrukturen för en Notion-arbetsyta utformad för att spåra personlig kunskap och bokmärken.",
+    "productivity-prioritization": "Förklara hur man tillämpar Eisenhower-matrisen för att prioritera uppgifter som ingenjörschef med motstridiga prioriteringar.",
+    "productivity-onboarding": "Skapa en checklista för introduktion av en ny fjärrprogramvaruingenjör till en komplex äldre monolitisk kodbas.",
+    "productivity-markdown-journal": "Utforma ett lättviktigt dagligt journalföringssystem som hjälper till att spåra dagliga mål, blockerare och tacksamhet.",
+    "productivity-inbox-zero": "Skapa ett steg-för-steg-system för att uppnå och underhålla Inbox Zero med hjälp av automatiska etiketter och kortkommandon.",
+    "productivity-postmortem": "Skapa en standardmall för att skriva mjukvara efter ett kritiskt produktionsavbrott.",
+    "productivity-learning-sprint": "Beskriv en 4-veckors inlärningssprintplan för att bemästra grunderna i Rust WebAssembly-sammanställning.",
+    "productivity-presentation-deck": "Utforma en bild-för-bild-struktur för en 10-minuters presentationspitch för att säkra startfinansiering för en lokal LLM-klient.",
+    "productivity-dependency-audit": "Skapa en handlingsplan för att utföra en månatlig granskning av biblioteksberoende med öppen källkod i ett produktionskodlager.",
+    "analysis-p2p-mesh": "Genomför en SWOT-analys av att distribuera ett decentraliserat peer-to-peer mesh-nätverk i tätortsområden.",
+    "analysis-sqlite-pg": "Jämför de arkitektoniska avvägningarna mellan SQLite vs PostgreSQL för en offline-första skrivbordsapplikation med synkroniseringsmöjligheter.",
+    "analysis-fallacy-media": "Lista fem vanliga logiska misstag som finns i modern mediarapportering och ge riktlinjer för hur man upptäcker dem.",
+    "analysis-cloud-vs-local": "Analysera de långsiktiga kostnads-nytto-avvägningarna mellan molnbaserad serverlös datoranvändning kontra egenvärdiga bare metal-servrar.",
+    "analysis-electron-tauri": "Utför en detaljerad jämförande analys av Electron vs Tauri när det gäller minnesfotavtryck, byggstorlek och säkerhetsmodeller.",
+    "analysis-monolith-micro": "Identifiera nyckelindikatorer som visar när en växande startup bör övergå från en monolit- till en mikroservicearkitektur.",
+    "analysis-privacy-shield": "Analysera de juridiska och tekniska konsekvenserna av GDPR-efterlevnadskrav på loggning och telemetripraxis.",
+    "analysis-rsa-vs-ecc": "Utför en jämförande teknisk analys av RSA vs Elliptic Curve Cryptography (ECC) angående nyckelstorlekar och signaturhastigheter.",
+    "analysis-dns-over-https": "Analysera integritetsfördelarna och nätverkets prestandaavvägningar med att anta DNS-över-HTTPS (DoH).",
+    "analysis-open-licensing": "Jämför juridiska villkor, copyleft-egenskaper och kommersiella användningsbehörigheter för MIT vs GPLv3-licenser.",
+    "analysis-ci-caching": "Analysera byggtidsoptimeringarna som erhållits från cachestrategier i GitHub Actions CI-pipelines.",
+    "analysis-work-automation": "Utvärdera de potentiella effekterna av AI-arbetsflöden för autonoma agenter på administrativa teams produktivitet och resursefterfrågan.",
+    "image-serene-mountain": "En fridfull bergssjö i gyllene timmen, låg dimma över vattnet, måleriskt",
+    "image-dewdrop-spiderweb": "Makrofoto av en daggdroppe på ett spindelnät, soluppgångsbelysning",
+    "image-cyberpunk-market": "Cyberpunk gatumarknad på natten, neonskyltar som speglar sig i pölar",
+    "image-fox-mushroom": "Barnbokillustration av en räv som läser en bok under en svamp",
+    "image-steampunk-airship": "Steampunk-luftskepp som dockar vid en flytande plattform i en molnfylld himmel, vintageillustrationstil",
+    "image-bioluminescent-forest": "En futuristisk självlysande skog på natten, glödande växter, eteriska blå och lila toner, detaljerad digital konst",
+    "image-watercolor-cafe": "Livlig akvarellmålning av ett livligt europeiskt gatukafé, solig dag, lösa konstnärliga penseldrag",
+    "image-astronaut-portrait": "Ett närbildsporträtt av en astronaut som tittar på jorden, reflektion i visiret, hyperrealistisk, detaljerad rymddräkt",
+    "image-overgrown-ruins": "Forntida ruiner av ett tempel bevuxet med gigantiska trädrötter, eftermiddagssolstrålar som tränger igenom löv, lynnig",
+    "image-minimalist-desert": "Minimalistisk vektorkonst av ett ökenlandskap på natten, halvmåne, stjärnor, varm terrakotta och mörkblå toner",
+    "image-cozy-cabin": "En oljemålning av en mysig stuga i skogen under en vintersnöstorm, varmt bärnstensljus som lyser från fönstren",
+    "image-floating-island": "En nyckfull flytande ö med en liten fyr, omgiven av fluffiga vita moln, 3D-lerstil",
+    "image-midcentury-abstract": "Abstrakt geometrisk komposition inspirerad av modern design från mitten av århundradet, dämpad retrofärgpalett",
+    "image-castle-dragon": "En majestätisk drake uppflugen på toppen av ett medeltida slottstorn, dimma, dramatisk filmisk belysning",
+    "image-surreal-whale": "Surrealistisk digital konst av en val som flyger genom en molnig himmel fylld med svävande luftballonger",
+    "image-retro-lab": "Ett retrofuturistiskt laboratorium med glasflaskor med glödande vätska, kopparspiraler och analoga urtavlor, dramatiska skuggor",
+    "image-sketch-cat": "Blyertsskiss av en sömnig katt uppkrupen på en bunt gamla läderbundna böcker, mjukt kryss",
+    "image-coral-reef": "Ett färgglatt korallrev som kryllar av exotiska fiskar, solljusstrålar som filtrerar genom klart turkost vatten, undervattensfoto",
+    "image-hacker-setup": "Cyberpunk-hackerinstallation med flera lysande monitorer, kablar överallt, mörkt rum med cyberblått omgivande ljus",
+    "image-stained-glass": "Målat glasfönster som visar ett livets träd, starkt solljus som kastar färgglada mönster på ett stengolv",
+    "audio-welcome-vf": "Välkommen till Venice Forge. Röstens framtid är här, och den talar alla språk.",
+    "audio-library-book": "I en lugn stad inbäddad mellan två berg, hade ett litet bibliotek en mycket gammal bok.",
+    "audio-octopus-brains": "Visste du det? En enda bläckfisk har nio hjärnor - en central, plus en i varje arm.",
+    "audio-safety-protocols": "Se till att alla säkerhetsprotokoll är helt inkopplade innan du distribuerar det lokala LLM-agentklustret.",
+    "audio-quick-brown-fox": "Den kvicka bruna räven hoppar över den lata hunden. Bara ett klassiskt sångtest för att kontrollera alla fonetiska frekvenser.",
+    "audio-hyperloop-depart": "Passagerare uppmärksamma, hyperloop-transitkorridoren till den östra terminalen kommer att avgå om exakt tre minuter.",
+    "audio-hydrothermal-vents": "Djupt i havet stödjer hydrotermiska öppningar unika ekosystem som aldrig ser solens ljus.",
+    "audio-study-stars": "För att förstå universum måste vi studera stjärnorna, atomerna och utrymmet mellan dem.",
+    "audio-step-forward": "Ett enda steg framåt kan förändra historiens gång, förutsatt att vi vet vilken väg vi följer.",
+    "audio-digital-archive": "Välkommen till det digitala arkivet. Vänligen ange dina referenser eller infoga din behörighetsmodul.",
+    "audio-whispering-leaves": "Viskande löv och avlägsna åska fyllde nattluften när höststormen närmade sig.",
+    "audio-getting-started": "Hemligheten med att komma framåt är att komma igång, kombinerat med en daglig vana av fokuserat arbete.",
+    "audio-compilation-complete": "Vårt system har framgångsrikt slutfört kompileringsprocessen. Alla modulparametrar är nominella.",
+    "audio-kepler-transmission": "År tjugotvå fyrtiotvå fick mänskligheten sin första verifierade överföring från Kepler-systemet.",
+    "audio-complex-problem": "För varje komplext problem finns det en lösning som är enkel, snygg och helt fel.",
+    "music-lofi-hiphop": "Lo-fi hiphop-beat med vinylsprakande och regn — 80 bpm, mjuk",
+    "music-cinematic-orchestral": "Filmisk orkesteruppbyggnad — långsamma stråkar som stiger till triumferande mässing",
+    "music-synthwave-retro": "Synthwave med retro arpeggios, varma pads, gated reverb trummor — 105 bpm",
+    "music-acoustic-folk": "Akustisk folk-fingerpicking, mjuk kvinnlig sång, intimt rumsljud",
+    "music-indie-pop": "Upbeat indiepoplåt med catchy elgitarrriff och handklappar — 120 bpm",
+    "music-dark-ambient": "Mörk omgivande drönare med långsamma synthpulser och metalliska texturer – rymdatmosfär",
+    "music-heavy-metal": "80-tals heavy metal gitarrsolo, snabba kontrabastrummor, högenergisk rocksång",
+    "music-jazz-piano": "Avkopplande jazzpianotrio med upprätt bas och mjuka borsttrummor — lounge sent på kvällen",
+    "music-industrial-techno": "Cyberpunk industriell techno med förvrängda baslinjer och tung kicktrumma — 130 bpm",
+    "music-japanese-flute": "Traditionell japansk flöjt (shakuhachi) med omgivande strängkuddar — fridfull meditation",
+    "music-edm-drop": "Högenergisk EDM-drop med progressiva synthackord och drivande subbas — festivalstil",
+    "music-chillstep": "Chillout chillstep-spår med tonhöjdsböjda sång och mjuk subbas — 90 bpm",
+    "music-delta-blues": "Delta blues slide gitarr med stompbox-rytm, rå och själfull",
+    "music-chiptune-retro": "Futuristisk chiptune 8-bitars spelmusik, glad melodi, retro ljudeffekter",
+    "music-reggae-dub": "Reggae dub-spår med tunga offbeat-ackord, djup baslinje och ekoeffekter",
+    "embeddings-fox-dog": "Den kvicka bruna räven hoppar över den lata hunden.",
+    "embeddings-meaning-vector": "Inbäddningar gör text till en vektor som du kan söka efter med betydelse.",
+    "embeddings-sf-bridges": "San Francisco är en stad i norra Kalifornien känd för sin dimma och sina broar.",
+    "embeddings-ai-simulation": "Artificiell intelligens är simulering av mänskliga intelligensprocesser med maskiner.",
+    "embeddings-quantum-computing": "Kvantberäkningar använder superposition och intrassling för att utföra komplexa operationer.",
+    "embeddings-dna-helix": "Dubbelhelixstrukturen av DNA upptäcktes först 1953 av Watson och Crick.",
+    "embeddings-db-index": "Ett databasindex är en datastruktur som förbättrar hastigheten för datahämtning.",
+    "embeddings-clean-code": "Ren kod ser alltid ut som om den skrivits av någon som bryr sig.",
+    "embeddings-photosynthesis": "Fotosyntes är den process som används av växter för att omvandla ljusenergi till kemisk energi.",
+    "embeddings-cryptographic-hash": "Kryptografiska hashfunktioner mappar godtyckliga binära data till en signatur med fast storlek.",
+    "embeddings-spacetime-curve": "Den allmänna relativitetsteorin beskriver gravitation som rumtidens krökning.",
+    "embeddings-offline-first": "I en offline-först-applikation lagras data lokalt innan den synkroniseras till molnet.",
+    "embeddings-regex-match": "Reguljära uttryck är mönster som används för att matcha teckenkombinationer i strängar.",
+    "embeddings-vector-space": "Ett vektorrum är en matematisk struktur som bildas av en samling vektorer.",
+    "embeddings-microservices": "Mikrotjänsters arkitektur strukturerar en applikation som en samling löst kopplade tjänster."
+  },
+  "statusCluster": {
+    "categories": {
+      "api": "API",
+      "apiKey": "Nyckel",
+      "model": "Modell",
+      "storage": "Lagring",
+      "safety": "Säkerhet",
+      "provider": "Forskning",
+      "project": "Projekt",
+      "desktop": "Läge"
+    },
+    "severities": {
+      "ok": "OK",
+      "warn": "Varning",
+      "error": "Fel",
+      "unknown": "Okänd"
+    },
+    "aria": {
+      "cluster": "Appstatuskluster",
+      "openHighest": "Öppna appstatus. Högsta svårighetsgrad: {{category}} {{severity}}"
+    },
+    "status": "Status"
+  },
+  "runtimeGenerated": {
+    "app": {
+      "attribute": {
+        "closeMenu": "Stäng menyn"
+      }
+    },
+    "components": {
+      "charactersview": {
+        "attribute": {
+          "adultCharacter": "Vuxen karaktär",
+          "averageRating": "Genomsnittligt betyg",
+          "ratingCount": "Antal betyg",
+          "totalImports": "Total import",
+          "openOnVenice": "Öppet på Venedig",
+          "closeCharacterDetails": "Stäng karaktärsdetaljer",
+          "characterSections": "Karaktärsavsnitt",
+          "characterChatModel": "Karaktär chatt modell",
+          "searchCharacters": "Sök tecken...",
+          "searchCharacters2": "Sök tecken"
+        },
+        "text": {
+          "unfavorite": "Avfavorit",
+          "favorite": "Favorit",
+          "v1Imported": "V1 importerad",
+          "v2Json": "V2 JSON",
+          "v2Png": "V2 PNG",
+          "vfNative": "VF Native",
+          "noDescription": "Ingen beskrivning",
+          "unknownAuthor": "Okänd författare",
+          "noDescriptionProvided": "Ingen beskrivning tillhandahålls.",
+          "loading": "Belastning…",
+          "loadMore": "Ladda mer"
+        },
+        "notification": {
+          "refreshedValue1": "Uppdaterad {{value1}}",
+          "duplicatedValue1ToLocal": "Duplicerade {{value1}} till Local",
+          "exportFailed": "Exporten misslyckades"
+        },
+        "metadata": {
+          "deleteValue1": "Ta bort {{value1}} ?",
+          "featured": "Utvalda",
+          "mostImported": "Mest importerade",
+          "highestRated": "Högst betyg",
+          "highlyRated": "Högt betygsatt",
+          "highlyRatedRecent": "Högt betygsatt och nyligen",
+          "mostRecent": "Senaste",
+          "mostRated": "Mest rankade",
+          "descending": "Fallande",
+          "ascending": "Stigande"
+        }
+      },
+      "modelselect": {
+        "attribute": {
+          "highFidelity": "Hi-fi",
+          "standardFidelity": "Standardåtergivning",
+          "anonymousInference": "Anonym slutsats",
+          "privateInference": "Privat slutledning"
+        },
+        "text": {
+          "value1K": "{{value1}} k"
+        }
+      },
+      "thememaker": {
+        "metadata": {
+          "veniceParityDark": "Venedig Parity Dark",
+          "forgeGraphite": "Forge grafit",
+          "forgeDaylight": "Forge Daylight",
+          "forgeCopper": "Smida koppar",
+          "forgeDracula": "Smida Dracula",
+          "gruvboxDark": "GruvBox mörk",
+          "rosepine": "Rosepine",
+          "forgeNord": "Forge Nord",
+          "forgeTokyo": "Forge Tokyo",
+          "forgeCatppuccin": "Forge Catppuccin",
+          "forgeSolarizedDark": "Forge Solarized Dark",
+          "forgeSolarizedLight": "Forge Solarized Light",
+          "forgeOneDark": "Forge One Dark",
+          "forgeMonokai": "Forge Monokai",
+          "forgeGithubLight": "Forge GitHub Light",
+          "obsidianBloom": "Obsidian Bloom",
+          "harborFog": "Hamndimma",
+          "circuitMint": "Circuit Mint",
+          "amberArchive": "Amber Arkiv",
+          "neonDusk": "Neonskymning",
+          "auroraBoreal": "Aurora Boreal",
+          "sakuraTerminal": "Sakura Terminal",
+          "basaltNoir": "Basalt Noir",
+          "solarAsh": "Solar Ash",
+          "cyberOrchid": "Cyberorkidé",
+          "arcticGlass": "Arctic Glass",
+          "desertCopperfield": "Desert Copperfield",
+          "toxicLimewire": "Giftig Limewire",
+          "midnightVelvet": "Midnight Velvet",
+          "porcelainDaybreak": "Porslin Daybreak",
+          "synthwaveHarbor": "Synthwave Harbor",
+          "mossCircuit": "Moss Circuit",
+          "emberMonastery": "Glödklostret",
+          "glacialInk": "Glacial bläck",
+          "ultravioletRain": "Ultraviolett regn",
+          "customTheme": "Anpassat tema",
+          "placeholder": "Platshållare"
+        },
+        "notification": {
+          "createdNewCustomThemeValue1": "Skapat nytt anpassat tema &quot; {{value1}} &quot;",
+          "failedToCreateThemeValue1": "Det gick inte att skapa tema: {{value1}}",
+          "themeValue1SavedSuccessfully": "Temat &quot; {{value1}} &quot; har sparats",
+          "failedToSaveThemeValue1": "Det gick inte att spara temat: {{value1}}",
+          "failedToDeleteThemeValue1": "Det gick inte att ta bort tema: {{value1}}",
+          "themeExportedSuccessfully": "Temat har exporterats",
+          "failedToExportTheme": "Det gick inte att exportera temat",
+          "failedToImportTheme": "Det gick inte att importera tema",
+          "themeValue1ImportedAndApplied": "Temat &quot; {{value1}} &quot; importerat och tillämpat",
+          "failedToImportThemeValue1": "Det gick inte att importera tema: {{value1}}"
+        },
+        "attribute": {
+          "themeName": "Temanamn",
+          "value1ColorPicker": "{{value1}} färgväljare"
+        }
+      },
+      "audio": {
+        "audioView": {
+          "notification": {
+            "ttsFailed": "TTS misslyckades",
+            "transcriptionFailed": "Transkriptionen misslyckades"
+          },
+          "text": {
+            "textToSpeech": "Text till tal",
+            "transcribe": "Transkribera",
+            "clickToSelectAudioFile": "Klicka för att välja ljudfil"
+          },
+          "attribute": {
+            "enterTextToConvertToSpeech": "Ange text för att konvertera till tal...",
+            "synthesizingSpeech": "Syntetiserar tal...",
+            "transcribingAudio": "Transkriberar ljud..."
+          }
+        }
+      },
+      "characterCreator": {
+        "charactercreatordrafteditor": {
+          "text": {
+            "untitledCharacter": "Namnlös karaktär",
+            "hideAiDesignProcess": "Dölj AI-designprocess",
+            "viewAiDesignProcessLog": "Visa AI Design Process Log",
+            "revisingDraft": "Reviderar utkast...",
+            "reviseWholeDraft": "Revidera hela utkastet"
+          },
+          "metadata": {
+            "overview": "Översikt",
+            "identity": "Identitet",
+            "behavior": "Beteende",
+            "conversation": "Konversation",
+            "advancedPrompting": "Avancerad fråga",
+            "lore": "Bakgrundshistoria",
+            "appearance": "Utseende",
+            "metadata": "Metadata"
+          },
+          "attribute": {
+            "start10UserHello10CharGreetings": "<START>{{user}} : Hej! {{char}} : Hälsningar...",
+            "avatarPreview": "Avatar förhandsvisning",
+            "triggerKeywordsEGGothamBatcave": "Utlösa sökord (t.ex. Gotham, Batcave)",
+            "loreDetailContentTriggeredWhenAnyKeywordAppearsInConversation": "Läs mer detaljerat innehåll som utlöses när ett sökord visas i konversationen...",
+            "eGMakeHerLessHostileGiveHimADry": "t.ex. Gör henne mindre fientlig, ge honom en torr humor eller flytta inställningen till 1920-talets Berlin..."
+          }
+        },
+        "charactercreatorerror": {
+          "notification": {
+            "errorDetailsCopiedToClipboard": "Felinformationen har kopierats till urklipp"
+          }
+        },
+        "charactercreatorlocalpickermodal": {
+          "attribute": {
+            "searchByCharacterNameTagOrDescription": "Sök efter teckennamn, tagg eller beskrivning..."
+          },
+          "text": {
+            "noLocalCharactersFoundInYourLibrary": "Inga lokala tecken hittades i ditt bibliotek.",
+            "noCharactersMatchYourSearchFilter": "Inga tecken matchar ditt sökfilter.",
+            "noDescriptionProvided": "Ingen beskrivning tillhandahålls."
+          }
+        },
+        "charactercreatormascot": {
+          "attribute": {
+            "characterCreatorMascot": "Karaktärsskaparens maskot"
+          }
+        },
+        "charactercreatorprocesspanel": {
+          "notification": {
+            "designProcessSummaryCopiedToClipboard": "Sammanfattning av designprocessen kopierad till urklipp",
+            "couldNotCopyToClipboard": "Det gick inte att kopiera till urklipp"
+          },
+          "text": {
+            "copied": "Kopierade",
+            "copyLog": "Kopiera logg",
+            "value1Value2": "{{value1}} : {{value2}}"
+          }
+        },
+        "charactercreatorready": {
+          "text": {
+            "characterReadyForApproval": "Karaktär redo för godkännande",
+            "validationIssuesDetected": "Valideringsproblem upptäckts",
+            "reviewTheValidationPreviewAndExplicitlyApproveCreationToAdd": "Granska valideringsförhandsgranskningen och godkänn uttryckligen skapande för att lägga till i ditt lokala bibliotek.",
+            "resolveValidationErrorsBeforeApprovingCharacterCardCreation": "Åtgärda valideringsfel innan du godkänner skapande av teckenkort.",
+            "noDescriptionSpecified": "Ingen beskrivning specificerad",
+            "thisDraftWasLoadedFromAnExistingCharacterYouCan": "Detta utkast laddades från en befintlig karaktär. Du kan uppdatera karaktären på plats eller spara som en ny kopia.",
+            "thisWillCreateANewLocalCharacterFromTheCurrent": "Detta kommer att skapa en ny lokal karaktär från det aktuella utkastet. Du kan fortsätta redigera den efter att den har skapats.",
+            "updateCharacter": "Uppdatera karaktär",
+            "createCharacter": "Skapa karaktär",
+            "updateStartChat": "Uppdatera och starta chatt",
+            "createStartChat": "Skapa och starta chatt"
+          }
+        },
+        "charactercreatorview": {
+          "metadata": {
+            "analyzingImage": "Analyserar bild"
+          },
+          "notification": {
+            "couldNotLoadDraft": "Det gick inte att läsa in utkast",
+            "draftDuplicated": "Utkast duplicerat",
+            "couldNotDuplicateDraft": "Det gick inte att duplicera utkastet",
+            "draftDeleted": "Utkast raderat",
+            "couldNotDeleteDraft": "Det gick inte att ta bort utkastet",
+            "autosaveFailed": "Autospara misslyckades",
+            "cannotSaveDraftWhilePendingChangesFailedToPersist": "Det gick inte att spara utkastet medan väntande ändringar misslyckades.",
+            "draftSavedLocally": "Utkast sparat lokalt",
+            "couldNotSaveDraft": "Det gick inte att spara utkastet",
+            "cannotReviseDraftWhilePendingChangesFailedToPersist": "Det går inte att revidera utkastet medan väntande ändringar misslyckades.",
+            "draftRevised": "Utkastet reviderat",
+            "cannotRegenerateFieldWhilePendingChangesFailedToPersist": "Det gick inte att återskapa fältet medan väntande ändringar misslyckades.",
+            "fieldFieldRegenerated": "Fältet &#39; {{field}} &#39; har genererats på nytt",
+            "cannotValidateDraftWhilePendingChangesFailedToPersist": "Det gick inte att validera utkastet medan väntande ändringar misslyckades.",
+            "cannotApproveCharacterWhilePendingChangesFailedToPersist": "Det gick inte att godkänna karaktären medan väntande ändringar misslyckades.",
+            "characterUpdated": "Karaktären uppdaterad!",
+            "characterCreated": "Karaktär skapad!",
+            "value1SavedToLocalLibrary": "&quot; {{value1}} &quot; har sparats i det lokala biblioteket.",
+            "cannotExportCardWhilePendingChangesFailedToPersist": "Det gick inte att exportera kortet medan väntande ändringar kunde inte bestå.",
+            "characterCardExported": "Teckenkort har exporterats",
+            "exportFailed": "Exporten misslyckades",
+            "exportedCharacterCardJson": "Exporterat teckenkort JSON",
+            "cardImportedIntoCharacterCreator": "Kort importerat till Character Creator",
+            "importedCard": "Importerat kort",
+            "importFailed": "Importen misslyckades",
+            "couldNotParseCardFile": "Det gick inte att analysera kortfilen",
+            "couldNotLoadCharacter": "Det gick inte att läsa in tecken"
+          }
+        },
+        "charactercreatorwelcome": {
+          "attribute": {
+            "exampleIWantABroodingNocturnalDetectiveWhoProtectsA": "Exempel: Jag vill ha en grubblande nattlig detektiv som skyddar en korrupt stad utan att döda.",
+            "eGNeoGothicMetropolis1920sNoir": "t.ex. nygotisk metropol, 1920-tals Noir",
+            "eGGrittyMelancholicSatirical": "t.ex. Gritty, melankolisk, satirisk",
+            "eGReluctantAllyMysteriousInformant": "t.ex. motvillig allierad, mystisk informator",
+            "duplicateDraft": "Duplicera utkast",
+            "deleteDraft": "Ta bort utkast"
+          }
+        }
+      },
+      "characters": {
+        "characteravatar": {
+          "attribute": {
+            "displaynameAvatar": "{{displayName}}-avatar"
+          }
+        }
+      },
+      "chat": {
+        "characterchatsview": {
+          "attribute": {
+            "newCharacterChat": "Ny karaktärschatt",
+            "chooseOrStartACharacterChat": "Välj eller starta en karaktärschatt",
+            "searchCharacterChats": "Sök karaktärchattar",
+            "searchLocalCharacters": "Sök efter lokala tecken...",
+            "newCharacterChat2": "Ny karaktärchatt",
+            "selectALocalCharacterOrBrowseHostedCharactersToLaunch": "Välj en lokal karaktär eller bläddra bland karaktärer för att starta en chatt.",
+            "filterLocalCharacters": "Filtrera lokala tecken..."
+          },
+          "text": {
+            "characterChat": "Karaktär chatt",
+            "local": "Lokal",
+            "hosted": "Värd",
+            "v1Imported": "V1 importerad",
+            "v2Json": "V2 JSON",
+            "v2Png": "V2 PNG",
+            "localCharacter": "Lokal karaktär",
+            "localCharacter2": "Lokal karaktär",
+            "noLocalCharactersCreatedYet": "Inga lokala karaktärer har skapats ännu.",
+            "noCharactersMatchPickerquery": "Inga tecken matchar &quot; {{pickerQuery}} &quot;."
+          }
+        },
+        "characterscenecard": {
+          "text": {
+            "unableToGenerateScene": "Det gick inte att skapa scen."
+          },
+          "attribute": {
+            "generatedScene": "Genererad scen"
+          }
+        },
+        "chatttsplayer": {
+          "attribute": {
+            "pauseSpeech": "Pausa talet",
+            "playSpeech": "Spela tal",
+            "stopSpeech": "Stoppa talet",
+            "restartSpeech": "Starta om talet"
+          }
+        },
+        "historyview": {
+          "notification": {
+            "importFailed": "Importen misslyckades",
+            "unableToSelectBackup": "Det gick inte att välja säkerhetskopiering",
+            "conversationDeleted": "Konversationen raderades",
+            "untitled": "Ofrälse",
+            "conversationRestored": "Konversationen återställdes",
+            "failedToRestore": "Det gick inte att återställa",
+            "movedConversations": "Flyttade konversationer",
+            "movedValue1ConversationValue2ToTargetname": "Flyttade {{value1}} konversation {{value2}} till {{targetName}} .",
+            "failedToMoveConversations": "Det gick inte att flytta konversationer",
+            "conversationsDeleted": "Konversationer raderade",
+            "value1SelectedConversationValue2Removed": "{{value1}} vald konversation {{value2}} har tagits bort.",
+            "someConversationsWereNotDeleted": "Vissa konversationer raderades inte",
+            "value1SelectedConversationValue2RemainBecauseStorageDeletionFailed": "{{value1}} vald konversation {{value2}} kvar eftersom radering av lagring misslyckades.",
+            "thisConversationHasNoFactsOrSummaryToUse": "Den här konversationen har inga fakta eller sammanfattningar att använda.",
+            "contextInjectedIntoActiveChat": "Kontext injiceras i aktiv chatt",
+            "privacyGateRemainsClosed": "Sekretessgrind förblir stängd",
+            "privacyGateWasNotEnabled": "Privacy gate var inte aktiverad",
+            "unknownError": "Okänt fel"
+          },
+          "metadata": {
+            "importEncryptedFolderBackup": "Importera krypterad mappbackup?",
+            "unlockBackup": "Lås upp säkerhetskopiering",
+            "undo": "Ångra",
+            "deleteValue1ConversationValue2": "Ta bort {{value1}} konversation {{value2}} ?",
+            "openPrivacyGate": "Öppna Privacy Gate",
+            "enableFolderPrivacyGate": "Aktivera Folder Privacy Gate",
+            "exportFolder": "Exportera mapp"
+          },
+          "attribute": {
+            "searchByTitleOrMessageContent": "Sök efter titel eller meddelandeinnehåll...",
+            "deselectFolderConversations": "Avmarkera mappkonversationer",
+            "selectAllConversationsInFolder": "Välj alla konversationer i mappen",
+            "moveFolderUp": "Flytta mappen uppåt",
+            "moveValue1FolderUp": "Flytta mappen {{value1}} uppåt",
+            "moveFolderDown": "Flytta mappen nedåt",
+            "moveValue1FolderDown": "Flytta ned mappen {{value1}}",
+            "renameFolder": "Byt namn på mapp",
+            "deleteFolder": "Ta bort mapp",
+            "deselect": "Välja bort",
+            "select": "Välja",
+            "deselectConversation": "Avmarkera konversation",
+            "selectConversation": "Välj konversation",
+            "injectContextIntoActiveChat": "Injicera sammanhang i aktiv chatt",
+            "deleteConversation": "Ta bort konversation",
+            "deselectUnfiledConversations": "Avmarkera oarkiverade konversationer",
+            "selectAllUnfiledConversations": "Välj alla oarkiverade konversationer",
+            "folderName": "Mappnamn...",
+            "privacyAccessGateNotPerFolderEncryptionAtRest": "Sekretessgrind; inte per mapp kryptering i vila"
+          },
+          "text": {
+            "deselectAllVisible": "Avmarkera alla synliga",
+            "selectAllVisible": "Välj alla synliga",
+            "folderselectedcountSelected": "· {{folderSelectedCount}} har valts",
+            "selected": "Vald",
+            "select": "Välja",
+            "unfiledselectedcountSelected": "· {{unfiledSelectedCount}} har valts"
+          }
+        },
+        "chatView": {
+          "notification": {
+            "modelUnavailable": "Modellen är inte tillgänglig",
+            "thePreviouslySelectedModelIsUnavailableThisChatNowUses": "Den tidigare valda modellen är inte tillgänglig. Den här chatten använder nu {{resolvedDefault}} .",
+            "priorContextSkipped": "Tidigare sammanhang hoppade över",
+            "factPermanentlyForgotten": "Fakta permanent glömt.",
+            "failedToForgetFact": "Misslyckades med att glömma fakta"
+          },
+          "metadata": {
+            "forgetThisFact": "Glömma detta faktum?",
+            "deleteFromHere": "Ta bort härifrån?",
+            "removedFromChat": "Borttagen från chatten",
+            "removednameStaysInMediaStudioClickUndoToReAttach": "{{removedName}} stannar i Media Studio. Klicka på Ångra för att bifoga igen.",
+            "undo": "Ångra",
+            "regenerateFromHere": "Återskapa härifrån?"
+          },
+          "attribute": {
+            "searchCurrentConversation": "Sök efter aktuell konversation",
+            "searchThisConversation": "Sök i den här konversationen",
+            "previousMatch": "Föregående match",
+            "nextMatch": "Nästa match",
+            "closeConversationSearch": "Stäng konversationssökning",
+            "cancel": "Avboka",
+            "chatContextSettings": "Inställningar för chattkontext",
+            "chatContext": "Chattsammanhang",
+            "stopChattingAsThisCharacter": "Sluta chatta som den här karaktären",
+            "value1Value2Tokens": "~ {{value1}} / {{value2}} tokens"
+          },
+          "text": {
+            "value0Matches": "0 matcher",
+            "value1OfValue2": "{{value1}} av {{value2}}",
+            "pickAModelInTheHeaderAboveThenStartA": "Välj en modell i rubriken ovan och starta sedan en konversation. Streaming, webbsökning och citat är alla inbyggda.",
+            "connectAVeniceApiKeyFromTheHeaderAboveTo": "Anslut en Venedig API-nyckel från rubriken ovan för att komma igång.",
+            "thisCharacter": "denna karaktär",
+            "viewList": "Visa lista",
+            "editText": "Redigera text",
+            "memoryOn": "minne på",
+            "memoryOff": "minne av",
+            "value1Prior": "{{value1}} tidigare",
+            "priorOff": "före av",
+            "remove": "Ta bort",
+            "add": "Tillägga",
+            "untitled": "Ofrälse",
+            "localCharacter": "Lokal karaktär",
+            "value1": "· {{value1}}"
+          }
+        },
+        "messageBubble": {
+          "text": {
+            "copied": "Kopierade",
+            "copy": "Kopiera",
+            "allow": "TILLÅTA",
+            "blocked": "BLOCKERAD",
+            "noArguments": "Inga argument"
+          },
+          "attribute": {
+            "copied": "Kopierade",
+            "copy": "Kopiera",
+            "editMessage": "Redigera meddelande",
+            "forkChatFromHere": "Gaffelchatt härifrån",
+            "deleteFromHere": "Ta bort härifrån",
+            "regenerateFromHere": "Återskapa härifrån",
+            "regenerate": "Regenerera",
+            "createScene": "Skapa scen",
+            "delete": "Radera",
+            "attachmentValue1": "Bilaga {{value1}}",
+            "editMessageText": "Redigera meddelandetext",
+            "value1Value2": "{{value1}} ( {{value2}} )",
+            "attachmentWasPartiallyOmittedDueToContextBudget": "Bilagan utelämnades delvis på grund av kontextbudgeten",
+            "aiAvatar": "AI-avatar",
+            "thinking": "Tänkande…",
+            "removeFromChat": "Ta bort från chatten",
+            "tokensUsedForThisMessage": "Tokens som används för detta meddelande"
+          }
+        }
+      },
+      "documents": {
+        "documentagentview": {
+          "notification": {
+            "managedDocumentCreated": "Hanterat dokument skapat",
+            "workingGroupValue1Created": "Arbetsgruppen &quot; {{value1}} &quot; skapad",
+            "approvedEditAppliedAsANewRevision": "Godkänd redigering tillämpas som en ny version",
+            "proposalRejectedWithoutChanges": "Förslaget avslogs utan ändringar"
+          },
+          "attribute": {
+            "searchDocuments": "Sök i dokument...",
+            "documentChangeProposal": "Dokumentändringsförslag",
+            "searchWorkspaceText": "Sök i arbetsytans text...",
+            "eGNotesMd": "t.ex. anteckningar.md",
+            "eGQ3Architecture": "t.ex. Q3 Arkitektur"
+          },
+          "text": {
+            "fileContentInspector": "Filinnehållsinspektör"
+          }
+        }
+      },
+      "embeddings": {
+        "embeddingsView": {
+          "attribute": {
+            "enterTextToEmbed": "Ange text att bädda in...",
+            "model": "Modell",
+            "dimensions": "Mått",
+            "tokens": "Polletter"
+          },
+          "text": {
+            "showFirstPreviewCount": "Visa första {{PREVIEW_COUNT}}",
+            "showAllDimsValues": "Visa alla {{dims}} värden"
+          }
+        }
+      },
+      "gallery": {
+        "compareView": {
+          "text": {
+            "allSharedFieldsMatch": "Alla delade fält matchar",
+            "changedcountFieldValue2Differ": "{{changedCount}} fältet {{value2}} skiljer sig"
+          },
+          "attribute": {
+            "closeCompareView": "Stäng jämför vy"
+          },
+          "metadata": {
+            "model": "Modell",
+            "prompt": "Prompt",
+            "negative": "Negativ",
+            "width": "Bredd",
+            "height": "Höjd",
+            "aspect": "Aspekt",
+            "resolution": "Upplösning",
+            "quality": "Kvalitet",
+            "seed": "Utsäde",
+            "steps": "Steg",
+            "cfg": "CFG",
+            "style": "Stil",
+            "project": "Projekt",
+            "operation": "Drift",
+            "type": "Typ",
+            "favorite": "Favorit",
+            "tags": "Taggar",
+            "created": "Skapad",
+            "rModel": "R: Modell",
+            "rPrompt": "R: Uppmaning",
+            "rNegative": "R: Negativt",
+            "rWidth": "R: Bredd",
+            "rHeight": "R: Höjd",
+            "rAspect": "R: Aspekt",
+            "rResolution": "R: Upplösning",
+            "rSeed": "R: Frö",
+            "rSteps": "R: Steg",
+            "rCfg": "R: CFG",
+            "rVariants": "R: Varianter",
+            "rStyle": "R: Stil",
+            "rQuality": "R: Kvalitet"
+          }
+        },
+        "galleryView": {
+          "notification": {
+            "favoritedValue1OfValue2": "Favoritmarkerade {{value1}} av {{value2}}",
+            "favoritedValue1ItemValue2": "Favoritmarkerat {{value1}} objekt {{value2}}",
+            "noneOfTheSelectedItemsHaveARecipe": "Ingen av de utvalda varorna har ett recept.",
+            "copiedValue1RecipeValue2": "Kopierade {{value1}} recept {{value2}}",
+            "couldNotCopyToClipboard": "Det gick inte att kopiera till urklipp.",
+            "failedToUpdateMediaItem": "Det gick inte att uppdatera mediaobjektet",
+            "removedFromMediaStudio": "Borttagen från Media Studio",
+            "failedToDelete": "Det gick inte att ta bort",
+            "removedValue1OfValue2SomeFailed": "Tog bort {{value1}} av {{value2}} (en del misslyckades)",
+            "removedValue1ItemValue2": "Tog bort {{value1}} objekt {{value2}}",
+            "batchDeleteFailed": "Det gick inte att radera batch",
+            "updatedValue1OfValue2": "Uppdaterad {{value1}} av {{value2}}",
+            "removedFavorites": "Ta bort favoriter",
+            "markedAsFavorites": "Markerad som favoriter",
+            "clearedFavorites": "Rensat favoriter",
+            "taggedValue1OfValue2": "Taggad {{value1}} av {{value2}}",
+            "taggedValue1ItemValue2": "Taggad {{value1}} artikel {{value2}}",
+            "enterATagFirst": "Ange en tagg först.",
+            "assignedValue1OfValue2Firstreason": "Tilldelad {{value1}} av {{value2}} ( {{firstReason}} )",
+            "assignedValue1ItemValue2": "Tilldelad {{value1}} objekt {{value2}}",
+            "selectAtLeastOneMediaItem": "Välj minst ett medieobjekt.",
+            "loadedSettingsIntoImageStudio": "Laddade inställningar i Image Studio",
+            "thisMediaItemHasNoReusableRecipe": "Detta mediaobjekt har inget återanvändbart recept",
+            "recipeLoadedIntoImageStudio": "Receptet laddat in i Image Studio",
+            "openingImageToolsForUpscale": "Öppna bildverktyg för exklusiva",
+            "openingImageToolsForEditing": "Öppna bildverktyg för redigering",
+            "sentToImageStudio": "Skickat till Image Studio",
+            "couldNotSendToImageStudio": "Kunde inte skicka till Image Studio",
+            "sentToImageTools": "Skickat till bildverktyg",
+            "couldNotSendToImageTools": "Kunde inte skicka till bildverktyg",
+            "createdNewChatWithPromptCopied": "Skapat ny chatt med uppmaning kopierad",
+            "couldNotSendToChat": "Kunde inte skicka till Chat",
+            "sentToVideoStudio": "Skickat till Video Studio",
+            "couldNotSendToVideoStudio": "Det gick inte att skicka till Video Studio",
+            "promptCopied": "Uppmaning kopierad",
+            "couldNotCopyPrompt": "Det gick inte att kopiera uppmaningen",
+            "negativeCopied": "Negativt kopierat",
+            "couldNotCopyNegative": "Kunde inte kopiera negativ",
+            "noSeedRecorded": "Inget frö registrerat",
+            "seedCopied": "Fröet kopierat",
+            "setUpAMasterPasswordInSettingsSecurityFirst": "Ställ in ett huvudlösenord i Inställningar &gt; Säkerhet först"
+          },
+          "metadata": {
+            "addTag": "Lägg till tagg",
+            "deleteThisValue1": "Ta bort denna {{value1}} ?",
+            "deleteValue1ItemValue2": "Ta bort {{value1}} objekt {{value2}} ?"
+          },
+          "text": {
+            "exitVault": "Avsluta Vault",
+            "vault": "Valv",
+            "imagesAndVideosGeneratedInImageStudioAndVideoStudio": "Bilder och videor genererade i Image Studio och Video Studio kommer att visas här automatiskt.",
+            "tryADifferentSearchOrFilterOrLoadOlderItems": "Prova en annan sökning eller ett annat filter, eller läs in äldre objekt för att utöka resultatuppsättningen.",
+            "tryADifferentSearchFilterOrSort": "Prova en annan sökning, filter eller sortering.",
+            "loadingOlderMedia": "Läser in äldre media...",
+            "loadMoreValue1Remaining": "Ladda mer ( {{value1}} kvar)"
+          },
+          "attribute": {
+            "doubleClickToInspect": "Dubbelklicka för att inspektera",
+            "heroLandscape": "hjälte, landskap, …"
+          }
+        },
+        "mediaCard": {
+          "attribute": {
+            "openValue1Value2": "Öppna {{value1}} : {{value2}}",
+            "generatedVideo": "Genererad video",
+            "generatedImage": "Genererad bild",
+            "unfavorite": "Avfavorit",
+            "markAsFavorite": "Markera som favorit",
+            "removeFromVault": "Ta bort från Vault",
+            "moveToVault": "Flytta till Vault",
+            "delete": "Radera"
+          },
+          "text": {
+            "loading": "Belastning…",
+            "previewUnavailable": "Förhandsgranskning inte tillgänglig",
+            "item": "Punkt",
+            "untitled": "Ofrälse"
+          }
+        },
+        "mediaDetailDialog": {
+          "attribute": {
+            "mediaDetail": "Mediadetalj",
+            "previous": "Tidigare",
+            "generatedImagePreview": "Genererad bildförhandsvisning",
+            "next": "Nästa",
+            "openValue1": "Öppna {{value1}}"
+          },
+          "text": {
+            "video": "Video",
+            "audio": "Audio",
+            "image": "Bild",
+            "favorited": "Favoritmarkerad",
+            "favorite": "Favorit",
+            "untitled": "Ofrälse",
+            "noTags": "Inga taggar"
+          }
+        },
+        "mediaInspector": {
+          "notification": {
+            "savedRecipeToPromptLibrary": "Sparat recept i promptbiblioteket",
+            "couldNotSaveRecipe": "Det gick inte att spara receptet",
+            "aiCharacterCreatorLaunched": "AI Character Creator lanseras",
+            "mediaSaved": "Media har sparats",
+            "mediaDownloadFailed": "Medianedladdning misslyckades"
+          },
+          "attribute": {
+            "mediaInspector": "Medieinspektör",
+            "loadThisImageSSettingsIntoImageStudioNoGeneration": "Ladda denna bilds inställningar i Image Studio (ingen generation)",
+            "loadTheGenerationRecipePromptModelSeedDimensionsEtcInto": "Ladda generationsreceptet (prompt, modell, frö, dimensioner, etc.) i lämplig studio",
+            "regenerateUsingThisImageSSettingsNewRandomSeed": "Återskapa med den här bildens inställningar (nytt slumpmässigt frö)",
+            "regenerateUsingTheSameSeedAsThisImage": "Återskapa med samma frö som denna bild",
+            "openThisImageInTheImageEditor": "Öppna den här bilden i bildredigeraren",
+            "saveTheMainProcessMediaFileWithANativeDialog": "Spara mediafilen i huvudprocessen med en inbyggd dialogruta",
+            "copyPromptText": "Kopiera uppmaningstext",
+            "copyNegativePrompt": "Kopiera negativ uppmaning",
+            "copySeedValue1": "Kopiera frö ( {{value1}} )",
+            "copyMetadataAsJson": "Kopiera metadata som JSON",
+            "saveRecipeToPromptLibrary": "Spara receptet i promptbiblioteket",
+            "copyGenerationRecipeAsJson": "Kopiera generationsreceptet som JSON",
+            "downloadGenerationRecipeAsAJsonFile": "Ladda ner generationsrecept som en JSON-fil",
+            "disabledInternalPromptEnhancerEnabledIsFalseInConfigYaml": "Inaktiverad: internal_prompt_enhancer.enabled är falsk i config.yaml",
+            "enhancePromptViaInternalLlm": "Förbättra uppmaningen via intern LLM",
+            "remixPromptViaInternalLlm": "Remix-prompt via intern LLM",
+            "addATagAndPressEnter": "Lägg till en tagg och tryck på Enter",
+            "removeTag": "Ta bort taggen",
+            "value1Chars": "{{value1}} tecken",
+            "captureAQuickReminderOrSeedValue": "Fånga en snabb påminnelse eller frövärde...",
+            "missingReferences": "Saknar referenser",
+            "upscaleEnhanceThisImage": "Uppskala / förbättra denna bild"
+          },
+          "text": {
+            "untitled": "Ofrälse",
+            "favorited": "Favoritmarkerad",
+            "markAsFavorite": "Markera som favorit",
+            "enhancing": "Förbättrar...",
+            "enhance": "Öka",
+            "remixing": "Remixar...",
+            "remix": "Remix",
+            "enhanced": "Förbättrad",
+            "remixed": "Remixat",
+            "enhancing2": "Förbättra",
+            "remixing2": "Remixning",
+            "thisItemReferencesRecordsThatNoLongerExistClearThe": "Detta objekt refererar till poster som inte längre finns. Rensa de inaktuella pekarna för att reparera härstamningen.",
+            "thisItemSParentRecordIsMissingClearTheParent": "Det här objektets överordnade post saknas. Rensa föräldralänken för att reparera härstamningen.",
+            "value1ChildValue2CouldNotBeResolvedClearTheStale": "{{value1}} barn {{value2}} kunde inte lösas. Rensa den inaktuella pekaren {{value3}} för att reparera härstamningen.",
+            "childrenidsValue1": "childIds: {{value1}}",
+            "childrenidsValue1Missing": "childrenIds: {{value1}} saknas",
+            "value1MissingRef": "1 saknad ref",
+            "value1MissingRefs": "{{value1}} saknade refs"
+          }
+        },
+        "mediaToolbar": {
+          "metadata": {
+            "unassign": "Ta bort tilldelning",
+            "all": "Alla",
+            "images": "Bilder",
+            "videos": "Videor",
+            "audio": "Audio",
+            "favorites": "Favoriter",
+            "upscaled": "Uppskalad",
+            "edited": "Redigerat",
+            "hasRecipe": "Har recept",
+            "noRecipe": "Inget recept",
+            "hasSeed": "Har frö",
+            "noSeed": "Inget frö",
+            "unscoped": "Oavgränsad",
+            "newest": "Nyaste",
+            "oldest": "Äldst",
+            "model": "Modell",
+            "size": "Storlek",
+            "project": "Projekt"
+          },
+          "attribute": {
+            "searchPromptsModelsTagsNotes": "Sökuppmaningar, modeller, taggar, anteckningar...",
+            "searchMedia": "Sök media",
+            "clearSearch": "Rensa sökning"
+          },
+          "text": {
+            "exitSelect": "Avsluta välj",
+            "select": "Välja",
+            "unfavorite": "Avfavorit",
+            "favorite": "Favorit"
+          }
+        },
+        "recipeComparison": {
+          "attribute": {
+            "recipeComparison": "Jämförelse av recept"
+          },
+          "text": {
+            "identical": "Identisk",
+            "changedcountFieldValue2WillChange": "{{changedCount}} fältet {{value2}} kommer att ändras"
+          },
+          "metadata": {
+            "model": "Modell",
+            "prompt": "Prompt",
+            "negativePrompt": "Negativ uppmaning",
+            "width": "Bredd",
+            "height": "Höjd",
+            "aspectRatio": "Bildförhållande",
+            "resolution": "Upplösning",
+            "quality": "Kvalitet",
+            "style": "Stil",
+            "steps": "Steg",
+            "cfgScale": "CFG skala",
+            "variants": "Varianter",
+            "seed": "Utsäde"
+          }
+        },
+        "recipeCompatibilityCard": {
+          "attribute": {
+            "sendTheOriginalRecipeToImageStudioWithoutSanitization": "Skicka originalreceptet till Image Studio utan sanering"
+          },
+          "text": {
+            "hideComparison": "Dölj jämförelse",
+            "showComparison": "Visa jämförelse"
+          }
+        }
+      },
+      "imageInspector": {
+        "imageinspectorview": {
+          "notification": {
+            "imageInspectorUploadIsOnlySupportedInTheDesktopApp": "Uppladdning av bildinspektör stöds endast i skrivbordsappen.",
+            "failedToProcessImage": "Det gick inte att bearbeta bilden",
+            "unknownError": "Okänt fel",
+            "noImageFoundOnClipboard": "Ingen bild hittades i urklipp"
+          },
+          "metadata": {
+            "deleteImageInspection": "Ta bort bildinspektion?",
+            "value1Value2": "{{value1}} — {{value2}}",
+            "quick": "Snabbt",
+            "standard": "Standard",
+            "maximum": "Maximal",
+            "forensic": "Rättsmedicinsk",
+            "genericNaturalLanguage": "Generiskt naturligt språk",
+            "veniceImageStudio": "Venedig Bildstudio",
+            "flux": "FLÖDE",
+            "midjourney": "Midjourney"
+          },
+          "attribute": {
+            "pasteFromClipboard": "Klistra in från urklipp",
+            "openImageInspectionValue1": "Öppna bildinspektion {{value1}}",
+            "deleteImageInspectionValue1": "Ta bort bildinspektion {{value1}}",
+            "cancelAnalysisBeforeDeleting": "Avbryt analys innan du tar bort",
+            "deleteInspection": "Ta bort inspektion",
+            "target": "Mål",
+            "selectAVisionModel": "Välj en visionmodell...",
+            "eGFocusOnLightingAndComposition": "t.ex. Fokusera på ljus och komposition...",
+            "analyzingImageContents": "Analyserar bildinnehåll..."
+          },
+          "text": {
+            "noSummaryAvailable": "Ingen sammanfattning tillgänglig.",
+            "subject": "Ämne",
+            "theSelectedVisionModelCouldNotAnalyzeThisImage": "Den valda synmodellen kunde inte analysera denna bild."
+          }
+        }
+      },
+      "image": {
+        "imagePage": {
+          "text": {
+            "generate": "Generera"
+          }
+        },
+        "imageView": {
+          "metadata": {
+            "value1Value2": "{{value1}} × {{value2}}"
+          }
+        }
+      },
+      "layout": {
+        "apiKeyDialog": {
+          "notification": {
+            "keySavedSecurely": "Nyckeln sparad säkert"
+          },
+          "attribute": {
+            "closeDialog": "Stäng dialogrutan"
+          },
+          "text": {
+            "heldInMemoryForThisLocalDevelopmentSessionOnly": "Hålls endast till minne för denna lokala utvecklingssession.",
+            "connect": "Ansluta"
+          }
+        },
+        "inspectorPane": {
+          "metadata": {
+            "veniceApiDefault": "Venedig API Standard",
+            "globalAppSystemPrompt": "Global systemprompt för appen",
+            "characterSystemPrompt": "Tecken System Prompt",
+            "conversationOverrideModeMode": "Konversationsöverstyrning (läge: {{mode}} )",
+            "all": "Alla",
+            "blocked": "Blockerad",
+            "errored": "Fel",
+            "aborted": "Avbruten",
+            "jina": "Jina",
+            "localOnly": "Endast lokalt"
+          },
+          "attribute": {
+            "developerTrafficInspector": "Utvecklare trafikinspektör",
+            "resizeInspector": "Ändra storlek på inspektören",
+            "clearAllLogs": "Rensa alla loggar",
+            "clearAllInspectorLogs": "Rensa alla inspektörsloggar",
+            "exportRedactedLogsAsJson": "Exportera redigerade loggar som JSON",
+            "exportRedactedInspectorLogsAsJson": "Exportera redigerade inspektörsloggar som JSON",
+            "closeInspector": "Stäng inspektör",
+            "closeTrafficInspector": "Stäng trafikinspektör"
+          },
+          "text": {
+            "traffic": "Trafik",
+            "promptLayers": "Snabba lager",
+            "pending": "I avvaktan på...",
+            "allow": "TILLÅTA",
+            "blocked": "BLOCKERAD",
+            "empty": "[Tömma]",
+            "pendingOrEmpty": "[Väntande eller tom]",
+            "untitled": "Ofrälse",
+            "active": "Aktiv",
+            "inactive": "Inaktiv"
+          }
+        },
+        "memoryPanel": {
+          "notification": {
+            "indexRebuiltSuccessfullyIndexedValue1Conversations": "Index återuppbyggt framgångsrikt! Indexerade {{value1}} konversationer.",
+            "rebuildFailedValue1": "Återuppbyggnaden misslyckades: {{value1}}",
+            "indexRebuildFailed": "Indexombyggnad misslyckades",
+            "failedToOpenVaultFolder": "Det gick inte att öppna valvmappen.",
+            "migrationCompletedMigratedValue1FailedValue2SkippedValue3": "Migreringen är klar! Migrerade: {{value1}} , Misslyckades: {{value2}} , hoppade över: {{value3}}",
+            "migrationFailedValue1": "Migreringen misslyckades: {{value1}}",
+            "migrationFailed": "Migreringen misslyckades",
+            "factForgottenSuccessfully": "Faktum glömt framgångsrikt.",
+            "failedToForgetFact": "Misslyckades med att glömma fakta."
+          },
+          "metadata": {
+            "forgetThisFact": "Glömma detta faktum?"
+          },
+          "text": {
+            "migrating": "Migrerar...",
+            "migrateNow": "Migrera nu",
+            "indexing": "Indexerar...",
+            "rebuildIndex": "Bygg om index"
+          }
+        },
+        "sidebar": {
+          "attribute": {
+            "primaryNavigation": "Primär navigering",
+            "closeMenu": "Stäng menyn",
+            "sections": "Avsnitt",
+            "confirmDelete": "Bekräfta borttagning"
+          }
+        }
+      },
+      "music": {
+        "musicView": {
+          "text": {
+            "value1SValue2S": "{{value1}} s– {{value2}} s",
+            "queued": "I kö...",
+            "generating": "Alstrande…",
+            "generateMusic": "Skapa musik",
+            "saved": "Sparad",
+            "saveToMediaStudio": "Spara i Media Studio"
+          },
+          "attribute": {
+            "anUpbeatElectronicTrackWithADrivingBasslineAndEthereal": "En optimistisk elektronisk låt med en drivande baslinje och eteriska syntar...",
+            "optionalLyricsOrVocalDirection": "Valfri text eller sångriktning...",
+            "durationS": "{{duration}} s",
+            "musicDuration": "Musikens varaktighet",
+            "alreadySavedToMediaStudio": "Redan sparad i Media Studio",
+            "saveToMediaStudio": "Spara i Media Studio",
+            "queuedWaitingForASlot": "I kö — väntar på en plats",
+            "composingYourTrack": "Komponerar ditt spår"
+          },
+          "notification": {
+            "alreadyInMediaStudio": "Redan i Media Studio",
+            "savedToMediaStudio": "Sparad i Media Studio"
+          }
+        }
+      },
+      "notifications": {
+        "progresstoast": {
+          "attribute": {
+            "value1Progress": "{{value1}} framsteg",
+            "dismissNotification": "Avvisa meddelande"
+          }
+        },
+        "toastitem": {
+          "attribute": {
+            "dismissNotification": "Avvisa meddelande"
+          }
+        },
+        "toastviewport": {
+          "attribute": {
+            "notifications": "Aviseringar"
+          }
+        }
+      },
+      "playground": {
+        "agentModelPicker": {
+          "metadata": {
+            "recommendedForAgents": "Rekommenderas för agenter",
+            "capable": "Kapabel",
+            "other": "Andra"
+          },
+          "attribute": {
+            "searchModels": "Sök efter modeller...",
+            "showingAllModels": "Visar alla modeller",
+            "showingOnlySchemaCapableModels": "Visar endast schemakompatibla modeller"
+          },
+          "text": {
+            "all": "Alla",
+            "capable": "Kapabel",
+            "value1Ctx": "· {{value1}} ctx"
+          }
+        },
+        "playgroundChat": {
+          "attribute": {
+            "thinking": "Tänkande…",
+            "working": "Arbetssätt…",
+            "agentIsWorking": "Agenten arbetar...",
+            "describeAWorkflowOrChange": "Beskriv ett arbetsflöde eller förändring..."
+          }
+        },
+        "playgroundView": {
+          "notification": {
+            "workflowCompleted": "Arbetsflödet avslutat",
+            "workflowFailed": "Arbetsflödet misslyckades"
+          },
+          "metadata": {
+            "clearPlayground": "Tydlig lekplats?"
+          },
+          "attribute": {
+            "clearConversation": "Tydlig konversation",
+            "unlink": "Ta bort länken",
+            "resetCanvas": "Återställ duk",
+            "runTheWorkflowInline": "Kör arbetsflödet inline",
+            "updateValue1": "Uppdatera &quot; {{value1}} &quot;",
+            "saveAsNewWorkflow": "Spara som nytt arbetsflöde",
+            "saveAsANewWorkflow": "Spara som ett nytt arbetsflöde",
+            "openInWorkflowsTab": "Öppna på fliken Arbetsflöden"
+          },
+          "text": {
+            "update": "Uppdatera",
+            "save": "Spara"
+          }
+        }
+      },
+      "privacy": {
+        "storageprivacydashboard": {
+          "text": {
+            "refreshing": "Uppfriskande...",
+            "refreshInventory": "Uppdatera inventering",
+            "previewOnly": "Endast förhandsgranskning",
+            "runAction": "Kör Action"
+          },
+          "metadata": {
+            "runDestructiveAction": "Köra destruktiva åtgärder?"
+          }
+        }
+      },
+      "prompts": {
+        "promptcreatemodal": {
+          "attribute": {
+            "createNewPrompt": "Skapa ny prompt",
+            "saveReusablePromptContentAndMetadataToYourEncryptedPrompt": "Spara återanvändbart promptinnehåll och metadata i ditt krypterade promptbibliotek.",
+            "closeCreatePromptDialog": "Stäng dialogrutan Skapa prompt",
+            "eGDarkFantasyPortrait": "T.ex. Dark Fantasy-porträtt",
+            "eGDarkFantasyPortraitLighting": "t.ex. mörk fantasi, porträttbelysning",
+            "enterPromptTextHere": "Ange uppmaningstext här...",
+            "optionalNegativePrompt": "Valfri negativ uppmaning..."
+          },
+          "metadata": {
+            "image": "Bild",
+            "negative": "Negativ",
+            "chat": "Chatta",
+            "system": "System",
+            "research": "Forskning",
+            "character": "Karaktär",
+            "workflow": "Arbetsflöde",
+            "recipe": "Recept",
+            "general": "Allmän"
+          }
+        },
+        "promptlibraryview": {
+          "attribute": {
+            "searchPrompts": "Sökmeddelanden...",
+            "tagsCommaSeparated": "taggar, kommaseparerade",
+            "optionalDescription": "Valfri beskrivning",
+            "typeValue1ToConfirm": "Skriv &quot; {{value1}} &quot; för att bekräfta"
+          },
+          "metadata": {
+            "allKinds": "Alla slag",
+            "allScopes": "Alla omfattningar",
+            "global": "Global",
+            "project": "Projekt",
+            "newest": "Nyaste",
+            "oldest": "Äldst",
+            "title": "Titel",
+            "kind": "Slag",
+            "favorite": "Favorit",
+            "allTags": "Alla taggar",
+            "t": "# {{t}}",
+            "workflowValue1": "Arbetsflöde: {{value1}}",
+            "image": "Bild",
+            "negative": "Negativ",
+            "chat": "Chatta",
+            "system": "System",
+            "research": "Forskning",
+            "character": "Karaktär",
+            "workflow": "Arbetsflöde",
+            "recipe": "Recept",
+            "general": "Allmän"
+          },
+          "text": {
+            "noPromptsMatchTheCurrentFilters": "Inga meddelanden matchar de aktuella filtren.",
+            "project": "Projekt",
+            "global": "Global",
+            "selectAPromptToViewItsDetails": "Välj en uppmaning för att se dess detaljer.",
+            "noPromptSelectedCreateANewOneToGetStarted": "Ingen prompt har valts. Skapa en ny för att komma igång.",
+            "favorited": "★ Favoritmarkerad",
+            "favorite": "☆ Favorit",
+            "unarchive": "Avarkivera",
+            "archive": "Arkiv",
+            "projectValue1": "Projekt: {{value1}}",
+            "saving": "Sparande...",
+            "saveMetadata": "Spara metadata",
+            "saveNewVersion": "Spara ny version",
+            "hide": "Dölja",
+            "show": "Visa"
+          },
+          "notification": {
+            "newVersionSaved": "Ny version sparad",
+            "promptDeleted": "Uppmaning raderad",
+            "workflowCreated": "Arbetsflöde skapat",
+            "promptCreated": "Uppmaning skapad",
+            "thePendingActionFailedYourUnsavedChangesWerePreserved": "Den väntande åtgärden misslyckades. Dina osparade ändringar bevarades.",
+            "metadataSaved": "Metadata har sparats",
+            "failedToSaveMetadata": "Det gick inte att spara metadata",
+            "versionContentIsEmpty": "Versionsinnehållet är tomt",
+            "failedToSaveVersion": "Det gick inte att spara versionen",
+            "sentToImageStudio": "Skickat till Image Studio",
+            "sentToChat": "Skickat till Chat"
+          }
+        }
+      },
+      "research": {
+        "researchworkspaceview": {
+          "metadata": {
+            "researchTitle": "Forskningstitel",
+            "deleteSession": "Ta bort session?",
+            "workflowValue1": "Arbetsflöde: {{value1}}",
+            "workflowGeneratedFromResearchSessionValue1": "Arbetsflöde genererat från forskningssession &quot; {{value1}} &quot;",
+            "reviewResearchSummary": "Granska forskningssammanfattning"
+          },
+          "notification": {
+            "searchFinishedWithValue1Warnings": "Sökningen avslutades med {{value1}} varningar",
+            "searchFailed": "Sökningen misslyckades",
+            "scrapeFailed": "Skrapning misslyckades",
+            "attachmentNote": "Bifogad notering",
+            "fileSAddedToResearchSources": "Fil(er) har lagts till i forskningskällor",
+            "fileUploadFailed": "Filuppladdning misslyckades",
+            "summarySavedToPromptLibrary": "Sammanfattning sparad i promptbibliotek",
+            "researchWorkflowCreated": "Forskningsarbetsflöde skapat"
+          },
+          "attribute": {
+            "researchSessions": "Forskningssessioner",
+            "createResearchSession": "Skapa research session",
+            "expandResearchSessions": "Utöka forskningssessioner",
+            "collapseResearchSessions": "Kollapsa forskningssessioner",
+            "removeValue1FromFavorites": "Ta bort {{value1}} från favoriter",
+            "addValue1ToFavorites": "Lägg till {{value1}} till favoriter",
+            "archiveSession": "Arkivsession",
+            "deleteSession": "Ta bort session",
+            "searchQuery": "Sökfråga...",
+            "runResearchSearch": "Kör forskningssökning",
+            "scrapeUrl": "Skrapa URL",
+            "removeSourceValue1": "Ta bort källan {{value1}}",
+            "summarizeTheFinding": "Sammanfatta fyndet",
+            "addSupportingDetailsAndCitations": "Lägg till stöddetaljer och citat",
+            "removeFindingValue1": "Ta bort hitta {{value1}}"
+          },
+          "text": {
+            "processing": "Bearbetar...",
+            "uploadDocument": "Ladda upp dokument",
+            "noExcerptAvailable": "Inget utdrag tillgängligt."
+          }
+        }
+      },
+      "rpStudio": {
+        "assetgallery": {
+          "metadata": {
+            "allChats": "Alla chattar"
+          },
+          "text": {
+            "noAssetsYet": "Inga tillgångar ännu"
+          },
+          "attribute": {
+            "deleteAsset": "Ta bort tillgång"
+          }
+        },
+        "characterbookeditor": {
+          "attribute": {
+            "bookExtensionData": "Boktilläggsdata",
+            "entryExtensionData": "Ange tilläggsdata"
+          }
+        },
+        "charactereditor": {
+          "notification": {
+            "fileLoadedSourced": "Fil laddad och hämtad",
+            "loadedValue1IntoFieldlabelAndSavedInsideCharacterFile": "Laddade &quot; {{value1}} &quot; i {{fieldLabel}} och sparade i teckenfilen.",
+            "reAppliedSourcedFile": "Återapplicerad källfil",
+            "reLoadedValue1ContentIntoValue2": "Läste om &quot; {{value1}} &quot; innehåll till {{value2}} .",
+            "workflowCreated": "Arbetsflöde skapat",
+            "savedToPromptLibrary": "Sparad i promptbibliotek",
+            "promptValue1Created": "Prompten &quot; {{value1}} &quot; skapades.",
+            "couldNotSaveToPromptLibrary": "Det gick inte att spara i promptbiblioteket",
+            "safetyGuardBlockedThePrompt": "Skyddsvakt blockerade uppmaningen.",
+            "pleaseTryAgain": "Försök igen.",
+            "rpChatStarted": "RP-chatten startade",
+            "openingValue1InRpStudio": "Öppnar &quot; {{value1}} &quot; i RP Studio.",
+            "couldNotStartRpChat": "Kunde inte starta RP-chatt",
+            "storageRejectedTheRequest": "Storage avvisade begäran.",
+            "chatStarted": "Chatten startade",
+            "openingValue1InChat": "Öppnar &quot; {{value1}} &quot; i chatt.",
+            "couldNotStartChat": "Kunde inte starta chatten",
+            "sceneAttached": "Scen bifogad",
+            "linkedValue1ToThisCharacter": "Länkade &quot; {{value1}} &quot; till denna karaktär.",
+            "sceneLinked": "Scen länkad.",
+            "couldNotAttachScene": "Det gick inte att bifoga scenen",
+            "promptAttached": "Uppmaning bifogas",
+            "promptLinked": "Uppmaning länkad.",
+            "couldNotAttachPrompt": "Det gick inte att bifoga uppmaningen",
+            "scenarioCreated": "Scenario skapat",
+            "openTheRpStudioToEditIt": "Öppna RP Studio för att redigera den.",
+            "versionSaved": "Version sparad",
+            "characterSnapshotCreated": "En ögonblicksbild av karaktären har skapats.",
+            "versionRestored": "Version återställd",
+            "characterRevertedToSavedVersion": "Tecken har återställts till sparad version.",
+            "testChatSaved": "Testchatten har sparats",
+            "theDisposableTurnWasPromotedToARealLocalConversation": "Engångssvängen främjades till ett riktigt lokalt samtal."
+          },
+          "metadata": {
+            "deleteCharacter": "Ta bort tecken?",
+            "workflowValue1": "Arbetsflöde: {{value1}}",
+            "untitled": "Ofrälse",
+            "disposableCardTest": "Engångskort test"
+          },
+          "attribute": {
+            "backToLibrary": "Tillbaka till biblioteket",
+            "estimatedTokensValue1OfValue2": "Uppskattade tokens {{value1}} av {{value2}}",
+            "stCardStudioSteps": "ST Card Studio steg",
+            "aShortSummaryShownInTheLibraryGrid": "En kort sammanfattning visas i bibliotekets rutnät.",
+            "displayOnlyNeverIncludedInModelPrompts": "Endast visning — ingår aldrig i modelluppmaningar",
+            "addATagAndPressEnter": "Lägg till en tagg och tryck på Retur...",
+            "removeTagT": "Ta bort taggen {{t}}",
+            "anOpenerSceneShownToTheModelOnTheFirst": "En öppnare scen som visas för modellen vid första svängen.",
+            "theCharacterSPersonaVoiceAndBehaviouralRules": "Karaktärens persona, röst och beteenderegler.",
+            "optionalHigherLevelGuidanceForTheModelSteeringRulesOutput": "Valfri vägledning på högre nivå för modellen (styrregler, utmatningsstil).",
+            "greetingShownOnTheFirstAssistantTurn": "Hälsning visas på den första assisterande svängen.",
+            "alternateGreetingValue1": "Alternativ hälsning {{value1}}",
+            "exampleValue1Speaker": "Exempel {{value1}} högtalare",
+            "speaker": "Högtalare",
+            "whatTheySay": "Vad de säger...",
+            "moveExampleValue1Up": "Flytta exemplet {{value1}} uppåt",
+            "moveExampleValue1Down": "Flytta exemplet {{value1}} nedåt",
+            "removeExample": "Ta bort exempel",
+            "losslessSillytavernMesExampleCompatibilityText": "Förlustfri SillyTavern mes_example kompatibilitetstext",
+            "urlScrapingProvider": "URL-skrapningsleverantör",
+            "temperature": "Temperatur",
+            "topP": "Topp P",
+            "removeFileValue1": "Ta bort filen {{value1}}",
+            "genreSettingRolePersonalityRelationship": "Genre, miljö, roll, personlighet, relation...",
+            "visionModelCapabilitySummary": "Sammanfattning av visionmodellens förmåga",
+            "optionalDirection": "Valfri riktning",
+            "stCardExportReport": "ST-kort exportrapport",
+            "characterVersionComparison": "Jämförelse av karaktärsversioner",
+            "savingCharacter": "Sparar karaktär"
+          },
+          "text": {
+            "untitled": "Ofrälse",
+            "unarchive": "Avarkivera",
+            "archive": "Arkiv",
+            "stepValue1OfValue2Value3YourLocalDraftRemainsAutosaved": "Steg {{value1}} av {{value2}} : {{value3}} . Ditt lokala utkast förblir automatiskt sparat medan du flyttar mellan stegen.",
+            "showingAllSteps110SelectAStepTabAbove": "Visar alla steg (1-10). Välj en stegflik ovan för att fokusera på specifika fält.",
+            "recoveredLocalDraft": "Återställt lokalt drag",
+            "savingLocalDraft": "Sparar lokalt utkast...",
+            "draftSavedLocallyNotSynced": "Utkast sparat lokalt (inte synkroniserat)",
+            "replace": "Ersätta",
+            "upload": "Ladda upp",
+            "veniceForgeLocal": "Venice Forge lokal",
+            "noGreetingText": "Ingen hälsningstext",
+            "value1": "· {{value1}}",
+            "testing": "Testning…",
+            "runDisposableTest": "Kör engångstest",
+            "analyzing": "Analyserar...",
+            "analyzeImage": "Analysera bilden",
+            "generating": "Alstrande…",
+            "synthesizeFromImageText": "Syntetisera från bild + text",
+            "generateFromText": "Generera från text",
+            "noDirectDescription": "Ingen direkt beskrivning",
+            "noDescription": "Ingen beskrivning",
+            "generatingProposal": "Genererar förslag...",
+            "generateProposal": "Skapa förslag",
+            "value1Value2": "· {{value1}} × {{value2}}",
+            "none": "Ingen",
+            "targetFieldValue1": "· Målfält: {{value1}}",
+            "generalContextFile": "· Allmän kontextfil"
+          }
+        },
+        "characterlibrary": {
+          "notification": {
+            "importFailed": "Importen misslyckades",
+            "couldNotInspectTheSelectedCard": "Det gick inte att inspektera det valda kortet.",
+            "theCardWasNotImported": "Kortet importerades inte.",
+            "characterImported": "Tecken importerat",
+            "theCompatibilityPayloadAndAvatarWerePreserved": "Kompatibilitetens nyttolast och avatar bevarades.",
+            "exportFailed": "Exporten misslyckades",
+            "theCardWasNotExported": "Kortet exporterades inte.",
+            "characterExported": "Tecken har exporterats",
+            "savedAVerifiedV2Value1Card": "Sparade ett verifierat V2 {{value1}} kort.",
+            "importUndone": "Importen har ångrats",
+            "undoFailed": "Det gick inte att ångra",
+            "chatStarted": "Chatten startade",
+            "openingValue1InChat": "Öppnar &quot; {{value1}} &quot; i chatt.",
+            "couldNotStartChat": "Kunde inte starta chatten",
+            "pleaseTryAgain": "Försök igen."
+          },
+          "metadata": {
+            "value1ExistingCharacter": "{{value1}} befintligt tecken?",
+            "standard": "Standard",
+            "adult": "Vuxen"
+          },
+          "attribute": {
+            "searchCharacters": "Sök tecken...",
+            "searchCharacters2": "Sök tecken",
+            "autoCreatePrompt": "Skapa meddelande automatiskt...",
+            "characterValue1": "Tecken {{value1}}",
+            "deleteValue1": "Ta bort {{value1}}"
+          },
+          "text": {
+            "untitled": "Ofrälse",
+            "noCharactersYet": "Inga tecken ännu",
+            "notSpecified": "Ej specificerat",
+            "importing": "Importerar...",
+            "import": "Importera"
+          }
+        },
+        "lorebookmanager": {
+          "attribute": {
+            "searchLorebooks": "Sök i lorebooks...",
+            "searchLorebooks2": "Sök i lorebooks",
+            "deleteValue1": "Ta bort {{value1}}",
+            "back": "Tillbaka",
+            "triggerKeysCommaSeparated": "triggernycklar (kommaseparerade)",
+            "removeEntry": "Ta bort posten",
+            "depth": "Djup",
+            "order": "Beställa",
+            "injectedContent": "Injicerat innehåll..."
+          },
+          "text": {
+            "noLorebooksYet": "Inga lorebooks ännu"
+          },
+          "metadata": {
+            "beforeChar": "Före röding",
+            "afterChar": "Efter röding",
+            "atDepth": "På djupet"
+          }
+        },
+        "personamanager": {
+          "attribute": {
+            "searchPersonas": "Sök personas...",
+            "searchPersonas2": "Sök personas",
+            "deleteValue1": "Ta bort {{value1}}",
+            "back": "Tillbaka",
+            "personaPreview": "Persona förhandsgranskning",
+            "eGTheWanderer": "t.ex. Vandraren",
+            "howTheModelShouldWriteTheUser": "Hur modellen ska skriva användaren.",
+            "addTag": "Lägg till tagg..."
+          },
+          "text": {
+            "noPersonasYet": "Inga personas än",
+            "deactivate": "Avaktivera",
+            "setActive": "Ställ in aktiv",
+            "replaceImage": "Byt ut bild",
+            "addImage": "Lägg till bild"
+          }
+        },
+        "promptdebugdrawer": {
+          "attribute": {
+            "promptDebugDrawer": "Snabb felsökningslåda"
+          },
+          "text": {
+            "budgetExceeded": "budgeten överskrids",
+            "withinBudget": "inom budget",
+            "value1": "· {{value1}}"
+          },
+          "metadata": {
+            "trace": "Spåra",
+            "system": "System",
+            "recent": "Ny",
+            "user": "Användare"
+          }
+        },
+        "rpchatlist": {
+          "metadata": {
+            "all": "Alla",
+            "standard": "Standard"
+          },
+          "text": {
+            "noRpChatsYet": "Inga RP-chattar än"
+          },
+          "attribute": {
+            "deleteValue1": "Ta bort {{value1}}",
+            "newRpChat": "Ny RP-chatt",
+            "leaveBlankToUseTheFirstCharacterSScenario": "Lämna tomt för att använda den första karaktärens scenario."
+          }
+        },
+        "rpchatview": {
+          "attribute": {
+            "back": "Tillbaka",
+            "streaming": "Streamar...",
+            "describeASceneAsTheNarrator": "Beskriv en scen som berättaren...",
+            "sendAMessageValue1": "Skicka ett meddelande {{value1}} …"
+          },
+          "text": {
+            "value1WillRespondFirst": "{{value1}} svarar först."
+          }
+        },
+        "rpstudioview": {
+          "metadata": {
+            "generate": "Generera",
+            "gallery": "Galleri",
+            "characters": "Karaktärer",
+            "personas": "Personor",
+            "lorebooks": "Bakgrundsböcker",
+            "chats": "Chattar",
+            "scenes": "Scener"
+          }
+        },
+        "scenegenerator": {
+          "notification": {
+            "sceneGenerated": "Scen genererad",
+            "savedToRpAssets": "Sparad till RP-tillgångar."
+          },
+          "attribute": {
+            "leaveBlankToExtractFromChat": "Lämna tomt för att extrahera från chatten",
+            "extractsFromTheMostRecentNonSystemMessage": "Utdrag från det senaste icke-systemmeddelandet.",
+            "thingsToAvoid": "Saker att undvika..."
+          },
+          "text": {
+            "thisChat": "(denna chatt)"
+          }
+        },
+        "shared": {
+          "metadata": {
+            "characters": "Karaktärer",
+            "personas": "Personor",
+            "lorebooks": "Bakgrundsböcker",
+            "chats": "Chattar",
+            "scenes": "Scener"
+          }
+        }
+      },
+      "scenes": {
+        "scenecomposerview": {
+          "metadata": {
+            "untitledScene": "Namnlös scen",
+            "workflowValue1": "Arbetsflöde: {{value1}}",
+            "vValue1": "v {{value1}}",
+            "subject": "Ämne",
+            "character": "Karaktär",
+            "location": "Plats",
+            "mood": "Humör",
+            "style": "Stil",
+            "camera": "Kamera",
+            "lighting": "Belysning",
+            "composition": "Sammansättning",
+            "negative": "Negativ"
+          },
+          "attribute": {
+            "searchScenes": "Sök efter scener...",
+            "optionalDescription": "Valfri beskrivning",
+            "tagsCommaSeparated": "taggar, kommaseparerade",
+            "modelEGFluxDev": "Modell (t.ex. flux-dev)",
+            "width": "Bredd",
+            "height": "Höjd",
+            "aspectEG169": "Aspekt (t.ex. 16:9)",
+            "optionalLabel": "Valfri etikett",
+            "componentContent": "Komponentinnehåll...",
+            "typeValue1ToConfirm": "Skriv &quot; {{value1}} &quot; för att bekräfta"
+          },
+          "text": {
+            "noSavedScenesYetClickNewToCreateOne": "Inga sparade scener ännu. Klicka på &quot;Ny&quot; för att skapa en.",
+            "noScenesMatchTheCurrentFilters": "Inga scener matchar de aktuella filtren.",
+            "value1OutputValue2": "{{value1}} utgång {{value2}}",
+            "project": "Projekt",
+            "global": "Global",
+            "selectASceneToCompose": "Välj en scen att komponera.",
+            "noSceneSelectedCreateANewOneToGetStarted": "Ingen scen vald. Skapa en ny för att komma igång.",
+            "modelDoesNotSupportReferences": "Modellen stöder inte referenser",
+            "favorited": "★ Favoritmarkerad",
+            "favorite": "☆ Favorit",
+            "unarchive": "Avarkivera",
+            "archive": "Arkiv",
+            "projectValue1": "Projekt: {{value1}}",
+            "off": "Av",
+            "hide": "Dölja",
+            "show": "Visa",
+            "value1MediaRefValue2": "· {{value1}} mediareferens {{value2}}",
+            "value1PromptRefValue2": "· {{value1}} prompt ref {{value2}}"
+          },
+          "notification": {
+            "newVersionSaved": "Ny version sparad",
+            "sceneDeleted": "Scen raderad",
+            "workflowCreated": "Arbetsflöde skapat",
+            "sceneMetadataSaved": "Scenens metadata har sparats",
+            "addAtLeastOneComponentWithContent": "Lägg till minst en komponent med innehåll",
+            "sceneHasNoPromptContent": "Scenen har inget meddelandeinnehåll",
+            "sentToImageStudio": "Skickat till Image Studio",
+            "recipeCopiedToClipboard": "Receptet har kopierats till urklipp"
+          }
+        }
+      },
+      "search": {
+        "airesearchtab": {
+          "attribute": {
+            "researchQuestion": "Forskningsfråga",
+            "whatAreTheLatestChangesInSafetyPoliciesOfFrontier": "Vilka är de senaste förändringarna i säkerhetspolicyn för frontier AI-labb?",
+            "searchProvider": "Sökleverantör",
+            "veniceSearchEngine": "Sökmotor i Venedig",
+            "runMode": "Körläge",
+            "synthesizedAnswersWillBeStreamedHere": "Syntetiserade svar kommer att streamas här..."
+          },
+          "text": {
+            "researching": "Forskar...",
+            "startResearch": "Starta forskning"
+          },
+          "notification": {
+            "answerCopied": "Svar kopierat!",
+            "evidenceSourcesCopied": "Beviskällor kopierade!"
+          }
+        },
+        "profilediscoverytab": {
+          "attribute": {
+            "targetName": "Målnamn",
+            "consentingPersonOrBrandName": "Samtyckande person eller varumärke",
+            "username": "@användarnamn",
+            "knownWebsite": "Känd webbplats",
+            "knownOrganization": "Känd organisation",
+            "githubInc": "GitHub Inc.",
+            "knownLocation": "Känd plats",
+            "sanFranciscoCa": "San Francisco, CA",
+            "maxSearchDepth": "Max sökdjup"
+          },
+          "text": {
+            "discovering": "Upptäcker...",
+            "discoverProfiles": "Upptäck profiler",
+            "unknownIdentity": "Okänd identitet"
+          }
+        },
+        "researchproviderstatus": {
+          "metadata": {
+            "apiKeyConfigured": "API-nyckel konfigurerad",
+            "veniceApiKeyMissing": "Venedig API-nyckel saknas",
+            "jinaAi": "Jina AI",
+            "jinaApiKeyOptionalUnauthenticatedUseSupported": "Jina API-nyckel valfri (oautentiserad användning stöds)",
+            "disabledByConfig": "Inaktiverad av config",
+            "genericScrape": "Generisk skrapa",
+            "enabledNoKeyRequired": "Aktiverad (ingen nyckel krävs)",
+            "liveBrowser": "Live webbläsare",
+            "desktopAvailable": "Desktop tillgängligt",
+            "webModeUnavailable": "Webbläget är inte tillgängligt"
+          },
+          "attribute": {
+            "configured": "Konfigurerad",
+            "missing": "Saknad",
+            "testFailed": "Testet misslyckades",
+            "disabled": "Inaktiverad",
+            "unavailable": "Inte tillgänglig"
+          }
+        },
+        "scrapetab": {
+          "attribute": {
+            "urlToScrape": "URL att skrapa",
+            "readerProvider": "Läsarleverantör",
+            "scrapedTextWillAppearHere": "Skrapad text kommer att visas här..."
+          },
+          "text": {
+            "scraping": "Skrapar...",
+            "scrape": "Skrapa"
+          },
+          "notification": {
+            "scrapedOutputCopied": "Skrapad utdata kopierad!"
+          }
+        },
+        "searchscrapeview": {
+          "attribute": {
+            "researchingAndSynthesizing": "Undersöker och syntetiserar...",
+            "readingWebPage": "Läser webbsida...",
+            "searchingTheWeb": "Söker på webben...",
+            "parsingDocument": "Parsar dokument...",
+            "researchTaskInProgress": "Forskningsuppgift pågår..."
+          },
+          "metadata": {
+            "untitled": "Ofrälse"
+          },
+          "notification": {
+            "savedToActiveResearchSession": "Sparad till aktiv forskningssession"
+          }
+        },
+        "searchtab": {
+          "attribute": {
+            "query": "Fråga",
+            "latestModelRoutingBestPractices": "bästa praxis för den senaste modellens routing",
+            "provider": "Leverantör"
+          },
+          "text": {
+            "searching": "Sökande…",
+            "search": "Söka",
+            "untitledResult": "Namnlöst resultat"
+          }
+        },
+        "textparsertab": {
+          "text": {
+            "parsing": "Parsar...",
+            "parseDocument": "Analysera dokument"
+          },
+          "attribute": {
+            "extractedDocumentText": "Extraherad dokumenttext..."
+          }
+        }
+      },
+      "settings": {
+        "safetypanel": {
+          "attribute": {
+            "veniceApiSafeMode": "Venedig API säkert läge"
+          }
+        }
+      },
+      "status": {
+        "diagnosticsdrawer": {
+          "notification": {
+            "safeDiagnosticsCopiedToClipboard": "Säker diagnostik har kopierats till urklipp",
+            "couldNotCopySafeDiagnostics": "Det gick inte att kopiera säker diagnostik",
+            "diagnosticsRefreshed": "Diagnostik uppdaterad",
+            "diagnosticsRefreshFailed": "Diagnostikuppdateringen misslyckades",
+            "livecountLiveModelsRefreshed": "{{liveCount}} livemodeller uppdaterade"
+          },
+          "attribute": {
+            "diagnostics": "Diagnostik",
+            "closeDiagnostics": "Stäng diagnostik",
+            "close": "Nära",
+            "includeRedactedPromptExcerptsInSafeDiagnostics": "Inkludera redigerade promptutdrag i säker diagnostik"
+          },
+          "text": {
+            "refreshing": "Uppfriskande…",
+            "refreshDiagnostics": "Uppdatera diagnostik",
+            "openConfig": "Öppna Config",
+            "refreshingModels": "Uppfriskande modeller...",
+            "refreshModels": "Uppdatera modeller",
+            "openStatus": "Öppna Status"
+          },
+          "metadata": {
+            "overview": "Översikt",
+            "apiKey": "API-nyckel",
+            "model": "Modell",
+            "storage": "Lagring",
+            "privacy": "Privatliv",
+            "project": "Projekt",
+            "safety": "Säkerhet",
+            "research": "Forskning",
+            "mode": "Läge",
+            "repair": "Reparera"
+          }
+        },
+        "taskcenterdrawer": {
+          "attribute": {
+            "taskCenter": "Uppgiftscenter",
+            "closeTaskCenter": "Stäng uppgiftscentret"
+          }
+        }
+      },
+      "ui": {
+        "logo": {
+          "attribute": {
+            "veniceForgeLogo": "Venice Forge Logotyp"
+          }
+        },
+        "modalRequests": {
+          "attribute": {
+            "confirmPassphrase": "Bekräfta lösenordsfras",
+            "titleConfirmation": "{{title}} bekräftelse"
+          },
+          "text": {
+            "hidePassphrase": "Dölj lösenfras",
+            "showPassphrase": "Visa lösenordsfras"
+          }
+        },
+        "select": {
+          "attribute": {
+            "search": "Söka...",
+            "searchOptions": "Sökalternativ"
+          }
+        }
+      },
+      "video": {
+        "videoView": {
+          "notification": {
+            "unsupportedImageTypeValue1UsePngJpegOrWebp": "Bildtyp som inte stöds: {{value1}} . Använd PNG, JPEG eller WEBP.",
+            "failedToReadImage": "Det gick inte att läsa bilden",
+            "pleaseChooseAPngJpegOrWebpImageUnderThe": "Välj en PNG-, JPEG- eller WEBP-bild under storleksgränsen.",
+            "alreadyInMediaStudio": "Redan i Media Studio",
+            "savedToMediaStudio": "Sparad i Media Studio",
+            "saveToMediaStudioFailed": "Det gick inte att spara till Media Studio",
+            "videoSaved": "Videon har sparats",
+            "videoDownloadFailed": "Videonedladdning misslyckades"
+          },
+          "attribute": {
+            "loading": "Belastning...",
+            "selectModel": "Välj modell...",
+            "aCinematicDroneShotOverMistyMountainsAtSunrise": "En filmdrönare skjuten över dimmiga berg vid soluppgången...",
+            "lowQualityBlurry": "låg kvalitet, suddig...",
+            "reference": "Hänvisning",
+            "removeReferenceImage": "Ta bort referensbild",
+            "chooseReferenceImage": "Välj referensbild",
+            "generateAudioEnabled": "Generera ljud aktiverat",
+            "generateAudioDisabled": "Generera ljud inaktiverat",
+            "resetVideoGenerationForm": "Återställ videogenereringsformuläret",
+            "alreadySavedToMediaStudio": "Redan sparad i Media Studio",
+            "saveToMediaStudio": "Spara i Media Studio",
+            "generateAnotherVideo": "Skapa en annan video",
+            "retrievingVideo": "Hämtar video...",
+            "savingSecurely": "Sparar säkert...",
+            "videoQueued": "Video i kö...",
+            "renderingVideo": "Återger video..."
+          },
+          "text": {
+            "queued": "I kö...",
+            "processing": "Bearbetar...",
+            "generateVideo": "Skapa video",
+            "saved": "Sparad",
+            "saveToMediaStudio": "Spara i Media Studio"
+          }
+        }
+      },
+      "workflows": {
+        "workflowtemplatesview": {
+          "metadata": {
+            "newWorkflow": "Nytt arbetsflöde",
+            "newPromptStep": "Nytt promptsteg"
+          },
+          "notification": {
+            "workflowImagePromptLoaded": "Uppmaning om arbetsflödesbild har laddats",
+            "reviewTheModelAndSettingsThenGenerate": "Granska modellen och inställningarna och generera sedan.",
+            "workflowsImported": "Arbetsflöden importerade",
+            "failedToImportWorkflows": "Det gick inte att importera arbetsflöden"
+          },
+          "attribute": {
+            "searchWorkflows": "Sök arbetsflöden...",
+            "searchWorkflows2": "Sök arbetsflöden",
+            "workflowTemplates": "Arbetsflödesmallar",
+            "favorite": "Favorit",
+            "tagsCommaSeparated": "Taggar (kommaseparerade)...",
+            "workflowStepTitle": "Rubrik för arbetsflödessteg",
+            "workflowStepKind": "Arbetsflödesstegstyp",
+            "workflowStepTarget": "Arbetsflödesstegsmål",
+            "workflowStepPrompt": "Uppmaning om arbetsflödessteg",
+            "describeTheImageToGenerate": "Beskriv bilden som ska skapas...",
+            "enterThePromptOrInstructionsForThisStep": "Ange uppmaningen eller instruktionerna för det här steget..."
+          },
+          "text": {
+            "global": "Global",
+            "project": "Projekt",
+            "unfavorite": "Avfavorit",
+            "favorite": "Favorit",
+            "untitledVersion": "Namnlös version",
+            "openValue1": "Öppna {{value1}}",
+            "execute": "Utföra"
+          }
+        }
+      }
+    },
+    "config": {
+      "configschema": {
+        "metadata": {
+          "pathExceedsPathMaxLengthCharactersRejected": "Sökvägen överstiger {{PATH_MAX_LENGTH}} tecken; avvisades.",
+          "pathValueLooksLikeAUrlLocalFilePathsOnly": "Sökvägen &quot; {{value}} &quot; ser ut som en webbadress. Endast lokala filsökvägar.",
+          "pathContainsControlCharactersRejected": "Sökväg innehåller kontrolltecken; avvisades.",
+          "keyLengthExceedsKeyMaxLengthRejected": "Nyckellängden överstiger {{KEY_MAX_LENGTH}} ; avvisades.",
+          "themeEntryMustBeAnObjectSkipped": "Temapost måste vara ett objekt; hoppade över.",
+          "invalidModeValue1Skipped": "Ogiltigt läge &quot; {{value1}} &quot;; hoppade över.",
+          "displayNameMustBeANonEmptyStringSkipped": "display_name måste vara en icke-tom sträng; hoppade över.",
+          "displayNameExceedsThemeNameMaxLengthCharsSkipped": "display_name överstiger {{THEME_NAME_MAX_LENGTH}} tecken; hoppade över.",
+          "tokensMustBeAnObjectSkipped": "tokens måste vara ett objekt; hoppade över.",
+          "unknownThemeTokenIgnored": "Okänd tematoken; ignoreras.",
+          "invalidColorValueThemeSkipped": "Ogiltigt färgvärde; temat hoppat över.",
+          "missingRequiredThemeTokenReqThemeSkipped": "Saknar obligatoriskt tematoken: {{req}} ; temat hoppat över.",
+          "unknownConfigVersionValue1Expected1FallingBackToDefaults": "Okänd konfigurationsversion &quot; {{value1}} &quot;; förväntat 1. Faller tillbaka till standardvärden.",
+          "themesFileRootMustBeAMappingUsingBuiltIn": "Temafilroten måste vara en mappning; endast med inbyggda teman.",
+          "unknownThemesVersionValue1Expected1SkippingFile": "Okända teman version &quot; {{value1}} &quot;; förväntad 1. Hoppa över fil.",
+          "themesBlockMustBeAMappingUsingBuiltInThemes": "temablock måste vara en kartläggning; endast med inbyggda teman.",
+          "themeNameMustBe1128CharactersSkipped": "Temanamn måste vara 1...128 tecken; hoppade över."
+        }
+      }
+    },
+    "hooks": {
+      "useChat": {
+        "metadata": {
+          "generateAnImage": "Skapa en bild"
+        },
+        "notification": {
+          "memoryRetrievalUnavailable": "Minneshämtning är inte tillgänglig",
+          "sendingYourMessageWithoutMemoryContext": "Skickar ditt meddelande utan minneskontext.",
+          "attachmentContextTruncated": "Bifogad kontext trunkerad",
+          "totalAttachmentTextExceededValue1KbSomeAttachmentsWereOmitted": "Den totala bifogade texten översteg {{value1}} kB. Vissa bilagor har utelämnats från detta meddelande."
+        }
+      },
+      "useDataStorageActions": {
+        "metadata": {
+          "clearLocalSettings": "Rensa lokala inställningar?",
+          "deleteAllIndexeddbHistory": "Ta bort all IndexedDB-historik?"
+        },
+        "notification": {
+          "localSettingsCleared": "Lokala inställningar rensades.",
+          "indexeddbDataClearedSuccessfully": "IndexedDB-data har rensats.",
+          "encryptedBackupExportedSuccessfully": "Krypterad säkerhetskopia har exporterats.",
+          "exportFailedPleaseTryAgain": "Exporten misslyckades. Försök igen."
+        }
+      }
+    },
+    "lib": {
+      "workflowValidator": {
+        "metadata": {
+          "workflowIsEmpty": "Arbetsflödet är tomt.",
+          "unknownNodeTypeValue1": "Okänd nodtyp: {{value1}}",
+          "value1MissingRequiredValue2": "{{value1}} : krävs &quot; {{value2}} &quot; saknas.",
+          "value1DoesNotAcceptInputs": "{{value1}} accepterar inte indata.",
+          "value1NoUpstreamInputConnected": "{{value1}} : ingen uppströmsingång ansluten.",
+          "value1HasNoOutputAndCannotFeedAnotherNode": "{{value1}} har ingen utdata och kan inte mata en annan nod.",
+          "edgeSourceValue1DoesNotExist": "Kantkällan {{value1}} finns inte.",
+          "edgeTargetValue1DoesNotExist": "Kantmål {{value1}} finns inte.",
+          "selfLoopsAreNotAllowed": "Självslingor är inte tillåtna.",
+          "value1Value2CannotConnectToValue3Value4": "{{value1}} ( {{value2}} ) kan inte ansluta till {{value3}} ( {{value4}} ).",
+          "value1OutputsValue2Value3ExpectsValue4ConversionMayBeLossy": "{{value1}} ger ut {{value2}} ; {{value3}} förväntar sig {{value4}} . Konvertering kan vara förlustbringande.",
+          "workflowContainsACycle": "Arbetsflödet innehåller en cykel.",
+          "setParamsKMustBeStringNumberBooleanGotValue2": "set_params: &quot; {{k}} &quot; måste vara sträng|number|boolean, fick {{value2}} .",
+          "addNodeUnknownParamKForLabel": "add_node: okänd param &quot; {{k}} &quot; för {{label}} .",
+          "labelParamKMustBeOneOfValue3GotV": "{{label}} : param &quot; {{k}} &quot; måste vara en av [ {{value3}} ], fick &quot; {{v}} &quot;.",
+          "labelParamKMustBeTGotValue4": "{{label}} : param &quot; {{k}} &quot; måste vara {{t}} , fick {{value4}} .",
+          "labelParamKMustBeValue3GotV": "{{label}} : param &quot; {{k}} &quot; måste vara &gt;= {{value3}} , fick {{v}} .",
+          "labelParamKMustBeValue3GotV2": "{{label}} : param &quot; {{k}} &quot; måste vara &lt;= {{value3}} , fick {{v}} ."
+        }
+      },
+      "workflowSchema": {
+        "metadata": {
+          "input": "Indata",
+          "staticTextProvidedByTheUserStartingPointOfA": "Statisk text tillhandahållen av användaren. Startpunkten för ett arbetsflöde.",
+          "theTextValue": "Textvärdet.",
+          "output": "Produktion",
+          "displaysWhateverItsUpstreamNodeProducedAcceptsAnyKind": "Visar vad dess uppströmsnod än produceras. Accepterar alla slag.",
+          "llm": "LLM",
+          "runAVeniceChatCompletionAcceptsUpstreamTextAsContext": "Kör en chatt i Venedig. Accepterar uppströmstext som sammanhang.",
+          "veniceChatModelId": "Venedig chatt modell-id.",
+          "instructionUseInputToPositionUpstreamTextOrLeaveEmpty": "Instruktion. Använd {{input}} för att placera text uppströms, eller lämna tomt för att lägga till.",
+          "samplingTemperature": "Provtagningstemperatur.",
+          "maxOutputTokens": "Max utgående tokens.",
+          "enableVeniceWebSearch": "Aktivera Venedig webbsökning.",
+          "imageGen": "Bild Gen",
+          "generateAnImageFromATextPrompt": "Skapa en bild från en textuppmaning.",
+          "veniceImageModelId": "Venedig bild modell-id.",
+          "imagePromptUseInputToPositionUpstreamText": "Bildprompt. Använd {{input}} för att placera text uppströms.",
+          "whatToAvoid": "Vad ska man undvika.",
+          "denoisingSteps": "Denoising steg.",
+          "imageWidthInPixels": "Bildbredd i pixlar.",
+          "imageHeightInPixels": "Bildhöjd i pixlar.",
+          "stylePresetName": "Namn på förinställd stil.",
+          "omitWatermarkIfAllowed": "Utelämna vattenstämpel om tillåtet.",
+          "textToSpeech": "Text till tal",
+          "narrateTextIntoSpeechAudio": "Berätta text till talljud.",
+          "ttsModelId": "TTS modell-id.",
+          "textToSpeakUseInputToPositionUpstreamText": "Text att tala. Använd {{input}} för att placera text uppströms.",
+          "voiceId": "Röst-ID.",
+          "playbackSpeed": "Uppspelningshastighet.",
+          "audioFormat": "Ljudformat.",
+          "musicGen": "Musik Gen",
+          "generateAMusicClipFromATextPrompt": "Skapa ett musikklipp från en textuppmaning.",
+          "musicModelId": "Musik modell-id.",
+          "musicPrompt": "Musikuppmaning.",
+          "durationInSeconds": "Varaktighet i sekunder.",
+          "forceInstrumental": "Tvinga instrumental.",
+          "optionalLyrics": "Valfri text.",
+          "videoGen": "Videogenerering",
+          "generateAShortVideoFromATextPrompt": "Skapa en kort video från en textuppmaning.",
+          "videoModelId": "Videomodell-id.",
+          "videoPrompt": "Videoprompt.",
+          "aspectRatio": "Bildförhållande.",
+          "clipDurationEmptyMeansModelDefault": "Klippets längd. Tom betyder standardmodell.",
+          "resolutionEmptyMeansModelDefault": "Upplösning. Tom betyder standardmodell."
+        }
+      }
+    },
+    "research": {
+      "providers": {
+        "generichttpscrapeprovider": {
+          "metadata": {
+            "genericHttp": "Generisk HTTP"
+          }
+        },
+        "jinaresearchprovider": {
+          "metadata": {
+            "jinaAi": "Jina AI"
+          }
+        }
+      }
+    },
+    "services": {
+      "backgroundtasktoastbridge": {
+        "metadata": {
+          "queued": "I kö...",
+          "cancel": "Avboka",
+          "completedSuccessfully": "Slutfördes framgångsrikt.",
+          "open": "Öppna",
+          "titleFailed": "{{title}} misslyckades",
+          "anErrorOccurred": "Ett fel uppstod.",
+          "retry": "Försöka igen",
+          "dismiss": "Avfärda"
+        }
+      },
+      "backupimportservice": {
+        "metadata": {
+          "legacyVersion2BackupAuthenticatedSourceCryptoContentCountAnd": "Äldre version 2-säkerhetskopiering: metadata för autentiserad källkod, krypto, innehållsräkning och uteslutning är inte tillgänglig.",
+          "backupAppVersionValue1DiffersFromThisAppVersionAppversion": "Backup-appversionen {{value1}} skiljer sig från den här appversionen {{appVersion}} .",
+          "thisBackupIncludesMediaRecords": "Denna säkerhetskopia inkluderar mediaposter.",
+          "excludedByDesignValue1": "Utesluten genom design: {{value1}} ."
+        }
+      },
+      "charactercards": {
+        "charactercardadapter": {
+          "metadata": {
+            "fieldWasTruncatedToMaxCharacters": "Fältet trunkerades till {{max}} tecken.",
+            "secretLikeContentWasRedacted": "Hemligt innehåll redigerades bort.",
+            "extensionDataExceededTheMaximumDepth": "Tilläggsdata överskred det maximala djupet.",
+            "nonJsonExtensionValueWasRemoved": "Icke-JSON-tilläggsvärdet togs bort.",
+            "unsafeObjectKeyWasRemoved": "Nyckel för osäkra objekt togs bort.",
+            "extensionDataExceededThe1MibLimit": "Tilläggsdata överskred gränsen på 1 MiB.",
+            "onlyTheFirstMaxLorebookEntriesCharacterBookEntriesWere": "Endast de första {{MAX_LOREBOOK_ENTRIES}} posterna i teckenboken bevarades.",
+            "onlyCharacterCardV2SpecVersion20IsSupported": "Endast Character Card V2 spec version 2.0 stöds.",
+            "keyMustBeAString": "{{key}} måste vara en sträng.",
+            "alternateGreetingsMustBeAnArray": "alternate_greetings måste vara en array.",
+            "tagsMustBeAnArray": "taggar måste vara en array.",
+            "extensionsMustBeAPlainJsonObject": "tillägg måste vara ett vanligt JSON-objekt.",
+            "formatValidButANameIsRequiredBeforeChat": "Formatet är giltigt, men ett namn krävs innan chatten.",
+            "descriptionIsRecommendedForVeniceForgeAuthoring": "Beskrivning rekommenderas för författarskap i Venice Forge.",
+            "aPrimaryGreetingIsRecommendedForChatReadiness": "En primär hälsning rekommenderas för chattberedskap."
+          }
+        }
+      },
+      "chatpromptcompiler": {
+        "metadata": {
+          "contextTruncated": "Kontext trunkerad",
+          "removedRemovedcountOldTurnwordToFitWithinContextLimitsStart": "Tog bort {{removedCount}} gamla {{turnWord}} för att passa inom kontextgränserna. Starta en ny chatt eller använd en modell med ett större sammanhangsfönster för att bevara hela historiken.",
+          "theConversationRequiresValue1TokensButOnlyValue2AreAvailable": "Konversationen kräver ~ {{value1}} tokens, men endast {{value2}} är tillgängliga efter att du har reserverat utdatatoken.",
+          "thisRequestReservesValue1OutputTokensSoTheCustomPrompt": "Denna begäran reserverar {{value1}} utdatatoken så att den anpassade prompten och den aktuella konversationen passar den valda modellen.",
+          "estkKOfTotalkKEstimatedTokensAreInUse": "{{estK}} K av {{totalK}} K uppskattade tokens används."
+        }
+      },
+      "chatstorage": {
+        "metadata": {
+          "newChat": "Ny chatt"
+        }
+      },
+      "chatttscontroller": {
+        "notification": {
+          "ttsPlaybackFailed": "TTS-uppspelning misslyckades",
+          "noTextToSpeakInThisMessage": "Ingen text att tala i detta meddelande.",
+          "noSpeakableTextRemainingInMessage": "Ingen läsbar text kvar i meddelandet.",
+          "ttsPlaybackErrorUnableToLoadAudioElement": "TTS-uppspelningsfel: det går inte att ladda ljudelementet.",
+          "ttsFailed": "TTS misslyckades",
+          "ttsRestartFailed": "TTS-omstart misslyckades"
+        }
+      },
+      "desktopbridge": {
+        "metadata": {
+          "requestFailed": "Begäran misslyckades",
+          "jinaConnectionSuccessful": "Jina-anslutningen lyckades",
+          "jinaReturnedValue1": "Jina returnerade {{value1}}",
+          "networkErrorTestingJinaApiKey": "Nätverksfel testar Jina API-nyckel"
+        }
+      },
+      "imageinspectoranalysis": {
+        "metadata": {
+          "notProvidedByModel": "Tillhandahålls inte av modell."
+        }
+      },
+      "replaceimportservice": {
+        "metadata": {
+          "replaceImportFailedAndAutomaticRollbackAlsoFailedUseThe": "Ersätt import misslyckades och automatisk återställning misslyckades också. Använd den bevarade återställningsbackupen.",
+          "replaceImportFailedTheOriginalProfileDataWasRestoredAutomatically": "Ersätt import misslyckades. Den ursprungliga profildatan återställdes automatiskt."
+        }
+      },
+      "researchservice": {
+        "metadata": {
+          "searchQueryIsEmpty": "Sökfrågan är tom",
+          "untitledResult": "Namnlöst resultat",
+          "searchFailed": "Sökningen misslyckades",
+          "invalidOrUnsafeUrl": "Ogiltig eller osäker webbadress",
+          "value1DoesNotSupportScraping": "{{value1}} stöder inte skrapning",
+          "scrapeFailed": "Skrapning misslyckades"
+        }
+      },
+      "researchsummaries": {
+        "metadata": {
+          "sourceIdNotFoundInSession": "Källa {{id}} hittades inte i sessionen",
+          "findingIdNotFoundInSession": "Hittade {{id}} hittades inte i sessionen",
+          "researchSummaryValue1": "Forskningssammanfattning: {{value1}}"
+        }
+      },
+      "rp": {
+        "promptbuilderservice": {
+          "metadata": {
+            "safetyPreamble": "Säkerhetsingress",
+            "modelIdentity": "Modellidentitet",
+            "personaValue1": "Persona: {{value1}}",
+            "persona": "Persona",
+            "characterValue1": "Tecken: {{value1}}",
+            "scenario": "Scenario",
+            "lorebookValue1": "Bakgrundsbok: {{value1}}",
+            "lorebookValue1BeforeChar": "Lorebook {{value1}} (före char)",
+            "lorebookValue1AfterChar": "Lorebook {{value1}} (efter char)",
+            "lorebookValue1AtDepth": "Lorebook {{value1}} (på djupet)",
+            "memoryBlock": "Minnesblock",
+            "recentMessagesValue1": "Senaste meddelanden ( {{value1}} )",
+            "postHistoryInstruction": "Efterhistorisk undervisning",
+            "activeTurnValue1": "Aktiv tur: {{value1}}",
+            "activeTurnInstruction": "Aktiv svänginstruktion",
+            "userMessage": "Användarmeddelande"
+          }
+        }
+      },
+      "rphelpers": {
+        "metadata": {
+          "value1SystemPrompt": "{{value1}} — systemprompt",
+          "savedFromCharacterCardValue1OnValue2": "Sparad från teckenkortet &quot; {{value1}} &quot; på {{value2}} .",
+          "chatWithValue1": "Chatta med {{value1}}"
+        }
+      },
+      "rppromptcompiler": {
+        "metadata": {
+          "exampleDialoguesValue1": "Exempel på dialoger ( {{value1}} )"
+        }
+      },
+      "rptokencounter": {
+        "metadata": {
+          "characterExceedsTheSupportedContextBudgetByValue1EstimatedTokens": "Tecken överskrider den stödda kontextbudgeten med {{value1}} uppskattade tokens."
+        }
+      },
+      "storagemaintenance": {
+        "metadata": {
+          "refreshInventory": "Uppdatera inventering",
+          "recountAllLocalDataAndCheckForIssues": "Berätta om alla lokala data och kontrollera om det finns några problem.",
+          "clearModelCache": "Rensa modellcache",
+          "removeTheLocalCacheOfAvailableVeniceModelsTheyWill": "Ta bort den lokala cachen för tillgängliga Venedig-modeller. De kommer att återhämtas vid nästa användning.",
+          "clearCharacterImageCache": "Rensa teckenbildscache",
+          "deleteLocallyCachedVeniceCharacterAvatarImagesTheyWillBe": "Ta bort lokalt cachade avatarbilder från Venedig-karaktären. De kommer att hämtas igen vid behov.",
+          "analyzeOrphanReferences": "Analysera föräldralösa referenser",
+          "reviewItemsThatReferToMissingProjectsNoRecordsAre": "Granska objekt som hänvisar till saknade projekt. Inga poster ändras."
+        }
+      },
+      "storageprivacyservice": {
+        "metadata": {
+          "rpStudio": "RP Studio",
+          "apiKeys": "API-nycklar",
+          "characterImageCache": "Cache för teckenbild",
+          "categoryItemValue2RefersToMissingProject": "{{category}} objekt &quot; {{value2}} &quot; refererar till saknat projekt",
+          "value1ItemHasAMissingTargetReference": "{{value1}} objekt saknar en {{target}} referens"
+        }
+      },
+      "syncpacketimporter": {
+        "metadata": {
+          "value1ConflictFromValue2": "{{value1}} (Konflikt från {{value2}} )"
+        }
+      },
+      "taskmediacatalog": {
+        "metadata": {
+          "value1Generation": "{{value1}}-generering"
+        }
+      },
+      "workflowcompiler": {
+        "metadata": {
+          "referencedPromptValue1NotFoundInContext": "Refererad prompt {{value1}} hittades inte i sammanhanget.",
+          "referencedSceneValue1NotFoundInContext": "Refererad scen {{value1}} hittades inte i sammanhanget.",
+          "referencedCharacterValue1NotFoundInContext": "Det refererade tecknet {{value1}} hittades inte i sammanhanget.",
+          "unsupportedStepKindValue1": "Stegtyp som inte stöds: {{value1}}"
+        }
+      },
+      "workflowrunner": {
+        "metadata": {
+          "duplicateOutputKeyValue1UsesTheLastStepValueAll": "Duplicera utdatanyckel &#39; {{value1}} &#39; använder det sista stegvärdet; alla åtgärder kommer fortfarande att köras.",
+          "sendPromptToValue1": "Skicka uppmaning till {{value1}}",
+          "sendRecipeToValue1": "Skicka recept till {{value1}}",
+          "sendSceneToValue1": "Skicka scen till {{value1}}",
+          "selectMedia": "Välj media",
+          "openRpContext": "Öppna RP-kontext",
+          "showNote": "Visa anteckning",
+          "openValue1": "Öppna {{value1}}"
+        }
+      }
+    },
+    "stores": {
+      "characterCardStore": {
+        "notification": {
+          "couldNotLoadCharacters": "Det gick inte att läsa in tecken",
+          "pleaseTryAgain": "Försök igen.",
+          "couldNotSaveCharacter": "Det gick inte att spara tecken",
+          "couldNotDeleteCharacter": "Det gick inte att ta bort tecken",
+          "storageRejectedTheRequest": "Storage avvisade begäran."
+        }
+      },
+      "chatFolderStore": {
+        "notification": {
+          "failedToLoadChatFolders": "Det gick inte att läsa in chattmappar",
+          "folderCreated": "Mapp skapad",
+          "failedToCreateFolder": "Det gick inte att skapa mappen",
+          "folderRenamed": "Mappen har bytt namn",
+          "failedToRenameFolder": "Det gick inte att byta namn på mappen",
+          "failedToReorderFolders": "Det gick inte att ordna om mappar",
+          "folderIsLocked": "Mappen är låst",
+          "unlockValue1BeforeMovingConversationsIntoIt": "Lås upp &quot; {{value1}} &quot; innan du flyttar konversationer till den.",
+          "failedToMoveConversation": "Det gick inte att flytta konversationen",
+          "failedToMoveConversations": "Det gick inte att flytta konversationer",
+          "folderDeleted": "Mapp raderad",
+          "failedToDeleteFolder": "Det gick inte att ta bort mappen",
+          "failedToReadFolderBackupPreview": "Det gick inte att läsa förhandsgranskning av mappbackup",
+          "unknownError": "Okänt fel",
+          "folderBackupExported": "Säkerhetskopiering av mapp har exporterats",
+          "encryptedBackupSaved": "Krypterad säkerhetskopia sparad",
+          "failedToExportFolderBackup": "Det gick inte att exportera mappsäkerhetskopiering",
+          "failedToPreviewFolderImport": "Det gick inte att förhandsgranska mappimporten",
+          "folderBackupImported": "Mappsäkerhetskopia importerad",
+          "failedToImportFolderBackup": "Det gick inte att importera mappbackup",
+          "folderPrivacyGateEnabled": "Mappskyddsgrind aktiverad",
+          "failedToLockFolder": "Det gick inte att låsa mappen",
+          "folderPrivacyGateOpened": "Sekretessgrind för mapp öppnades",
+          "failedToUnlockFolder": "Det gick inte att låsa upp mappen"
+        }
+      },
+      "chatStore": {
+        "metadata": {
+          "newChat": "Ny chatt",
+          "chatWithValue1": "Chatta med {{value1}}",
+          "chatGeneratedMedia": "Chattgenererade media",
+          "value1Fork": "{{value1}} — Gaffel"
+        },
+        "notification": {
+          "systemPromptExceedsMaximumLength": "Systemmeddelandet överskrider den maximala längden",
+          "systemPromptApproachingLengthLimit": "Systemmeddelande närmar sig längdgränsen"
+        }
+      },
+      "imageInspectorStore": {
+        "notification": {
+          "couldNotLoadSessionId": "Det gick inte att ladda sessionen {{id}}",
+          "loadASessionBeforeStartingAnalysis": "Ladda en session innan analysen påbörjas.",
+          "noActiveSessionForSearch": "Ingen aktiv session för sökning.",
+          "noQueryAvailableToSearch": "Ingen sökfråga tillgänglig att söka.",
+          "foundValue1SearchResultsViaValue2": "Hittade {{value1}} sökresultat via {{value2}}",
+          "noSearchResultsReturnedFromValue1": "Inga sökresultat returnerade från {{value1}}"
+        },
+        "metadata": {
+          "newSession": "Ny session",
+          "searchResult": "Sökresultat"
+        }
+      },
+      "lorebookStore": {
+        "notification": {
+          "couldNotLoadLorebooks": "Det gick inte att ladda lorebooks",
+          "pleaseTryAgain": "Försök igen.",
+          "couldNotSaveLorebook": "Kunde inte spara lorebook",
+          "couldNotDeleteLorebook": "Kunde inte ta bort lorebook",
+          "storageRejectedTheRequest": "Storage avvisade begäran."
+        }
+      },
+      "mediaStore": {
+        "metadata": {
+          "deleteMediaInUse": "Ta bort media som används?"
+        },
+        "notification": {
+          "tagUpdatePartiallyFailed": "Tagguppdatering misslyckades delvis",
+          "couldNotUpdateTagsForValue1ItemS": "Det gick inte att uppdatera taggarna för {{value1}} objekt(er).",
+          "tagRemovalPartiallyFailed": "Det gick inte att ta bort taggen delvis",
+          "couldNotRemoveTagForValue1ItemS": "Det gick inte att ta bort taggen för {{value1}} objekt(er)."
+        }
+      },
+      "personaStore": {
+        "notification": {
+          "couldNotSavePersona": "Kunde inte spara persona",
+          "couldNotDeletePersona": "Kunde inte ta bort persona",
+          "storageRejectedTheRequest": "Storage avvisade begäran."
+        }
+      },
+      "rpChatStore": {
+        "metadata": {
+          "newRp": "Ny RP"
+        },
+        "notification": {
+          "couldNotCreateRpChat": "Det gick inte att skapa RP-chatt",
+          "pleaseTryAgain": "Försök igen.",
+          "couldNotSaveRpChat": "Det gick inte att spara RP-chatten",
+          "couldNotDeleteRpChat": "Det gick inte att ta bort RP-chatt",
+          "storageRejectedTheRequest": "Storage avvisade begäran.",
+          "couldNotSaveMessage": "Det gick inte att spara meddelandet"
+        }
+      },
+      "scenarioStore": {
+        "notification": {
+          "couldNotLoadScenarios": "Det gick inte att ladda scenarier",
+          "pleaseTryAgain": "Försök igen.",
+          "couldNotSaveScenario": "Det gick inte att spara scenariot",
+          "couldNotDeleteScenario": "Det gick inte att ta bort scenario",
+          "storageRejectedTheRequest": "Storage avvisade begäran."
+        }
+      },
+      "sceneAssetStore": {
+        "notification": {
+          "couldNotLoadAssets": "Det gick inte att läsa in tillgångar",
+          "pleaseTryAgain": "Försök igen.",
+          "couldNotSaveAsset": "Det gick inte att spara tillgången",
+          "couldNotDeleteAsset": "Det gick inte att ta bort tillgången",
+          "storageRejectedTheRequest": "Storage avvisade begäran."
+        }
+      },
+      "storagePrivacyStore": {
+        "notification": {
+          "failedToRefreshStorageInventory": "Det gick inte att uppdatera lagringsutrymmet",
+          "noInventoryDataToCopyRefreshFirst": "Inga lagerdata att kopiera. Uppdatera först.",
+          "safePrivacySummaryCopiedToClipboard": "Sammanfattning av säker integritet kopierad till urklipp",
+          "failedToCopyPrivacySummary": "Det gick inte att kopiera sekretesssammanfattningen",
+          "noInventoryDataToExportRefreshFirst": "Inga lagerdata att exportera. Uppdatera först.",
+          "safePrivacySummaryDownloaded": "Sammanfattning av säker integritet har laddats ned",
+          "maintenanceActionPartiallyFailedValue1": "Underhållsåtgärden misslyckades delvis: {{value1}}",
+          "maintenanceActionCompleted": "Underhållsåtgärd slutförd",
+          "maintenanceActionFailed": "Underhållsåtgärden misslyckades"
+        }
+      },
+      "workflowTemplateStore": {
+        "metadata": {
+          "initialVersion": "Initial version",
+          "versionNextversionnumber": "Version {{nextVersionNumber}}"
+        }
+      }
+    },
+    "types": {
+      "characterCardSpec": {
+        "metadata": {
+          "formatValidButANameIsRequiredBeforeChat": "Formatet är giltigt, men ett namn krävs innan chatten.",
+          "descriptionIsRecommendedForVeniceForgeAuthoring": "Beskrivning rekommenderas för författarskap i Venice Forge.",
+          "aPrimaryGreetingIsRecommendedForChatReadiness": "En primär hälsning rekommenderas för chattberedskap."
+        }
+      },
+      "project": {
+        "metadata": {
+          "recipeIsMissingAPrompt": "Receptet saknar en prompt.",
+          "recipeIsMissingATargetModel": "Receptet saknar en målmodell.",
+          "modelValue1IsNotInTheKnownRegistryDefaultsApplied": "Modellen &quot; {{value1}} &quot; finns inte i det kända registret – standardvärden tillämpas.",
+          "value1DoesNotSupportANegativePromptItWillBe": "{{value1}} stöder inte en negativ prompt – den kommer att tas bort.",
+          "value1DoesNotSupportASeedItWillBeDropped": "{{value1}} stöder inte ett frö – det kommer att tas bort.",
+          "value1DoesNotSupportMultipleVariantsValueWillBeDropped": "{{value1}} stöder inte flera varianter – värdet kommer att tas bort.",
+          "value1DoesNotSupportStepsValueWillBeDropped": "{{value1}} stöder inte steg – värdet kommer att tas bort.",
+          "value1DoesNotSupportCfgScaleValueWillBeDropped": "{{value1}} stöder inte CFG-skala – värdet kommer att tas bort.",
+          "value1DoesNotSupportAStylePresetValueWillBe": "{{value1}} stöder inte en stilförinställning – värdet kommer att tas bort.",
+          "value1UsesPixelSizingAspectRatioWillBeDropped": "{{value1}} använder pixelstorlek – bildförhållande kommer att tas bort.",
+          "value1DoesNotSupportAResolutionPresetValueWillBe": "{{value1}} stöder inte en förinställd upplösning – värdet kommer att tas bort.",
+          "dimensionsOriginalpairAreNotSupportedDefaultedToFinalpair": "Dimensioner {{originalPair}} stöds inte – standardinställningen är {{finalPair}} .",
+          "aspectRatioValue1IsNotSupportedDefaultedToValue2": "Bildförhållande &quot; {{value1}} &quot; stöds inte – standardinställningen är {{value2}} .",
+          "resolutionValue1IsNotSupportedDefaultedToValue2": "Upplösning &quot; {{value1}} &quot; stöds inte – standardinställningen är {{value2}} ."
+        }
+      },
+      "workflow": {
+        "metadata": {
+          "initialVersion": "Initial version"
+        }
+      },
+      "provider": {
+        "metadata": {
+          "primaryPrivateLocalFirstMultimodalPlatform": "Primär, privat, lokal-första multimodal plattform.",
+          "fastOpenSourceModelInference": "Snabb modellslutledning med öppen källkod.",
+          "ultraFastLpuInferenceEngine": "Ultrasnabb LPU-inferensmotor.",
+          "highPerformanceLlmApis": "Högpresterande LLM API:er.",
+          "notImplementedNoCredentialsOrRequestsAreAccepted": "Inte genomfört. Inga referenser eller förfrågningar accepteras.",
+          "geminiDeveloperApiAiStudio": "Gemini Developer API (AI Studio).",
+          "mistralAiModelsAndEndpoints": "Mistral AI-modeller och slutpunkter.",
+          "claudeAndOtherSafeFoundationModels": "Claude och andra säkra grundmodeller.",
+          "searchGroundedAndFastLlmApis": "Sökbaserade och snabba LLM API:er."
+        }
+      }
+    },
+    "constants": {
+      "prompttemplates": {
+        "metadata": {
+          "animeIllustration": "Animeillustration",
+          "cinematicFilm": "Cinematisk film",
+          "value35mmCameraFilmLookNaturalLightingMovieSceneGrain": "35 mm kamerafilmutseende, naturligt ljus, filmscener",
+          "minimalistVectorArt": "Minimalistisk vektorkonst",
+          "cleanFlatColorVectorDesignSvgStyle": "Ren platt färg vektordesign, SVG-stil",
+          "oilPainting": "Oljemålning",
+          "classicalTexturedCanvasBrushstrokes": "Klassisk texturerad canvas penseldrag",
+          "goldenHour": "Gyllene timmen",
+          "warmLowAngleSunsetGlow": "Varm, lågvinklar solnedgångsglöd",
+          "studioPortrait": "Studio porträtt",
+          "professionalMultiPointStudioKeyLighting": "Professionell multipunkts studionyckelbelysning",
+          "neonCyberpunk": "Neon-cyberpunk",
+          "vibrantNeonBluesAndMagentasWithDarkShadows": "Levande neonblått och magenta med mörka skuggor",
+          "extremeCloseUp": "Extrem närbild",
+          "tightFocusOnFacialDetailsOrSmallSubjects": "Tight fokus på ansiktsdetaljer eller små motiv",
+          "aerialDroneView": "Flygdrönare",
+          "highAltitudeBirdSEyePerspective": "Höghöjds fågelperspektiv",
+          "ruleOfThirdsWide": "Tredjedelsregeln",
+          "balancedOffCenterCinematicFocalPoint": "Balanserad ocentrerad filmisk fokuspunkt",
+          "photorealistic8k": "Fotorealistisk 8k",
+          "maximizesResolutionSkinTexturesAndMaterialRealism": "Maximerar upplösning, hudstrukturer och materialrealism",
+          "standardNegative": "Standard negativ",
+          "standardPromptsToAvoidDistortionsAndLowQuality": "Standarduppmaningar för att undvika förvrängningar och låg kvalitet"
+        }
+      }
+    },
+    "shared": {
+      "legal": {
+        "metadata": {
+          "welcomeToVeniceForge": "Välkommen till Venice Forge"
+        }
+      }
+    },
+    "utils": {
+      "imageprocessor": {
+        "metadata": {
+          "landscapesNature": "Landskap &amp; Natur",
+          "animeMangaIllustration": "Anime / manga / bildkonst",
+          "cinematicFilm": "Filmisk / film",
+          "portraitsPeople": "Porträtt / Människor",
+          "productCommercialStudio": "Produkt / Kommersiell Studio"
+        }
+      }
+    }
+  },
+  "statusDiagnostics": {
+    "actions": {
+      "openConfig": "Öppna Config",
+      "openStatus": "Öppna Status"
+    },
+    "external": "{{message}}",
+    "api": {
+      "notChecked": "Venedig API-nyckel har inte kontrollerats ännu.",
+      "checking": "Kontrollerar konfigurationen för säker lagring i Venedig...",
+      "inspectionFailed": "Inspektionen av säker lagring i Venedig misslyckades.",
+      "notConfigured": "Venedig API-nyckel inte konfigurerad. Lägg till en nyckel för att aktivera generering.",
+      "openConfigDetail": "Öppna fliken Config för att ansluta din Venedig API-nyckel.",
+      "connectivityUnverified": "API-nyckel är konfigurerad, men live Venedig-anslutning har inte verifierats ännu.",
+      "testConnectivityDetail": "Använd API-nyckel-teståtgärden för att verifiera /models-anslutning."
+    },
+    "apiKey": {
+      "notChecked": "Venedig API-nyckel har inte kontrollerats ännu.",
+      "checking": "Kontrollerar Venedig API-nyckelkonfiguration...",
+      "inspectionFailed": "Inspektion av säker lagring misslyckades.",
+      "secure": "Venedig API-nyckel är konfigurerad i säker lagring. Rånyckeln är dold.",
+      "memoryOnly": "Nyckel finns endast i minnet. Rånyckel är dold och utesluten från diagnostik och export.",
+      "missing": "Ingen Venedig API-nyckel. Generering av bild, ljud och chatt är blockerade.",
+      "addKeyDetail": "Lägg till en nyckel via API-nyckelknappen i rubriken eller fliken Config."
+    },
+    "model": {
+      "notRequested": "Modellkatalog har inte begärts.",
+      "loading": "Laddar modellkatalogen...",
+      "loaded": "{{count}} modeller har laddats.",
+      "selectionUnavailable": "Den valda modellen &quot; {{modelId}} &quot; finns inte i den aktuella katalogen ( {{modelType}} ).",
+      "cached": "Använda en cachad modellkatalog från {{timestamp}} .",
+      "loadFailed": "Modellkatalogen kunde inte laddas."
+    },
+    "storage": {
+      "unavailable": "IndexedDB är inte tillgängligt. Lokal historia och media kommer inte att bestå.",
+      "permissionsDetail": "Webbläsarläge med lagring inaktiverad. Kontrollera webbplatsbehörigheter.",
+      "web": "Webbläge: poster kvarstår i webbläsaren IndexedDB (krypterad i vila).",
+      "siteDataDetail": "Om du rensar platsdata raderas det lokala valvet.",
+      "desktop": "Desktop IndexedDB är tillgänglig. Posterna krypteras i vila."
+    },
+    "project": {
+      "allProjects": "Alla projekt-läge aktivt (oavgränsad vy).",
+      "missing": "Aktivt projekt-id saknas eller är okänt. Butiken kommer att reparera vid nästa interaktion.",
+      "archived": "Aktivt projekt &quot; {{projectName}} &quot; är arkiverat. Byt till Alla projekt för att reparera.",
+      "valid": "Det aktiva projektet &quot; {{projectName}} &quot; är giltigt."
+    },
+    "safety": {
+      "on": {
+        "on": "Lokal vakt: på · Venedig safe_mode: på",
+        "off": "Lokal vakt: på · Venedig safe_mode: av"
+      },
+      "off": {
+        "on": "Lokal vakt: av · Venedig safe_mode: på",
+        "off": "Lokal vakt: av · Venedig safe_mode: av"
+      }
+    },
+    "provider": {
+      "disabled": "Research Workspace aktiv ( {{count}} sessioner). Jina är funktionshindrad.",
+      "enabled": "Research Workspace aktiv ( {{count}} sessioner). Jina aktiverad.",
+      "missingKey": "Research Workspace aktiv ( {{count}} sessioner). Jina aktiverad men ingen nyckel konfigurerad."
+    },
+    "desktop": {
+      "desktop": "Skrivbordsläge: Elektronhuvudprocess + förladdningsbrygga kan nås.",
+      "web": "Webbläge: API-nycklar finns i serverns .env. Endast skrivbordsfunktioner (filsystem, avslöjar, systemskal) är inte tillgängliga."
+    },
+    "diagnostics": {
+      "operational": "Alla system i drift. Inga problem upptäcktes.",
+      "issues": "{{count}} kontroller registrerade; värsta svårighetsgraden: {{severity}} ."
+    }
+  },
+  "imageCapabilities": {
+    "toolsTab": "Redigera / Uppskala / BG Ta bort",
+    "sizes": "{{count}} storlekar",
+    "ratios": "{{count}} förhållanden",
+    "ratiosResolutions": "{{ratios}} förhållanden × {{resolutions}} upplösningar",
+    "fixedDimensions": "Fast {{width}} × {{height}}",
+    "fixedSize": "Fast storlek",
+    "unknownSizing": "Okänd storlek",
+    "negativePrompt": "Negativ uppmaning",
+    "noNegativePrompt": "Ingen negativ uppmaning",
+    "seed": "Utsäde",
+    "noSeed": "Inget frö",
+    "variants": "Varianter",
+    "singleOutput": "Enkel utgång",
+    "noSteps": "Inga steg",
+    "noCfg": "Ingen CFG",
+    "noStylePreset": "Ingen förinställd stil",
+    "references_one": "{{count}} referens",
+    "references_other": "{{count}} referenser",
+    "noReferences": "Inga referenser",
+    "quality": "Kvalitet"
+  },
+  "runtimeSlashLabels": {
+    "cancelReset": "Avbryt / Återställ",
+    "shortDescriptionSummary": "Kort beskrivning / Sammanfattning",
+    "settingWorld": "Inställning / Värld",
+    "generalPg": "Allmänt / PG",
+    "matureDarkThemes": "Mogna / mörka teman",
+    "documentNamePath": "Dokumentnamn/sökväg",
+    "characterPersonaReferences": "Karaktär / Persona referenser"
   }
 }

@@ -56,8 +56,12 @@ function fail(message) {
 function mustContain(file, fragments, label) {
   const text = readFileSync(file, "utf8");
   for (const fragment of fragments) {
-    if (!text.includes(fragment)) {
-      fail(`${file} is missing ${label}: ${JSON.stringify(fragment)}`);
+    const matched = fragment instanceof RegExp
+      ? fragment.test(text)
+      : text.includes(fragment);
+    if (!matched) {
+      const expected = fragment instanceof RegExp ? fragment.source : fragment;
+      fail(`${file} is missing ${label}: ${JSON.stringify(expected)}`);
     }
   }
 }
@@ -118,7 +122,7 @@ function verifySourceIntegrationTokens() {
     [
       "processFileAttachment",
       "SUPPORTED_ATTACHMENT_ACCEPT",
-      "AI is not vision capable",
+      "composer.visionUnsupportedTitle",
       "setAttachments((prev) => [...prev, attachment])",
     ],
     "chat attachment integration",
@@ -128,7 +132,7 @@ function verifySourceIntegrationTokens() {
     "src/components/chat/chat-view.tsx",
     [
       "modelRequirements.requiresVision",
-      "AI is not vision capable",
+      "chat:composer.visionUnsupportedTitle",
       "disableImageAttach={!visionSupported}",
     ],
     "send-side vision gate",
@@ -149,7 +153,7 @@ function verifySourceIntegrationTokens() {
     "src/components/research/ResearchWorkspaceView.tsx",
     [
       "processFileAttachment",
-      "kind: 'manual_note'",
+      /kind:\s*["']manual_note["']/,
       "localFile: true",
       "extractionRoute",
     ],

@@ -1,5 +1,7 @@
 # Image Generation Remediation Report
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 ## Repository State
 
 - **Canonical Repository Root:** `/Users/super_user/Projects/Venice_Forge`

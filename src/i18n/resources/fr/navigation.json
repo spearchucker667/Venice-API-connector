@@ -218,7 +218,7 @@
     "promptCopied": "Prompt copié dans le presse-papiers",
     "couldNotCopyPrompt": "Impossible de copier le prompt",
     "noPromptsToExport": "Aucun prompt à exporter.",
-    "exportedPrompts": "{{count}} prompt{{plural}} exporté{{plural}}",
+    "exportedPrompts": "Invite {{count}} exportée{{plural}}",
     "importSuccess": "Bibliothèque de prompts : {{parts}}",
     "importUpToDate": "Bibliothèque de prompts à jour",
     "couldNotImport": "Impossible d'importer",
@@ -258,5 +258,18 @@
     "toggleInspector": "Basculer l'inspecteur",
     "toggleHint": "⌘K pour basculer",
     "navigateHint": "↑↓ pour naviguer · Entrée pour choisir"
+  },
+  "header": {
+    "openMenu": "Ouvrir le menu",
+    "toggleSidebar": "Basculer la barre latérale",
+    "selectModel": "Sélectionnez le modèle…",
+    "selectedModel": "Modèle sélectionné",
+    "toggleTaskCenter": "Basculer le centre de tâches",
+    "tasks": "Tâches",
+    "checkingApiKey": "Vérification de la clé API",
+    "apiKeyConnectedManage": "Clé API connectée, gérer",
+    "connectApiKey": "Connecter la clé API",
+    "checkingKey": "Vérification de la clé…",
+    "connected": "Connecté"
   }
 }

@@ -1,3 +1,4 @@
+import { translateRuntime } from "../../i18n/runtimeTranslator";
 /** @fileoverview Toolbar for the Media Studio grid. Hosts search, filter pills,
  * sort select, batch-select toggle, batch action buttons, and the batch count
  * summary. Phase 2B adds the dynamic project picker + bulk action hooks. */
@@ -8,31 +9,183 @@ import { PillGroup, GhostButton } from "../ui/shared";
 import type { MediaFilter, MediaSort } from "../../stores/media-store";
 import { formatBytesApprox, estimateItemBytes } from "../../utils/mediaItem";
 import type { MediaItem } from "../../types/media";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 const FILTER_OPTIONS: Array<{ value: MediaFilter; label: string }> = [
-  { value: "all", label: "All" },
-  { value: "image", label: "Images" },
-  { value: "video", label: "Videos" },
-  { value: "audio", label: "Audio" },
-  { value: "favorites", label: "Favorites" },
-  { value: "upscaled", label: "Upscaled" },
-  { value: "edited", label: "Edited" },
-  { value: "has-recipe", label: "Has recipe" },
-  { value: "no-recipe", label: "No recipe" },
-  { value: "has-seed", label: "Has seed" },
-  { value: "no-seed", label: "No seed" },
-  { value: "no-project", label: "Unscoped" },
+  {
+    value: "all",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.all",
+        "All",
+      );
+    },
+  },
+  {
+    value: "image",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.images",
+        "Images",
+      );
+    },
+  },
+  {
+    value: "video",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.videos",
+        "Videos",
+      );
+    },
+  },
+  {
+    value: "audio",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.audio",
+        "Audio",
+      );
+    },
+  },
+  {
+    value: "favorites",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.favorites",
+        "Favorites",
+      );
+    },
+  },
+  {
+    value: "upscaled",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.upscaled",
+        "Upscaled",
+      );
+    },
+  },
+  {
+    value: "edited",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.edited",
+        "Edited",
+      );
+    },
+  },
+  {
+    value: "has-recipe",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.hasRecipe",
+        "Has recipe",
+      );
+    },
+  },
+  {
+    value: "no-recipe",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.noRecipe",
+        "No recipe",
+      );
+    },
+  },
+  {
+    value: "has-seed",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.hasSeed",
+        "Has seed",
+      );
+    },
+  },
+  {
+    value: "no-seed",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.noSeed",
+        "No seed",
+      );
+    },
+  },
+  {
+    value: "no-project",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.unscoped",
+        "Unscoped",
+      );
+    },
+  },
 ];
 
 const SORT_OPTIONS: Array<{ value: MediaSort; label: string }> = [
-  { value: "newest", label: "Newest" },
-  { value: "oldest", label: "Oldest" },
-  { value: "model", label: "Model" },
-  { value: "size", label: "Size" },
-  { value: "project", label: "Project" },
-  { value: "has-recipe", label: "Has recipe" },
-  { value: "has-seed", label: "Has seed" },
+  {
+    value: "newest",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.newest",
+        "Newest",
+      );
+    },
+  },
+  {
+    value: "oldest",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.oldest",
+        "Oldest",
+      );
+    },
+  },
+  {
+    value: "model",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.model",
+        "Model",
+      );
+    },
+  },
+  {
+    value: "size",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.size",
+        "Size",
+      );
+    },
+  },
+  {
+    value: "project",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.project",
+        "Project",
+      );
+    },
+  },
+  {
+    value: "has-recipe",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.hasRecipe",
+        "Has recipe",
+      );
+    },
+  },
+  {
+    value: "has-seed",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.hasSeed",
+        "Has seed",
+      );
+    },
+  },
 ];
 
 interface MediaToolbarProps {
@@ -93,10 +246,17 @@ export function MediaToolbar({
   onBatchCompare,
   compareReady,
 }: MediaToolbarProps) {
-  const allFavorited = selectedItems.length > 0 && selectedItems.every((item) => item.favorite);
+  const { t: tRuntime } = useTranslation("common");
+  const allFavorited =
+    selectedItems.length > 0 && selectedItems.every((item) => item.favorite);
   const hasSelection = selectedIds.size > 0;
   const projectOptions = [
-    { value: "", label: "Unassign" },
+    {
+      value: "",
+      label: tRuntime(
+        "runtimeGenerated.components.gallery.mediaToolbar.metadata.unassign",
+      ),
+    },
     ...(availableProjects ?? []).map((p) => ({ value: p.id, label: p.name })),
   ];
 
@@ -109,15 +269,21 @@ export function MediaToolbar({
             type="search"
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
-            placeholder="Search prompts, models, tags, notes…"
-            aria-label="Search media"
+            placeholder={tRuntime(
+              "runtimeGenerated.components.gallery.mediaToolbar.attribute.searchPromptsModelsTagsNotes",
+            )}
+            aria-label={tRuntime(
+              "runtimeGenerated.components.gallery.mediaToolbar.attribute.searchMedia",
+            )}
             className="w-full rounded-lg border border-border bg-surface-elevated py-1.5 pl-8 pr-7 text-[13px] text-text-primary placeholder:text-text-muted focus:border-accent focus:outline-none"
           />
           {query && (
             <button
               type="button"
               onClick={() => onQueryChange("")}
-              aria-label="Clear search"
+              aria-label={tRuntime(
+                "runtimeGenerated.components.gallery.mediaToolbar.attribute.clearSearch",
+              )}
               className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary"
             >
               <X className="h-3.5 w-3.5" />
@@ -126,22 +292,36 @@ export function MediaToolbar({
         </div>
 
         <label className="flex items-center gap-1 text-[12px] text-text-muted">
-          <span><Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.sort" /></span>
+          <span>
+            <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.sort" />
+          </span>
           <select
             value={sort}
             onChange={(e) => onSortChange(e.target.value as MediaSort)}
             className="rounded-md border border-border bg-surface-elevated px-2 py-1 text-[12px] text-text-primary focus:border-accent focus:outline-none"
           >
             {SORT_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
             ))}
           </select>
         </label>
 
-        <GhostButton onClick={onRefresh} ariaLabel="Refresh media library" disabled={refreshing}>
+        <GhostButton
+          onClick={onRefresh}
+          ariaLabel="Refresh media library"
+          disabled={refreshing}
+        >
           <span className="flex items-center gap-1.5">
-            <span className={cn("inline-block", refreshing && "animate-spin")} aria-hidden="true">↻</span>
-            <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.refresh" /></span>
+            <span
+              className={cn("inline-block", refreshing && "animate-spin")}
+              aria-hidden="true"
+            >
+              ↻
+            </span>
+            <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.refresh" />
+          </span>
         </GhostButton>
 
         <button
@@ -155,7 +335,13 @@ export function MediaToolbar({
               : "border-border text-text-secondary hover:border-accent hover:text-accent",
           )}
         >
-          {multiSelectMode ? "Exit select" : "Select"}
+          {multiSelectMode
+            ? tRuntime(
+                "runtimeGenerated.components.gallery.mediaToolbar.text.exitSelect",
+              )
+            : tRuntime(
+                "runtimeGenerated.components.gallery.mediaToolbar.text.select",
+              )}
         </button>
       </div>
 
@@ -167,7 +353,9 @@ export function MediaToolbar({
           ariaLabel="Filter media"
         />
         <span className="ml-auto text-[12px] text-text-muted">
-          {totalCount} <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.item" />{totalCount === 1 ? "" : "s"}
+          {totalCount}{" "}
+          <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.item" />
+          {totalCount === 1 ? "" : "s"}
         </span>
       </div>
 
@@ -177,11 +365,19 @@ export function MediaToolbar({
           data-testid="bulk-action-toolbar"
         >
           <span className="text-[12px] text-text-secondary">
-            {selectedIds.size} <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.selected" />{selectedItems.length > 0 && (
+            {selectedIds.size}{" "}
+            <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.selected" />
+            {selectedItems.length > 0 && (
               <>
-                {" "}·{" "}
+                {" "}
+                ·{" "}
                 <span className="text-text-muted">
-                  {formatBytesApprox(selectedItems.reduce((acc, item) => acc + estimateItemBytes(item), 0))}
+                  {formatBytesApprox(
+                    selectedItems.reduce(
+                      (acc, item) => acc + estimateItemBytes(item),
+                      0,
+                    ),
+                  )}
                 </span>
               </>
             )}
@@ -193,14 +389,16 @@ export function MediaToolbar({
               data-testid="bulk-select-all"
               className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
             >
-              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.selectAll" /></button>
+              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.selectAll" />
+            </button>
             <button
               type="button"
               onClick={onClearSelection}
               data-testid="bulk-clear-selection"
               className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
             >
-              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.clear" /></button>
+              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.clear" />
+            </button>
             {onBatchCompare && (
               <button
                 type="button"
@@ -209,7 +407,8 @@ export function MediaToolbar({
                 data-testid="bulk-compare"
                 className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.compare" /></button>
+                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.compare" />
+              </button>
             )}
             {onBatchExport && (
               <button
@@ -219,7 +418,8 @@ export function MediaToolbar({
                 data-testid="bulk-export"
                 className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30"
               >
-                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.export" /></button>
+                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.export" />
+              </button>
             )}
             {onBatchAddTag && (
               <button
@@ -229,11 +429,14 @@ export function MediaToolbar({
                 data-testid="bulk-add-tag"
                 className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30"
               >
-                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.addTag" /></button>
+                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.addTag" />
+              </button>
             )}
             {onBulkProjectIdChange && (
               <label className="flex items-center gap-1 text-[12px] text-text-muted">
-                <span><Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.project" /></span>
+                <span>
+                  <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.project" />
+                </span>
                 <select
                   value={bulkProjectId ?? ""}
                   onChange={(e) => onBulkProjectIdChange(e.target.value)}
@@ -242,7 +445,9 @@ export function MediaToolbar({
                   className="rounded-md border border-border bg-surface-elevated px-2 py-1 text-[12px] text-text-primary focus:border-accent focus:outline-none disabled:opacity-30"
                 >
                   {projectOptions.map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
                   ))}
                 </select>
               </label>
@@ -255,7 +460,8 @@ export function MediaToolbar({
                 data-testid="bulk-assign-project"
                 className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30"
               >
-                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.apply" /></button>
+                <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.apply" />
+              </button>
             )}
             <button
               type="button"
@@ -264,7 +470,13 @@ export function MediaToolbar({
               data-testid="bulk-favorite"
               className="rounded-md border border-rose-400/30 px-2 py-1 text-[12px] text-rose-300 hover:bg-rose-500/10 disabled:opacity-30"
             >
-              {allFavorited ? "Unfavorite" : "Favorite"}
+              {allFavorited
+                ? tRuntime(
+                    "runtimeGenerated.components.gallery.mediaToolbar.text.unfavorite",
+                  )
+                : tRuntime(
+                    "runtimeGenerated.components.gallery.mediaToolbar.text.favorite",
+                  )}
             </button>
             <button
               type="button"
@@ -272,7 +484,8 @@ export function MediaToolbar({
               disabled={!hasSelection}
               className="rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30"
             >
-              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.unstar" /></button>
+              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.unstar" />
+            </button>
             <button
               type="button"
               onClick={onBatchDelete}
@@ -280,7 +493,8 @@ export function MediaToolbar({
               data-testid="bulk-delete"
               className="rounded-md border border-danger/30 px-2 py-1 text-[12px] text-text-danger hover:bg-danger/10 disabled:opacity-30"
             >
-              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.delete" /></button>
+              <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.action.delete" />
+            </button>
           </div>
         </div>
       )}

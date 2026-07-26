@@ -1,5 +1,5 @@
 {
-  "appName": "Venice Forge",
+  "appName": "베니스 포지",
   "appSubtitle": "프라이빗 로컬 워크벤치.",
   "actions": {
     "save": "저장",
@@ -59,10 +59,10 @@
     "auto": "자동",
     "idle": "유휴"
   },
-  "conversations": "conv-1",
-  "character_cards": "card-1",
+  "conversations": "전환수-1",
+  "character_cards": "카드-1",
   "rp_chats": "rpchat-1",
-  "tombstones": "conv-1",
+  "tombstones": "전환수-1",
   "cancelled": "실패",
   "failed": "실패",
   "repair": "완료",
@@ -732,7 +732,7 @@
         "video": "비디오",
         "vision": "비전",
         "tags": "태그",
-        "parentid": "parentId="
+        "parentid": "상위 ID="
       },
       "heading": {
         "inspector": "검사기",
@@ -954,7 +954,7 @@
       "text": {
         "playground": "플레이그라운드",
         "agent": "에이전트",
-        "n": "n ·",
+        "n": "N ·",
         "running": "실행 중…",
         "openInWorkflows": "워크플로에서 열기",
         "open": "열기"
@@ -1301,7 +1301,7 @@
         "generate": "생성",
         "chooseLorebook": "설화첩 선택…",
         "useChatDefault": "채팅 기본값 사용",
-        "brave": "Brave",
+        "brave": "용감한",
         "google": "Google",
         "noCompatibleLiveModel": "호환되는 라이브 모델 없음",
         "vision": "· 비전 ·",
@@ -1983,5 +1983,2534 @@
         "noResults": "결과 없음"
       }
     }
+  },
+  "promptStarters": {
+    "writing-rsa-email": "집주인에게 난방 시설을 고쳐달라고 요청하는 정중하면서도 단호한 이메일 초안을 작성하세요.",
+    "writing-cover-letter": "원격 협업에 중점을 둔 수석 풀 스택 엔지니어 역할을 위한 맞춤형 자기소개서 템플릿을 작성하세요.",
+    "writing-scifi-hook": "도시마다 중력이 다르게 작용하는 SF 소설의 매력적인 오프닝 후크를 구성해 보세요.",
+    "writing-newsletter-intro": "자율 에이전트 함대의 사회적 영향을 논의하는 매력적인 뉴스레터 소개 초안을 작성하세요.",
+    "writing-press-release": "개인 정보 보호를 최우선으로 하는 웹 스크레이퍼의 오픈 소스를 알리는 공식 보도 자료 템플릿을 만드세요.",
+    "writing-linkedin-post": "오프라인 우선 Electron 애플리케이션 구축에서 배운 주요 교훈을 요약한 전문 LinkedIn 게시물 초안을 작성하세요.",
+    "writing-blog-outline": "'현대 Electron 앱의 프리로드 브리지 보안'이라는 제목의 기술 블로그 게시물에 대한 자세한 개요를 생성하세요.",
+    "writing-sabbatical-request": "분산 시스템을 연구하기 위해 3개월 간의 교육 안식년을 요청하는 전문적인 제안서를 작성하세요.",
+    "writing-speech-intro": "로컬 우선 소프트웨어와 데이터 주권의 중요성에 대한 3분짜리 소개 연설을 작성하세요.",
+    "writing-bug-report": "빠른 해결을 장려하기 위해 오픈 소스 프로젝트에서 버그 보고서를 위한 철저한 템플릿을 작성하세요.",
+    "writing-refusal-letter": "향후 협력을 위해 문을 열어두면서 공급업체 제안을 거부하는 전문적인 대응 초안을 작성하세요.",
+    "writing-haiku-comp": "아날로그 하드웨어에서 양자 계산으로의 전환을 포착하는 세 개의 하이쿠를 작성합니다.",
+    "coding-rest-graphql": "REST와 GraphQL을 비교해보세요. 각각은 언제 빛을 발할까요?",
+    "coding-debounce-ts": "즉각적인 호출을 지원하는 React용 TypeScript에서 강력하고 완전한 유형의 디바운스 후크를 작성하세요.",
+    "coding-sql-recursive": "조직 계층 쿼리의 예를 통해 SQL에서 재귀 CTE가 작동하는 방식을 설명합니다.",
+    "coding-refactor-lru": "만료 지원을 통해 간단한 Node.js 메모리 캐시를 스레드로부터 안전한 LRU 캐시로 리팩터링합니다.",
+    "coding-rust-error": "`thiserror` 및 `anyhow` 상자를 사용하여 Rust에서 사용자 정의 오류 처리를 구현하는 방법을 보여줍니다.",
+    "coding-git-bisect": "자동화된 스크립트 실행을 포함하여 'git bisect'를 사용하여 회귀 커밋을 찾는 방법을 설명합니다.",
+    "coding-docker-multi": "TypeScript Node.js 마이크로서비스를 패키징하기 위한 최소한의 안전한 다단계 Dockerfile을 만듭니다.",
+    "coding-csp-rules": "로컬 WASM 실행은 허용하지만 인라인 평가는 차단하는 엄격한 콘텐츠 보안 정책(CSP) 헤더 구성을 작성합니다.",
+    "coding-vitest-mocking": "Vitest에서 전역 창 개체와 비동기 가져오기 호출을 모의하는 방법을 보여줍니다.",
+    "coding-css-flex-grid": "CSS Grid와 Flexbox 레이아웃 간의 아키텍처 차이점을 각각의 특정 레이아웃 사용 사례와 함께 설명합니다.",
+    "coding-sse-parse": "외부 종속성 없이 바닐라 JavaScript로 SSE(Server-Sent Events)에 대한 스트림 파서를 작성하는 방법을 보여줍니다.",
+    "coding-indexeddb-transaction": "브라우저 기반 IndexedDB에서 강력한 트랜잭션 관리 및 오류 롤백의 예를 제공합니다.",
+    "learning-rsa-metaphor": "10살 어린이가 이해할 수 있는 비유를 사용하여 RSA 암호화가 어떻게 작동하는지 설명하세요.",
+    "learning-pid-controller": "간단하고 직관적인 용어로 PID 온도 컨트롤러 이면의 수학을 설명합니다.",
+    "learning-monad-metaphor": "일상적인 실제 비유를 사용하여 함수형 프로그래밍에서 모나드가 무엇인지 설명하세요.",
+    "learning-special-relativity": "특수 상대성 이론에서 시간 팽창이란 무엇입니까? 시계와 관련된 사고 실험을 사용하여 설명하십시오.",
+    "learning-inflation-basics": "중앙은행이 인플레이션을 통제하기 위해 이자율을 어떻게 사용하는지, 그리고 경제적 상충관계가 무엇인지 설명하십시오.",
+    "learning-photosynthesis": "광합성의 빛 의존 반응을 단계별 조립 라인 공정으로 설명합니다.",
+    "learning-platonic-cave": "플라톤의 동굴 비유를 설명하고 이것이 현대 소셜 미디어 반향실과 어떤 관련이 있는지 토론해 보세요.",
+    "learning-blockchain-proof": "기술 전문 용어를 사용하지 않고 작업 증명과 지분 증명 합의 알고리즘의 차이점을 설명합니다.",
+    "learning-turing-complete": "시스템이 '튜링 완전'하다는 것은 무엇을 의미합니까? 간단한 설명과 명확하지 않은 예를 들어보세요.",
+    "learning-habermas-public": "위르겐 하버마스의 '공공 영역' 개념과 인터넷 시대와의 관련성을 요약합니다.",
+    "learning-plate-tectonics": "판 구조론은 화산 활동을 어떻게 유도합니까? 섭입대와 핫스팟의 차이점을 설명하세요.",
+    "learning-music-scales": "수학적 주파수와 음악적 음계 또는 조화 사이의 관계를 설명합니다.",
+    "research-fusion-status": "상업용 핵융합 에너지 연구에 있어서 최신 이정표와 남아있는 공학적 장벽은 무엇입니까?",
+    "research-dns-sec": "기존 DNS 프로토콜의 보안 취약성과 DNSSEC가 이를 해결하는 방법을 분석합니다.",
+    "research-solid-battery": "전기자동차용 전고체전지 기술 현황을 에너지 밀도와 수명주기를 중심으로 요약합니다.",
+    "research-roman-concrete": "고대 로마 해양 콘크리트의 화학적 조성과 그것이 현대 포틀랜드 시멘트보다 오래 지속되는 이유를 조사합니다.",
+    "research-browser-privacy": "타사 쿠키 차단, 브라우저 핑거프린팅 방어, 파티셔닝의 개인정보 보호 메커니즘을 비교해 보세요.",
+    "research-green-hydrogen": "직접 배터리 전기화에 비해 녹색수소 생산의 에너지적, 경제적 효율성을 분석합니다.",
+    "research-graphene-scaling": "상업용 전자제품용 단층 그래핀의 스케일링을 방해하는 현재 제조 제한 사항은 무엇입니까?",
+    "research-zero-knowledge": "신뢰할 수 있는 설정 요구 사항, 증명 크기 및 계산 오버헤드 측면에서 zk-SNARK와 zk-STARK를 비교하세요.",
+    "research-microbiome-brain": "인간 장내 미생물군집과 중추신경계 기능을 연결하는 주요 생물학적 경로를 요약합니다.",
+    "research-deep-sea-mining": "국제 해역에서 심해 다금속 단괴 채굴의 환경적, 경제적 이해관계는 무엇입니까?",
+    "research-compiler-optimizations": "루프 풀기, 데드 코드 제거, 레지스터 할당 최적화가 컴파일러 내에서 어떻게 작동하는지 조사하세요.",
+    "research-cfc-ozone": "몬트리올 의정서에 따른 오존층 복구의 역사적 연대표와 화학적 과정을 추적해 보세요.",
+    "creative-llm-pi-projects": "LLM과 Raspberry Pi를 사용하여 다섯 가지 새로운 사이드 프로젝트 아이디어를 브레인스토밍하세요.",
+    "creative-time-travel-game": "반복적인 시간 여행 역설을 중심으로 한 조사 퍼즐 게임의 핵심 게임플레이 루프를 디자인합니다.",
+    "creative-steampunk-ai": "기계적 미분 분석기를 통해 지방자치단체의 결정이 전달되는 스팀펑크 도시에 대한 간략한 개념적 설명을 작성하세요.",
+    "creative-product-name": "현지화된 P2P 메시 네트워킹 유틸리티에 대한 10가지 독특하고 연상적인 브랜드 이름을 생각해 보세요.",
+    "creative-card-game": "네트워크 라우팅을 테마로 한 18개의 카드만으로 플레이하는 마이크로 카드 게임의 규칙과 승리 조건을 만드세요.",
+    "creative-synth-podcast": "좌초된 심우주 통신 부표의 일기 항목을 자세히 설명하는 가상의 오디오 드라마 팟캐스트에 대한 개요를 설명합니다.",
+    "creative-culinary-fusion": "전통적인 일본식 발효 기술과 멕시코 길거리 음식 컨셉을 혼합한 5가지 창의적인 퓨전 요리를 만들어보세요.",
+    "creative-speculative-ui": "공간 3D 노드 캔버스를 사용하여 개인 정보 보호 정책을 관리하기 위한 혁신적인 사용자 인터페이스 디자인을 설명합니다.",
+    "creative-robot-sports": "다리가 있는 로봇공학과 드론의 조정 한계를 보여주기 위해 특별히 고안된 새로운 스포츠에 대해 브레인스토밍해 보세요.",
+    "creative-magic-system": "열역학적 법칙과 운동량 보존에 의해 주문 시전이 제한되는 판타지 마법 시스템을 설계합니다.",
+    "creative-smart-mirror": "지역 달력 및 주변 날씨 API와 상호 작용하는 스마트 미러를 위한 세 가지 창의적인 애플리케이션에 대해 브레인스토밍하세요.",
+    "creative-metaphor-database": "데이터베이스 정규화를 거대한 시립 도서관 구성과 비교하는 확장된 비유를 만들어 보세요.",
+    "productivity-time-box": "심층 작업 소프트웨어 개발 일정에 최적화된 사용자 정의 가능한 주간 시간 차단 템플릿을 만듭니다.",
+    "productivity-meeting-agenda": "아키텍처 병목 현상 해결을 목표로 매주 비동기 우선 엔지니어링 동기화를 위한 안건 템플릿 초안을 작성합니다.",
+    "productivity-habit-stack": "일관된 아침 운동과 독서 루틴으로 전환하기 위한 30일 습관 쌓기 프레임워크를 설계하세요.",
+    "productivity-notion-layout": "개인 지식과 북마크를 추적하도록 설계된 Notion 작업 공간의 데이터베이스 스키마와 레이아웃 구조를 간략하게 설명합니다.",
+    "productivity-prioritization": "우선순위가 상충되는 엔지니어링 관리자로서 작업의 우선순위를 지정하기 위해 아이젠하워 매트릭스를 적용하는 방법을 설명합니다.",
+    "productivity-onboarding": "새로운 원격 소프트웨어 엔지니어를 복잡한 레거시 모놀리식 코드베이스에 온보딩하기 위한 체크리스트를 만듭니다.",
+    "productivity-markdown-journal": "일일 목표, 방해 요소 및 감사를 추적하는 데 도움이 되는 가벼운 일일 마크다운 저널링 프롬프트 시스템을 설계합니다.",
+    "productivity-inbox-zero": "자동화된 라벨과 키보드 단축키를 사용하여 Inbox Zero를 달성하고 유지 관리하기 위한 단계별 시스템 초안을 작성합니다.",
+    "productivity-postmortem": "중요한 생산 중단 후 소프트웨어 사후 분석을 작성하기 위한 표준 템플릿을 만듭니다.",
+    "productivity-learning-sprint": "Rust WebAssembly 컴파일의 기본 사항을 숙달하기 위한 4주 학습 스프린트 계획을 간략하게 설명하세요.",
+    "productivity-presentation-deck": "현지 LLM 고객을 위한 초기 자금을 확보하기 위해 10분 프레젠테이션 프레젠테이션을 위한 슬라이드별 구조 초안을 작성합니다.",
+    "productivity-dependency-audit": "프로덕션 코드 저장소의 오픈 소스 라이브러리 종속성에 대한 월별 감사를 수행하기 위한 실행 계획을 만듭니다.",
+    "analysis-p2p-mesh": "고밀도 도시 지역에 분산형 P2P 메시 네트워크 배포에 대한 SWOT 분석을 수행합니다.",
+    "analysis-sqlite-pg": "동기화 기능을 갖춘 오프라인 우선 데스크톱 애플리케이션에 대한 SQLite와 PostgreSQL의 아키텍처 장단점을 비교합니다.",
+    "analysis-fallacy-media": "현대 언론 보도에서 흔히 발견되는 다섯 가지 논리적 오류를 나열하고 이를 발견하는 방법에 대한 지침을 제공하십시오.",
+    "analysis-cloud-vs-local": "클라우드 호스팅 서버리스 컴퓨팅과 자체 호스팅 베어메탈 서버의 장기적인 비용 이익 균형을 분석합니다.",
+    "analysis-electron-tauri": "메모리 공간, 빌드 크기 및 보안 모델 측면에서 Electron과 Tauri의 자세한 비교 분석을 수행합니다.",
+    "analysis-monolith-micro": "성장하는 스타트업이 언제 모놀리스에서 마이크로서비스 아키텍처로 전환해야 하는지 보여주는 주요 지표를 식별하세요.",
+    "analysis-privacy-shield": "로깅 및 원격 측정 관행에 대한 GDPR 규정 준수 요구 사항의 법적, 기술적 영향을 분석합니다.",
+    "analysis-rsa-vs-ecc": "키 크기 및 서명 속도와 관련하여 RSA와 ECC(타원 곡선 암호화)의 기술 비교 분석을 수행합니다.",
+    "analysis-dns-over-https": "DoH(DNS-over-HTTPS) 채택에 따른 개인 정보 보호 이점과 네트워크 성능 장단점을 분석합니다.",
+    "analysis-open-licensing": "MIT와 GPLv3 라이선스의 법적 조건, 카피레프트 속성, 상업적 사용 허가를 비교해보세요.",
+    "analysis-ci-caching": "GitHub Actions CI 파이프라인의 캐시 전략을 통해 얻은 빌드 시간 최적화를 분석합니다.",
+    "analysis-work-automation": "AI 자율 에이전트 워크플로가 관리 팀 생산성 및 리소스 수요에 미치는 예상 영향을 평가합니다.",
+    "image-serene-mountain": "황금 시간의 고요한 산 호수, 물 위의 낮은 안개, 회화적",
+    "image-dewdrop-spiderweb": "거미줄에 이슬방울이 있는 매크로 사진, 일출 조명",
+    "image-cyberpunk-market": "밤의 사이버펑크 거리 시장, 웅덩이에 반사되는 네온 사인",
+    "image-fox-mushroom": "버섯 밑에서 책을 읽고 있는 여우의 동화책 일러스트",
+    "image-steampunk-airship": "구름 가득한 하늘, 빈티지 일러스트레이션 스타일의 떠 있는 플랫폼에 도킹하는 스팀펑크 비행선",
+    "image-bioluminescent-forest": "밤의 미래 생물발광 숲, 빛나는 식물, 천상의 파란색과 보라색 톤, 상세한 디지털 아트",
+    "image-watercolor-cafe": "분주한 유럽 거리 카페의 생생한 수채화, 화창한 날, 느슨한 예술적 붓놀림",
+    "image-astronaut-portrait": "지구를 바라보는 우주비행사의 클로즈업 초상화, 바이저에 반사된 초현실적이고 세밀한 우주복",
+    "image-overgrown-ruins": "거대한 나무 뿌리로 무성한 사원의 고대 유적, 나뭇잎 사이로 비치는 오후 햇빛, 변덕스러운",
+    "image-minimalist-desert": "밤의 사막 풍경, 초승달, 별, 따뜻한 테라코타 및 짙은 파란색 톤의 미니멀한 벡터 아트",
+    "image-cozy-cabin": "겨울 눈보라 속에서 숲 속의 아늑한 오두막을 그린 유화, 창문에서 빛나는 따뜻한 호박색 빛",
+    "image-floating-island": "3D 클레이메이션 스타일의 푹신한 흰 구름으로 둘러싸인 작은 등대가 있는 기발한 떠다니는 섬",
+    "image-midcentury-abstract": "20세기 중반 모던 디자인에서 영감을 받은 추상 기하학적 구성, 차분한 복고풍 색상 팔레트",
+    "image-castle-dragon": "중세 성탑 꼭대기에 자리잡은 장엄한 용, 안개, 극적인 영화 조명",
+    "image-surreal-whale": "떠다니는 열기구로 가득 찬 흐린 하늘을 날아다니는 고래의 초현실적인 디지털 아트",
+    "image-retro-lab": "빛나는 액체가 담긴 유리병, 구리 코일, 아날로그 다이얼, 드라마틱한 그림자를 갖춘 복고풍 미래형 실험실",
+    "image-sketch-cat": "가죽으로 묶인 오래된 책 더미 위에 웅크리고 있는 졸린 고양이의 연필 스케치, 부드러운 크로스해칭",
+    "image-coral-reef": "이국적인 물고기로 가득한 다채로운 산호초, 맑은 청록색 물을 통해 필터링되는 햇빛, 수중 사진",
+    "image-hacker-setup": "여러 개의 빛나는 모니터, 곳곳에 전선, 사이버 블루 주변 조명이 있는 어두운 방을 갖춘 사이버펑크 해커 설정",
+    "image-stained-glass": "생명의 나무를 묘사한 스테인드 글라스 창문, 돌 바닥에 다채로운 패턴을 드리우는 밝은 햇빛",
+    "audio-welcome-vf": "베니스 포지에 오신 것을 환영합니다. 음성의 미래가 여기에 있으며 모든 언어를 지원합니다.",
+    "audio-library-book": "두 산 사이에 자리한 조용한 마을, 아주 오래된 책 한 권을 소장하고 있는 작은 도서관이 있었습니다.",
+    "audio-octopus-brains": "알고 계셨나요? 문어 한 마리에는 뇌가 9개 있습니다. 중앙에 뇌가 하나 있고, 양쪽 팔에도 뇌가 하나씩 있습니다.",
+    "audio-safety-protocols": "로컬 LLM 에이전트 클러스터를 배포하기 전에 모든 안전 프로토콜이 완전히 적용되었는지 확인하십시오.",
+    "audio-quick-brown-fox": "날렵한 갈색여우가 게으른 개를 뛰어넘습니다. 모든 음성 주파수를 확인하는 고전적인 보컬 테스트입니다.",
+    "audio-hyperloop-depart": "승객 여러분, 동부 터미널로 향하는 하이퍼루프 환승 통로가 정확히 3분 후에 출발합니다.",
+    "audio-hydrothermal-vents": "바다 깊은 곳에 있는 열수분출구는 결코 태양빛을 볼 수 없는 독특한 생태계를 지원합니다.",
+    "audio-study-stars": "우주를 이해하려면 별, 원자, 그리고 그들 사이의 공간을 연구해야 합니다.",
+    "audio-step-forward": "우리가 어떤 길을 따르고 있는지 안다면 한 걸음 앞으로 나아가는 것이 역사의 흐름을 바꿀 수 있습니다.",
+    "audio-digital-archive": "디지털 아카이브에 오신 것을 환영합니다. 자격 증명을 명시하거나 인증 모듈을 삽입하세요.",
+    "audio-whispering-leaves": "가을 폭풍이 다가오자 속삭이는 나뭇잎 소리와 먼 천둥소리가 밤공기를 가득 채웠습니다.",
+    "audio-getting-started": "앞서가는 비결은 시작하는 것, 그리고 매일 집중해서 일하는 습관을 결합하는 것입니다.",
+    "audio-compilation-complete": "우리 시스템이 컴파일 프로세스를 성공적으로 완료했습니다. 모든 모듈 매개변수는 명목상입니다.",
+    "audio-kepler-transmission": "2242년에 인류는 케플러 성계로부터 최초로 검증된 전송을 받았습니다.",
+    "audio-complex-problem": "모든 복잡한 문제에는 단순하고 깔끔하며 완전히 잘못된 해결책이 있습니다.",
+    "music-lofi-hiphop": "비닐 크래클과 비가 포함된 Lo-Fi 힙합 비트 — 80bpm, 감미로움",
+    "music-cinematic-orchestral": "영화 같은 오케스트라 구성 — 승리의 금관악기로 올라가는 느린 현악기",
+    "music-synthwave-retro": "레트로 아르페지오, 웜 패드, 게이트 리버브 드럼을 갖춘 신디웨이브 — 105bpm",
+    "music-acoustic-folk": "어쿠스틱 포크 핑거피킹, 부드러운 여성 보컬, 친밀한 룸 사운드",
+    "music-indie-pop": "눈길을 끄는 일렉트릭 기타 리프와 박수소리가 돋보이는 경쾌한 인디 팝 트랙 — 120bpm",
+    "music-dark-ambient": "느린 신디사이저 펄스와 금속 질감을 갖춘 어두운 주변 드론 - 우주 대기",
+    "music-heavy-metal": "80년대 헤비메탈 기타 솔로, 빠른 더블 베이스 드럼, 에너지 넘치는 록 찬가",
+    "music-jazz-piano": "업라이트 베이스와 부드러운 브러시 드럼이 어우러진 편안한 재즈 피아노 트리오 — 심야 라운지",
+    "music-industrial-techno": "왜곡된 베이스라인과 묵직한 킥 드럼을 갖춘 사이버펑크 인더스트리얼 테크노 - 130bpm",
+    "music-japanese-flute": "주변 현악기 패드를 갖춘 전통 일본 플루트(샤쿠하치) — 고요한 명상",
+    "music-edm-drop": "프로그레시브 신스 코드와 드라이빙 서브베이스를 갖춘 고에너지 EDM 드롭 — 페스티벌 스타일",
+    "music-chillstep": "피치 벤트 보컬 찹과 부드러운 서브베이스가 포함된 Chillout chillstep 트랙 - 90bpm",
+    "music-delta-blues": "스톰프박스 리듬, 원시적이고 소울풀한 델타 블루스 슬라이드 기타",
+    "music-chiptune-retro": "미래지향적인 칩튠 8비트 게임음악, 경쾌한 멜로디, 레트로한 음향효과",
+    "music-reggae-dub": "무겁고 색다른 코드, 깊은 베이스라인, 에코 효과를 갖춘 레게 더빙 트랙",
+    "embeddings-fox-dog": "날렵한 갈색여우가 게으른 개를 뛰어넘습니다.",
+    "embeddings-meaning-vector": "임베딩은 텍스트를 의미별로 검색할 수 있는 벡터로 변환합니다.",
+    "embeddings-sf-bridges": "샌프란시스코는 안개와 다리로 유명한 캘리포니아 북부의 도시입니다.",
+    "embeddings-ai-simulation": "인공지능은 인간의 지능 과정을 기계가 시뮬레이션하는 것입니다.",
+    "embeddings-quantum-computing": "양자 컴퓨팅은 중첩과 얽힘을 활용하여 복잡한 작업을 수행합니다.",
+    "embeddings-dna-helix": "DNA의 이중나선 구조는 1953년 왓슨(Watson)과 크릭(Crick)에 의해 처음 발견되었습니다.",
+    "embeddings-db-index": "데이터베이스 인덱스는 데이터 검색 작업 속도를 향상시키는 데이터 구조입니다.",
+    "embeddings-clean-code": "깨끗한 코드는 항상 관심 있는 사람이 작성한 것처럼 보입니다.",
+    "embeddings-photosynthesis": "광합성은 식물이 빛 에너지를 화학 에너지로 변환하는 데 사용되는 과정입니다.",
+    "embeddings-cryptographic-hash": "암호화 해시 함수는 임의의 바이너리 데이터를 고정 크기 서명에 매핑합니다.",
+    "embeddings-spacetime-curve": "일반 상대성 이론은 중력을 시공간의 곡률로 설명합니다.",
+    "embeddings-offline-first": "오프라인 우선 애플리케이션에서는 데이터가 클라우드에 동기화되기 전에 로컬에 저장됩니다.",
+    "embeddings-regex-match": "정규식은 문자열의 문자 조합을 일치시키는 데 사용되는 패턴입니다.",
+    "embeddings-vector-space": "벡터 공간은 벡터의 집합으로 구성된 수학적 구조입니다.",
+    "embeddings-microservices": "마이크로서비스 아키텍처는 느슨하게 결합된 서비스 모음으로 애플리케이션을 구성합니다."
+  },
+  "statusCluster": {
+    "categories": {
+      "api": "API",
+      "apiKey": "열쇠",
+      "model": "모델",
+      "storage": "저장",
+      "safety": "안전",
+      "provider": "연구",
+      "project": "프로젝트",
+      "desktop": "방법"
+    },
+    "severities": {
+      "ok": "좋아요",
+      "warn": "경고",
+      "error": "오류",
+      "unknown": "알려지지 않은"
+    },
+    "aria": {
+      "cluster": "앱 상태 클러스터",
+      "openHighest": "앱 상태를 엽니다. 최고 심각도: {{category}} {{severity}}"
+    },
+    "status": "상태"
+  },
+  "runtimeGenerated": {
+    "app": {
+      "attribute": {
+        "closeMenu": "메뉴 닫기"
+      }
+    },
+    "components": {
+      "charactersview": {
+        "attribute": {
+          "adultCharacter": "성인 캐릭터",
+          "averageRating": "평균 평점",
+          "ratingCount": "평가 횟수",
+          "totalImports": "총수입",
+          "openOnVenice": "베니스에서 오픈",
+          "closeCharacterDetails": "캐릭터 세부정보 닫기",
+          "characterSections": "캐릭터 섹션",
+          "characterChatModel": "캐릭터 채팅 모델",
+          "searchCharacters": "문자 검색…",
+          "searchCharacters2": "문자 검색"
+        },
+        "text": {
+          "unfavorite": "즐겨찾기 안함",
+          "favorite": "가장 좋아하는",
+          "v1Imported": "V1 수입",
+          "v2Json": "V2 JSON",
+          "v2Png": "V2 PNG",
+          "vfNative": "VF 네이티브",
+          "noDescription": "설명 없음",
+          "unknownAuthor": "알 수 없는 저자",
+          "noDescriptionProvided": "설명이 제공되지 않았습니다.",
+          "loading": "로드 중…",
+          "loadMore": "더 로드하기"
+        },
+        "notification": {
+          "refreshedValue1": "새로고침된 {{value1}}",
+          "duplicatedValue1ToLocal": "{{value1}} 이(가) 로컬에 복제되었습니다.",
+          "exportFailed": "내보내기 실패"
+        },
+        "metadata": {
+          "deleteValue1": "{{value1}} (를) 삭제하시겠습니까?",
+          "featured": "추천",
+          "mostImported": "가장 많이 수입된",
+          "highestRated": "최고 등급",
+          "highlyRated": "높은 평가를 받은",
+          "highlyRatedRecent": "높은 평가 및 최근",
+          "mostRecent": "가장 최근",
+          "mostRated": "가장 높은 평가를 받은",
+          "descending": "내림차순",
+          "ascending": "오름차순"
+        }
+      },
+      "modelselect": {
+        "attribute": {
+          "highFidelity": "높은 충실도",
+          "standardFidelity": "표준 충실도",
+          "anonymousInference": "익명 추론",
+          "privateInference": "사적인 추론"
+        },
+        "text": {
+          "value1K": "{{value1}} k"
+        }
+      },
+      "thememaker": {
+        "metadata": {
+          "veniceParityDark": "베니스 패리티 다크",
+          "forgeGraphite": "단조 흑연",
+          "forgeDaylight": "포지 데이라이트",
+          "forgeCopper": "포지 구리",
+          "forgeDracula": "포지 드라큘라",
+          "gruvboxDark": "그루브박스 다크",
+          "rosepine": "로즈핀",
+          "forgeNord": "포지 노드",
+          "forgeTokyo": "포지 도쿄",
+          "forgeCatppuccin": "포지 캣푸친",
+          "forgeSolarizedDark": "포지 솔라라이즈 다크",
+          "forgeSolarizedLight": "Forge Solarized Light",
+          "forgeOneDark": "포지 원 다크",
+          "forgeMonokai": "모노카이 대장간",
+          "forgeGithubLight": "Forge GitHub 라이트",
+          "obsidianBloom": "흑요석 꽃",
+          "harborFog": "항구 안개",
+          "circuitMint": "서킷민트",
+          "amberArchive": "앰버 아카이브",
+          "neonDusk": "네온 황혼",
+          "auroraBoreal": "오로라 북극",
+          "sakuraTerminal": "사쿠라 터미널",
+          "basaltNoir": "현무암 느와르",
+          "solarAsh": "솔라 애쉬",
+          "cyberOrchid": "사이버 오키드",
+          "arcticGlass": "북극 유리",
+          "desertCopperfield": "데저트 카퍼필드",
+          "toxicLimewire": "독성 라임와이어",
+          "midnightVelvet": "미드나잇 벨벳",
+          "porcelainDaybreak": "도자기 새벽",
+          "synthwaveHarbor": "신스웨이브 항구",
+          "mossCircuit": "모스 서킷",
+          "emberMonastery": "엠버 수도원",
+          "glacialInk": "빙하 잉크",
+          "ultravioletRain": "자외선 비",
+          "customTheme": "맞춤 테마",
+          "placeholder": "자리 표시자"
+        },
+        "notification": {
+          "createdNewCustomThemeValue1": "새 맞춤 테마 &#39; {{value1}} &#39;을(를) 생성했습니다.",
+          "failedToCreateThemeValue1": "테마 생성 실패: {{value1}}",
+          "themeValue1SavedSuccessfully": "테마 &quot; {{value1}} &quot;이(가) 성공적으로 저장되었습니다.",
+          "failedToSaveThemeValue1": "테마를 저장하지 못했습니다: {{value1}}",
+          "failedToDeleteThemeValue1": "테마 삭제 실패: {{value1}}",
+          "themeExportedSuccessfully": "테마를 성공적으로 내보냈습니다.",
+          "failedToExportTheme": "테마를 내보내지 못했습니다.",
+          "failedToImportTheme": "테마를 가져오지 못했습니다.",
+          "themeValue1ImportedAndApplied": "&quot; {{value1}} &quot; 테마를 가져와 적용했습니다.",
+          "failedToImportThemeValue1": "테마를 가져오지 못했습니다: {{value1}}"
+        },
+        "attribute": {
+          "themeName": "테마 이름",
+          "value1ColorPicker": "{{value1}} 색상 선택기"
+        }
+      },
+      "audio": {
+        "audioView": {
+          "notification": {
+            "ttsFailed": "TTS 실패",
+            "transcriptionFailed": "전사 실패"
+          },
+          "text": {
+            "textToSpeech": "텍스트 음성 변환",
+            "transcribe": "고쳐 쓰다",
+            "clickToSelectAudioFile": "오디오 파일을 선택하려면 클릭하세요."
+          },
+          "attribute": {
+            "enterTextToConvertToSpeech": "음성으로 변환할 텍스트를 입력하세요…",
+            "synthesizingSpeech": "음성 합성 중…",
+            "transcribingAudio": "오디오 스크립트 작성 중…"
+          }
+        }
+      },
+      "characterCreator": {
+        "charactercreatordrafteditor": {
+          "text": {
+            "untitledCharacter": "제목 없는 캐릭터",
+            "hideAiDesignProcess": "AI 디자인 프로세스 숨기기",
+            "viewAiDesignProcessLog": "AI 디자인 프로세스 로그 보기",
+            "revisingDraft": "초안 수정 중...",
+            "reviseWholeDraft": "전체 초안 수정"
+          },
+          "metadata": {
+            "overview": "개요",
+            "identity": "신원",
+            "behavior": "행동",
+            "conversation": "대화",
+            "advancedPrompting": "고급 프롬프트",
+            "lore": "과학적 학문",
+            "appearance": "모습",
+            "metadata": "메타데이터"
+          },
+          "attribute": {
+            "start10UserHello10CharGreetings": "<START>{{user}} : 안녕하세요! {{char}} : 안녕하세요...",
+            "avatarPreview": "아바타 미리보기",
+            "triggerKeywordsEGGothamBatcave": "트리거 키워드(예: Gotham, Batcave)",
+            "loreDetailContentTriggeredWhenAnyKeywordAppearsInConversation": "대화에 키워드가 나타날 때 세부 정보 콘텐츠가 트리거됩니다...",
+            "eGMakeHerLessHostileGiveHimADry": "예를 들어 그녀를 덜 적대적으로 만들거나, 그에게 건조한 유머 감각을 주거나, 배경을 1920년대 베를린으로 옮기거나..."
+          }
+        },
+        "charactercreatorerror": {
+          "notification": {
+            "errorDetailsCopiedToClipboard": "오류 세부정보가 클립보드에 복사되었습니다."
+          }
+        },
+        "charactercreatorlocalpickermodal": {
+          "attribute": {
+            "searchByCharacterNameTagOrDescription": "캐릭터 이름, 태그, 설명으로 검색하세요..."
+          },
+          "text": {
+            "noLocalCharactersFoundInYourLibrary": "라이브러리에 로컬 문자가 없습니다.",
+            "noCharactersMatchYourSearchFilter": "검색 필터와 일치하는 문자가 없습니다.",
+            "noDescriptionProvided": "설명이 제공되지 않았습니다."
+          }
+        },
+        "charactercreatormascot": {
+          "attribute": {
+            "characterCreatorMascot": "캐릭터 생성기 마스코트"
+          }
+        },
+        "charactercreatorprocesspanel": {
+          "notification": {
+            "designProcessSummaryCopiedToClipboard": "설계 프로세스 요약이 클립보드에 복사되었습니다.",
+            "couldNotCopyToClipboard": "클립보드에 복사할 수 없습니다."
+          },
+          "text": {
+            "copied": "복사됨",
+            "copyLog": "로그 복사",
+            "value1Value2": "{{value1}} ​​: {{value2}}"
+          }
+        },
+        "charactercreatorready": {
+          "text": {
+            "characterReadyForApproval": "승인을 위한 문자 준비",
+            "validationIssuesDetected": "검증 문제가 감지되었습니다.",
+            "reviewTheValidationPreviewAndExplicitlyApproveCreationToAdd": "유효성 검사 미리 보기를 검토하고 생성을 명시적으로 승인하여 로컬 라이브러리에 추가하세요.",
+            "resolveValidationErrorsBeforeApprovingCharacterCardCreation": "캐릭터 카드 생성을 승인하기 전에 유효성 검사 오류를 해결하세요.",
+            "noDescriptionSpecified": "지정된 설명이 없습니다.",
+            "thisDraftWasLoadedFromAnExistingCharacterYouCan": "이 초안은 기존 캐릭터에서 로드되었습니다. 캐릭터를 그 자리에서 업데이트하거나 새 복사본으로 저장할 수 있습니다.",
+            "thisWillCreateANewLocalCharacterFromTheCurrent": "그러면 현재 초안에서 새로운 로컬 캐릭터가 생성됩니다. 생성 후에도 계속 편집할 수 있습니다.",
+            "updateCharacter": "캐릭터 업데이트",
+            "createCharacter": "캐릭터 생성",
+            "updateStartChat": "업데이트 및 채팅 시작",
+            "createStartChat": "채팅 생성 및 시작"
+          }
+        },
+        "charactercreatorview": {
+          "metadata": {
+            "analyzingImage": "이미지 분석 중"
+          },
+          "notification": {
+            "couldNotLoadDraft": "초안을 로드할 수 없습니다.",
+            "draftDuplicated": "초안이 중복되었습니다.",
+            "couldNotDuplicateDraft": "초안을 복제할 수 없습니다.",
+            "draftDeleted": "초안이 삭제되었습니다.",
+            "couldNotDeleteDraft": "초안을 삭제할 수 없습니다.",
+            "autosaveFailed": "자동 저장 실패",
+            "cannotSaveDraftWhilePendingChangesFailedToPersist": "보류 중인 변경 사항이 지속되지 않으면 초안을 저장할 수 없습니다.",
+            "draftSavedLocally": "초안이 로컬에 저장됨",
+            "couldNotSaveDraft": "초안을 저장할 수 없습니다.",
+            "cannotReviseDraftWhilePendingChangesFailedToPersist": "보류 중인 변경 사항을 유지하지 못한 동안에는 초안을 수정할 수 없습니다.",
+            "draftRevised": "초안이 수정됨",
+            "cannotRegenerateFieldWhilePendingChangesFailedToPersist": "보류 중인 변경 사항이 지속되지 않는 동안에는 필드를 다시 생성할 수 없습니다.",
+            "fieldFieldRegenerated": "&#39; {{field}} &#39; 필드가 다시 생성되었습니다.",
+            "cannotValidateDraftWhilePendingChangesFailedToPersist": "보류 중인 변경 사항이 유지되지 않아 초안을 확인할 수 없습니다.",
+            "cannotApproveCharacterWhilePendingChangesFailedToPersist": "보류 중인 변경 사항이 지속되지 않는 동안에는 캐릭터를 승인할 수 없습니다.",
+            "characterUpdated": "캐릭터 업데이트!",
+            "characterCreated": "캐릭터가 생성되었습니다!",
+            "value1SavedToLocalLibrary": "&quot; {{value1}} &quot;이(가) 로컬 라이브러리에 저장되었습니다.",
+            "cannotExportCardWhilePendingChangesFailedToPersist": "보류 중인 변경 사항이 지속되지 않는 동안에는 카드를 내보낼 수 없습니다.",
+            "characterCardExported": "캐릭터 카드 내보내기",
+            "exportFailed": "내보내기 실패",
+            "exportedCharacterCardJson": "내보낸 캐릭터 카드 JSON",
+            "cardImportedIntoCharacterCreator": "Character Creator로 가져온 카드",
+            "importedCard": "수입카드",
+            "importFailed": "가져오기 실패",
+            "couldNotParseCardFile": "카드 파일을 구문 분석할 수 없습니다.",
+            "couldNotLoadCharacter": "캐릭터를 로드할 수 없습니다."
+          }
+        },
+        "charactercreatorwelcome": {
+          "attribute": {
+            "exampleIWantABroodingNocturnalDetectiveWhoProtectsA": "예: 나는 살인 없이 부패한 도시를 보호하는 우울한 야행성 탐정을 원합니다.",
+            "eGNeoGothicMetropolis1920sNoir": "예: 신고딕 양식의 대도시, 1920년대 느와르",
+            "eGGrittyMelancholicSatirical": "예: 투박한, 우울한, 풍자적인",
+            "eGReluctantAllyMysteriousInformant": "예: 마지 못해 동맹자, 신비한 정보원",
+            "duplicateDraft": "초안 복제",
+            "deleteDraft": "초안 삭제"
+          }
+        }
+      },
+      "characters": {
+        "characteravatar": {
+          "attribute": {
+            "displaynameAvatar": "{{displayName}} 아바타"
+          }
+        }
+      },
+      "chat": {
+        "characterchatsview": {
+          "attribute": {
+            "newCharacterChat": "신규 캐릭터 채팅",
+            "chooseOrStartACharacterChat": "캐릭터 채팅을 선택하거나 시작하세요",
+            "searchCharacterChats": "캐릭터 채팅 검색",
+            "searchLocalCharacters": "지역 문자 검색…",
+            "newCharacterChat2": "신규 캐릭터 채팅",
+            "selectALocalCharacterOrBrowseHostedCharactersToLaunch": "지역 캐릭터를 선택하거나 호스팅된 캐릭터를 찾아 채팅을 시작하세요.",
+            "filterLocalCharacters": "지역 문자 필터링…"
+          },
+          "text": {
+            "characterChat": "캐릭터 채팅",
+            "local": "현지의",
+            "hosted": "호스팅됨",
+            "v1Imported": "V1 수입",
+            "v2Json": "V2 JSON",
+            "v2Png": "V2 PNG",
+            "localCharacter": "지역 문자",
+            "localCharacter2": "지역 캐릭터",
+            "noLocalCharactersCreatedYet": "아직 생성된 로컬 캐릭터가 없습니다.",
+            "noCharactersMatchPickerquery": "&quot; {{pickerQuery}} &quot;와 일치하는 문자가 없습니다."
+          }
+        },
+        "characterscenecard": {
+          "text": {
+            "unableToGenerateScene": "장면을 생성할 수 없습니다."
+          },
+          "attribute": {
+            "generatedScene": "생성된 장면"
+          }
+        },
+        "chatttsplayer": {
+          "attribute": {
+            "pauseSpeech": "연설 일시중지",
+            "playSpeech": "음성 재생",
+            "stopSpeech": "연설 중지",
+            "restartSpeech": "음성 다시 시작"
+          }
+        },
+        "historyview": {
+          "notification": {
+            "importFailed": "가져오기 실패",
+            "unableToSelectBackup": "백업을 선택할 수 없습니다",
+            "conversationDeleted": "대화가 삭제되었습니다.",
+            "untitled": "제목 없음",
+            "conversationRestored": "대화가 복원되었습니다.",
+            "failedToRestore": "복원하지 못했습니다.",
+            "movedConversations": "이동된 대화",
+            "movedValue1ConversationValue2ToTargetname": "{{value1}} 대화 {{value2}} 을(를 {{targetName}} 로 이동했습니다.",
+            "failedToMoveConversations": "대화를 이동하지 못했습니다.",
+            "conversationsDeleted": "대화가 삭제되었습니다.",
+            "value1SelectedConversationValue2Removed": "{{value1}} 선택한 대화 {{value2}} 가 삭제되었습니다.",
+            "someConversationsWereNotDeleted": "일부 대화가 삭제되지 않았습니다.",
+            "value1SelectedConversationValue2RemainBecauseStorageDeletionFailed": "저장소 삭제에 실패하여 선택한 대화 { {{value1}} 이 {{value2}} 남아 있습니다.",
+            "thisConversationHasNoFactsOrSummaryToUse": "이 대화에는 사용할 사실이나 요약이 없습니다.",
+            "contextInjectedIntoActiveChat": "활성 채팅에 컨텍스트 삽입",
+            "privacyGateRemainsClosed": "프라이버시 게이트는 계속 닫혀 있습니다",
+            "privacyGateWasNotEnabled": "개인정보 보호 게이트가 활성화되지 않았습니다.",
+            "unknownError": "알 수 없는 오류"
+          },
+          "metadata": {
+            "importEncryptedFolderBackup": "암호화된 폴더 백업을 가져오시겠습니까?",
+            "unlockBackup": "백업 잠금 해제",
+            "undo": "끄르다",
+            "deleteValue1ConversationValue2": "{{value1}} 대화 {{value2}} 을(를) 삭제하시겠습니까?",
+            "openPrivacyGate": "프라이버시 게이트 열기",
+            "enableFolderPrivacyGate": "폴더 개인 정보 보호 게이트 활성화",
+            "exportFolder": "폴더 내보내기"
+          },
+          "attribute": {
+            "searchByTitleOrMessageContent": "제목이나 메시지 내용으로 검색하세요...",
+            "deselectFolderConversations": "폴더 대화 선택 해제",
+            "selectAllConversationsInFolder": "폴더의 모든 대화 선택",
+            "moveFolderUp": "폴더를 위로 이동",
+            "moveValue1FolderUp": "{{value1}} 폴더를 위로 이동",
+            "moveFolderDown": "폴더를 아래로 이동",
+            "moveValue1FolderDown": "{{value1}} 폴더를 아래로 이동",
+            "renameFolder": "폴더 이름 바꾸기",
+            "deleteFolder": "폴더 삭제",
+            "deselect": "선택 취소",
+            "select": "선택하다",
+            "deselectConversation": "대화 선택 해제",
+            "selectConversation": "대화 선택",
+            "injectContextIntoActiveChat": "활성 채팅에 컨텍스트 삽입",
+            "deleteConversation": "대화 삭제",
+            "deselectUnfiledConversations": "보관되지 않은 대화 선택 해제",
+            "selectAllUnfiledConversations": "보관되지 않은 대화를 모두 선택하세요.",
+            "folderName": "폴더 이름...",
+            "privacyAccessGateNotPerFolderEncryptionAtRest": "개인 정보 보호 액세스 게이트; 미사용 폴더별 암호화가 아님"
+          },
+          "text": {
+            "deselectAllVisible": "보이는 항목 모두 선택 취소",
+            "selectAllVisible": "보이는 항목 모두 선택",
+            "folderselectedcountSelected": "· {{folderSelectedCount}} 개 선택됨",
+            "selected": "선택된",
+            "select": "선택하다",
+            "unfiledselectedcountSelected": "· {{unfiledSelectedCount}} 개 선택됨"
+          }
+        },
+        "chatView": {
+          "notification": {
+            "modelUnavailable": "모델을 사용할 수 없음",
+            "thePreviouslySelectedModelIsUnavailableThisChatNowUses": "이전에 선택한 모델은 사용할 수 없습니다. 이 채팅은 이제 {{resolvedDefault}} 사용합니다.",
+            "priorContextSkipped": "이전 컨텍스트를 건너뛰었습니다.",
+            "factPermanentlyForgotten": "사실은 영원히 잊혀졌습니다.",
+            "failedToForgetFact": "사실을 잊지 못했습니다."
+          },
+          "metadata": {
+            "forgetThisFact": "이 사실을 잊어버리셨나요?",
+            "deleteFromHere": "여기에서 삭제하시겠습니까?",
+            "removedFromChat": "채팅에서 삭제됨",
+            "removednameStaysInMediaStudioClickUndoToReAttach": "{{removedName}} (는) Media Studio에 남아 있습니다. 다시 연결하려면 실행 취소를 클릭하세요.",
+            "undo": "끄르다",
+            "regenerateFromHere": "여기에서 재생성하시겠습니까?"
+          },
+          "attribute": {
+            "searchCurrentConversation": "현재 대화 검색",
+            "searchThisConversation": "이 대화 검색",
+            "previousMatch": "이전 경기",
+            "nextMatch": "다음 경기",
+            "closeConversationSearch": "대화 검색 닫기",
+            "cancel": "취소",
+            "chatContextSettings": "채팅 컨텍스트 설정",
+            "chatContext": "채팅 컨텍스트",
+            "stopChattingAsThisCharacter": "이 캐릭터로 채팅을 중지하세요",
+            "value1Value2Tokens": "~ {{value1}} / {{value2}} 토큰"
+          },
+          "text": {
+            "value0Matches": "0개 일치",
+            "value1OfValue2": "{{value1}} 중 {{value2}}",
+            "pickAModelInTheHeaderAboveThenStartA": "위 헤더에서 모델을 선택한 다음 대화를 시작하세요. 스트리밍, 웹 검색, 인용 기능이 모두 내장되어 있습니다.",
+            "connectAVeniceApiKeyFromTheHeaderAboveTo": "시작하려면 위 헤더에서 Venice API 키를 연결하세요.",
+            "thisCharacter": "이 캐릭터",
+            "viewList": "목록 보기",
+            "editText": "텍스트 편집",
+            "memoryOn": "메모리 켜짐",
+            "memoryOff": "메모리 꺼짐",
+            "value1Prior": "{{value1}} 이전",
+            "priorOff": "사전에 꺼짐",
+            "remove": "제거하다",
+            "add": "추가하다",
+            "untitled": "제목 없음",
+            "localCharacter": "지역 캐릭터",
+            "value1": "· {{value1}}"
+          }
+        },
+        "messageBubble": {
+          "text": {
+            "copied": "복사됨",
+            "copy": "복사",
+            "allow": "허용하다",
+            "blocked": "막힌",
+            "noArguments": "인수 없음"
+          },
+          "attribute": {
+            "copied": "복사됨",
+            "copy": "복사",
+            "editMessage": "메시지 편집",
+            "forkChatFromHere": "여기에서 포크 채팅",
+            "deleteFromHere": "여기에서 삭제",
+            "regenerateFromHere": "여기에서 재생성",
+            "regenerate": "재생성",
+            "createScene": "장면 만들기",
+            "delete": "삭제",
+            "attachmentValue1": "첨부파일 {{value1}}",
+            "editMessageText": "메시지 텍스트 편집",
+            "value1Value2": "{{value1}} ​​( {{value2}} )",
+            "attachmentWasPartiallyOmittedDueToContextBudget": "맥락상 예산 문제로 첨부가 일부 생략되었습니다.",
+            "aiAvatar": "AI 아바타",
+            "thinking": "생각…",
+            "removeFromChat": "채팅에서 삭제",
+            "tokensUsedForThisMessage": "이 메시지에 사용된 토큰"
+          }
+        }
+      },
+      "documents": {
+        "documentagentview": {
+          "notification": {
+            "managedDocumentCreated": "관리 문서가 생성되었습니다.",
+            "workingGroupValue1Created": "작업 그룹 &quot; {{value1}} &quot;이(가) 생성되었습니다.",
+            "approvedEditAppliedAsANewRevision": "승인된 수정사항이 새 버전으로 적용되었습니다.",
+            "proposalRejectedWithoutChanges": "변경사항 없이 제안이 거부됨"
+          },
+          "attribute": {
+            "searchDocuments": "문서 검색…",
+            "documentChangeProposal": "문서변경 제안",
+            "searchWorkspaceText": "작업공간 텍스트 검색…",
+            "eGNotesMd": "예: Notes.md",
+            "eGQ3Architecture": "예: Q3 아키텍처"
+          },
+          "text": {
+            "fileContentInspector": "파일 콘텐츠 검사기"
+          }
+        }
+      },
+      "embeddings": {
+        "embeddingsView": {
+          "attribute": {
+            "enterTextToEmbed": "삽입할 텍스트를 입력하세요…",
+            "model": "모델",
+            "dimensions": "치수",
+            "tokens": "토큰"
+          },
+          "text": {
+            "showFirstPreviewCount": "첫 번째 {{PREVIEW_COUNT}} 개 표시",
+            "showAllDimsValues": "모든 {{dims}} 값 표시"
+          }
+        }
+      },
+      "gallery": {
+        "compareView": {
+          "text": {
+            "allSharedFieldsMatch": "모든 공유 필드가 일치합니다.",
+            "changedcountFieldValue2Differ": "{{changedCount}} 필드 {{value2}} 가 다름"
+          },
+          "attribute": {
+            "closeCompareView": "비교 보기 닫기"
+          },
+          "metadata": {
+            "model": "모델",
+            "prompt": "즉각적인",
+            "negative": "부정적인",
+            "width": "너비",
+            "height": "키",
+            "aspect": "측면",
+            "resolution": "해결",
+            "quality": "품질",
+            "seed": "씨앗",
+            "steps": "단계",
+            "cfg": "CFG",
+            "style": "스타일",
+            "project": "프로젝트",
+            "operation": "작업",
+            "type": "유형",
+            "favorite": "가장 좋아하는",
+            "tags": "태그",
+            "created": "생성됨",
+            "rModel": "R: 모델",
+            "rPrompt": "R: 프롬프트",
+            "rNegative": "R: 부정",
+            "rWidth": "R: 폭",
+            "rHeight": "R: 높이",
+            "rAspect": "R: 측면",
+            "rResolution": "R: 해상도",
+            "rSeed": "R: 시드",
+            "rSteps": "R: 단계",
+            "rCfg": "R: CFG",
+            "rVariants": "R: 변형",
+            "rStyle": "R: 스타일",
+            "rQuality": "R: 품질"
+          }
+        },
+        "galleryView": {
+          "notification": {
+            "favoritedValue1OfValue2": "{{value1}} {{value2}} (를) 즐겨찾기에 추가했습니다.",
+            "favoritedValue1ItemValue2": "즐겨찾는 {{value1}} 항목 {{value2}}",
+            "noneOfTheSelectedItemsHaveARecipe": "선택한 항목에는 레시피가 없습니다.",
+            "copiedValue1RecipeValue2": "{{value1}} 레시피 {{value2}} 를 복사했습니다.",
+            "couldNotCopyToClipboard": "클립보드에 복사할 수 없습니다.",
+            "failedToUpdateMediaItem": "미디어 항목을 업데이트하지 못했습니다.",
+            "removedFromMediaStudio": "미디어 스튜디오에서 삭제됨",
+            "failedToDelete": "삭제하지 못했습니다.",
+            "removedValue1OfValue2SomeFailed": "{{value1}} 중 {{value2}} }을(를) 제거했습니다(일부 실패).",
+            "removedValue1ItemValue2": "{{value1}} 항목 {{value2}} 을(를) 삭제했습니다.",
+            "batchDeleteFailed": "일괄 삭제 실패",
+            "updatedValue1OfValue2": "{{value1}} {{value2}} 이(가) 업데이트되었습니다.",
+            "removedFavorites": "즐겨찾기가 삭제되었습니다.",
+            "markedAsFavorites": "즐겨찾기로 표시됨",
+            "clearedFavorites": "즐겨찾기를 삭제했습니다.",
+            "taggedValue1OfValue2": "{{value1}} 중 {{value2}} 태그가 지정됨",
+            "taggedValue1ItemValue2": "태그된 {{value1}} 항목 {{value2}}",
+            "enterATagFirst": "먼저 태그를 입력하세요.",
+            "assignedValue1OfValue2Firstreason": "{{value1}} 중 {{value2}} 이( {{firstReason}} ) 할당됨",
+            "assignedValue1ItemValue2": "할당된 {{value1}} 항목 {{value2}}",
+            "selectAtLeastOneMediaItem": "미디어 항목을 하나 이상 선택하세요.",
+            "loadedSettingsIntoImageStudio": "Image Studio에 설정 로드됨",
+            "thisMediaItemHasNoReusableRecipe": "이 미디어 항목에는 재사용 가능한 레시피가 없습니다.",
+            "recipeLoadedIntoImageStudio": "Image Studio에 로드된 레시피",
+            "openingImageToolsForUpscale": "고급을 위한 이미지 도구 열기",
+            "openingImageToolsForEditing": "편집을 위한 이미지 도구 열기",
+            "sentToImageStudio": "Image Studio로 전송됨",
+            "couldNotSendToImageStudio": "Image Studio로 보낼 수 없습니다.",
+            "sentToImageTools": "이미지 도구로 전송됨",
+            "couldNotSendToImageTools": "이미지 도구로 보낼 수 없습니다.",
+            "createdNewChatWithPromptCopied": "메시지가 복사된 새 채팅이 생성되었습니다.",
+            "couldNotSendToChat": "채팅으로 보낼 수 없습니다.",
+            "sentToVideoStudio": "비디오 스튜디오로 전송됨",
+            "couldNotSendToVideoStudio": "비디오 스튜디오로 보낼 수 없습니다",
+            "promptCopied": "프롬프트 복사됨",
+            "couldNotCopyPrompt": "프롬프트를 복사할 수 없습니다.",
+            "negativeCopied": "네거티브 복사됨",
+            "couldNotCopyNegative": "네거티브를 복사할 수 없습니다.",
+            "noSeedRecorded": "기록된 시드가 없습니다.",
+            "seedCopied": "시드 복사됨",
+            "setUpAMasterPasswordInSettingsSecurityFirst": "설정 &gt; 보안에서 먼저 마스터 비밀번호를 설정하세요."
+          },
+          "metadata": {
+            "addTag": "태그 추가",
+            "deleteThisValue1": "이 {{value1}} (를) 삭제하시겠습니까?",
+            "deleteValue1ItemValue2": "{{value1}} 항목 {{value2}} 을(를) 삭제하시겠습니까?"
+          },
+          "text": {
+            "exitVault": "Vault 종료",
+            "vault": "둥근 천장",
+            "imagesAndVideosGeneratedInImageStudioAndVideoStudio": "Image Studio 및 Video Studio에서 생성된 이미지와 비디오는 여기에 자동으로 표시됩니다.",
+            "tryADifferentSearchOrFilterOrLoadOlderItems": "다른 검색이나 필터를 시도하거나 이전 항목을 로드하여 결과 집합을 확장하세요.",
+            "tryADifferentSearchFilterOrSort": "다른 검색, 필터링, 정렬을 시도해 보세요.",
+            "loadingOlderMedia": "오래된 미디어 로드 중…",
+            "loadMoreValue1Remaining": "더 로드하세요( {{value1}} 남음)"
+          },
+          "attribute": {
+            "doubleClickToInspect": "검사하려면 두 번 클릭하세요.",
+            "heroLandscape": "영웅, 풍경, …"
+          }
+        },
+        "mediaCard": {
+          "attribute": {
+            "openValue1Value2": "열기 {{value1}} : {{value2}}",
+            "generatedVideo": "생성된 비디오",
+            "generatedImage": "생성된 이미지",
+            "unfavorite": "즐겨찾기 안함",
+            "markAsFavorite": "즐겨찾기로 표시",
+            "removeFromVault": "Vault에서 제거",
+            "moveToVault": "Vault로 이동",
+            "delete": "삭제"
+          },
+          "text": {
+            "loading": "로드 중…",
+            "previewUnavailable": "미리보기를 사용할 수 없습니다.",
+            "item": "목",
+            "untitled": "제목 없음"
+          }
+        },
+        "mediaDetailDialog": {
+          "attribute": {
+            "mediaDetail": "미디어 세부정보",
+            "previous": "이전의",
+            "generatedImagePreview": "생성된 이미지 미리보기",
+            "next": "다음",
+            "openValue1": "{{value1}} ​​열기"
+          },
+          "text": {
+            "video": "동영상",
+            "audio": "오디오",
+            "image": "영상",
+            "favorited": "즐겨찾기",
+            "favorite": "가장 좋아하는",
+            "untitled": "제목 없음",
+            "noTags": "태그 없음"
+          }
+        },
+        "mediaInspector": {
+          "notification": {
+            "savedRecipeToPromptLibrary": "프롬프트 라이브러리에 레시피를 저장했습니다.",
+            "couldNotSaveRecipe": "레시피를 저장할 수 없습니다.",
+            "aiCharacterCreatorLaunched": "AI 캐릭터 크리에이터 출시",
+            "mediaSaved": "미디어가 저장되었습니다",
+            "mediaDownloadFailed": "미디어 다운로드 실패"
+          },
+          "attribute": {
+            "mediaInspector": "미디어 검사관",
+            "loadThisImageSSettingsIntoImageStudioNoGeneration": "이 이미지의 설정을 Image Studio에 로드합니다(생성 없음).",
+            "loadTheGenerationRecipePromptModelSeedDimensionsEtcInto": "생성 레시피(프롬프트, 모델, 시드, 차원 등)를 적절한 스튜디오에 로드합니다.",
+            "regenerateUsingThisImageSSettingsNewRandomSeed": "이 이미지의 설정을 사용하여 재생성합니다(새 임의 시드).",
+            "regenerateUsingTheSameSeedAsThisImage": "이 이미지와 동일한 시드를 사용하여 재생성",
+            "openThisImageInTheImageEditor": "이미지 편집기에서 이 이미지를 엽니다.",
+            "saveTheMainProcessMediaFileWithANativeDialog": "기본 대화 상자를 사용하여 기본 프로세스 미디어 파일 저장",
+            "copyPromptText": "프롬프트 텍스트 복사",
+            "copyNegativePrompt": "부정적인 프롬프트 복사",
+            "copySeedValue1": "시드 복사( {{value1}} )",
+            "copyMetadataAsJson": "메타데이터를 JSON으로 복사",
+            "saveRecipeToPromptLibrary": "프롬프트 라이브러리에 레시피 저장",
+            "copyGenerationRecipeAsJson": "생성 레시피를 JSON으로 복사",
+            "downloadGenerationRecipeAsAJsonFile": "생성 레시피를 JSON 파일로 다운로드",
+            "disabledInternalPromptEnhancerEnabledIsFalseInConfigYaml": "비활성화됨: config.yaml에서 Internal_prompt_enhancer.enabled가 false입니다.",
+            "enhancePromptViaInternalLlm": "내부 LLM을 통해 프롬프트 강화",
+            "remixPromptViaInternalLlm": "내부 LLM을 통한 리믹스 프롬프트",
+            "addATagAndPressEnter": "태그를 추가하고 Enter를 누르세요",
+            "removeTag": "태그 제거",
+            "value1Chars": "{{value1}} 자",
+            "captureAQuickReminderOrSeedValue": "빠른 알림이나 시드 값을 캡처하세요...",
+            "missingReferences": "누락된 참조",
+            "upscaleEnhanceThisImage": "이 이미지를 확대/강화하세요"
+          },
+          "text": {
+            "untitled": "제목 없음",
+            "favorited": "즐겨찾기",
+            "markAsFavorite": "즐겨찾기로 표시",
+            "enhancing": "강화 중…",
+            "enhance": "향상시키다",
+            "remixing": "리믹싱 중…",
+            "remix": "리믹스",
+            "enhanced": "향상된",
+            "remixed": "리믹스",
+            "enhancing2": "강화",
+            "remixing2": "리믹싱",
+            "thisItemReferencesRecordsThatNoLongerExistClearThe": "이 항목은 더 이상 존재하지 않는 기록을 참조합니다. 오래된 포인터를 지워 계보를 복구합니다.",
+            "thisItemSParentRecordIsMissingClearTheParent": "이 항목의 상위 레코드가 누락되었습니다. 계보를 복구하려면 상위 링크를 삭제하세요.",
+            "value1ChildValue2CouldNotBeResolvedClearTheStale": "{{value1}} 하위 {{value2}} (를) 확인할 수 없습니다. 계보를 복구하려면 오래된 포인터 {{value3}} 를 지웁니다.",
+            "childrenidsValue1": "childrenId: {{value1}}",
+            "childrenidsValue1Missing": "childrenIds: {{value1}} 누락됨",
+            "value1MissingRef": "참조 1개 누락",
+            "value1MissingRefs": "{{value1}} 참조 누락"
+          }
+        },
+        "mediaToolbar": {
+          "metadata": {
+            "unassign": "할당 취소",
+            "all": "모두",
+            "images": "이미지",
+            "videos": "비디오",
+            "audio": "오디오",
+            "favorites": "즐겨찾기",
+            "upscaled": "업스케일됨",
+            "edited": "편집됨",
+            "hasRecipe": "레시피 있음",
+            "noRecipe": "레시피 없음",
+            "hasSeed": "씨앗 있음",
+            "noSeed": "씨앗 없음",
+            "unscoped": "범위가 지정되지 않음",
+            "newest": "최신",
+            "oldest": "가장 오래된",
+            "model": "모델",
+            "size": "크기",
+            "project": "프로젝트"
+          },
+          "attribute": {
+            "searchPromptsModelsTagsNotes": "검색 프롬프트, 모델, 태그, 메모…",
+            "searchMedia": "미디어 검색",
+            "clearSearch": "검색 지우기"
+          },
+          "text": {
+            "exitSelect": "선택 종료",
+            "select": "선택하다",
+            "unfavorite": "즐겨찾기 안함",
+            "favorite": "가장 좋아하는"
+          }
+        },
+        "recipeComparison": {
+          "attribute": {
+            "recipeComparison": "레시피 비교"
+          },
+          "text": {
+            "identical": "동일한",
+            "changedcountFieldValue2WillChange": "{{changedCount}} 필드 {{value2}} 가 변경됩니다."
+          },
+          "metadata": {
+            "model": "모델",
+            "prompt": "즉각적인",
+            "negativePrompt": "부정적인 프롬프트",
+            "width": "너비",
+            "height": "키",
+            "aspectRatio": "종횡비",
+            "resolution": "해결",
+            "quality": "품질",
+            "style": "스타일",
+            "steps": "단계",
+            "cfgScale": "CFG 규모",
+            "variants": "변형",
+            "seed": "씨앗"
+          }
+        },
+        "recipeCompatibilityCard": {
+          "attribute": {
+            "sendTheOriginalRecipeToImageStudioWithoutSanitization": "원본 레시피를 삭제하지 않고 Image Studio로 보냅니다."
+          },
+          "text": {
+            "hideComparison": "비교 숨기기",
+            "showComparison": "비교 표시"
+          }
+        }
+      },
+      "imageInspector": {
+        "imageinspectorview": {
+          "notification": {
+            "imageInspectorUploadIsOnlySupportedInTheDesktopApp": "이미지 검사기 업로드는 데스크톱 앱에서만 지원됩니다.",
+            "failedToProcessImage": "이미지를 처리하지 못했습니다.",
+            "unknownError": "알 수 없는 오류",
+            "noImageFoundOnClipboard": "클립보드에 이미지가 없습니다."
+          },
+          "metadata": {
+            "deleteImageInspection": "이미지 검사를 삭제하시겠습니까?",
+            "value1Value2": "{{value1}} ​​— {{value2}}",
+            "quick": "빠른",
+            "standard": "기준",
+            "maximum": "최고",
+            "forensic": "법의학",
+            "genericNaturalLanguage": "일반 자연어",
+            "veniceImageStudio": "베니스 이미지 스튜디오",
+            "flux": "유량",
+            "midjourney": "중간 여정"
+          },
+          "attribute": {
+            "pasteFromClipboard": "클립보드에서 붙여넣기",
+            "openImageInspectionValue1": "이미지 검사 열기 {{value1}}",
+            "deleteImageInspectionValue1": "이미지 검사 {{value1}} 삭제",
+            "cancelAnalysisBeforeDeleting": "삭제하기 전에 분석을 취소하세요",
+            "deleteInspection": "검사 삭제",
+            "target": "목표",
+            "selectAVisionModel": "비전 모델을 선택하세요...",
+            "eGFocusOnLightingAndComposition": "예를 들어 조명과 구도에 중점을 둡니다.",
+            "analyzingImageContents": "이미지 콘텐츠 분석 중…"
+          },
+          "text": {
+            "noSummaryAvailable": "요약이 없습니다.",
+            "subject": "주제",
+            "theSelectedVisionModelCouldNotAnalyzeThisImage": "선택한 비전 모델은 이 이미지를 분석할 수 없습니다."
+          }
+        }
+      },
+      "image": {
+        "imagePage": {
+          "text": {
+            "generate": "생성하다"
+          }
+        },
+        "imageView": {
+          "metadata": {
+            "value1Value2": "{{value1}} ​​× {{value2}}"
+          }
+        }
+      },
+      "layout": {
+        "apiKeyDialog": {
+          "notification": {
+            "keySavedSecurely": "키가 안전하게 저장됨"
+          },
+          "attribute": {
+            "closeDialog": "대화상자 닫기"
+          },
+          "text": {
+            "heldInMemoryForThisLocalDevelopmentSessionOnly": "이 로컬 개발 세션에 대해서만 메모리에 보관됩니다.",
+            "connect": "연결하다"
+          }
+        },
+        "inspectorPane": {
+          "metadata": {
+            "veniceApiDefault": "베니스 API 기본값",
+            "globalAppSystemPrompt": "글로벌 앱 시스템 프롬프트",
+            "characterSystemPrompt": "캐릭터 시스템 프롬프트",
+            "conversationOverrideModeMode": "대화 무시(모드: {{mode}} )",
+            "all": "모두",
+            "blocked": "막힌",
+            "errored": "오류 발생",
+            "aborted": "중단됨",
+            "jina": "지나",
+            "localOnly": "로컬 전용"
+          },
+          "attribute": {
+            "developerTrafficInspector": "개발자 트래픽 검사기",
+            "resizeInspector": "크기 조정 검사기",
+            "clearAllLogs": "모든 로그 지우기",
+            "clearAllInspectorLogs": "모든 검사기 로그 지우기",
+            "exportRedactedLogsAsJson": "수정된 로그를 JSON으로 내보내기",
+            "exportRedactedInspectorLogsAsJson": "수정된 검사기 로그를 JSON으로 내보내기",
+            "closeInspector": "검사관 닫기",
+            "closeTrafficInspector": "교통 검사관 닫기"
+          },
+          "text": {
+            "traffic": "교통",
+            "promptLayers": "프롬프트 레이어",
+            "pending": "보류 중...",
+            "allow": "허용하다",
+            "blocked": "막힌",
+            "empty": "[비어 있는]",
+            "pendingOrEmpty": "[보류 중 또는 비어 있음]",
+            "untitled": "제목 없음",
+            "active": "활동적인",
+            "inactive": "비활성"
+          }
+        },
+        "memoryPanel": {
+          "notification": {
+            "indexRebuiltSuccessfullyIndexedValue1Conversations": "인덱스가 성공적으로 재구축되었습니다! 색인이 생성된 {{value1}} 대화.",
+            "rebuildFailedValue1": "재구축 실패: {{value1}}",
+            "indexRebuildFailed": "인덱스 재구축 실패",
+            "failedToOpenVaultFolder": "볼트 폴더를 열지 못했습니다.",
+            "migrationCompletedMigratedValue1FailedValue2SkippedValue3": "마이그레이션이 완료되었습니다! 마이그레이션됨: {{value1}} , 실패: {{value2}} , 건너뛴: {{value3}}",
+            "migrationFailedValue1": "마이그레이션 실패: {{value1}}",
+            "migrationFailed": "마이그레이션 실패",
+            "factForgottenSuccessfully": "사실을 성공적으로 잊었습니다.",
+            "failedToForgetFact": "사실을 잊지 못했습니다."
+          },
+          "metadata": {
+            "forgetThisFact": "이 사실을 잊어버리셨나요?"
+          },
+          "text": {
+            "migrating": "마이그레이션 중...",
+            "migrateNow": "지금 마이그레이션",
+            "indexing": "인덱싱 중...",
+            "rebuildIndex": "인덱스 재구축"
+          }
+        },
+        "sidebar": {
+          "attribute": {
+            "primaryNavigation": "기본 탐색",
+            "closeMenu": "메뉴 닫기",
+            "sections": "섹션",
+            "confirmDelete": "삭제 확인"
+          }
+        }
+      },
+      "music": {
+        "musicView": {
+          "text": {
+            "value1SValue2S": "{{value1}} 초 – {{value2}} 초",
+            "queued": "대기 중…",
+            "generating": "생성 중…",
+            "generateMusic": "음악 생성",
+            "saved": "저장됨",
+            "saveToMediaStudio": "미디어 스튜디오에 저장"
+          },
+          "attribute": {
+            "anUpbeatElectronicTrackWithADrivingBasslineAndEthereal": "역동적인 베이스라인과 천상의 신디사이저가 어우러진 경쾌한 일렉트로닉 트랙…",
+            "optionalLyricsOrVocalDirection": "선택적인 가사 또는 보컬 방향…",
+            "durationS": "{{duration}} 초",
+            "musicDuration": "음악 지속 시간",
+            "alreadySavedToMediaStudio": "이미 Media Studio에 저장되었습니다.",
+            "saveToMediaStudio": "미디어 스튜디오에 저장",
+            "queuedWaitingForASlot": "대기 중 — 슬롯을 기다리는 중",
+            "composingYourTrack": "트랙 작성"
+          },
+          "notification": {
+            "alreadyInMediaStudio": "이미 미디어 스튜디오에 있음",
+            "savedToMediaStudio": "미디어 스튜디오에 저장됨"
+          }
+        }
+      },
+      "notifications": {
+        "progresstoast": {
+          "attribute": {
+            "value1Progress": "{{value1}} 진행 상황",
+            "dismissNotification": "알림 닫기"
+          }
+        },
+        "toastitem": {
+          "attribute": {
+            "dismissNotification": "알림 닫기"
+          }
+        },
+        "toastviewport": {
+          "attribute": {
+            "notifications": "알림"
+          }
+        }
+      },
+      "playground": {
+        "agentModelPicker": {
+          "metadata": {
+            "recommendedForAgents": "상담원에게 권장됨",
+            "capable": "유능한",
+            "other": "다른"
+          },
+          "attribute": {
+            "searchModels": "모델 검색…",
+            "showingAllModels": "모든 모델 표시",
+            "showingOnlySchemaCapableModels": "스키마 가능 모델만 표시"
+          },
+          "text": {
+            "all": "모두",
+            "capable": "유능한",
+            "value1Ctx": "· {{value1}} ctx"
+          }
+        },
+        "playgroundChat": {
+          "attribute": {
+            "thinking": "생각…",
+            "working": "일하고 있는…",
+            "agentIsWorking": "에이전트가 작업 중입니다…",
+            "describeAWorkflowOrChange": "작업 흐름이나 변경 사항을 설명하세요…"
+          }
+        },
+        "playgroundView": {
+          "notification": {
+            "workflowCompleted": "워크플로 완료됨",
+            "workflowFailed": "워크플로 실패"
+          },
+          "metadata": {
+            "clearPlayground": "놀이터가 깨끗합니까?"
+          },
+          "attribute": {
+            "clearConversation": "명확한 대화",
+            "unlink": "풀리다",
+            "resetCanvas": "캔버스 재설정",
+            "runTheWorkflowInline": "워크플로 인라인 실행",
+            "updateValue1": "&quot; {{value1}} &quot; 업데이트",
+            "saveAsNewWorkflow": "새 워크플로로 저장",
+            "saveAsANewWorkflow": "새 워크플로로 저장",
+            "openInWorkflowsTab": "워크플로 탭에서 열기"
+          },
+          "text": {
+            "update": "업데이트",
+            "save": "구하다"
+          }
+        }
+      },
+      "privacy": {
+        "storageprivacydashboard": {
+          "text": {
+            "refreshing": "상쾌하다...",
+            "refreshInventory": "재고 새로 고침",
+            "previewOnly": "미리보기만 가능",
+            "runAction": "작업 실행"
+          },
+          "metadata": {
+            "runDestructiveAction": "파괴적인 행동을 실행하시겠습니까?"
+          }
+        }
+      },
+      "prompts": {
+        "promptcreatemodal": {
+          "attribute": {
+            "createNewPrompt": "새 프롬프트 만들기",
+            "saveReusablePromptContentAndMetadataToYourEncryptedPrompt": "재사용 가능한 프롬프트 콘텐츠와 메타데이터를 암호화된 프롬프트 라이브러리에 저장하세요.",
+            "closeCreatePromptDialog": "프롬프트 생성 대화상자 닫기",
+            "eGDarkFantasyPortrait": "예: 다크 판타지 초상화",
+            "eGDarkFantasyPortraitLighting": "예: 다크 판타지, 인물 조명",
+            "enterPromptTextHere": "여기에 프롬프트 텍스트를 입력하세요...",
+            "optionalNegativePrompt": "선택적 부정적인 프롬프트..."
+          },
+          "metadata": {
+            "image": "영상",
+            "negative": "부정적인",
+            "chat": "채팅",
+            "system": "체계",
+            "research": "연구",
+            "character": "성격",
+            "workflow": "작업흐름",
+            "recipe": "레시피",
+            "general": "일반적인"
+          }
+        },
+        "promptlibraryview": {
+          "attribute": {
+            "searchPrompts": "검색 프롬프트…",
+            "tagsCommaSeparated": "태그, 쉼표로 구분",
+            "optionalDescription": "선택적 설명",
+            "typeValue1ToConfirm": "확인하려면 &quot; {{value1}} &quot;를 입력하세요."
+          },
+          "metadata": {
+            "allKinds": "모든 종류",
+            "allScopes": "모든 범위",
+            "global": "글로벌",
+            "project": "프로젝트",
+            "newest": "최신",
+            "oldest": "가장 오래된",
+            "title": "제목",
+            "kind": "친절한",
+            "favorite": "가장 좋아하는",
+            "allTags": "모든 태그",
+            "t": "# {{t}}",
+            "workflowValue1": "워크플로: {{value1}}",
+            "image": "영상",
+            "negative": "부정적인",
+            "chat": "채팅",
+            "system": "체계",
+            "research": "연구",
+            "character": "성격",
+            "workflow": "작업흐름",
+            "recipe": "레시피",
+            "general": "일반적인"
+          },
+          "text": {
+            "noPromptsMatchTheCurrentFilters": "현재 필터와 일치하는 프롬프트가 없습니다.",
+            "project": "프로젝트",
+            "global": "글로벌",
+            "selectAPromptToViewItsDetails": "세부정보를 보려면 프롬프트를 선택하세요.",
+            "noPromptSelectedCreateANewOneToGetStarted": "선택한 프롬프트가 없습니다. 시작하려면 새 항목을 만드세요.",
+            "favorited": "★ 즐겨찾기",
+            "favorite": "☆ 즐겨찾기",
+            "unarchive": "보관 취소",
+            "archive": "보관소",
+            "projectValue1": "프로젝트: {{value1}}",
+            "saving": "절약...",
+            "saveMetadata": "메타데이터 저장",
+            "saveNewVersion": "새 버전 저장",
+            "hide": "숨다",
+            "show": "보여주다"
+          },
+          "notification": {
+            "newVersionSaved": "새 버전이 저장되었습니다.",
+            "promptDeleted": "프롬프트가 삭제되었습니다.",
+            "workflowCreated": "워크플로가 생성되었습니다.",
+            "promptCreated": "프롬프트가 생성되었습니다",
+            "thePendingActionFailedYourUnsavedChangesWerePreserved": "보류 중인 작업이 실패했습니다. 저장되지 않은 변경사항은 보존되었습니다.",
+            "metadataSaved": "메타데이터가 저장되었습니다",
+            "failedToSaveMetadata": "메타데이터를 저장하지 못했습니다.",
+            "versionContentIsEmpty": "버전 내용이 비어 있습니다.",
+            "failedToSaveVersion": "버전을 저장하지 못했습니다.",
+            "sentToImageStudio": "Image Studio로 전송됨",
+            "sentToChat": "채팅으로 보냈습니다"
+          }
+        }
+      },
+      "research": {
+        "researchworkspaceview": {
+          "metadata": {
+            "researchTitle": "연구 제목",
+            "deleteSession": "세션을 삭제하시겠습니까?",
+            "workflowValue1": "워크플로: {{value1}}",
+            "workflowGeneratedFromResearchSessionValue1": "연구 세션 &quot; {{value1}} &quot;에서 생성된 워크플로",
+            "reviewResearchSummary": "연구 요약 검토"
+          },
+          "notification": {
+            "searchFinishedWithValue1Warnings": "{{value1}} 경고와 함께 검색이 완료되었습니다.",
+            "searchFailed": "검색 실패",
+            "scrapeFailed": "스크랩 실패",
+            "attachmentNote": "첨부노트",
+            "fileSAddedToResearchSources": "연구 소스에 추가된 파일",
+            "fileUploadFailed": "파일 업로드 실패",
+            "summarySavedToPromptLibrary": "프롬프트 라이브러리에 요약이 저장되었습니다.",
+            "researchWorkflowCreated": "연구 워크플로가 생성되었습니다."
+          },
+          "attribute": {
+            "researchSessions": "연구 세션",
+            "createResearchSession": "연구 세션 만들기",
+            "expandResearchSessions": "연구 세션 확대",
+            "collapseResearchSessions": "연구 세션 축소",
+            "removeValue1FromFavorites": "즐겨찾기에서 {{value1}} 제거",
+            "addValue1ToFavorites": "즐겨찾기에 {{value1}} 추가",
+            "archiveSession": "아카이브 세션",
+            "deleteSession": "세션 삭제",
+            "searchQuery": "검색어...",
+            "runResearchSearch": "연구 검색 실행",
+            "scrapeUrl": "스크랩 URL",
+            "removeSourceValue1": "소스 {{value1}} 삭제",
+            "summarizeTheFinding": "결과 요약",
+            "addSupportingDetailsAndCitations": "지원 세부정보 및 인용 추가",
+            "removeFindingValue1": "{{value1}} 발견 항목 삭제"
+          },
+          "text": {
+            "processing": "처리 중...",
+            "uploadDocument": "문서 업로드",
+            "noExcerptAvailable": "발췌된 내용이 없습니다."
+          }
+        }
+      },
+      "rpStudio": {
+        "assetgallery": {
+          "metadata": {
+            "allChats": "모든 채팅"
+          },
+          "text": {
+            "noAssetsYet": "아직 애셋이 없습니다."
+          },
+          "attribute": {
+            "deleteAsset": "자산 삭제"
+          }
+        },
+        "characterbookeditor": {
+          "attribute": {
+            "bookExtensionData": "도서 확장 데이터",
+            "entryExtensionData": "항목 확장 데이터"
+          }
+        },
+        "charactereditor": {
+          "notification": {
+            "fileLoadedSourced": "파일 로드 및 소스",
+            "loadedValue1IntoFieldlabelAndSavedInsideCharacterFile": "&quot; {{value1}} &quot;을 {{fieldLabel}} 에 로드하고 문자 파일 내에 저장했습니다.",
+            "reAppliedSourcedFile": "소스파일 재적용",
+            "reLoadedValue1ContentIntoValue2": "&quot; {{value1}} &quot; 콘텐츠를 {{value2}} 에 다시 로드했습니다.",
+            "workflowCreated": "워크플로가 생성되었습니다.",
+            "savedToPromptLibrary": "프롬프트 라이브러리에 저장됨",
+            "promptValue1Created": "&quot; {{value1}} &quot; 프롬프트가 생성되었습니다.",
+            "couldNotSaveToPromptLibrary": "프롬프트 라이브러리에 저장할 수 없습니다.",
+            "safetyGuardBlockedThePrompt": "안전요원이 프롬프트를 차단했습니다.",
+            "pleaseTryAgain": "다시 시도해 주세요.",
+            "rpChatStarted": "RP 채팅이 시작되었습니다",
+            "openingValue1InRpStudio": "RP Studio에서 &quot; {{value1}} &quot;을(를) 엽니다.",
+            "couldNotStartRpChat": "RP 채팅을 시작할 수 없습니다",
+            "storageRejectedTheRequest": "스토리지가 요청을 거부했습니다.",
+            "chatStarted": "채팅이 시작되었습니다",
+            "openingValue1InChat": "Chat에서 &quot; {{value1}} &quot;을(를) 엽니다.",
+            "couldNotStartChat": "채팅을 시작할 수 없습니다.",
+            "sceneAttached": "장면 첨부",
+            "linkedValue1ToThisCharacter": "&quot; {{value1}} &quot;을(를) 이 캐릭터에 연결했습니다.",
+            "sceneLinked": "장면이 연결되었습니다.",
+            "couldNotAttachScene": "장면을 첨부할 수 없습니다.",
+            "promptAttached": "프롬프트 첨부",
+            "promptLinked": "프롬프트가 연결되었습니다.",
+            "couldNotAttachPrompt": "프롬프트를 첨부할 수 없습니다.",
+            "scenarioCreated": "시나리오가 생성되었습니다.",
+            "openTheRpStudioToEditIt": "RP Studio를 열어 편집하세요.",
+            "versionSaved": "버전이 저장되었습니다.",
+            "characterSnapshotCreated": "캐릭터 스냅샷이 생성되었습니다.",
+            "versionRestored": "버전이 복원되었습니다.",
+            "characterRevertedToSavedVersion": "캐릭터가 저장된 버전으로 되돌아갔습니다.",
+            "testChatSaved": "테스트 채팅이 저장되었습니다.",
+            "theDisposableTurnWasPromotedToARealLocalConversation": "일회성 차례가 실제 현지 대화로 승격되었습니다."
+          },
+          "metadata": {
+            "deleteCharacter": "캐릭터를 삭제하시겠습니까?",
+            "workflowValue1": "워크플로: {{value1}}",
+            "untitled": "제목 없음",
+            "disposableCardTest": "일회용 카드 테스트"
+          },
+          "attribute": {
+            "backToLibrary": "도서관으로 돌아가기",
+            "estimatedTokensValue1OfValue2": "{{value1}} 중 예상 토큰 {{value2}}",
+            "stCardStudioSteps": "ST 카드 스튜디오 단계",
+            "aShortSummaryShownInTheLibraryGrid": "라이브러리 그리드에 표시되는 간략한 요약입니다.",
+            "displayOnlyNeverIncludedInModelPrompts": "표시 전용 — 모델 프롬프트에 포함되지 않음",
+            "addATagAndPressEnter": "태그를 추가하고 Enter 키를 누르세요…",
+            "removeTagT": "태그 제거 {{t}}",
+            "anOpenerSceneShownToTheModelOnTheFirst": "첫 번째 턴에서 모델에게 보여지는 오프너 장면.",
+            "theCharacterSPersonaVoiceAndBehaviouralRules": "캐릭터의 페르소나, 목소리, 행동 규칙.",
+            "optionalHigherLevelGuidanceForTheModelSteeringRulesOutput": "모델에 대한 선택적 상위 수준 지침(조향 규칙, 출력 스타일).",
+            "greetingShownOnTheFirstAssistantTurn": "첫 번째 보조 턴에 표시되는 인사말입니다.",
+            "alternateGreetingValue1": "대체 인사말 {{value1}}",
+            "exampleValue1Speaker": "예시 {{value1}} 화자",
+            "speaker": "스피커",
+            "whatTheySay": "그들이 말하는 것은…",
+            "moveExampleValue1Up": "예시 {{value1}} 위로 이동",
+            "moveExampleValue1Down": "예시 {{value1}} 아래로 이동",
+            "removeExample": "예시 삭제",
+            "losslessSillytavernMesExampleCompatibilityText": "무손실 SillyTavern mes_example 호환성 텍스트",
+            "urlScrapingProvider": "URL 스크래핑 제공업체",
+            "temperature": "온도",
+            "topP": "탑P",
+            "removeFileValue1": "{{value1}} 파일 삭제",
+            "genreSettingRolePersonalityRelationship": "장르, 설정, 역할, 성격, 관계…",
+            "visionModelCapabilitySummary": "비전 모델 기능 요약",
+            "optionalDirection": "선택적 방향",
+            "stCardExportReport": "ST카드 수출신고",
+            "characterVersionComparison": "캐릭터 버전 비교",
+            "savingCharacter": "캐릭터 저장 중"
+          },
+          "text": {
+            "untitled": "제목 없음",
+            "unarchive": "보관 취소",
+            "archive": "보관소",
+            "stepValue1OfValue2Value3YourLocalDraftRemainsAutosaved": "{{value1}} 중 {{value2}} 단계 : {{value3}} . 단계 사이를 이동하는 동안 로컬 초안은 자동 저장된 상태로 유지됩니다.",
+            "showingAllSteps110SelectAStepTabAbove": "모든 단계(1-10)를 표시합니다. 특정 필드에 집중하려면 위의 단계 탭을 선택하세요.",
+            "recoveredLocalDraft": "복구된 로컬 초안",
+            "savingLocalDraft": "로컬 초안 저장 중…",
+            "draftSavedLocallyNotSynced": "초안이 로컬에 저장됨(동기화되지 않음)",
+            "replace": "바꾸다",
+            "upload": "업로드",
+            "veniceForgeLocal": "베니스 포지 로컬",
+            "noGreetingText": "인사말 텍스트 없음",
+            "value1": "· {{value1}}",
+            "testing": "테스트 중…",
+            "runDisposableTest": "일회용 테스트 실행",
+            "analyzing": "분석 중…",
+            "analyzeImage": "이미지 분석",
+            "generating": "생성 중…",
+            "synthesizeFromImageText": "이미지 + 텍스트로 합성",
+            "generateFromText": "텍스트에서 생성",
+            "noDirectDescription": "직접적인 설명 없음",
+            "noDescription": "설명 없음",
+            "generatingProposal": "제안 생성 중…",
+            "generateProposal": "제안 생성",
+            "value1Value2": "· {{value1}} ​​× {{value2}}",
+            "none": "없음",
+            "targetFieldValue1": "· 대상 필드: {{value1}}",
+            "generalContextFile": "· 일반 컨텍스트 파일"
+          }
+        },
+        "characterlibrary": {
+          "notification": {
+            "importFailed": "가져오기 실패",
+            "couldNotInspectTheSelectedCard": "선택한 카드를 검사할 수 없습니다.",
+            "theCardWasNotImported": "카드를 가져오지 못했습니다.",
+            "characterImported": "가져온 캐릭터",
+            "theCompatibilityPayloadAndAvatarWerePreserved": "호환성 페이로드와 아바타가 유지되었습니다.",
+            "exportFailed": "내보내기 실패",
+            "theCardWasNotExported": "카드를 내보낼 수 없습니다.",
+            "characterExported": "내보낸 캐릭터",
+            "savedAVerifiedV2Value1Card": "확인된 V2 {{value1}} 카드를 저장했습니다.",
+            "importUndone": "가져오기가 취소되었습니다.",
+            "undoFailed": "실행취소 실패",
+            "chatStarted": "채팅이 시작되었습니다",
+            "openingValue1InChat": "Chat에서 &quot; {{value1}} &quot;을(를) 엽니다.",
+            "couldNotStartChat": "채팅을 시작할 수 없습니다.",
+            "pleaseTryAgain": "다시 시도해 주세요."
+          },
+          "metadata": {
+            "value1ExistingCharacter": "{{value1}} 기존 캐릭터?",
+            "standard": "기준",
+            "adult": "성인"
+          },
+          "attribute": {
+            "searchCharacters": "문자 검색…",
+            "searchCharacters2": "문자 검색",
+            "autoCreatePrompt": "자동 생성 프롬프트...",
+            "characterValue1": "문자 {{value1}}",
+            "deleteValue1": "{{value1}} ​​삭제"
+          },
+          "text": {
+            "untitled": "제목 없음",
+            "noCharactersYet": "아직 문자가 없습니다.",
+            "notSpecified": "지정되지 않음",
+            "importing": "가져오는 중…",
+            "import": "수입"
+          }
+        },
+        "lorebookmanager": {
+          "attribute": {
+            "searchLorebooks": "전승서 검색…",
+            "searchLorebooks2": "설화집 검색",
+            "deleteValue1": "{{value1}} ​​삭제",
+            "back": "뒤쪽에",
+            "triggerKeysCommaSeparated": "트리거 키(쉼표로 구분)",
+            "removeEntry": "항목 삭제",
+            "depth": "깊이",
+            "order": "주문하다",
+            "injectedContent": "주입된 콘텐츠…"
+          },
+          "text": {
+            "noLorebooksYet": "아직 전승서가 없습니다."
+          },
+          "metadata": {
+            "beforeChar": "문자 전",
+            "afterChar": "문자 이후",
+            "atDepth": "깊이에서"
+          }
+        },
+        "personamanager": {
+          "attribute": {
+            "searchPersonas": "페르소나 검색…",
+            "searchPersonas2": "페르소나 검색",
+            "deleteValue1": "{{value1}} ​​삭제",
+            "back": "뒤쪽에",
+            "personaPreview": "페르소나 미리보기",
+            "eGTheWanderer": "예를 들어 방랑자",
+            "howTheModelShouldWriteTheUser": "모델이 사용자를 작성하는 방법.",
+            "addTag": "태그 추가…"
+          },
+          "text": {
+            "noPersonasYet": "아직 페르소나 없음",
+            "deactivate": "비활성화",
+            "setActive": "활성으로 설정",
+            "replaceImage": "이미지 교체",
+            "addImage": "이미지 추가"
+          }
+        },
+        "promptdebugdrawer": {
+          "attribute": {
+            "promptDebugDrawer": "프롬프트 디버그 서랍"
+          },
+          "text": {
+            "budgetExceeded": "예산 초과",
+            "withinBudget": "예산 내에서",
+            "value1": "· {{value1}}"
+          },
+          "metadata": {
+            "trace": "추적하다",
+            "system": "체계",
+            "recent": "최근의",
+            "user": "사용자"
+          }
+        },
+        "rpchatlist": {
+          "metadata": {
+            "all": "모두",
+            "standard": "기준"
+          },
+          "text": {
+            "noRpChatsYet": "아직 RP 채팅이 없습니다"
+          },
+          "attribute": {
+            "deleteValue1": "{{value1}} ​​삭제",
+            "newRpChat": "새로운 RP 채팅",
+            "leaveBlankToUseTheFirstCharacterSScenario": "첫 번째 캐릭터의 시나리오를 사용하려면 공백으로 남겨두세요."
+          }
+        },
+        "rpchatview": {
+          "attribute": {
+            "back": "뒤쪽에",
+            "streaming": "스트리밍…",
+            "describeASceneAsTheNarrator": "해설자가 되어 장면을 묘사해 보세요.",
+            "sendAMessageValue1": "메시지 보내기 {{value1}} …"
+          },
+          "text": {
+            "value1WillRespondFirst": "{{value1}} ) 먼저 응답합니다."
+          }
+        },
+        "rpstudioview": {
+          "metadata": {
+            "generate": "생성하다",
+            "gallery": "갱도",
+            "characters": "캐릭터",
+            "personas": "페르소나",
+            "lorebooks": "설화집",
+            "chats": "채팅",
+            "scenes": "장면"
+          }
+        },
+        "scenegenerator": {
+          "notification": {
+            "sceneGenerated": "생성된 장면",
+            "savedToRpAssets": "RP 자산에 저장됩니다."
+          },
+          "attribute": {
+            "leaveBlankToExtractFromChat": "채팅에서 추출하려면 비워두세요.",
+            "extractsFromTheMostRecentNonSystemMessage": "가장 최근의 비시스템 메시지에서 추출합니다.",
+            "thingsToAvoid": "피해야 할 것들…"
+          },
+          "text": {
+            "thisChat": "(이 채팅)"
+          }
+        },
+        "shared": {
+          "metadata": {
+            "characters": "캐릭터",
+            "personas": "페르소나",
+            "lorebooks": "설화집",
+            "chats": "채팅",
+            "scenes": "장면"
+          }
+        }
+      },
+      "scenes": {
+        "scenecomposerview": {
+          "metadata": {
+            "untitledScene": "제목없는 장면",
+            "workflowValue1": "워크플로: {{value1}}",
+            "vValue1": "v {{value1}}",
+            "subject": "주제",
+            "character": "성격",
+            "location": "위치",
+            "mood": "분위기",
+            "style": "스타일",
+            "camera": "카메라",
+            "lighting": "조명",
+            "composition": "구성",
+            "negative": "부정적인"
+          },
+          "attribute": {
+            "searchScenes": "검색 장면…",
+            "optionalDescription": "선택적 설명",
+            "tagsCommaSeparated": "태그, 쉼표로 구분",
+            "modelEGFluxDev": "모델(예: flux-dev)",
+            "width": "너비",
+            "height": "키",
+            "aspectEG169": "종횡비(예: 16:9)",
+            "optionalLabel": "선택적 라벨",
+            "componentContent": "구성품 내용…",
+            "typeValue1ToConfirm": "확인하려면 &quot; {{value1}} &quot;를 입력하세요."
+          },
+          "text": {
+            "noSavedScenesYetClickNewToCreateOne": "아직 저장된 장면이 없습니다. 새로 만들려면 &quot;새로 만들기&quot;를 클릭하세요.",
+            "noScenesMatchTheCurrentFilters": "현재 필터와 일치하는 장면이 없습니다.",
+            "value1OutputValue2": "{{value1}} ​​출력 {{value2}}",
+            "project": "프로젝트",
+            "global": "글로벌",
+            "selectASceneToCompose": "구성할 장면을 선택하세요.",
+            "noSceneSelectedCreateANewOneToGetStarted": "선택한 장면이 없습니다. 시작하려면 새 항목을 만드세요.",
+            "modelDoesNotSupportReferences": "모델이 참조를 지원하지 않습니다.",
+            "favorited": "★ 즐겨찾기",
+            "favorite": "☆ 즐겨찾기",
+            "unarchive": "보관 취소",
+            "archive": "보관소",
+            "projectValue1": "프로젝트: {{value1}}",
+            "off": "끄다",
+            "hide": "숨다",
+            "show": "보여주다",
+            "value1MediaRefValue2": "· {{value1}} ​​미디어 참조 {{value2}}",
+            "value1PromptRefValue2": "· {{value1}} ​​프롬프트 참조 {{value2}}"
+          },
+          "notification": {
+            "newVersionSaved": "새 버전이 저장되었습니다.",
+            "sceneDeleted": "장면이 삭제되었습니다.",
+            "workflowCreated": "워크플로가 생성되었습니다.",
+            "sceneMetadataSaved": "장면 메타데이터가 저장되었습니다.",
+            "addAtLeastOneComponentWithContent": "콘텐츠가 포함된 구성요소를 하나 이상 추가하세요.",
+            "sceneHasNoPromptContent": "장면에 프롬프트 콘텐츠가 없습니다.",
+            "sentToImageStudio": "Image Studio로 전송됨",
+            "recipeCopiedToClipboard": "레시피가 클립보드에 복사되었습니다."
+          }
+        }
+      },
+      "search": {
+        "airesearchtab": {
+          "attribute": {
+            "researchQuestion": "연구문제",
+            "whatAreTheLatestChangesInSafetyPoliciesOfFrontier": "프론티어 AI 연구소의 안전 정책에는 최근 어떤 변화가 있나요?",
+            "searchProvider": "검색 공급자",
+            "veniceSearchEngine": "베니스 검색 엔진",
+            "runMode": "실행 모드",
+            "synthesizedAnswersWillBeStreamedHere": "종합된 답변은 여기에서 스트리밍됩니다..."
+          },
+          "text": {
+            "researching": "연구 중…",
+            "startResearch": "연구 시작"
+          },
+          "notification": {
+            "answerCopied": "답변이 복사되었습니다!",
+            "evidenceSourcesCopied": "증거 소스가 복사되었습니다!"
+          }
+        },
+        "profilediscoverytab": {
+          "attribute": {
+            "targetName": "대상 이름",
+            "consentingPersonOrBrandName": "동의하는 사람 또는 브랜드 이름",
+            "username": "@사용자 이름",
+            "knownWebsite": "알려진 웹사이트",
+            "knownOrganization": "알려진 조직",
+            "githubInc": "GitHub Inc.",
+            "knownLocation": "알려진 위치",
+            "sanFranciscoCa": "캘리포니아주 샌프란시스코",
+            "maxSearchDepth": "최대 검색 깊이"
+          },
+          "text": {
+            "discovering": "발견 중…",
+            "discoverProfiles": "프로필 검색",
+            "unknownIdentity": "알 수 없는 신원"
+          }
+        },
+        "researchproviderstatus": {
+          "metadata": {
+            "apiKeyConfigured": "API 키가 구성됨",
+            "veniceApiKeyMissing": "베니스 API 키가 누락되었습니다",
+            "jinaAi": "아이지나",
+            "jinaApiKeyOptionalUnauthenticatedUseSupported": "Jina API Key 선택사항 (인증되지 않은 사용 지원)",
+            "disabledByConfig": "구성에 의해 비활성화됨",
+            "genericScrape": "일반 긁힌 자국",
+            "enabledNoKeyRequired": "활성화됨(키 필요 없음)",
+            "liveBrowser": "라이브 브라우저",
+            "desktopAvailable": "데스크탑 사용 가능",
+            "webModeUnavailable": "웹 모드를 사용할 수 없습니다"
+          },
+          "attribute": {
+            "configured": "구성됨",
+            "missing": "없어진",
+            "testFailed": "테스트 실패",
+            "disabled": "장애가 있는",
+            "unavailable": "없는"
+          }
+        },
+        "scrapetab": {
+          "attribute": {
+            "urlToScrape": "스크랩할 URL",
+            "readerProvider": "리더 제공업체",
+            "scrapedTextWillAppearHere": "긁힌 텍스트가 여기에 표시됩니다..."
+          },
+          "text": {
+            "scraping": "긁는 중…",
+            "scrape": "긁다"
+          },
+          "notification": {
+            "scrapedOutputCopied": "스크랩한 출력물이 복사되었습니다!"
+          }
+        },
+        "searchscrapeview": {
+          "attribute": {
+            "researchingAndSynthesizing": "연구하고 합성하는…",
+            "readingWebPage": "웹페이지를 읽는 중…",
+            "searchingTheWeb": "웹 검색 중…",
+            "parsingDocument": "문서 파싱 중…",
+            "researchTaskInProgress": "연구 과제 진행 중…"
+          },
+          "metadata": {
+            "untitled": "제목 없음"
+          },
+          "notification": {
+            "savedToActiveResearchSession": "활성 연구 세션에 저장됨"
+          }
+        },
+        "searchtab": {
+          "attribute": {
+            "query": "질문",
+            "latestModelRoutingBestPractices": "최신 모델 라우팅 모범 사례",
+            "provider": "공급자"
+          },
+          "text": {
+            "searching": "수색…",
+            "search": "찾다",
+            "untitledResult": "제목 없는 결과"
+          }
+        },
+        "textparsertab": {
+          "text": {
+            "parsing": "파싱 ​​중…",
+            "parseDocument": "문서 분석"
+          },
+          "attribute": {
+            "extractedDocumentText": "추출된 문서 텍스트..."
+          }
+        }
+      },
+      "settings": {
+        "safetypanel": {
+          "attribute": {
+            "veniceApiSafeMode": "베니스 API 안전 모드"
+          }
+        }
+      },
+      "status": {
+        "diagnosticsdrawer": {
+          "notification": {
+            "safeDiagnosticsCopiedToClipboard": "클립보드에 복사된 안전한 진단",
+            "couldNotCopySafeDiagnostics": "안전한 진단을 복사할 수 없습니다.",
+            "diagnosticsRefreshed": "진단이 새로 고쳐졌습니다.",
+            "diagnosticsRefreshFailed": "진단 새로 고침 실패",
+            "livecountLiveModelsRefreshed": "{{liveCount}} 개의 실시간 모델이 새로 고쳐졌습니다."
+          },
+          "attribute": {
+            "diagnostics": "진단",
+            "closeDiagnostics": "진단 닫기",
+            "close": "닫다",
+            "includeRedactedPromptExcerptsInSafeDiagnostics": "안전한 진단에 수정된 프롬프트 발췌문 포함"
+          },
+          "text": {
+            "refreshing": "상쾌하다…",
+            "refreshDiagnostics": "진단 새로 고침",
+            "openConfig": "구성 열기",
+            "refreshingModels": "상큼한 모델들…",
+            "refreshModels": "모델 새로 고침",
+            "openStatus": "오픈 상태"
+          },
+          "metadata": {
+            "overview": "개요",
+            "apiKey": "API 키",
+            "model": "모델",
+            "storage": "저장",
+            "privacy": "은둔",
+            "project": "프로젝트",
+            "safety": "안전",
+            "research": "연구",
+            "mode": "방법",
+            "repair": "수리하다"
+          }
+        },
+        "taskcenterdrawer": {
+          "attribute": {
+            "taskCenter": "태스크 센터",
+            "closeTaskCenter": "작업 센터 닫기"
+          }
+        }
+      },
+      "ui": {
+        "logo": {
+          "attribute": {
+            "veniceForgeLogo": "베니스 포지 로고"
+          }
+        },
+        "modalRequests": {
+          "attribute": {
+            "confirmPassphrase": "암호 확인",
+            "titleConfirmation": "{{title}} 확인"
+          },
+          "text": {
+            "hidePassphrase": "암호 숨기기",
+            "showPassphrase": "암호 표시"
+          }
+        },
+        "select": {
+          "attribute": {
+            "search": "찾다...",
+            "searchOptions": "검색 옵션"
+          }
+        }
+      },
+      "video": {
+        "videoView": {
+          "notification": {
+            "unsupportedImageTypeValue1UsePngJpegOrWebp": "지원되지 않는 이미지 유형: {{value1}} . PNG, JPEG 또는 WEBP를 사용하세요.",
+            "failedToReadImage": "이미지를 읽지 못했습니다.",
+            "pleaseChooseAPngJpegOrWebpImageUnderThe": "크기 제한 내에서 PNG, JPEG, WEBP 이미지를 선택하세요.",
+            "alreadyInMediaStudio": "이미 미디어 스튜디오에 있음",
+            "savedToMediaStudio": "미디어 스튜디오에 저장됨",
+            "saveToMediaStudioFailed": "Media Studio에 저장하지 못했습니다.",
+            "videoSaved": "동영상이 저장되었습니다.",
+            "videoDownloadFailed": "비디오 다운로드 실패"
+          },
+          "attribute": {
+            "loading": "로드 중...",
+            "selectModel": "모델 선택...",
+            "aCinematicDroneShotOverMistyMountainsAtSunrise": "일출 때 안개 낀 산 위로 영화 같은 드론이 촬영되었습니다...",
+            "lowQualityBlurry": "품질이 낮고 흐릿하고...",
+            "reference": "참조",
+            "removeReferenceImage": "참조 이미지 삭제",
+            "chooseReferenceImage": "참조 이미지 선택",
+            "generateAudioEnabled": "오디오 생성 활성화",
+            "generateAudioDisabled": "오디오 생성이 비활성화되었습니다.",
+            "resetVideoGenerationForm": "영상 생성 양식 재설정",
+            "alreadySavedToMediaStudio": "이미 Media Studio에 저장되었습니다.",
+            "saveToMediaStudio": "미디어 스튜디오에 저장",
+            "generateAnotherVideo": "다른 비디오 생성",
+            "retrievingVideo": "동영상 검색 중…",
+            "savingSecurely": "안전하게 저장 중…",
+            "videoQueued": "동영상 대기 중…",
+            "renderingVideo": "비디오 렌더링 중…"
+          },
+          "text": {
+            "queued": "대기 중...",
+            "processing": "처리 중...",
+            "generateVideo": "비디오 생성",
+            "saved": "저장됨",
+            "saveToMediaStudio": "미디어 스튜디오에 저장"
+          }
+        }
+      },
+      "workflows": {
+        "workflowtemplatesview": {
+          "metadata": {
+            "newWorkflow": "새로운 워크플로",
+            "newPromptStep": "새 프롬프트 단계"
+          },
+          "notification": {
+            "workflowImagePromptLoaded": "워크플로 이미지 프롬프트가 로드됨",
+            "reviewTheModelAndSettingsThenGenerate": "모델과 설정을 검토한 후 생성합니다.",
+            "workflowsImported": "가져온 워크플로",
+            "failedToImportWorkflows": "워크플로를 가져오지 못했습니다."
+          },
+          "attribute": {
+            "searchWorkflows": "워크플로 검색...",
+            "searchWorkflows2": "워크플로 검색",
+            "workflowTemplates": "워크플로 템플릿",
+            "favorite": "가장 좋아하는",
+            "tagsCommaSeparated": "태그(쉼표로 구분)...",
+            "workflowStepTitle": "워크플로 단계 제목",
+            "workflowStepKind": "워크플로 단계 종류",
+            "workflowStepTarget": "워크플로 단계 목표",
+            "workflowStepPrompt": "워크플로 단계 프롬프트",
+            "describeTheImageToGenerate": "생성할 이미지를 설명합니다…",
+            "enterThePromptOrInstructionsForThisStep": "이 단계에 대한 프롬프트나 지침을 입력하세요..."
+          },
+          "text": {
+            "global": "글로벌",
+            "project": "프로젝트",
+            "unfavorite": "즐겨찾기 안함",
+            "favorite": "가장 좋아하는",
+            "untitledVersion": "제목 없는 버전",
+            "openValue1": "{{value1}} ​​열기",
+            "execute": "실행하다"
+          }
+        }
+      }
+    },
+    "config": {
+      "configschema": {
+        "metadata": {
+          "pathExceedsPathMaxLengthCharactersRejected": "경로가 {{PATH_MAX_LENGTH}} 자를 초과합니다. 거부되었습니다.",
+          "pathValueLooksLikeAUrlLocalFilePathsOnly": "&quot; {{value}} &quot; 경로는 URL과 같습니다. 로컬 파일 경로만 해당됩니다.",
+          "pathContainsControlCharactersRejected": "경로에는 제어 문자가 포함되어 있습니다. 거부되었습니다.",
+          "keyLengthExceedsKeyMaxLengthRejected": "키 길이가 {{KEY_MAX_LENGTH}} 초과합니다. 거부되었습니다.",
+          "themeEntryMustBeAnObjectSkipped": "테마 항목은 객체여야 합니다. 건너뛰었습니다.",
+          "invalidModeValue1Skipped": "잘못된 모드 &quot; {{value1}} &quot;; 건너뛰었습니다.",
+          "displayNameMustBeANonEmptyStringSkipped": "display_name은 비어 있지 않은 문자열이어야 합니다. 건너뛰었습니다.",
+          "displayNameExceedsThemeNameMaxLengthCharsSkipped": "display_name이 {{THEME_NAME_MAX_LENGTH}} 자를 초과합니다. 건너뛰었습니다.",
+          "tokensMustBeAnObjectSkipped": "토큰은 객체여야 합니다. 건너뛰었습니다.",
+          "unknownThemeTokenIgnored": "알 수 없는 테마 토큰입니다. 무시되었습니다.",
+          "invalidColorValueThemeSkipped": "잘못된 색상 값입니다. 테마를 건너뛰었습니다.",
+          "missingRequiredThemeTokenReqThemeSkipped": "필수 테마 토큰 누락: {{req}} ; 테마를 건너뛰었습니다.",
+          "unknownConfigVersionValue1Expected1FallingBackToDefaults": "알 수 없는 구성 버전 &quot; {{value1}} &quot;; 예상됨 1. 기본값으로 돌아갑니다.",
+          "themesFileRootMustBeAMappingUsingBuiltIn": "테마 파일 루트는 매핑이어야 합니다. 내장 테마만 사용합니다.",
+          "unknownThemesVersionValue1Expected1SkippingFile": "알 수 없는 테마 버전 &quot; {{value1}} &quot;; 예상되는 1. 파일을 건너뛰는 중입니다.",
+          "themesBlockMustBeAMappingUsingBuiltInThemes": "테마 블록은 매핑이어야 합니다. 내장 테마만 사용합니다.",
+          "themeNameMustBe1128CharactersSkipped": "테마 이름은 1~128자여야 합니다. 건너뛰었습니다."
+        }
+      }
+    },
+    "hooks": {
+      "useChat": {
+        "metadata": {
+          "generateAnImage": "이미지 생성"
+        },
+        "notification": {
+          "memoryRetrievalUnavailable": "메모리 검색 불가",
+          "sendingYourMessageWithoutMemoryContext": "메모리 컨텍스트 없이 메시지를 보냅니다.",
+          "attachmentContextTruncated": "첨부파일 컨텍스트가 잘렸습니다.",
+          "totalAttachmentTextExceededValue1KbSomeAttachmentsWereOmitted": "총 첨부 파일 텍스트가 {{value1}} KB를 초과했습니다. 이 메시지에서는 일부 첨부 파일이 생략되었습니다."
+        }
+      },
+      "useDataStorageActions": {
+        "metadata": {
+          "clearLocalSettings": "로컬 설정을 삭제하시겠습니까?",
+          "deleteAllIndexeddbHistory": "모든 IndexedDB 기록을 삭제하시겠습니까?"
+        },
+        "notification": {
+          "localSettingsCleared": "로컬 설정이 삭제되었습니다.",
+          "indexeddbDataClearedSuccessfully": "IndexedDB 데이터가 성공적으로 지워졌습니다.",
+          "encryptedBackupExportedSuccessfully": "암호화된 백업을 성공적으로 내보냈습니다.",
+          "exportFailedPleaseTryAgain": "내보내기에 실패했습니다. 다시 시도해 주세요."
+        }
+      }
+    },
+    "lib": {
+      "workflowValidator": {
+        "metadata": {
+          "workflowIsEmpty": "워크플로가 비어 있습니다.",
+          "unknownNodeTypeValue1": "알 수 없는 노드 유형: {{value1}}",
+          "value1MissingRequiredValue2": "{{value1}} : 필수 &quot; {{value2}} &quot;이(가) 누락되었습니다.",
+          "value1DoesNotAcceptInputs": "{{value1}} 는) 입력을 허용하지 않습니다.",
+          "value1NoUpstreamInputConnected": "{{value1}} : 연결된 업스트림 입력이 없습니다.",
+          "value1HasNoOutputAndCannotFeedAnotherNode": "{{value1}} 에는 출력이 없으며 다른 노드에 공급할 수 없습니다.",
+          "edgeSourceValue1DoesNotExist": "에지 소스 {{value1}} 이(가) 존재하지 않습니다.",
+          "edgeTargetValue1DoesNotExist": "에지 대상 {{value1}} 이(가) 존재하지 않습니다.",
+          "selfLoopsAreNotAllowed": "자가 루프는 허용되지 않습니다.",
+          "value1Value2CannotConnectToValue3Value4": "{{value1}} ( {{value2}} )는 {{value3}} ( {{value4}} )에 연결할 수 없습니다.",
+          "value1OutputsValue2Value3ExpectsValue4ConversionMayBeLossy": "{{value1}} {{value2}} 출력합니다. {{value3}} {{value4}} 을(를) 예상합니다. 변환에는 손실이 있을 수 있습니다.",
+          "workflowContainsACycle": "워크플로에는 주기가 포함되어 있습니다.",
+          "setParamsKMustBeStringNumberBooleanGotValue2": "set_params: &quot; {{k}} &quot;는 string|number|boolean이어야 하며 {{value2}} 얻었습니다.",
+          "addNodeUnknownParamKForLabel": "add_node: {{label}} 에 대한 알 수 없는 매개변수 &quot; {{k}} &quot;.",
+          "labelParamKMustBeOneOfValue3GotV": "{{label}} : param &quot; {{k}} &quot;는 [ {{value3}} ] 중 하나여야 하며 &quot; {{v}} &quot;를 가져옵니다.",
+          "labelParamKMustBeTGotValue4": "{{label}} : param &quot; {{k}} &quot;는 {{t}} 이어야 하며 {{value4}} 가져옵니다.",
+          "labelParamKMustBeValue3GotV": "{{label}} : param &quot; {{k}} &quot;는 &gt;= {{value3}} 이어야 하며 {{v}} 가져왔습니다.",
+          "labelParamKMustBeValue3GotV2": "{{label}} : param &quot; {{k}} &quot;는 &lt;= {{value3}} 이어야 하며 {{v}} 를 가져옵니다."
+        }
+      },
+      "workflowSchema": {
+        "metadata": {
+          "input": "입력",
+          "staticTextProvidedByTheUserStartingPointOfA": "사용자가 제공하는 정적 텍스트입니다. 워크플로의 시작점입니다.",
+          "theTextValue": "텍스트 값입니다.",
+          "output": "산출",
+          "displaysWhateverItsUpstreamNodeProducedAcceptsAnyKind": "업스트림 노드가 생성한 모든 것을 표시합니다. 어떤 종류든 받아들입니다.",
+          "llm": "법학대학원",
+          "runAVeniceChatCompletionAcceptsUpstreamTextAsContext": "베니스 채팅 완료를 실행하세요. 업스트림 텍스트를 컨텍스트로 받아들입니다.",
+          "veniceChatModelId": "베니스 채팅 모델 ID입니다.",
+          "instructionUseInputToPositionUpstreamTextOrLeaveEmpty": "지침. 업스트림 텍스트를 배치하려면 {{input}} 사용하고, 추가하려면 비워 두세요.",
+          "samplingTemperature": "샘플링 온도.",
+          "maxOutputTokens": "최대 출력 토큰.",
+          "enableVeniceWebSearch": "베니스 웹 검색을 활성화합니다.",
+          "imageGen": "이미지 생성",
+          "generateAnImageFromATextPrompt": "텍스트 프롬프트에서 이미지를 생성합니다.",
+          "veniceImageModelId": "베니스 이미지 모델 ID.",
+          "imagePromptUseInputToPositionUpstreamText": "이미지 프롬프트. 업스트림 텍스트를 배치하려면 {{input}} 사용하세요.",
+          "whatToAvoid": "피해야 할 것.",
+          "denoisingSteps": "노이즈 제거 단계.",
+          "imageWidthInPixels": "이미지 너비(픽셀)입니다.",
+          "imageHeightInPixels": "이미지 높이(픽셀)입니다.",
+          "stylePresetName": "스타일 사전 설정 이름.",
+          "omitWatermarkIfAllowed": "허용되는 경우 워터마크를 생략하세요.",
+          "textToSpeech": "텍스트 음성 변환",
+          "narrateTextIntoSpeechAudio": "텍스트를 음성 오디오로 설명합니다.",
+          "ttsModelId": "TTS 모델 ID.",
+          "textToSpeakUseInputToPositionUpstreamText": "말할 텍스트. 업스트림 텍스트를 배치하려면 {{input}} 사용하세요.",
+          "voiceId": "보이스 아이디.",
+          "playbackSpeed": "재생 속도.",
+          "audioFormat": "오디오 형식.",
+          "musicGen": "뮤직젠",
+          "generateAMusicClipFromATextPrompt": "텍스트 프롬프트에서 음악 클립을 생성합니다.",
+          "musicModelId": "음악 모델 ID.",
+          "musicPrompt": "음악 프롬프트.",
+          "durationInSeconds": "기간(초)입니다.",
+          "forceInstrumental": "강제 도구.",
+          "optionalLyrics": "선택적 가사.",
+          "videoGen": "비디오 생성",
+          "generateAShortVideoFromATextPrompt": "텍스트 프롬프트에서 짧은 비디오를 생성합니다.",
+          "videoModelId": "동영상 모델 ID",
+          "videoPrompt": "비디오 프롬프트.",
+          "aspectRatio": "종횡비.",
+          "clipDurationEmptyMeansModelDefault": "클립 지속 시간. 비어 있음은 모델 기본값을 의미합니다.",
+          "resolutionEmptyMeansModelDefault": "해결. 비어 있음은 모델 기본값을 의미합니다."
+        }
+      }
+    },
+    "research": {
+      "providers": {
+        "generichttpscrapeprovider": {
+          "metadata": {
+            "genericHttp": "일반 HTTP"
+          }
+        },
+        "jinaresearchprovider": {
+          "metadata": {
+            "jinaAi": "아이지나"
+          }
+        }
+      }
+    },
+    "services": {
+      "backgroundtasktoastbridge": {
+        "metadata": {
+          "queued": "대기 중...",
+          "cancel": "취소",
+          "completedSuccessfully": "성공적으로 완료되었습니다.",
+          "open": "열려 있는",
+          "titleFailed": "{{title}} 실패",
+          "anErrorOccurred": "오류가 발생했습니다.",
+          "retry": "다시 해 보다",
+          "dismiss": "해고하다"
+        }
+      },
+      "backupimportservice": {
+        "metadata": {
+          "legacyVersion2BackupAuthenticatedSourceCryptoContentCountAnd": "레거시 버전-2 백업: 인증된 소스, 암호화, 콘텐츠 수 및 제외 메타데이터를 사용할 수 없습니다.",
+          "backupAppVersionValue1DiffersFromThisAppVersionAppversion": "백업 앱 버전 {{value1}} 이(가) 이 앱 버전 {{appVersion}} 과(와) 다릅니다.",
+          "thisBackupIncludesMediaRecords": "이 백업에는 미디어 기록이 포함됩니다.",
+          "excludedByDesignValue1": "설계상 제외됨: {{value1}} ."
+        }
+      },
+      "charactercards": {
+        "charactercardadapter": {
+          "metadata": {
+            "fieldWasTruncatedToMaxCharacters": "필드가 {{max}} 자로 잘렸습니다.",
+            "secretLikeContentWasRedacted": "비밀과 유사한 콘텐츠가 수정되었습니다.",
+            "extensionDataExceededTheMaximumDepth": "확장 데이터가 최대 깊이를 초과했습니다.",
+            "nonJsonExtensionValueWasRemoved": "JSON이 아닌 확장 값이 제거되었습니다.",
+            "unsafeObjectKeyWasRemoved": "안전하지 않은 객체 키가 제거되었습니다.",
+            "extensionDataExceededThe1MibLimit": "확장 데이터가 1MiB 한도를 초과했습니다.",
+            "onlyTheFirstMaxLorebookEntriesCharacterBookEntriesWere": "처음 {{MAX_LOREBOOK_ENTRIES}} 개의 문자북 항목만 보존되었습니다.",
+            "onlyCharacterCardV2SpecVersion20IsSupported": "캐릭터카드 V2 스펙 버전 2.0만 지원됩니다.",
+            "keyMustBeAString": "{{key}} 문자열이어야 합니다.",
+            "alternateGreetingsMustBeAnArray": "대체_인사말은 배열이어야 합니다.",
+            "tagsMustBeAnArray": "태그는 배열이어야 합니다.",
+            "extensionsMustBeAPlainJsonObject": "확장은 일반 JSON 객체여야 합니다.",
+            "formatValidButANameIsRequiredBeforeChat": "형식은 유효하지만 채팅 전에 이름이 필요합니다.",
+            "descriptionIsRecommendedForVeniceForgeAuthoring": "Venice Forge 저작에는 설명이 권장됩니다.",
+            "aPrimaryGreetingIsRecommendedForChatReadiness": "채팅 준비를 위해 기본 인사말을 사용하는 것이 좋습니다."
+          }
+        }
+      },
+      "chatpromptcompiler": {
+        "metadata": {
+          "contextTruncated": "컨텍스트 잘림",
+          "removedRemovedcountOldTurnwordToFitWithinContextLimitsStart": "컨텍스트 제한에 맞추기 위해 {{removedCount}} 이전 {{turnWord}} 삭제했습니다. 전체 기록을 보존하려면 새 채팅을 시작하거나 더 큰 컨텍스트 창이 있는 모델을 사용하세요.",
+          "theConversationRequiresValue1TokensButOnlyValue2AreAvailable": "대화에는 ~ {{value1}} 토큰이 필요하지만 출력 토큰을 예약한 후에는 {{value2}} 만 사용할 수 있습니다.",
+          "thisRequestReservesValue1OutputTokensSoTheCustomPrompt": "이 요청은 사용자 지정 프롬프트와 현재 대화가 선택한 모델에 맞도록 {{value1}} 출력 토큰을 예약합니다.",
+          "estkKOfTotalkKEstimatedTokensAreInUse": "{{estK}} K/ {{totalK}} K개의 예상 토큰이 사용 중입니다."
+        }
+      },
+      "chatstorage": {
+        "metadata": {
+          "newChat": "새 채팅"
+        }
+      },
+      "chatttscontroller": {
+        "notification": {
+          "ttsPlaybackFailed": "TTS 재생 실패",
+          "noTextToSpeakInThisMessage": "이 메시지에는 말할 내용이 없습니다.",
+          "noSpeakableTextRemainingInMessage": "메시지에 말할 수 있는 텍스트가 남아 있지 않습니다.",
+          "ttsPlaybackErrorUnableToLoadAudioElement": "TTS 재생 오류: 오디오 요소를 로드할 수 없습니다.",
+          "ttsFailed": "TTS 실패",
+          "ttsRestartFailed": "TTS 다시 시작 실패"
+        }
+      },
+      "desktopbridge": {
+        "metadata": {
+          "requestFailed": "요청 실패",
+          "jinaConnectionSuccessful": "지나 연결 성공",
+          "jinaReturnedValue1": "Jina가 {{value1}} (를) 반환했습니다.",
+          "networkErrorTestingJinaApiKey": "네트워크 오류 테스트 Jina API 키"
+        }
+      },
+      "imageinspectoranalysis": {
+        "metadata": {
+          "notProvidedByModel": "모델별로 제공되지 않습니다."
+        }
+      },
+      "replaceimportservice": {
+        "metadata": {
+          "replaceImportFailedAndAutomaticRollbackAlsoFailedUseThe": "교체 가져오기에 실패했으며 자동 롤백도 실패했습니다. 보존된 복구 백업을 사용하십시오.",
+          "replaceImportFailedTheOriginalProfileDataWasRestoredAutomatically": "가져오기 교체에 실패했습니다. 원래 프로필 데이터가 자동으로 복원되었습니다."
+        }
+      },
+      "researchservice": {
+        "metadata": {
+          "searchQueryIsEmpty": "검색어가 비어 있습니다.",
+          "untitledResult": "제목 없는 결과",
+          "searchFailed": "검색 실패",
+          "invalidOrUnsafeUrl": "유효하지 않거나 안전하지 않은 URL",
+          "value1DoesNotSupportScraping": "{{value1}} 스크래핑을 지원하지 않습니다.",
+          "scrapeFailed": "스크랩 실패"
+        }
+      },
+      "researchsummaries": {
+        "metadata": {
+          "sourceIdNotFoundInSession": "세션에서 소스 {{id}} 찾을 수 없습니다.",
+          "findingIdNotFoundInSession": "세션에서 {{id}} (를) 찾을 수 없습니다.",
+          "researchSummaryValue1": "연구 요약: {{value1}}"
+        }
+      },
+      "rp": {
+        "promptbuilderservice": {
+          "metadata": {
+            "safetyPreamble": "안전 서문",
+            "modelIdentity": "모델 아이덴티티",
+            "personaValue1": "페르소나: {{value1}}",
+            "persona": "페르소나",
+            "characterValue1": "문자: {{value1}}",
+            "scenario": "대본",
+            "lorebookValue1": "전승: {{value1}}",
+            "lorebookValue1BeforeChar": "Lorebook {{value1}} (문자 앞)",
+            "lorebookValue1AfterChar": "설화집 {{value1}} (문자 뒤)",
+            "lorebookValue1AtDepth": "설화집 {{value1}} (심층)",
+            "memoryBlock": "메모리 블록",
+            "recentMessagesValue1": "최근 메시지( {{value1}} )",
+            "postHistoryInstruction": "역사 이후의 교육",
+            "activeTurnValue1": "활성 턴: {{value1}}",
+            "activeTurnInstruction": "활성 회전 지시",
+            "userMessage": "사용자 메시지"
+          }
+        }
+      },
+      "rphelpers": {
+        "metadata": {
+          "value1SystemPrompt": "{{value1}} — 시스템 프롬프트",
+          "savedFromCharacterCardValue1OnValue2": "{{value2}} 의 캐릭터 카드 &quot; {{value1}} &quot;에서 저장되었습니다.",
+          "chatWithValue1": "{{value1}} 님과 채팅"
+        }
+      },
+      "rppromptcompiler": {
+        "metadata": {
+          "exampleDialoguesValue1": "대화 예시( {{value1}} )"
+        }
+      },
+      "rptokencounter": {
+        "metadata": {
+          "characterExceedsTheSupportedContextBudgetByValue1EstimatedTokens": "캐릭터가 지원되는 컨텍스트 예산을 예상 토큰 {{value1}} 만큼 초과합니다."
+        }
+      },
+      "storagemaintenance": {
+        "metadata": {
+          "refreshInventory": "재고 새로 고침",
+          "recountAllLocalDataAndCheckForIssues": "모든 로컬 데이터를 다시 계산하고 문제가 있는지 확인하세요.",
+          "clearModelCache": "모델 캐시 지우기",
+          "removeTheLocalCacheOfAvailableVeniceModelsTheyWill": "사용 가능한 베니스 모델의 로컬 캐시를 제거합니다. 다음 사용 시 다시 가져옵니다.",
+          "clearCharacterImageCache": "캐릭터 이미지 캐시 지우기",
+          "deleteLocallyCachedVeniceCharacterAvatarImagesTheyWillBe": "로컬에 캐시된 베니스 캐릭터 아바타 이미지를 삭제합니다. 필요에 따라 다시 가져옵니다.",
+          "analyzeOrphanReferences": "고아 참조 분석",
+          "reviewItemsThatReferToMissingProjectsNoRecordsAre": "누락된 프로젝트를 참조하는 항목을 검토하세요. 레코드가 변경되지 않습니다."
+        }
+      },
+      "storageprivacyservice": {
+        "metadata": {
+          "rpStudio": "RP 스튜디오",
+          "apiKeys": "API 키",
+          "characterImageCache": "캐릭터 이미지 캐시",
+          "categoryItemValue2RefersToMissingProject": "{{category}} 항목 &quot; {{value2}} &quot;는 누락된 프로젝트를 나타냅니다.",
+          "value1ItemHasAMissingTargetReference": "{{value1}} 항목에 {{target}} 참조가 누락되었습니다."
+        }
+      },
+      "syncpacketimporter": {
+        "metadata": {
+          "value1ConflictFromValue2": "{{value1}} ( {{value2}} 의 충돌)"
+        }
+      },
+      "taskmediacatalog": {
+        "metadata": {
+          "value1Generation": "{{value1}} 세대"
+        }
+      },
+      "workflowcompiler": {
+        "metadata": {
+          "referencedPromptValue1NotFoundInContext": "참조된 프롬프트 {{value1}} (를) 컨텍스트에서 찾을 수 없습니다.",
+          "referencedSceneValue1NotFoundInContext": "참조된 장면 {{value1}} (를) 컨텍스트에서 찾을 수 없습니다.",
+          "referencedCharacterValue1NotFoundInContext": "참조된 문자 {{value1}} (를) 컨텍스트에서 찾을 수 없습니다.",
+          "unsupportedStepKindValue1": "지원되지 않는 단계 종류: {{value1}}"
+        }
+      },
+      "workflowrunner": {
+        "metadata": {
+          "duplicateOutputKeyValue1UsesTheLastStepValueAll": "중복 출력 키 &#39; {{value1}} &#39;은(는) 마지막 단계 값을 사용합니다. 모든 작업은 계속 실행됩니다.",
+          "sendPromptToValue1": "{{value1}} 에 메시지 보내기",
+          "sendRecipeToValue1": "{{value1}} 에 레시피 보내기",
+          "sendSceneToValue1": "{{value1}} 에 장면 보내기",
+          "selectMedia": "미디어 선택",
+          "openRpContext": "RP 컨텍스트 열기",
+          "showNote": "메모 표시",
+          "openValue1": "{{value1}} ​​열기"
+        }
+      }
+    },
+    "stores": {
+      "characterCardStore": {
+        "notification": {
+          "couldNotLoadCharacters": "문자를 로드할 수 없습니다.",
+          "pleaseTryAgain": "다시 시도해 주세요.",
+          "couldNotSaveCharacter": "캐릭터를 저장할 수 없습니다",
+          "couldNotDeleteCharacter": "캐릭터를 삭제할 수 없습니다",
+          "storageRejectedTheRequest": "스토리지가 요청을 거부했습니다."
+        }
+      },
+      "chatFolderStore": {
+        "notification": {
+          "failedToLoadChatFolders": "채팅 폴더를 로드하지 못했습니다.",
+          "folderCreated": "폴더가 생성되었습니다.",
+          "failedToCreateFolder": "폴더를 생성하지 못했습니다.",
+          "folderRenamed": "폴더 이름이 변경됨",
+          "failedToRenameFolder": "폴더 이름을 바꾸지 못했습니다.",
+          "failedToReorderFolders": "폴더를 재정렬하지 못했습니다.",
+          "folderIsLocked": "폴더가 잠겨 있습니다.",
+          "unlockValue1BeforeMovingConversationsIntoIt": "대화를 이동하기 전에 &#39; {{value1}} &#39;을(를) 잠금 해제하세요.",
+          "failedToMoveConversation": "대화를 이동하지 못했습니다.",
+          "failedToMoveConversations": "대화를 이동하지 못했습니다.",
+          "folderDeleted": "폴더가 삭제되었습니다.",
+          "failedToDeleteFolder": "폴더를 삭제하지 못했습니다.",
+          "failedToReadFolderBackupPreview": "폴더 백업 미리보기를 읽지 못했습니다.",
+          "unknownError": "알 수 없는 오류",
+          "folderBackupExported": "폴더 백업을 내보냈습니다.",
+          "encryptedBackupSaved": "암호화된 백업이 저장되었습니다.",
+          "failedToExportFolderBackup": "폴더 백업을 내보내지 못했습니다.",
+          "failedToPreviewFolderImport": "폴더 가져오기를 미리 볼 수 없습니다.",
+          "folderBackupImported": "폴더 백업을 가져왔습니다.",
+          "failedToImportFolderBackup": "폴더 백업을 가져오지 못했습니다.",
+          "folderPrivacyGateEnabled": "폴더 개인정보 보호 게이트 활성화됨",
+          "failedToLockFolder": "폴더를 잠그지 못했습니다.",
+          "folderPrivacyGateOpened": "폴더 개인 정보 보호 게이트가 열렸습니다.",
+          "failedToUnlockFolder": "폴더 잠금을 해제하지 못했습니다."
+        }
+      },
+      "chatStore": {
+        "metadata": {
+          "newChat": "새 채팅",
+          "chatWithValue1": "{{value1}} 님과 채팅",
+          "chatGeneratedMedia": "채팅 생성 미디어",
+          "value1Fork": "{{value1}} — 포크"
+        },
+        "notification": {
+          "systemPromptExceedsMaximumLength": "시스템 프롬프트가 최대 길이를 초과했습니다.",
+          "systemPromptApproachingLengthLimit": "시스템 프롬프트가 길이 제한에 접근함"
+        }
+      },
+      "imageInspectorStore": {
+        "notification": {
+          "couldNotLoadSessionId": "세션 {{id}} 을(를) 로드할 수 없습니다.",
+          "loadASessionBeforeStartingAnalysis": "분석을 시작하기 전에 세션을 로드하십시오.",
+          "noActiveSessionForSearch": "검색할 활성 세션이 없습니다.",
+          "noQueryAvailableToSearch": "검색할 수 있는 쿼리가 없습니다.",
+          "foundValue1SearchResultsViaValue2": "{{value1}} 을(를) 통해 {{value2}} 검색결과를 찾았습니다.",
+          "noSearchResultsReturnedFromValue1": "{{value1}} 에서 검색 결과가 반환되지 않았습니다."
+        },
+        "metadata": {
+          "newSession": "새 세션",
+          "searchResult": "검색결과"
+        }
+      },
+      "lorebookStore": {
+        "notification": {
+          "couldNotLoadLorebooks": "전설책을 로드할 수 없습니다.",
+          "pleaseTryAgain": "다시 시도해 주세요.",
+          "couldNotSaveLorebook": "전설책을 저장할 수 없습니다.",
+          "couldNotDeleteLorebook": "설화집을 삭제할 수 없습니다.",
+          "storageRejectedTheRequest": "스토리지가 요청을 거부했습니다."
+        }
+      },
+      "mediaStore": {
+        "metadata": {
+          "deleteMediaInUse": "사용 중인 미디어를 삭제하시겠습니까?"
+        },
+        "notification": {
+          "tagUpdatePartiallyFailed": "태그 업데이트가 부분적으로 실패했습니다.",
+          "couldNotUpdateTagsForValue1ItemS": "{{value1}} 개 항목의 태그를 업데이트할 수 없습니다.",
+          "tagRemovalPartiallyFailed": "태그 제거가 부분적으로 실패함",
+          "couldNotRemoveTagForValue1ItemS": "{{value1}} 개 항목에 대한 태그를 제거할 수 없습니다."
+        }
+      },
+      "personaStore": {
+        "notification": {
+          "couldNotSavePersona": "인물을 저장할 수 없습니다.",
+          "couldNotDeletePersona": "페르소나를 삭제할 수 없습니다.",
+          "storageRejectedTheRequest": "스토리지가 요청을 거부했습니다."
+        }
+      },
+      "rpChatStore": {
+        "metadata": {
+          "newRp": "새로운 RP"
+        },
+        "notification": {
+          "couldNotCreateRpChat": "RP 채팅을 생성할 수 없습니다",
+          "pleaseTryAgain": "다시 시도해 주세요.",
+          "couldNotSaveRpChat": "RP 채팅을 저장할 수 없습니다.",
+          "couldNotDeleteRpChat": "RP 채팅을 삭제할 수 없습니다.",
+          "storageRejectedTheRequest": "스토리지가 요청을 거부했습니다.",
+          "couldNotSaveMessage": "메시지를 저장할 수 없습니다."
+        }
+      },
+      "scenarioStore": {
+        "notification": {
+          "couldNotLoadScenarios": "시나리오를 로드할 수 없습니다.",
+          "pleaseTryAgain": "다시 시도해 주세요.",
+          "couldNotSaveScenario": "시나리오를 저장할 수 없습니다.",
+          "couldNotDeleteScenario": "시나리오를 삭제할 수 없습니다.",
+          "storageRejectedTheRequest": "스토리지가 요청을 거부했습니다."
+        }
+      },
+      "sceneAssetStore": {
+        "notification": {
+          "couldNotLoadAssets": "자산을 로드할 수 없습니다.",
+          "pleaseTryAgain": "다시 시도해 주세요.",
+          "couldNotSaveAsset": "자산을 저장할 수 없습니다.",
+          "couldNotDeleteAsset": "자산을 삭제할 수 없습니다.",
+          "storageRejectedTheRequest": "스토리지가 요청을 거부했습니다."
+        }
+      },
+      "storagePrivacyStore": {
+        "notification": {
+          "failedToRefreshStorageInventory": "스토리지 인벤토리를 새로 고치지 못했습니다.",
+          "noInventoryDataToCopyRefreshFirst": "복사할 인벤토리 데이터가 없습니다. 먼저 새로고침하세요.",
+          "safePrivacySummaryCopiedToClipboard": "안전한 개인정보 보호 요약이 클립보드에 복사되었습니다.",
+          "failedToCopyPrivacySummary": "개인정보 보호 요약을 복사하지 못했습니다.",
+          "noInventoryDataToExportRefreshFirst": "내보낼 인벤토리 데이터가 없습니다. 먼저 새로고침하세요.",
+          "safePrivacySummaryDownloaded": "안전한 개인정보 보호 요약 다운로드됨",
+          "maintenanceActionPartiallyFailedValue1": "유지 관리 작업이 부분적으로 실패했습니다: {{value1}}",
+          "maintenanceActionCompleted": "유지보수 작업 완료",
+          "maintenanceActionFailed": "유지 관리 작업이 실패했습니다."
+        }
+      },
+      "workflowTemplateStore": {
+        "metadata": {
+          "initialVersion": "초기 버전",
+          "versionNextversionnumber": "버전 {{nextVersionNumber}}"
+        }
+      }
+    },
+    "types": {
+      "characterCardSpec": {
+        "metadata": {
+          "formatValidButANameIsRequiredBeforeChat": "형식은 유효하지만 채팅 전에 이름이 필요합니다.",
+          "descriptionIsRecommendedForVeniceForgeAuthoring": "Venice Forge 저작에는 설명이 권장됩니다.",
+          "aPrimaryGreetingIsRecommendedForChatReadiness": "채팅 준비를 위해 기본 인사말을 사용하는 것이 좋습니다."
+        }
+      },
+      "project": {
+        "metadata": {
+          "recipeIsMissingAPrompt": "레시피에 프롬프트가 없습니다.",
+          "recipeIsMissingATargetModel": "레시피에 대상 모델이 없습니다.",
+          "modelValue1IsNotInTheKnownRegistryDefaultsApplied": "모델 &quot; {{value1}} &quot;은(는) 알려진 레지스트리에 없습니다. 기본값이 적용됩니다.",
+          "value1DoesNotSupportANegativePromptItWillBe": "{{value1}} 부정적인 프롬프트를 지원하지 않습니다. 삭제됩니다.",
+          "value1DoesNotSupportASeedItWillBeDropped": "{{value1}} 은(는) 시드를 지원하지 않습니다. 삭제됩니다.",
+          "value1DoesNotSupportMultipleVariantsValueWillBeDropped": "{{value1}} (는) 여러 변형을 지원하지 않습니다. 값이 삭제됩니다.",
+          "value1DoesNotSupportStepsValueWillBeDropped": "{{value1}} 단계를 지원하지 않습니다. 값이 삭제됩니다.",
+          "value1DoesNotSupportCfgScaleValueWillBeDropped": "{{value1}} CFG 규모를 지원하지 않습니다. 값이 삭제됩니다.",
+          "value1DoesNotSupportAStylePresetValueWillBe": "{{value1}} 스타일 사전 설정을 지원하지 않습니다. 값이 삭제됩니다.",
+          "value1UsesPixelSizingAspectRatioWillBeDropped": "{{value1}} 픽셀 크기 조정을 사용합니다. 종횡비가 떨어집니다.",
+          "value1DoesNotSupportAResolutionPresetValueWillBe": "{{value1}} 해상도 사전 설정을 지원하지 않습니다. 값이 삭제됩니다.",
+          "dimensionsOriginalpairAreNotSupportedDefaultedToFinalpair": "{{originalPair}} 차원은 지원되지 않습니다. 기본값은 {{finalPair}} 입니다.",
+          "aspectRatioValue1IsNotSupportedDefaultedToValue2": "가로세로 비율 &quot; {{value1}} &quot;은 지원되지 않습니다. 기본값은 {{value2}} 입니다.",
+          "resolutionValue1IsNotSupportedDefaultedToValue2": "&quot; {{value1}} &quot; 해상도는 지원되지 않습니다. 기본값은 {{value2}} 입니다."
+        }
+      },
+      "workflow": {
+        "metadata": {
+          "initialVersion": "초기 버전"
+        }
+      },
+      "provider": {
+        "metadata": {
+          "primaryPrivateLocalFirstMultimodalPlatform": "기본, 프라이빗, 로컬 우선 다중 모드 플랫폼입니다.",
+          "fastOpenSourceModelInference": "빠른 오픈 소스 모델 추론.",
+          "ultraFastLpuInferenceEngine": "초고속 LPU 추론 엔진.",
+          "highPerformanceLlmApis": "고성능 LLM API.",
+          "notImplementedNoCredentialsOrRequestsAreAccepted": "구현되지 않았습니다. 자격 증명이나 요청은 허용되지 않습니다.",
+          "geminiDeveloperApiAiStudio": "Gemini 개발자 API(AI Studio).",
+          "mistralAiModelsAndEndpoints": "Mistral AI 모델 및 엔드포인트.",
+          "claudeAndOtherSafeFoundationModels": "Claude 및 기타 안전한 기초 모델.",
+          "searchGroundedAndFastLlmApis": "검색 기반의 빠른 LLM API."
+        }
+      }
+    },
+    "constants": {
+      "prompttemplates": {
+        "metadata": {
+          "animeIllustration": "애니메이션 일러스트",
+          "cinematicFilm": "시네마틱 필름",
+          "value35mmCameraFilmLookNaturalLightingMovieSceneGrain": "35mm 카메라 필름룩, 자연광, 영화 장면 그레인",
+          "minimalistVectorArt": "미니멀리스트 벡터 아트",
+          "cleanFlatColorVectorDesignSvgStyle": "깔끔한 플랫 컬러 벡터 디자인, SVG 스타일",
+          "oilPainting": "유화",
+          "classicalTexturedCanvasBrushstrokes": "클래식한 질감의 캔버스 브러시 스트로크",
+          "goldenHour": "골든아워",
+          "warmLowAngleSunsetGlow": "따뜻하고 낮은 각도의 일몰 노을",
+          "studioPortrait": "스튜디오 초상화",
+          "professionalMultiPointStudioKeyLighting": "전문 멀티포인트 스튜디오 키 조명",
+          "neonCyberpunk": "네온 사이버펑크",
+          "vibrantNeonBluesAndMagentasWithDarkShadows": "어두운 그림자가 있는 생동감 넘치는 네온 블루와 마젠타",
+          "extremeCloseUp": "극단적인 클로즈업",
+          "tightFocusOnFacialDetailsOrSmallSubjects": "얼굴의 세세한 부분이나 작은 피사체에 집중하세요.",
+          "aerialDroneView": "공중 드론 뷰",
+          "highAltitudeBirdSEyePerspective": "높은 고도 조감도",
+          "ruleOfThirdsWide": "1/3의 법칙 와이드",
+          "balancedOffCenterCinematicFocalPoint": "중심에서 벗어난 균형 잡힌 영화적 초점",
+          "photorealistic8k": "사실적인 8k",
+          "maximizesResolutionSkinTexturesAndMaterialRealism": "해상도, 피부 질감, 소재의 현실감을 극대화합니다.",
+          "standardNegative": "표준 네거티브",
+          "standardPromptsToAvoidDistortionsAndLowQuality": "왜곡과 낮은 품질을 방지하기 위한 표준 프롬프트"
+        }
+      }
+    },
+    "shared": {
+      "legal": {
+        "metadata": {
+          "welcomeToVeniceForge": "베니스 포지에 오신 것을 환영합니다"
+        }
+      }
+    },
+    "utils": {
+      "imageprocessor": {
+        "metadata": {
+          "landscapesNature": "풍경과 자연",
+          "animeMangaIllustration": "애니메이션 / 만화 / 일러스트레이션",
+          "cinematicFilm": "영화/영화",
+          "portraitsPeople": "초상화 / 인물",
+          "productCommercialStudio": "제품 / 상업 스튜디오"
+        }
+      }
+    }
+  },
+  "statusDiagnostics": {
+    "actions": {
+      "openConfig": "구성 열기",
+      "openStatus": "오픈 상태"
+    },
+    "external": "{{message}}",
+    "api": {
+      "notChecked": "베니스 API 키가 아직 확인되지 않았습니다.",
+      "checking": "베니스 보안 저장소 구성을 확인하는 중…",
+      "inspectionFailed": "베니스 보안 스토리지 검사에 실패했습니다.",
+      "notConfigured": "베니스 API 키가 구성되지 않았습니다. 생성을 활성화하려면 키를 추가하세요.",
+      "openConfigDetail": "Config 탭을 열어 Venice API 키를 연결하세요.",
+      "connectivityUnverified": "API 키가 구성되었지만 라이브 베니스 연결이 아직 확인되지 않았습니다.",
+      "testConnectivityDetail": "API 키 테스트 작업을 사용하여 /models 연결을 확인하세요."
+    },
+    "apiKey": {
+      "notChecked": "베니스 API 키가 아직 확인되지 않았습니다.",
+      "checking": "Venice API 키 구성을 확인하는 중…",
+      "inspectionFailed": "보안 저장소 검사에 실패했습니다.",
+      "secure": "베니스 API 키는 보안 저장소에 구성되어 있습니다. 원시 키가 숨겨져 있습니다.",
+      "memoryOnly": "키는 메모리에만 존재합니다. 원시 키는 숨겨지고 진단 및 내보내기에서 제외됩니다.",
+      "missing": "베니스 API 키가 없습니다. 이미지, 오디오, 채팅 생성이 차단됩니다.",
+      "addKeyDetail": "헤더 또는 구성 탭의 API 키 버튼을 통해 키를 추가하세요."
+    },
+    "model": {
+      "notRequested": "모델 카탈로그가 요청되지 않았습니다.",
+      "loading": "모델 카탈로그 로드 중…",
+      "loaded": "{{count}} 개의 모델이 로드되었습니다.",
+      "selectionUnavailable": "선택한 모델 &#39; {{modelId}} &#39;이(가) 현재 카탈로그( {{modelType}} )에 없습니다.",
+      "cached": "{{timestamp}} 의 캐시된 모델 카탈로그를 사용합니다.",
+      "loadFailed": "모델 카탈로그를 로드할 수 없습니다."
+    },
+    "storage": {
+      "unavailable": "IndexedDB를 사용할 수 없습니다. 지역 기록과 미디어는 유지되지 않습니다.",
+      "permissionsDetail": "저장소가 비활성화된 브라우저 모드. 사이트 권한을 확인하세요.",
+      "web": "웹 모드: 레코드는 브라우저 IndexedDB에 유지됩니다(저장 시 암호화됨).",
+      "siteDataDetail": "사이트 데이터를 지우면 로컬 볼트도 지워집니다.",
+      "desktop": "데스크톱 IndexedDB에 연결할 수 있습니다. 기록은 저장 시 암호화됩니다."
+    },
+    "project": {
+      "allProjects": "모든 프로젝트 모드가 활성화되었습니다(범위가 지정되지 않은 보기).",
+      "missing": "활성 프로젝트 ID가 누락되었거나 알 수 없습니다. 다음 상호작용 시 상점이 수리됩니다.",
+      "archived": "활성 프로젝트 &#39; {{projectName}} &#39;이(가) 보관되었습니다. 복구하려면 모든 프로젝트로 전환하세요.",
+      "valid": "활성 프로젝트 “ {{projectName}} ”이(가) 유효합니다."
+    },
+    "safety": {
+      "on": {
+        "on": "지역 경비: 켜짐 · 베니스 safe_mode: 켜짐",
+        "off": "로컬 가드: 켜짐 · 베니스 safe_mode: 꺼짐"
+      },
+      "off": {
+        "on": "로컬 가드: 꺼짐 · 베니스 safe_mode: 켜짐",
+        "off": "지역 경비: 꺼짐 · 베니스 safe_mode: 꺼짐"
+      }
+    },
+    "provider": {
+      "disabled": "연구 작업 공간이 활성화되었습니다( {{count}} 세션). 지나는 장애인입니다.",
+      "enabled": "연구 작업 공간이 활성화되었습니다( {{count}} 세션). 지나가 활성화되었습니다.",
+      "missingKey": "연구 작업 공간이 활성화되었습니다( {{count}} 세션). Jina가 활성화되었지만 키가 구성되지 않았습니다."
+    },
+    "desktop": {
+      "desktop": "데스크탑 모드: Electron 메인 프로세스 + 프리로드 브리지에 도달 가능합니다.",
+      "web": "웹 모드: API 키는 서버 .env에 있습니다. 데스크탑 전용 기능(파일 시스템, 표시, 시스템 셸)을 사용할 수 없습니다."
+    },
+    "diagnostics": {
+      "operational": "모든 시스템이 작동 중입니다. 발견된 문제가 없습니다.",
+      "issues": "{{count}} 건의 수표가 기록되었습니다. 최악의 심각도: {{severity}} ."
+    }
+  },
+  "imageCapabilities": {
+    "toolsTab": "편집 / 업스케일 / BG 제거",
+    "sizes": "{{count}} 사이즈",
+    "ratios": "{{count}} 비율",
+    "ratiosResolutions": "{{ratios}} 비율 × {{resolutions}} 해상도",
+    "fixedDimensions": "고정 {{width}} × {{height}}",
+    "fixedSize": "고정 크기",
+    "unknownSizing": "알 수 없는 크기",
+    "negativePrompt": "부정적인 프롬프트",
+    "noNegativePrompt": "부정적인 프롬프트 없음",
+    "seed": "씨앗",
+    "noSeed": "씨앗 없음",
+    "variants": "변형",
+    "singleOutput": "단일 출력",
+    "noSteps": "단계 없음",
+    "noCfg": "CFG 없음",
+    "noStylePreset": "스타일 사전 설정 없음",
+    "references_one": "{{count}} 참조",
+    "references_other": "{{count}} 참조",
+    "noReferences": "참조 없음",
+    "quality": "품질"
+  },
+  "runtimeSlashLabels": {
+    "cancelReset": "취소 / 재설정",
+    "shortDescriptionSummary": "간단한 설명/요약",
+    "settingWorld": "설정 / 세계",
+    "generalPg": "일반/PG",
+    "matureDarkThemes": "성인/어두운 테마",
+    "documentNamePath": "문서 이름 / 경로",
+    "characterPersonaReferences": "캐릭터/페르소나 참고자료"
   }
 }

@@ -84,6 +84,14 @@ function mustContain(file, label, fragments) {
   }
 }
 
+function mustMatch(file, label, pattern) {
+  try {
+    check(`${label} → ${JSON.stringify(pattern.source)}`, pattern.test(read(file)));
+  } catch {
+    check(label, false, `file not found: ${file}`);
+  }
+}
+
 console.log("Phase 2E Scene Composer contract guard (VERIFY-047)");
 console.log("");
 
@@ -140,9 +148,7 @@ mustContain(VIEW_FILE, "src/components/scenes/SceneComposerView.tsx", [
 ]);
 
 // 5. Tab registry declares the scenes tab.
-mustContain(TABS_FILE, "src/config/tabs.ts tab", [
-  "'scenes'",
-]);
+mustMatch(TABS_FILE, "src/config/tabs.ts tab", /id:\s*["']scenes["']/);
 
 // 6. App.tsx mounts the SceneComposerView for the scenes tab.
 mustContain(APP_FILE, "src/App.tsx mount", [

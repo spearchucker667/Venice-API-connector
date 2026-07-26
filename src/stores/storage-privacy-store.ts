@@ -1,10 +1,18 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 import { create } from "zustand";
 import {
   type StorageInventoryResult,
   type StorageMaintenancePlan,
 } from "../types/storage-privacy";
-import { buildStorageInventory, buildSafePrivacySummary, type StorageInventoryRecord } from "../services/storagePrivacyService";
-import { createStorageMaintenancePlan, applyMaintenanceAction } from "../services/storageMaintenance";
+import {
+  buildStorageInventory,
+  buildSafePrivacySummary,
+  type StorageInventoryRecord,
+} from "../services/storagePrivacyService";
+import {
+  createStorageMaintenancePlan,
+  applyMaintenanceAction,
+} from "../services/storageMaintenance";
 import { useProjectStore, ensureProjectsLoaded } from "./project-store";
 import { usePromptLibraryStore } from "./prompt-library-store";
 import { useSceneComposerStore } from "./scene-composer-store";
@@ -23,12 +31,21 @@ import { desktopCharacterImage, isElectron } from "../services/desktopBridge";
 import { copyText } from "../stores/media-send-to";
 import type { MediaItem } from "../types/media";
 import type { WorkflowTemplateItem } from "../types/workflow";
-import type { CharacterCardV1, LorebookV1, UserPersonaV1, ScenarioV1 } from "../types/rp";
+import type {
+  CharacterCardV1,
+  LorebookV1,
+  UserPersonaV1,
+  ScenarioV1,
+} from "../types/rp";
 import type { SceneComposerItem } from "../types/scene";
 
-function toStorageRecord(
-  item: { id: string; title?: string; name?: string; projectId?: string | null; archivedAt?: string | number | null },
-): StorageInventoryRecord {
+function toStorageRecord(item: {
+  id: string;
+  title?: string;
+  name?: string;
+  projectId?: string | null;
+  archivedAt?: string | number | null;
+}): StorageInventoryRecord {
   return {
     id: item.id,
     title: item.title,
@@ -38,32 +55,61 @@ function toStorageRecord(
   };
 }
 
-export function mapMediaItemToStorageRecord(item: MediaItem): StorageInventoryRecord {
+export function mapMediaItemToStorageRecord(
+  item: MediaItem,
+): StorageInventoryRecord {
   return { id: item.id, projectId: item.projectId ?? null };
 }
 
-export function mapWorkflowToStorageRecord(item: WorkflowTemplateItem): StorageInventoryRecord {
-  return { id: item.id, title: item.title, projectId: item.projectId ?? null, archivedAt: item.archivedAt ?? null };
+export function mapWorkflowToStorageRecord(
+  item: WorkflowTemplateItem,
+): StorageInventoryRecord {
+  return {
+    id: item.id,
+    title: item.title,
+    projectId: item.projectId ?? null,
+    archivedAt: item.archivedAt ?? null,
+  };
 }
 
-export function mapCharacterToStorageRecord(item: CharacterCardV1): StorageInventoryRecord {
+export function mapCharacterToStorageRecord(
+  item: CharacterCardV1,
+): StorageInventoryRecord {
   return { id: item.id, name: item.name };
 }
 
-export function mapLorebookToStorageRecord(item: LorebookV1): StorageInventoryRecord {
+export function mapLorebookToStorageRecord(
+  item: LorebookV1,
+): StorageInventoryRecord {
   return { id: item.id, name: item.name, projectId: item.projectId ?? null };
 }
 
-export function mapPersonaToStorageRecord(item: UserPersonaV1): StorageInventoryRecord {
+export function mapPersonaToStorageRecord(
+  item: UserPersonaV1,
+): StorageInventoryRecord {
   return { id: item.id, name: item.name, projectId: item.projectId ?? null };
 }
 
-export function mapScenarioToStorageRecord(item: ScenarioV1): StorageInventoryRecord {
-  return { id: item.id, name: item.name, projectId: item.projectId ?? null, archivedAt: item.archivedAt ?? null };
+export function mapScenarioToStorageRecord(
+  item: ScenarioV1,
+): StorageInventoryRecord {
+  return {
+    id: item.id,
+    name: item.name,
+    projectId: item.projectId ?? null,
+    archivedAt: item.archivedAt ?? null,
+  };
 }
 
-export function mapSceneToStorageRecord(item: SceneComposerItem): StorageInventoryRecord {
-  return { id: item.id, title: item.title, projectId: item.projectId ?? null, archivedAt: item.archivedAt ?? null };
+export function mapSceneToStorageRecord(
+  item: SceneComposerItem,
+): StorageInventoryRecord {
+  return {
+    id: item.id,
+    title: item.title,
+    projectId: item.projectId ?? null,
+    archivedAt: item.archivedAt ?? null,
+  };
 }
 
 export interface StoragePrivacyState {
@@ -81,140 +127,226 @@ export interface StoragePrivacyState {
   clear(): void;
 }
 
-export const useStoragePrivacyStore = create<StoragePrivacyState>((set, get) => ({
-  inventory: null,
-  maintenancePlan: null,
-  hydrated: false,
-  refreshing: false,
-  error: null,
-  lastRefreshedAt: null,
+export const useStoragePrivacyStore = create<StoragePrivacyState>(
+  (set, get) => ({
+    inventory: null,
+    maintenancePlan: null,
+    hydrated: false,
+    refreshing: false,
+    error: null,
+    lastRefreshedAt: null,
 
-  refreshInventory: async () => {
-    set({ refreshing: true, error: null });
-    try {
-      // Ensure other stores are loaded if needed
-      await Promise.all([
-        ensureProjectsLoaded(),
-        usePromptLibraryStore.getState().ensureLoaded?.() || Promise.resolve(),
-        useSceneComposerStore.getState().ensureLoaded?.() || Promise.resolve(),
-        useMediaStore.getState().refresh(),
-        useWorkflowTemplateStore.getState().ensureWorkflowTemplatesLoaded(),
-        useCharacterCardStore.getState().load?.() || Promise.resolve(),
-        useLorebookStore.getState().load?.() || Promise.resolve(),
-        usePersonaStore.getState().load?.() || Promise.resolve(),
-        useScenarioStore.getState().load?.() || Promise.resolve(),
-        useRpChatStore.getState().load?.() || Promise.resolve(),
-      ]);
+    refreshInventory: async () => {
+      set({ refreshing: true, error: null });
+      try {
+        // Ensure other stores are loaded if needed
+        await Promise.all([
+          ensureProjectsLoaded(),
+          usePromptLibraryStore.getState().ensureLoaded?.() ||
+            Promise.resolve(),
+          useSceneComposerStore.getState().ensureLoaded?.() ||
+            Promise.resolve(),
+          useMediaStore.getState().refresh(),
+          useWorkflowTemplateStore.getState().ensureWorkflowTemplatesLoaded(),
+          useCharacterCardStore.getState().load?.() || Promise.resolve(),
+          useLorebookStore.getState().load?.() || Promise.resolve(),
+          usePersonaStore.getState().load?.() || Promise.resolve(),
+          useScenarioStore.getState().load?.() || Promise.resolve(),
+          useRpChatStore.getState().load?.() || Promise.resolve(),
+        ]);
 
-      const [cacheInventory] = await Promise.all([
-        desktopCharacterImage.getInventory(),
-      ]);
+        const [cacheInventory] = await Promise.all([
+          desktopCharacterImage.getInventory(),
+        ]);
 
-      // Refresh the canonical API-key configured state from the secure bridge
-      // (desktop safeStorage or web server-side session) rather than trusting
-      // a non-existent settings field.
-      await useAuthStore.getState().checkConfiguration();
-      const veniceConfigured = useAuthStore.getState().isConfigured;
+        // Refresh the canonical API-key configured state from the secure bridge
+        // (desktop safeStorage or web server-side session) rather than trusting
+        // a non-existent settings field.
+        await useAuthStore.getState().checkConfiguration();
+        const veniceConfigured = useAuthStore.getState().isConfigured;
 
-      const conversations = useChatStore.getState().conversations.map((c) => ({
-        id: c.id,
-        title: c.title,
-        projectId: c.memory?.projectRefs?.[0] ?? null,
-        archivedAt: c.metadata?.archived ? 1 : null,
-      }));
+        const conversations = useChatStore
+          .getState()
+          .conversations.map((c) => ({
+            id: c.id,
+            title: c.title,
+            projectId: c.memory?.projectRefs?.[0] ?? null,
+            archivedAt: c.metadata?.archived ? 1 : null,
+          }));
 
-      const inventory = buildStorageInventory({
-        projects: useProjectStore.getState().projects.map(toStorageRecord),
-        conversations,
-        prompts: usePromptLibraryStore.getState().prompts.map(toStorageRecord),
-        scenes: useSceneComposerStore.getState().scenes.map(mapSceneToStorageRecord),
-        media: useMediaStore.getState().items.map(mapMediaItemToStorageRecord),
-        workflows: useWorkflowTemplateStore.getState().workflows.map(mapWorkflowToStorageRecord),
-        characters: useCharacterCardStore.getState().cards.map(mapCharacterToStorageRecord),
-        lorebooks: useLorebookStore.getState().lorebooks.map(mapLorebookToStorageRecord),
-        personas: usePersonaStore.getState().personas.map(mapPersonaToStorageRecord),
-        scenarios: useScenarioStore.getState().scenarios.map(mapScenarioToStorageRecord),
-        rpChats: useRpChatStore.getState().chats.map((c) => ({ id: c.id, projectId: null, archivedAt: c.metadata?.archived ? 1 : null })),
-        apiKey: {
-          configured: veniceConfigured,
-          storage: isElectron() ? "secure-storage" : "web-environment",
-          lastValidationStatus: veniceConfigured ? "configured-not-validated" : "not-configured",
-        },
-        characterImageCache: cacheInventory.ok
-          ? { count: cacheInventory.count ?? 0, totalBytes: cacheInventory.totalBytes ?? 0 }
-          : undefined,
-      });
+        const inventory = buildStorageInventory({
+          projects: useProjectStore.getState().projects.map(toStorageRecord),
+          conversations,
+          prompts: usePromptLibraryStore
+            .getState()
+            .prompts.map(toStorageRecord),
+          scenes: useSceneComposerStore
+            .getState()
+            .scenes.map(mapSceneToStorageRecord),
+          media: useMediaStore
+            .getState()
+            .items.map(mapMediaItemToStorageRecord),
+          workflows: useWorkflowTemplateStore
+            .getState()
+            .workflows.map(mapWorkflowToStorageRecord),
+          characters: useCharacterCardStore
+            .getState()
+            .cards.map(mapCharacterToStorageRecord),
+          lorebooks: useLorebookStore
+            .getState()
+            .lorebooks.map(mapLorebookToStorageRecord),
+          personas: usePersonaStore
+            .getState()
+            .personas.map(mapPersonaToStorageRecord),
+          scenarios: useScenarioStore
+            .getState()
+            .scenarios.map(mapScenarioToStorageRecord),
+          rpChats: useRpChatStore.getState().chats.map((c) => ({
+            id: c.id,
+            projectId: null,
+            archivedAt: c.metadata?.archived ? 1 : null,
+          })),
+          apiKey: {
+            configured: veniceConfigured,
+            storage: isElectron() ? "secure-storage" : "web-environment",
+            lastValidationStatus: veniceConfigured
+              ? "configured-not-validated"
+              : "not-configured",
+          },
+          characterImageCache: cacheInventory.ok
+            ? {
+                count: cacheInventory.count ?? 0,
+                totalBytes: cacheInventory.totalBytes ?? 0,
+              }
+            : undefined,
+        });
 
-      const maintenancePlan = createStorageMaintenancePlan(inventory);
+        const maintenancePlan = createStorageMaintenancePlan(inventory);
 
-      set({
-        inventory,
-        maintenancePlan,
-        hydrated: true,
-        refreshing: false,
-        error: null,
-        lastRefreshedAt: new Date().toISOString(),
-      });
-    } catch (err) {
-      set({ refreshing: false, error: err instanceof Error ? err.message : String(err) });
-      toast.error("Failed to refresh storage inventory");
-      logger.error(err);
-    }
-  },
-
-  copySafeSummary: async () => {
-    const { inventory } = get();
-    if (!inventory) {
-      toast.error("No inventory data to copy. Refresh first.");
-      return;
-    }
-    const summary = buildSafePrivacySummary(inventory);
-    const json = JSON.stringify(summary, null, 2);
-    const ok = await copyText(json);
-    if (ok) {
-      toast.success("Safe privacy summary copied to clipboard");
-    } else {
-      toast.error("Failed to copy privacy summary");
-    }
-  },
-
-  exportSafeSummary: () => {
-    const { inventory } = get();
-    if (!inventory) {
-      toast.error("No inventory data to export. Refresh first.");
-      return;
-    }
-    const summary = buildSafePrivacySummary(inventory);
-    const json = JSON.stringify(summary, null, 2);
-    const blob = new Blob([json], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `venice-forge-privacy-summary-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast.success("Safe privacy summary downloaded");
-  },
-
-  runMaintenanceAction: async (actionId) => {
-    set({ refreshing: true });
-    try {
-      const result = await applyMaintenanceAction(actionId);
-      if (result.failed.length > 0) {
-        toast.error(`Maintenance action partially failed: ${result.failed[0].reason}`);
-      } else {
-        toast.success("Maintenance action completed");
-        if (actionId === "clear-model-cache") {
-            // we might want to trigger a refresh of models here if we had access to the models store
-        }
+        set({
+          inventory,
+          maintenancePlan,
+          hydrated: true,
+          refreshing: false,
+          error: null,
+          lastRefreshedAt: new Date().toISOString(),
+        });
+      } catch (err) {
+        set({
+          refreshing: false,
+          error: err instanceof Error ? err.message : String(err),
+        });
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.storagePrivacyStore.notification.failedToRefreshStorageInventory",
+            "Failed to refresh storage inventory",
+          ),
+        );
+        logger.error(err);
       }
-      await get().refreshInventory();
-    } catch (err) {
-      set({ refreshing: false });
-      toast.error("Maintenance action failed");
-      logger.error(err);
-    }
-  },
+    },
 
-  clear: () => set({ inventory: null, maintenancePlan: null, hydrated: false, lastRefreshedAt: null }),
-}));
+    copySafeSummary: async () => {
+      const { inventory } = get();
+      if (!inventory) {
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.storagePrivacyStore.notification.noInventoryDataToCopyRefreshFirst",
+            "No inventory data to copy. Refresh first.",
+          ),
+        );
+        return;
+      }
+      const summary = buildSafePrivacySummary(inventory);
+      const json = JSON.stringify(summary, null, 2);
+      const ok = await copyText(json);
+      if (ok) {
+        toast.success(
+          translateRuntime(
+            "runtimeGenerated.stores.storagePrivacyStore.notification.safePrivacySummaryCopiedToClipboard",
+            "Safe privacy summary copied to clipboard",
+          ),
+        );
+      } else {
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.storagePrivacyStore.notification.failedToCopyPrivacySummary",
+            "Failed to copy privacy summary",
+          ),
+        );
+      }
+    },
+
+    exportSafeSummary: () => {
+      const { inventory } = get();
+      if (!inventory) {
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.storagePrivacyStore.notification.noInventoryDataToExportRefreshFirst",
+            "No inventory data to export. Refresh first.",
+          ),
+        );
+        return;
+      }
+      const summary = buildSafePrivacySummary(inventory);
+      const json = JSON.stringify(summary, null, 2);
+      const blob = new Blob([json], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `venice-forge-privacy-summary-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success(
+        translateRuntime(
+          "runtimeGenerated.stores.storagePrivacyStore.notification.safePrivacySummaryDownloaded",
+          "Safe privacy summary downloaded",
+        ),
+      );
+    },
+
+    runMaintenanceAction: async (actionId) => {
+      set({ refreshing: true });
+      try {
+        const result = await applyMaintenanceAction(actionId);
+        if (result.failed.length > 0) {
+          toast.error(
+            translateRuntime(
+              "runtimeGenerated.stores.storagePrivacyStore.notification.maintenanceActionPartiallyFailedValue1",
+              "Maintenance action partially failed: {{value1}}",
+              { value1: result.failed[0].reason },
+            ),
+          );
+        } else {
+          toast.success(
+            translateRuntime(
+              "runtimeGenerated.stores.storagePrivacyStore.notification.maintenanceActionCompleted",
+              "Maintenance action completed",
+            ),
+          );
+          if (actionId === "clear-model-cache") {
+            // we might want to trigger a refresh of models here if we had access to the models store
+          }
+        }
+        await get().refreshInventory();
+      } catch (err) {
+        set({ refreshing: false });
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.storagePrivacyStore.notification.maintenanceActionFailed",
+            "Maintenance action failed",
+          ),
+        );
+        logger.error(err);
+      }
+    },
+
+    clear: () =>
+      set({
+        inventory: null,
+        maintenancePlan: null,
+        hydrated: false,
+        lastRefreshedAt: null,
+      }),
+  }),
+);

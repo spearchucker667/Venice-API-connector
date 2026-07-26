@@ -7,22 +7,35 @@ import { useRpChatStore } from "../../stores/rp-chat-store";
 import { useCharacterCardStore } from "../../stores/character-card-store";
 import { usePersonaStore } from "../../stores/persona-store";
 import { useLorebookStore } from "../../stores/lorebook-store";
-import { GhostButton, Label, PrimaryButton, ErrorText, EmptyState, PillGroup } from "../ui/shared";
+import {
+  GhostButton,
+  Label,
+  PrimaryButton,
+  ErrorText,
+  EmptyState,
+  PillGroup,
+} from "../ui/shared";
 import { Spinner } from "../ui/spinner";
 import { formatRelativeTime, truncate, avatarDataUri } from "./_shared";
 import { FALLBACK_MODELS } from "../../constants/venice";
-import { MAX_ACTIVE_CHARACTERS, type CharacterCardV1, type LorebookV1, type UserPersonaV1 } from "../../types/rp";
+import {
+  MAX_ACTIVE_CHARACTERS,
+  type CharacterCardV1,
+  type LorebookV1,
+  type UserPersonaV1,
+} from "../../types/rp";
 import { assessCharacterBatchImport } from "../../shared/safety/characterImportSafety";
 import { useSettingsStore } from "../../stores/settings-store";
 import { getEffectiveRendererLocalFamilySafeModeEnabled } from "../../safetyHydration";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 interface Props {
   onOpen: (chatId: string) => void;
 }
 
 export function RpChatList({ onOpen }: Props) {
+  const { t: tRuntime } = useTranslation("common");
   const loadChats = useRpChatStore((s) => s.load);
   const hasLoaded = useRpChatStore((s) => s.hasLoaded);
   const isLoading = useRpChatStore((s) => s.isLoading);
@@ -39,7 +52,10 @@ export function RpChatList({ onOpen }: Props) {
   const loadLorebooks = useLorebookStore((s) => s.load);
   const lorebooks = useLorebookStore((s) => s.lorebooks);
   const lorebooksLoaded = useLorebookStore((s) => s.hasLoaded);
-  const defaultModel = useSettingsStore((s) => s.selectedModels["rp-studio"]) || FALLBACK_MODELS.text[0]?.id || "venice-uncensored";
+  const defaultModel =
+    useSettingsStore((s) => s.selectedModels["rp-studio"]) ||
+    FALLBACK_MODELS.text[0]?.id ||
+    "venice-uncensored";
   const [creating, setCreating] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState<string | null>(null);
   const confirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -47,7 +63,8 @@ export function RpChatList({ onOpen }: Props) {
 
   useEffect(() => {
     return () => {
-      if (confirmTimerRef.current !== null) clearTimeout(confirmTimerRef.current);
+      if (confirmTimerRef.current !== null)
+        clearTimeout(confirmTimerRef.current);
     };
   }, []);
 
@@ -70,7 +87,16 @@ export function RpChatList({ onOpen }: Props) {
     if (!cardsLoaded) void loadCards();
     if (!personasLoaded) void loadPersonas();
     if (!lorebooksLoaded) void loadLorebooks();
-  }, [hasLoaded, cardsLoaded, personasLoaded, lorebooksLoaded, loadChats, loadCards, loadPersonas, loadLorebooks]);
+  }, [
+    hasLoaded,
+    cardsLoaded,
+    personasLoaded,
+    lorebooksLoaded,
+    loadChats,
+    loadCards,
+    loadPersonas,
+    loadLorebooks,
+  ]);
 
   const filteredChats = useMemo(() => {
     if (adultFilter === "all") return chats;
@@ -81,25 +107,56 @@ export function RpChatList({ onOpen }: Props) {
     <div className="flex flex-col h-full min-h-0">
       <div className="flex flex-wrap items-center gap-2 px-4 py-3 soft-separator-y mesh-header mesh-surface">
         <PillGroup
-          options={[{ value: "all", label: "All" }, { value: "standard", label: "Standard" }]}
+          options={[
+            {
+              value: "all",
+              label: tRuntime(
+                "runtimeGenerated.components.rpStudio.rpchatlist.metadata.all",
+              ),
+            },
+            {
+              value: "standard",
+              label: tRuntime(
+                "runtimeGenerated.components.rpStudio.rpchatlist.metadata.standard",
+              ),
+            },
+          ]}
           value={adultFilter}
           onChange={(v) => setAdultFilter(v as "all" | "standard")}
           ariaLabel="Adult filter"
         />
         <div className="flex-1" />
-        <PrimaryButton size="sm" onClick={() => setCreating(true)}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.newRpChat" /></PrimaryButton>
+        <PrimaryButton size="sm" onClick={() => setCreating(true)}>
+          <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.newRpChat" />
+        </PrimaryButton>
       </div>
 
-      {error && <div className="px-4 py-3"><ErrorText>{error}</ErrorText></div>}
+      {error && (
+        <div className="px-4 py-3">
+          <ErrorText>{error}</ErrorText>
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto px-4 py-4">
         {isLoading && !hasLoaded ? (
           <div className="flex items-center justify-center h-full text-text-muted gap-2 text-[13px]">
-            <Spinner className="text-text-muted" /> <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.loadingChats" /></div>
+            <Spinner className="text-text-muted" />{" "}
+            <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.loadingChats" />
+          </div>
         ) : filteredChats.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-3">
-            <EmptyState>{hasLoaded ? "No RP chats yet" : ""}</EmptyState>
-            {hasLoaded && <GhostButton onClick={() => setCreating(true)}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.startYourFirstRp" /></GhostButton>}
+            <EmptyState>
+              {hasLoaded
+                ? tRuntime(
+                    "runtimeGenerated.components.rpStudio.rpchatlist.text.noRpChatsYet",
+                  )
+                : ""}
+            </EmptyState>
+            {hasLoaded && (
+              <GhostButton onClick={() => setCreating(true)}>
+                <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.startYourFirstRp" />
+              </GhostButton>
+            )}
           </div>
         ) : (
           <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
@@ -114,9 +171,13 @@ export function RpChatList({ onOpen }: Props) {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <div className="text-[14px] font-semibold text-text-primary truncate">{chat.title}</div>
+                      <div className="text-[14px] font-semibold text-text-primary truncate">
+                        {chat.title}
+                      </div>
                       <div className="text-[12px] text-text-muted mt-0.5">
-                        {roster.length} {roster.length === 1 ? "character" : "characters"} · {formatRelativeTime(chat.updatedAt)}
+                        {roster.length}{" "}
+                        {roster.length === 1 ? "character" : "characters"} ·{" "}
+                        {formatRelativeTime(chat.updatedAt)}
                       </div>
                     </div>
                     {chat.adult && (
@@ -136,7 +197,11 @@ export function RpChatList({ onOpen }: Props) {
                             className="w-7 h-7 rounded-full overflow-hidden border border-border bg-surface-elevated flex items-center justify-center text-[12px] font-semibold text-text-secondary"
                           >
                             {src ? (
-                              <img src={src} alt="" className="w-full h-full object-cover" />
+                              <img
+                                src={src}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
                             ) : (
                               c.name.slice(0, 1).toUpperCase()
                             )}
@@ -151,30 +216,51 @@ export function RpChatList({ onOpen }: Props) {
                     </div>
                   )}
                   {chat.scenario && (
-                    <p className="text-[12.5px] text-text-secondary line-clamp-2">{truncate(chat.scenario, 180)}</p>
+                    <p className="text-[12.5px] text-text-secondary line-clamp-2">
+                      {truncate(chat.scenario, 180)}
+                    </p>
                   )}
                   <div className="flex items-center gap-1.5 mt-1">
                     <button
                       type="button"
-                      onClick={() => { setActive(chat.id); onOpen(chat.id); }}
+                      onClick={() => {
+                        setActive(chat.id);
+                        onOpen(chat.id);
+                      }}
                       className="flex-1 text-[12px] py-1.5 rounded-md border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors"
                     >
-                      <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.action.open" /></button>
+                      <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.action.open" />
+                    </button>
                     {confirmingDelete === chat.id ? (
                       <button
                         type="button"
-                        onClick={() => { void remove(chat.id); cancelConfirm(); }}
+                        onClick={() => {
+                          void remove(chat.id);
+                          cancelConfirm();
+                        }}
                         className="text-[12px] py-1.5 px-2 rounded-md text-rose-300 border border-rose-500/30 hover:bg-rose-500/10"
                       >
-                        <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.action.delete" /></button>
+                        <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.action.delete" />
+                      </button>
                     ) : (
                       <button
                         type="button"
                         onClick={() => armConfirm(chat.id)}
-                        aria-label={`Delete ${chat.title}`}
+                        aria-label={tRuntime(
+                          "runtimeGenerated.components.rpStudio.rpchatlist.attribute.deleteValue1",
+                          { value1: chat.title },
+                        )}
                         className="text-text-muted hover:text-rose-300 p-1.5"
                       >
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                        <svg
+                          width="11"
+                          height="11"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        >
                           <line x1="18" y1="6" x2="6" y2="18" />
                           <line x1="6" y1="6" x2="18" y2="18" />
                         </svg>
@@ -229,13 +315,28 @@ export function NewChatDialog({
   adultFilter,
 }: {
   onClose: () => void;
-  onCreate: (init: { title: string; characterIds: string[]; personaId: string | null; lorebookIds: string[]; modelId: string; scenario: string | undefined; adult: boolean; greeting?: { mode: "primary" | "alternate" | "random" | "none"; characterId: string; index?: number; content?: string } }) => Promise<string | null>;
+  onCreate: (init: {
+    title: string;
+    characterIds: string[];
+    personaId: string | null;
+    lorebookIds: string[];
+    modelId: string;
+    scenario: string | undefined;
+    adult: boolean;
+    greeting?: {
+      mode: "primary" | "alternate" | "random" | "none";
+      characterId: string;
+      index?: number;
+      content?: string;
+    };
+  }) => Promise<string | null>;
   cards: CharacterCardV1[];
   personas: UserPersonaV1[];
   lorebooks: LorebookV1[];
   defaultModel: string;
   adultFilter: "all" | "standard";
 }) {
+  const { t: tRuntime } = useTranslation("common");
   const [title, setTitle] = useState("New RP");
   const [selectedCards, setSelectedCards] = useState<string[]>([]);
   const [personaId, setPersonaId] = useState<string>("");
@@ -263,7 +364,9 @@ export function NewChatDialog({
   };
 
   const toggleLorebook = (id: string) => {
-    setSelectedLorebooks((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+    setSelectedLorebooks((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
   };
 
   const handleCreate = async () => {
@@ -282,21 +385,47 @@ export function NewChatDialog({
     const adult = resolvedCards.some((c) => c.adult);
     const greetingCard = resolvedCards[0];
     const greeting = (() => {
-      if (!greetingCard || greetingChoice === "none") return greetingCard ? { mode: "none" as const, characterId: greetingCard.id } : undefined;
+      if (!greetingCard || greetingChoice === "none")
+        return greetingCard
+          ? { mode: "none" as const, characterId: greetingCard.id }
+          : undefined;
       if (greetingChoice === "random") {
-        const candidates = [greetingCard.firstMessage, ...(greetingCard.alternateGreetings ?? [])].filter((value): value is string => Boolean(value));
-        const index = candidates.length ? Math.floor(Math.random() * candidates.length) : -1;
-        return { mode: "random" as const, characterId: greetingCard.id, ...(index >= 0 ? { index, content: candidates[index] } : {}) };
+        const candidates = [
+          greetingCard.firstMessage,
+          ...(greetingCard.alternateGreetings ?? []),
+        ].filter((value): value is string => Boolean(value));
+        const index = candidates.length
+          ? Math.floor(Math.random() * candidates.length)
+          : -1;
+        return {
+          mode: "random" as const,
+          characterId: greetingCard.id,
+          ...(index >= 0 ? { index, content: candidates[index] } : {}),
+        };
       }
       if (greetingChoice.startsWith("alternate:")) {
         const index = Number(greetingChoice.split(":")[1]);
         const content = greetingCard.alternateGreetings?.[index];
-        return { mode: "alternate" as const, characterId: greetingCard.id, index, ...(content ? { content } : {}) };
+        return {
+          mode: "alternate" as const,
+          characterId: greetingCard.id,
+          index,
+          ...(content ? { content } : {}),
+        };
       }
-      return { mode: "primary" as const, characterId: greetingCard.id, ...(greetingCard.firstMessage ? { content: greetingCard.firstMessage } : {}) };
+      return {
+        mode: "primary" as const,
+        characterId: greetingCard.id,
+        ...(greetingCard.firstMessage
+          ? { content: greetingCard.firstMessage }
+          : {}),
+      };
     })();
     // Mandatory safety guard for batch character import.
-    const decision = assessCharacterBatchImport(resolvedCards, getEffectiveRendererLocalFamilySafeModeEnabled());
+    const decision = assessCharacterBatchImport(
+      resolvedCards,
+      getEffectiveRendererLocalFamilySafeModeEnabled(),
+    );
     if (!decision.allow || decision.action === "block") {
       setError(decision.userMessage);
       return;
@@ -324,21 +453,35 @@ export function NewChatDialog({
       tabIndex={-1}
       role="dialog"
       aria-modal="true"
-      aria-label="New RP chat"
+      aria-label={tRuntime(
+        "runtimeGenerated.components.rpStudio.rpchatlist.attribute.newRpChat",
+      )}
       className="absolute inset-0 z-30 flex items-center justify-center bg-bg/70 backdrop-blur-sm"
     >
       <div className="w-full max-w-2xl max-h-[85%] flex flex-col bg-surface border border-border rounded-2xl shadow-2xl overflow-hidden">
         <div className="flex items-center gap-2 px-5 py-3 soft-separator-y mesh-header mesh-surface">
-          <h2 className="text-[15px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.heading.newRpChat" /></h2>
+          <h2 className="text-[15px] font-semibold text-text-primary">
+            <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.heading.newRpChat" />
+          </h2>
           <div className="ml-auto flex items-center gap-2">
-            <GhostButton onClick={onClose} disabled={saving}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.cancel" /></GhostButton>
-            <PrimaryButton size="sm" onClick={() => void handleCreate()} loading={saving}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.create" /></PrimaryButton>
+            <GhostButton onClick={onClose} disabled={saving}>
+              <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.cancel" />
+            </GhostButton>
+            <PrimaryButton
+              size="sm"
+              onClick={() => void handleCreate()}
+              loading={saving}
+            >
+              <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.create" />
+            </PrimaryButton>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
           {error && <ErrorText>{error}</ErrorText>}
           <div>
-            <Label htmlFor="rp-title"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.title" /></Label>
+            <Label htmlFor="rp-title">
+              <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.title" />
+            </Label>
             <input
               ref={titleRef}
               id="rp-title"
@@ -349,7 +492,9 @@ export function NewChatDialog({
             />
           </div>
           <div>
-            <Label htmlFor="rp-model"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.model" /></Label>
+            <Label htmlFor="rp-model">
+              <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.model" />
+            </Label>
             <select
               id="rp-model"
               value={modelId}
@@ -357,24 +502,51 @@ export function NewChatDialog({
               className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-colors"
             >
               {FALLBACK_MODELS.text.map((m) => (
-                <option key={m.id} value={m.id}>{m.name}</option>
+                <option key={m.id} value={m.id}>
+                  {m.name}
+                </option>
               ))}
             </select>
           </div>
           <div>
-            <Label htmlFor="rp-greeting"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.openingGreeting" /></Label>
-            <select id="rp-greeting" value={greetingChoice} onChange={(event) => setGreetingChoice(event.target.value)} className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary">
-              <option value="primary"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.usePrimaryGreeting" /></option>
-              {(cards.find((card) => card.id === selectedCards[0])?.alternateGreetings ?? []).map((_, index) => <option key={index} value={`alternate:${index}`}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.alternateGreeting" /> {index + 1}</option>)}
-              <option value="random"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.randomGreeting" /></option>
-              <option value="none"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.startWithoutGreeting" /></option>
+            <Label htmlFor="rp-greeting">
+              <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.openingGreeting" />
+            </Label>
+            <select
+              id="rp-greeting"
+              value={greetingChoice}
+              onChange={(event) => setGreetingChoice(event.target.value)}
+              className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary"
+            >
+              <option value="primary">
+                <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.usePrimaryGreeting" />
+              </option>
+              {(
+                cards.find((card) => card.id === selectedCards[0])
+                  ?.alternateGreetings ?? []
+              ).map((_, index) => (
+                <option key={index} value={`alternate:${index}`}>
+                  <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.alternateGreeting" />{" "}
+                  {index + 1}
+                </option>
+              ))}
+              <option value="random">
+                <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.randomGreeting" />
+              </option>
+              <option value="none">
+                <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.startWithoutGreeting" />
+              </option>
             </select>
           </div>
           <div>
-            <Label hint={`${selectedCards.length}/${MAX_ACTIVE_CHARACTERS}`}><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.characters" /></Label>
+            <Label hint={`${selectedCards.length}/${MAX_ACTIVE_CHARACTERS}`}>
+              <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.characters" />
+            </Label>
             <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto p-1">
               {visibleCards.length === 0 ? (
-                <div className="text-[12px] text-text-muted italic"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.noCharactersYetCreateOneInThe" /></div>
+                <div className="text-[12px] text-text-muted italic">
+                  <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.noCharactersYetCreateOneInThe" />
+                </div>
               ) : (
                 visibleCards.map((c) => (
                   <button
@@ -392,22 +564,30 @@ export function NewChatDialog({
             </div>
           </div>
           <div>
-            <Label htmlFor="rp-persona"><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.personaOptional" /></Label>
+            <Label htmlFor="rp-persona">
+              <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.personaOptional" />
+            </Label>
             <select
               id="rp-persona"
               value={personaId}
               onChange={(e) => setPersonaId(e.target.value)}
               className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-colors"
             >
-              <option value=""><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.noPersona" /></option>
+              <option value="">
+                <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.option.noPersona" />
+              </option>
               {personas.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
               ))}
             </select>
           </div>
           {lorebooks.length > 0 && (
             <div>
-              <Label><Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.lorebooks" /></Label>
+              <Label>
+                <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.lorebooks" />
+              </Label>
               <div className="flex flex-wrap gap-1.5">
                 {lorebooks.map((l) => (
                   <button
@@ -425,13 +605,16 @@ export function NewChatDialog({
           )}
           <div>
             <Label htmlFor="rp-scenario" hint="optional">
-              <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.scenarioOverride" /></Label>
+              <Trans i18nKey="common:surface.componentsRpStudioRpchatlist.text.scenarioOverride" />
+            </Label>
             <textarea
               id="rp-scenario"
               value={scenario}
               onChange={(e) => setScenario(e.target.value)}
               rows={3}
-              placeholder="Leave blank to use the first character's scenario."
+              placeholder={tRuntime(
+                "runtimeGenerated.components.rpStudio.rpchatlist.attribute.leaveBlankToUseTheFirstCharacterSScenario",
+              )}
               className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-colors placeholder:text-text-muted resize-none"
             />
           </div>

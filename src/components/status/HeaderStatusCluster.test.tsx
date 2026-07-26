@@ -11,8 +11,19 @@ vi.mock("../../services/desktopBridge", () => ({
   desktopProviderApiKey: { isConfigured: () => Promise.resolve(false) },
   desktopProviderSettings: { get: () => Promise.resolve({}) },
   desktopApp: { getDiagnostics: () => Promise.resolve({}) },
-  desktopConversations: { list: () => Promise.resolve({ ok: false, records: [], error: "mock" }) },
-  desktopChat: { list: () => Promise.resolve({ ok: false, conversations: [], truncated: false, totalScanned: 0, error: "mock" }) },
+  desktopConversations: {
+    list: () => Promise.resolve({ ok: false, records: [], error: "mock" }),
+  },
+  desktopChat: {
+    list: () =>
+      Promise.resolve({
+        ok: false,
+        conversations: [],
+        truncated: false,
+        totalScanned: 0,
+        error: "mock",
+      }),
+  },
 }));
 
 import { HeaderStatusCluster } from "./HeaderStatusCluster";
@@ -23,6 +34,7 @@ import { useProjectStore } from "../../stores/project-store";
 import { useMediaStore } from "../../stores/media-store";
 import { useChatStore } from "../../stores/chat-store";
 import { _resetAuditCounters_TEST_ONLY } from "../../shared/safety";
+import { i18n } from "../../i18n";
 
 function reset() {
   _resetAuditCounters_TEST_ONLY();
@@ -42,7 +54,12 @@ function reset() {
     localFamilySafeModeEnabled: true,
     veniceApiSafeMode: true,
   } as never);
-  useProjectStore.setState({ projects: [], loaded: true, loading: false, lastError: null });
+  useProjectStore.setState({
+    projects: [],
+    loaded: true,
+    loading: false,
+    lastError: null,
+  });
   useMediaStore.setState({
     items: [],
     loading: false,
@@ -56,7 +73,10 @@ function reset() {
     conversations: [],
     activeConversationId: null,
     isStreaming: false,
-    veniceParams: { include_venice_system_prompt: false, enable_web_search: "off" },
+    veniceParams: {
+      include_venice_system_prompt: false,
+      enable_web_search: "off",
+    },
     systemPrompt: "",
     temperature: 0.7,
     topP: 1,
@@ -76,10 +96,34 @@ afterEach(() => {
 });
 
 describe("HeaderStatusCluster (VERIFY-045)", () => {
+  it("localizes category and severity accessible names at runtime", async () => {
+    await act(async () => {
+      await i18n.changeLanguage("sv-SE");
+    });
+    render(<HeaderStatusCluster />);
+    expect(screen.getByTestId("status-indicator-storage")).toHaveAccessibleName(
+      /Lagring: /,
+    );
+    expect(screen.getByTestId("status-indicator-model")).toHaveAccessibleName(
+      /Modell: /,
+    );
+    await act(async () => {
+      await i18n.changeLanguage("en-US");
+    });
+  });
   it("renders all 8 required indicators with accessible names", () => {
     render(<HeaderStatusCluster />);
     expect(screen.getByTestId("header-status-cluster")).toBeInTheDocument();
-    for (const id of ["api", "apiKey", "model", "storage", "safety", "provider", "project", "desktop"]) {
+    for (const id of [
+      "api",
+      "apiKey",
+      "model",
+      "storage",
+      "safety",
+      "provider",
+      "project",
+      "desktop",
+    ]) {
       const el = screen.getByTestId(`status-indicator-${id}`);
       expect(el).toBeInTheDocument();
       // Accessible label includes category + severity word.
@@ -112,7 +156,9 @@ describe("HeaderStatusCluster (VERIFY-045)", () => {
 
   it("keyboard activation (Enter) opens the drawer", () => {
     render(<HeaderStatusCluster />);
-    const el = screen.getByTestId("status-indicator-model") as HTMLButtonElement;
+    const el = screen.getByTestId(
+      "status-indicator-model",
+    ) as HTMLButtonElement;
     el.focus();
     fireEvent.click(el);
     expect(useStatusStore.getState().drawerOpen).toBe(true);
@@ -121,7 +167,16 @@ describe("HeaderStatusCluster (VERIFY-045)", () => {
 
   it("narrow layout does NOT hide the aria-label of any indicator (a11y invariant)", () => {
     render(<HeaderStatusCluster compact />);
-    for (const id of ["api", "apiKey", "model", "storage", "safety", "provider", "project", "desktop"]) {
+    for (const id of [
+      "api",
+      "apiKey",
+      "model",
+      "storage",
+      "safety",
+      "provider",
+      "project",
+      "desktop",
+    ]) {
       const el = screen.getByTestId(`status-indicator-${id}`);
       // Even when visually compact, screen readers see the full label.
       expect(el.getAttribute("aria-label")).toBeTruthy();
@@ -134,8 +189,14 @@ describe("HeaderStatusCluster (VERIFY-045)", () => {
     expect(before).toBeNull();
     render(<HeaderStatusCluster />);
     act(() => {
-      useAuthStore.setState({ isConfigured: true, apiKey: "k", hydrationStatus: "ready" } as never);
+      useAuthStore.setState({
+        isConfigured: true,
+        apiKey: "k",
+        hydrationStatus: "ready",
+      } as never);
     });
-    expect(screen.getByTestId("status-indicator-apiKey").dataset.severity).toBe("ok");
+    expect(screen.getByTestId("status-indicator-apiKey").dataset.severity).toBe(
+      "ok",
+    );
   });
 });

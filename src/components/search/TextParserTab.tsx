@@ -1,5 +1,5 @@
 import React from "react";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 const SUPPORTED_DOCUMENT_ACCEPT = [
   ".pdf",
@@ -73,7 +73,7 @@ export function TextParserTab({
   loading,
   runParser,
   parserOutput,
-  setParserOutput
+  setParserOutput,
 }: {
   file: File | null;
   setFile: (val: File | null) => void;
@@ -82,13 +82,17 @@ export function TextParserTab({
   parserOutput: string;
   setParserOutput: (val: string) => void;
 }) {
+  const { t: tRuntime } = useTranslation("common");
   return (
     <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg space-y-4">
-      <h3 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsSearchTextparsertab.heading.documentTextParser" /></h3>
+      <h3 className="text-[14.5px] font-medium text-text-primary">
+        <Trans i18nKey="common:surface.componentsSearchTextparsertab.heading.documentTextParser" />
+      </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="space-y-4">
           <p className="text-[12.5px] text-text-secondary leading-relaxed">
-            <Trans i18nKey="common:surface.componentsSearchTextparsertab.description.extractRawTextFromPdfDocxXlsx" /></p>
+            <Trans i18nKey="common:surface.componentsSearchTextparsertab.description.extractRawTextFromPdfDocxXlsx" />
+          </p>
           <input
             type="file"
             accept={SUPPORTED_DOCUMENT_ACCEPT}
@@ -100,13 +104,21 @@ export function TextParserTab({
             onClick={runParser}
             disabled={loading === "parser" || !file}
           >
-            {loading === "parser" ? "Parsing…" : "Parse Document"}
+            {loading === "parser"
+              ? tRuntime(
+                  "runtimeGenerated.components.search.textparsertab.text.parsing",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.search.textparsertab.text.parseDocument",
+                )}
           </button>
         </div>
         <textarea
           value={parserOutput}
           onChange={(e) => setParserOutput(e.target.value)}
-          placeholder="Extracted document text..."
+          placeholder={tRuntime(
+            "runtimeGenerated.components.search.textparsertab.attribute.extractedDocumentText",
+          )}
           className="w-full bg-surface border border-border rounded-lg px-3.5 py-2.5 text-[13px] text-text-secondary outline-none font-mono focus:border-accent transition-all min-h-[160px] placeholder:text-text-muted/50"
         />
       </div>

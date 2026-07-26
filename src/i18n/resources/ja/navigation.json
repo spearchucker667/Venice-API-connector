@@ -258,5 +258,18 @@
     "toggleInspector": "インスペクターの切り替え",
     "toggleHint": "⌘Kで切り替え",
     "navigateHint": "↑↓でナビゲート · Enterで選択"
+  },
+  "header": {
+    "openMenu": "メニューを開く",
+    "toggleSidebar": "サイドバーの切り替え",
+    "selectModel": "モデルを選択してください…",
+    "selectedModel": "選択したモデル",
+    "toggleTaskCenter": "タスクセンターを切り替えます",
+    "tasks": "タスク",
+    "checkingApiKey": "APIキーの確認",
+    "apiKeyConnectedManage": "API キーの接続、管理",
+    "connectApiKey": "接続APIキー",
+    "checkingKey": "キーを確認中…",
+    "connected": "接続済み"
   }
 }

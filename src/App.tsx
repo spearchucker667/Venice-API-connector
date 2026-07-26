@@ -30,7 +30,7 @@ import { applyTheme, resolveInitialTheme } from './theme'
 import { CANONICAL_TAB_ORDER, normaliseTab, type TabId } from './config/tabs'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
 import { useProfileVolatileReset } from './hooks/useProfileVolatileReset'
-import { Trans } from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 
 /** Exported for regression testing: identifies whether a keyboard event target
  *  is an editable element where global shortcuts should be ignored. */
@@ -189,6 +189,7 @@ const views: Record<TabId, React.ComponentType> = {
 export const TAB_ORDER: readonly TabId[] = CANONICAL_TAB_ORDER;
 
 export function App() {
+  const { t: tRuntime } = useTranslation('common')
   const needsUnlock = useAuthStore((s) => !s.isConfigured && !s.apiKey)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   // LEGAL: show the 18+ age-gate on first launch. Persists via FIRST_RUN_ACK_KEY.
@@ -302,7 +303,7 @@ export function App() {
       {/* Mobile drawer overlay */}
       {mobileSidebarOpen && (
         <button
-          aria-label="Close menu"
+          aria-label={tRuntime("runtimeGenerated.app.attribute.closeMenu")}
           className="md:hidden fixed inset-0 z-30 bg-overlay backdrop-blur-sm animate-fade-in"
           onClick={() => setMobileSidebarOpen(false)}
         />

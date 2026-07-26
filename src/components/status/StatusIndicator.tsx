@@ -2,6 +2,7 @@
  *  header status cluster + diagnostics drawer). */
 
 import type { StatusSeverity } from "../../types/status";
+import { useTranslation } from "react-i18next";
 
 /* ----------------------------------------------------------------- *
  * Tone → CSS class mapping. The class is composed with the existing
@@ -39,8 +40,12 @@ export function getIndicatorDotClass(severity: StatusSeverity): string {
   return DOT_CLASS[severity];
 }
 
-export function getIndicatorAriaLabel(severity: StatusSeverity, label: string): string {
-  return `${label}: ${LABEL_PREFIX[severity]}`;
+export function getIndicatorAriaLabel(
+  severity: StatusSeverity,
+  label: string,
+  severityLabel = LABEL_PREFIX[severity],
+): string {
+  return `${label}: ${severityLabel}`;
 }
 
 export interface StatusIndicatorProps {
@@ -63,23 +68,25 @@ export function StatusIndicator({
   onClick,
   compact = false,
 }: StatusIndicatorProps) {
-  const interactive = typeof onClick === "function"
-  const Tag = interactive ? "button" : "div"
+  const { t } = useTranslation("common");
+  const severityLabel = t(`statusCluster.severities.${severity}`);
+  const interactive = typeof onClick === "function";
+  const Tag = interactive ? "button" : "div";
   const tagProps = interactive
-    ? ({
+    ? {
         type: "button" as const,
         onClick,
-        "aria-label": getIndicatorAriaLabel(severity, label),
+        "aria-label": getIndicatorAriaLabel(severity, label, severityLabel),
         title: summary,
         "data-testid": `status-indicator-${id}`,
         "data-severity": severity,
-      })
-    : ({
-        "aria-label": getIndicatorAriaLabel(severity, label),
+      }
+    : {
+        "aria-label": getIndicatorAriaLabel(severity, label, severityLabel),
         title: summary,
         "data-testid": `status-indicator-${id}`,
         "data-severity": severity,
-      })
+      };
   return (
     <Tag
       {...tagProps}
@@ -98,9 +105,9 @@ export function StatusIndicator({
       <span className="text-text-primary/80">{label}</span>
       {!compact && (
         <span className="text-text-muted/70 text-[12px] hidden lg:inline">
-          {LABEL_PREFIX[severity]}
+          {severityLabel}
         </span>
       )}
     </Tag>
-  )
+  );
 }

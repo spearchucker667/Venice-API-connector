@@ -1,5 +1,7 @@
 # Video Pipeline and Research Browser Deactivation Report
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 Date: 2026-07-18
 Status: local implementation and automated validation complete; paid-provider and packaged headed QA deferred.
 

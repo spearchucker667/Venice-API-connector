@@ -1,3 +1,4 @@
+import { translateRuntime } from "../../i18n/runtimeTranslator";
 // Code Owner: fayeblade (@spearchucker667)
 /** @fileoverview Jina AI Reader/Search research provider adapter.
  *
@@ -32,7 +33,9 @@ function nowIso(): string {
   return new Date().toISOString();
 }
 
-function buildHeaders(options?: ScrapeInput["options"]): Record<string, string> {
+function buildHeaders(
+  options?: ScrapeInput["options"],
+): Record<string, string> {
   const headers: Record<string, string> = {};
 
   if (options?.outputFormat === "json") {
@@ -86,7 +89,7 @@ function buildSearchUrl(input: SearchInput): string {
 async function jinaFetch(
   url: string,
   headers: Record<string, string>,
-  timeoutMs?: number
+  timeoutMs?: number,
 ): Promise<unknown> {
   try {
     const result = await desktopJina.request({
@@ -123,10 +126,10 @@ function normalizeReader(url: string, data: unknown): ScrapeResult {
     typeof d.data === "string"
       ? d.data
       : typeof d.markdown === "string"
-      ? d.markdown
-      : typeof d.text === "string"
-      ? d.text
-      : undefined;
+        ? d.markdown
+        : typeof d.text === "string"
+          ? d.text
+          : undefined;
 
   return {
     provider: "jina" as ResearchProviderId,
@@ -149,7 +152,11 @@ function normalizeSearch(query: string, data: unknown): SearchResult[] {
   }
 
   const d = (data ?? {}) as Record<string, unknown>;
-  const items = Array.isArray(d.data) ? d.data : Array.isArray(d.results) ? d.results : undefined;
+  const items = Array.isArray(d.data)
+    ? d.data
+    : Array.isArray(d.results)
+      ? d.results
+      : undefined;
   if (items && Array.isArray(items)) {
     return items
       .map((item: unknown, idx: number): SearchResult => {
@@ -162,10 +169,10 @@ function normalizeSearch(query: string, data: unknown): SearchResult[] {
             typeof r.description === "string"
               ? r.description
               : typeof r.snippet === "string"
-              ? r.snippet
-              : typeof r.content === "string"
-              ? r.content.slice(0, 500)
-              : undefined,
+                ? r.snippet
+                : typeof r.content === "string"
+                  ? r.content.slice(0, 500)
+                  : undefined,
           publishedAt: r.date ? String(r.date) : undefined,
           raw: item,
         };
@@ -199,7 +206,10 @@ function parseUrlsFromMarkdown(text: string): SearchResult[] {
 export function createJinaProvider(): ResearchProvider {
   return {
     id: "jina",
-    label: "Jina AI",
+    label: translateRuntime(
+      "runtimeGenerated.research.providers.jinaresearchprovider.metadata.jinaAi",
+      "Jina AI",
+    ),
     supports: {
       search: true,
       scrape: true,

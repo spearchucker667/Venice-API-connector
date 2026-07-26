@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
 import { uiSoundController } from "../../services/uiSoundController";
@@ -76,7 +77,9 @@ export function askDecision(options: DecisionRequestOptions): Promise<boolean> {
   });
 }
 
-export function askSecret(options: SecretRequestOptions): Promise<string | null> {
+export function askSecret(
+  options: SecretRequestOptions,
+): Promise<string | null> {
   return new Promise((resolve) => {
     const listener = activeListener;
     if (!listener) {
@@ -88,6 +91,7 @@ export function askSecret(options: SecretRequestOptions): Promise<string | null>
 }
 
 export function ModalRequestHost() {
+  const { t: tRuntime } = useTranslation("common");
   const [request, setRequest] = useState<ModalRequest | null>(null);
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -106,7 +110,9 @@ export function ModalRequestHost() {
 
   useEffect(() => {
     if (request?.kind === "text" || request?.kind === "secret") {
-      setValue(request.kind === "text" ? request.options.initialValue ?? "" : "");
+      setValue(
+        request.kind === "text" ? (request.options.initialValue ?? "") : "",
+      );
       setConfirmation("");
       setRevealSecret(false);
       setError(null);
@@ -125,15 +131,16 @@ export function ModalRequestHost() {
 
   function cancelRequest() {
     if (!request) return;
-    uiSoundController.play('secondaryClick')
-    if (request.kind === "text" || request.kind === "secret") request.resolve(null);
+    uiSoundController.play("secondaryClick");
+    if (request.kind === "text" || request.kind === "secret")
+      request.resolve(null);
     else request.resolve(false);
     closeRequest();
   }
 
   function acceptRequest() {
     if (!request) return;
-    uiSoundController.play('primaryClick')
+    uiSoundController.play("primaryClick");
     if (request.kind === "text") {
       const validationError = request.options.validate?.(value) ?? null;
       if (validationError) {
@@ -162,12 +169,15 @@ export function ModalRequestHost() {
   const detail = request.options.detail;
   const actionLabel =
     request.kind === "text"
-      ? request.options.actionLabel ?? "Save"
+      ? (request.options.actionLabel ?? "Save")
       : request.kind === "secret"
-      ? request.options.actionLabel ?? "Continue"
-      : request.options.actionLabel ?? "Continue";
+        ? (request.options.actionLabel ?? "Continue")
+        : (request.options.actionLabel ?? "Continue");
   const cancelLabel = request.options.cancelLabel ?? "Cancel";
-  const actionTone = request.kind === "decision" && request.options.danger ? "danger" : "primary";
+  const actionTone =
+    request.kind === "decision" && request.options.danger
+      ? "danger"
+      : "primary";
 
   return (
     <div
@@ -185,11 +195,17 @@ export function ModalRequestHost() {
         aria-labelledby="modal-request-title"
         aria-describedby={detail ? "modal-request-detail" : undefined}
       >
-        <h2 id="modal-request-title" className="mb-2 text-lg font-display font-semibold text-text-primary">
+        <h2
+          id="modal-request-title"
+          className="mb-2 text-lg font-display font-semibold text-text-primary"
+        >
           {title}
         </h2>
         {detail && (
-          <p id="modal-request-detail" className="mb-5 text-sm leading-relaxed text-text-secondary">
+          <p
+            id="modal-request-detail"
+            className="mb-5 text-sm leading-relaxed text-text-secondary"
+          >
             {detail}
           </p>
         )}
@@ -209,8 +225,14 @@ export function ModalRequestHost() {
                 }
               }}
               placeholder={request.options.placeholder}
-              type={request.kind === "secret" && !revealSecret ? "password" : "text"}
-              autoComplete={request.kind === "secret" ? request.options.autocomplete ?? "current-password" : undefined}
+              type={
+                request.kind === "secret" && !revealSecret ? "password" : "text"
+              }
+              autoComplete={
+                request.kind === "secret"
+                  ? (request.options.autocomplete ?? "current-password")
+                  : undefined
+              }
               className="input w-full"
               aria-label={title}
               aria-invalid={error ? "true" : "false"}
@@ -231,9 +253,14 @@ export function ModalRequestHost() {
                 }}
                 type={revealSecret ? "text" : "password"}
                 autoComplete="new-password"
-                placeholder="Confirm passphrase"
+                placeholder={tRuntime(
+                  "runtimeGenerated.components.ui.modalRequests.attribute.confirmPassphrase",
+                )}
                 className="input mt-3 w-full"
-                aria-label={`${title} confirmation`}
+                aria-label={tRuntime(
+                  "runtimeGenerated.components.ui.modalRequests.attribute.titleConfirmation",
+                  { title: title },
+                )}
                 aria-invalid={error ? "true" : "false"}
               />
             )}
@@ -243,7 +270,13 @@ export function ModalRequestHost() {
                 className="mt-2 text-xs text-text-secondary hover:text-text-primary"
                 onClick={() => setRevealSecret((current) => !current)}
               >
-                {revealSecret ? "Hide passphrase" : "Show passphrase"}
+                {revealSecret
+                  ? tRuntime(
+                      "runtimeGenerated.components.ui.modalRequests.text.hidePassphrase",
+                    )
+                  : tRuntime(
+                      "runtimeGenerated.components.ui.modalRequests.text.showPassphrase",
+                    )}
               </button>
             )}
             {error && (
@@ -257,7 +290,11 @@ export function ModalRequestHost() {
           <button type="button" className="btn" onClick={cancelRequest}>
             {cancelLabel}
           </button>
-          <button type="button" className={`btn ${actionTone}`} onClick={acceptRequest}>
+          <button
+            type="button"
+            className={`btn ${actionTone}`}
+            onClick={acceptRequest}
+          >
             {actionLabel}
           </button>
         </div>

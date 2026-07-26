@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   BUILTIN_VENICE,
@@ -52,7 +53,7 @@ import { useConfigStore } from "../stores/config-store";
 import { toast } from "../stores/toast-store";
 import { redactErrorMessage } from "../shared/redaction";
 import { desktopConfig } from "../services/desktopBridge";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 const TOKEN_LABELS: Record<keyof ThemeTokens, string> = {
   background: "Background",
@@ -79,7 +80,12 @@ const TOKEN_LABELS: Record<keyof ThemeTokens, string> = {
   info: "Info",
   inputBackground: "Input Background",
   inputForeground: "Input Foreground",
-  placeholder: "Placeholder",
+  get placeholder() {
+    return translateRuntime(
+      "runtimeGenerated.components.thememaker.metadata.placeholder",
+      "Placeholder",
+    );
+  },
   disabledForeground: "Disabled Foreground",
   buttonPrimaryBackground: "Primary Button Background",
   buttonPrimaryForeground: "Primary Button Foreground",
@@ -99,23 +105,61 @@ const TOKEN_CATEGORIES: Array<{
 }> = [
   {
     name: "Surfaces & Backgrounds",
-    keys: ["background", "surface", "surfaceElevated", "surfaceMuted", "overlay", "glow"],
+    keys: [
+      "background",
+      "surface",
+      "surfaceElevated",
+      "surfaceMuted",
+      "overlay",
+      "glow",
+    ],
   },
   {
     name: "Typography & Text",
-    keys: ["foreground", "foregroundMuted", "foregroundSubtle", "placeholder", "disabledForeground", "link"],
+    keys: [
+      "foreground",
+      "foregroundMuted",
+      "foregroundSubtle",
+      "placeholder",
+      "disabledForeground",
+      "link",
+    ],
   },
   {
     name: "Borders & Focus",
-    keys: ["border", "borderStrong", "focusRing", "selectionBackground", "selectionForeground"],
+    keys: [
+      "border",
+      "borderStrong",
+      "focusRing",
+      "selectionBackground",
+      "selectionForeground",
+    ],
   },
   {
     name: "Controls & Buttons",
-    keys: ["accent", "accentHover", "accentForeground", "buttonPrimaryBackground", "buttonPrimaryForeground", "buttonSecondaryBackground", "buttonSecondaryForeground", "inputBackground", "inputForeground"],
+    keys: [
+      "accent",
+      "accentHover",
+      "accentForeground",
+      "buttonPrimaryBackground",
+      "buttonPrimaryForeground",
+      "buttonSecondaryBackground",
+      "buttonSecondaryForeground",
+      "inputBackground",
+      "inputForeground",
+    ],
   },
   {
     name: "Status & Feedback",
-    keys: ["success", "successForeground", "warning", "warningForeground", "danger", "dangerForeground", "info"],
+    keys: [
+      "success",
+      "successForeground",
+      "warning",
+      "warningForeground",
+      "danger",
+      "dangerForeground",
+      "info",
+    ],
   },
 ];
 
@@ -141,12 +185,17 @@ function camelToSnake(value: string): string {
 }
 
 function snakeToCamel(value: string): string {
-  return value.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
+  return value.replace(/_([a-z])/g, (_, letter: string) =>
+    letter.toUpperCase(),
+  );
 }
 
 function importedTokens(mode: ThemeMode, raw: unknown): ThemeTokens {
-  if (!isRecord(raw)) throw new Error("Invalid theme yaml: tokens must be a mapping.");
-  const fallback = cloneTheme(mode === "light" ? BUILTIN_LIGHT : BUILTIN_VENICE).tokens;
+  if (!isRecord(raw))
+    throw new Error("Invalid theme yaml: tokens must be a mapping.");
+  const fallback = cloneTheme(
+    mode === "light" ? BUILTIN_LIGHT : BUILTIN_VENICE,
+  ).tokens;
   const merged: Record<string, string> = { ...fallback };
   for (const [rawKey, value] of Object.entries(raw)) {
     const key = snakeToCamel(rawKey);
@@ -162,7 +211,9 @@ function importedTokens(mode: ThemeMode, raw: unknown): ThemeTokens {
 export async function themeToYaml(theme: Theme): Promise<string> {
   const { stringify } = await import("yaml");
   const tokens = Object.fromEntries(
-    Object.entries(completeThemeTokens(theme.mode, theme.tokens)).map(([key, value]) => [camelToSnake(key), value]),
+    Object.entries(completeThemeTokens(theme.mode, theme.tokens)).map(
+      ([key, value]) => [camelToSnake(key), value],
+    ),
   );
   return stringify({
     version: 1,
@@ -179,19 +230,27 @@ export async function themeToYaml(theme: Theme): Promise<string> {
 export async function yamlToTheme(yamlStr: string): Promise<Theme> {
   const { parse } = await import("yaml");
   const raw: unknown = parse(yamlStr);
-  if (!isRecord(raw)) throw new Error("Invalid theme yaml: root must be a mapping.");
+  if (!isRecord(raw))
+    throw new Error("Invalid theme yaml: root must be a mapping.");
 
   if (isRecord(raw.themes)) {
     const first = Object.values(raw.themes)[0];
-    if (!isRecord(first)) throw new Error("Invalid theme yaml: themes must contain an entry.");
+    if (!isRecord(first))
+      throw new Error("Invalid theme yaml: themes must contain an entry.");
     if (first.mode !== "dark" && first.mode !== "light") {
       throw new Error("Invalid theme yaml: mode must be dark or light.");
     }
     const mode: ThemeMode = first.mode === "light" ? "light" : "dark";
-    const name = typeof first.display_name === "string" && first.display_name.trim()
-      ? first.display_name.trim()
-      : "Imported Theme";
-    return { id: `custom-${Date.now()}`, name, mode, tokens: importedTokens(mode, first.tokens) };
+    const name =
+      typeof first.display_name === "string" && first.display_name.trim()
+        ? first.display_name.trim()
+        : "Imported Theme";
+    return {
+      id: `custom-${Date.now()}`,
+      name,
+      mode,
+      tokens: importedTokens(mode, first.tokens),
+    };
   }
 
   const background = typeof raw.background === "string" ? raw.background : null;
@@ -199,28 +258,46 @@ export async function yamlToTheme(yamlStr: string): Promise<Theme> {
   const accent = typeof raw.accent === "string" ? raw.accent : null;
   const details = typeof raw.details === "string" ? raw.details : null;
   if (!background || !foreground || !accent) {
-    throw new Error("Invalid theme yaml: expected a themes block or legacy background/foreground/accent fields.");
+    throw new Error(
+      "Invalid theme yaml: expected a themes block or legacy background/foreground/accent fields.",
+    );
   }
   if (![background, foreground, accent].every(isValidColorValue)) {
-    throw new Error("Invalid theme yaml: legacy color fields contain an unsafe value.");
+    throw new Error(
+      "Invalid theme yaml: legacy color fields contain an unsafe value.",
+    );
   }
 
-  const detailsIsColor = typeof details === "string" && isValidColorValue(details);
-  const rawName = typeof raw.name === "string" && raw.name.trim() ? raw.name.trim() : null;
-  const name = rawName || (detailsIsColor || !details ? "Imported Theme" : details);
+  const detailsIsColor =
+    typeof details === "string" && isValidColorValue(details);
+  const rawName =
+    typeof raw.name === "string" && raw.name.trim() ? raw.name.trim() : null;
+  const name =
+    rawName || (detailsIsColor || !details ? "Imported Theme" : details);
 
-  const inferredMode: ThemeMode = luminance(background) > 0.5 ? "light" : "dark";
-  const mode: ThemeMode = raw.mode === "light" || raw.mode === "dark" ? raw.mode : inferredMode;
+  const inferredMode: ThemeMode =
+    luminance(background) > 0.5 ? "light" : "dark";
+  const mode: ThemeMode =
+    raw.mode === "light" || raw.mode === "dark" ? raw.mode : inferredMode;
 
   const terminal = isRecord(raw.terminal_colors) ? raw.terminal_colors : {};
   const bright = isRecord(terminal.bright) ? terminal.bright : {};
   const normal = isRecord(terminal.normal) ? terminal.normal : {};
-  const color = (record: Record<string, unknown>, key: string, fallback: string): string =>
-    typeof record[key] === "string" && isValidColorValue(record[key]) ? record[key] : fallback;
+  const color = (
+    record: Record<string, unknown>,
+    key: string,
+    fallback: string,
+  ): string =>
+    typeof record[key] === "string" && isValidColorValue(record[key])
+      ? record[key]
+      : fallback;
 
-  const surfaceFallback = detailsIsColor && details ? details : color(normal, "black", background);
-  const surfaceElevatedFallback = detailsIsColor && details ? details : color(bright, "black", background);
-  const borderFallback = detailsIsColor && details ? details : color(normal, "white", foreground);
+  const surfaceFallback =
+    detailsIsColor && details ? details : color(normal, "black", background);
+  const surfaceElevatedFallback =
+    detailsIsColor && details ? details : color(bright, "black", background);
+  const borderFallback =
+    detailsIsColor && details ? details : color(normal, "white", foreground);
   const accentForeground = luminance(accent) > 0.5 ? foreground : background;
 
   const legacy: ThemeTokenInput = {
@@ -242,7 +319,12 @@ export async function yamlToTheme(yamlStr: string): Promise<Theme> {
     overlay: mode === "light" ? "rgba(0, 0, 0, 0.25)" : "rgba(0, 0, 0, 0.6)",
     glow: `${accent}25`,
   };
-  return { id: `custom-${Date.now()}`, name, mode, tokens: completeThemeTokens(mode, legacy) };
+  return {
+    id: `custom-${Date.now()}`,
+    name,
+    mode,
+    tokens: completeThemeTokens(mode, legacy),
+  };
 }
 
 const EMPTY_CUSTOM_THEMES: Theme[] = [];
@@ -254,9 +336,12 @@ interface ImportPreviewModalState {
 }
 
 export function ThemeMaker() {
-  const selectedThemeId = useSettingsStore((s) => s.selectedThemeId) || "builtin-venice";
+  const { t: tRuntime } = useTranslation("common");
+  const selectedThemeId =
+    useSettingsStore((s) => s.selectedThemeId) || "builtin-venice";
   const customTheme = useSettingsStore((s) => s.customTheme);
-  const customThemes = useSettingsStore((s) => s.customThemes) ?? EMPTY_CUSTOM_THEMES;
+  const customThemes =
+    useSettingsStore((s) => s.customThemes) ?? EMPTY_CUSTOM_THEMES;
   const setSelectedThemeId = useSettingsStore((s) => s.setSelectedThemeId);
   const setCustomTheme = useSettingsStore((s) => s.setCustomTheme);
   const saveCustomTheme = useSettingsStore((s) => s.saveCustomTheme);
@@ -303,7 +388,7 @@ export function ThemeMaker() {
       "builtin-glacial-ink": BUILTIN_GLACIAL_INK,
       "builtin-ultraviolet-rain": BUILTIN_ULTRAVIOLET_RAIN,
     }),
-    []
+    [],
   );
 
   const customThemesMap = useMemo(() => {
@@ -324,83 +409,277 @@ export function ThemeMaker() {
     [builtInMap, customThemesMap, yamlThemes],
   );
 
-  const [selector, setSelector] = useState<string>(selectedThemeId || "builtin-venice");
+  const [selector, setSelector] = useState<string>(
+    selectedThemeId || "builtin-venice",
+  );
   const [draft, setDraft] = useState<Theme>(() => {
-    const active = allThemesMap[selectedThemeId] || customTheme || BUILTIN_VENICE;
+    const active =
+      allThemesMap[selectedThemeId] || customTheme || BUILTIN_VENICE;
     return cloneTheme(active);
   });
-  const [importModal, setImportModal] = useState<ImportPreviewModalState | null>(null);
+  const [importModal, setImportModal] =
+    useState<ImportPreviewModalState | null>(null);
 
   useEffect(() => {
     setSelector(selectedThemeId || "builtin-venice");
-    const active = allThemesMap[selectedThemeId] || customTheme || BUILTIN_VENICE;
+    const active =
+      allThemesMap[selectedThemeId] || customTheme || BUILTIN_VENICE;
     setDraft(cloneTheme(active));
   }, [selectedThemeId, customTheme, customThemes, allThemesMap]);
 
-  const isCustomSelected = selector === "custom" || Boolean(customThemesMap[selector]);
+  const isCustomSelected =
+    selector === "custom" || Boolean(customThemesMap[selector]);
 
   const isDraftDirty = useMemo(() => {
-    const currentStored = allThemesMap[selector] || customTheme || BUILTIN_VENICE;
-    if (draft.name !== currentStored.name || draft.mode !== currentStored.mode) return true;
-    return JSON.stringify(draft.tokens) !== JSON.stringify(currentStored.tokens);
+    const currentStored =
+      allThemesMap[selector] || customTheme || BUILTIN_VENICE;
+    if (draft.name !== currentStored.name || draft.mode !== currentStored.mode)
+      return true;
+    return (
+      JSON.stringify(draft.tokens) !== JSON.stringify(currentStored.tokens)
+    );
   }, [draft, selector, allThemesMap, customTheme]);
 
   const themeOptions = useMemo(() => {
     const builtInOptions = [
-      { id: "builtin-venice", label: "Venice Parity Dark" },
-      { id: "builtin-dark", label: "Forge Graphite" },
-      { id: "builtin-light", label: "Forge Daylight" },
-      { id: "builtin-copper", label: "Forge Copper" },
-      { id: "builtin-dracula", label: "Forge Dracula" },
-      { id: "builtin-gruvbox-dark", label: "GruvBox Dark" },
-      { id: "builtin-rosepine", label: "Rosepine" },
-      { id: "builtin-nord", label: "Forge Nord" },
-      { id: "builtin-tokyo-night", label: "Forge Tokyo" },
-      { id: "builtin-catppuccin", label: "Forge Catppuccin" },
-      { id: "builtin-solarized-dark", label: "Forge Solarized Dark" },
-      { id: "builtin-solarized-light", label: "Forge Solarized Light" },
-      { id: "builtin-one-dark", label: "Forge One Dark" },
-      { id: "builtin-monokai", label: "Forge Monokai" },
-      { id: "builtin-github-light", label: "Forge GitHub Light" },
-      { id: "builtin-obsidian-bloom", label: "Obsidian Bloom" },
-      { id: "builtin-harbor-fog", label: "Harbor Fog" },
-      { id: "builtin-circuit-mint", label: "Circuit Mint" },
-      { id: "builtin-amber-archive", label: "Amber Archive" },
-      { id: "builtin-neon-dusk", label: "Neon Dusk" },
-      { id: "builtin-aurora-boreal", label: "Aurora Boreal" },
-      { id: "builtin-sakura-terminal", label: "Sakura Terminal" },
-      { id: "builtin-basalt-noir", label: "Basalt Noir" },
-      { id: "builtin-solar-ash", label: "Solar Ash" },
-      { id: "builtin-cyber-orchid", label: "Cyber Orchid" },
-      { id: "builtin-arctic-glass", label: "Arctic Glass" },
-      { id: "builtin-desert-copperfield", label: "Desert Copperfield" },
-      { id: "builtin-toxic-limewire", label: "Toxic Limewire" },
-      { id: "builtin-midnight-velvet", label: "Midnight Velvet" },
-      { id: "builtin-porcelain-daybreak", label: "Porcelain Daybreak" },
-      { id: "builtin-synthwave-harbor", label: "Synthwave Harbor" },
-      { id: "builtin-moss-circuit", label: "Moss Circuit" },
-      { id: "builtin-ember-monastery", label: "Ember Monastery" },
-      { id: "builtin-glacial-ink", label: "Glacial Ink" },
-      { id: "builtin-ultraviolet-rain", label: "Ultraviolet Rain" },
+      {
+        id: "builtin-venice",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.veniceParityDark",
+        ),
+      },
+      {
+        id: "builtin-dark",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeGraphite",
+        ),
+      },
+      {
+        id: "builtin-light",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeDaylight",
+        ),
+      },
+      {
+        id: "builtin-copper",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeCopper",
+        ),
+      },
+      {
+        id: "builtin-dracula",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeDracula",
+        ),
+      },
+      {
+        id: "builtin-gruvbox-dark",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.gruvboxDark",
+        ),
+      },
+      {
+        id: "builtin-rosepine",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.rosepine",
+        ),
+      },
+      {
+        id: "builtin-nord",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeNord",
+        ),
+      },
+      {
+        id: "builtin-tokyo-night",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeTokyo",
+        ),
+      },
+      {
+        id: "builtin-catppuccin",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeCatppuccin",
+        ),
+      },
+      {
+        id: "builtin-solarized-dark",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeSolarizedDark",
+        ),
+      },
+      {
+        id: "builtin-solarized-light",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeSolarizedLight",
+        ),
+      },
+      {
+        id: "builtin-one-dark",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeOneDark",
+        ),
+      },
+      {
+        id: "builtin-monokai",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeMonokai",
+        ),
+      },
+      {
+        id: "builtin-github-light",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.forgeGithubLight",
+        ),
+      },
+      {
+        id: "builtin-obsidian-bloom",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.obsidianBloom",
+        ),
+      },
+      {
+        id: "builtin-harbor-fog",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.harborFog",
+        ),
+      },
+      {
+        id: "builtin-circuit-mint",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.circuitMint",
+        ),
+      },
+      {
+        id: "builtin-amber-archive",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.amberArchive",
+        ),
+      },
+      {
+        id: "builtin-neon-dusk",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.neonDusk",
+        ),
+      },
+      {
+        id: "builtin-aurora-boreal",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.auroraBoreal",
+        ),
+      },
+      {
+        id: "builtin-sakura-terminal",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.sakuraTerminal",
+        ),
+      },
+      {
+        id: "builtin-basalt-noir",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.basaltNoir",
+        ),
+      },
+      {
+        id: "builtin-solar-ash",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.solarAsh",
+        ),
+      },
+      {
+        id: "builtin-cyber-orchid",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.cyberOrchid",
+        ),
+      },
+      {
+        id: "builtin-arctic-glass",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.arcticGlass",
+        ),
+      },
+      {
+        id: "builtin-desert-copperfield",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.desertCopperfield",
+        ),
+      },
+      {
+        id: "builtin-toxic-limewire",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.toxicLimewire",
+        ),
+      },
+      {
+        id: "builtin-midnight-velvet",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.midnightVelvet",
+        ),
+      },
+      {
+        id: "builtin-porcelain-daybreak",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.porcelainDaybreak",
+        ),
+      },
+      {
+        id: "builtin-synthwave-harbor",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.synthwaveHarbor",
+        ),
+      },
+      {
+        id: "builtin-moss-circuit",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.mossCircuit",
+        ),
+      },
+      {
+        id: "builtin-ember-monastery",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.emberMonastery",
+        ),
+      },
+      {
+        id: "builtin-glacial-ink",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.glacialInk",
+        ),
+      },
+      {
+        id: "builtin-ultraviolet-rain",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.ultravioletRain",
+        ),
+      },
     ];
-    
-    const optionsMap = new Map<string, { id: string, label: string }>();
-    
+
+    const optionsMap = new Map<string, { id: string; label: string }>();
+
     // Add built-ins first
-    builtInOptions.forEach(opt => optionsMap.set(opt.id, opt));
-    
+    builtInOptions.forEach((opt) => optionsMap.set(opt.id, opt));
+
     // Add yaml themes (overriding built-ins with the same ID, though they should be identical)
-    Object.entries(yamlThemes).forEach(([id, theme]) => optionsMap.set(id, { id, label: theme.name }));
-    
+    Object.entries(yamlThemes).forEach(([id, theme]) =>
+      optionsMap.set(id, { id, label: theme.name }),
+    );
+
     // Add custom user themes
-    Object.values(customThemesMap).forEach(theme => optionsMap.set(theme.id, { id: theme.id, label: theme.name }));
+    Object.values(customThemesMap).forEach((theme) =>
+      optionsMap.set(theme.id, { id: theme.id, label: theme.name }),
+    );
 
     const options = Array.from(optionsMap.values());
     if (!optionsMap.has("custom")) {
-      options.push({ id: "custom", label: "Custom Theme" });
+      options.push({
+        id: "custom",
+        label: tRuntime(
+          "runtimeGenerated.components.thememaker.metadata.customTheme",
+        ),
+      });
     }
     return options;
-  }, [yamlThemes, customThemesMap]);
+  }, [yamlThemes, customThemesMap, tRuntime]);
 
   function handleSelect(id: string) {
     setSelector(id);
@@ -431,15 +710,29 @@ export function ThemeMaker() {
     setDraft(newTheme);
     setSelector(newTheme.id);
     applyTheme(newTheme);
-    
+
     try {
       const result = await desktopConfig.saveTheme(newTheme);
-      if (!result.ok) throw new Error(result.error || "Theme persistence failed.");
+      if (!result.ok)
+        throw new Error(result.error || "Theme persistence failed.");
       saveCustomTheme(newTheme);
-      setYamlThemes({ ...useConfigStore.getState().yamlThemes, [newTheme.id]: newTheme });
-      toast.success(`Created new custom theme "${newTheme.name}"`);
+      setYamlThemes({
+        ...useConfigStore.getState().yamlThemes,
+        [newTheme.id]: newTheme,
+      });
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.thememaker.notification.createdNewCustomThemeValue1",
+          { value1: newTheme.name },
+        ),
+      );
     } catch (err) {
-      toast.error(`Failed to create theme: ${redactErrorMessage(err)}`);
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.thememaker.notification.failedToCreateThemeValue1",
+          { value1: redactErrorMessage(err) },
+        ),
+      );
     }
   }
 
@@ -472,13 +765,27 @@ export function ThemeMaker() {
   async function handleSave() {
     try {
       const result = await desktopConfig.saveTheme(draft);
-      if (!result.ok) throw new Error(result.error || "Theme persistence failed.");
+      if (!result.ok)
+        throw new Error(result.error || "Theme persistence failed.");
       saveCustomTheme(draft);
-      setYamlThemes({ ...useConfigStore.getState().yamlThemes, [draft.id]: draft });
+      setYamlThemes({
+        ...useConfigStore.getState().yamlThemes,
+        [draft.id]: draft,
+      });
       setSelector(draft.id);
-      toast.success(`Theme "${draft.name}" saved successfully`);
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.thememaker.notification.themeValue1SavedSuccessfully",
+          { value1: draft.name },
+        ),
+      );
     } catch (err) {
-      toast.error(`Failed to save theme: ${redactErrorMessage(err)}`);
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.thememaker.notification.failedToSaveThemeValue1",
+          { value1: redactErrorMessage(err) },
+        ),
+      );
     }
   }
 
@@ -517,7 +824,12 @@ export function ThemeMaker() {
       applyTheme(fallback);
       toast.info("Custom theme deleted");
     } catch (err) {
-      toast.error(`Failed to delete theme: ${redactErrorMessage(err)}`);
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.thememaker.notification.failedToDeleteThemeValue1",
+          { value1: redactErrorMessage(err) },
+        ),
+      );
     }
   }
 
@@ -526,9 +838,18 @@ export function ThemeMaker() {
       const yaml = await themeToYaml(draft);
       const filename = `${draft.name.toLowerCase().replace(/[^a-z0-9_-]/g, "_")}.theme.yaml`;
       await desktopFiles.exportYaml(yaml, filename);
-      toast.success("Theme exported successfully");
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.thememaker.notification.themeExportedSuccessfully",
+        ),
+      );
     } catch (err) {
-      toast.error("Failed to export theme", redactErrorMessage(err));
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.thememaker.notification.failedToExportTheme",
+        ),
+        redactErrorMessage(err),
+      );
     }
   }
 
@@ -538,25 +859,38 @@ export function ThemeMaker() {
       if (!yaml) return;
       const importedTheme = await yamlToTheme(yaml);
 
-      const conflict = Object.values(customThemesMap).find((t) => t.id === importedTheme.id || t.name.toLowerCase() === importedTheme.name.toLowerCase());
+      const conflict = Object.values(customThemesMap).find(
+        (t) =>
+          t.id === importedTheme.id ||
+          t.name.toLowerCase() === importedTheme.name.toLowerCase(),
+      );
       setImportModal({
         theme: importedTheme,
         conflictId: conflict?.id,
         conflictName: conflict?.name,
       });
     } catch (err) {
-      toast.error("Failed to import theme", redactErrorMessage(err));
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.thememaker.notification.failedToImportTheme",
+        ),
+        redactErrorMessage(err),
+      );
     }
   }
 
   async function confirmImport(mode: "apply" | "copy" | "replace") {
     if (!importModal) return;
-    const targetId = (mode === "copy" || (mode === "apply" && importModal.conflictId))
-      ? `user-theme-${Date.now()}`
-      : (mode === "replace" && importModal.conflictId) ? importModal.conflictId : importModal.theme.id;
-    const targetName = (mode === "copy" || (mode === "apply" && importModal.conflictId))
-      ? `${importModal.theme.name} (Imported)`
-      : importModal.theme.name;
+    const targetId =
+      mode === "copy" || (mode === "apply" && importModal.conflictId)
+        ? `user-theme-${Date.now()}`
+        : mode === "replace" && importModal.conflictId
+          ? importModal.conflictId
+          : importModal.theme.id;
+    const targetName =
+      mode === "copy" || (mode === "apply" && importModal.conflictId)
+        ? `${importModal.theme.name} (Imported)`
+        : importModal.theme.name;
 
     const finalTheme: Theme = {
       ...cloneTheme(importModal.theme),
@@ -565,16 +899,30 @@ export function ThemeMaker() {
     };
     try {
       const result = await desktopConfig.saveTheme(finalTheme);
-      if (!result.ok) throw new Error(result.error || "Theme persistence failed.");
+      if (!result.ok)
+        throw new Error(result.error || "Theme persistence failed.");
       saveCustomTheme(finalTheme);
-      setYamlThemes({ ...useConfigStore.getState().yamlThemes, [finalTheme.id]: finalTheme });
+      setYamlThemes({
+        ...useConfigStore.getState().yamlThemes,
+        [finalTheme.id]: finalTheme,
+      });
       setDraft(finalTheme);
       setSelector(finalTheme.id);
       applyTheme(finalTheme);
       setImportModal(null);
-      toast.success(`Theme "${finalTheme.name}" imported and applied`);
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.thememaker.notification.themeValue1ImportedAndApplied",
+          { value1: finalTheme.name },
+        ),
+      );
     } catch (err) {
-      toast.error(`Failed to import theme: ${redactErrorMessage(err)}`);
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.thememaker.notification.failedToImportThemeValue1",
+          { value1: redactErrorMessage(err) },
+        ),
+      );
     }
   }
 
@@ -585,27 +933,36 @@ export function ThemeMaker() {
       {/* Header Controls */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/50 pb-4">
         <div>
-          <h3 className="text-lg font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsThememaker.heading.themeSystemEditor" /></h3>
+          <h3 className="text-lg font-semibold text-text-primary">
+            <Trans i18nKey="common:surface.componentsThememaker.heading.themeSystemEditor" />
+          </h3>
           <p className="text-xs text-text-muted">
-            <Trans i18nKey="common:surface.componentsThememaker.description.configureThemeColorsBorderContrastFocusRings" /></p>
+            <Trans i18nKey="common:surface.componentsThememaker.description.configureThemeColorsBorderContrastFocusRings" />
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <button className="btn" onClick={handleCreateNewFromActive}>
-            <Trans i18nKey="common:surface.componentsThememaker.action.createNewTheme" /></button>
+            <Trans i18nKey="common:surface.componentsThememaker.action.createNewTheme" />
+          </button>
           <button className="btn" onClick={handleImportClick}>
-            <Trans i18nKey="common:surface.componentsThememaker.action.importTheme" /></button>
+            <Trans i18nKey="common:surface.componentsThememaker.action.importTheme" />
+          </button>
           <button className="btn" onClick={handleExport}>
-            <Trans i18nKey="common:surface.componentsThememaker.action.exportTheme" /></button>
+            <Trans i18nKey="common:surface.componentsThememaker.action.exportTheme" />
+          </button>
         </div>
       </div>
 
       {/* Theme Selector Palette */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-text-secondary"><Trans i18nKey="common:surface.componentsThememaker.label.selectActiveTheme" /></label>
+          <label className="text-sm font-medium text-text-secondary">
+            <Trans i18nKey="common:surface.componentsThememaker.label.selectActiveTheme" />
+          </label>
           {isDraftDirty && (
             <span className="inline-flex items-center rounded-full bg-warning/20 px-2 py-0.5 text-xs font-medium text-warning border border-warning/30">
-              <Trans i18nKey="common:surface.componentsThememaker.text.unsavedDraftChanges" /></span>
+              <Trans i18nKey="common:surface.componentsThememaker.text.unsavedDraftChanges" />
+            </span>
           )}
         </div>
         <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-1 border border-border rounded-lg bg-surface">
@@ -635,39 +992,58 @@ export function ThemeMaker() {
               value={draft.name}
               onChange={(e) => updateName(e.target.value)}
               className="rounded-md border border-border bg-surface-elevated px-3 py-1 text-sm font-semibold text-text-primary"
-              aria-label="Theme name"
+              aria-label={tRuntime(
+                "runtimeGenerated.components.thememaker.attribute.themeName",
+              )}
             />
             <div className="flex items-center gap-1 rounded-lg border border-border bg-surface-elevated p-1">
               <button
                 type="button"
                 onClick={() => updateMode("dark")}
                 className={`rounded px-2 py-0.5 text-xs font-medium ${
-                  draft.mode === "dark" ? "bg-accent text-accent-fg" : "text-text-muted hover:text-text-primary"
+                  draft.mode === "dark"
+                    ? "bg-accent text-accent-fg"
+                    : "text-text-muted hover:text-text-primary"
                 }`}
               >
-                <Trans i18nKey="common:surface.componentsThememaker.action.darkMode" /></button>
+                <Trans i18nKey="common:surface.componentsThememaker.action.darkMode" />
+              </button>
               <button
                 type="button"
                 onClick={() => updateMode("light")}
                 className={`rounded px-2 py-0.5 text-xs font-medium ${
-                  draft.mode === "light" ? "bg-accent text-accent-fg" : "text-text-muted hover:text-text-primary"
+                  draft.mode === "light"
+                    ? "bg-accent text-accent-fg"
+                    : "text-text-muted hover:text-text-primary"
                 }`}
               >
-                <Trans i18nKey="common:surface.componentsThememaker.action.lightMode" /></button>
+                <Trans i18nKey="common:surface.componentsThememaker.action.lightMode" />
+              </button>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="btn primary" onClick={handleSave} disabled={!isDraftDirty && selector === draft.id}>
-              <Trans i18nKey="common:surface.componentsThememaker.action.saveTheme" /></button>
-            <button className="btn" onClick={handleReset} disabled={!isDraftDirty}>
-              Cancel / Reset
+            <button
+              className="btn primary"
+              onClick={handleSave}
+              disabled={!isDraftDirty && selector === draft.id}
+            >
+              <Trans i18nKey="common:surface.componentsThememaker.action.saveTheme" />
+            </button>
+            <button
+              className="btn"
+              onClick={handleReset}
+              disabled={!isDraftDirty}
+            >
+              {tRuntime("runtimeSlashLabels.cancelReset")}
             </button>
             {customThemesMap[selector] && (
               <button className="btn danger" onClick={handleDeleteCustom}>
-                <Trans i18nKey="common:surface.componentsThememaker.action.deleteTheme" /></button>
+                <Trans i18nKey="common:surface.componentsThememaker.action.deleteTheme" />
+              </button>
             )}
             <button className="btn ghost" onClick={handleRestoreDefaults}>
-              <Trans i18nKey="common:surface.componentsThememaker.action.restoreDefaultTheme" /></button>
+              <Trans i18nKey="common:surface.componentsThememaker.action.restoreDefaultTheme" />
+            </button>
           </div>
         </div>
 
@@ -683,16 +1059,29 @@ export function ThemeMaker() {
                   const value = draft.tokens[key] || "";
                   const valid = validColor(value);
                   return (
-                    <div key={key} className="flex items-center gap-2 rounded-md border border-border/60 p-2 bg-surface-elevated">
+                    <div
+                      key={key}
+                      className="flex items-center gap-2 rounded-md border border-border/60 p-2 bg-surface-elevated"
+                    >
                       <input
                         type="color"
-                        aria-label={`${TOKEN_LABELS[key]} color picker`}
-                        value={/^#[0-9a-fA-F]{6}$/.test(value) ? value : COLOR_INPUT_FALLBACK}
+                        aria-label={tRuntime(
+                          "runtimeGenerated.components.thememaker.attribute.value1ColorPicker",
+                          { value1: TOKEN_LABELS[key] },
+                        )}
+                        value={
+                          /^#[0-9a-fA-F]{6}$/.test(value)
+                            ? value
+                            : COLOR_INPUT_FALLBACK
+                        }
                         onChange={(e) => updateToken(key, e.target.value)}
                         className="h-7 w-8 shrink-0 rounded border border-border bg-transparent cursor-pointer"
                       />
                       <div className="flex flex-1 flex-col min-w-0">
-                        <label htmlFor={`token-${key}`} className="text-xs text-text-secondary truncate">
+                        <label
+                          htmlFor={`token-${key}`}
+                          className="text-xs text-text-secondary truncate"
+                        >
                           {TOKEN_LABELS[key]}
                         </label>
                         <input
@@ -707,8 +1096,12 @@ export function ThemeMaker() {
                         />
                       </div>
                       {!valid && (
-                        <span role="alert" className="text-[10px] text-danger shrink-0">
-                          <Trans i18nKey="common:surface.componentsThememaker.text.invalid" /></span>
+                        <span
+                          role="alert"
+                          className="text-[10px] text-danger shrink-0"
+                        >
+                          <Trans i18nKey="common:surface.componentsThememaker.text.invalid" />
+                        </span>
                       )}
                     </div>
                   );
@@ -722,51 +1115,82 @@ export function ThemeMaker() {
       {/* Live Preview Panel */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <div className="text-sm font-medium text-text-secondary"><Trans i18nKey="common:surface.componentsThememaker.text.liveThemePreview" /></div>
-          <span className="text-xs text-text-muted"><Trans i18nKey="common:surface.componentsThememaker.text.showingLivePreviewOfActiveDraft" /></span>
+          <div className="text-sm font-medium text-text-secondary">
+            <Trans i18nKey="common:surface.componentsThememaker.text.liveThemePreview" />
+          </div>
+          <span className="text-xs text-text-muted">
+            <Trans i18nKey="common:surface.componentsThememaker.text.showingLivePreviewOfActiveDraft" />
+          </span>
         </div>
         <ThemePreview theme={draft} />
       </div>
 
       {/* Import Preview Modal */}
       {importModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">{/* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="w-full max-w-xl rounded-xl border border-border bg-surface-elevated p-6 space-y-4 shadow-2xl">
             <div className="border-b border-border/50 pb-3">
-              <h3 className="text-lg font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsThememaker.heading.importThemePreview" /></h3>
+              <h3 className="text-lg font-semibold text-text-primary">
+                <Trans i18nKey="common:surface.componentsThememaker.heading.importThemePreview" />
+              </h3>
               <p className="text-xs text-text-muted">
-                <Trans i18nKey="common:surface.componentsThememaker.description.reviewThemeMetadataAndPreviewLayoutBefore" /></p>
+                <Trans i18nKey="common:surface.componentsThememaker.description.reviewThemeMetadataAndPreviewLayoutBefore" />
+              </p>
             </div>
 
             <div className="space-y-2 text-sm text-text-secondary">
               <div>
-                <strong><Trans i18nKey="common:surface.componentsThememaker.text.themeName" /></strong> {importModal.theme.name}
+                <strong>
+                  <Trans i18nKey="common:surface.componentsThememaker.text.themeName" />
+                </strong>{" "}
+                {importModal.theme.name}
               </div>
               <div>
-                <strong><Trans i18nKey="common:surface.componentsThememaker.text.mode" /></strong> {importModal.theme.mode}
+                <strong>
+                  <Trans i18nKey="common:surface.componentsThememaker.text.mode" />
+                </strong>{" "}
+                {importModal.theme.mode}
               </div>
               {importModal.conflictName && (
                 <div className="rounded-lg border border-warning/30 bg-warning/10 p-3 text-xs text-warning">
-                  <Trans i18nKey="common:surface.componentsThememaker.text.aCustomThemeNamedLdquo" />{importModal.conflictName}<Trans i18nKey="common:surface.componentsThememaker.text.rdquoAlreadyExistsInYourWorkspace" /></div>
+                  <Trans i18nKey="common:surface.componentsThememaker.text.aCustomThemeNamedLdquo" />
+                  {importModal.conflictName}
+                  <Trans i18nKey="common:surface.componentsThememaker.text.rdquoAlreadyExistsInYourWorkspace" />
+                </div>
               )}
             </div>
 
             <div className="rounded-lg border border-border p-3 bg-surface">
-              <div className="text-xs font-semibold text-text-muted mb-2"><Trans i18nKey="common:surface.componentsThememaker.text.importedLayoutPreview" /></div>
+              <div className="text-xs font-semibold text-text-muted mb-2">
+                <Trans i18nKey="common:surface.componentsThememaker.text.importedLayoutPreview" />
+              </div>
               <ThemePreview theme={importModal.theme} />
             </div>
 
             <div className="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-border/50">
-              <button className="btn ghost" onClick={() => setImportModal(null)}>
-                <Trans i18nKey="common:surface.componentsThememaker.action.cancel" /></button>
+              <button
+                className="btn ghost"
+                onClick={() => setImportModal(null)}
+              >
+                <Trans i18nKey="common:surface.componentsThememaker.action.cancel" />
+              </button>
               {importModal.conflictName && (
-                <button className="btn danger" onClick={() => confirmImport("replace")}>
-                  <Trans i18nKey="common:surface.componentsThememaker.action.replaceExisting" /></button>
+                <button
+                  className="btn danger"
+                  onClick={() => confirmImport("replace")}
+                >
+                  <Trans i18nKey="common:surface.componentsThememaker.action.replaceExisting" />
+                </button>
               )}
               <button className="btn" onClick={() => confirmImport("copy")}>
-                <Trans i18nKey="common:surface.componentsThememaker.action.importAsCopy" /></button>
-              <button className="btn primary" onClick={() => confirmImport("apply")}>
-                <Trans i18nKey="common:surface.componentsThememaker.action.importApply" /></button>
+                <Trans i18nKey="common:surface.componentsThememaker.action.importAsCopy" />
+              </button>
+              <button
+                className="btn primary"
+                onClick={() => confirmImport("apply")}
+              >
+                <Trans i18nKey="common:surface.componentsThememaker.action.importApply" />
+              </button>
             </div>
           </div>
         </div>

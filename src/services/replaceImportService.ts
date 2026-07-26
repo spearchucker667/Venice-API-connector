@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /** @fileoverview Transactional replace-import orchestration with durable rollback. */
 
 import { STORE_NAMES } from "../constants/venice";
@@ -35,7 +36,9 @@ const MAIN_MANAGED_STORES = new Set<SyncStoreName>([
   "rpScenarios",
 ]);
 
-const REPLACEABLE_STORES = STORE_NAMES.filter((storeName) => IMPORTABLE_STORES.has(storeName));
+const REPLACEABLE_STORES = STORE_NAMES.filter((storeName) =>
+  IMPORTABLE_STORES.has(storeName),
+);
 
 export class ReplaceImportError extends Error {
   readonly rolledBack: boolean;
@@ -79,9 +82,15 @@ async function createVerifiedCurrentRecovery(password: string): Promise<{
 }> {
   const manifest = await createEncryptedBackup(password);
   const prepared = await prepareBackupImport(manifest, password);
-  const persisted = await desktopSync.createReplaceImportRecovery({ manifest, password });
+  const persisted = await desktopSync.createReplaceImportRecovery({
+    manifest,
+    password,
+  });
   if (!persisted.ok || !persisted.recovery) {
-    throw new Error(persisted.error || "Could not persist a verified replace-import recovery backup.");
+    throw new Error(
+      persisted.error ||
+        "Could not persist a verified replace-import recovery backup.",
+    );
   }
   return { manifest, prepared, metadata: persisted.recovery };
 }
@@ -101,7 +110,10 @@ async function applyReplacementWithRecovery(
       await applyPreparedBackup(recovery.prepared);
     } catch (rollbackError) {
       throw new ReplaceImportError({
-        message: "Replace import failed and automatic rollback also failed. Use the retained recovery backup.",
+        message: translateRuntime(
+          "runtimeGenerated.services.replaceimportservice.metadata.replaceImportFailedAndAutomaticRollbackAlsoFailedUseThe",
+          "Replace import failed and automatic rollback also failed. Use the retained recovery backup.",
+        ),
         rolledBack: false,
         recoveryId: recovery.metadata.id,
         originalError,
@@ -109,7 +121,10 @@ async function applyReplacementWithRecovery(
       });
     }
     throw new ReplaceImportError({
-      message: "Replace import failed. The original profile data was restored automatically.",
+      message: translateRuntime(
+        "runtimeGenerated.services.replaceimportservice.metadata.replaceImportFailedTheOriginalProfileDataWasRestoredAutomatically",
+        "Replace import failed. The original profile data was restored automatically.",
+      ),
       rolledBack: true,
       recoveryId: recovery.metadata.id,
       originalError,
@@ -123,7 +138,9 @@ export async function replaceBackupWithRecovery(
   password: string,
 ): Promise<ReplaceImportResult> {
   if (!isElectron()) {
-    throw new Error("Replace import is available only in the Venice Forge desktop app.");
+    throw new Error(
+      "Replace import is available only in the Venice Forge desktop app.",
+    );
   }
   const incoming = await prepareBackupImport(manifest, password);
   return applyReplacementWithRecovery(incoming, password);
@@ -135,11 +152,18 @@ export async function restoreReplaceImportRecovery(
   password: string,
 ): Promise<ReplaceImportResult> {
   if (!isElectron()) {
-    throw new Error("Recovery restore is available only in the Venice Forge desktop app.");
+    throw new Error(
+      "Recovery restore is available only in the Venice Forge desktop app.",
+    );
   }
-  const loaded = await desktopSync.loadReplaceImportRecovery({ id: recoveryId, password });
+  const loaded = await desktopSync.loadReplaceImportRecovery({
+    id: recoveryId,
+    password,
+  });
   if (!loaded.ok || !loaded.manifest) {
-    throw new Error(loaded.error || "Could not load the replace-import recovery backup.");
+    throw new Error(
+      loaded.error || "Could not load the replace-import recovery backup.",
+    );
   }
   const incoming = await prepareBackupImport(loaded.manifest, password);
   return applyReplacementWithRecovery(incoming, password);
@@ -148,6 +172,9 @@ export async function restoreReplaceImportRecovery(
 export async function getLatestReplaceImportRecovery(): Promise<ReplaceImportRecoveryMetadata | null> {
   if (!isElectron()) return null;
   const result = await desktopSync.getLatestReplaceImportRecovery();
-  if (!result.ok) throw new Error(result.error || "Could not inspect replace-import recovery backups.");
+  if (!result.ok)
+    throw new Error(
+      result.error || "Could not inspect replace-import recovery backups.",
+    );
   return result.recovery ?? null;
 }

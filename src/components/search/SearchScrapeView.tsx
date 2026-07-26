@@ -8,9 +8,15 @@ import { MAX_RAW_UPLOAD_BYTES } from "../../services/veniceClient";
 import { useSettingsStore } from "../../stores/settings-store";
 import { veniceResearchProvider } from "../../research/providers/veniceResearchProvider";
 import { createJinaProvider } from "../../research/providers/jinaResearchProvider";
-import { runResearchJob, type ResearchBudget } from "../../research/agent/researchRunner";
+import {
+  runResearchJob,
+  type ResearchBudget,
+} from "../../research/agent/researchRunner";
 import { synthesizeResearch } from "../../research/agent/researchSynthesis";
-import { runSocialDiscovery, type SocialProfileCandidate } from "../../research/agent/socialDiscovery";
+import {
+  runSocialDiscovery,
+  type SocialProfileCandidate,
+} from "../../research/agent/socialDiscovery";
 import { useAuthStore } from "../../stores/auth-store";
 import type { DiagnosticsEntry } from "../../types/venice";
 
@@ -29,12 +35,16 @@ import { runResearchScrape } from "../../services/researchService";
 import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
 
 import { DEFAULT_CHAT_MODEL } from "../../constants/venice";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 export function SearchScrapeView() {
+  const { t: tRuntime } = useTranslation("common");
   const [subTab, setSubTab] = useState<SubTab>("workspace");
-  const selectedModel = useSettingsStore((s) => s.selectedModels.chat) || DEFAULT_CHAT_MODEL;
-  const localFamilySafeModeEnabled = useSettingsStore((s) => s.localFamilySafeModeEnabled);
+  const selectedModel =
+    useSettingsStore((s) => s.selectedModels.chat) || DEFAULT_CHAT_MODEL;
+  const localFamilySafeModeEnabled = useSettingsStore(
+    (s) => s.localFamilySafeModeEnabled,
+  );
   const veniceKeyConfigured = useAuthStore((s) => s.isConfigured);
 
   function requireVeniceApiKey(where: string): boolean {
@@ -49,13 +59,16 @@ export function SearchScrapeView() {
   const [provider, setProvider] = useState("brave");
   const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
   const [url, setUrl] = useState("");
-  const [scrapeProvider, setScrapeProvider] = useState<"venice" | "jina">("venice");
+  const [scrapeProvider, setScrapeProvider] = useState<"venice" | "jina">(
+    "venice",
+  );
   const [scrapeOutput, setScrapeOutput] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [parserOutput, setParserOutput] = useState("");
   const [loading, setLoading] = useState("");
   const [error, setError] = useState("");
-  const [diagnostics, setDiagnostics] = useState<Partial<DiagnosticsEntry> | null>(null);
+  const [diagnostics, setDiagnostics] =
+    useState<Partial<DiagnosticsEntry> | null>(null);
 
   const abortRef = useRef<AbortController | null>(null);
   const runIdRef = useRef(0);
@@ -63,10 +76,18 @@ export function SearchScrapeView() {
   const [researchQuestion, setResearchQuestion] = useState("");
   const [researchOutput, setResearchOutput] = useState("");
   const [researchCitations, setResearchCitations] = useState("");
-  const [researchProviderId, setResearchProviderId] = useState<"venice" | "jina">("venice");
-  const [researchSearchProvider, setResearchSearchProvider] = useState<"brave" | "google" | "auto">("auto");
-  const [researchScrapeProvider, setResearchScrapeProvider] = useState<"venice" | "jina" | "generic-http" | "auto">("auto");
-  const [researchRunMode, setResearchRunMode] = useState<"retrieve-only" | "retrieve-and-synthesize">("retrieve-and-synthesize");
+  const [researchProviderId, setResearchProviderId] = useState<
+    "venice" | "jina"
+  >("venice");
+  const [researchSearchProvider, setResearchSearchProvider] = useState<
+    "brave" | "google" | "auto"
+  >("auto");
+  const [researchScrapeProvider, setResearchScrapeProvider] = useState<
+    "venice" | "jina" | "generic-http" | "auto"
+  >("auto");
+  const [researchRunMode, setResearchRunMode] = useState<
+    "retrieve-only" | "retrieve-and-synthesize"
+  >("retrieve-and-synthesize");
   const [researchBudget, setResearchBudget] = useState<ResearchBudget>({
     maxQueries: 4,
     maxResultsPerQuery: 5,
@@ -81,10 +102,16 @@ export function SearchScrapeView() {
   const [knownWebsite, setKnownWebsite] = useState("");
   const [knownOrg, setKnownOrg] = useState("");
   const [knownLocation, setKnownLocation] = useState("");
-  const [allowedPlatforms, setAllowedPlatforms] = useState<string[]>(["GitHub", "LinkedIn", "X/Twitter"]);
+  const [allowedPlatforms, setAllowedPlatforms] = useState<string[]>([
+    "GitHub",
+    "LinkedIn",
+    "X/Twitter",
+  ]);
   const [maxDepth, setMaxDepth] = useState(5);
   const [authorized, setAuthorized] = useState(false);
-  const [profileCandidates, setProfileCandidates] = useState<SocialProfileCandidate[]>([]);
+  const [profileCandidates, setProfileCandidates] = useState<
+    SocialProfileCandidate[]
+  >([]);
 
   useEffect(() => {
     return () => {
@@ -107,7 +134,12 @@ export function SearchScrapeView() {
     if (!requireVeniceApiKey("running web search")) return;
     setError("");
     const guardDecision = maybeRunLocalFamilyGuard(
-      { text: query.trim(), endpoint: "/augment/search", method: "POST", source: "research" },
+      {
+        text: query.trim(),
+        endpoint: "/augment/search",
+        method: "POST",
+        source: "research",
+      },
       localFamilySafeModeEnabled,
     );
     if (!guardDecision.allowed) {
@@ -118,7 +150,9 @@ export function SearchScrapeView() {
     setSearchResults([]);
     const { runId, signal } = beginRun();
     try {
-      const { data, diagnostics: d } = await veniceFetch<Record<string, unknown>>("/augment/search", {
+      const { data, diagnostics: d } = await veniceFetch<
+        Record<string, unknown>
+      >("/augment/search", {
         method: "POST",
         body: { query: query.trim(), provider },
         signal,
@@ -135,34 +169,52 @@ export function SearchScrapeView() {
     } catch (err: unknown) {
       if (runIdRef.current !== runId) return;
       const error = err as { name?: string; message?: string };
-      if (error.name !== "AbortError") setError(describeResearchError(error, "Search failed."));
+      if (error.name !== "AbortError")
+        setError(describeResearchError(error, "Search failed."));
     } finally {
       if (runIdRef.current === runId) setLoading("");
     }
   }
 
-  async function runScrape(explicitUrl?: string, explicitProvider?: "venice" | "jina") {
+  async function runScrape(
+    explicitUrl?: string,
+    explicitProvider?: "venice" | "jina",
+  ) {
     const targetUrl = (explicitUrl ?? url).trim();
     const selectedScrapeProvider = explicitProvider ?? scrapeProvider;
     if (!targetUrl) return;
-    if (selectedScrapeProvider === "venice" && !requireVeniceApiKey("scraping a URL")) return;
+    if (
+      selectedScrapeProvider === "venice" &&
+      !requireVeniceApiKey("scraping a URL")
+    )
+      return;
     setError("");
     setLoading("scrape");
     setScrapeOutput("");
     const { runId, signal } = beginRun();
     try {
       if (selectedScrapeProvider === "jina") {
-        const result = await runResearchScrape({ url: targetUrl, provider: "jina" });
+        const result = await runResearchScrape({
+          url: targetUrl,
+          provider: "jina",
+        });
         if (runIdRef.current !== runId) return;
-        const providerError = result.warnings.find((warning) => warning.severity === "error");
+        const providerError = result.warnings.find(
+          (warning) => warning.severity === "error",
+        );
         if (providerError) {
           setError(providerError.message);
           return;
         }
-        setScrapeOutput(result.sources[0]?.excerpt || "Jina returned no readable content for this page.");
+        setScrapeOutput(
+          result.sources[0]?.excerpt ||
+            "Jina returned no readable content for this page.",
+        );
         return;
       }
-      const { data, diagnostics: d } = await veniceFetch<Record<string, unknown>>("/augment/scrape", {
+      const { data, diagnostics: d } = await veniceFetch<
+        Record<string, unknown>
+      >("/augment/scrape", {
         method: "POST",
         body: { url: targetUrl },
         signal,
@@ -171,16 +223,28 @@ export function SearchScrapeView() {
       if (d) setDiagnostics(d as Partial<DiagnosticsEntry>);
       const scrapeData = data as Record<string, unknown>;
       setScrapeOutput(
-        String(scrapeData.markdown || scrapeData.content || scrapeData.text || JSON.stringify(scrapeData, null, 2))
+        String(
+          scrapeData.markdown ||
+            scrapeData.content ||
+            scrapeData.text ||
+            JSON.stringify(scrapeData, null, 2),
+        ),
       );
     } catch (err: unknown) {
       if (runIdRef.current !== runId) return;
       const error = err as { name?: string; message?: string };
       if (error.name !== "AbortError") {
-        const described = describeResearchError(error, "Scrape failed.", selectedScrapeProvider);
-        setError(selectedScrapeProvider === "venice" && /denied|permission|forbidden/i.test(described)
-          ? `${described} You can also select Jina Reader in the Web Scrape card.`
-          : described);
+        const described = describeResearchError(
+          error,
+          "Scrape failed.",
+          selectedScrapeProvider,
+        );
+        setError(
+          selectedScrapeProvider === "venice" &&
+            /denied|permission|forbidden/i.test(described)
+            ? `${described} You can also select Jina Reader in the Web Scrape card.`
+            : described,
+        );
       }
     } finally {
       if (runIdRef.current === runId) setLoading("");
@@ -191,7 +255,9 @@ export function SearchScrapeView() {
     if (!file) return;
     if (!requireVeniceApiKey("parsing a document")) return;
     if (file.size > MAX_RAW_UPLOAD_BYTES) {
-      setError(`File too large. Maximum upload size is ${Math.floor(MAX_RAW_UPLOAD_BYTES / (1024 * 1024))} MiB.`);
+      setError(
+        `File too large. Maximum upload size is ${Math.floor(MAX_RAW_UPLOAD_BYTES / (1024 * 1024))} MiB.`,
+      );
       return;
     }
     setError("");
@@ -202,7 +268,9 @@ export function SearchScrapeView() {
       const form = new FormData();
       form.append("file", file);
       form.append("response_format", "json");
-      const { data, diagnostics: d } = await veniceFetch<Record<string, unknown>>("/augment/text-parser", {
+      const { data, diagnostics: d } = await veniceFetch<
+        Record<string, unknown>
+      >("/augment/text-parser", {
         method: "POST",
         body: form,
         signal,
@@ -211,7 +279,9 @@ export function SearchScrapeView() {
       if (runIdRef.current !== runId) return;
       if (d) setDiagnostics(d as Partial<DiagnosticsEntry>);
       const parserData = data as Record<string, unknown>;
-      setParserOutput(String(parserData.text || JSON.stringify(parserData, null, 2)));
+      setParserOutput(
+        String(parserData.text || JSON.stringify(parserData, null, 2)),
+      );
     } catch (err: unknown) {
       if (runIdRef.current !== runId) return;
       const error = err as { name?: string; message?: string };
@@ -224,14 +294,21 @@ export function SearchScrapeView() {
 
   async function runAiResearch() {
     if (!researchQuestion.trim()) return;
-    if (researchRunMode === "retrieve-and-synthesize" && !requireVeniceApiKey("running AI research synthesis")) return;
+    if (
+      researchRunMode === "retrieve-and-synthesize" &&
+      !requireVeniceApiKey("running AI research synthesis")
+    )
+      return;
     setError("");
-    const researchGuard = maybeRunLocalFamilyGuard({
-      text: researchQuestion.trim(),
-      endpoint: "/augment/search",
-      method: "POST",
-      source: "research",
-    }, localFamilySafeModeEnabled);
+    const researchGuard = maybeRunLocalFamilyGuard(
+      {
+        text: researchQuestion.trim(),
+        endpoint: "/augment/search",
+        method: "POST",
+        source: "research",
+      },
+      localFamilySafeModeEnabled,
+    );
     if (!researchGuard.allowed) {
       setError(researchGuard.userMessage);
       return;
@@ -243,12 +320,25 @@ export function SearchScrapeView() {
 
     try {
       // Resolve search provider
-      let searchProvider = researchProviderId === "jina" ? createJinaProvider() : veniceResearchProvider;
-      if (researchProviderId === "venice" && researchSearchProvider !== "auto") {
+      let searchProvider =
+        researchProviderId === "jina"
+          ? createJinaProvider()
+          : veniceResearchProvider;
+      if (
+        researchProviderId === "venice" &&
+        researchSearchProvider !== "auto"
+      ) {
         searchProvider = {
           ...veniceResearchProvider,
           search: veniceResearchProvider.search
-            ? (input) => veniceResearchProvider.search!({ ...input, options: { ...input.options, provider: researchSearchProvider } })
+            ? (input) =>
+                veniceResearchProvider.search!({
+                  ...input,
+                  options: {
+                    ...input.options,
+                    provider: researchSearchProvider,
+                  },
+                })
             : undefined,
         };
       }
@@ -269,17 +359,24 @@ export function SearchScrapeView() {
         return;
       }
 
-      const citations = Array.isArray(job.evidence?.citations) ? job.evidence.citations : [];
+      const citations = Array.isArray(job.evidence?.citations)
+        ? job.evidence.citations
+        : [];
       setResearchCitations(citations.join("\n"));
 
       if (researchRunMode === "retrieve-only") {
         setResearchOutput(
           `## Retrieved Evidence\n\n` +
-          `**Queries used:** ${job.queriesUsed.join(", ")}\n\n` +
-          `**Sources found:** ${job.evidence.searchResults.length}\n\n` +
-          `**Pages scraped:** ${job.evidence.scrapes.length}\n\n` +
-          `---\n\n` +
-          job.evidence.searchResults.map((r, i) => `${i + 1}. [${r.title}](${r.url})\n   > ${r.snippet || ""}`).join("\n\n")
+            `**Queries used:** ${job.queriesUsed.join(", ")}\n\n` +
+            `**Sources found:** ${job.evidence.searchResults.length}\n\n` +
+            `**Pages scraped:** ${job.evidence.scrapes.length}\n\n` +
+            `---\n\n` +
+            job.evidence.searchResults
+              .map(
+                (r, i) =>
+                  `${i + 1}. [${r.title}](${r.url})\n   > ${r.snippet || ""}`,
+              )
+              .join("\n\n"),
         );
         return;
       }
@@ -300,7 +397,13 @@ export function SearchScrapeView() {
       if (runIdRef.current !== runId) return;
       const error = err as { name?: string; message?: string };
       if (error.name !== "AbortError")
-        setError(describeResearchError(error, "AI research failed.", researchProviderId));
+        setError(
+          describeResearchError(
+            error,
+            "AI research failed.",
+            researchProviderId,
+          ),
+        );
     } finally {
       if (runIdRef.current === runId) setLoading("");
     }
@@ -316,14 +419,19 @@ export function SearchScrapeView() {
       knownWebsite.trim(),
       knownOrg.trim(),
       knownLocation.trim(),
-    ].filter(Boolean).join("\n\n");
+    ]
+      .filter(Boolean)
+      .join("\n\n");
 
-    const profileGuard = maybeRunLocalFamilyGuard({
-      text: profileGuardText,
-      endpoint: "/augment/search",
-      method: "POST",
-      source: "research",
-    }, localFamilySafeModeEnabled);
+    const profileGuard = maybeRunLocalFamilyGuard(
+      {
+        text: profileGuardText,
+        endpoint: "/augment/search",
+        method: "POST",
+        source: "research",
+      },
+      localFamilySafeModeEnabled,
+    );
     if (!profileGuard.allowed) {
       setError(profileGuard.userMessage);
       return;
@@ -345,7 +453,7 @@ export function SearchScrapeView() {
           authorized,
           signal,
         },
-        veniceResearchProvider
+        veniceResearchProvider,
       );
 
       if (runIdRef.current !== runId) return;
@@ -358,7 +466,8 @@ export function SearchScrapeView() {
     } catch (err: unknown) {
       if (runIdRef.current !== runId) return;
       const error = err as { name?: string; message?: string };
-      if (error.name !== "AbortError") setError(describeResearchError(error, "Profile discovery failed."));
+      if (error.name !== "AbortError")
+        setError(describeResearchError(error, "Profile discovery failed."));
     } finally {
       if (runIdRef.current === runId) setLoading("");
     }
@@ -366,7 +475,9 @@ export function SearchScrapeView() {
 
   function togglePlatform(platform: string) {
     setAllowedPlatforms((prev) =>
-      prev.includes(platform) ? prev.filter((p) => p !== platform) : [...prev, platform]
+      prev.includes(platform)
+        ? prev.filter((p) => p !== platform)
+        : [...prev, platform],
     );
   }
 
@@ -395,9 +506,12 @@ export function SearchScrapeView() {
       <div className="flex-none p-5 border-b border-border/50 bg-surface">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-[17px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsSearchSearchscrapeview.heading.research" /></h2>
+            <h2 className="text-[17px] font-semibold text-text-primary">
+              <Trans i18nKey="common:surface.componentsSearchSearchscrapeview.heading.research" />
+            </h2>
             <p className="text-[12.5px] text-text-muted mt-0.5">
-              <Trans i18nKey="common:surface.componentsSearchSearchscrapeview.description.searchScrapeCollectEvidenceAndSynthesizeFindings" /></p>
+              <Trans i18nKey="common:surface.componentsSearchSearchscrapeview.description.searchScrapeCollectEvidenceAndSynthesizeFindings" />
+            </p>
           </div>
           <DiagPreview diagnostics={diagnostics} />
         </div>
@@ -409,23 +523,57 @@ export function SearchScrapeView() {
             {tabBtn("profile-discovery", "Profile Discovery")}
           </div>
           <div className="shrink-0">
-            <ResearchProviderStatus onOpenApiKeyDialog={() => setError("Open the API Key dialog (lock icon in the header) to add your Venice key.")} />
+            <ResearchProviderStatus
+              onOpenApiKeyDialog={() =>
+                setError(
+                  "Open the API Key dialog (lock icon in the header) to add your Venice key.",
+                )
+              }
+            />
           </div>
         </div>
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-5">
         {error && (
-          <div role="alert" className="mb-6 p-3 bg-danger/10 border border-danger/20 text-danger rounded-lg text-sm leading-relaxed">
+          <div
+            role="alert"
+            className="mb-6 p-3 bg-danger/10 border border-danger/20 text-danger rounded-lg text-sm leading-relaxed"
+          >
             {error}
           </div>
         )}
 
         {loading && (
-          <div className="mb-5 rounded-xl border border-accent/30 bg-accent/5 p-4" role="status" aria-live="polite" data-testid="research-loading-indicator">
+          <div
+            className="mb-5 rounded-xl border border-accent/30 bg-accent/5 p-4"
+            role="status"
+            aria-live="polite"
+            data-testid="research-loading-indicator"
+          >
             <GenerationLoadingIndicator
               state="processing"
-              label={loading === "ai-research" ? "Researching and synthesizing…" : loading === "scrape" ? "Reading web page…" : loading === "search" ? "Searching the web…" : loading === "parser" ? "Parsing document…" : "Research task in progress…"}
+              label={
+                loading === "ai-research"
+                  ? tRuntime(
+                      "runtimeGenerated.components.search.searchscrapeview.attribute.researchingAndSynthesizing",
+                    )
+                  : loading === "scrape"
+                    ? tRuntime(
+                        "runtimeGenerated.components.search.searchscrapeview.attribute.readingWebPage",
+                      )
+                    : loading === "search"
+                      ? tRuntime(
+                          "runtimeGenerated.components.search.searchscrapeview.attribute.searchingTheWeb",
+                        )
+                      : loading === "parser"
+                        ? tRuntime(
+                            "runtimeGenerated.components.search.searchscrapeview.attribute.parsingDocument",
+                          )
+                        : tRuntime(
+                            "runtimeGenerated.components.search.searchscrapeview.attribute.researchTaskInProgress",
+                          )
+              }
               detail="You can leave the form as-is while this section works."
               showCancel
               onCancel={cancelRun}
@@ -454,31 +602,50 @@ export function SearchScrapeView() {
                   setUrl(url);
                   setScrapeOutput("Reading with Jina...");
                   try {
-                    const result = await runResearchScrape({ url, provider: "jina" });
+                    const result = await runResearchScrape({
+                      url,
+                      provider: "jina",
+                    });
                     if (result.sources[0]?.excerpt) {
                       setScrapeOutput(String(result.sources[0].excerpt));
                     }
                   } catch (err) {
-                    setScrapeOutput(describeResearchError(err as Error, "Reading with Jina failed.", "jina"));
+                    setScrapeOutput(
+                      describeResearchError(
+                        err as Error,
+                        "Reading with Jina failed.",
+                        "jina",
+                      ),
+                    );
                   }
                 }}
                 onSaveToSession={async (item) => {
                   const store = useResearchStore.getState();
                   if (!store.activeSessionId) {
-                    setError("No active research session. Open the Workspace tab and create a session first.");
+                    setError(
+                      "No active research session. Open the Workspace tab and create a session first.",
+                    );
                     return;
                   }
                   await store.addSource(store.activeSessionId, {
                     kind: "search_result",
                     provider: "venice",
-                    title: item.title || "Untitled",
+                    title:
+                      item.title ||
+                      tRuntime(
+                        "runtimeGenerated.components.search.searchscrapeview.metadata.untitled",
+                      ),
                     url: item.url || item.link,
                     excerpt: item.snippet || item.content || item.description,
                     retrievedAt: new Date().toISOString(),
                     citations: [],
                     tags: [],
                   });
-                  toast.success("Saved to active research session");
+                  toast.success(
+                    tRuntime(
+                      "runtimeGenerated.components.search.searchscrapeview.notification.savedToActiveResearchSession",
+                    ),
+                  );
                 }}
               />
               <ScrapeTab

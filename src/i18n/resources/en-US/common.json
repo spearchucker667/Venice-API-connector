@@ -1983,5 +1983,2534 @@
         "noRunnableActions": "No runnable actions."
       }
     }
+  },
+  "promptStarters": {
+    "writing-rsa-email": "Draft a polite but firm email asking my landlord to fix the heating.",
+    "writing-cover-letter": "Write a tailored cover letter template for a Senior Full Stack Engineer role focusing on remote collaboration.",
+    "writing-scifi-hook": "Compose a compelling opening hook for a sci-fi novel where gravity behaves differently in every city.",
+    "writing-newsletter-intro": "Draft a engaging newsletter introduction discussing the societal impacts of autonomous agent fleets.",
+    "writing-press-release": "Create a formal press release template announcing the open-sourcing of a privacy-first web scraper.",
+    "writing-linkedin-post": "Draft a professional LinkedIn post summarizing key lessons learned from building an offline-first Electron application.",
+    "writing-blog-outline": "Generate a detailed outline for a technical blog post titled 'Securing Preload Bridges in Modern Electron Apps'.",
+    "writing-sabbatical-request": "Write a professional proposal requesting a 3-month educational sabbatical to study distributed systems.",
+    "writing-speech-intro": "Write a 3-minute introductory speech on the importance of local-first software and data sovereignty.",
+    "writing-bug-report": "Write a thorough template for a bug report in an open-source project to encourage fast resolution.",
+    "writing-refusal-letter": "Draft a professional response declining a vendor proposal while keeping the door open for future collaboration.",
+    "writing-haiku-comp": "Compose three haikus capturing the transition from analog hardware to quantum computation.",
+    "coding-rest-graphql": "Compare REST and GraphQL — when does each shine?",
+    "coding-debounce-ts": "Write a robust, fully-typed debounce hook in TypeScript for React with support for immediate invocation.",
+    "coding-sql-recursive": "Explain how recursive CTEs work in SQL with an example of querying an organizational hierarchy.",
+    "coding-refactor-lru": "Refactor a simple Node.js memory cache into a thread-safe LRU cache with expiration support.",
+    "coding-rust-error": "Show how to implement custom error handling in Rust using the `thiserror` and `anyhow` crates.",
+    "coding-git-bisect": "Explain how to use `git bisect` to locate a regression commit, including automated script execution.",
+    "coding-docker-multi": "Create a minimal, secure multi-stage Dockerfile for packaging a TypeScript Node.js microservice.",
+    "coding-csp-rules": "Write a strict Content Security Policy (CSP) header configuration that allows local WASM execution but blocks inline eval.",
+    "coding-vitest-mocking": "Demonstrate how to mock global window objects and asynchronous fetch calls in Vitest.",
+    "coding-css-flex-grid": "Explain the architectural differences between CSS Grid and Flexbox layouts, with specific layout use cases for each.",
+    "coding-sse-parse": "Show how to write a stream parser for Server-Sent Events (SSE) in vanilla JavaScript without external dependencies.",
+    "coding-indexeddb-transaction": "Provide an example of robust transaction management and error rollback in browser-native IndexedDB.",
+    "learning-rsa-metaphor": "Explain how RSA encryption works using a metaphor a 10-year-old could grasp.",
+    "learning-pid-controller": "Explain the mathematics behind a PID temperature controller in simple, intuitive terms.",
+    "learning-monad-metaphor": "Explain what a Monad is in functional programming using an everyday real-world analogy.",
+    "learning-special-relativity": "What is time dilation in special relativity? Explain it using a thought experiment involving clocks.",
+    "learning-inflation-basics": "Explain how central banks use interest rates to control inflation and what economic tradeoffs are involved.",
+    "learning-photosynthesis": "Describe the light-dependent reactions of photosynthesis as a step-by-step assembly line process.",
+    "learning-platonic-cave": "Explain Plato's Allegory of the Cave and discuss how it relates to modern social media echo chambers.",
+    "learning-blockchain-proof": "Explain the difference between Proof of Work and Proof of Stake consensus algorithms without using tech jargon.",
+    "learning-turing-complete": "What does it mean for a system to be 'Turing Complete'? Give a simple explanation and a non-obvious example.",
+    "learning-habermas-public": "Summarize Jürgen Habermas's concept of the 'Public Sphere' and its relevance to the internet era.",
+    "learning-plate-tectonics": "How do plate tectonics drive volcanic activity? Explain the differences between subduction zones and hot spots.",
+    "learning-music-scales": "Explain the relationship between mathematical frequencies and musical scales or harmony.",
+    "research-fusion-status": "What are the latest milestones and remaining engineering barriers in commercial nuclear fusion energy research?",
+    "research-dns-sec": "Analyze the security vulnerabilities of the traditional DNS protocol and how DNSSEC addresses them.",
+    "research-solid-battery": "Summarize the current state of solid-state battery technology for electric vehicles, focusing on energy density and lifecycle.",
+    "research-roman-concrete": "Investigate the chemical formulation of ancient Roman marine concrete and why it outlasts modern Portland cement.",
+    "research-browser-privacy": "Compare the privacy protection mechanisms of third-party cookie blocking, browser fingerprinting defense, and partitioning.",
+    "research-green-hydrogen": "Analyze the energetic and economic efficiency of green hydrogen production compared to direct battery electrification.",
+    "research-graphene-scaling": "What are the current manufacturing limitations preventing the scaling of monolayer graphene for commercial electronics?",
+    "research-zero-knowledge": "Compare zk-SNARKs and zk-STARKs in terms of trusted setup requirements, proof size, and computational overhead.",
+    "research-microbiome-brain": "Summarize the primary biological pathways connecting the human gut microbiome to central nervous system functions.",
+    "research-deep-sea-mining": "What are the environmental and economic stakes of deep-sea polymetallic nodule mining in international waters?",
+    "research-compiler-optimizations": "Investigate how loop unrolling, dead-code elimination, and register allocation optimization work inside compilers.",
+    "research-cfc-ozone": "Trace the historical timeline and chemical process of the ozone layer recovery following the Montreal Protocol.",
+    "creative-llm-pi-projects": "Brainstorm five novel side-project ideas using LLMs and a Raspberry Pi.",
+    "creative-time-travel-game": "Design the core gameplay loop for an investigative puzzle game centered on recursive time travel paradoxes.",
+    "creative-steampunk-ai": "Write a short conceptual description of a steampunk city where municipal decisions are routed through mechanical differential analyzers.",
+    "creative-product-name": "Brainstorm ten distinct, evocative brand names for a localized, peer-to-peer mesh networking utility.",
+    "creative-card-game": "Create the rules and win conditions for a micro card game played with only 18 cards themed around network routing.",
+    "creative-synth-podcast": "Outline a pitch for a fictional audio drama podcast detailing the diary entries of a stranded deep-space communication buoy.",
+    "creative-culinary-fusion": "Invent five creative fusion dishes blending traditional Japanese fermentation techniques with Mexican street food concepts.",
+    "creative-speculative-ui": "Describe an innovative user interface design for managing personal privacy policies using a spatial 3D node canvas.",
+    "creative-robot-sports": "Brainstorm a brand new sport designed specifically to showcase the coordination limits of legged robotics and drones.",
+    "creative-magic-system": "Design a fantasy magic system where spellcasting is constrained by thermodynamic laws and conservation of momentum.",
+    "creative-smart-mirror": "Brainstorm three creative applications for a smart mirror that interacts with local calendar and ambient weather APIs.",
+    "creative-metaphor-database": "Create an extended metaphor comparing database normalization to organizing a sprawling municipal library.",
+    "productivity-time-box": "Create a customizable weekly time-blocking template optimized for deep-work software development schedules.",
+    "productivity-meeting-agenda": "Draft an agenda template for a weekly async-first engineering sync aimed at resolving architectural bottlenecks.",
+    "productivity-habit-stack": "Design a 30-day habit-stacking framework for transitioning into a consistent morning exercise and reading routine.",
+    "productivity-notion-layout": "Outline the database schema and layout structure for a Notion workspace designed to track personal knowledge and bookmarks.",
+    "productivity-prioritization": "Explain how to apply the Eisenhower Matrix to prioritize tasks as an engineering manager with conflicting priorities.",
+    "productivity-onboarding": "Create a checklist for onboarding a new remote software engineer to a complex legacy monolithic codebase.",
+    "productivity-markdown-journal": "Design a lightweight daily markdown journaling prompt system that helps track daily goals, blockers, and gratitudes.",
+    "productivity-inbox-zero": "Draft a step-by-step system for achieving and maintaining Inbox Zero using automated labels and keyboard shortcuts.",
+    "productivity-postmortem": "Create a standard template for writing software postmortems after a critical production outage.",
+    "productivity-learning-sprint": "Outline a 4-week learning sprint plan to master the fundamentals of Rust WebAssembly compilation.",
+    "productivity-presentation-deck": "Draft a slide-by-slide structure for a 10-minute presentation pitch to secure seed funding for a local LLM client.",
+    "productivity-dependency-audit": "Create an action plan for conducting a monthly audit of open-source library dependencies in a production code repository.",
+    "analysis-p2p-mesh": "Conduct a SWOT analysis of deploying a decentralized peer-to-peer mesh network in high-density urban areas.",
+    "analysis-sqlite-pg": "Compare the architectural tradeoffs of SQLite vs PostgreSQL for an offline-first desktop application with syncing capabilities.",
+    "analysis-fallacy-media": "List five common logical fallacies found in modern media reporting and provide guidelines on how to spot them.",
+    "analysis-cloud-vs-local": "Analyze the long-term cost-benefit tradeoffs of cloud-hosted serverless computing vs self-hosted bare metal servers.",
+    "analysis-electron-tauri": "Perform a detailed comparative analysis of Electron vs Tauri in terms of memory footprint, build size, and security models.",
+    "analysis-monolith-micro": "Identify key indicators showing when a growing startup should transition from a monolith to a microservices architecture.",
+    "analysis-privacy-shield": "Analyze the legal and technical implications of GDPR compliance requirements on logging and telemetry practices.",
+    "analysis-rsa-vs-ecc": "Perform a comparative technical analysis of RSA vs Elliptic Curve Cryptography (ECC) regarding key sizes and signature speeds.",
+    "analysis-dns-over-https": "Analyze the privacy advantages and network performance tradeoffs of adopting DNS-over-HTTPS (DoH).",
+    "analysis-open-licensing": "Compare the legal conditions, copyleft properties, and commercial usage permissions of MIT vs GPLv3 licenses.",
+    "analysis-ci-caching": "Analyze the build time optimizations gained from cache strategies in GitHub Actions CI pipelines.",
+    "analysis-work-automation": "Evaluate the prospective impacts of AI autonomous agent workflows on administrative team productivity and resource demand.",
+    "image-serene-mountain": "A serene mountain lake at golden hour, low fog over the water, painterly",
+    "image-dewdrop-spiderweb": "Macro photo of a dewdrop on a spider web, sunrise lighting",
+    "image-cyberpunk-market": "Cyberpunk street market at night, neon signs reflecting in puddles",
+    "image-fox-mushroom": "Children's book illustration of a fox reading a book under a mushroom",
+    "image-steampunk-airship": "Steampunk airship docking at a floating platform in a cloud-filled sky, vintage illustration style",
+    "image-bioluminescent-forest": "A futuristic bioluminescent forest at night, glowing plants, ethereal blue and purple tones, detailed digital art",
+    "image-watercolor-cafe": "Vibrant watercolor painting of a bustling European street cafe, sunny day, loose artistic brushstrokes",
+    "image-astronaut-portrait": "A close-up portrait of an astronaut looking at Earth, reflection in the visor, hyper-realistic, detailed spacesuit",
+    "image-overgrown-ruins": "Ancient ruins of a temple overgrown with giant tree roots, afternoon sunbeams piercing through leaves, moody",
+    "image-minimalist-desert": "Minimalist vector art of a desert landscape at night, crescent moon, stars, warm terracotta and dark blue tones",
+    "image-cozy-cabin": "An oil painting of a cozy cabin in the woods during a winter snowstorm, warm amber light shining from the windows",
+    "image-floating-island": "A whimsical floating island with a small lighthouse, surrounded by fluffy white clouds, 3D claymation style",
+    "image-midcentury-abstract": "Abstract geometric composition inspired by mid-century modern design, muted retro color palette",
+    "image-castle-dragon": "A majestic dragon perched on top of a medieval castle tower, mist, dramatic cinematic lighting",
+    "image-surreal-whale": "Surreal digital art of a whale flying through a cloudy sky filled with floating hot air balloons",
+    "image-retro-lab": "A retro-futuristic laboratory with glass vials of glowing liquid, copper coils, and analog dials, dramatic shadows",
+    "image-sketch-cat": "Pencil sketch of a sleepy cat curled up on a stack of old leather-bound books, soft crosshatching",
+    "image-coral-reef": "A colorful coral reef teeming with exotic fish, sunlight rays filtering through clear turquoise water, underwater photo",
+    "image-hacker-setup": "Cyberpunk hacker setup with multiple glowing monitors, wires everywhere, dark room with cyber-blue ambient light",
+    "image-stained-glass": "Stained glass window depicting a tree of life, bright sunlight casting colorful patterns on a stone floor",
+    "audio-welcome-vf": "Welcome to Venice Forge. The future of voice is here, and it speaks every language.",
+    "audio-library-book": "In a quiet town nestled between two mountains, a small library held a very old book.",
+    "audio-octopus-brains": "Did you know? A single octopus has nine brains — one central, plus one in each arm.",
+    "audio-safety-protocols": "Please ensure all safety protocols are fully engaged before deploying the local LLM agent cluster.",
+    "audio-quick-brown-fox": "The quick brown fox jumps over the lazy dog. Just a classic vocal test to check all phonetic frequencies.",
+    "audio-hyperloop-depart": "Attention passengers, the hyperloop transit corridor to the eastern terminal will depart in exactly three minutes.",
+    "audio-hydrothermal-vents": "Deep in the ocean, hydrothermal vents support unique ecosystems that never see the light of the sun.",
+    "audio-study-stars": "To understand the universe, we must study the stars, the atoms, and the space between them.",
+    "audio-step-forward": "A single step forward can change the course of history, provided we know which path we are following.",
+    "audio-digital-archive": "Welcome to the digital archive. Please state your credentials or insert your authorization module.",
+    "audio-whispering-leaves": "Whispering leaves and distant thunder filled the night air as the autumn storm approached.",
+    "audio-getting-started": "The secret of getting ahead is getting started, combined with a daily habit of focused work.",
+    "audio-compilation-complete": "Our system has successfully completed the compilation process. All module parameters are nominal.",
+    "audio-kepler-transmission": "In the year twenty-two forty-two, humanity received its first verified transmission from the Kepler system.",
+    "audio-complex-problem": "For every complex problem, there is a solution that is simple, neat, and completely wrong.",
+    "music-lofi-hiphop": "Lo-fi hip-hop beat with vinyl crackle and rain — 80 bpm, mellow",
+    "music-cinematic-orchestral": "Cinematic orchestral build — slow strings rising into triumphant brass",
+    "music-synthwave-retro": "Synthwave with retro arpeggios, warm pads, gated reverb drums — 105 bpm",
+    "music-acoustic-folk": "Acoustic folk fingerpicking, soft female vocals, intimate room sound",
+    "music-indie-pop": "Upbeat indie pop track with catchy electric guitar riffs and handclaps — 120 bpm",
+    "music-dark-ambient": "Dark ambient drone with slow synth pulses and metallic textures — space atmosphere",
+    "music-heavy-metal": "80s heavy metal guitar solo, fast double-bass drums, high-energy rock anthem",
+    "music-jazz-piano": "Relaxing jazz piano trio with upright bass and soft brush drums — late-night lounge",
+    "music-industrial-techno": "Cyberpunk industrial techno with distorted basslines and heavy kick drum — 130 bpm",
+    "music-japanese-flute": "Traditional Japanese flute (shakuhachi) with ambient string pads — serene meditation",
+    "music-edm-drop": "High-energy EDM drop with progressive synth chords and driving sub-bass — festival style",
+    "music-chillstep": "Chillout chillstep track with pitch-bent vocal chops and soft sub-bass — 90 bpm",
+    "music-delta-blues": "Delta blues slide guitar with stompbox rhythm, raw and soulful",
+    "music-chiptune-retro": "Futuristic chiptune 8-bit game music, cheerful melody, retro sound effects",
+    "music-reggae-dub": "Reggae dub track with heavy offbeat chords, deep bassline, and echo effects",
+    "embeddings-fox-dog": "The quick brown fox jumps over the lazy dog.",
+    "embeddings-meaning-vector": "Embeddings turn text into a vector you can search by meaning.",
+    "embeddings-sf-bridges": "San Francisco is a city in northern California known for its fog and bridges.",
+    "embeddings-ai-simulation": "Artificial intelligence is the simulation of human intelligence processes by machines.",
+    "embeddings-quantum-computing": "Quantum computing utilizes superposition and entanglement to perform complex operations.",
+    "embeddings-dna-helix": "The double-helix structure of DNA was first discovered in 1953 by Watson and Crick.",
+    "embeddings-db-index": "A database index is a data structure that improves the speed of data retrieval operations.",
+    "embeddings-clean-code": "Clean code always looks like it was written by someone who cares.",
+    "embeddings-photosynthesis": "Photosynthesis is the process used by plants to convert light energy into chemical energy.",
+    "embeddings-cryptographic-hash": "Cryptographic hash functions map arbitrary binary data to a fixed-size signature.",
+    "embeddings-spacetime-curve": "The theory of general relativity describes gravity as the curvature of spacetime.",
+    "embeddings-offline-first": "In an offline-first application, data is stored locally before syncing to the cloud.",
+    "embeddings-regex-match": "Regular expressions are patterns used to match character combinations in strings.",
+    "embeddings-vector-space": "A vector space is a mathematical structure formed by a collection of vectors.",
+    "embeddings-microservices": "Microservices architecture structures an application as a collection of loosely coupled services."
+  },
+  "statusCluster": {
+    "categories": {
+      "api": "API",
+      "apiKey": "Key",
+      "model": "Model",
+      "storage": "Storage",
+      "safety": "Safety",
+      "provider": "Research",
+      "project": "Project",
+      "desktop": "Mode"
+    },
+    "severities": {
+      "ok": "OK",
+      "warn": "Warning",
+      "error": "Error",
+      "unknown": "Unknown"
+    },
+    "aria": {
+      "cluster": "App status cluster",
+      "openHighest": "Open app status. Highest severity: {{category}} {{severity}}"
+    },
+    "status": "Status"
+  },
+  "runtimeGenerated": {
+    "app": {
+      "attribute": {
+        "closeMenu": "Close menu"
+      }
+    },
+    "components": {
+      "charactersview": {
+        "attribute": {
+          "adultCharacter": "Adult character",
+          "averageRating": "Average rating",
+          "ratingCount": "Rating count",
+          "totalImports": "Total imports",
+          "openOnVenice": "Open on Venice",
+          "closeCharacterDetails": "Close character details",
+          "characterSections": "Character sections",
+          "characterChatModel": "Character chat model",
+          "searchCharacters": "Search characters…",
+          "searchCharacters2": "Search characters"
+        },
+        "text": {
+          "unfavorite": "Unfavorite",
+          "favorite": "Favorite",
+          "v1Imported": "V1 Imported",
+          "v2Json": "V2 JSON",
+          "v2Png": "V2 PNG",
+          "vfNative": "VF Native",
+          "noDescription": "No description",
+          "unknownAuthor": "Unknown author",
+          "noDescriptionProvided": "No description provided.",
+          "loading": "Loading…",
+          "loadMore": "Load more"
+        },
+        "notification": {
+          "refreshedValue1": "Refreshed {{value1}}",
+          "duplicatedValue1ToLocal": "Duplicated {{value1}} to Local",
+          "exportFailed": "Export failed"
+        },
+        "metadata": {
+          "deleteValue1": "Delete {{value1}}?",
+          "featured": "Featured",
+          "mostImported": "Most Imported",
+          "highestRated": "Highest Rated",
+          "highlyRated": "Highly Rated",
+          "highlyRatedRecent": "Highly Rated & Recent",
+          "mostRecent": "Most Recent",
+          "mostRated": "Most Rated",
+          "descending": "Descending",
+          "ascending": "Ascending"
+        }
+      },
+      "modelselect": {
+        "attribute": {
+          "highFidelity": "High Fidelity",
+          "standardFidelity": "Standard Fidelity",
+          "anonymousInference": "Anonymous Inference",
+          "privateInference": "Private Inference"
+        },
+        "text": {
+          "value1K": "{{value1}}k"
+        }
+      },
+      "thememaker": {
+        "metadata": {
+          "veniceParityDark": "Venice Parity Dark",
+          "forgeGraphite": "Forge Graphite",
+          "forgeDaylight": "Forge Daylight",
+          "forgeCopper": "Forge Copper",
+          "forgeDracula": "Forge Dracula",
+          "gruvboxDark": "GruvBox Dark",
+          "rosepine": "Rosepine",
+          "forgeNord": "Forge Nord",
+          "forgeTokyo": "Forge Tokyo",
+          "forgeCatppuccin": "Forge Catppuccin",
+          "forgeSolarizedDark": "Forge Solarized Dark",
+          "forgeSolarizedLight": "Forge Solarized Light",
+          "forgeOneDark": "Forge One Dark",
+          "forgeMonokai": "Forge Monokai",
+          "forgeGithubLight": "Forge GitHub Light",
+          "obsidianBloom": "Obsidian Bloom",
+          "harborFog": "Harbor Fog",
+          "circuitMint": "Circuit Mint",
+          "amberArchive": "Amber Archive",
+          "neonDusk": "Neon Dusk",
+          "auroraBoreal": "Aurora Boreal",
+          "sakuraTerminal": "Sakura Terminal",
+          "basaltNoir": "Basalt Noir",
+          "solarAsh": "Solar Ash",
+          "cyberOrchid": "Cyber Orchid",
+          "arcticGlass": "Arctic Glass",
+          "desertCopperfield": "Desert Copperfield",
+          "toxicLimewire": "Toxic Limewire",
+          "midnightVelvet": "Midnight Velvet",
+          "porcelainDaybreak": "Porcelain Daybreak",
+          "synthwaveHarbor": "Synthwave Harbor",
+          "mossCircuit": "Moss Circuit",
+          "emberMonastery": "Ember Monastery",
+          "glacialInk": "Glacial Ink",
+          "ultravioletRain": "Ultraviolet Rain",
+          "customTheme": "Custom Theme",
+          "placeholder": "Placeholder"
+        },
+        "notification": {
+          "createdNewCustomThemeValue1": "Created new custom theme \"{{value1}}\"",
+          "failedToCreateThemeValue1": "Failed to create theme: {{value1}}",
+          "themeValue1SavedSuccessfully": "Theme \"{{value1}}\" saved successfully",
+          "failedToSaveThemeValue1": "Failed to save theme: {{value1}}",
+          "failedToDeleteThemeValue1": "Failed to delete theme: {{value1}}",
+          "themeExportedSuccessfully": "Theme exported successfully",
+          "failedToExportTheme": "Failed to export theme",
+          "failedToImportTheme": "Failed to import theme",
+          "themeValue1ImportedAndApplied": "Theme \"{{value1}}\" imported and applied",
+          "failedToImportThemeValue1": "Failed to import theme: {{value1}}"
+        },
+        "attribute": {
+          "themeName": "Theme name",
+          "value1ColorPicker": "{{value1}} color picker"
+        }
+      },
+      "audio": {
+        "audioView": {
+          "notification": {
+            "ttsFailed": "TTS failed",
+            "transcriptionFailed": "Transcription failed"
+          },
+          "text": {
+            "textToSpeech": "Text to Speech",
+            "transcribe": "Transcribe",
+            "clickToSelectAudioFile": "Click to select audio file"
+          },
+          "attribute": {
+            "enterTextToConvertToSpeech": "Enter text to convert to speech…",
+            "synthesizingSpeech": "Synthesizing speech…",
+            "transcribingAudio": "Transcribing audio…"
+          }
+        }
+      },
+      "characterCreator": {
+        "charactercreatordrafteditor": {
+          "text": {
+            "untitledCharacter": "Untitled Character",
+            "hideAiDesignProcess": "Hide AI Design Process",
+            "viewAiDesignProcessLog": "View AI Design Process Log",
+            "revisingDraft": "Revising Draft...",
+            "reviseWholeDraft": "Revise Whole Draft"
+          },
+          "metadata": {
+            "overview": "Overview",
+            "identity": "Identity",
+            "behavior": "Behavior",
+            "conversation": "Conversation",
+            "advancedPrompting": "Advanced Prompting",
+            "lore": "Lore",
+            "appearance": "Appearance",
+            "metadata": "Metadata"
+          },
+          "attribute": {
+            "start10UserHello10CharGreetings": "<START>&#10;{{user}}: Hello!&#10;{{char}}: Greetings...",
+            "avatarPreview": "Avatar Preview",
+            "triggerKeywordsEGGothamBatcave": "Trigger keywords (e.g. Gotham, Batcave)",
+            "loreDetailContentTriggeredWhenAnyKeywordAppearsInConversation": "Lore detail content triggered when any keyword appears in conversation...",
+            "eGMakeHerLessHostileGiveHimADry": "e.g. Make her less hostile, give him a dry sense of humor, or move setting to 1920s Berlin..."
+          }
+        },
+        "charactercreatorerror": {
+          "notification": {
+            "errorDetailsCopiedToClipboard": "Error details copied to clipboard"
+          }
+        },
+        "charactercreatorlocalpickermodal": {
+          "attribute": {
+            "searchByCharacterNameTagOrDescription": "Search by character name, tag, or description..."
+          },
+          "text": {
+            "noLocalCharactersFoundInYourLibrary": "No local characters found in your library.",
+            "noCharactersMatchYourSearchFilter": "No characters match your search filter.",
+            "noDescriptionProvided": "No description provided."
+          }
+        },
+        "charactercreatormascot": {
+          "attribute": {
+            "characterCreatorMascot": "Character Creator Mascot"
+          }
+        },
+        "charactercreatorprocesspanel": {
+          "notification": {
+            "designProcessSummaryCopiedToClipboard": "Design process summary copied to clipboard",
+            "couldNotCopyToClipboard": "Could not copy to clipboard"
+          },
+          "text": {
+            "copied": "Copied",
+            "copyLog": "Copy Log",
+            "value1Value2": "{{value1}}: {{value2}}"
+          }
+        },
+        "charactercreatorready": {
+          "text": {
+            "characterReadyForApproval": "Character Ready for Approval",
+            "validationIssuesDetected": "Validation Issues Detected",
+            "reviewTheValidationPreviewAndExplicitlyApproveCreationToAdd": "Review the validation preview and explicitly approve creation to add to your local library.",
+            "resolveValidationErrorsBeforeApprovingCharacterCardCreation": "Resolve validation errors before approving character card creation.",
+            "noDescriptionSpecified": "No description specified",
+            "thisDraftWasLoadedFromAnExistingCharacterYouCan": "This draft was loaded from an existing character. You can update the character in-place or save as a new copy.",
+            "thisWillCreateANewLocalCharacterFromTheCurrent": "This will create a new local character from the current draft. You can continue editing it after creation.",
+            "updateCharacter": "Update Character",
+            "createCharacter": "Create Character",
+            "updateStartChat": "Update & Start Chat",
+            "createStartChat": "Create & Start Chat"
+          }
+        },
+        "charactercreatorview": {
+          "metadata": {
+            "analyzingImage": "Analyzing Image"
+          },
+          "notification": {
+            "couldNotLoadDraft": "Could not load draft",
+            "draftDuplicated": "Draft duplicated",
+            "couldNotDuplicateDraft": "Could not duplicate draft",
+            "draftDeleted": "Draft deleted",
+            "couldNotDeleteDraft": "Could not delete draft",
+            "autosaveFailed": "Autosave failed",
+            "cannotSaveDraftWhilePendingChangesFailedToPersist": "Cannot save draft while pending changes failed to persist.",
+            "draftSavedLocally": "Draft saved locally",
+            "couldNotSaveDraft": "Could not save draft",
+            "cannotReviseDraftWhilePendingChangesFailedToPersist": "Cannot revise draft while pending changes failed to persist.",
+            "draftRevised": "Draft revised",
+            "cannotRegenerateFieldWhilePendingChangesFailedToPersist": "Cannot regenerate field while pending changes failed to persist.",
+            "fieldFieldRegenerated": "Field '{{field}}' regenerated",
+            "cannotValidateDraftWhilePendingChangesFailedToPersist": "Cannot validate draft while pending changes failed to persist.",
+            "cannotApproveCharacterWhilePendingChangesFailedToPersist": "Cannot approve character while pending changes failed to persist.",
+            "characterUpdated": "Character updated!",
+            "characterCreated": "Character created!",
+            "value1SavedToLocalLibrary": "\"{{value1}}\" saved to local library.",
+            "cannotExportCardWhilePendingChangesFailedToPersist": "Cannot export card while pending changes failed to persist.",
+            "characterCardExported": "Character Card exported",
+            "exportFailed": "Export failed",
+            "exportedCharacterCardJson": "Exported Character Card JSON",
+            "cardImportedIntoCharacterCreator": "Card imported into Character Creator",
+            "importedCard": "Imported Card",
+            "importFailed": "Import failed",
+            "couldNotParseCardFile": "Could not parse card file",
+            "couldNotLoadCharacter": "Could not load character"
+          }
+        },
+        "charactercreatorwelcome": {
+          "attribute": {
+            "exampleIWantABroodingNocturnalDetectiveWhoProtectsA": "Example: I want a brooding nocturnal detective who protects a corrupt city without killing.",
+            "eGNeoGothicMetropolis1920sNoir": "e.g. Neo-Gothic metropolis, 1920s Noir",
+            "eGGrittyMelancholicSatirical": "e.g. Gritty, melancholic, satirical",
+            "eGReluctantAllyMysteriousInformant": "e.g. Reluctant ally, mysterious informant",
+            "duplicateDraft": "Duplicate Draft",
+            "deleteDraft": "Delete Draft"
+          }
+        }
+      },
+      "characters": {
+        "characteravatar": {
+          "attribute": {
+            "displaynameAvatar": "{{displayName}} avatar"
+          }
+        }
+      },
+      "chat": {
+        "characterchatsview": {
+          "attribute": {
+            "newCharacterChat": "New character chat",
+            "chooseOrStartACharacterChat": "Choose or start a character chat",
+            "searchCharacterChats": "Search character chats",
+            "searchLocalCharacters": "Search local characters…",
+            "newCharacterChat2": "New Character Chat",
+            "selectALocalCharacterOrBrowseHostedCharactersToLaunch": "Select a local character or browse hosted characters to launch a chat.",
+            "filterLocalCharacters": "Filter local characters…"
+          },
+          "text": {
+            "characterChat": "Character chat",
+            "local": "Local",
+            "hosted": "Hosted",
+            "v1Imported": "V1 Imported",
+            "v2Json": "V2 JSON",
+            "v2Png": "V2 PNG",
+            "localCharacter": "Local Character",
+            "localCharacter2": "Local character",
+            "noLocalCharactersCreatedYet": "No local characters created yet.",
+            "noCharactersMatchPickerquery": "No characters match \"{{pickerQuery}}\"."
+          }
+        },
+        "characterscenecard": {
+          "text": {
+            "unableToGenerateScene": "Unable to generate scene."
+          },
+          "attribute": {
+            "generatedScene": "Generated scene"
+          }
+        },
+        "chatttsplayer": {
+          "attribute": {
+            "pauseSpeech": "Pause speech",
+            "playSpeech": "Play speech",
+            "stopSpeech": "Stop speech",
+            "restartSpeech": "Restart speech"
+          }
+        },
+        "historyview": {
+          "notification": {
+            "importFailed": "Import failed",
+            "unableToSelectBackup": "Unable to select backup",
+            "conversationDeleted": "Conversation deleted",
+            "untitled": "Untitled",
+            "conversationRestored": "Conversation restored",
+            "failedToRestore": "Failed to restore",
+            "movedConversations": "Moved conversations",
+            "movedValue1ConversationValue2ToTargetname": "Moved {{value1}} conversation{{value2}} to {{targetName}}.",
+            "failedToMoveConversations": "Failed to move conversations",
+            "conversationsDeleted": "Conversations deleted",
+            "value1SelectedConversationValue2Removed": "{{value1}} selected conversation{{value2}} removed.",
+            "someConversationsWereNotDeleted": "Some conversations were not deleted",
+            "value1SelectedConversationValue2RemainBecauseStorageDeletionFailed": "{{value1}} selected conversation{{value2}} remain because storage deletion failed.",
+            "thisConversationHasNoFactsOrSummaryToUse": "This conversation has no facts or summary to use.",
+            "contextInjectedIntoActiveChat": "Context injected into active chat",
+            "privacyGateRemainsClosed": "Privacy gate remains closed",
+            "privacyGateWasNotEnabled": "Privacy gate was not enabled",
+            "unknownError": "Unknown error"
+          },
+          "metadata": {
+            "importEncryptedFolderBackup": "Import encrypted folder backup?",
+            "unlockBackup": "Unlock Backup",
+            "undo": "Undo",
+            "deleteValue1ConversationValue2": "Delete {{value1}} conversation{{value2}}?",
+            "openPrivacyGate": "Open Privacy Gate",
+            "enableFolderPrivacyGate": "Enable Folder Privacy Gate",
+            "exportFolder": "Export Folder"
+          },
+          "attribute": {
+            "searchByTitleOrMessageContent": "Search by title or message content...",
+            "deselectFolderConversations": "Deselect folder conversations",
+            "selectAllConversationsInFolder": "Select all conversations in folder",
+            "moveFolderUp": "Move folder up",
+            "moveValue1FolderUp": "Move {{value1}} folder up",
+            "moveFolderDown": "Move folder down",
+            "moveValue1FolderDown": "Move {{value1}} folder down",
+            "renameFolder": "Rename Folder",
+            "deleteFolder": "Delete Folder",
+            "deselect": "Deselect",
+            "select": "Select",
+            "deselectConversation": "Deselect conversation",
+            "selectConversation": "Select conversation",
+            "injectContextIntoActiveChat": "Inject context into active chat",
+            "deleteConversation": "Delete conversation",
+            "deselectUnfiledConversations": "Deselect unfiled conversations",
+            "selectAllUnfiledConversations": "Select all unfiled conversations",
+            "folderName": "Folder Name...",
+            "privacyAccessGateNotPerFolderEncryptionAtRest": "Privacy access gate; not per-folder encryption at rest"
+          },
+          "text": {
+            "deselectAllVisible": "Deselect all visible",
+            "selectAllVisible": "Select all visible",
+            "folderselectedcountSelected": " · {{folderSelectedCount}} selected",
+            "selected": "Selected",
+            "select": "Select",
+            "unfiledselectedcountSelected": " · {{unfiledSelectedCount}} selected"
+          }
+        },
+        "chatView": {
+          "notification": {
+            "modelUnavailable": "Model unavailable",
+            "thePreviouslySelectedModelIsUnavailableThisChatNowUses": "The previously selected model is unavailable. This chat now uses {{resolvedDefault}}.",
+            "priorContextSkipped": "Prior context skipped",
+            "factPermanentlyForgotten": "Fact permanently forgotten.",
+            "failedToForgetFact": "Failed to forget fact"
+          },
+          "metadata": {
+            "forgetThisFact": "Forget this fact?",
+            "deleteFromHere": "Delete from here?",
+            "removedFromChat": "Removed from chat",
+            "removednameStaysInMediaStudioClickUndoToReAttach": "{{removedName}} stays in Media Studio. Click Undo to re-attach.",
+            "undo": "Undo",
+            "regenerateFromHere": "Regenerate from here?"
+          },
+          "attribute": {
+            "searchCurrentConversation": "Search current conversation",
+            "searchThisConversation": "Search this conversation",
+            "previousMatch": "Previous match",
+            "nextMatch": "Next match",
+            "closeConversationSearch": "Close conversation search",
+            "cancel": "Cancel",
+            "chatContextSettings": "Chat context settings",
+            "chatContext": "Chat context",
+            "stopChattingAsThisCharacter": "Stop chatting as this character",
+            "value1Value2Tokens": "~{{value1}} / {{value2}} tokens"
+          },
+          "text": {
+            "value0Matches": "0 matches",
+            "value1OfValue2": "{{value1}} of {{value2}}",
+            "pickAModelInTheHeaderAboveThenStartA": "Pick a model in the header above, then start a conversation. Streaming, web search, and citations are all built in.",
+            "connectAVeniceApiKeyFromTheHeaderAboveTo": "Connect a Venice API key from the header above to get started.",
+            "thisCharacter": "this character",
+            "viewList": "View List",
+            "editText": "Edit Text",
+            "memoryOn": "memory on",
+            "memoryOff": "memory off",
+            "value1Prior": "{{value1}} prior",
+            "priorOff": "prior off",
+            "remove": "Remove ",
+            "add": "Add ",
+            "untitled": "Untitled",
+            "localCharacter": "Local character",
+            "value1": " · {{value1}}"
+          }
+        },
+        "messageBubble": {
+          "text": {
+            "copied": "Copied",
+            "copy": "Copy",
+            "allow": "ALLOW",
+            "blocked": "BLOCKED",
+            "noArguments": "No arguments"
+          },
+          "attribute": {
+            "copied": "Copied",
+            "copy": "Copy",
+            "editMessage": "Edit message",
+            "forkChatFromHere": "Fork chat from here",
+            "deleteFromHere": "Delete from here",
+            "regenerateFromHere": "Regenerate from here",
+            "regenerate": "Regenerate",
+            "createScene": "Create scene",
+            "delete": "Delete",
+            "attachmentValue1": "Attachment {{value1}}",
+            "editMessageText": "Edit message text",
+            "value1Value2": "{{value1}} ({{value2}})",
+            "attachmentWasPartiallyOmittedDueToContextBudget": "Attachment was partially omitted due to context budget",
+            "aiAvatar": "AI avatar",
+            "thinking": "Thinking…",
+            "removeFromChat": "Remove from chat",
+            "tokensUsedForThisMessage": "Tokens used for this message"
+          }
+        }
+      },
+      "documents": {
+        "documentagentview": {
+          "notification": {
+            "managedDocumentCreated": "Managed document created",
+            "workingGroupValue1Created": "Working Group \"{{value1}}\" created",
+            "approvedEditAppliedAsANewRevision": "Approved edit applied as a new revision",
+            "proposalRejectedWithoutChanges": "Proposal rejected without changes"
+          },
+          "attribute": {
+            "searchDocuments": "Search documents…",
+            "documentChangeProposal": "Document change proposal",
+            "searchWorkspaceText": "Search workspace text…",
+            "eGNotesMd": "e.g. notes.md",
+            "eGQ3Architecture": "e.g. Q3 Architecture"
+          },
+          "text": {
+            "fileContentInspector": "File Content Inspector"
+          }
+        }
+      },
+      "embeddings": {
+        "embeddingsView": {
+          "attribute": {
+            "enterTextToEmbed": "Enter text to embed…",
+            "model": "Model",
+            "dimensions": "Dimensions",
+            "tokens": "Tokens"
+          },
+          "text": {
+            "showFirstPreviewCount": "Show first {{PREVIEW_COUNT}}",
+            "showAllDimsValues": "Show all {{dims}} values"
+          }
+        }
+      },
+      "gallery": {
+        "compareView": {
+          "text": {
+            "allSharedFieldsMatch": "All shared fields match",
+            "changedcountFieldValue2Differ": "{{changedCount}} field{{value2}} differ"
+          },
+          "attribute": {
+            "closeCompareView": "Close compare view"
+          },
+          "metadata": {
+            "model": "Model",
+            "prompt": "Prompt",
+            "negative": "Negative",
+            "width": "Width",
+            "height": "Height",
+            "aspect": "Aspect",
+            "resolution": "Resolution",
+            "quality": "Quality",
+            "seed": "Seed",
+            "steps": "Steps",
+            "cfg": "CFG",
+            "style": "Style",
+            "project": "Project",
+            "operation": "Operation",
+            "type": "Type",
+            "favorite": "Favorite",
+            "tags": "Tags",
+            "created": "Created",
+            "rModel": "R: Model",
+            "rPrompt": "R: Prompt",
+            "rNegative": "R: Negative",
+            "rWidth": "R: Width",
+            "rHeight": "R: Height",
+            "rAspect": "R: Aspect",
+            "rResolution": "R: Resolution",
+            "rSeed": "R: Seed",
+            "rSteps": "R: Steps",
+            "rCfg": "R: CFG",
+            "rVariants": "R: Variants",
+            "rStyle": "R: Style",
+            "rQuality": "R: Quality"
+          }
+        },
+        "galleryView": {
+          "notification": {
+            "favoritedValue1OfValue2": "Favorited {{value1}} of {{value2}}",
+            "favoritedValue1ItemValue2": "Favorited {{value1}} item{{value2}}",
+            "noneOfTheSelectedItemsHaveARecipe": "None of the selected items have a recipe.",
+            "copiedValue1RecipeValue2": "Copied {{value1}} recipe{{value2}}",
+            "couldNotCopyToClipboard": "Could not copy to clipboard.",
+            "failedToUpdateMediaItem": "Failed to update media item",
+            "removedFromMediaStudio": "Removed from Media Studio",
+            "failedToDelete": "Failed to delete",
+            "removedValue1OfValue2SomeFailed": "Removed {{value1}} of {{value2}} (some failed)",
+            "removedValue1ItemValue2": "Removed {{value1}} item{{value2}}",
+            "batchDeleteFailed": "Batch delete failed",
+            "updatedValue1OfValue2": "Updated {{value1}} of {{value2}}",
+            "removedFavorites": "Removed favorites",
+            "markedAsFavorites": "Marked as favorites",
+            "clearedFavorites": "Cleared favorites",
+            "taggedValue1OfValue2": "Tagged {{value1}} of {{value2}}",
+            "taggedValue1ItemValue2": "Tagged {{value1}} item{{value2}}",
+            "enterATagFirst": "Enter a tag first.",
+            "assignedValue1OfValue2Firstreason": "Assigned {{value1}} of {{value2}} ({{firstReason}})",
+            "assignedValue1ItemValue2": "Assigned {{value1}} item{{value2}}",
+            "selectAtLeastOneMediaItem": "Select at least one media item.",
+            "loadedSettingsIntoImageStudio": "Loaded settings into Image Studio",
+            "thisMediaItemHasNoReusableRecipe": "This media item has no reusable recipe",
+            "recipeLoadedIntoImageStudio": "Recipe loaded into Image Studio",
+            "openingImageToolsForUpscale": "Opening image tools for upscale",
+            "openingImageToolsForEditing": "Opening image tools for editing",
+            "sentToImageStudio": "Sent to Image Studio",
+            "couldNotSendToImageStudio": "Could not send to Image Studio",
+            "sentToImageTools": "Sent to Image Tools",
+            "couldNotSendToImageTools": "Could not send to Image Tools",
+            "createdNewChatWithPromptCopied": "Created new chat with prompt copied",
+            "couldNotSendToChat": "Could not send to Chat",
+            "sentToVideoStudio": "Sent to Video Studio",
+            "couldNotSendToVideoStudio": "Could not send to Video Studio",
+            "promptCopied": "Prompt copied",
+            "couldNotCopyPrompt": "Could not copy prompt",
+            "negativeCopied": "Negative copied",
+            "couldNotCopyNegative": "Could not copy negative",
+            "noSeedRecorded": "No seed recorded",
+            "seedCopied": "Seed copied",
+            "setUpAMasterPasswordInSettingsSecurityFirst": "Set up a master password in Settings > Security first"
+          },
+          "metadata": {
+            "addTag": "Add tag",
+            "deleteThisValue1": "Delete this {{value1}}?",
+            "deleteValue1ItemValue2": "Delete {{value1}} item{{value2}}?"
+          },
+          "text": {
+            "exitVault": "Exit Vault",
+            "vault": "Vault",
+            "imagesAndVideosGeneratedInImageStudioAndVideoStudio": "Images and videos generated in Image Studio and Video Studio will appear here automatically.",
+            "tryADifferentSearchOrFilterOrLoadOlderItems": "Try a different search or filter, or load older items to expand the result set.",
+            "tryADifferentSearchFilterOrSort": "Try a different search, filter, or sort.",
+            "loadingOlderMedia": "Loading older media…",
+            "loadMoreValue1Remaining": "Load more ({{value1}} remaining)"
+          },
+          "attribute": {
+            "doubleClickToInspect": "Double-click to inspect",
+            "heroLandscape": "hero, landscape, …"
+          }
+        },
+        "mediaCard": {
+          "attribute": {
+            "openValue1Value2": "Open {{value1}}: {{value2}}",
+            "generatedVideo": "Generated video",
+            "generatedImage": "Generated image",
+            "unfavorite": "Unfavorite",
+            "markAsFavorite": "Mark as favorite",
+            "removeFromVault": "Remove from Vault",
+            "moveToVault": "Move to Vault",
+            "delete": "Delete"
+          },
+          "text": {
+            "loading": "Loading…",
+            "previewUnavailable": "Preview unavailable",
+            "item": "Item",
+            "untitled": "Untitled"
+          }
+        },
+        "mediaDetailDialog": {
+          "attribute": {
+            "mediaDetail": "Media detail",
+            "previous": "Previous",
+            "generatedImagePreview": "Generated image preview",
+            "next": "Next",
+            "openValue1": "Open {{value1}}"
+          },
+          "text": {
+            "video": "Video",
+            "audio": "Audio",
+            "image": "Image",
+            "favorited": "Favorited",
+            "favorite": "Favorite",
+            "untitled": "Untitled",
+            "noTags": "No tags"
+          }
+        },
+        "mediaInspector": {
+          "notification": {
+            "savedRecipeToPromptLibrary": "Saved recipe to Prompt Library",
+            "couldNotSaveRecipe": "Could not save recipe",
+            "aiCharacterCreatorLaunched": "AI Character Creator launched",
+            "mediaSaved": "Media saved",
+            "mediaDownloadFailed": "Media download failed"
+          },
+          "attribute": {
+            "mediaInspector": "Media inspector",
+            "loadThisImageSSettingsIntoImageStudioNoGeneration": "Load this image's settings into Image Studio (no generation)",
+            "loadTheGenerationRecipePromptModelSeedDimensionsEtcInto": "Load the generation recipe (prompt, model, seed, dimensions, etc.) into the appropriate studio",
+            "regenerateUsingThisImageSSettingsNewRandomSeed": "Regenerate using this image's settings (new random seed)",
+            "regenerateUsingTheSameSeedAsThisImage": "Regenerate using the same seed as this image",
+            "openThisImageInTheImageEditor": "Open this image in the image editor",
+            "saveTheMainProcessMediaFileWithANativeDialog": "Save the main-process media file with a native dialog",
+            "copyPromptText": "Copy prompt text",
+            "copyNegativePrompt": "Copy negative prompt",
+            "copySeedValue1": "Copy seed ({{value1}})",
+            "copyMetadataAsJson": "Copy metadata as JSON",
+            "saveRecipeToPromptLibrary": "Save recipe to Prompt Library",
+            "copyGenerationRecipeAsJson": "Copy generation recipe as JSON",
+            "downloadGenerationRecipeAsAJsonFile": "Download generation recipe as a JSON file",
+            "disabledInternalPromptEnhancerEnabledIsFalseInConfigYaml": "Disabled: internal_prompt_enhancer.enabled is false in config.yaml",
+            "enhancePromptViaInternalLlm": "Enhance prompt via internal LLM",
+            "remixPromptViaInternalLlm": "Remix prompt via internal LLM",
+            "addATagAndPressEnter": "Add a tag and press Enter",
+            "removeTag": "Remove tag",
+            "value1Chars": "{{value1}} chars",
+            "captureAQuickReminderOrSeedValue": "Capture a quick reminder or seed value…",
+            "missingReferences": "Missing references",
+            "upscaleEnhanceThisImage": "Upscale / enhance this image"
+          },
+          "text": {
+            "untitled": "Untitled",
+            "favorited": "Favorited",
+            "markAsFavorite": "Mark as favorite",
+            "enhancing": "Enhancing…",
+            "enhance": "Enhance",
+            "remixing": "Remixing…",
+            "remix": "Remix",
+            "enhanced": "Enhanced",
+            "remixed": "Remixed",
+            "enhancing2": "Enhancing",
+            "remixing2": "Remixing",
+            "thisItemReferencesRecordsThatNoLongerExistClearThe": "This item references records that no longer exist. Clear the stale pointers to repair the lineage.",
+            "thisItemSParentRecordIsMissingClearTheParent": "This item's parent record is missing. Clear the parent link to repair the lineage.",
+            "value1ChildValue2CouldNotBeResolvedClearTheStale": "{{value1}} child {{value2}} could not be resolved. Clear the stale pointer{{value3}} to repair the lineage.",
+            "childrenidsValue1": "childrenIds: {{value1}}",
+            "childrenidsValue1Missing": "childrenIds: {{value1}} missing",
+            "value1MissingRef": "1 missing ref",
+            "value1MissingRefs": "{{value1}} missing refs"
+          }
+        },
+        "mediaToolbar": {
+          "metadata": {
+            "unassign": "Unassign",
+            "all": "All",
+            "images": "Images",
+            "videos": "Videos",
+            "audio": "Audio",
+            "favorites": "Favorites",
+            "upscaled": "Upscaled",
+            "edited": "Edited",
+            "hasRecipe": "Has recipe",
+            "noRecipe": "No recipe",
+            "hasSeed": "Has seed",
+            "noSeed": "No seed",
+            "unscoped": "Unscoped",
+            "newest": "Newest",
+            "oldest": "Oldest",
+            "model": "Model",
+            "size": "Size",
+            "project": "Project"
+          },
+          "attribute": {
+            "searchPromptsModelsTagsNotes": "Search prompts, models, tags, notes…",
+            "searchMedia": "Search media",
+            "clearSearch": "Clear search"
+          },
+          "text": {
+            "exitSelect": "Exit select",
+            "select": "Select",
+            "unfavorite": "Unfavorite",
+            "favorite": "Favorite"
+          }
+        },
+        "recipeComparison": {
+          "attribute": {
+            "recipeComparison": "Recipe comparison"
+          },
+          "text": {
+            "identical": "Identical",
+            "changedcountFieldValue2WillChange": "{{changedCount}} field{{value2}} will change"
+          },
+          "metadata": {
+            "model": "Model",
+            "prompt": "Prompt",
+            "negativePrompt": "Negative prompt",
+            "width": "Width",
+            "height": "Height",
+            "aspectRatio": "Aspect ratio",
+            "resolution": "Resolution",
+            "quality": "Quality",
+            "style": "Style",
+            "steps": "Steps",
+            "cfgScale": "CFG scale",
+            "variants": "Variants",
+            "seed": "Seed"
+          }
+        },
+        "recipeCompatibilityCard": {
+          "attribute": {
+            "sendTheOriginalRecipeToImageStudioWithoutSanitization": "Send the original recipe to Image Studio without sanitization"
+          },
+          "text": {
+            "hideComparison": "Hide comparison",
+            "showComparison": "Show comparison"
+          }
+        }
+      },
+      "imageInspector": {
+        "imageinspectorview": {
+          "notification": {
+            "imageInspectorUploadIsOnlySupportedInTheDesktopApp": "Image inspector upload is only supported in the desktop app.",
+            "failedToProcessImage": "Failed to process image",
+            "unknownError": "Unknown error",
+            "noImageFoundOnClipboard": "No image found on clipboard"
+          },
+          "metadata": {
+            "deleteImageInspection": "Delete image inspection?",
+            "value1Value2": "{{value1}} — {{value2}}",
+            "quick": "Quick",
+            "standard": "Standard",
+            "maximum": "Maximum",
+            "forensic": "Forensic",
+            "genericNaturalLanguage": "Generic Natural Language",
+            "veniceImageStudio": "Venice Image Studio",
+            "flux": "FLUX",
+            "midjourney": "Midjourney"
+          },
+          "attribute": {
+            "pasteFromClipboard": "Paste from clipboard",
+            "openImageInspectionValue1": "Open image inspection {{value1}}",
+            "deleteImageInspectionValue1": "Delete image inspection {{value1}}",
+            "cancelAnalysisBeforeDeleting": "Cancel analysis before deleting",
+            "deleteInspection": "Delete inspection",
+            "target": "Target",
+            "selectAVisionModel": "Select a vision model...",
+            "eGFocusOnLightingAndComposition": "e.g. Focus on lighting and composition...",
+            "analyzingImageContents": "Analyzing image contents…"
+          },
+          "text": {
+            "noSummaryAvailable": "No summary available.",
+            "subject": "Subject",
+            "theSelectedVisionModelCouldNotAnalyzeThisImage": "The selected vision model could not analyze this image."
+          }
+        }
+      },
+      "image": {
+        "imagePage": {
+          "text": {
+            "generate": "Generate"
+          }
+        },
+        "imageView": {
+          "metadata": {
+            "value1Value2": "{{value1}}×{{value2}}"
+          }
+        }
+      },
+      "layout": {
+        "apiKeyDialog": {
+          "notification": {
+            "keySavedSecurely": "Key saved securely"
+          },
+          "attribute": {
+            "closeDialog": "Close dialog"
+          },
+          "text": {
+            "heldInMemoryForThisLocalDevelopmentSessionOnly": "Held in memory for this local development session only.",
+            "connect": "Connect"
+          }
+        },
+        "inspectorPane": {
+          "metadata": {
+            "veniceApiDefault": "Venice API Default",
+            "globalAppSystemPrompt": "Global App System Prompt",
+            "characterSystemPrompt": "Character System Prompt",
+            "conversationOverrideModeMode": "Conversation Override (mode: {{mode}})",
+            "all": "All",
+            "blocked": "Blocked",
+            "errored": "Errored",
+            "aborted": "Aborted",
+            "jina": "Jina",
+            "localOnly": "Local-only"
+          },
+          "attribute": {
+            "developerTrafficInspector": "Developer traffic inspector",
+            "resizeInspector": "Resize Inspector",
+            "clearAllLogs": "Clear all logs",
+            "clearAllInspectorLogs": "Clear all inspector logs",
+            "exportRedactedLogsAsJson": "Export redacted logs as JSON",
+            "exportRedactedInspectorLogsAsJson": "Export redacted inspector logs as JSON",
+            "closeInspector": "Close Inspector",
+            "closeTrafficInspector": "Close traffic inspector"
+          },
+          "text": {
+            "traffic": "Traffic",
+            "promptLayers": "Prompt Layers",
+            "pending": "Pending...",
+            "allow": "ALLOW",
+            "blocked": "BLOCKED",
+            "empty": "[Empty]",
+            "pendingOrEmpty": "[Pending or Empty]",
+            "untitled": "Untitled",
+            "active": "Active",
+            "inactive": "Inactive"
+          }
+        },
+        "memoryPanel": {
+          "notification": {
+            "indexRebuiltSuccessfullyIndexedValue1Conversations": "Index rebuilt successfully! Indexed {{value1}} conversations.",
+            "rebuildFailedValue1": "Rebuild failed: {{value1}}",
+            "indexRebuildFailed": "Index rebuild failed",
+            "failedToOpenVaultFolder": "Failed to open vault folder.",
+            "migrationCompletedMigratedValue1FailedValue2SkippedValue3": "Migration completed! Migrated: {{value1}}, Failed: {{value2}}, Skipped: {{value3}}",
+            "migrationFailedValue1": "Migration failed: {{value1}}",
+            "migrationFailed": "Migration failed",
+            "factForgottenSuccessfully": "Fact forgotten successfully.",
+            "failedToForgetFact": "Failed to forget fact."
+          },
+          "metadata": {
+            "forgetThisFact": "Forget this fact?"
+          },
+          "text": {
+            "migrating": "Migrating...",
+            "migrateNow": "Migrate Now",
+            "indexing": "Indexing...",
+            "rebuildIndex": "Rebuild Index"
+          }
+        },
+        "sidebar": {
+          "attribute": {
+            "primaryNavigation": "Primary navigation",
+            "closeMenu": "Close menu",
+            "sections": "Sections",
+            "confirmDelete": "Confirm delete"
+          }
+        }
+      },
+      "music": {
+        "musicView": {
+          "text": {
+            "value1SValue2S": "{{value1}}s–{{value2}}s",
+            "queued": "Queued…",
+            "generating": "Generating…",
+            "generateMusic": "Generate Music",
+            "saved": "Saved",
+            "saveToMediaStudio": "Save to Media Studio"
+          },
+          "attribute": {
+            "anUpbeatElectronicTrackWithADrivingBasslineAndEthereal": "An upbeat electronic track with a driving bassline and ethereal synths…",
+            "optionalLyricsOrVocalDirection": "Optional lyrics or vocal direction…",
+            "durationS": "{{duration}}s",
+            "musicDuration": "Music duration",
+            "alreadySavedToMediaStudio": "Already saved to Media Studio",
+            "saveToMediaStudio": "Save to Media Studio",
+            "queuedWaitingForASlot": "Queued — waiting for a slot",
+            "composingYourTrack": "Composing your track"
+          },
+          "notification": {
+            "alreadyInMediaStudio": "Already in Media Studio",
+            "savedToMediaStudio": "Saved to Media Studio"
+          }
+        }
+      },
+      "notifications": {
+        "progresstoast": {
+          "attribute": {
+            "value1Progress": "{{value1}} progress",
+            "dismissNotification": "Dismiss notification"
+          }
+        },
+        "toastitem": {
+          "attribute": {
+            "dismissNotification": "Dismiss notification"
+          }
+        },
+        "toastviewport": {
+          "attribute": {
+            "notifications": "Notifications"
+          }
+        }
+      },
+      "playground": {
+        "agentModelPicker": {
+          "metadata": {
+            "recommendedForAgents": "Recommended for agents",
+            "capable": "Capable",
+            "other": "Other"
+          },
+          "attribute": {
+            "searchModels": "Search models…",
+            "showingAllModels": "Showing all models",
+            "showingOnlySchemaCapableModels": "Showing only schema-capable models"
+          },
+          "text": {
+            "all": "All",
+            "capable": "Capable",
+            "value1Ctx": " · {{value1}} ctx"
+          }
+        },
+        "playgroundChat": {
+          "attribute": {
+            "thinking": "Thinking…",
+            "working": "Working…",
+            "agentIsWorking": "Agent is working…",
+            "describeAWorkflowOrChange": "Describe a workflow or change…"
+          }
+        },
+        "playgroundView": {
+          "notification": {
+            "workflowCompleted": "Workflow completed",
+            "workflowFailed": "Workflow failed"
+          },
+          "metadata": {
+            "clearPlayground": "Clear playground?"
+          },
+          "attribute": {
+            "clearConversation": "Clear conversation",
+            "unlink": "Unlink",
+            "resetCanvas": "Reset canvas",
+            "runTheWorkflowInline": "Run the workflow inline",
+            "updateValue1": "Update \"{{value1}}\"",
+            "saveAsNewWorkflow": "Save as new workflow",
+            "saveAsANewWorkflow": "Save as a new workflow",
+            "openInWorkflowsTab": "Open in Workflows tab"
+          },
+          "text": {
+            "update": "Update",
+            "save": "Save"
+          }
+        }
+      },
+      "privacy": {
+        "storageprivacydashboard": {
+          "text": {
+            "refreshing": "Refreshing...",
+            "refreshInventory": "Refresh Inventory",
+            "previewOnly": "Preview only",
+            "runAction": "Run Action"
+          },
+          "metadata": {
+            "runDestructiveAction": "Run destructive action?"
+          }
+        }
+      },
+      "prompts": {
+        "promptcreatemodal": {
+          "attribute": {
+            "createNewPrompt": "Create New Prompt",
+            "saveReusablePromptContentAndMetadataToYourEncryptedPrompt": "Save reusable prompt content and metadata to your encrypted Prompt Library.",
+            "closeCreatePromptDialog": "Close create prompt dialog",
+            "eGDarkFantasyPortrait": "E.g., Dark Fantasy Portrait",
+            "eGDarkFantasyPortraitLighting": "e.g. dark fantasy, portrait lighting",
+            "enterPromptTextHere": "Enter prompt text here...",
+            "optionalNegativePrompt": "Optional negative prompt..."
+          },
+          "metadata": {
+            "image": "Image",
+            "negative": "Negative",
+            "chat": "Chat",
+            "system": "System",
+            "research": "Research",
+            "character": "Character",
+            "workflow": "Workflow",
+            "recipe": "Recipe",
+            "general": "General"
+          }
+        },
+        "promptlibraryview": {
+          "attribute": {
+            "searchPrompts": "Search prompts…",
+            "tagsCommaSeparated": "tags, comma separated",
+            "optionalDescription": "Optional description",
+            "typeValue1ToConfirm": "Type \"{{value1}}\" to confirm"
+          },
+          "metadata": {
+            "allKinds": "All kinds",
+            "allScopes": "All scopes",
+            "global": "Global",
+            "project": "Project",
+            "newest": "Newest",
+            "oldest": "Oldest",
+            "title": "Title",
+            "kind": "Kind",
+            "favorite": "Favorite",
+            "allTags": "All tags",
+            "t": "#{{t}}",
+            "workflowValue1": "Workflow: {{value1}}",
+            "image": "Image",
+            "negative": "Negative",
+            "chat": "Chat",
+            "system": "System",
+            "research": "Research",
+            "character": "Character",
+            "workflow": "Workflow",
+            "recipe": "Recipe",
+            "general": "General"
+          },
+          "text": {
+            "noPromptsMatchTheCurrentFilters": "No prompts match the current filters.",
+            "project": "Project",
+            "global": "Global",
+            "selectAPromptToViewItsDetails": "Select a prompt to view its details.",
+            "noPromptSelectedCreateANewOneToGetStarted": "No prompt selected. Create a new one to get started.",
+            "favorited": "★ Favorited",
+            "favorite": "☆ Favorite",
+            "unarchive": "Unarchive",
+            "archive": "Archive",
+            "projectValue1": "Project: {{value1}}",
+            "saving": "Saving...",
+            "saveMetadata": "Save metadata",
+            "saveNewVersion": "Save new version",
+            "hide": "Hide",
+            "show": "Show"
+          },
+          "notification": {
+            "newVersionSaved": "New version saved",
+            "promptDeleted": "Prompt deleted",
+            "workflowCreated": "Workflow created",
+            "promptCreated": "Prompt created",
+            "thePendingActionFailedYourUnsavedChangesWerePreserved": "The pending action failed. Your unsaved changes were preserved.",
+            "metadataSaved": "Metadata saved",
+            "failedToSaveMetadata": "Failed to save metadata",
+            "versionContentIsEmpty": "Version content is empty",
+            "failedToSaveVersion": "Failed to save version",
+            "sentToImageStudio": "Sent to Image Studio",
+            "sentToChat": "Sent to Chat"
+          }
+        }
+      },
+      "research": {
+        "researchworkspaceview": {
+          "metadata": {
+            "researchTitle": "Research title",
+            "deleteSession": "Delete session?",
+            "workflowValue1": "Workflow: {{value1}}",
+            "workflowGeneratedFromResearchSessionValue1": "Workflow generated from research session \"{{value1}}\"",
+            "reviewResearchSummary": "Review Research Summary"
+          },
+          "notification": {
+            "searchFinishedWithValue1Warnings": "Search finished with {{value1}} warnings",
+            "searchFailed": "Search failed",
+            "scrapeFailed": "Scrape failed",
+            "attachmentNote": "Attachment note",
+            "fileSAddedToResearchSources": "File(s) added to research sources",
+            "fileUploadFailed": "File upload failed",
+            "summarySavedToPromptLibrary": "Summary saved to Prompt Library",
+            "researchWorkflowCreated": "Research workflow created"
+          },
+          "attribute": {
+            "researchSessions": "Research sessions",
+            "createResearchSession": "Create research session",
+            "expandResearchSessions": "Expand research sessions",
+            "collapseResearchSessions": "Collapse research sessions",
+            "removeValue1FromFavorites": "Remove {{value1}} from favorites",
+            "addValue1ToFavorites": "Add {{value1}} to favorites",
+            "archiveSession": "Archive session",
+            "deleteSession": "Delete session",
+            "searchQuery": "Search query...",
+            "runResearchSearch": "Run research search",
+            "scrapeUrl": "Scrape URL",
+            "removeSourceValue1": "Remove source {{value1}}",
+            "summarizeTheFinding": "Summarize the finding",
+            "addSupportingDetailsAndCitations": "Add supporting details and citations",
+            "removeFindingValue1": "Remove finding {{value1}}"
+          },
+          "text": {
+            "processing": "Processing...",
+            "uploadDocument": "Upload Document",
+            "noExcerptAvailable": "No excerpt available."
+          }
+        }
+      },
+      "rpStudio": {
+        "assetgallery": {
+          "metadata": {
+            "allChats": "All chats"
+          },
+          "text": {
+            "noAssetsYet": "No assets yet"
+          },
+          "attribute": {
+            "deleteAsset": "Delete asset"
+          }
+        },
+        "characterbookeditor": {
+          "attribute": {
+            "bookExtensionData": "Book extension data",
+            "entryExtensionData": "Entry extension data"
+          }
+        },
+        "charactereditor": {
+          "notification": {
+            "fileLoadedSourced": "File loaded & sourced",
+            "loadedValue1IntoFieldlabelAndSavedInsideCharacterFile": "Loaded \"{{value1}}\" into {{fieldLabel}} and saved inside character file.",
+            "reAppliedSourcedFile": "Re-applied sourced file",
+            "reLoadedValue1ContentIntoValue2": "Re-loaded \"{{value1}}\" content into {{value2}}.",
+            "workflowCreated": "Workflow created",
+            "savedToPromptLibrary": "Saved to Prompt Library",
+            "promptValue1Created": "Prompt \"{{value1}}\" created.",
+            "couldNotSaveToPromptLibrary": "Could not save to Prompt Library",
+            "safetyGuardBlockedThePrompt": "Safety guard blocked the prompt.",
+            "pleaseTryAgain": "Please try again.",
+            "rpChatStarted": "RP chat started",
+            "openingValue1InRpStudio": "Opening \"{{value1}}\" in RP Studio.",
+            "couldNotStartRpChat": "Could not start RP chat",
+            "storageRejectedTheRequest": "Storage rejected the request.",
+            "chatStarted": "Chat started",
+            "openingValue1InChat": "Opening \"{{value1}}\" in Chat.",
+            "couldNotStartChat": "Could not start chat",
+            "sceneAttached": "Scene attached",
+            "linkedValue1ToThisCharacter": "Linked \"{{value1}}\" to this character.",
+            "sceneLinked": "Scene linked.",
+            "couldNotAttachScene": "Could not attach scene",
+            "promptAttached": "Prompt attached",
+            "promptLinked": "Prompt linked.",
+            "couldNotAttachPrompt": "Could not attach prompt",
+            "scenarioCreated": "Scenario created",
+            "openTheRpStudioToEditIt": "Open the RP Studio to edit it.",
+            "versionSaved": "Version saved",
+            "characterSnapshotCreated": "Character snapshot created.",
+            "versionRestored": "Version restored",
+            "characterRevertedToSavedVersion": "Character reverted to saved version.",
+            "testChatSaved": "Test chat saved",
+            "theDisposableTurnWasPromotedToARealLocalConversation": "The disposable turn was promoted to a real local conversation."
+          },
+          "metadata": {
+            "deleteCharacter": "Delete character?",
+            "workflowValue1": "Workflow: {{value1}}",
+            "untitled": "Untitled",
+            "disposableCardTest": "Disposable card test"
+          },
+          "attribute": {
+            "backToLibrary": "Back to library",
+            "estimatedTokensValue1OfValue2": "Estimated tokens {{value1}} of {{value2}}",
+            "stCardStudioSteps": "ST Card Studio steps",
+            "aShortSummaryShownInTheLibraryGrid": "A short summary shown in the library grid.",
+            "displayOnlyNeverIncludedInModelPrompts": "Display-only — never included in model prompts",
+            "addATagAndPressEnter": "Add a tag and press Enter…",
+            "removeTagT": "Remove tag {{t}}",
+            "anOpenerSceneShownToTheModelOnTheFirst": "An opener scene shown to the model on the first turn.",
+            "theCharacterSPersonaVoiceAndBehaviouralRules": "The character's persona, voice, and behavioural rules.",
+            "optionalHigherLevelGuidanceForTheModelSteeringRulesOutput": "Optional higher-level guidance for the model (steering rules, output style).",
+            "greetingShownOnTheFirstAssistantTurn": "Greeting shown on the first assistant turn.",
+            "alternateGreetingValue1": "Alternate greeting {{value1}}",
+            "exampleValue1Speaker": "Example {{value1}} speaker",
+            "speaker": "Speaker",
+            "whatTheySay": "What they say…",
+            "moveExampleValue1Up": "Move example {{value1}} up",
+            "moveExampleValue1Down": "Move example {{value1}} down",
+            "removeExample": "Remove example",
+            "losslessSillytavernMesExampleCompatibilityText": "Lossless SillyTavern mes_example compatibility text",
+            "urlScrapingProvider": "URL scraping provider",
+            "temperature": "Temperature",
+            "topP": "Top P",
+            "removeFileValue1": "Remove file {{value1}}",
+            "genreSettingRolePersonalityRelationship": "Genre, setting, role, personality, relationship…",
+            "visionModelCapabilitySummary": "Vision model capability summary",
+            "optionalDirection": "Optional direction",
+            "stCardExportReport": "ST Card export report",
+            "characterVersionComparison": "Character version comparison",
+            "savingCharacter": "Saving character"
+          },
+          "text": {
+            "untitled": "Untitled",
+            "unarchive": "Unarchive",
+            "archive": "Archive",
+            "stepValue1OfValue2Value3YourLocalDraftRemainsAutosaved": "Step {{value1}} of {{value2}}: {{value3}}. Your local draft remains autosaved while you move between steps.",
+            "showingAllSteps110SelectAStepTabAbove": "Showing all steps (1-10). Select a step tab above to focus on specific fields.",
+            "recoveredLocalDraft": "Recovered local draft",
+            "savingLocalDraft": "Saving local draft…",
+            "draftSavedLocallyNotSynced": "Draft saved locally (not synced)",
+            "replace": "Replace",
+            "upload": "Upload",
+            "veniceForgeLocal": "Venice Forge local",
+            "noGreetingText": "No greeting text",
+            "value1": "· {{value1}}",
+            "testing": "Testing…",
+            "runDisposableTest": "Run disposable test",
+            "analyzing": "Analyzing…",
+            "analyzeImage": "Analyze image",
+            "generating": "Generating…",
+            "synthesizeFromImageText": "Synthesize from image + text",
+            "generateFromText": "Generate from text",
+            "noDirectDescription": "No direct description",
+            "noDescription": "No description",
+            "generatingProposal": "Generating proposal…",
+            "generateProposal": "Generate proposal",
+            "value1Value2": " · {{value1}}×{{value2}}",
+            "none": "None",
+            "targetFieldValue1": " · Target field: {{value1}}",
+            "generalContextFile": " · General context file"
+          }
+        },
+        "characterlibrary": {
+          "notification": {
+            "importFailed": "Import failed",
+            "couldNotInspectTheSelectedCard": "Could not inspect the selected card.",
+            "theCardWasNotImported": "The card was not imported.",
+            "characterImported": "Character imported",
+            "theCompatibilityPayloadAndAvatarWerePreserved": "The compatibility payload and avatar were preserved.",
+            "exportFailed": "Export failed",
+            "theCardWasNotExported": "The card was not exported.",
+            "characterExported": "Character exported",
+            "savedAVerifiedV2Value1Card": "Saved a verified V2 {{value1}} card.",
+            "importUndone": "Import undone",
+            "undoFailed": "Undo failed",
+            "chatStarted": "Chat started",
+            "openingValue1InChat": "Opening \"{{value1}}\" in Chat.",
+            "couldNotStartChat": "Could not start chat",
+            "pleaseTryAgain": "Please try again."
+          },
+          "metadata": {
+            "value1ExistingCharacter": "{{value1}} existing character?",
+            "standard": "Standard",
+            "adult": "Adult"
+          },
+          "attribute": {
+            "searchCharacters": "Search characters…",
+            "searchCharacters2": "Search characters",
+            "autoCreatePrompt": "Auto-create prompt...",
+            "characterValue1": "Character {{value1}}",
+            "deleteValue1": "Delete {{value1}}"
+          },
+          "text": {
+            "untitled": "Untitled",
+            "noCharactersYet": "No characters yet",
+            "notSpecified": "Not specified",
+            "importing": "Importing…",
+            "import": "Import"
+          }
+        },
+        "lorebookmanager": {
+          "attribute": {
+            "searchLorebooks": "Search lorebooks…",
+            "searchLorebooks2": "Search lorebooks",
+            "deleteValue1": "Delete {{value1}}",
+            "back": "Back",
+            "triggerKeysCommaSeparated": "trigger keys (comma-separated)",
+            "removeEntry": "Remove entry",
+            "depth": "Depth",
+            "order": "Order",
+            "injectedContent": "Injected content…"
+          },
+          "text": {
+            "noLorebooksYet": "No lorebooks yet"
+          },
+          "metadata": {
+            "beforeChar": "Before char",
+            "afterChar": "After char",
+            "atDepth": "At depth"
+          }
+        },
+        "personamanager": {
+          "attribute": {
+            "searchPersonas": "Search personas…",
+            "searchPersonas2": "Search personas",
+            "deleteValue1": "Delete {{value1}}",
+            "back": "Back",
+            "personaPreview": "Persona preview",
+            "eGTheWanderer": "e.g. The Wanderer",
+            "howTheModelShouldWriteTheUser": "How the model should write the user.",
+            "addTag": "Add tag…"
+          },
+          "text": {
+            "noPersonasYet": "No personas yet",
+            "deactivate": "Deactivate",
+            "setActive": "Set active",
+            "replaceImage": "Replace image",
+            "addImage": "Add image"
+          }
+        },
+        "promptdebugdrawer": {
+          "attribute": {
+            "promptDebugDrawer": "Prompt debug drawer"
+          },
+          "text": {
+            "budgetExceeded": "budget exceeded",
+            "withinBudget": "within budget",
+            "value1": " · {{value1}}"
+          },
+          "metadata": {
+            "trace": "Trace",
+            "system": "System",
+            "recent": "Recent",
+            "user": "User"
+          }
+        },
+        "rpchatlist": {
+          "metadata": {
+            "all": "All",
+            "standard": "Standard"
+          },
+          "text": {
+            "noRpChatsYet": "No RP chats yet"
+          },
+          "attribute": {
+            "deleteValue1": "Delete {{value1}}",
+            "newRpChat": "New RP chat",
+            "leaveBlankToUseTheFirstCharacterSScenario": "Leave blank to use the first character's scenario."
+          }
+        },
+        "rpchatview": {
+          "attribute": {
+            "back": "Back",
+            "streaming": "Streaming…",
+            "describeASceneAsTheNarrator": "Describe a scene as the narrator…",
+            "sendAMessageValue1": "Send a message{{value1}}…"
+          },
+          "text": {
+            "value1WillRespondFirst": "{{value1}} will respond first."
+          }
+        },
+        "rpstudioview": {
+          "metadata": {
+            "generate": "Generate",
+            "gallery": "Gallery",
+            "characters": "Characters",
+            "personas": "Personas",
+            "lorebooks": "Lorebooks",
+            "chats": "Chats",
+            "scenes": "Scenes"
+          }
+        },
+        "scenegenerator": {
+          "notification": {
+            "sceneGenerated": "Scene generated",
+            "savedToRpAssets": "Saved to RP assets."
+          },
+          "attribute": {
+            "leaveBlankToExtractFromChat": "Leave blank to extract from chat",
+            "extractsFromTheMostRecentNonSystemMessage": "Extracts from the most recent non-system message.",
+            "thingsToAvoid": "Things to avoid…"
+          },
+          "text": {
+            "thisChat": " (this chat)"
+          }
+        },
+        "shared": {
+          "metadata": {
+            "characters": "Characters",
+            "personas": "Personas",
+            "lorebooks": "Lorebooks",
+            "chats": "Chats",
+            "scenes": "Scenes"
+          }
+        }
+      },
+      "scenes": {
+        "scenecomposerview": {
+          "metadata": {
+            "untitledScene": "Untitled scene",
+            "workflowValue1": "Workflow: {{value1}}",
+            "vValue1": "v{{value1}}",
+            "subject": "Subject",
+            "character": "Character",
+            "location": "Location",
+            "mood": "Mood",
+            "style": "Style",
+            "camera": "Camera",
+            "lighting": "Lighting",
+            "composition": "Composition",
+            "negative": "Negative"
+          },
+          "attribute": {
+            "searchScenes": "Search scenes…",
+            "optionalDescription": "Optional description",
+            "tagsCommaSeparated": "tags, comma separated",
+            "modelEGFluxDev": "Model (e.g. flux-dev)",
+            "width": "Width",
+            "height": "Height",
+            "aspectEG169": "Aspect (e.g. 16:9)",
+            "optionalLabel": "Optional label",
+            "componentContent": "Component content…",
+            "typeValue1ToConfirm": "Type \"{{value1}}\" to confirm"
+          },
+          "text": {
+            "noSavedScenesYetClickNewToCreateOne": "No saved scenes yet. Click \"New\" to create one.",
+            "noScenesMatchTheCurrentFilters": "No scenes match the current filters.",
+            "value1OutputValue2": "{{value1}} output{{value2}}",
+            "project": "Project",
+            "global": "Global",
+            "selectASceneToCompose": "Select a scene to compose.",
+            "noSceneSelectedCreateANewOneToGetStarted": "No scene selected. Create a new one to get started.",
+            "modelDoesNotSupportReferences": "Model does not support references",
+            "favorited": "★ Favorited",
+            "favorite": "☆ Favorite",
+            "unarchive": "Unarchive",
+            "archive": "Archive",
+            "projectValue1": "Project: {{value1}}",
+            "off": "Off",
+            "hide": "Hide",
+            "show": "Show",
+            "value1MediaRefValue2": " · {{value1}} media ref{{value2}}",
+            "value1PromptRefValue2": " · {{value1}} prompt ref{{value2}}"
+          },
+          "notification": {
+            "newVersionSaved": "New version saved",
+            "sceneDeleted": "Scene deleted",
+            "workflowCreated": "Workflow created",
+            "sceneMetadataSaved": "Scene metadata saved",
+            "addAtLeastOneComponentWithContent": "Add at least one component with content",
+            "sceneHasNoPromptContent": "Scene has no prompt content",
+            "sentToImageStudio": "Sent to Image Studio",
+            "recipeCopiedToClipboard": "Recipe copied to clipboard"
+          }
+        }
+      },
+      "search": {
+        "airesearchtab": {
+          "attribute": {
+            "researchQuestion": "Research Question",
+            "whatAreTheLatestChangesInSafetyPoliciesOfFrontier": "What are the latest changes in safety policies of frontier AI labs?",
+            "searchProvider": "Search Provider",
+            "veniceSearchEngine": "Venice Search Engine",
+            "runMode": "Run Mode",
+            "synthesizedAnswersWillBeStreamedHere": "Synthesized answers will be streamed here..."
+          },
+          "text": {
+            "researching": "Researching…",
+            "startResearch": "Start Research"
+          },
+          "notification": {
+            "answerCopied": "Answer copied!",
+            "evidenceSourcesCopied": "Evidence sources copied!"
+          }
+        },
+        "profilediscoverytab": {
+          "attribute": {
+            "targetName": "Target Name",
+            "consentingPersonOrBrandName": "Consenting person or Brand Name",
+            "username": "@username",
+            "knownWebsite": "Known Website",
+            "knownOrganization": "Known Organization",
+            "githubInc": "GitHub Inc.",
+            "knownLocation": "Known Location",
+            "sanFranciscoCa": "San Francisco, CA",
+            "maxSearchDepth": "Max Search Depth"
+          },
+          "text": {
+            "discovering": "Discovering…",
+            "discoverProfiles": "Discover Profiles",
+            "unknownIdentity": "Unknown Identity"
+          }
+        },
+        "researchproviderstatus": {
+          "metadata": {
+            "apiKeyConfigured": "API key configured",
+            "veniceApiKeyMissing": "Venice API key missing",
+            "jinaAi": "Jina AI",
+            "jinaApiKeyOptionalUnauthenticatedUseSupported": "Jina API key optional (unauthenticated use supported)",
+            "disabledByConfig": "Disabled by config",
+            "genericScrape": "Generic Scrape",
+            "enabledNoKeyRequired": "Enabled (no key required)",
+            "liveBrowser": "Live Browser",
+            "desktopAvailable": "Desktop available",
+            "webModeUnavailable": "Web mode unavailable"
+          },
+          "attribute": {
+            "configured": "Configured",
+            "missing": "Missing",
+            "testFailed": "Test failed",
+            "disabled": "Disabled",
+            "unavailable": "Unavailable"
+          }
+        },
+        "scrapetab": {
+          "attribute": {
+            "urlToScrape": "URL to scrape",
+            "readerProvider": "Reader provider",
+            "scrapedTextWillAppearHere": "Scraped text will appear here..."
+          },
+          "text": {
+            "scraping": "Scraping…",
+            "scrape": "Scrape"
+          },
+          "notification": {
+            "scrapedOutputCopied": "Scraped output copied!"
+          }
+        },
+        "searchscrapeview": {
+          "attribute": {
+            "researchingAndSynthesizing": "Researching and synthesizing…",
+            "readingWebPage": "Reading web page…",
+            "searchingTheWeb": "Searching the web…",
+            "parsingDocument": "Parsing document…",
+            "researchTaskInProgress": "Research task in progress…"
+          },
+          "metadata": {
+            "untitled": "Untitled"
+          },
+          "notification": {
+            "savedToActiveResearchSession": "Saved to active research session"
+          }
+        },
+        "searchtab": {
+          "attribute": {
+            "query": "Query",
+            "latestModelRoutingBestPractices": "latest model routing best practices",
+            "provider": "Provider"
+          },
+          "text": {
+            "searching": "Searching…",
+            "search": "Search",
+            "untitledResult": "Untitled result"
+          }
+        },
+        "textparsertab": {
+          "text": {
+            "parsing": "Parsing…",
+            "parseDocument": "Parse Document"
+          },
+          "attribute": {
+            "extractedDocumentText": "Extracted document text..."
+          }
+        }
+      },
+      "settings": {
+        "safetypanel": {
+          "attribute": {
+            "veniceApiSafeMode": "Venice API Safe Mode"
+          }
+        }
+      },
+      "status": {
+        "diagnosticsdrawer": {
+          "notification": {
+            "safeDiagnosticsCopiedToClipboard": "Safe diagnostics copied to clipboard",
+            "couldNotCopySafeDiagnostics": "Could not copy safe diagnostics",
+            "diagnosticsRefreshed": "Diagnostics refreshed",
+            "diagnosticsRefreshFailed": "Diagnostics refresh failed",
+            "livecountLiveModelsRefreshed": "{{liveCount}} live models refreshed"
+          },
+          "attribute": {
+            "diagnostics": "Diagnostics",
+            "closeDiagnostics": "Close diagnostics",
+            "close": "Close",
+            "includeRedactedPromptExcerptsInSafeDiagnostics": "Include redacted prompt excerpts in safe diagnostics"
+          },
+          "text": {
+            "refreshing": "Refreshing…",
+            "refreshDiagnostics": "Refresh Diagnostics",
+            "openConfig": "Open Config",
+            "refreshingModels": "Refreshing models…",
+            "refreshModels": "Refresh Models",
+            "openStatus": "Open Status"
+          },
+          "metadata": {
+            "overview": "Overview",
+            "apiKey": "API Key",
+            "model": "Model",
+            "storage": "Storage",
+            "privacy": "Privacy",
+            "project": "Project",
+            "safety": "Safety",
+            "research": "Research",
+            "mode": "Mode",
+            "repair": "Repair"
+          }
+        },
+        "taskcenterdrawer": {
+          "attribute": {
+            "taskCenter": "Task Center",
+            "closeTaskCenter": "Close task center"
+          }
+        }
+      },
+      "ui": {
+        "logo": {
+          "attribute": {
+            "veniceForgeLogo": "Venice Forge Logo"
+          }
+        },
+        "modalRequests": {
+          "attribute": {
+            "confirmPassphrase": "Confirm passphrase",
+            "titleConfirmation": "{{title}} confirmation"
+          },
+          "text": {
+            "hidePassphrase": "Hide passphrase",
+            "showPassphrase": "Show passphrase"
+          }
+        },
+        "select": {
+          "attribute": {
+            "search": "Search...",
+            "searchOptions": "Search options"
+          }
+        }
+      },
+      "video": {
+        "videoView": {
+          "notification": {
+            "unsupportedImageTypeValue1UsePngJpegOrWebp": "Unsupported image type: {{value1}}. Use PNG, JPEG, or WEBP.",
+            "failedToReadImage": "Failed to read image",
+            "pleaseChooseAPngJpegOrWebpImageUnderThe": "Please choose a PNG, JPEG, or WEBP image under the size limit.",
+            "alreadyInMediaStudio": "Already in Media Studio",
+            "savedToMediaStudio": "Saved to Media Studio",
+            "saveToMediaStudioFailed": "Save to Media Studio failed",
+            "videoSaved": "Video saved",
+            "videoDownloadFailed": "Video download failed"
+          },
+          "attribute": {
+            "loading": "Loading...",
+            "selectModel": "Select model...",
+            "aCinematicDroneShotOverMistyMountainsAtSunrise": "A cinematic drone shot over misty mountains at sunrise...",
+            "lowQualityBlurry": "low quality, blurry...",
+            "reference": "Reference",
+            "removeReferenceImage": "Remove reference image",
+            "chooseReferenceImage": "Choose reference image",
+            "generateAudioEnabled": "Generate audio enabled",
+            "generateAudioDisabled": "Generate audio disabled",
+            "resetVideoGenerationForm": "Reset video generation form",
+            "alreadySavedToMediaStudio": "Already saved to Media Studio",
+            "saveToMediaStudio": "Save to Media Studio",
+            "generateAnotherVideo": "Generate another video",
+            "retrievingVideo": "Retrieving video…",
+            "savingSecurely": "Saving securely…",
+            "videoQueued": "Video queued…",
+            "renderingVideo": "Rendering video…"
+          },
+          "text": {
+            "queued": "Queued...",
+            "processing": "Processing...",
+            "generateVideo": "Generate Video",
+            "saved": "Saved",
+            "saveToMediaStudio": "Save to Media Studio"
+          }
+        }
+      },
+      "workflows": {
+        "workflowtemplatesview": {
+          "metadata": {
+            "newWorkflow": "New Workflow",
+            "newPromptStep": "New Prompt Step"
+          },
+          "notification": {
+            "workflowImagePromptLoaded": "Workflow image prompt loaded",
+            "reviewTheModelAndSettingsThenGenerate": "Review the model and settings, then generate.",
+            "workflowsImported": "Workflows imported",
+            "failedToImportWorkflows": "Failed to import workflows"
+          },
+          "attribute": {
+            "searchWorkflows": "Search workflows...",
+            "searchWorkflows2": "Search workflows",
+            "workflowTemplates": "Workflow templates",
+            "favorite": "Favorite",
+            "tagsCommaSeparated": "Tags (comma separated)...",
+            "workflowStepTitle": "Workflow step title",
+            "workflowStepKind": "Workflow step kind",
+            "workflowStepTarget": "Workflow step target",
+            "workflowStepPrompt": "Workflow step prompt",
+            "describeTheImageToGenerate": "Describe the image to generate…",
+            "enterThePromptOrInstructionsForThisStep": "Enter the prompt or instructions for this step…"
+          },
+          "text": {
+            "global": "Global",
+            "project": "Project",
+            "unfavorite": "Unfavorite",
+            "favorite": "Favorite",
+            "untitledVersion": "Untitled Version",
+            "openValue1": "Open {{value1}}",
+            "execute": "Execute"
+          }
+        }
+      }
+    },
+    "config": {
+      "configschema": {
+        "metadata": {
+          "pathExceedsPathMaxLengthCharactersRejected": "Path exceeds {{PATH_MAX_LENGTH}} characters; rejected.",
+          "pathValueLooksLikeAUrlLocalFilePathsOnly": "Path \"{{value}}\" looks like a URL. Local file paths only.",
+          "pathContainsControlCharactersRejected": "Path contains control characters; rejected.",
+          "keyLengthExceedsKeyMaxLengthRejected": "Key length exceeds {{KEY_MAX_LENGTH}}; rejected.",
+          "themeEntryMustBeAnObjectSkipped": "Theme entry must be an object; skipped.",
+          "invalidModeValue1Skipped": "Invalid mode \"{{value1}}\"; skipped.",
+          "displayNameMustBeANonEmptyStringSkipped": "display_name must be a non-empty string; skipped.",
+          "displayNameExceedsThemeNameMaxLengthCharsSkipped": "display_name exceeds {{THEME_NAME_MAX_LENGTH}} chars; skipped.",
+          "tokensMustBeAnObjectSkipped": "tokens must be an object; skipped.",
+          "unknownThemeTokenIgnored": "Unknown theme token; ignored.",
+          "invalidColorValueThemeSkipped": "Invalid color value; theme skipped.",
+          "missingRequiredThemeTokenReqThemeSkipped": "Missing required theme token: {{req}}; theme skipped.",
+          "unknownConfigVersionValue1Expected1FallingBackToDefaults": "Unknown config version \"{{value1}}\"; expected 1. Falling back to defaults.",
+          "themesFileRootMustBeAMappingUsingBuiltIn": "Themes file root must be a mapping; using built-in themes only.",
+          "unknownThemesVersionValue1Expected1SkippingFile": "Unknown themes version \"{{value1}}\"; expected 1. Skipping file.",
+          "themesBlockMustBeAMappingUsingBuiltInThemes": "themes block must be a mapping; using built-in themes only.",
+          "themeNameMustBe1128CharactersSkipped": "Theme name must be 1..128 characters; skipped."
+        }
+      }
+    },
+    "hooks": {
+      "useChat": {
+        "metadata": {
+          "generateAnImage": "Generate an image"
+        },
+        "notification": {
+          "memoryRetrievalUnavailable": "Memory retrieval unavailable",
+          "sendingYourMessageWithoutMemoryContext": "Sending your message without memory context.",
+          "attachmentContextTruncated": "Attachment context truncated",
+          "totalAttachmentTextExceededValue1KbSomeAttachmentsWereOmitted": "Total attachment text exceeded {{value1}} KB. Some attachments were omitted from this message."
+        }
+      },
+      "useDataStorageActions": {
+        "metadata": {
+          "clearLocalSettings": "Clear local settings?",
+          "deleteAllIndexeddbHistory": "Delete all IndexedDB history?"
+        },
+        "notification": {
+          "localSettingsCleared": "Local settings cleared.",
+          "indexeddbDataClearedSuccessfully": "IndexedDB data cleared successfully.",
+          "encryptedBackupExportedSuccessfully": "Encrypted backup exported successfully.",
+          "exportFailedPleaseTryAgain": "Export failed. Please try again."
+        }
+      }
+    },
+    "lib": {
+      "workflowValidator": {
+        "metadata": {
+          "workflowIsEmpty": "Workflow is empty.",
+          "unknownNodeTypeValue1": "Unknown node type: {{value1}}",
+          "value1MissingRequiredValue2": "{{value1}}: missing required \"{{value2}}\".",
+          "value1DoesNotAcceptInputs": "{{value1}} does not accept inputs.",
+          "value1NoUpstreamInputConnected": "{{value1}}: no upstream input connected.",
+          "value1HasNoOutputAndCannotFeedAnotherNode": "{{value1}} has no output and cannot feed another node.",
+          "edgeSourceValue1DoesNotExist": "Edge source {{value1}} does not exist.",
+          "edgeTargetValue1DoesNotExist": "Edge target {{value1}} does not exist.",
+          "selfLoopsAreNotAllowed": "Self-loops are not allowed.",
+          "value1Value2CannotConnectToValue3Value4": "{{value1}} ({{value2}}) cannot connect to {{value3}} ({{value4}}).",
+          "value1OutputsValue2Value3ExpectsValue4ConversionMayBeLossy": "{{value1}} outputs {{value2}}; {{value3}} expects {{value4}}. Conversion may be lossy.",
+          "workflowContainsACycle": "Workflow contains a cycle.",
+          "setParamsKMustBeStringNumberBooleanGotValue2": "set_params: \"{{k}}\" must be string|number|boolean, got {{value2}}.",
+          "addNodeUnknownParamKForLabel": "add_node: unknown param \"{{k}}\" for {{label}}.",
+          "labelParamKMustBeOneOfValue3GotV": "{{label}}: param \"{{k}}\" must be one of [{{value3}}], got \"{{v}}\".",
+          "labelParamKMustBeTGotValue4": "{{label}}: param \"{{k}}\" must be {{t}}, got {{value4}}.",
+          "labelParamKMustBeValue3GotV": "{{label}}: param \"{{k}}\" must be >= {{value3}}, got {{v}}.",
+          "labelParamKMustBeValue3GotV2": "{{label}}: param \"{{k}}\" must be <= {{value3}}, got {{v}}."
+        }
+      },
+      "workflowSchema": {
+        "metadata": {
+          "input": "Input",
+          "staticTextProvidedByTheUserStartingPointOfA": "Static text provided by the user. Starting point of a workflow.",
+          "theTextValue": "The text value.",
+          "output": "Output",
+          "displaysWhateverItsUpstreamNodeProducedAcceptsAnyKind": "Displays whatever its upstream node produced. Accepts any kind.",
+          "llm": "LLM",
+          "runAVeniceChatCompletionAcceptsUpstreamTextAsContext": "Run a Venice chat completion. Accepts upstream text as context.",
+          "veniceChatModelId": "Venice chat model id.",
+          "instructionUseInputToPositionUpstreamTextOrLeaveEmpty": "Instruction. Use {{input}} to position upstream text, or leave empty to append.",
+          "samplingTemperature": "Sampling temperature.",
+          "maxOutputTokens": "Max output tokens.",
+          "enableVeniceWebSearch": "Enable Venice web search.",
+          "imageGen": "Image Gen",
+          "generateAnImageFromATextPrompt": "Generate an image from a text prompt.",
+          "veniceImageModelId": "Venice image model id.",
+          "imagePromptUseInputToPositionUpstreamText": "Image prompt. Use {{input}} to position upstream text.",
+          "whatToAvoid": "What to avoid.",
+          "denoisingSteps": "Denoising steps.",
+          "imageWidthInPixels": "Image width in pixels.",
+          "imageHeightInPixels": "Image height in pixels.",
+          "stylePresetName": "Style preset name.",
+          "omitWatermarkIfAllowed": "Omit watermark if allowed.",
+          "textToSpeech": "Text to Speech",
+          "narrateTextIntoSpeechAudio": "Narrate text into speech audio.",
+          "ttsModelId": "TTS model id.",
+          "textToSpeakUseInputToPositionUpstreamText": "Text to speak. Use {{input}} to position upstream text.",
+          "voiceId": "Voice id.",
+          "playbackSpeed": "Playback speed.",
+          "audioFormat": "Audio format.",
+          "musicGen": "Music Gen",
+          "generateAMusicClipFromATextPrompt": "Generate a music clip from a text prompt.",
+          "musicModelId": "Music model id.",
+          "musicPrompt": "Music prompt.",
+          "durationInSeconds": "Duration in seconds.",
+          "forceInstrumental": "Force instrumental.",
+          "optionalLyrics": "Optional lyrics.",
+          "videoGen": "Video Gen",
+          "generateAShortVideoFromATextPrompt": "Generate a short video from a text prompt.",
+          "videoModelId": "Video model id.",
+          "videoPrompt": "Video prompt.",
+          "aspectRatio": "Aspect ratio.",
+          "clipDurationEmptyMeansModelDefault": "Clip duration. Empty means model default.",
+          "resolutionEmptyMeansModelDefault": "Resolution. Empty means model default."
+        }
+      }
+    },
+    "research": {
+      "providers": {
+        "generichttpscrapeprovider": {
+          "metadata": {
+            "genericHttp": "Generic HTTP"
+          }
+        },
+        "jinaresearchprovider": {
+          "metadata": {
+            "jinaAi": "Jina AI"
+          }
+        }
+      }
+    },
+    "services": {
+      "backgroundtasktoastbridge": {
+        "metadata": {
+          "queued": "Queued...",
+          "cancel": "Cancel",
+          "completedSuccessfully": "Completed successfully.",
+          "open": "Open",
+          "titleFailed": "{{title}} failed",
+          "anErrorOccurred": "An error occurred.",
+          "retry": "Retry",
+          "dismiss": "Dismiss"
+        }
+      },
+      "backupimportservice": {
+        "metadata": {
+          "legacyVersion2BackupAuthenticatedSourceCryptoContentCountAnd": "Legacy version-2 backup: authenticated source, crypto, content-count, and exclusion metadata is unavailable.",
+          "backupAppVersionValue1DiffersFromThisAppVersionAppversion": "Backup app version {{value1}} differs from this app version {{appVersion}}.",
+          "thisBackupIncludesMediaRecords": "This backup includes media records.",
+          "excludedByDesignValue1": "Excluded by design: {{value1}}."
+        }
+      },
+      "charactercards": {
+        "charactercardadapter": {
+          "metadata": {
+            "fieldWasTruncatedToMaxCharacters": "Field was truncated to {{max}} characters.",
+            "secretLikeContentWasRedacted": "Secret-like content was redacted.",
+            "extensionDataExceededTheMaximumDepth": "Extension data exceeded the maximum depth.",
+            "nonJsonExtensionValueWasRemoved": "Non-JSON extension value was removed.",
+            "unsafeObjectKeyWasRemoved": "Unsafe object key was removed.",
+            "extensionDataExceededThe1MibLimit": "Extension data exceeded the 1 MiB limit.",
+            "onlyTheFirstMaxLorebookEntriesCharacterBookEntriesWere": "Only the first {{MAX_LOREBOOK_ENTRIES}} character-book entries were preserved.",
+            "onlyCharacterCardV2SpecVersion20IsSupported": "Only Character Card V2 spec version 2.0 is supported.",
+            "keyMustBeAString": "{{key}} must be a string.",
+            "alternateGreetingsMustBeAnArray": "alternate_greetings must be an array.",
+            "tagsMustBeAnArray": "tags must be an array.",
+            "extensionsMustBeAPlainJsonObject": "extensions must be a plain JSON object.",
+            "formatValidButANameIsRequiredBeforeChat": "Format valid, but a name is required before chat.",
+            "descriptionIsRecommendedForVeniceForgeAuthoring": "Description is recommended for Venice Forge authoring.",
+            "aPrimaryGreetingIsRecommendedForChatReadiness": "A primary greeting is recommended for chat readiness."
+          }
+        }
+      },
+      "chatpromptcompiler": {
+        "metadata": {
+          "contextTruncated": "Context truncated",
+          "removedRemovedcountOldTurnwordToFitWithinContextLimitsStart": "Removed {{removedCount}} old {{turnWord}} to fit within context limits. Start a new chat or use a model with a larger context window to preserve full history.",
+          "theConversationRequiresValue1TokensButOnlyValue2AreAvailable": "The conversation requires ~{{value1}} tokens, but only {{value2}} are available after reserving output tokens.",
+          "thisRequestReservesValue1OutputTokensSoTheCustomPrompt": "This request reserves {{value1}} output tokens so the custom prompt and current conversation fit the selected model.",
+          "estkKOfTotalkKEstimatedTokensAreInUse": "{{estK}}K of {{totalK}}K estimated tokens are in use."
+        }
+      },
+      "chatstorage": {
+        "metadata": {
+          "newChat": "New Chat"
+        }
+      },
+      "chatttscontroller": {
+        "notification": {
+          "ttsPlaybackFailed": "TTS playback failed",
+          "noTextToSpeakInThisMessage": "No text to speak in this message.",
+          "noSpeakableTextRemainingInMessage": "No speakable text remaining in message.",
+          "ttsPlaybackErrorUnableToLoadAudioElement": "TTS playback error: unable to load audio element.",
+          "ttsFailed": "TTS Failed",
+          "ttsRestartFailed": "TTS restart failed"
+        }
+      },
+      "desktopbridge": {
+        "metadata": {
+          "requestFailed": "Request failed",
+          "jinaConnectionSuccessful": "Jina connection successful",
+          "jinaReturnedValue1": "Jina returned {{value1}}",
+          "networkErrorTestingJinaApiKey": "Network error testing Jina API key"
+        }
+      },
+      "imageinspectoranalysis": {
+        "metadata": {
+          "notProvidedByModel": "Not provided by model."
+        }
+      },
+      "replaceimportservice": {
+        "metadata": {
+          "replaceImportFailedAndAutomaticRollbackAlsoFailedUseThe": "Replace import failed and automatic rollback also failed. Use the retained recovery backup.",
+          "replaceImportFailedTheOriginalProfileDataWasRestoredAutomatically": "Replace import failed. The original profile data was restored automatically."
+        }
+      },
+      "researchservice": {
+        "metadata": {
+          "searchQueryIsEmpty": "Search query is empty",
+          "untitledResult": "Untitled Result",
+          "searchFailed": "Search failed",
+          "invalidOrUnsafeUrl": "Invalid or unsafe URL",
+          "value1DoesNotSupportScraping": "{{value1}} does not support scraping",
+          "scrapeFailed": "Scrape failed"
+        }
+      },
+      "researchsummaries": {
+        "metadata": {
+          "sourceIdNotFoundInSession": "Source {{id}} not found in session",
+          "findingIdNotFoundInSession": "Finding {{id}} not found in session",
+          "researchSummaryValue1": "Research Summary: {{value1}}"
+        }
+      },
+      "rp": {
+        "promptbuilderservice": {
+          "metadata": {
+            "safetyPreamble": "Safety preamble",
+            "modelIdentity": "Model identity",
+            "personaValue1": "Persona: {{value1}}",
+            "persona": "Persona",
+            "characterValue1": "Character: {{value1}}",
+            "scenario": "Scenario",
+            "lorebookValue1": "Lorebook: {{value1}}",
+            "lorebookValue1BeforeChar": "Lorebook {{value1}} (before char)",
+            "lorebookValue1AfterChar": "Lorebook {{value1}} (after char)",
+            "lorebookValue1AtDepth": "Lorebook {{value1}} (at depth)",
+            "memoryBlock": "Memory block",
+            "recentMessagesValue1": "Recent messages ({{value1}})",
+            "postHistoryInstruction": "Post-history instruction",
+            "activeTurnValue1": "Active turn: {{value1}}",
+            "activeTurnInstruction": "Active turn instruction",
+            "userMessage": "User message"
+          }
+        }
+      },
+      "rphelpers": {
+        "metadata": {
+          "value1SystemPrompt": "{{value1}} — system prompt",
+          "savedFromCharacterCardValue1OnValue2": "Saved from character card \"{{value1}}\" on {{value2}}.",
+          "chatWithValue1": "Chat with {{value1}}"
+        }
+      },
+      "rppromptcompiler": {
+        "metadata": {
+          "exampleDialoguesValue1": "Example dialogues ({{value1}})"
+        }
+      },
+      "rptokencounter": {
+        "metadata": {
+          "characterExceedsTheSupportedContextBudgetByValue1EstimatedTokens": "Character exceeds the supported context budget by {{value1}} estimated tokens."
+        }
+      },
+      "storagemaintenance": {
+        "metadata": {
+          "refreshInventory": "Refresh Inventory",
+          "recountAllLocalDataAndCheckForIssues": "Recount all local data and check for issues.",
+          "clearModelCache": "Clear Model Cache",
+          "removeTheLocalCacheOfAvailableVeniceModelsTheyWill": "Remove the local cache of available Venice models. They will be refetched on next use.",
+          "clearCharacterImageCache": "Clear Character Image Cache",
+          "deleteLocallyCachedVeniceCharacterAvatarImagesTheyWillBe": "Delete locally cached Venice character avatar images. They will be re-fetched as needed.",
+          "analyzeOrphanReferences": "Analyze Orphan References",
+          "reviewItemsThatReferToMissingProjectsNoRecordsAre": "Review items that refer to missing projects. No records are changed."
+        }
+      },
+      "storageprivacyservice": {
+        "metadata": {
+          "rpStudio": "RP Studio",
+          "apiKeys": "API Keys",
+          "characterImageCache": "Character Image Cache",
+          "categoryItemValue2RefersToMissingProject": "{{category}} item \"{{value2}}\" refers to missing project",
+          "value1ItemHasAMissingTargetReference": "{{value1}} item has a missing {{target}} reference"
+        }
+      },
+      "syncpacketimporter": {
+        "metadata": {
+          "value1ConflictFromValue2": "{{value1}} (Conflict from {{value2}})"
+        }
+      },
+      "taskmediacatalog": {
+        "metadata": {
+          "value1Generation": "{{value1}} generation"
+        }
+      },
+      "workflowcompiler": {
+        "metadata": {
+          "referencedPromptValue1NotFoundInContext": "Referenced prompt {{value1}} not found in context.",
+          "referencedSceneValue1NotFoundInContext": "Referenced scene {{value1}} not found in context.",
+          "referencedCharacterValue1NotFoundInContext": "Referenced character {{value1}} not found in context.",
+          "unsupportedStepKindValue1": "Unsupported step kind: {{value1}}"
+        }
+      },
+      "workflowrunner": {
+        "metadata": {
+          "duplicateOutputKeyValue1UsesTheLastStepValueAll": "Duplicate output key '{{value1}}' uses the last step value; all actions will still run.",
+          "sendPromptToValue1": "Send prompt to {{value1}}",
+          "sendRecipeToValue1": "Send recipe to {{value1}}",
+          "sendSceneToValue1": "Send scene to {{value1}}",
+          "selectMedia": "Select media",
+          "openRpContext": "Open RP context",
+          "showNote": "Show note",
+          "openValue1": "Open {{value1}}"
+        }
+      }
+    },
+    "stores": {
+      "characterCardStore": {
+        "notification": {
+          "couldNotLoadCharacters": "Could not load characters",
+          "pleaseTryAgain": "Please try again.",
+          "couldNotSaveCharacter": "Could not save character",
+          "couldNotDeleteCharacter": "Could not delete character",
+          "storageRejectedTheRequest": "Storage rejected the request."
+        }
+      },
+      "chatFolderStore": {
+        "notification": {
+          "failedToLoadChatFolders": "Failed to load chat folders",
+          "folderCreated": "Folder created",
+          "failedToCreateFolder": "Failed to create folder",
+          "folderRenamed": "Folder renamed",
+          "failedToRenameFolder": "Failed to rename folder",
+          "failedToReorderFolders": "Failed to reorder folders",
+          "folderIsLocked": "Folder is locked",
+          "unlockValue1BeforeMovingConversationsIntoIt": "Unlock \"{{value1}}\" before moving conversations into it.",
+          "failedToMoveConversation": "Failed to move conversation",
+          "failedToMoveConversations": "Failed to move conversations",
+          "folderDeleted": "Folder deleted",
+          "failedToDeleteFolder": "Failed to delete folder",
+          "failedToReadFolderBackupPreview": "Failed to read folder backup preview",
+          "unknownError": "Unknown error",
+          "folderBackupExported": "Folder backup exported",
+          "encryptedBackupSaved": "Encrypted backup saved",
+          "failedToExportFolderBackup": "Failed to export folder backup",
+          "failedToPreviewFolderImport": "Failed to preview folder import",
+          "folderBackupImported": "Folder backup imported",
+          "failedToImportFolderBackup": "Failed to import folder backup",
+          "folderPrivacyGateEnabled": "Folder privacy gate enabled",
+          "failedToLockFolder": "Failed to lock folder",
+          "folderPrivacyGateOpened": "Folder privacy gate opened",
+          "failedToUnlockFolder": "Failed to unlock folder"
+        }
+      },
+      "chatStore": {
+        "metadata": {
+          "newChat": "New Chat",
+          "chatWithValue1": "Chat with {{value1}}",
+          "chatGeneratedMedia": "Chat generated media",
+          "value1Fork": "{{value1}} — Fork"
+        },
+        "notification": {
+          "systemPromptExceedsMaximumLength": "System prompt exceeds maximum length",
+          "systemPromptApproachingLengthLimit": "System prompt approaching length limit"
+        }
+      },
+      "imageInspectorStore": {
+        "notification": {
+          "couldNotLoadSessionId": "Could not load session {{id}}",
+          "loadASessionBeforeStartingAnalysis": "Load a session before starting analysis.",
+          "noActiveSessionForSearch": "No active session for search.",
+          "noQueryAvailableToSearch": "No query available to search.",
+          "foundValue1SearchResultsViaValue2": "Found {{value1}} search results via {{value2}}",
+          "noSearchResultsReturnedFromValue1": "No search results returned from {{value1}}"
+        },
+        "metadata": {
+          "newSession": "New Session",
+          "searchResult": "Search Result"
+        }
+      },
+      "lorebookStore": {
+        "notification": {
+          "couldNotLoadLorebooks": "Could not load lorebooks",
+          "pleaseTryAgain": "Please try again.",
+          "couldNotSaveLorebook": "Could not save lorebook",
+          "couldNotDeleteLorebook": "Could not delete lorebook",
+          "storageRejectedTheRequest": "Storage rejected the request."
+        }
+      },
+      "mediaStore": {
+        "metadata": {
+          "deleteMediaInUse": "Delete media in use?"
+        },
+        "notification": {
+          "tagUpdatePartiallyFailed": "Tag update partially failed",
+          "couldNotUpdateTagsForValue1ItemS": "Could not update tags for {{value1}} item(s).",
+          "tagRemovalPartiallyFailed": "Tag removal partially failed",
+          "couldNotRemoveTagForValue1ItemS": "Could not remove tag for {{value1}} item(s)."
+        }
+      },
+      "personaStore": {
+        "notification": {
+          "couldNotSavePersona": "Could not save persona",
+          "couldNotDeletePersona": "Could not delete persona",
+          "storageRejectedTheRequest": "Storage rejected the request."
+        }
+      },
+      "rpChatStore": {
+        "metadata": {
+          "newRp": "New RP"
+        },
+        "notification": {
+          "couldNotCreateRpChat": "Could not create RP chat",
+          "pleaseTryAgain": "Please try again.",
+          "couldNotSaveRpChat": "Could not save RP chat",
+          "couldNotDeleteRpChat": "Could not delete RP chat",
+          "storageRejectedTheRequest": "Storage rejected the request.",
+          "couldNotSaveMessage": "Could not save message"
+        }
+      },
+      "scenarioStore": {
+        "notification": {
+          "couldNotLoadScenarios": "Could not load scenarios",
+          "pleaseTryAgain": "Please try again.",
+          "couldNotSaveScenario": "Could not save scenario",
+          "couldNotDeleteScenario": "Could not delete scenario",
+          "storageRejectedTheRequest": "Storage rejected the request."
+        }
+      },
+      "sceneAssetStore": {
+        "notification": {
+          "couldNotLoadAssets": "Could not load assets",
+          "pleaseTryAgain": "Please try again.",
+          "couldNotSaveAsset": "Could not save asset",
+          "couldNotDeleteAsset": "Could not delete asset",
+          "storageRejectedTheRequest": "Storage rejected the request."
+        }
+      },
+      "storagePrivacyStore": {
+        "notification": {
+          "failedToRefreshStorageInventory": "Failed to refresh storage inventory",
+          "noInventoryDataToCopyRefreshFirst": "No inventory data to copy. Refresh first.",
+          "safePrivacySummaryCopiedToClipboard": "Safe privacy summary copied to clipboard",
+          "failedToCopyPrivacySummary": "Failed to copy privacy summary",
+          "noInventoryDataToExportRefreshFirst": "No inventory data to export. Refresh first.",
+          "safePrivacySummaryDownloaded": "Safe privacy summary downloaded",
+          "maintenanceActionPartiallyFailedValue1": "Maintenance action partially failed: {{value1}}",
+          "maintenanceActionCompleted": "Maintenance action completed",
+          "maintenanceActionFailed": "Maintenance action failed"
+        }
+      },
+      "workflowTemplateStore": {
+        "metadata": {
+          "initialVersion": "Initial Version",
+          "versionNextversionnumber": "Version {{nextVersionNumber}}"
+        }
+      }
+    },
+    "types": {
+      "characterCardSpec": {
+        "metadata": {
+          "formatValidButANameIsRequiredBeforeChat": "Format valid, but a name is required before chat.",
+          "descriptionIsRecommendedForVeniceForgeAuthoring": "Description is recommended for Venice Forge authoring.",
+          "aPrimaryGreetingIsRecommendedForChatReadiness": "A primary greeting is recommended for chat readiness."
+        }
+      },
+      "project": {
+        "metadata": {
+          "recipeIsMissingAPrompt": "Recipe is missing a prompt.",
+          "recipeIsMissingATargetModel": "Recipe is missing a target model.",
+          "modelValue1IsNotInTheKnownRegistryDefaultsApplied": "Model \"{{value1}}\" is not in the known registry — defaults applied.",
+          "value1DoesNotSupportANegativePromptItWillBe": "{{value1}} does not support a negative prompt — it will be dropped.",
+          "value1DoesNotSupportASeedItWillBeDropped": "{{value1}} does not support a seed — it will be dropped.",
+          "value1DoesNotSupportMultipleVariantsValueWillBeDropped": "{{value1}} does not support multiple variants — value will be dropped.",
+          "value1DoesNotSupportStepsValueWillBeDropped": "{{value1}} does not support steps — value will be dropped.",
+          "value1DoesNotSupportCfgScaleValueWillBeDropped": "{{value1}} does not support CFG scale — value will be dropped.",
+          "value1DoesNotSupportAStylePresetValueWillBe": "{{value1}} does not support a style preset — value will be dropped.",
+          "value1UsesPixelSizingAspectRatioWillBeDropped": "{{value1}} uses pixel sizing — aspect ratio will be dropped.",
+          "value1DoesNotSupportAResolutionPresetValueWillBe": "{{value1}} does not support a resolution preset — value will be dropped.",
+          "dimensionsOriginalpairAreNotSupportedDefaultedToFinalpair": "Dimensions {{originalPair}} are not supported — defaulted to {{finalPair}}.",
+          "aspectRatioValue1IsNotSupportedDefaultedToValue2": "Aspect ratio \"{{value1}}\" is not supported — defaulted to {{value2}}.",
+          "resolutionValue1IsNotSupportedDefaultedToValue2": "Resolution \"{{value1}}\" is not supported — defaulted to {{value2}}."
+        }
+      },
+      "workflow": {
+        "metadata": {
+          "initialVersion": "Initial Version"
+        }
+      },
+      "provider": {
+        "metadata": {
+          "primaryPrivateLocalFirstMultimodalPlatform": "Primary, private, local-first multimodal platform.",
+          "fastOpenSourceModelInference": "Fast, open-source model inference.",
+          "ultraFastLpuInferenceEngine": "Ultra-fast LPU inference engine.",
+          "highPerformanceLlmApis": "High-performance LLM APIs.",
+          "notImplementedNoCredentialsOrRequestsAreAccepted": "Not implemented. No credentials or requests are accepted.",
+          "geminiDeveloperApiAiStudio": "Gemini Developer API (AI Studio).",
+          "mistralAiModelsAndEndpoints": "Mistral AI models and endpoints.",
+          "claudeAndOtherSafeFoundationModels": "Claude and other safe foundation models.",
+          "searchGroundedAndFastLlmApis": "Search-grounded and fast LLM APIs."
+        }
+      }
+    },
+    "constants": {
+      "prompttemplates": {
+        "metadata": {
+          "animeIllustration": "Anime Illustration",
+          "cinematicFilm": "Cinematic Film",
+          "value35mmCameraFilmLookNaturalLightingMovieSceneGrain": "35mm camera film look, natural lighting, movie scene grain",
+          "minimalistVectorArt": "Minimalist Vector Art",
+          "cleanFlatColorVectorDesignSvgStyle": "Clean flat color vector design, SVG style",
+          "oilPainting": "Oil Painting",
+          "classicalTexturedCanvasBrushstrokes": "Classical textured canvas brushstrokes",
+          "goldenHour": "Golden Hour",
+          "warmLowAngleSunsetGlow": "Warm, low-angle sunset glow",
+          "studioPortrait": "Studio Portrait",
+          "professionalMultiPointStudioKeyLighting": "Professional multi-point studio key lighting",
+          "neonCyberpunk": "Neon Cyberpunk",
+          "vibrantNeonBluesAndMagentasWithDarkShadows": "Vibrant neon blues and magentas with dark shadows",
+          "extremeCloseUp": "Extreme Close-Up",
+          "tightFocusOnFacialDetailsOrSmallSubjects": "Tight focus on facial details or small subjects",
+          "aerialDroneView": "Aerial Drone View",
+          "highAltitudeBirdSEyePerspective": "High altitude bird's-eye perspective",
+          "ruleOfThirdsWide": "Rule of Thirds Wide",
+          "balancedOffCenterCinematicFocalPoint": "Balanced off-center cinematic focal point",
+          "photorealistic8k": "Photorealistic 8k",
+          "maximizesResolutionSkinTexturesAndMaterialRealism": "Maximizes resolution, skin textures, and material realism",
+          "standardNegative": "Standard Negative",
+          "standardPromptsToAvoidDistortionsAndLowQuality": "Standard prompts to avoid distortions and low quality"
+        }
+      }
+    },
+    "shared": {
+      "legal": {
+        "metadata": {
+          "welcomeToVeniceForge": "Welcome to Venice Forge"
+        }
+      }
+    },
+    "utils": {
+      "imageprocessor": {
+        "metadata": {
+          "landscapesNature": "Landscapes & Nature",
+          "animeMangaIllustration": "Anime / Manga / Illustration",
+          "cinematicFilm": "Cinematic / Film",
+          "portraitsPeople": "Portraits / People",
+          "productCommercialStudio": "Product / Commercial Studio"
+        }
+      }
+    }
+  },
+  "statusDiagnostics": {
+    "actions": {
+      "openConfig": "Open Config",
+      "openStatus": "Open Status"
+    },
+    "external": "{{message}}",
+    "api": {
+      "notChecked": "Venice API key has not been checked yet.",
+      "checking": "Checking Venice secure-storage configuration…",
+      "inspectionFailed": "Venice secure-storage inspection failed.",
+      "notConfigured": "Venice API key not configured. Add a key to enable generation.",
+      "openConfigDetail": "Open the Config tab to connect your Venice API key.",
+      "connectivityUnverified": "API key is configured, but live Venice connectivity has not been verified yet.",
+      "testConnectivityDetail": "Use the API-key test action to verify /models connectivity."
+    },
+    "apiKey": {
+      "notChecked": "Venice API key has not been checked yet.",
+      "checking": "Checking Venice API-key configuration…",
+      "inspectionFailed": "Secure-storage inspection failed.",
+      "secure": "Venice API key is configured in secure storage. Raw key is hidden.",
+      "memoryOnly": "Key present in memory only. Raw key is hidden and excluded from diagnostics and exports.",
+      "missing": "No Venice API key. Image, audio, and chat generation are blocked.",
+      "addKeyDetail": "Add a key via the API key button in the header or the Config tab."
+    },
+    "model": {
+      "notRequested": "Model catalog has not been requested.",
+      "loading": "Loading the model catalog…",
+      "loaded": "{{count}} models loaded.",
+      "selectionUnavailable": "Selected model “{{modelId}}” is not present in the current catalog ({{modelType}}).",
+      "cached": "Using a cached model catalog from {{timestamp}}.",
+      "loadFailed": "Model catalog could not be loaded."
+    },
+    "storage": {
+      "unavailable": "IndexedDB is not available. Local history and media will not persist.",
+      "permissionsDetail": "Browser mode with storage disabled. Check site permissions.",
+      "web": "Web mode: records persist in browser IndexedDB (encrypted at rest).",
+      "siteDataDetail": "Clearing site data will erase the local vault.",
+      "desktop": "Desktop IndexedDB is reachable. Records are encrypted at rest."
+    },
+    "project": {
+      "allProjects": "All Projects mode active (unscoped view).",
+      "missing": "Active project id is missing or unknown. The store will repair on next interaction.",
+      "archived": "Active project “{{projectName}}” is archived. Switch to All Projects to repair.",
+      "valid": "Active project “{{projectName}}” is valid."
+    },
+    "safety": {
+      "on": {
+        "on": "Local guard: on · Venice safe_mode: on",
+        "off": "Local guard: on · Venice safe_mode: off"
+      },
+      "off": {
+        "on": "Local guard: off · Venice safe_mode: on",
+        "off": "Local guard: off · Venice safe_mode: off"
+      }
+    },
+    "provider": {
+      "disabled": "Research Workspace active ({{count}} sessions). Jina is disabled.",
+      "enabled": "Research Workspace active ({{count}} sessions). Jina enabled.",
+      "missingKey": "Research Workspace active ({{count}} sessions). Jina enabled but no key configured."
+    },
+    "desktop": {
+      "desktop": "Desktop mode: Electron main process + preload bridge are reachable.",
+      "web": "Web mode: API keys live in the server .env. Desktop-only features (filesystem, reveals, system shell) are unavailable."
+    },
+    "diagnostics": {
+      "operational": "All systems operational. No issues detected.",
+      "issues": "{{count}} checks recorded; worst severity: {{severity}}."
+    }
+  },
+  "imageCapabilities": {
+    "toolsTab": "Edit / Upscale / BG Remove",
+    "sizes": "{{count}} sizes",
+    "ratios": "{{count}} ratios",
+    "ratiosResolutions": "{{ratios}} ratios × {{resolutions}} resolutions",
+    "fixedDimensions": "Fixed {{width}}×{{height}}",
+    "fixedSize": "Fixed size",
+    "unknownSizing": "Unknown sizing",
+    "negativePrompt": "Negative prompt",
+    "noNegativePrompt": "No negative prompt",
+    "seed": "Seed",
+    "noSeed": "No seed",
+    "variants": "Variants",
+    "singleOutput": "Single output",
+    "noSteps": "No steps",
+    "noCfg": "No CFG",
+    "noStylePreset": "No style preset",
+    "references_one": "{{count}} reference",
+    "references_other": "{{count}} references",
+    "noReferences": "No references",
+    "quality": "Quality"
+  },
+  "runtimeSlashLabels": {
+    "cancelReset": "Cancel / Reset",
+    "shortDescriptionSummary": "Short Description / Summary",
+    "settingWorld": "Setting / World",
+    "generalPg": "General / PG",
+    "matureDarkThemes": "Mature / Dark Themes",
+    "documentNamePath": "Document Name / Path",
+    "characterPersonaReferences": "Character / Persona references"
   }
 }

@@ -1,60 +1,99 @@
-import { useState, useRef, useEffect } from 'react'
-import { useShallow } from 'zustand/shallow'
-import { usePlaygroundStore, type PlaygroundActivity } from '../../stores/playground-store'
-import { selectHasVeniceKey, useAuthStore } from '../../stores/auth-store'
-import { useSettingsStore } from '../../stores/settings-store'
-import { useModelCatalog } from '../../hooks/use-model-catalog'
-import { GenerationLoadingIndicator } from '../generation/GenerationLoadingIndicator'
-import { useAgentModels } from '../../hooks/use-agent-models'
-import { callAgent, DEFAULT_AGENT_MODEL } from '../../lib/playground-agent'
-import { runAgentTools, type RunStep } from '../../lib/playground-agent-tools'
-import { applyPatch, type WorkflowPatch } from '../../lib/workflow-mutations'
-import { validatePatch } from '../../lib/workflow-validator'
-import { generateId } from '../../lib/utils'
-import { cn } from '../../lib/utils'
-import { Trans } from 'react-i18next';
+import { useState, useRef, useEffect } from "react";
+import { useShallow } from "zustand/shallow";
+import {
+  usePlaygroundStore,
+  type PlaygroundActivity,
+} from "../../stores/playground-store";
+import { selectHasVeniceKey, useAuthStore } from "../../stores/auth-store";
+import { useSettingsStore } from "../../stores/settings-store";
+import { useModelCatalog } from "../../hooks/use-model-catalog";
+import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
+import { useAgentModels } from "../../hooks/use-agent-models";
+import { callAgent, DEFAULT_AGENT_MODEL } from "../../lib/playground-agent";
+import { runAgentTools, type RunStep } from "../../lib/playground-agent-tools";
+import { applyPatch, type WorkflowPatch } from "../../lib/workflow-mutations";
+import { validatePatch } from "../../lib/workflow-validator";
+import { generateId } from "../../lib/utils";
+import { cn } from "../../lib/utils";
+import { Trans, useTranslation } from "react-i18next";
 
 const STARTER_PROMPTS = [
-  'Build a workflow that makes a 9:16 reel using web search to research the topic, then writes a script and generates the video',
-  'Research a topic with web search, summarize into 5 bullets, and narrate it as audio',
-  'Turn a concept into a vivid image prompt, then generate the image',
-  'Write a short song with lyrics, then generate it as music',
-]
+  "Build a workflow that makes a 9:16 reel using web search to research the topic, then writes a script and generates the video",
+  "Research a topic with web search, summarize into 5 bullets, and narrate it as audio",
+  "Turn a concept into a vivid image prompt, then generate the image",
+  "Write a short song with lyrics, then generate it as music",
+];
 
 function summarizeStep(step: RunStep): PlaygroundActivity {
-  const ok = !('error' in step.result) || !step.result.error
-  const a = step.args
+  const ok = !("error" in step.result) || !step.result.error;
+  const a = step.args;
   switch (step.tool) {
-    case 'clear':
-      return { tool: step.tool, summary: 'Cleared canvas', ok }
-    case 'add_node': {
-      const id = (step.result as { id?: string }).id
-      const type = String(a.node_type ?? '?')
-      return { tool: step.tool, summary: ok ? `Added ${type}${id ? ` "${id}"` : ''}` : `Failed to add ${type}`, ok }
+    case "clear":
+      return { tool: step.tool, summary: "Cleared canvas", ok };
+    case "add_node": {
+      const id = (step.result as { id?: string }).id;
+      const type = String(a.node_type ?? "?");
+      return {
+        tool: step.tool,
+        summary: ok
+          ? `Added ${type}${id ? ` "${id}"` : ""}`
+          : `Failed to add ${type}`,
+        ok,
+      };
     }
-    case 'connect': {
-      const s = String(a.source ?? ''), t = String(a.target ?? '')
-      return { tool: step.tool, summary: ok ? `Connected ${s} → ${t}` : `Connect failed`, ok }
+    case "connect": {
+      const s = String(a.source ?? ""),
+        t = String(a.target ?? "");
+      return {
+        tool: step.tool,
+        summary: ok ? `Connected ${s} → ${t}` : `Connect failed`,
+        ok,
+      };
     }
-    case 'set_params':
-      return { tool: step.tool, summary: ok ? `Updated params on ${String(a.id ?? '')}` : 'set_params failed', ok }
-    case 'remove_node':
-      return { tool: step.tool, summary: ok ? `Removed ${String(a.id ?? '')}` : 'remove failed', ok }
-    case 'pick_model': {
-      const model = (step.result as { model?: string }).model
-      return { tool: step.tool, summary: ok ? `Picked ${model} for ${String(a.node_type ?? '')}` : `pick_model failed`, ok }
+    case "set_params":
+      return {
+        tool: step.tool,
+        summary: ok
+          ? `Updated params on ${String(a.id ?? "")}`
+          : "set_params failed",
+        ok,
+      };
+    case "remove_node":
+      return {
+        tool: step.tool,
+        summary: ok ? `Removed ${String(a.id ?? "")}` : "remove failed",
+        ok,
+      };
+    case "pick_model": {
+      const model = (step.result as { model?: string }).model;
+      return {
+        tool: step.tool,
+        summary: ok
+          ? `Picked ${model} for ${String(a.node_type ?? "")}`
+          : `pick_model failed`,
+        ok,
+      };
     }
-    case 'ask_user':
-      return { tool: step.tool, summary: 'Awaiting your reply', ok }
-    case 'done':
-      return { tool: step.tool, summary: 'Finished', ok }
+    case "ask_user":
+      return { tool: step.tool, summary: "Awaiting your reply", ok };
+    case "done":
+      return { tool: step.tool, summary: "Finished", ok };
     default:
-      return { tool: step.tool, summary: step.tool, ok }
+      return { tool: step.tool, summary: step.tool, ok };
   }
 }
 
 export function PlaygroundChat() {
-  const { messages, draft, isThinking, addMessage, updateMessage, setThinking, applyAgentPatches } = usePlaygroundStore(
+  const { t: tRuntime } = useTranslation("common");
+  const {
+    messages,
+    draft,
+    isThinking,
+    addMessage,
+    updateMessage,
+    setThinking,
+    applyAgentPatches,
+  } = usePlaygroundStore(
     useShallow((s) => ({
       messages: s.messages,
       draft: s.draft,
@@ -64,52 +103,68 @@ export function PlaygroundChat() {
       setThinking: s.setThinking,
       applyAgentPatches: s.applyAgentPatches,
     })),
-  )
-  const hasKey = useAuthStore(selectHasVeniceKey)
-  const agentModelId = useSettingsStore((s) => s.playgroundAgentModel) || DEFAULT_AGENT_MODEL
-  const { catalog } = useModelCatalog()
-  const { models: agentModels } = useAgentModels()
-  const agentCaps = agentModels.find((m) => m.id === agentModelId)?.capabilities
-  const [input, setInput] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const abortRef = useRef<AbortController | null>(null)
+  );
+  const hasKey = useAuthStore(selectHasVeniceKey);
+  const agentModelId =
+    useSettingsStore((s) => s.playgroundAgentModel) || DEFAULT_AGENT_MODEL;
+  const { catalog } = useModelCatalog();
+  const { models: agentModels } = useAgentModels();
+  const agentCaps = agentModels.find(
+    (m) => m.id === agentModelId,
+  )?.capabilities;
+  const [input, setInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
-  }, [messages, isThinking])
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages, isThinking]);
 
   const send = async (text: string) => {
-    const trimmed = text.trim()
-    if (!trimmed || isThinking) return
+    const trimmed = text.trim();
+    if (!trimmed || isThinking) return;
     if (!hasKey) {
-      setError('Connect your Venice API key first.')
-      return
+      setError("Connect your Venice API key first.");
+      return;
     }
-    setError(null)
-    setInput('')
+    setError(null);
+    setInput("");
 
-    const userMsg = { id: generateId(), role: 'user' as const, content: trimmed }
-    const pendingMsg = { id: generateId(), role: 'assistant' as const, content: '', pending: true, activity: [] }
-    addMessage(userMsg)
-    addMessage(pendingMsg)
-    setThinking(true)
+    const userMsg = {
+      id: generateId(),
+      role: "user" as const,
+      content: trimmed,
+    };
+    const pendingMsg = {
+      id: generateId(),
+      role: "assistant" as const,
+      content: "",
+      pending: true,
+      activity: [],
+    };
+    addMessage(userMsg);
+    addMessage(pendingMsg);
+    setThinking(true);
 
-    abortRef.current?.abort()
-    const controller = new AbortController()
-    abortRef.current = controller
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     const history = messages
       .filter((m) => !m.pending && !m.error)
       .slice(-10)
-      .map((m) => ({ role: m.role, content: m.content }))
+      .map((m) => ({ role: m.role, content: m.content }));
 
     try {
-      const useTools = agentCaps?.supportsFunctionCalling === true
+      const useTools = agentCaps?.supportsFunctionCalling === true;
 
       if (useTools) {
         // Tool-call mode — incremental, streams activity, self-corrects on errors.
-        const activity: PlaygroundActivity[] = []
+        const activity: PlaygroundActivity[] = [];
         const result = await runAgentTools({
           userMessage: trimmed,
           draft,
@@ -125,29 +180,38 @@ export function PlaygroundChat() {
               // a number) before they reach the graph. applyPatch() already
               // guards against duplicate ids and unknown node types, but
               // not against per-param type mismatches.
-              const issues = validatePatch(patch)
-              if (issues.some((i) => i.severity === 'error')) {
-                return { error: issues.find((i) => i.severity === 'error')?.message ?? 'Patch failed validation' }
+              const issues = validatePatch(patch);
+              if (issues.some((i) => i.severity === "error")) {
+                return {
+                  error:
+                    issues.find((i) => i.severity === "error")?.message ??
+                    "Patch failed validation",
+                };
               }
-              const current = usePlaygroundStore.getState().draft
-              const r = applyPatch({ nodes: current.nodes, edges: current.edges }, patch)
-              usePlaygroundStore.setState({ draft: { nodes: r.nodes, edges: r.edges } })
-              return { ok: true, id: r.addedNodeId, edge_id: r.addedEdgeId }
+              const current = usePlaygroundStore.getState().draft;
+              const r = applyPatch(
+                { nodes: current.nodes, edges: current.edges },
+                patch,
+              );
+              usePlaygroundStore.setState({
+                draft: { nodes: r.nodes, edges: r.edges },
+              });
+              return { ok: true, id: r.addedNodeId, edge_id: r.addedEdgeId };
             } catch {
-              return { error: 'Patch failed' }
+              return { error: "Patch failed" };
             }
           },
           onStep: (step) => {
-            activity.push(summarizeStep(step))
-            updateMessage(pendingMsg.id, { activity: [...activity] })
+            activity.push(summarizeStep(step));
+            updateMessage(pendingMsg.id, { activity: [...activity] });
           },
-        })
+        });
 
         updateMessage(pendingMsg.id, {
-          content: result.say || 'Done.',
+          content: result.say || "Done.",
           activity,
           pending: false,
-        })
+        });
       } else {
         // Legacy JSON-patch mode for models without function calling.
         const response = await callAgent({
@@ -158,53 +222,68 @@ export function PlaygroundChat() {
           model: agentModelId,
           capabilities: agentCaps,
           signal: controller.signal,
-        })
+        });
 
-        let patchError: string | undefined
+        let patchError: string | undefined;
         try {
-          if (response.patches.length > 0) applyAgentPatches(response.patches)
+          if (response.patches.length > 0) applyAgentPatches(response.patches);
         } catch {
-          patchError = 'Failed to apply patches'
+          patchError = "Failed to apply patches";
         }
 
-        const invalidNote = response.invalidPatches > 0
-          ? ` (${response.invalidPatches} invalid patch${response.invalidPatches === 1 ? '' : 'es'} ignored)`
-          : ''
+        const invalidNote =
+          response.invalidPatches > 0
+            ? ` (${response.invalidPatches} invalid patch${response.invalidPatches === 1 ? "" : "es"} ignored)`
+            : "";
 
-        const fallbackSay = response.patches.length === 0 && !response.say
-          ? 'The agent returned an unparseable response. Try a different model from the picker above, or simplify the request.'
-          : response.say || (response.patches.length > 0 ? 'Updated the workflow.' : '')
+        const fallbackSay =
+          response.patches.length === 0 && !response.say
+            ? "The agent returned an unparseable response. Try a different model from the picker above, or simplify the request."
+            : response.say ||
+              (response.patches.length > 0 ? "Updated the workflow." : "");
 
         updateMessage(pendingMsg.id, {
           content: fallbackSay + invalidNote,
           patches: response.patches,
           error: patchError,
           pending: false,
-        })
+        });
       }
     } catch {
       if (controller.signal.aborted) {
-        updateMessage(pendingMsg.id, { content: '', error: 'Cancelled', pending: false })
+        updateMessage(pendingMsg.id, {
+          content: "",
+          error: "Cancelled",
+          pending: false,
+        });
       } else {
-        updateMessage(pendingMsg.id, { content: '', error: 'Agent request failed', pending: false })
+        updateMessage(pendingMsg.id, {
+          content: "",
+          error: "Agent request failed",
+          pending: false,
+        });
       }
     } finally {
-      setThinking(false)
-      abortRef.current = null
+      setThinking(false);
+      abortRef.current = null;
     }
-  }
+  };
 
   const cancel = () => {
-    abortRef.current?.abort()
-  }
+    abortRef.current?.abort();
+  };
 
   return (
     <div className="flex flex-col h-full bg-surface">
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4">
         {messages.length === 0 ? (
           <div className="flex flex-col gap-3 pt-8">
-            <div className="text-[15px] text-text-secondary font-semibold mb-1"><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.whatShouldIBuild" /></div>
-            <div className="text-[13px] text-text-muted mb-4"><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.describeAWorkflowInPlainLanguageI" /></div>
+            <div className="text-[15px] text-text-secondary font-semibold mb-1">
+              <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.whatShouldIBuild" />
+            </div>
+            <div className="text-[13px] text-text-muted mb-4">
+              <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.describeAWorkflowInPlainLanguageI" />
+            </div>
             <div className="flex flex-col gap-2">
               {STARTER_PROMPTS.map((p) => (
                 <button
@@ -222,42 +301,73 @@ export function PlaygroundChat() {
             {messages.map((m) => (
               <div
                 key={m.id}
-                className={cn('flex flex-col gap-1.5', m.role === 'user' ? 'items-end' : 'items-start')}
+                className={cn(
+                  "flex flex-col gap-1.5",
+                  m.role === "user" ? "items-end" : "items-start",
+                )}
               >
                 <div
                   className={cn(
-                    'max-w-[88%] px-3.5 py-2 rounded-xl text-[13.5px] leading-relaxed whitespace-pre-wrap',
-                    m.role === 'user'
-                      ? 'bg-surface-elevated text-text-primary border border-border'
-                      : 'bg-surface-elevated border border-border text-text-secondary',
+                    "max-w-[88%] px-3.5 py-2 rounded-xl text-[13.5px] leading-relaxed whitespace-pre-wrap",
+                    m.role === "user"
+                      ? "bg-surface-elevated text-text-primary border border-border"
+                      : "bg-surface-elevated border border-border text-text-secondary",
                   )}
                 >
                   {m.pending && (!m.activity || m.activity.length === 0) ? (
-                    <GenerationLoadingIndicator size="sm" state="generating" label="Thinking…" className="text-text-muted" />
+                    <GenerationLoadingIndicator
+                      size="sm"
+                      state="generating"
+                      label={tRuntime(
+                        "runtimeGenerated.components.playground.playgroundChat.attribute.thinking",
+                      )}
+                      className="text-text-muted"
+                    />
                   ) : m.error ? (
                     <span className="text-red-300/95">{m.error}</span>
                   ) : (
-                    m.content || <span className="text-text-muted italic"><Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.noMessage" /></span>
+                    m.content || (
+                      <span className="text-text-muted italic">
+                        <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.noMessage" />
+                      </span>
+                    )
                   )}
                 </div>
 
                 {m.activity && m.activity.length > 0 && (
                   <div className="max-w-[88%] flex flex-col gap-px text-[12px] font-mono text-text-muted px-1">
                     {m.activity.map((a, i) => (
-                      <div key={i} className={cn('flex items-center gap-1.5', !a.ok && 'text-rose-300/85')}>
+                      <div
+                        key={i}
+                        className={cn(
+                          "flex items-center gap-1.5",
+                          !a.ok && "text-rose-300/85",
+                        )}
+                      >
                         <span className="text-text-muted">·</span>
                         <span>{a.summary}</span>
                       </div>
                     ))}
                     {m.pending && (
-                      <GenerationLoadingIndicator size="sm" state="processing" label="Working…" className="text-text-muted mt-1" />
+                      <GenerationLoadingIndicator
+                        size="sm"
+                        state="processing"
+                        label={tRuntime(
+                          "runtimeGenerated.components.playground.playgroundChat.attribute.working",
+                        )}
+                        className="text-text-muted mt-1"
+                      />
                     )}
                   </div>
                 )}
 
                 {m.patches && m.patches.length > 0 && !m.activity?.length && (
                   <div className="max-w-[88%] px-3 py-1 text-[12px] text-text-muted font-mono tracking-wide">
-                    {m.patches.length} <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.patch" />{m.patches.length === 1 ? '' : 'es'} <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.applied" /></div>
+                    {m.patches.length}{" "}
+                    <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.patch" />
+                    {m.patches.length === 1 ? "" : "es"}{" "}
+                    <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.text.applied" />
+                  </div>
                 )}
               </div>
             ))}
@@ -266,18 +376,28 @@ export function PlaygroundChat() {
       </div>
 
       <div className="shrink-0 border-t border-border/50 p-3">
-        {error && <div className="mb-2 text-[13px] text-red-300/95">{error}</div>}
+        {error && (
+          <div className="mb-2 text-[13px] text-red-300/95">{error}</div>
+        )}
         <div className="flex items-end gap-2">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault()
-                send(input)
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                send(input);
               }
             }}
-            placeholder={isThinking ? 'Agent is working…' : 'Describe a workflow or change…'}
+            placeholder={
+              isThinking
+                ? tRuntime(
+                    "runtimeGenerated.components.playground.playgroundChat.attribute.agentIsWorking",
+                  )
+                : tRuntime(
+                    "runtimeGenerated.components.playground.playgroundChat.attribute.describeAWorkflowOrChange",
+                  )
+            }
             rows={2}
             disabled={isThinking}
             className="flex-1 bg-surface-elevated border border-border rounded-lg px-3 py-2 text-[13.5px] text-text-secondary outline-none resize-none placeholder:text-text-muted focus:border-accent disabled:opacity-60"
@@ -287,17 +407,19 @@ export function PlaygroundChat() {
               onClick={cancel}
               className="shrink-0 px-3 py-2 text-[13px] text-text-secondary hover:text-text-primary border border-border hover:bg-surface-muted rounded-lg transition-colors"
             >
-              <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.action.stop" /></button>
+              <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.action.stop" />
+            </button>
           ) : (
             <button
               onClick={() => send(input)}
               disabled={!input.trim()}
               className="shrink-0 px-4 py-2 text-[13px] font-medium bg-accent text-accent-fg rounded-lg hover:bg-accent-hover transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
-              <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.action.send" /></button>
+              <Trans i18nKey="common:surface.componentsPlaygroundPlaygroundChat.action.send" />
+            </button>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,14 +1,21 @@
 {
-  "schemaVersion": 3,
-  "updatedAt": "2026-07-26T15:44:43.286Z",
+  "schemaVersion": 4,
+  "updatedAt": "2026-07-26T19:58:56.580Z",
   "extractorArtifact": "scripts/extract-i18n-keys.cjs (TS Compiler API)",
   "verifier": "scripts/verify-i18n.cjs (sentinel + missing-marker aware)",
+  "runtimeSurfaceArtifact": "artifacts/i18n/hardcoded-strings.json",
+  "runtimeSurfaceFindings": 0,
+  "runtimeSurfaceFilesScanned": 480,
+  "runtimeSurfaceExtractor": "typescript-compiler-api-runtime-visible-text-v2",
   "locales": {
     "en-US": {
       "name": "English (US)",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "source-language",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -20,13 +27,16 @@
       "reviewStatus": "source-language",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     },
     "es": {
       "name": "Español",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -38,13 +48,16 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     },
     "fr": {
       "name": "Français",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -56,13 +69,16 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     },
     "de": {
       "name": "Deutsch",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -74,13 +90,16 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     },
     "pt-BR": {
       "name": "Português (Brasil)",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -92,13 +111,16 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     },
     "ru": {
       "name": "Русский",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -110,13 +132,16 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     },
     "zh-CN": {
       "name": "简体中文",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -128,13 +153,16 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     },
     "ja": {
       "name": "日本語",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -146,13 +174,16 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     },
     "hi": {
       "name": "हिन्दी",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -164,13 +195,16 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     },
     "ar": {
       "name": "العربية",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -182,13 +216,16 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     },
     "ko": {
       "name": "한국어",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -200,13 +237,16 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     },
     "sv-SE": {
       "name": "Svenska",
+      "catalogStructuralCoverage": 100,
+      "runtimeSurfaceCoverage": 100,
+      "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 2037,
-      "translatedKeyTotal": 2037,
+      "canonicalKeyTotal": 3884,
+      "translatedKeyTotal": 3884,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "identicalUnapprovedLeaves": 0,
@@ -218,7 +258,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-07-26T15:44:43.286Z"
+      "lastUpdated": "2026-07-26T19:58:56.581Z"
     }
   }
 }

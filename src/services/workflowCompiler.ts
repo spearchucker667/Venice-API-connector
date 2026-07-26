@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 import {
   type WorkflowTemplateItem,
   type WorkflowVersion,
@@ -44,12 +45,18 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function stringField(record: Record<string, unknown>, field: string): string | undefined {
+function stringField(
+  record: Record<string, unknown>,
+  field: string,
+): string | undefined {
   const value = record[field];
   return typeof value === "string" && value.length > 0 ? value : undefined;
 }
 
-function findRecordById(items: unknown[] | undefined, id: string): Record<string, unknown> | null {
+function findRecordById(
+  items: unknown[] | undefined,
+  id: string,
+): Record<string, unknown> | null {
   if (!Array.isArray(items)) return null;
   for (const item of items) {
     if (!isRecord(item)) continue;
@@ -62,10 +69,14 @@ function resolvePromptVersion(
   prompt: Record<string, unknown>,
   preferredVersionId?: string,
 ): Record<string, unknown> | null {
-  const versions = Array.isArray(prompt.versions) ? prompt.versions.filter(isRecord) : [];
+  const versions = Array.isArray(prompt.versions)
+    ? prompt.versions.filter(isRecord)
+    : [];
   if (versions.length === 0) return null;
   if (preferredVersionId) {
-    const preferred = versions.find((version) => version.id === preferredVersionId);
+    const preferred = versions.find(
+      (version) => version.id === preferredVersionId,
+    );
     if (preferred) return preferred;
   }
   const currentVersionId = stringField(prompt, "currentVersionId");
@@ -114,11 +125,18 @@ export function compileWorkflowTemplate(
           compiledStep.warnings.push({
             id: crypto.randomUUID(),
             severity: "warning",
-            message: `Referenced prompt ${step.ref.promptId} not found in context.`,
+            message: translateRuntime(
+              "runtimeGenerated.services.workflowcompiler.metadata.referencedPromptValue1NotFoundInContext",
+              "Referenced prompt {{value1}} not found in context.",
+              { value1: step.ref.promptId },
+            ),
             stepId: step.id,
           });
         } else {
-          const promptVersion = resolvePromptVersion(found, step.ref.promptVersionId);
+          const promptVersion = resolvePromptVersion(
+            found,
+            step.ref.promptVersionId,
+          );
           compiledStep.resolvedInput = {
             ...compiledStep.resolvedInput,
             promptId: step.ref.promptId,
@@ -135,14 +153,19 @@ export function compileWorkflowTemplate(
           compiledStep.warnings.push({
             id: crypto.randomUUID(),
             severity: "warning",
-            message: `Referenced scene ${step.ref.sceneId} not found in context.`,
+            message: translateRuntime(
+              "runtimeGenerated.services.workflowcompiler.metadata.referencedSceneValue1NotFoundInContext",
+              "Referenced scene {{value1}} not found in context.",
+              { value1: step.ref.sceneId },
+            ),
             stepId: step.id,
           });
         } else {
           compiledStep.resolvedInput = {
             ...compiledStep.resolvedInput,
             sceneId: step.ref.sceneId,
-            sceneVersionId: step.ref.sceneVersionId ?? stringField(found, "currentVersionId"),
+            sceneVersionId:
+              step.ref.sceneVersionId ?? stringField(found, "currentVersionId"),
             sceneTitle: stringField(found, "title"),
             scene: { ...found },
           };
@@ -157,14 +180,19 @@ export function compileWorkflowTemplate(
           compiledStep.warnings.push({
             id: crypto.randomUUID(),
             severity: "warning",
-            message: `Referenced character ${step.ref.characterId} not found in context.`,
+            message: translateRuntime(
+              "runtimeGenerated.services.workflowcompiler.metadata.referencedCharacterValue1NotFoundInContext",
+              "Referenced character {{value1}} not found in context.",
+              { value1: step.ref.characterId },
+            ),
             stepId: step.id,
           });
         } else {
           compiledStep.resolvedInput = {
             ...compiledStep.resolvedInput,
             characterId: step.ref.characterId,
-            characterName: stringField(found, "name") ?? stringField(found, "title"),
+            characterName:
+              stringField(found, "name") ?? stringField(found, "title"),
             character: { ...found },
           };
         }
@@ -173,25 +201,41 @@ export function compileWorkflowTemplate(
       }
     }
 
-    if (step.kind !== "prompt" && step.kind !== "image_recipe" && step.kind !== "scene" && step.kind !== "media" && step.kind !== "research" && step.kind !== "rp_character" && step.kind !== "rp_scenario" && step.kind !== "handoff" && step.kind !== "note") {
+    if (
+      step.kind !== "prompt" &&
+      step.kind !== "image_recipe" &&
+      step.kind !== "scene" &&
+      step.kind !== "media" &&
+      step.kind !== "research" &&
+      step.kind !== "rp_character" &&
+      step.kind !== "rp_scenario" &&
+      step.kind !== "handoff" &&
+      step.kind !== "note"
+    ) {
       compiledStep.warnings.push({
         id: crypto.randomUUID(),
         severity: "error",
-        message: `Unsupported step kind: ${step.kind}`,
+        message: translateRuntime(
+          "runtimeGenerated.services.workflowcompiler.metadata.unsupportedStepKindValue1",
+          "Unsupported step kind: {{value1}}",
+          { value1: step.kind },
+        ),
         stepId: step.id,
       });
       result.canRun = false;
     }
 
-    if (compiledStep.warnings.some(w => w.severity === "error")) {
-        result.canRun = false;
+    if (compiledStep.warnings.some((w) => w.severity === "error")) {
+      result.canRun = false;
     }
 
     result.steps.push(compiledStep);
   }
 
   // Aggregate step errors to global canRun
-  if (result.steps.some(s => s.warnings.some(w => w.severity === "error"))) {
+  if (
+    result.steps.some((s) => s.warnings.some((w) => w.severity === "error"))
+  ) {
     result.canRun = false;
   }
 

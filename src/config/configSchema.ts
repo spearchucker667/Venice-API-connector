@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 // Code Owner: fayeblade (@spearchucker667)
 /**
  * @fileoverview Strict runtime validation for the local master YAML config.
@@ -277,17 +278,30 @@ The app's existing safety guard and upstream provider controls remain authoritat
 /** Returns true if the input is a local filesystem path (no scheme). */
 function looksLikeUrl(value: string): boolean {
   if (!value) return false;
-  return /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(value) || /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(value);
+  return (
+    /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(value) ||
+    /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(value)
+  );
 }
 
 /** Clamps a number into [min, max]. Returns `fallback` for non-finite values. */
-function clampNumber(value: unknown, min: number, max: number, fallback: number): number {
+function clampNumber(
+  value: unknown,
+  min: number,
+  max: number,
+  fallback: number,
+): number {
   if (typeof value !== "number" || !Number.isFinite(value)) return fallback;
   return Math.min(max, Math.max(min, value));
 }
 
 /** Returns the input if it is a finite integer, otherwise `fallback`. */
-function clampInteger(value: unknown, min: number, max: number, fallback: number): number {
+function clampInteger(
+  value: unknown,
+  min: number,
+  max: number,
+  fallback: number,
+): number {
   if (typeof value !== "number" || !Number.isFinite(value)) return fallback;
   const n = Math.trunc(value);
   return Math.min(max, Math.max(min, n));
@@ -306,95 +320,215 @@ function clampBool(value: unknown, fallback: boolean): boolean {
   return typeof value === "boolean" ? value : fallback;
 }
 
-function clampEnum<T extends string>(value: unknown, allowed: readonly T[], fallback: T): T {
+function clampEnum<T extends string>(
+  value: unknown,
+  allowed: readonly T[],
+  fallback: T,
+): T {
   if (typeof value !== "string") return fallback;
-  return (allowed as readonly string[]).includes(value) ? (value as T) : fallback;
+  return (allowed as readonly string[]).includes(value)
+    ? (value as T)
+    : fallback;
 }
 
-function clampPath(value: unknown, warnings: ConfigWarning[], field: string, fallback: string): string {
+function clampPath(
+  value: unknown,
+  warnings: ConfigWarning[],
+  field: string,
+  fallback: string,
+): string {
   if (typeof value !== "string") return fallback;
   if (value.length === 0) return fallback;
   if (value.length > PATH_MAX_LENGTH) {
-    warnings.push({ field, message: `Path exceeds ${PATH_MAX_LENGTH} characters; rejected.`, severity: "error" });
+    warnings.push({
+      field,
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.pathExceedsPathMaxLengthCharactersRejected",
+        "Path exceeds {{PATH_MAX_LENGTH}} characters; rejected.",
+        { PATH_MAX_LENGTH: PATH_MAX_LENGTH },
+      ),
+      severity: "error",
+    });
     return fallback;
   }
   if (looksLikeUrl(value)) {
-    warnings.push({ field, message: `Path "${value}" looks like a URL. Local file paths only.`, severity: "error" });
+    warnings.push({
+      field,
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.pathValueLooksLikeAUrlLocalFilePathsOnly",
+        'Path "{{value}}" looks like a URL. Local file paths only.',
+        { value: value },
+      ),
+      severity: "error",
+    });
     return fallback;
   }
   // Reject control characters and NUL bytes that some FS APIs mishandle.
   // eslint-disable-next-line no-control-regex -- intentional rejection of control chars
   if (/[\u0000-\u001f]/.test(value)) {
-    warnings.push({ field, message: `Path contains control characters; rejected.`, severity: "error" });
+    warnings.push({
+      field,
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.pathContainsControlCharactersRejected",
+        "Path contains control characters; rejected.",
+      ),
+      severity: "error",
+    });
     return fallback;
   }
   return value;
 }
 
-function clampKey(value: unknown, field: string, redactedFields: string[], warnings: ConfigWarning[]): string {
+function clampKey(
+  value: unknown,
+  field: string,
+  redactedFields: string[],
+  warnings: ConfigWarning[],
+): string {
   if (typeof value !== "string") return "";
   const trimmed = value.trim();
   if (trimmed.length === 0) return "";
   if (trimmed.length > KEY_MAX_LENGTH) {
-    warnings.push({ field, message: `Key length exceeds ${KEY_MAX_LENGTH}; rejected.`, severity: "error" });
+    warnings.push({
+      field,
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.keyLengthExceedsKeyMaxLengthRejected",
+        "Key length exceeds {{KEY_MAX_LENGTH}}; rejected.",
+        { KEY_MAX_LENGTH: KEY_MAX_LENGTH },
+      ),
+      severity: "error",
+    });
     redactedFields.push(field);
     return "";
   }
   return trimmed;
 }
 
-function clampThemeName(value: unknown, field: string, fallback: string): string {
+function clampThemeName(
+  value: unknown,
+  field: string,
+  fallback: string,
+): string {
   if (typeof value !== "string") return fallback;
   const trimmed = value.trim();
   if (trimmed.length === 0) return fallback;
-  if (trimmed.length > THEME_NAME_MAX_LENGTH) return trimmed.slice(0, THEME_NAME_MAX_LENGTH);
+  if (trimmed.length > THEME_NAME_MAX_LENGTH)
+    return trimmed.slice(0, THEME_NAME_MAX_LENGTH);
   return trimmed;
 }
 
-function validateThemeBlock(name: string, raw: unknown): { theme: YamlTheme | null; warnings: ConfigWarning[] } {
+function validateThemeBlock(
+  name: string,
+  raw: unknown,
+): { theme: YamlTheme | null; warnings: ConfigWarning[] } {
   const warnings: ConfigWarning[] = [];
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
-    warnings.push({ field: `themes.${name}`, message: "Theme entry must be an object; skipped.", severity: "error" });
+    warnings.push({
+      field: `themes.${name}`,
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.themeEntryMustBeAnObjectSkipped",
+        "Theme entry must be an object; skipped.",
+      ),
+      severity: "error",
+    });
     return { theme: null, warnings };
   }
   const rec = raw as Record<string, unknown>;
   if (rec.mode !== "dark" && rec.mode !== "light") {
-    warnings.push({ field: `themes.${name}.mode`, message: `Invalid mode "${String(rec.mode)}"; skipped.`, severity: "error" });
+    warnings.push({
+      field: `themes.${name}.mode`,
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.invalidModeValue1Skipped",
+        'Invalid mode "{{value1}}"; skipped.',
+        { value1: String(rec.mode) },
+      ),
+      severity: "error",
+    });
     return { theme: null, warnings };
   }
   if (typeof rec.display_name !== "string" || rec.display_name.length === 0) {
-    warnings.push({ field: `themes.${name}.display_name`, message: "display_name must be a non-empty string; skipped.", severity: "error" });
+    warnings.push({
+      field: `themes.${name}.display_name`,
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.displayNameMustBeANonEmptyStringSkipped",
+        "display_name must be a non-empty string; skipped.",
+      ),
+      severity: "error",
+    });
     return { theme: null, warnings };
   }
   if (rec.display_name.length > THEME_NAME_MAX_LENGTH) {
-    warnings.push({ field: `themes.${name}.display_name`, message: `display_name exceeds ${THEME_NAME_MAX_LENGTH} chars; skipped.`, severity: "error" });
+    warnings.push({
+      field: `themes.${name}.display_name`,
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.displayNameExceedsThemeNameMaxLengthCharsSkipped",
+        "display_name exceeds {{THEME_NAME_MAX_LENGTH}} chars; skipped.",
+        { THEME_NAME_MAX_LENGTH: THEME_NAME_MAX_LENGTH },
+      ),
+      severity: "error",
+    });
     return { theme: null, warnings };
   }
-  if (typeof rec.tokens !== "object" || rec.tokens === null || Array.isArray(rec.tokens)) {
-    warnings.push({ field: `themes.${name}.tokens`, message: "tokens must be an object; skipped.", severity: "error" });
+  if (
+    typeof rec.tokens !== "object" ||
+    rec.tokens === null ||
+    Array.isArray(rec.tokens)
+  ) {
+    warnings.push({
+      field: `themes.${name}.tokens`,
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.tokensMustBeAnObjectSkipped",
+        "tokens must be an object; skipped.",
+      ),
+      severity: "error",
+    });
     return { theme: null, warnings };
   }
   const tokens: Record<string, string> = {};
   const allowedTokens = new Set<string>(REQUIRED_THEME_TOKEN_KEYS);
   let allValid = true;
   for (const [k, v] of Object.entries(rec.tokens as Record<string, unknown>)) {
-    const normalizedKey = k.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
+    const normalizedKey = k.replace(/_([a-z])/g, (_, letter: string) =>
+      letter.toUpperCase(),
+    );
     if (!allowedTokens.has(normalizedKey)) {
-      warnings.push({ field: `themes.${name}.tokens.${k}`, message: "Unknown theme token; ignored.", severity: "warn" });
+      warnings.push({
+        field: `themes.${name}.tokens.${k}`,
+        message: translateRuntime(
+          "runtimeGenerated.config.configschema.metadata.unknownThemeTokenIgnored",
+          "Unknown theme token; ignored.",
+        ),
+        severity: "warn",
+      });
       continue;
     }
     if (typeof v !== "string" || !isValidColorValue(v)) {
-      warnings.push({ field: `themes.${name}.tokens.${k}`, message: "Invalid color value; theme skipped.", severity: "error" });
+      warnings.push({
+        field: `themes.${name}.tokens.${k}`,
+        message: translateRuntime(
+          "runtimeGenerated.config.configschema.metadata.invalidColorValueThemeSkipped",
+          "Invalid color value; theme skipped.",
+        ),
+        severity: "error",
+      });
       allValid = false;
       break;
     }
     tokens[normalizedKey] = v;
   }
-  
+
   if (allValid) {
     for (const req of REQUIRED_THEME_TOKEN_KEYS) {
       if (!(req in tokens)) {
-        warnings.push({ field: `themes.${name}.tokens.${req}`, message: `Missing required theme token: ${req}; theme skipped.`, severity: "error" });
+        warnings.push({
+          field: `themes.${name}.tokens.${req}`,
+          message: translateRuntime(
+            "runtimeGenerated.config.configschema.metadata.missingRequiredThemeTokenReqThemeSkipped",
+            "Missing required theme token: {{req}}; theme skipped.",
+            { req: req },
+          ),
+          severity: "error",
+        });
         allValid = false;
         break;
       }
@@ -423,12 +557,23 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
   const r = raw as Record<string, unknown>;
 
   if (r.version !== 1) {
-    warnings.push({ field: "version", message: `Unknown config version "${String(r.version)}"; expected 1. Falling back to defaults.`, severity: "error" });
+    warnings.push({
+      field: "version",
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.unknownConfigVersionValue1Expected1FallingBackToDefaults",
+        'Unknown config version "{{value1}}"; expected 1. Falling back to defaults.',
+        { value1: String(r.version) },
+      ),
+      severity: "error",
+    });
     return { config: emptyConfig(), warnings, redactedFields };
   }
 
   // ── app ──
-  const appRaw = (typeof r.app === "object" && r.app !== null) ? r.app as Record<string, unknown> : {};
+  const appRaw =
+    typeof r.app === "object" && r.app !== null
+      ? (r.app as Record<string, unknown>)
+      : {};
   const app: YamlApp = {
     config_name: clampString(appRaw.config_name, 128, "local-dev"),
     profile: clampString(appRaw.profile, 32, "development"),
@@ -437,22 +582,46 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
   };
 
   // ── secrets ──
-  const secRaw = (typeof r.secrets === "object" && r.secrets !== null) ? r.secrets as Record<string, unknown> : {};
+  const secRaw =
+    typeof r.secrets === "object" && r.secrets !== null
+      ? (r.secrets as Record<string, unknown>)
+      : {};
   const secrets: YamlSecrets = {
-    venice_api_key: clampKey(secRaw.venice_api_key, "secrets.venice_api_key", redactedFields, warnings),
-    jina_api_key: clampKey(secRaw.jina_api_key, "secrets.jina_api_key", redactedFields, warnings),
+    venice_api_key: clampKey(
+      secRaw.venice_api_key,
+      "secrets.venice_api_key",
+      redactedFields,
+      warnings,
+    ),
+    jina_api_key: clampKey(
+      secRaw.jina_api_key,
+      "secrets.jina_api_key",
+      redactedFields,
+      warnings,
+    ),
     keep_plaintext_keys: clampBool(secRaw.keep_plaintext_keys, false),
   };
 
   // ── theme ──
-  const themeRaw = (typeof r.theme === "object" && r.theme !== null) ? r.theme as Record<string, unknown> : {};
+  const themeRaw =
+    typeof r.theme === "object" && r.theme !== null
+      ? (r.theme as Record<string, unknown>)
+      : {};
   const theme: YamlThemeRef = {
     active: clampThemeName(themeRaw.active, "theme.active", "builtin-venice"),
-    themes_file: clampPath(themeRaw.themes_file, warnings, "theme.themes_file", ""),
+    themes_file: clampPath(
+      themeRaw.themes_file,
+      warnings,
+      "theme.themes_file",
+      "",
+    ),
   };
 
   // ── models ──
-  const modelsRaw = (typeof r.models === "object" && r.models !== null) ? r.models as Record<string, unknown> : {};
+  const modelsRaw =
+    typeof r.models === "object" && r.models !== null
+      ? (r.models as Record<string, unknown>)
+      : {};
   const models: YamlModels = {
     chat: clampString(modelsRaw.chat, 256, ""),
     image: clampString(modelsRaw.image, 256, ""),
@@ -464,14 +633,38 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
   };
 
   // ── chat ──
-  const chatRaw = (typeof r.chat === "object" && r.chat !== null) ? r.chat as Record<string, unknown> : {};
+  const chatRaw =
+    typeof r.chat === "object" && r.chat !== null
+      ? (r.chat as Record<string, unknown>)
+      : {};
   const chat: YamlChat = {
-    system_prompt: clampString(chatRaw.system_prompt, SYSTEM_PROMPT_MAX_LENGTH, ""),
-    temperature: clampNumber(chatRaw.temperature, TEMPERATURE_MIN, TEMPERATURE_MAX, 0.7),
+    system_prompt: clampString(
+      chatRaw.system_prompt,
+      SYSTEM_PROMPT_MAX_LENGTH,
+      "",
+    ),
+    temperature: clampNumber(
+      chatRaw.temperature,
+      TEMPERATURE_MIN,
+      TEMPERATURE_MAX,
+      0.7,
+    ),
     top_p: clampNumber(chatRaw.top_p, TOP_P_MIN, TOP_P_MAX, 1),
-    max_tokens: clampInteger(chatRaw.max_tokens, MAX_TOKENS_MIN, MAX_TOKENS_MAX, 4096),
-    include_venice_system_prompt: clampBool(chatRaw.include_venice_system_prompt, true),
-    enable_web_search: clampEnum(chatRaw.enable_web_search, ["off", "on", "auto"] as const, "off"),
+    max_tokens: clampInteger(
+      chatRaw.max_tokens,
+      MAX_TOKENS_MIN,
+      MAX_TOKENS_MAX,
+      4096,
+    ),
+    include_venice_system_prompt: clampBool(
+      chatRaw.include_venice_system_prompt,
+      true,
+    ),
+    enable_web_search: clampEnum(
+      chatRaw.enable_web_search,
+      ["off", "on", "auto"] as const,
+      "off",
+    ),
     enable_web_scraping: clampBool(chatRaw.enable_web_scraping, false),
     enable_web_citations: clampBool(chatRaw.enable_web_citations, false),
     strip_thinking_response: clampBool(chatRaw.strip_thinking_response, false),
@@ -479,38 +672,81 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
   };
 
   // ── memory ──
-  const memoryRaw = (typeof r.memory === "object" && r.memory !== null) ? r.memory as Record<string, unknown> : {};
+  const memoryRaw =
+    typeof r.memory === "object" && r.memory !== null
+      ? (r.memory as Record<string, unknown>)
+      : {};
   const memory: YamlMemory = {
     enable_memory_retrieval: clampBool(memoryRaw.enable_memory_retrieval, true),
-    show_pulled_context_before_sending: clampBool(memoryRaw.show_pulled_context_before_sending, false),
+    show_pulled_context_before_sending: clampBool(
+      memoryRaw.show_pulled_context_before_sending,
+      false,
+    ),
   };
 
   // ── research ──
-  const researchRaw = (typeof r.research === "object" && r.research !== null) ? r.research as Record<string, unknown> : {};
+  const researchRaw =
+    typeof r.research === "object" && r.research !== null
+      ? (r.research as Record<string, unknown>)
+      : {};
   const research: YamlResearch = {
-    default_provider: clampEnum(researchRaw.default_provider, ["venice", "jina", "auto"] as const, "venice"),
-    default_search_provider: clampEnum(researchRaw.default_search_provider, ["brave", "google"] as const, "brave"),
-    default_reader_provider: clampEnum(researchRaw.default_reader_provider, ["jina", "generic-http"] as const, "jina"),
+    default_provider: clampEnum(
+      researchRaw.default_provider,
+      ["venice", "jina", "auto"] as const,
+      "venice",
+    ),
+    default_search_provider: clampEnum(
+      researchRaw.default_search_provider,
+      ["brave", "google"] as const,
+      "brave",
+    ),
+    default_reader_provider: clampEnum(
+      researchRaw.default_reader_provider,
+      ["jina", "generic-http"] as const,
+      "jina",
+    ),
     enable_jina: clampBool(researchRaw.enable_jina, false),
-    enable_social_discovery: clampBool(researchRaw.enable_social_discovery, false),
+    enable_social_discovery: clampBool(
+      researchRaw.enable_social_discovery,
+      false,
+    ),
   };
 
   // ── characters ──
-  const charRaw = (typeof r.characters === "object" && r.characters !== null) ? r.characters as Record<string, unknown> : {};
+  const charRaw =
+    typeof r.characters === "object" && r.characters !== null
+      ? (r.characters as Record<string, unknown>)
+      : {};
   const characters: YamlCharacters = {
     enabled: clampBool(charRaw.enabled, true),
-    include_adult_characters: clampBool(charRaw.include_adult_characters, false),
-    default_character_slug: clampString(charRaw.default_character_slug, 128, ""),
+    include_adult_characters: clampBool(
+      charRaw.include_adult_characters,
+      false,
+    ),
+    default_character_slug: clampString(
+      charRaw.default_character_slug,
+      128,
+      "",
+    ),
   };
 
-  const safetyRaw = (typeof r.safety === "object" && r.safety !== null) ? r.safety as Record<string, unknown> : {};
+  const safetyRaw =
+    typeof r.safety === "object" && r.safety !== null
+      ? (r.safety as Record<string, unknown>)
+      : {};
   const safety: YamlSafety = {
-    local_family_safe_mode_enabled: clampBool(safetyRaw.local_family_safe_mode_enabled, true),
+    local_family_safe_mode_enabled: clampBool(
+      safetyRaw.local_family_safe_mode_enabled,
+      true,
+    ),
     venice_api_safe_mode: clampBool(safetyRaw.venice_api_safe_mode, true),
   };
 
   // ── developer ──
-  const devRaw = (typeof r.developer === "object" && r.developer !== null) ? r.developer as Record<string, unknown> : {};
+  const devRaw =
+    typeof r.developer === "object" && r.developer !== null
+      ? (r.developer as Record<string, unknown>)
+      : {};
   const developer: YamlDeveloper = {
     verbose_config_logging: clampBool(devRaw.verbose_config_logging, false),
     allow_config_key_import: clampBool(devRaw.allow_config_key_import, true),
@@ -519,16 +755,26 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
   };
 
   // ── internal_prompt_enhancer ──
-  const enhancerRaw = (typeof r.internal_prompt_enhancer === "object" && r.internal_prompt_enhancer !== null)
-    ? r.internal_prompt_enhancer as Record<string, unknown>
-    : {};
+  const enhancerRaw =
+    typeof r.internal_prompt_enhancer === "object" &&
+    r.internal_prompt_enhancer !== null
+      ? (r.internal_prompt_enhancer as Record<string, unknown>)
+      : {};
   const internal_prompt_enhancer: YamlInternalPromptEnhancer = {
     enabled: clampBool(enhancerRaw.enabled, true),
     model: clampString(enhancerRaw.model, 256, DEFAULT_PROMPT_ENHANCER_MODEL),
     temperature: clampNumber(enhancerRaw.temperature, 0, 2, 0.4),
     maxTokens: clampInteger(enhancerRaw.maxTokens, 1, 4000, 350),
-    systemPrompt: clampString(enhancerRaw.systemPrompt, ENHANCER_PROMPT_MAX_LENGTH, DEFAULT_ENHANCE_SYSTEM_PROMPT),
-    remixSystemPrompt: clampString(enhancerRaw.remixSystemPrompt, ENHANCER_PROMPT_MAX_LENGTH, DEFAULT_REMIX_SYSTEM_PROMPT),
+    systemPrompt: clampString(
+      enhancerRaw.systemPrompt,
+      ENHANCER_PROMPT_MAX_LENGTH,
+      DEFAULT_ENHANCE_SYSTEM_PROMPT,
+    ),
+    remixSystemPrompt: clampString(
+      enhancerRaw.remixSystemPrompt,
+      ENHANCER_PROMPT_MAX_LENGTH,
+      DEFAULT_REMIX_SYSTEM_PROMPT,
+    ),
   };
 
   return {
@@ -552,25 +798,63 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
 }
 
 /** Validates a themes.yaml mapping. Skips invalid entries with a warning. */
-export function validateThemesFile(raw: unknown): { themes: Record<string, YamlTheme>; warnings: ConfigWarning[] } {
+export function validateThemesFile(raw: unknown): {
+  themes: Record<string, YamlTheme>;
+  warnings: ConfigWarning[];
+} {
   const warnings: ConfigWarning[] = [];
   const out: Record<string, YamlTheme> = {};
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
-    warnings.push({ field: "(root)", message: "Themes file root must be a mapping; using built-in themes only.", severity: "error" });
+    warnings.push({
+      field: "(root)",
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.themesFileRootMustBeAMappingUsingBuiltIn",
+        "Themes file root must be a mapping; using built-in themes only.",
+      ),
+      severity: "error",
+    });
     return { themes: out, warnings };
   }
   const r = raw as Record<string, unknown>;
   if (r.version !== undefined && r.version !== 1) {
-    warnings.push({ field: "version", message: `Unknown themes version "${String(r.version)}"; expected 1. Skipping file.`, severity: "error" });
+    warnings.push({
+      field: "version",
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.unknownThemesVersionValue1Expected1SkippingFile",
+        'Unknown themes version "{{value1}}"; expected 1. Skipping file.',
+        { value1: String(r.version) },
+      ),
+      severity: "error",
+    });
     return { themes: out, warnings };
   }
-  if (typeof r.themes !== "object" || r.themes === null || Array.isArray(r.themes)) {
-    warnings.push({ field: "themes", message: "themes block must be a mapping; using built-in themes only.", severity: "error" });
+  if (
+    typeof r.themes !== "object" ||
+    r.themes === null ||
+    Array.isArray(r.themes)
+  ) {
+    warnings.push({
+      field: "themes",
+      message: translateRuntime(
+        "runtimeGenerated.config.configschema.metadata.themesBlockMustBeAMappingUsingBuiltInThemes",
+        "themes block must be a mapping; using built-in themes only.",
+      ),
+      severity: "error",
+    });
     return { themes: out, warnings };
   }
-  for (const [name, value] of Object.entries(r.themes as Record<string, unknown>)) {
+  for (const [name, value] of Object.entries(
+    r.themes as Record<string, unknown>,
+  )) {
     if (name.length === 0 || name.length > THEME_NAME_MAX_LENGTH) {
-      warnings.push({ field: `themes.${name || "<empty>"}`, message: "Theme name must be 1..128 characters; skipped.", severity: "error" });
+      warnings.push({
+        field: `themes.${name || "<empty>"}`,
+        message: translateRuntime(
+          "runtimeGenerated.config.configschema.metadata.themeNameMustBe1128CharactersSkipped",
+          "Theme name must be 1..128 characters; skipped.",
+        ),
+        severity: "error",
+      });
       continue;
     }
     const { theme, warnings: themeWarnings } = validateThemeBlock(name, value);
@@ -603,7 +887,10 @@ export function sanitizeConfig(config: YamlConfig): SanitizedConfig {
   };
 }
 
-function makeFallback(warnings: ConfigWarning[], message: string): ConfigValidationResult {
+function makeFallback(
+  warnings: ConfigWarning[],
+  message: string,
+): ConfigValidationResult {
   warnings.push({ field: "(root)", message, severity: "error" });
   return { config: emptyConfig(), warnings, redactedFields: [] };
 }
@@ -612,10 +899,27 @@ function makeFallback(warnings: ConfigWarning[], message: string): ConfigValidat
 export function emptyConfig(): YamlConfig {
   return {
     version: 1,
-    app: { config_name: "default", profile: "default", auto_open_devtools: false, check_for_updates: true },
-    secrets: { venice_api_key: "", jina_api_key: "", keep_plaintext_keys: false },
+    app: {
+      config_name: "default",
+      profile: "default",
+      auto_open_devtools: false,
+      check_for_updates: true,
+    },
+    secrets: {
+      venice_api_key: "",
+      jina_api_key: "",
+      keep_plaintext_keys: false,
+    },
     theme: { active: "builtin-venice", themes_file: "" },
-    models: { chat: "", image: "", video: "", audio: "", music: "", embedding: "", upscale: "" },
+    models: {
+      chat: "",
+      image: "",
+      video: "",
+      audio: "",
+      music: "",
+      embedding: "",
+      upscale: "",
+    },
     chat: {
       system_prompt: "",
       temperature: 0.7,
@@ -628,11 +932,32 @@ export function emptyConfig(): YamlConfig {
       strip_thinking_response: false,
       disable_thinking: false,
     },
-    memory: { enable_memory_retrieval: true, show_pulled_context_before_sending: false },
-    research: { default_provider: "venice", default_search_provider: "brave", default_reader_provider: "jina", enable_jina: false, enable_social_discovery: false },
-    characters: { enabled: true, include_adult_characters: false, default_character_slug: "" },
-    safety: { local_family_safe_mode_enabled: true, venice_api_safe_mode: true },
-    developer: { verbose_config_logging: false, allow_config_key_import: true, force_import_keys: false, force_apply_config: false },
+    memory: {
+      enable_memory_retrieval: true,
+      show_pulled_context_before_sending: false,
+    },
+    research: {
+      default_provider: "venice",
+      default_search_provider: "brave",
+      default_reader_provider: "jina",
+      enable_jina: false,
+      enable_social_discovery: false,
+    },
+    characters: {
+      enabled: true,
+      include_adult_characters: false,
+      default_character_slug: "",
+    },
+    safety: {
+      local_family_safe_mode_enabled: true,
+      venice_api_safe_mode: true,
+    },
+    developer: {
+      verbose_config_logging: false,
+      allow_config_key_import: true,
+      force_import_keys: false,
+      force_apply_config: false,
+    },
     internal_prompt_enhancer: {
       enabled: true,
       model: DEFAULT_PROMPT_ENHANCER_MODEL,

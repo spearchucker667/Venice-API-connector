@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 // @vitest-environment jsdom
 /** @fileoverview Data & Storage actions extracted from `SettingsView`.
  *
@@ -39,8 +40,10 @@ import type { Memory } from "../services/memoryService";
 import type { ExportPayload } from "../services/exportImport";
 import StorageService from "../services/storageService";
 import { STORE_NAMES } from "../constants/venice";
-import { createEncryptedBackup, downloadEncryptedBackup } from "../services/backupExportService";
-
+import {
+  createEncryptedBackup,
+  downloadEncryptedBackup,
+} from "../services/backupExportService";
 
 /** Shape of the local-state setters that the hook needs to drive. */
 export interface DataStorageActionsOptions {
@@ -96,7 +99,10 @@ export function useDataStorageActions(
 
   const clearLocalSettings = useCallback(async () => {
     setPendingConfirm({
-      message: "Clear local settings?",
+      message: translateRuntime(
+        "runtimeGenerated.hooks.useDataStorageActions.metadata.clearLocalSettings",
+        "Clear local settings?",
+      ),
       detail:
         "This will reset default system prompts, citation toggles, and UI model configurations to standard defaults.",
       onConfirm: async () => {
@@ -111,10 +117,18 @@ export function useDataStorageActions(
         setVeniceApiSafeMode(true);
         if (isElectron()) {
           await desktopConfig.writeSanitized({
-            safety: { local_family_safe_mode_enabled: true, venice_api_safe_mode: true },
+            safety: {
+              local_family_safe_mode_enabled: true,
+              venice_api_safe_mode: true,
+            },
           });
         }
-        toast.success("Local settings cleared.");
+        toast.success(
+          translateRuntime(
+            "runtimeGenerated.hooks.useDataStorageActions.notification.localSettingsCleared",
+            "Local settings cleared.",
+          ),
+        );
       },
     });
   }, [
@@ -127,13 +141,26 @@ export function useDataStorageActions(
 
   const clearAllHistory = useCallback(async () => {
     setPendingConfirm({
-      message: "Delete all IndexedDB history?",
+      message: translateRuntime(
+        "runtimeGenerated.hooks.useDataStorageActions.metadata.deleteAllIndexeddbHistory",
+        "Delete all IndexedDB history?",
+      ),
       detail:
         "This deletes every Venice Forge IndexedDB store in this browser profile, including saved images, chats, configurations, and settings. It does not delete Electron vault files, exports, or sync folders. This cannot be undone.",
       onConfirm: async () => {
-        await Promise.all(STORE_NAMES.map((store) => StorageService.clearStore(store)));
-        useChatStore.setState({ conversations: [], activeConversationId: null });
-        toast.success("IndexedDB data cleared successfully.");
+        await Promise.all(
+          STORE_NAMES.map((store) => StorageService.clearStore(store)),
+        );
+        useChatStore.setState({
+          conversations: [],
+          activeConversationId: null,
+        });
+        toast.success(
+          translateRuntime(
+            "runtimeGenerated.hooks.useDataStorageActions.notification.indexeddbDataClearedSuccessfully",
+            "IndexedDB data cleared successfully.",
+          ),
+        );
       },
     });
   }, [setPendingConfirm]);
@@ -150,9 +177,20 @@ export function useDataStorageActions(
           includeMedia,
         });
         const ok = await downloadEncryptedBackup(manifest);
-        if (ok) toast.success("Encrypted backup exported successfully.");
+        if (ok)
+          toast.success(
+            translateRuntime(
+              "runtimeGenerated.hooks.useDataStorageActions.notification.encryptedBackupExportedSuccessfully",
+              "Encrypted backup exported successfully.",
+            ),
+          );
       } catch {
-        toast.error("Export failed. Please try again.");
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.hooks.useDataStorageActions.notification.exportFailedPleaseTryAgain",
+            "Export failed. Please try again.",
+          ),
+        );
       }
     },
     [],

@@ -1,5 +1,5 @@
 {
-  "appName": "Venice Forge",
+  "appName": "Forja de Venecia",
   "appSubtitle": "El banco de trabajo local y privado.",
   "actions": {
     "save": "Guardar",
@@ -60,7 +60,7 @@
     "idle": "Inactivo"
   },
   "conversations": "conv-1",
-  "character_cards": "card-1",
+  "character_cards": "tarjeta-1",
   "rp_chats": "rpchat-1",
   "tombstones": "conv-1",
   "cancelled": "fallido",
@@ -71,7 +71,7 @@
   "isWebEnabled": "verdadero",
   "stable-audio": "q1",
   "video-model": "q2",
-  "promptLibrary": "lib-1",
+  "promptLibrary": "biblioteca-1",
   "surface": {
     "app": {
       "text": {
@@ -333,7 +333,7 @@
         "describe": "Describir",
         "review": "Revisar",
         "recentUnfinishedDrafts": "Borradores recientes sin terminar",
-        "rev": "Rev",
+        "rev": "Rdo",
         "duplicate": "Duplicado"
       },
       "description": {
@@ -742,8 +742,8 @@
         "missingReferences": "Referencias faltantes"
       },
       "description": {
-        "originalLdquo": "Original: “",
-        "rdquo": "”",
+        "originalLdquo": "Original: &quot;",
+        "rdquo": "&quot;",
         "promptViaInternalLlm": "mensaje mediante LLM interno…",
         "theseEndpointsAreRecognisedForTheSource": "Estos puntos finales se reconocen para el modelo de origen. Volver a ejecutar la misma operación en este elemento los utilizará.",
         "noTagsYet": "Aún no hay etiquetas."
@@ -941,7 +941,7 @@
     "playgroundAgentModelPicker": {
       "text": {
         "noMatches": "Sin matches",
-        "rec": "Rec",
+        "rec": "rec",
         "recommended": "Herramientas recomendadas",
         "tools": "Herramientas",
         "reasoning": "Razonamiento",
@@ -1330,7 +1330,7 @@
       "heading": {
         "1SourceAvatar": "1. Fuente y avatar",
         "2Identity": "2. Identidad",
-        "3Persona": "3. Persona",
+        "3Persona": "3.Persona",
         "4PromptBehavior": "4. Comportamiento del mensaje",
         "5Greetings": "5. Saludos",
         "6ExampleDialogue": "6. Diálogo de ejemplo",
@@ -1341,7 +1341,7 @@
         "10ExportWorkflow": "10. Exportación y flujo de trabajo"
       },
       "item": {
-        "tokens": "tokens"
+        "tokens": "fichas"
       }
     },
     "componentsRpStudioCharacterlibrary": {
@@ -1733,7 +1733,7 @@
     "componentsDiagnosticspreview": {
       "text": {
         "noRequestsYet": "aún no hay solicitudes",
-        "cfRay": "CF-RAY"
+        "cfRay": "RAYOS CF"
       }
     },
     "componentsErrorboundary": {
@@ -1960,7 +1960,7 @@
     },
     "componentsSettingsConfigpanel": {
       "text": {
-        "configYaml": "config.yaml",
+        "configYaml": "configuración.yaml",
         "themesYaml": "temas.yaml",
         "secretsKeepPlaintextKeysTrue": "secrets.keep_plaintext_keys: verdadero"
       }
@@ -1983,5 +1983,2534 @@
         "noResults": "Sin resultados"
       }
     }
+  },
+  "promptStarters": {
+    "writing-rsa-email": "Redacte un correo electrónico cortés pero firme pidiéndole al propietario que arregle la calefacción.",
+    "writing-cover-letter": "Escriba una plantilla de carta de presentación personalizada para un puesto de ingeniero senior full stack centrado en la colaboración remota.",
+    "writing-scifi-hook": "Componga un gancho inicial convincente para una novela de ciencia ficción donde la gravedad se comporta de manera diferente en cada ciudad.",
+    "writing-newsletter-intro": "Redacte una atractiva introducción al boletín que analice los impactos sociales de las flotas de agentes autónomos.",
+    "writing-press-release": "Cree una plantilla de comunicado de prensa formal que anuncie el código abierto de un raspador web que prioriza la privacidad.",
+    "writing-linkedin-post": "Redacte una publicación profesional en LinkedIn que resuma las lecciones clave aprendidas al crear una aplicación Electron sin conexión.",
+    "writing-blog-outline": "Genere un esquema detallado para una publicación de blog técnica titulada 'Seguridad de puentes de precarga en aplicaciones electrónicas modernas'.",
+    "writing-sabbatical-request": "Redactar una propuesta profesional solicitando un año sabático educativo de 3 meses para estudiar sistemas distribuidos.",
+    "writing-speech-intro": "Escriba un discurso introductorio de 3 minutos sobre la importancia del software local y la soberanía de los datos.",
+    "writing-bug-report": "Escriba una plantilla completa para un informe de error en un proyecto de código abierto para fomentar una resolución rápida.",
+    "writing-refusal-letter": "Redacte una respuesta profesional rechazando una propuesta de proveedor mientras mantiene la puerta abierta para futuras colaboraciones.",
+    "writing-haiku-comp": "Redacte tres haikus que capturen la transición del hardware analógico a la computación cuántica.",
+    "coding-rest-graphql": "Compare REST y GraphQL: ¿cuándo brilla cada uno?",
+    "coding-debounce-ts": "Escriba un gancho antirrebote robusto y completamente tipificado en TypeScript para React con soporte para invocación inmediata.",
+    "coding-sql-recursive": "Explique cómo funcionan los CTE recursivos en SQL con un ejemplo de consulta de una jerarquía organizativa.",
+    "coding-refactor-lru": "Refactorice una memoria caché de Node.js simple en una caché LRU segura para subprocesos con soporte de caducidad.",
+    "coding-rust-error": "Muestre cómo implementar un manejo de errores personalizado en Rust usando las cajas `thiserror` y `anyhow`.",
+    "coding-git-bisect": "Explique cómo usar `git bisect` para localizar una confirmación de regresión, incluida la ejecución automatizada de scripts.",
+    "coding-docker-multi": "Cree un Dockerfile de varias etapas mínimo y seguro para empaquetar un microservicio TypeScript Node.js.",
+    "coding-csp-rules": "Escriba una configuración de encabezado estricta de la Política de seguridad de contenido (CSP) que permita la ejecución local de WASM pero bloquee la evaluación en línea.",
+    "coding-vitest-mocking": "Demuestre cómo simular objetos de ventana globales y llamadas de recuperación asincrónicas en Vitest.",
+    "coding-css-flex-grid": "Explique las diferencias arquitectónicas entre los diseños CSS Grid y Flexbox, con casos de uso de diseño específicos para cada uno.",
+    "coding-sse-parse": "Muestre cómo escribir un analizador de secuencias para eventos enviados por el servidor (SSE) en JavaScript básico sin dependencias externas.",
+    "coding-indexeddb-transaction": "Proporcione un ejemplo de gestión sólida de transacciones y reversión de errores en IndexedDB nativo del navegador.",
+    "learning-rsa-metaphor": "Explique cómo funciona el cifrado RSA utilizando una metáfora que un niño de 10 años podría comprender.",
+    "learning-pid-controller": "Explique las matemáticas detrás de un controlador de temperatura PID en términos simples e intuitivos.",
+    "learning-monad-metaphor": "Explique qué es una mónada en programación funcional utilizando una analogía cotidiana del mundo real.",
+    "learning-special-relativity": "¿Qué es la dilatación del tiempo en la relatividad especial? Explícalo usando un experimento mental que involucre relojes.",
+    "learning-inflation-basics": "Explique cómo los bancos centrales utilizan las tasas de interés para controlar la inflación y qué compensaciones económicas están involucradas.",
+    "learning-photosynthesis": "Describir las reacciones de la fotosíntesis dependientes de la luz como un proceso de línea de ensamblaje paso a paso.",
+    "learning-platonic-cave": "Explique la Alegoría de la Caverna de Platón y analice cómo se relaciona con las cámaras de eco de las redes sociales modernas.",
+    "learning-blockchain-proof": "Explique la diferencia entre los algoritmos de consenso de Prueba de trabajo y Prueba de participación sin utilizar jerga tecnológica.",
+    "learning-turing-complete": "¿Qué significa que un sistema sea 'Turing Complete'? Dé una explicación sencilla y un ejemplo no obvio.",
+    "learning-habermas-public": "Resuma el concepto de \"esfera pública\" de Jürgen Habermas y su relevancia para la era de Internet.",
+    "learning-plate-tectonics": "¿Cómo impulsa la tectónica de placas la actividad volcánica? Explicar las diferencias entre zonas de subducción y puntos calientes.",
+    "learning-music-scales": "Explicar la relación entre las frecuencias matemáticas y las escalas musicales o la armonía.",
+    "research-fusion-status": "¿Cuáles son los últimos hitos y las barreras de ingeniería que aún persisten en la investigación comercial de la energía de fusión nuclear?",
+    "research-dns-sec": "Analice las vulnerabilidades de seguridad del protocolo DNS tradicional y cómo DNSSEC las aborda.",
+    "research-solid-battery": "Resumir el estado actual de la tecnología de baterías de estado sólido para vehículos eléctricos, centrándose en la densidad de energía y el ciclo de vida.",
+    "research-roman-concrete": "Investigue la formulación química del hormigón marino de la antigua Roma y por qué dura más que el cemento Portland moderno.",
+    "research-browser-privacy": "Compare los mecanismos de protección de la privacidad del bloqueo de cookies de terceros, la defensa de huellas digitales del navegador y la partición.",
+    "research-green-hydrogen": "Analizar la eficiencia energética y económica de la producción de hidrógeno verde frente a la electrificación directa con baterías.",
+    "research-graphene-scaling": "¿Cuáles son las limitaciones de fabricación actuales que impiden la ampliación del grafeno monocapa para la electrónica comercial?",
+    "research-zero-knowledge": "Compare zk-SNARK y zk-STARK en términos de requisitos de configuración confiables, tamaño de prueba y sobrecarga computacional.",
+    "research-microbiome-brain": "Resumir las vías biológicas principales que conectan el microbioma intestinal humano con las funciones del sistema nervioso central.",
+    "research-deep-sea-mining": "¿Cuáles son los riesgos ambientales y económicos de la minería de nódulos polimetálicos en aguas profundas en aguas internacionales?",
+    "research-compiler-optimizations": "Investigue cómo funcionan el desenrollado de bucles, la eliminación de códigos inactivos y la optimización de la asignación de registros dentro de los compiladores.",
+    "research-cfc-ozone": "Traza la línea de tiempo histórica y el proceso químico de la recuperación de la capa de ozono siguiendo el Protocolo de Montreal.",
+    "creative-llm-pi-projects": "Piense en cinco ideas novedosas para proyectos paralelos utilizando LLM y una Raspberry Pi.",
+    "creative-time-travel-game": "Diseña el bucle de juego central para un juego de rompecabezas de investigación centrado en las paradojas recursivas del viaje en el tiempo.",
+    "creative-steampunk-ai": "Escriba una breve descripción conceptual de una ciudad steampunk donde las decisiones municipales se canalizan a través de analizadores diferenciales mecánicos.",
+    "creative-product-name": "Piense en diez marcas distintas y evocadoras para una utilidad de red de malla punto a punto localizada.",
+    "creative-card-game": "Crea las reglas y gana las condiciones para un juego de microcartas jugado con solo 18 cartas con el tema del enrutamiento de red.",
+    "creative-synth-podcast": "Describe un discurso para un podcast dramático de audio ficticio que detalla las anotaciones del diario de una boya de comunicación varada en el espacio profundo.",
+    "creative-culinary-fusion": "Inventa cinco platos de fusión creativos que combinen técnicas tradicionales de fermentación japonesas con conceptos de comida callejera mexicana.",
+    "creative-speculative-ui": "Describir un diseño de interfaz de usuario innovador para gestionar políticas de privacidad personal utilizando un lienzo de nodos espaciales 3D.",
+    "creative-robot-sports": "Piense en un deporte completamente nuevo diseñado específicamente para mostrar los límites de coordinación de los drones y la robótica con patas.",
+    "creative-magic-system": "Diseñe un sistema de magia de fantasía donde el lanzamiento de hechizos esté limitado por leyes termodinámicas y la conservación del impulso.",
+    "creative-smart-mirror": "Piense en tres aplicaciones creativas para un espejo inteligente que interactúe con el calendario local y las API del clima ambiental.",
+    "creative-metaphor-database": "Cree una metáfora ampliada que compare la normalización de la base de datos con la organización de una biblioteca municipal en expansión.",
+    "productivity-time-box": "Cree una plantilla de bloqueo de tiempo semanal personalizable y optimizada para cronogramas de desarrollo de software de trabajo profundo.",
+    "productivity-meeting-agenda": "Redacte una plantilla de agenda para una sincronización de ingeniería semanal con prioridad asíncrona destinada a resolver cuellos de botella arquitectónicos.",
+    "productivity-habit-stack": "Diseñe un marco de acumulación de hábitos de 30 días para la transición a una rutina matutina constante de ejercicio y lectura.",
+    "productivity-notion-layout": "Describa el esquema de la base de datos y la estructura de diseño de un espacio de trabajo de Notion diseñado para realizar un seguimiento de los conocimientos y marcadores personales.",
+    "productivity-prioritization": "Explique cómo aplicar la Matriz de Eisenhower para priorizar tareas como gerente de ingeniería con prioridades contradictorias.",
+    "productivity-onboarding": "Cree una lista de verificación para incorporar a un nuevo ingeniero de software remoto a una base de código monolítica heredada compleja.",
+    "productivity-markdown-journal": "Diseñe un sistema ligero de avisos de diario de rebajas que ayude a realizar un seguimiento de los objetivos, los bloqueadores y las gratitudes diarios.",
+    "productivity-inbox-zero": "Redacte un sistema paso a paso para lograr y mantener Inbox Zero utilizando etiquetas automatizadas y atajos de teclado.",
+    "productivity-postmortem": "Cree una plantilla estándar para escribir autopsias de software después de una interrupción crítica de la producción.",
+    "productivity-learning-sprint": "Describe un plan de sprint de aprendizaje de 4 semanas para dominar los fundamentos de la compilación de Rust WebAssembly.",
+    "productivity-presentation-deck": "Redacte una estructura diapositiva por diapositiva para una presentación de 10 minutos para asegurar la financiación inicial para un cliente local de LLM.",
+    "productivity-dependency-audit": "Cree un plan de acción para realizar una auditoría mensual de las dependencias de la biblioteca de código abierto en un repositorio de código de producción.",
+    "analysis-p2p-mesh": "Realizar un análisis FODA sobre la implementación de una red de malla de igual a igual descentralizada en áreas urbanas de alta densidad.",
+    "analysis-sqlite-pg": "Compare las ventajas arquitectónicas de SQLite frente a PostgreSQL para obtener una aplicación de escritorio sin conexión con capacidades de sincronización.",
+    "analysis-fallacy-media": "Enumere cinco falacias lógicas comunes que se encuentran en los informes de los medios modernos y proporcione pautas sobre cómo detectarlas.",
+    "analysis-cloud-vs-local": "Analice las ventajas y desventajas a largo plazo entre la computación sin servidor alojada en la nube y los servidores bare metal autohospedados.",
+    "analysis-electron-tauri": "Realice un análisis comparativo detallado de Electron frente a Tauri en términos de huella de memoria, tamaño de construcción y modelos de seguridad.",
+    "analysis-monolith-micro": "Identifique indicadores clave que muestren cuándo una startup en crecimiento debería realizar la transición de una arquitectura monolítica a una de microservicios.",
+    "analysis-privacy-shield": "Analice las implicaciones legales y técnicas de los requisitos de cumplimiento del RGPD en las prácticas de registro y telemetría.",
+    "analysis-rsa-vs-ecc": "Realice un análisis técnico comparativo de RSA frente a la criptografía de curva elíptica (ECC) con respecto a los tamaños de clave y las velocidades de firma.",
+    "analysis-dns-over-https": "Analice las ventajas de privacidad y las compensaciones en el rendimiento de la red al adoptar DNS sobre HTTPS (DoH).",
+    "analysis-open-licensing": "Compare las condiciones legales, las propiedades copyleft y los permisos de uso comercial de las licencias MIT frente a las GPLv3.",
+    "analysis-ci-caching": "Analice las optimizaciones del tiempo de compilación obtenidas a partir de las estrategias de caché en las canalizaciones de CI de GitHub Actions.",
+    "analysis-work-automation": "Evalúe los impactos potenciales de los flujos de trabajo de agentes autónomos de IA en la productividad del equipo administrativo y la demanda de recursos.",
+    "image-serene-mountain": "Un sereno lago de montaña en la hora dorada, niebla baja sobre el agua, pictórico",
+    "image-dewdrop-spiderweb": "Fotografía macro de una gota de rocío sobre una tela de araña, iluminación del amanecer",
+    "image-cyberpunk-market": "Mercado callejero Cyberpunk por la noche, carteles de neón que se reflejan en los charcos",
+    "image-fox-mushroom": "Ilustración de libros infantiles de un zorro leyendo un libro debajo de una seta",
+    "image-steampunk-airship": "Dirigible Steampunk atracado en una plataforma flotante en un cielo lleno de nubes, estilo de ilustración vintage",
+    "image-bioluminescent-forest": "Un bosque bioluminiscente futurista por la noche, plantas brillantes, etéreos tonos azules y morados, arte digital detallado",
+    "image-watercolor-cafe": "Vibrante pintura acuarela de un bullicioso café callejero europeo, día soleado, pinceladas artísticas sueltas",
+    "image-astronaut-portrait": "Un retrato en primer plano de un astronauta mirando la Tierra, reflejo en el visor, traje espacial hiperrealista y detallado",
+    "image-overgrown-ruins": "Ruinas antiguas de un templo cubierto de raíces de árboles gigantes, rayos de sol de la tarde atravesando las hojas, de mal humor",
+    "image-minimalist-desert": "Arte vectorial minimalista de un paisaje desértico por la noche, luna creciente, estrellas, terracota cálida y tonos azul oscuro",
+    "image-cozy-cabin": "Una pintura al óleo de una acogedora cabaña en el bosque durante una tormenta de nieve invernal, con una cálida luz ámbar brillando desde las ventanas.",
+    "image-floating-island": "Una caprichosa isla flotante con un pequeño faro, rodeada de esponjosas nubes blancas, estilo plastilina en 3D.",
+    "image-midcentury-abstract": "Composición geométrica abstracta inspirada en el diseño moderno de mediados de siglo, paleta de colores retro apagados",
+    "image-castle-dragon": "Un majestuoso dragón encaramado en lo alto de la torre de un castillo medieval, niebla y una iluminación cinematográfica espectacular",
+    "image-surreal-whale": "Arte digital surrealista de una ballena volando a través de un cielo nublado lleno de globos aerostáticos flotantes.",
+    "image-retro-lab": "Un laboratorio retrofuturista con viales de vidrio con líquido brillante, bobinas de cobre y diales analógicos, sombras espectaculares.",
+    "image-sketch-cat": "Dibujo a lápiz de un gato somnoliento acurrucado sobre una pila de viejos libros encuadernados en cuero, sombreado suave",
+    "image-coral-reef": "Un colorido arrecife de coral repleto de peces exóticos, rayos de sol filtrándose a través de aguas cristalinas de color turquesa, fotografía submarina",
+    "image-hacker-setup": "Configuración de hacker Cyberpunk con múltiples monitores brillantes, cables por todas partes, cuarto oscuro con luz ambiental azul cibernética",
+    "image-stained-glass": "Vidriera que representa un árbol de la vida, la luz del sol brillante proyectando patrones coloridos sobre un suelo de piedra",
+    "audio-welcome-vf": "Bienvenidos a Forja de Venecia. El futuro de la voz está aquí y habla todos los idiomas.",
+    "audio-library-book": "En un pueblo tranquilo ubicado entre dos montañas, una pequeña biblioteca contenía un libro muy antiguo.",
+    "audio-octopus-brains": "¿Sabías? Un solo pulpo tiene nueve cerebros: uno central y uno en cada brazo.",
+    "audio-safety-protocols": "Asegúrese de que todos los protocolos de seguridad estén completamente implementados antes de implementar el clúster de agentes LLM local.",
+    "audio-quick-brown-fox": "El veloz zorro marrón salta sobre el perro perezoso. Sólo una prueba vocal clásica para comprobar todas las frecuencias fonéticas.",
+    "audio-hyperloop-depart": "Atención pasajeros, el corredor de tránsito Hyperloop hacia la terminal este partirá en exactamente tres minutos.",
+    "audio-hydrothermal-vents": "En lo profundo del océano, los respiraderos hidrotermales sustentan ecosistemas únicos que nunca ven la luz del sol.",
+    "audio-study-stars": "Para comprender el universo, debemos estudiar las estrellas, los átomos y el espacio entre ellos.",
+    "audio-step-forward": "Un solo paso adelante puede cambiar el curso de la historia, siempre que sepamos qué camino estamos siguiendo.",
+    "audio-digital-archive": "Bienvenido al archivo digital. Por favor indique sus credenciales o inserte su módulo de autorización.",
+    "audio-whispering-leaves": "El susurro de las hojas y los truenos distantes llenaron el aire de la noche a medida que se acercaba la tormenta otoñal.",
+    "audio-getting-started": "El secreto para salir adelante es empezar, combinado con un hábito diario de trabajo concentrado.",
+    "audio-compilation-complete": "Nuestro sistema ha completado con éxito el proceso de compilación. Todos los parámetros del módulo son nominales.",
+    "audio-kepler-transmission": "En el año veintidós cuarenta y dos, la humanidad recibió su primera transmisión verificada desde el sistema Kepler.",
+    "audio-complex-problem": "Para cada problema complejo, existe una solución que es simple, clara y completamente incorrecta.",
+    "music-lofi-hiphop": "Ritmo de hip-hop de baja fidelidad con crujido de vinilo y lluvia: 80 bpm, suave",
+    "music-cinematic-orchestral": "Construcción orquestal cinematográfica: cuerdas lentas que se elevan hacia metales triunfantes",
+    "music-synthwave-retro": "Synthwave con arpegios retro, pads cálidos y batería con reverberación cerrada: 105 bpm",
+    "music-acoustic-folk": "Selección de dedos folk acústico, voces femeninas suaves, sonido de habitación íntimo",
+    "music-indie-pop": "Pista alegre de indie pop con pegadizos riffs de guitarra eléctrica y palmas: 120 bpm",
+    "music-dark-ambient": "Dron ambiental oscuro con pulsos de sintetizador lentos y texturas metálicas: atmósfera espacial",
+    "music-heavy-metal": "Solo de guitarra de heavy metal de los 80, rápido contrabajo, himno de rock de alta energía",
+    "music-jazz-piano": "Relajante trío de piano de jazz con contrabajo y suaves tambores: salón nocturno",
+    "music-industrial-techno": "Techno industrial ciberpunk con líneas de bajo distorsionadas y bombo pesado: 130 bpm",
+    "music-japanese-flute": "Flauta tradicional japonesa (shakuhachi) con almohadillas de cuerdas ambientales: meditación serena",
+    "music-edm-drop": "Drop EDM de alta energía con acordes de sintetizador progresivos y subgraves potentes: estilo festival",
+    "music-chillstep": "Pista chillout chillstep con cortes vocales con tono inclinado y subgraves suaves: 90 bpm",
+    "music-delta-blues": "Guitarra slide de blues delta con ritmo de stompbox, cruda y conmovedora",
+    "music-chiptune-retro": "Música de juego futurista chiptune de 8 bits, melodía alegre, efectos de sonido retro",
+    "music-reggae-dub": "Pista de doblaje de reggae con acordes pesados ​​y poco convencionales, línea de bajo profunda y efectos de eco",
+    "embeddings-fox-dog": "El veloz zorro marrón salta sobre el perro perezoso.",
+    "embeddings-meaning-vector": "Las incrustaciones convierten el texto en un vector que puedes buscar por significado.",
+    "embeddings-sf-bridges": "San Francisco es una ciudad del norte de California conocida por su niebla y sus puentes.",
+    "embeddings-ai-simulation": "La inteligencia artificial es la simulación de procesos de inteligencia humana mediante máquinas.",
+    "embeddings-quantum-computing": "La computación cuántica utiliza superposición y entrelazamiento para realizar operaciones complejas.",
+    "embeddings-dna-helix": "La estructura de doble hélice del ADN fue descubierta por primera vez en 1953 por Watson y Crick.",
+    "embeddings-db-index": "Un índice de base de datos es una estructura de datos que mejora la velocidad de las operaciones de recuperación de datos.",
+    "embeddings-clean-code": "El código limpio siempre parece escrito por alguien a quien le importa.",
+    "embeddings-photosynthesis": "La fotosíntesis es el proceso que utilizan las plantas para convertir la energía luminosa en energía química.",
+    "embeddings-cryptographic-hash": "Las funciones hash criptográficas asignan datos binarios arbitrarios a una firma de tamaño fijo.",
+    "embeddings-spacetime-curve": "La teoría de la relatividad general describe la gravedad como la curvatura del espacio-tiempo.",
+    "embeddings-offline-first": "En una aplicación sin conexión, los datos se almacenan localmente antes de sincronizarse con la nube.",
+    "embeddings-regex-match": "Las expresiones regulares son patrones que se utilizan para hacer coincidir combinaciones de caracteres en cadenas.",
+    "embeddings-vector-space": "Un espacio vectorial es una estructura matemática formada por una colección de vectores.",
+    "embeddings-microservices": "La arquitectura de microservicios estructura una aplicación como una colección de servicios débilmente acoplados."
+  },
+  "statusCluster": {
+    "categories": {
+      "api": "API",
+      "apiKey": "Llave",
+      "model": "Modelo",
+      "storage": "Almacenamiento",
+      "safety": "Seguridad",
+      "provider": "Investigación",
+      "project": "Proyecto",
+      "desktop": "Modo"
+    },
+    "severities": {
+      "ok": "DE ACUERDO",
+      "warn": "Advertencia",
+      "error": "Error",
+      "unknown": "Desconocido"
+    },
+    "aria": {
+      "cluster": "Clúster de estado de la aplicación",
+      "openHighest": "Abrir estado de la aplicación. Gravedad más alta: {{category}} {{severity}}"
+    },
+    "status": "Estado"
+  },
+  "runtimeGenerated": {
+    "app": {
+      "attribute": {
+        "closeMenu": "Cerrar menú"
+      }
+    },
+    "components": {
+      "charactersview": {
+        "attribute": {
+          "adultCharacter": "personaje adulto",
+          "averageRating": "Calificación promedio",
+          "ratingCount": "Recuento de calificaciones",
+          "totalImports": "Importaciones totales",
+          "openOnVenice": "Abierto en Venecia",
+          "closeCharacterDetails": "Cerrar detalles del personaje",
+          "characterSections": "Secciones de personajes",
+          "characterChatModel": "Modelo de chat de personajes",
+          "searchCharacters": "Buscar personajes…",
+          "searchCharacters2": "Buscar personajes"
+        },
+        "text": {
+          "unfavorite": "No favorito",
+          "favorite": "Favorito",
+          "v1Imported": "V1 importado",
+          "v2Json": "JSON V2",
+          "v2Png": "V2PNG",
+          "vfNative": "VF Nativo",
+          "noDescription": "Sin descripción",
+          "unknownAuthor": "Autor desconocido",
+          "noDescriptionProvided": "No se proporciona descripción.",
+          "loading": "Cargando…",
+          "loadMore": "Cargar más"
+        },
+        "notification": {
+          "refreshedValue1": "Actualizado {{value1}}",
+          "duplicatedValue1ToLocal": "Duplicado {{value1}} a Local",
+          "exportFailed": "Exportación fallida"
+        },
+        "metadata": {
+          "deleteValue1": "¿Eliminar {{value1}}?",
+          "featured": "Presentado",
+          "mostImported": "Los más importados",
+          "highestRated": "Mejor valorado",
+          "highlyRated": "Altamente calificado",
+          "highlyRatedRecent": "Altamente calificado y reciente",
+          "mostRecent": "Más reciente",
+          "mostRated": "Más valorados",
+          "descending": "Descendente",
+          "ascending": "Ascendente"
+        }
+      },
+      "modelselect": {
+        "attribute": {
+          "highFidelity": "Alta fidelidad",
+          "standardFidelity": "Fidelidad estándar",
+          "anonymousInference": "Inferencia anónima",
+          "privateInference": "Inferencia privada"
+        },
+        "text": {
+          "value1K": "{{value1}} k"
+        }
+      },
+      "thememaker": {
+        "metadata": {
+          "veniceParityDark": "Venecia paridad oscura",
+          "forgeGraphite": "Forja Grafito",
+          "forgeDaylight": "Forja la luz del día",
+          "forgeCopper": "Forja de cobre",
+          "forgeDracula": "Forjar Drácula",
+          "gruvboxDark": "GruvBox Oscuro",
+          "rosepine": "rosapino",
+          "forgeNord": "Forja Norte",
+          "forgeTokyo": "Forja Tokio",
+          "forgeCatppuccin": "Forja Catpuchin",
+          "forgeSolarizedDark": "Forja Solarizada Oscura",
+          "forgeSolarizedLight": "Luz Solarizada Forja",
+          "forgeOneDark": "Forja una oscuridad",
+          "forgeMonokai": "Forja Monokai",
+          "forgeGithubLight": "Forjar la luz de GitHub",
+          "obsidianBloom": "Flor de obsidiana",
+          "harborFog": "Niebla del puerto",
+          "circuitMint": "Circuito de menta",
+          "amberArchive": "Archivo ámbar",
+          "neonDusk": "Anochecer de neón",
+          "auroraBoreal": "aurora boreal",
+          "sakuraTerminal": "Terminal Sakura",
+          "basaltNoir": "Basalto negro",
+          "solarAsh": "Ceniza solar",
+          "cyberOrchid": "Orquídea cibernética",
+          "arcticGlass": "Vidrio ártico",
+          "desertCopperfield": "Campo de cobre del desierto",
+          "toxicLimewire": "Alambre de cal tóxico",
+          "midnightVelvet": "Terciopelo de medianoche",
+          "porcelainDaybreak": "Amanecer de porcelana",
+          "synthwaveHarbor": "Puerto de onda sintética",
+          "mossCircuit": "Circuito de musgo",
+          "emberMonastery": "Monasterio de ascuas",
+          "glacialInk": "tinta glacial",
+          "ultravioletRain": "Lluvia ultravioleta",
+          "customTheme": "Tema personalizado",
+          "placeholder": "Marcador de posición"
+        },
+        "notification": {
+          "createdNewCustomThemeValue1": "Se creó un nuevo tema personalizado \"{{value1}}\"",
+          "failedToCreateThemeValue1": "No se pudo crear el tema: {{value1}}",
+          "themeValue1SavedSuccessfully": "Tema \"{{value1}}\" guardado exitosamente",
+          "failedToSaveThemeValue1": "No se pudo guardar el tema: {{value1}}",
+          "failedToDeleteThemeValue1": "No se pudo eliminar el tema: {{value1}}",
+          "themeExportedSuccessfully": "Tema exportado exitosamente",
+          "failedToExportTheme": "No se pudo exportar el tema",
+          "failedToImportTheme": "No se pudo importar el tema",
+          "themeValue1ImportedAndApplied": "Tema \"{{value1}}\" importado y aplicado",
+          "failedToImportThemeValue1": "No se pudo importar el tema: {{value1}}"
+        },
+        "attribute": {
+          "themeName": "Nombre del tema",
+          "value1ColorPicker": "{{value1}} selector de color"
+        }
+      },
+      "audio": {
+        "audioView": {
+          "notification": {
+            "ttsFailed": "TTS falló",
+            "transcriptionFailed": "Error de transcripción"
+          },
+          "text": {
+            "textToSpeech": "Texto a voz",
+            "transcribe": "Transcribir",
+            "clickToSelectAudioFile": "Haga clic para seleccionar el archivo de audio"
+          },
+          "attribute": {
+            "enterTextToConvertToSpeech": "Ingrese el texto para convertirlo a voz...",
+            "synthesizingSpeech": "Sintetizando el discurso...",
+            "transcribingAudio": "Transcribiendo audio…"
+          }
+        }
+      },
+      "characterCreator": {
+        "charactercreatordrafteditor": {
+          "text": {
+            "untitledCharacter": "Personaje sin título",
+            "hideAiDesignProcess": "Ocultar proceso de diseño de IA",
+            "viewAiDesignProcessLog": "Ver el registro del proceso de diseño de IA",
+            "revisingDraft": "Revisando borrador...",
+            "reviseWholeDraft": "Revisar el borrador completo"
+          },
+          "metadata": {
+            "overview": "Descripción general",
+            "identity": "Identidad",
+            "behavior": "Comportamiento",
+            "conversation": "Conversación",
+            "advancedPrompting": "Indicaciones avanzadas",
+            "lore": "Ciencia",
+            "appearance": "Apariencia",
+            "metadata": "Metadatos"
+          },
+          "attribute": {
+            "start10UserHello10CharGreetings": "<INICIO>\n{{user}}: ¡Hola!\n{{char}}: Saludos...",
+            "avatarPreview": "Vista previa de avatar",
+            "triggerKeywordsEGGothamBatcave": "Palabras clave de activación (por ejemplo, Gotham, Batcave)",
+            "loreDetailContentTriggeredWhenAnyKeywordAppearsInConversation": "El contenido detallado de la historia se activa cuando aparece cualquier palabra clave en la conversación...",
+            "eGMakeHerLessHostileGiveHimADry": "p.ej. Hazla menos hostil, dale un sentido del humor seco o traslada el escenario al Berlín de los años 20..."
+          }
+        },
+        "charactercreatorerror": {
+          "notification": {
+            "errorDetailsCopiedToClipboard": "Detalles del error copiados al portapapeles"
+          }
+        },
+        "charactercreatorlocalpickermodal": {
+          "attribute": {
+            "searchByCharacterNameTagOrDescription": "Buscar por nombre de personaje, etiqueta o descripción..."
+          },
+          "text": {
+            "noLocalCharactersFoundInYourLibrary": "No se encontraron caracteres locales en su biblioteca.",
+            "noCharactersMatchYourSearchFilter": "Ningún carácter coincide con su filtro de búsqueda.",
+            "noDescriptionProvided": "No se proporciona descripción."
+          }
+        },
+        "charactercreatormascot": {
+          "attribute": {
+            "characterCreatorMascot": "Mascota creadora de personajes"
+          }
+        },
+        "charactercreatorprocesspanel": {
+          "notification": {
+            "designProcessSummaryCopiedToClipboard": "Resumen del proceso de diseño copiado al portapapeles",
+            "couldNotCopyToClipboard": "No se pudo copiar al portapapeles"
+          },
+          "text": {
+            "copied": "Copiado",
+            "copyLog": "Copiar registro",
+            "value1Value2": "{{value1}} : {{value2}}"
+          }
+        },
+        "charactercreatorready": {
+          "text": {
+            "characterReadyForApproval": "Personaje listo para aprobación",
+            "validationIssuesDetected": "Problemas de validación detectados",
+            "reviewTheValidationPreviewAndExplicitlyApproveCreationToAdd": "Revise la vista previa de validación y apruebe explícitamente la creación para agregarla a su biblioteca local.",
+            "resolveValidationErrorsBeforeApprovingCharacterCardCreation": "Resuelve errores de validación antes de aprobar la creación de tarjetas de personaje.",
+            "noDescriptionSpecified": "No se ha especificado ninguna descripción",
+            "thisDraftWasLoadedFromAnExistingCharacterYouCan": "Este borrador fue cargado desde un personaje existente. Puedes actualizar el personaje en el lugar o guardarlo como una copia nueva.",
+            "thisWillCreateANewLocalCharacterFromTheCurrent": "Esto creará un nuevo personaje local a partir del borrador actual. Puedes continuar editándolo después de su creación.",
+            "updateCharacter": "Actualizar personaje",
+            "createCharacter": "Crear personaje",
+            "updateStartChat": "Actualizar e iniciar chat",
+            "createStartChat": "Crear e iniciar chat"
+          }
+        },
+        "charactercreatorview": {
+          "metadata": {
+            "analyzingImage": "Analizando imagen"
+          },
+          "notification": {
+            "couldNotLoadDraft": "No se pudo cargar el borrador",
+            "draftDuplicated": "Borrador duplicado",
+            "couldNotDuplicateDraft": "No se pudo duplicar el borrador",
+            "draftDeleted": "Borrador eliminado",
+            "couldNotDeleteDraft": "No se pudo eliminar el borrador",
+            "autosaveFailed": "Error al guardar automáticamente",
+            "cannotSaveDraftWhilePendingChangesFailedToPersist": "No se puede guardar el borrador mientras los cambios pendientes no persisten.",
+            "draftSavedLocally": "Borrador guardado localmente",
+            "couldNotSaveDraft": "No se pudo guardar el borrador",
+            "cannotReviseDraftWhilePendingChangesFailedToPersist": "No se puede revisar el borrador mientras los cambios pendientes no persisten.",
+            "draftRevised": "Borrador revisado",
+            "cannotRegenerateFieldWhilePendingChangesFailedToPersist": "No se puede regenerar el campo mientras los cambios pendientes no persisten.",
+            "fieldFieldRegenerated": "Campo '{{field}}' regenerado",
+            "cannotValidateDraftWhilePendingChangesFailedToPersist": "No se puede validar el borrador mientras los cambios pendientes no persisten.",
+            "cannotApproveCharacterWhilePendingChangesFailedToPersist": "No se puede aprobar el personaje mientras los cambios pendientes no persisten.",
+            "characterUpdated": "¡Personaje actualizado!",
+            "characterCreated": "Personaje creado!",
+            "value1SavedToLocalLibrary": "\"{{value1}}\" guardado en la biblioteca local.",
+            "cannotExportCardWhilePendingChangesFailedToPersist": "No se puede exportar la tarjeta mientras los cambios pendientes no persisten.",
+            "characterCardExported": "Tarjeta de personaje exportada",
+            "exportFailed": "Exportación fallida",
+            "exportedCharacterCardJson": "Tarjeta de personaje exportada JSON",
+            "cardImportedIntoCharacterCreator": "Tarjeta importada a Character Creator",
+            "importedCard": "Tarjeta Importada",
+            "importFailed": "Importación fallida",
+            "couldNotParseCardFile": "No se pudo analizar el archivo de la tarjeta",
+            "couldNotLoadCharacter": "No se pudo cargar el personaje"
+          }
+        },
+        "charactercreatorwelcome": {
+          "attribute": {
+            "exampleIWantABroodingNocturnalDetectiveWhoProtectsA": "Ejemplo: quiero un detective nocturno inquietante que proteja una ciudad corrupta sin matar.",
+            "eGNeoGothicMetropolis1920sNoir": "p.ej. Metrópolis neogótica, años 20 Noir",
+            "eGGrittyMelancholicSatirical": "p.ej. Valiente, melancólica, satírica.",
+            "eGReluctantAllyMysteriousInformant": "p.ej. Aliado reacio, informante misterioso",
+            "duplicateDraft": "Borrador duplicado",
+            "deleteDraft": "Eliminar borrador"
+          }
+        }
+      },
+      "characters": {
+        "characteravatar": {
+          "attribute": {
+            "displaynameAvatar": "{{displayName}} avatar"
+          }
+        }
+      },
+      "chat": {
+        "characterchatsview": {
+          "attribute": {
+            "newCharacterChat": "Nuevo chat de personajes",
+            "chooseOrStartACharacterChat": "Elige o inicia un chat de personaje.",
+            "searchCharacterChats": "Buscar chats de personajes",
+            "searchLocalCharacters": "Buscar personajes locales…",
+            "newCharacterChat2": "Nuevo chat de personajes",
+            "selectALocalCharacterOrBrowseHostedCharactersToLaunch": "Selecciona un personaje local o busca personajes alojados para iniciar un chat.",
+            "filterLocalCharacters": "Filtrar personajes locales..."
+          },
+          "text": {
+            "characterChat": "Charla de personajes",
+            "local": "Local",
+            "hosted": "Alojado",
+            "v1Imported": "V1 importado",
+            "v2Json": "JSON V2",
+            "v2Png": "V2PNG",
+            "localCharacter": "Carácter local",
+            "localCharacter2": "Carácter local",
+            "noLocalCharactersCreatedYet": "Aún no se han creado personajes locales.",
+            "noCharactersMatchPickerquery": "Ningún carácter coincide con \"{{pickerQuery}}\"."
+          }
+        },
+        "characterscenecard": {
+          "text": {
+            "unableToGenerateScene": "No se puede generar la escena."
+          },
+          "attribute": {
+            "generatedScene": "escena generada"
+          }
+        },
+        "chatttsplayer": {
+          "attribute": {
+            "pauseSpeech": "pausar el discurso",
+            "playSpeech": "Reproducir discurso",
+            "stopSpeech": "dejar de hablar",
+            "restartSpeech": "Reiniciar el discurso"
+          }
+        },
+        "historyview": {
+          "notification": {
+            "importFailed": "Importación fallida",
+            "unableToSelectBackup": "No se puede seleccionar la copia de seguridad",
+            "conversationDeleted": "Conversación eliminada",
+            "untitled": "Intitulado",
+            "conversationRestored": "Conversación restaurada",
+            "failedToRestore": "No se pudo restaurar",
+            "movedConversations": "Conversaciones conmovidas",
+            "movedValue1ConversationValue2ToTargetname": "Se movió {{value1}} conversación{{value2}} a {{targetName}}.",
+            "failedToMoveConversations": "No se pudieron mover las conversaciones",
+            "conversationsDeleted": "Conversaciones eliminadas",
+            "value1SelectedConversationValue2Removed": "{{value1}} conversación seleccionada {{value2}} eliminada.",
+            "someConversationsWereNotDeleted": "Algunas conversaciones no fueron eliminadas",
+            "value1SelectedConversationValue2RemainBecauseStorageDeletionFailed": "{{value1}} conversación seleccionada {{value2}} permanecen porque falló la eliminación del almacenamiento.",
+            "thisConversationHasNoFactsOrSummaryToUse": "Esta conversación no tiene hechos ni resumen para usar.",
+            "contextInjectedIntoActiveChat": "Contexto inyectado en el chat activo.",
+            "privacyGateRemainsClosed": "La puerta de privacidad permanece cerrada",
+            "privacyGateWasNotEnabled": "La puerta de privacidad no estaba habilitada",
+            "unknownError": "Error desconocido"
+          },
+          "metadata": {
+            "importEncryptedFolderBackup": "¿Importar copia de seguridad de carpeta cifrada?",
+            "unlockBackup": "Desbloquear copia de seguridad",
+            "undo": "Deshacer",
+            "deleteValue1ConversationValue2": "¿Eliminar {{value1}} conversación{{value2}}?",
+            "openPrivacyGate": "Abrir puerta de privacidad",
+            "enableFolderPrivacyGate": "Habilitar puerta de privacidad de carpetas",
+            "exportFolder": "Exportar carpeta"
+          },
+          "attribute": {
+            "searchByTitleOrMessageContent": "Buscar por título o contenido del mensaje...",
+            "deselectFolderConversations": "Deseleccionar carpeta de conversaciones",
+            "selectAllConversationsInFolder": "Seleccionar todas las conversaciones en la carpeta",
+            "moveFolderUp": "Mover carpeta hacia arriba",
+            "moveValue1FolderUp": "Mover la carpeta {{value1}} hacia arriba",
+            "moveFolderDown": "Mover carpeta hacia abajo",
+            "moveValue1FolderDown": "Mover la carpeta {{value1}} hacia abajo",
+            "renameFolder": "Cambiar nombre de carpeta",
+            "deleteFolder": "Eliminar carpeta",
+            "deselect": "Deseleccionar",
+            "select": "Seleccionar",
+            "deselectConversation": "Deseleccionar conversación",
+            "selectConversation": "Seleccionar conversación",
+            "injectContextIntoActiveChat": "Inyecte contexto en el chat activo",
+            "deleteConversation": "Eliminar conversación",
+            "deselectUnfiledConversations": "Deseleccionar conversaciones no archivadas",
+            "selectAllUnfiledConversations": "Seleccionar todas las conversaciones no archivadas",
+            "folderName": "Nombre de la carpeta...",
+            "privacyAccessGateNotPerFolderEncryptionAtRest": "Puerta de acceso de privacidad; no cifrado por carpeta en reposo"
+          },
+          "text": {
+            "deselectAllVisible": "Deseleccionar todo lo visible",
+            "selectAllVisible": "Seleccionar todo visible",
+            "folderselectedcountSelected": "· {{folderSelectedCount}} seleccionado",
+            "selected": "Seleccionado",
+            "select": "Seleccionar",
+            "unfiledselectedcountSelected": "· {{unfiledSelectedCount}} seleccionado"
+          }
+        },
+        "chatView": {
+          "notification": {
+            "modelUnavailable": "Modelo no disponible",
+            "thePreviouslySelectedModelIsUnavailableThisChatNowUses": "El modelo seleccionado anteriormente no está disponible. Este chat ahora usa {{resolvedDefault}}.",
+            "priorContextSkipped": "Contexto anterior omitido",
+            "factPermanentlyForgotten": "Hecho olvidado permanentemente.",
+            "failedToForgetFact": "No pude olvidar el hecho"
+          },
+          "metadata": {
+            "forgetThisFact": "¿Olvidar este hecho?",
+            "deleteFromHere": "¿Eliminar de aquí?",
+            "removedFromChat": "Eliminado del chat",
+            "removednameStaysInMediaStudioClickUndoToReAttach": "{{removedName}} permanece en Media Studio. Haga clic en Deshacer para volver a adjuntar.",
+            "undo": "Deshacer",
+            "regenerateFromHere": "¿Regenerarse desde aquí?"
+          },
+          "attribute": {
+            "searchCurrentConversation": "Buscar conversación actual",
+            "searchThisConversation": "Buscar esta conversación",
+            "previousMatch": "Partido anterior",
+            "nextMatch": "Próximo partido",
+            "closeConversationSearch": "Cerrar búsqueda de conversación",
+            "cancel": "Cancelar",
+            "chatContextSettings": "Configuración del contexto del chat",
+            "chatContext": "Contexto de chat",
+            "stopChattingAsThisCharacter": "Deja de chatear como este personaje.",
+            "value1Value2Tokens": "~ {{value1}} / {{value2}} tokens"
+          },
+          "text": {
+            "value0Matches": "0 coincidencias",
+            "value1OfValue2": "{{value1}} de {{value2}}",
+            "pickAModelInTheHeaderAboveThenStartA": "Elija un modelo en el encabezado de arriba y luego inicie una conversación. La transmisión por secuencias, la búsqueda web y las citas están integradas.",
+            "connectAVeniceApiKeyFromTheHeaderAboveTo": "Conecte una clave API de Venecia desde el encabezado de arriba para comenzar.",
+            "thisCharacter": "este personaje",
+            "viewList": "Ver lista",
+            "editText": "Editar texto",
+            "memoryOn": "memoria encendida",
+            "memoryOff": "memoria apagada",
+            "value1Prior": "{{value1}} anterior",
+            "priorOff": "antes de salir",
+            "remove": "Eliminar",
+            "add": "Agregar",
+            "untitled": "Intitulado",
+            "localCharacter": "Carácter local",
+            "value1": "· {{value1}}"
+          }
+        },
+        "messageBubble": {
+          "text": {
+            "copied": "Copiado",
+            "copy": "Copiar",
+            "allow": "PERMITIR",
+            "blocked": "OBSTRUIDO",
+            "noArguments": "Sin argumentos"
+          },
+          "attribute": {
+            "copied": "Copiado",
+            "copy": "Copiar",
+            "editMessage": "Editar mensaje",
+            "forkChatFromHere": "Chat de horquilla desde aquí",
+            "deleteFromHere": "Eliminar de aquí",
+            "regenerateFromHere": "Regenerate desde aquí",
+            "regenerate": "Regenerado",
+            "createScene": "crear escena",
+            "delete": "Borrar",
+            "attachmentValue1": "Adjunto {{value1}}",
+            "editMessageText": "Editar texto del mensaje",
+            "value1Value2": "{{value1}} ( {{value2}} )",
+            "attachmentWasPartiallyOmittedDueToContextBudget": "El archivo adjunto se omitió parcialmente debido al presupuesto contextual.",
+            "aiAvatar": "avatar de IA",
+            "thinking": "Pensamiento…",
+            "removeFromChat": "Quitar del chat",
+            "tokensUsedForThisMessage": "Tokens utilizados para este mensaje"
+          }
+        }
+      },
+      "documents": {
+        "documentagentview": {
+          "notification": {
+            "managedDocumentCreated": "Documento gestionado creado",
+            "workingGroupValue1Created": "Grupo de trabajo \"{{value1}}\" creado",
+            "approvedEditAppliedAsANewRevision": "Edición aprobada aplicada como una nueva revisión",
+            "proposalRejectedWithoutChanges": "Propuesta rechazada sin cambios"
+          },
+          "attribute": {
+            "searchDocuments": "Buscar documentos…",
+            "documentChangeProposal": "Propuesta de cambio de documento",
+            "searchWorkspaceText": "Buscar texto en el espacio de trabajo…",
+            "eGNotesMd": "p.ej. notas.md",
+            "eGQ3Architecture": "p.ej. Arquitectura Q3"
+          },
+          "text": {
+            "fileContentInspector": "Inspector de contenido de archivos"
+          }
+        }
+      },
+      "embeddings": {
+        "embeddingsView": {
+          "attribute": {
+            "enterTextToEmbed": "Ingrese el texto para insertar...",
+            "model": "Modelo",
+            "dimensions": "Dimensiones",
+            "tokens": "Fichas"
+          },
+          "text": {
+            "showFirstPreviewCount": "Mostrar primero {{PREVIEW_COUNT}}",
+            "showAllDimsValues": "Mostrar todos los valores {{dims}}"
+          }
+        }
+      },
+      "gallery": {
+        "compareView": {
+          "text": {
+            "allSharedFieldsMatch": "Todos los campos compartidos coinciden",
+            "changedcountFieldValue2Differ": "{{changedCount}} campo{{value2}} difieren"
+          },
+          "attribute": {
+            "closeCompareView": "Cerrar vista de comparación"
+          },
+          "metadata": {
+            "model": "Modelo",
+            "prompt": "Inmediato",
+            "negative": "Negativo",
+            "width": "Ancho",
+            "height": "Altura",
+            "aspect": "Aspecto",
+            "resolution": "Resolución",
+            "quality": "Calidad",
+            "seed": "Semilla",
+            "steps": "Pasos",
+            "cfg": "CFG",
+            "style": "Estilo",
+            "project": "Proyecto",
+            "operation": "Operación",
+            "type": "Tipo",
+            "favorite": "Favorito",
+            "tags": "Etiquetas",
+            "created": "Creado",
+            "rModel": "R: Modelo",
+            "rPrompt": "R: rápido",
+            "rNegative": "R: Negativo",
+            "rWidth": "R: Ancho",
+            "rHeight": "R: Altura",
+            "rAspect": "R: Aspecto",
+            "rResolution": "R: Resolución",
+            "rSeed": "R: semilla",
+            "rSteps": "R: Pasos",
+            "rCfg": "R: CFG",
+            "rVariants": "R: Variantes",
+            "rStyle": "R: Estilo",
+            "rQuality": "R: Calidad"
+          }
+        },
+        "galleryView": {
+          "notification": {
+            "favoritedValue1OfValue2": "Favorito {{value1}} de {{value2}}",
+            "favoritedValue1ItemValue2": "Favorito {{value1}} elemento{{value2}}",
+            "noneOfTheSelectedItemsHaveARecipe": "Ninguno de los artículos seleccionados tiene receta.",
+            "copiedValue1RecipeValue2": "Copiado {{value1}} receta{{value2}}",
+            "couldNotCopyToClipboard": "No se pudo copiar al portapapeles.",
+            "failedToUpdateMediaItem": "No se pudo actualizar el elemento multimedia",
+            "removedFromMediaStudio": "Eliminado de Media Studio",
+            "failedToDelete": "No se pudo eliminar",
+            "removedValue1OfValue2SomeFailed": "Se eliminó {{value1}} de {{value2}} (algunos fallaron)",
+            "removedValue1ItemValue2": "Se eliminó {{value1}} elemento{{value2}}",
+            "batchDeleteFailed": "Error al eliminar el lote",
+            "updatedValue1OfValue2": "Actualizado {{value1}} de {{value2}}",
+            "removedFavorites": "Favoritos eliminados",
+            "markedAsFavorites": "Marcados como favoritos",
+            "clearedFavorites": "Favoritos eliminados",
+            "taggedValue1OfValue2": "Etiquetado {{value1}} de {{value2}}",
+            "taggedValue1ItemValue2": "Etiquetado {{value1}} artículo{{value2}}",
+            "enterATagFirst": "Introduzca una etiqueta primero.",
+            "assignedValue1OfValue2Firstreason": "Asignado {{value1}} de {{value2}} ({{firstReason}})",
+            "assignedValue1ItemValue2": "Asignado {{value1}} elemento{{value2}}",
+            "selectAtLeastOneMediaItem": "Seleccione al menos un elemento multimedia.",
+            "loadedSettingsIntoImageStudio": "Configuraciones cargadas en Image Studio",
+            "thisMediaItemHasNoReusableRecipe": "Este elemento multimedia no tiene una receta reutilizable.",
+            "recipeLoadedIntoImageStudio": "Receta cargada en Image Studio",
+            "openingImageToolsForUpscale": "Abrir herramientas de imagen para mejorar",
+            "openingImageToolsForEditing": "Abrir herramientas de imagen para editar",
+            "sentToImageStudio": "Enviado a Estudio de Imagen",
+            "couldNotSendToImageStudio": "No se pudo enviar a Image Studio",
+            "sentToImageTools": "Enviado a herramientas de imagen",
+            "couldNotSendToImageTools": "No se pudo enviar a Herramientas de imagen",
+            "createdNewChatWithPromptCopied": "Se creó un nuevo chat con el mensaje copiado.",
+            "couldNotSendToChat": "No se pudo enviar al chat",
+            "sentToVideoStudio": "Enviado al estudio de vídeo",
+            "couldNotSendToVideoStudio": "No se pudo enviar a Video Studio",
+            "promptCopied": "Mensaje copiado",
+            "couldNotCopyPrompt": "No se pudo copiar el mensaje",
+            "negativeCopied": "Copiado negativo",
+            "couldNotCopyNegative": "No se pudo copiar el negativo",
+            "noSeedRecorded": "No se registró ninguna semilla",
+            "seedCopied": "semilla copiada",
+            "setUpAMasterPasswordInSettingsSecurityFirst": "Configure una contraseña maestra en Configuración > Seguridad primero"
+          },
+          "metadata": {
+            "addTag": "Agregar etiqueta",
+            "deleteThisValue1": "¿Eliminar este {{value1}}?",
+            "deleteValue1ItemValue2": "¿Eliminar {{value1}} elemento {{value2}}?"
+          },
+          "text": {
+            "exitVault": "Salir de la bóveda",
+            "vault": "Bóveda",
+            "imagesAndVideosGeneratedInImageStudioAndVideoStudio": "Las imágenes y vídeos generados en Image Studio y Video Studio aparecerán aquí automáticamente.",
+            "tryADifferentSearchOrFilterOrLoadOlderItems": "Pruebe con una búsqueda o filtro diferente, o cargue elementos más antiguos para ampliar el conjunto de resultados.",
+            "tryADifferentSearchFilterOrSort": "Pruebe con una búsqueda, filtro u orden diferente.",
+            "loadingOlderMedia": "Cargando medios antiguos...",
+            "loadMoreValue1Remaining": "Cargar más ({{value1}} restante)"
+          },
+          "attribute": {
+            "doubleClickToInspect": "Haga doble clic para inspeccionar",
+            "heroLandscape": "héroe, paisaje,…"
+          }
+        },
+        "mediaCard": {
+          "attribute": {
+            "openValue1Value2": "Abrir {{value1}}: {{value2}}",
+            "generatedVideo": "Vídeo generado",
+            "generatedImage": "Imagen generada",
+            "unfavorite": "No favorito",
+            "markAsFavorite": "Marcar como favorito",
+            "removeFromVault": "Quitar de la bóveda",
+            "moveToVault": "Mover a la bóveda",
+            "delete": "Borrar"
+          },
+          "text": {
+            "loading": "Cargando…",
+            "previewUnavailable": "Vista previa no disponible",
+            "item": "Artículo",
+            "untitled": "Intitulado"
+          }
+        },
+        "mediaDetailDialog": {
+          "attribute": {
+            "mediaDetail": "Detalle de los medios",
+            "previous": "Anterior",
+            "generatedImagePreview": "Vista previa de la imagen generada",
+            "next": "Próximo",
+            "openValue1": "Abrir {{value1}}"
+          },
+          "text": {
+            "video": "Video",
+            "audio": "Audio",
+            "image": "Imagen",
+            "favorited": "Favorito",
+            "favorite": "Favorito",
+            "untitled": "Intitulado",
+            "noTags": "Sin etiquetas"
+          }
+        },
+        "mediaInspector": {
+          "notification": {
+            "savedRecipeToPromptLibrary": "Receta guardada en la biblioteca de mensajes",
+            "couldNotSaveRecipe": "No se pudo guardar la receta",
+            "aiCharacterCreatorLaunched": "Lanzamiento del creador de personajes con IA",
+            "mediaSaved": "Medios guardados",
+            "mediaDownloadFailed": "Falló la descarga de medios"
+          },
+          "attribute": {
+            "mediaInspector": "inspector de medios",
+            "loadThisImageSSettingsIntoImageStudioNoGeneration": "Cargue la configuración de esta imagen en Image Studio (sin generación)",
+            "loadTheGenerationRecipePromptModelSeedDimensionsEtcInto": "Cargue la receta de generación (indicador, modelo, semilla, dimensiones, etc.) en el estudio apropiado",
+            "regenerateUsingThisImageSSettingsNewRandomSeed": "Regenerar usando la configuración de esta imagen (nueva semilla aleatoria)",
+            "regenerateUsingTheSameSeedAsThisImage": "Regenerar usando la misma semilla que esta imagen.",
+            "openThisImageInTheImageEditor": "Abra esta imagen en el editor de imágenes.",
+            "saveTheMainProcessMediaFileWithANativeDialog": "Guarde el archivo multimedia del proceso principal con un diálogo nativo",
+            "copyPromptText": "Copiar texto del mensaje",
+            "copyNegativePrompt": "Copiar mensaje negativo",
+            "copySeedValue1": "Copiar semilla ({{value1}})",
+            "copyMetadataAsJson": "Copiar metadatos como JSON",
+            "saveRecipeToPromptLibrary": "Guardar receta en la biblioteca de mensajes",
+            "copyGenerationRecipeAsJson": "Copiar receta de generación como JSON",
+            "downloadGenerationRecipeAsAJsonFile": "Descargar receta de generación como archivo JSON",
+            "disabledInternalPromptEnhancerEnabledIsFalseInConfigYaml": "Deshabilitado: internal_prompt_enhancer.enabled es falso en config.yaml",
+            "enhancePromptViaInternalLlm": "Mejorar el mensaje a través de LLM interno",
+            "remixPromptViaInternalLlm": "Aviso de remezcla a través de LLM interno",
+            "addATagAndPressEnter": "Agregue una etiqueta y presione Entrar",
+            "removeTag": "Quitar etiqueta",
+            "value1Chars": "{{value1}} caracteres",
+            "captureAQuickReminderOrSeedValue": "Capture un recordatorio rápido o un valor inicial...",
+            "missingReferences": "Referencias faltantes",
+            "upscaleEnhanceThisImage": "Mejorar/mejorar esta imagen"
+          },
+          "text": {
+            "untitled": "Intitulado",
+            "favorited": "Favorito",
+            "markAsFavorite": "Marcar como favorito",
+            "enhancing": "Mejorando…",
+            "enhance": "Mejorar",
+            "remixing": "Remezclando…",
+            "remix": "remezclar",
+            "enhanced": "Mejorado",
+            "remixed": "remezclado",
+            "enhancing2": "Mejorando",
+            "remixing2": "Remezclando",
+            "thisItemReferencesRecordsThatNoLongerExistClearThe": "Este elemento hace referencia a registros que ya no existen. Borre los consejos obsoletos para reparar el linaje.",
+            "thisItemSParentRecordIsMissingClearTheParent": "Falta el registro principal de este elemento. Borre el enlace principal para reparar el linaje.",
+            "value1ChildValue2CouldNotBeResolvedClearTheStale": "{{value1}} hijo {{value2}} no se pudo resolver. Borre el puntero obsoleto{{value3}} para reparar el linaje.",
+            "childrenidsValue1": "niñosIds: {{value1}}",
+            "childrenidsValue1Missing": "niñosIds: {{value1}} falta",
+            "value1MissingRef": "1 árbitro faltante",
+            "value1MissingRefs": "{{value1}} referencias faltantes"
+          }
+        },
+        "mediaToolbar": {
+          "metadata": {
+            "unassign": "Desasignar",
+            "all": "Todo",
+            "images": "Imágenes",
+            "videos": "Vídeos",
+            "audio": "Audio",
+            "favorites": "Favoritos",
+            "upscaled": "Mejorado",
+            "edited": "Editado",
+            "hasRecipe": "tiene receta",
+            "noRecipe": "Sin receta",
+            "hasSeed": "tiene semilla",
+            "noSeed": "sin semilla",
+            "unscoped": "sin alcance",
+            "newest": "El más nuevo",
+            "oldest": "más antiguo",
+            "model": "Modelo",
+            "size": "Tamaño",
+            "project": "Proyecto"
+          },
+          "attribute": {
+            "searchPromptsModelsTagsNotes": "Mensajes de búsqueda, modelos, etiquetas, notas…",
+            "searchMedia": "Buscar medios",
+            "clearSearch": "Borrar búsqueda"
+          },
+          "text": {
+            "exitSelect": "Salir seleccionar",
+            "select": "Seleccionar",
+            "unfavorite": "No favorito",
+            "favorite": "Favorito"
+          }
+        },
+        "recipeComparison": {
+          "attribute": {
+            "recipeComparison": "Comparación de recetas"
+          },
+          "text": {
+            "identical": "Idéntico",
+            "changedcountFieldValue2WillChange": "{{changedCount}} campo{{value2}} cambiará"
+          },
+          "metadata": {
+            "model": "Modelo",
+            "prompt": "Inmediato",
+            "negativePrompt": "mensaje negativo",
+            "width": "Ancho",
+            "height": "Altura",
+            "aspectRatio": "relación de aspecto",
+            "resolution": "Resolución",
+            "quality": "Calidad",
+            "style": "Estilo",
+            "steps": "Pasos",
+            "cfgScale": "escala CFG",
+            "variants": "Variantes",
+            "seed": "Semilla"
+          }
+        },
+        "recipeCompatibilityCard": {
+          "attribute": {
+            "sendTheOriginalRecipeToImageStudioWithoutSanitization": "Envía la receta original a Image Studio sin sanitización"
+          },
+          "text": {
+            "hideComparison": "Ocultar comparación",
+            "showComparison": "Mostrar comparación"
+          }
+        }
+      },
+      "imageInspector": {
+        "imageinspectorview": {
+          "notification": {
+            "imageInspectorUploadIsOnlySupportedInTheDesktopApp": "La carga del inspector de imágenes solo se admite en la aplicación de escritorio.",
+            "failedToProcessImage": "No se pudo procesar la imagen",
+            "unknownError": "Error desconocido",
+            "noImageFoundOnClipboard": "No se encontró ninguna imagen en el portapapeles"
+          },
+          "metadata": {
+            "deleteImageInspection": "¿Eliminar inspección de imagen?",
+            "value1Value2": "{{value1}} - {{value2}}",
+            "quick": "Rápido",
+            "standard": "Estándar",
+            "maximum": "Máximo",
+            "forensic": "Forense",
+            "genericNaturalLanguage": "Lenguaje natural genérico",
+            "veniceImageStudio": "Estudio de imagen de Venecia",
+            "flux": "FLUJO",
+            "midjourney": "A mitad del viaje"
+          },
+          "attribute": {
+            "pasteFromClipboard": "Pegar desde el portapapeles",
+            "openImageInspectionValue1": "Abrir inspección de imagen {{value1}}",
+            "deleteImageInspectionValue1": "Eliminar inspección de imagen {{value1}}",
+            "cancelAnalysisBeforeDeleting": "Cancelar el análisis antes de eliminar",
+            "deleteInspection": "Eliminar inspección",
+            "target": "Objetivo",
+            "selectAVisionModel": "Seleccione un modelo de visión...",
+            "eGFocusOnLightingAndComposition": "p.ej. Centrarse en la iluminación y la composición...",
+            "analyzingImageContents": "Analizando el contenido de la imagen..."
+          },
+          "text": {
+            "noSummaryAvailable": "No hay resumen disponible.",
+            "subject": "Sujeto",
+            "theSelectedVisionModelCouldNotAnalyzeThisImage": "El modelo de visión seleccionado no pudo analizar esta imagen."
+          }
+        }
+      },
+      "image": {
+        "imagePage": {
+          "text": {
+            "generate": "Generar"
+          }
+        },
+        "imageView": {
+          "metadata": {
+            "value1Value2": "{{value1}} × {{value2}}"
+          }
+        }
+      },
+      "layout": {
+        "apiKeyDialog": {
+          "notification": {
+            "keySavedSecurely": "Clave guardada de forma segura"
+          },
+          "attribute": {
+            "closeDialog": "Cerrar diálogo"
+          },
+          "text": {
+            "heldInMemoryForThisLocalDevelopmentSessionOnly": "Celebrado en memoria únicamente para esta sesión de desarrollo local.",
+            "connect": "Conectar"
+          }
+        },
+        "inspectorPane": {
+          "metadata": {
+            "veniceApiDefault": "Valor predeterminado de la API de Venecia",
+            "globalAppSystemPrompt": "Aviso del sistema de aplicaciones globales",
+            "characterSystemPrompt": "Aviso del sistema de caracteres",
+            "conversationOverrideModeMode": "Anulación de conversación (modo: {{mode}})",
+            "all": "Todo",
+            "blocked": "Obstruido",
+            "errored": "Error",
+            "aborted": "Abortado",
+            "jina": "Jina",
+            "localOnly": "Sólo local"
+          },
+          "attribute": {
+            "developerTrafficInspector": "inspector de tráfico de desarrolladores",
+            "resizeInspector": "Cambiar tamaño del inspector",
+            "clearAllLogs": "Borrar todos los registros",
+            "clearAllInspectorLogs": "Borrar todos los registros del inspector",
+            "exportRedactedLogsAsJson": "Exportar registros redactados como JSON",
+            "exportRedactedInspectorLogsAsJson": "Exportar registros de inspector redactados como JSON",
+            "closeInspector": "Cerrar inspector",
+            "closeTrafficInspector": "Cerrar inspector de tráfico"
+          },
+          "text": {
+            "traffic": "Tráfico",
+            "promptLayers": "Capas rápidas",
+            "pending": "Pendiente...",
+            "allow": "PERMITIR",
+            "blocked": "OBSTRUIDO",
+            "empty": "[Vacío]",
+            "pendingOrEmpty": "[Pendiente o Vacío]",
+            "untitled": "Intitulado",
+            "active": "Activo",
+            "inactive": "Inactivo"
+          }
+        },
+        "memoryPanel": {
+          "notification": {
+            "indexRebuiltSuccessfullyIndexedValue1Conversations": "¡Índice reconstruido exitosamente! Conversaciones {{value1}} indexadas.",
+            "rebuildFailedValue1": "Error de reconstrucción: {{value1}}",
+            "indexRebuildFailed": "Falló la reconstrucción del índice",
+            "failedToOpenVaultFolder": "No se pudo abrir la carpeta del almacén.",
+            "migrationCompletedMigratedValue1FailedValue2SkippedValue3": "¡Migración completada! Migrado: {{value1}}, fallido: {{value2}}, omitido: {{value3}}",
+            "migrationFailedValue1": "Error de migración: {{value1}}",
+            "migrationFailed": "La migración falló",
+            "factForgottenSuccessfully": "Hecho olvidado con éxito.",
+            "failedToForgetFact": "No pude olvidar el hecho."
+          },
+          "metadata": {
+            "forgetThisFact": "¿Olvidar este hecho?"
+          },
+          "text": {
+            "migrating": "Migrando...",
+            "migrateNow": "Migrar ahora",
+            "indexing": "Indexación...",
+            "rebuildIndex": "Índice de reconstrucción"
+          }
+        },
+        "sidebar": {
+          "attribute": {
+            "primaryNavigation": "Navegación primaria",
+            "closeMenu": "Cerrar menú",
+            "sections": "Secciones",
+            "confirmDelete": "Confirmar eliminación"
+          }
+        }
+      },
+      "music": {
+        "musicView": {
+          "text": {
+            "value1SValue2S": "{{value1}} s– {{value2}} s",
+            "queued": "En cola…",
+            "generating": "Generando…",
+            "generateMusic": "Generar música",
+            "saved": "Guardado",
+            "saveToMediaStudio": "Guardar en Media Studio"
+          },
+          "attribute": {
+            "anUpbeatElectronicTrackWithADrivingBasslineAndEthereal": "Una pista electrónica alegre con una línea de bajo potente y sintetizadores etéreos...",
+            "optionalLyricsOrVocalDirection": "Letra opcional o dirección vocal...",
+            "durationS": "{{duration}} s",
+            "musicDuration": "Duración de la música",
+            "alreadySavedToMediaStudio": "Ya guardado en Media Studio",
+            "saveToMediaStudio": "Guardar en Media Studio",
+            "queuedWaitingForASlot": "En cola: esperando un espacio",
+            "composingYourTrack": "Componiendo tu pista"
+          },
+          "notification": {
+            "alreadyInMediaStudio": "Ya en Media Studio",
+            "savedToMediaStudio": "Guardado en Media Studio"
+          }
+        }
+      },
+      "notifications": {
+        "progresstoast": {
+          "attribute": {
+            "value1Progress": "{{value1}} progreso",
+            "dismissNotification": "Descartar notificación"
+          }
+        },
+        "toastitem": {
+          "attribute": {
+            "dismissNotification": "Descartar notificación"
+          }
+        },
+        "toastviewport": {
+          "attribute": {
+            "notifications": "Notificaciones"
+          }
+        }
+      },
+      "playground": {
+        "agentModelPicker": {
+          "metadata": {
+            "recommendedForAgents": "Recomendado para agentes",
+            "capable": "Capaz",
+            "other": "Otro"
+          },
+          "attribute": {
+            "searchModels": "Buscar modelos…",
+            "showingAllModels": "Mostrando todos los modelos",
+            "showingOnlySchemaCapableModels": "Mostrar solo modelos compatibles con esquemas"
+          },
+          "text": {
+            "all": "Todo",
+            "capable": "Capaz",
+            "value1Ctx": "· {{value1}}ctx"
+          }
+        },
+        "playgroundChat": {
+          "attribute": {
+            "thinking": "Pensamiento…",
+            "working": "Laboral…",
+            "agentIsWorking": "El agente está trabajando...",
+            "describeAWorkflowOrChange": "Describe un flujo de trabajo o cambio..."
+          }
+        },
+        "playgroundView": {
+          "notification": {
+            "workflowCompleted": "Flujo de trabajo completado",
+            "workflowFailed": "Error en el flujo de trabajo"
+          },
+          "metadata": {
+            "clearPlayground": "¿Despejar el patio de recreo?"
+          },
+          "attribute": {
+            "clearConversation": "Conversación clara",
+            "unlink": "Desconectar",
+            "resetCanvas": "Restablecer lienzo",
+            "runTheWorkflowInline": "Ejecute el flujo de trabajo en línea",
+            "updateValue1": "Actualización \"{{value1}}\"",
+            "saveAsNewWorkflow": "Guardar como nuevo flujo de trabajo",
+            "saveAsANewWorkflow": "Guardar como un nuevo flujo de trabajo",
+            "openInWorkflowsTab": "Abrir en la pestaña Flujos de trabajo"
+          },
+          "text": {
+            "update": "Actualizar",
+            "save": "Ahorrar"
+          }
+        }
+      },
+      "privacy": {
+        "storageprivacydashboard": {
+          "text": {
+            "refreshing": "Refrescante...",
+            "refreshInventory": "Actualizar inventario",
+            "previewOnly": "Solo vista previa",
+            "runAction": "Ejecutar acción"
+          },
+          "metadata": {
+            "runDestructiveAction": "¿Ejecutar acciones destructivas?"
+          }
+        }
+      },
+      "prompts": {
+        "promptcreatemodal": {
+          "attribute": {
+            "createNewPrompt": "Crear nuevo mensaje",
+            "saveReusablePromptContentAndMetadataToYourEncryptedPrompt": "Guarde metadatos y contenido de mensajes reutilizables en su biblioteca de mensajes cifrada.",
+            "closeCreatePromptDialog": "Cerrar el diálogo de creación de mensajes",
+            "eGDarkFantasyPortrait": "Por ejemplo, retrato de fantasía oscura",
+            "eGDarkFantasyPortraitLighting": "p.ej. fantasía oscura, iluminación de retratos",
+            "enterPromptTextHere": "Introduzca el texto del mensaje aquí...",
+            "optionalNegativePrompt": "Mensaje negativo opcional..."
+          },
+          "metadata": {
+            "image": "Imagen",
+            "negative": "Negativo",
+            "chat": "Charlar",
+            "system": "Sistema",
+            "research": "Investigación",
+            "character": "Personaje",
+            "workflow": "Flujo de trabajo",
+            "recipe": "Receta",
+            "general": "General"
+          }
+        },
+        "promptlibraryview": {
+          "attribute": {
+            "searchPrompts": "Mensajes de búsqueda...",
+            "tagsCommaSeparated": "etiquetas, separadas por comas",
+            "optionalDescription": "Descripción opcional",
+            "typeValue1ToConfirm": "Escriba \"{{value1}}\" para confirmar"
+          },
+          "metadata": {
+            "allKinds": "todo tipo",
+            "allScopes": "Todos los alcances",
+            "global": "Global",
+            "project": "Proyecto",
+            "newest": "El más nuevo",
+            "oldest": "más antiguo",
+            "title": "Título",
+            "kind": "Amable",
+            "favorite": "Favorito",
+            "allTags": "Todas las etiquetas",
+            "t": "# {{t}}",
+            "workflowValue1": "Flujo de trabajo: {{value1}}",
+            "image": "Imagen",
+            "negative": "Negativo",
+            "chat": "Charlar",
+            "system": "Sistema",
+            "research": "Investigación",
+            "character": "Personaje",
+            "workflow": "Flujo de trabajo",
+            "recipe": "Receta",
+            "general": "General"
+          },
+          "text": {
+            "noPromptsMatchTheCurrentFilters": "Ningún mensaje coincide con los filtros actuales.",
+            "project": "Proyecto",
+            "global": "Global",
+            "selectAPromptToViewItsDetails": "Seleccione un mensaje para ver sus detalles.",
+            "noPromptSelectedCreateANewOneToGetStarted": "No se seleccionó ningún mensaje. Crea uno nuevo para comenzar.",
+            "favorited": "★ Favorito",
+            "favorite": "☆ Favorito",
+            "unarchive": "Desarchivar",
+            "archive": "Archivo",
+            "projectValue1": "Proyecto: {{value1}}",
+            "saving": "Ahorro...",
+            "saveMetadata": "Guardar metadatos",
+            "saveNewVersion": "Guardar nueva versión",
+            "hide": "Esconder",
+            "show": "Espectáculo"
+          },
+          "notification": {
+            "newVersionSaved": "Nueva versión guardada",
+            "promptDeleted": "Aviso eliminado",
+            "workflowCreated": "Flujo de trabajo creado",
+            "promptCreated": "Mensaje creado",
+            "thePendingActionFailedYourUnsavedChangesWerePreserved": "La acción pendiente falló. Se conservaron los cambios no guardados.",
+            "metadataSaved": "Metadatos guardados",
+            "failedToSaveMetadata": "No se pudieron guardar los metadatos",
+            "versionContentIsEmpty": "El contenido de la versión está vacío.",
+            "failedToSaveVersion": "No se pudo guardar la versión",
+            "sentToImageStudio": "Enviado a Estudio de Imagen",
+            "sentToChat": "Enviado al chat"
+          }
+        }
+      },
+      "research": {
+        "researchworkspaceview": {
+          "metadata": {
+            "researchTitle": "Título de la investigación",
+            "deleteSession": "¿Eliminar sesión?",
+            "workflowValue1": "Flujo de trabajo: {{value1}}",
+            "workflowGeneratedFromResearchSessionValue1": "Flujo de trabajo generado a partir de la sesión de investigación \"{{value1}}\"",
+            "reviewResearchSummary": "Revisar el resumen de la investigación"
+          },
+          "notification": {
+            "searchFinishedWithValue1Warnings": "Búsqueda finalizada con {{value1}} advertencias",
+            "searchFailed": "La búsqueda falló",
+            "scrapeFailed": "Raspado fallido",
+            "attachmentNote": "Nota adjunta",
+            "fileSAddedToResearchSources": "Archivo(s) agregado(s) a las fuentes de investigación",
+            "fileUploadFailed": "Error al subir el archivo",
+            "summarySavedToPromptLibrary": "Resumen guardado en la biblioteca de mensajes",
+            "researchWorkflowCreated": "Flujo de trabajo de investigación creado"
+          },
+          "attribute": {
+            "researchSessions": "Sesiones de investigación",
+            "createResearchSession": "Crear sesión de investigación",
+            "expandResearchSessions": "Ampliar las sesiones de investigación",
+            "collapseResearchSessions": "Contraer sesiones de investigación",
+            "removeValue1FromFavorites": "Eliminar {{value1}} de favoritos",
+            "addValue1ToFavorites": "Añadir {{value1}} a favoritos",
+            "archiveSession": "Sesión de archivo",
+            "deleteSession": "Eliminar sesión",
+            "searchQuery": "Consulta de búsqueda...",
+            "runResearchSearch": "Ejecutar búsqueda de investigación",
+            "scrapeUrl": "URL raspada",
+            "removeSourceValue1": "Eliminar fuente {{value1}}",
+            "summarizeTheFinding": "Resumir el hallazgo",
+            "addSupportingDetailsAndCitations": "Agregue detalles de respaldo y citas",
+            "removeFindingValue1": "Eliminar hallazgo {{value1}}"
+          },
+          "text": {
+            "processing": "Tratamiento...",
+            "uploadDocument": "Cargar documento",
+            "noExcerptAvailable": "No hay extracto disponible."
+          }
+        }
+      },
+      "rpStudio": {
+        "assetgallery": {
+          "metadata": {
+            "allChats": "Todos los chats"
+          },
+          "text": {
+            "noAssetsYet": "Aún no hay activos"
+          },
+          "attribute": {
+            "deleteAsset": "Eliminar activo"
+          }
+        },
+        "characterbookeditor": {
+          "attribute": {
+            "bookExtensionData": "Datos de extensión del libro",
+            "entryExtensionData": "Datos de extensión de entrada"
+          }
+        },
+        "charactereditor": {
+          "notification": {
+            "fileLoadedSourced": "Archivo cargado y obtenido",
+            "loadedValue1IntoFieldlabelAndSavedInsideCharacterFile": "Cargó \"{{value1}}\" en {{fieldLabel}} y lo guardó dentro del archivo de caracteres.",
+            "reAppliedSourcedFile": "Archivo fuente vuelto a aplicar",
+            "reLoadedValue1ContentIntoValue2": "Se volvió a cargar el contenido \"{{value1}}\" en {{value2}}.",
+            "workflowCreated": "Flujo de trabajo creado",
+            "savedToPromptLibrary": "Guardado en la biblioteca de mensajes",
+            "promptValue1Created": "Se creó el mensaje \"{{value1}}\".",
+            "couldNotSaveToPromptLibrary": "No se pudo guardar en la biblioteca de mensajes",
+            "safetyGuardBlockedThePrompt": "El guardia de seguridad bloqueó el mensaje.",
+            "pleaseTryAgain": "Por favor inténtalo de nuevo.",
+            "rpChatStarted": "Se inició el chat RP",
+            "openingValue1InRpStudio": "Abriendo \"{{value1}}\" en RP Studio.",
+            "couldNotStartRpChat": "No se pudo iniciar el chat RP",
+            "storageRejectedTheRequest": "El almacenamiento rechazó la solicitud.",
+            "chatStarted": "Chat iniciado",
+            "openingValue1InChat": "Abriendo \"{{value1}}\" en Chat.",
+            "couldNotStartChat": "No se pudo iniciar el chat",
+            "sceneAttached": "Escena adjunta",
+            "linkedValue1ToThisCharacter": "Vinculado \"{{value1}}\" a este personaje.",
+            "sceneLinked": "Escena vinculada.",
+            "couldNotAttachScene": "No se pudo adjuntar la escena",
+            "promptAttached": "Aviso adjunto",
+            "promptLinked": "Vinculado rápidamente.",
+            "couldNotAttachPrompt": "No se pudo adjuntar el mensaje",
+            "scenarioCreated": "Escenario creado",
+            "openTheRpStudioToEditIt": "Abra RP Studio para editarlo.",
+            "versionSaved": "Versión guardada",
+            "characterSnapshotCreated": "Instantánea del personaje creada.",
+            "versionRestored": "Versión restaurada",
+            "characterRevertedToSavedVersion": "Personaje revertido a la versión guardada.",
+            "testChatSaved": "Chat de prueba guardado",
+            "theDisposableTurnWasPromotedToARealLocalConversation": "El giro desechable fue promovido a una verdadera conversación local."
+          },
+          "metadata": {
+            "deleteCharacter": "¿Eliminar personaje?",
+            "workflowValue1": "Flujo de trabajo: {{value1}}",
+            "untitled": "Intitulado",
+            "disposableCardTest": "Prueba de tarjeta desechable"
+          },
+          "attribute": {
+            "backToLibrary": "volver a la biblioteca",
+            "estimatedTokensValue1OfValue2": "Tokens estimados {{value1}} de {{value2}}",
+            "stCardStudioSteps": "Pasos de ST Card Studio",
+            "aShortSummaryShownInTheLibraryGrid": "Un breve resumen que se muestra en la cuadrícula de la biblioteca.",
+            "displayOnlyNeverIncludedInModelPrompts": "Solo visualización: nunca se incluye en las indicaciones del modelo",
+            "addATagAndPressEnter": "Agregue una etiqueta y presione Entrar...",
+            "removeTagT": "Eliminar etiqueta {{t}}",
+            "anOpenerSceneShownToTheModelOnTheFirst": "Una escena inicial mostrada al modelo en el primer turno.",
+            "theCharacterSPersonaVoiceAndBehaviouralRules": "La personalidad, la voz y las reglas de comportamiento del personaje.",
+            "optionalHigherLevelGuidanceForTheModelSteeringRulesOutput": "Guía opcional de nivel superior para el modelo (reglas de dirección, estilo de salida).",
+            "greetingShownOnTheFirstAssistantTurn": "Saludo mostrado en el turno del primer asistente.",
+            "alternateGreetingValue1": "Saludo alternativo {{value1}}",
+            "exampleValue1Speaker": "Ejemplo {{value1}} altavoz",
+            "speaker": "Vocero",
+            "whatTheySay": "Lo que dicen...",
+            "moveExampleValue1Up": "Mover el ejemplo {{value1}} hacia arriba",
+            "moveExampleValue1Down": "Mover el ejemplo {{value1}} hacia abajo",
+            "removeExample": "Eliminar ejemplo",
+            "losslessSillytavernMesExampleCompatibilityText": "Texto de compatibilidad sin pérdida SillyTavern mes_example",
+            "urlScrapingProvider": "Proveedor de raspado de URL",
+            "temperature": "Temperatura",
+            "topP": "P superior",
+            "removeFileValue1": "Eliminar archivo {{value1}}",
+            "genreSettingRolePersonalityRelationship": "Género, escenario, rol, personalidad, relación…",
+            "visionModelCapabilitySummary": "Resumen de capacidades del modelo de visión",
+            "optionalDirection": "Dirección opcional",
+            "stCardExportReport": "Informe de exportación de tarjeta ST",
+            "characterVersionComparison": "Comparación de versiones de personajes",
+            "savingCharacter": "Guardando personaje"
+          },
+          "text": {
+            "untitled": "Intitulado",
+            "unarchive": "Desarchivar",
+            "archive": "Archivo",
+            "stepValue1OfValue2Value3YourLocalDraftRemainsAutosaved": "Paso {{value1}} de {{value2}}: {{value3}}. Su borrador local permanece guardado automáticamente mientras avanza entre los pasos.",
+            "showingAllSteps110SelectAStepTabAbove": "Mostrando todos los pasos (1-10). Seleccione una pestaña de pasos arriba para centrarse en campos específicos.",
+            "recoveredLocalDraft": "Calado local recuperado",
+            "savingLocalDraft": "Guardando borrador local…",
+            "draftSavedLocallyNotSynced": "Borrador guardado localmente (no sincronizado)",
+            "replace": "Reemplazar",
+            "upload": "Subir",
+            "veniceForgeLocal": "Forja de Venecia local",
+            "noGreetingText": "Sin texto de saludo",
+            "value1": "· {{value1}}",
+            "testing": "Pruebas…",
+            "runDisposableTest": "Ejecutar prueba desechable",
+            "analyzing": "Analizando…",
+            "analyzeImage": "Analizar imagen",
+            "generating": "Generando…",
+            "synthesizeFromImageText": "Sintetizar a partir de imagen + texto",
+            "generateFromText": "Generar a partir de texto",
+            "noDirectDescription": "Sin descripción directa",
+            "noDescription": "Sin descripción",
+            "generatingProposal": "Generando propuesta…",
+            "generateProposal": "Generar propuesta",
+            "value1Value2": "· {{value1}}×{{value2}}",
+            "none": "Ninguno",
+            "targetFieldValue1": "· Campo objetivo: {{value1}}",
+            "generalContextFile": "· Archivo de contexto general"
+          }
+        },
+        "characterlibrary": {
+          "notification": {
+            "importFailed": "Importación fallida",
+            "couldNotInspectTheSelectedCard": "No se pudo inspeccionar la tarjeta seleccionada.",
+            "theCardWasNotImported": "La tarjeta no fue importada.",
+            "characterImported": "Carácter importado",
+            "theCompatibilityPayloadAndAvatarWerePreserved": "Se conservaron la carga útil de compatibilidad y el avatar.",
+            "exportFailed": "Exportación fallida",
+            "theCardWasNotExported": "La tarjeta no fue exportada.",
+            "characterExported": "Carácter exportado",
+            "savedAVerifiedV2Value1Card": "Se guardó una tarjeta V2 {{value1}} verificada.",
+            "importUndone": "Importación deshecha",
+            "undoFailed": "Error al deshacer",
+            "chatStarted": "Chat iniciado",
+            "openingValue1InChat": "Abriendo \"{{value1}}\" en Chat.",
+            "couldNotStartChat": "No se pudo iniciar el chat",
+            "pleaseTryAgain": "Por favor inténtalo de nuevo."
+          },
+          "metadata": {
+            "value1ExistingCharacter": "¿{{value1}} carácter existente?",
+            "standard": "Estándar",
+            "adult": "Adulto"
+          },
+          "attribute": {
+            "searchCharacters": "Buscar personajes…",
+            "searchCharacters2": "Buscar personajes",
+            "autoCreatePrompt": "Mensaje de creación automática...",
+            "characterValue1": "Carácter {{value1}}",
+            "deleteValue1": "Eliminar {{value1}}"
+          },
+          "text": {
+            "untitled": "Intitulado",
+            "noCharactersYet": "Aún no hay personajes",
+            "notSpecified": "No especificado",
+            "importing": "Importador…",
+            "import": "Importar"
+          }
+        },
+        "lorebookmanager": {
+          "attribute": {
+            "searchLorebooks": "Buscar libros de historia...",
+            "searchLorebooks2": "Buscar libros de historia",
+            "deleteValue1": "Eliminar {{value1}}",
+            "back": "Atrás",
+            "triggerKeysCommaSeparated": "teclas de activación (separadas por comas)",
+            "removeEntry": "Eliminar entrada",
+            "depth": "Profundidad",
+            "order": "Orden",
+            "injectedContent": "Contenido inyectado..."
+          },
+          "text": {
+            "noLorebooksYet": "Aún no hay libros de historia"
+          },
+          "metadata": {
+            "beforeChar": "antes de carbonizarse",
+            "afterChar": "Después de carbonizar",
+            "atDepth": "En profundidad"
+          }
+        },
+        "personamanager": {
+          "attribute": {
+            "searchPersonas": "Buscar personas…",
+            "searchPersonas2": "buscar personas",
+            "deleteValue1": "Eliminar {{value1}}",
+            "back": "Atrás",
+            "personaPreview": "Vista previa de persona",
+            "eGTheWanderer": "p.ej. El vagabundo",
+            "howTheModelShouldWriteTheUser": "Cómo el modelo debe escribir al usuario.",
+            "addTag": "Añadir etiqueta…"
+          },
+          "text": {
+            "noPersonasYet": "Aún no hay personas",
+            "deactivate": "Desactivar",
+            "setActive": "Establecer activo",
+            "replaceImage": "Reemplazar imagen",
+            "addImage": "Agregar imagen"
+          }
+        },
+        "promptdebugdrawer": {
+          "attribute": {
+            "promptDebugDrawer": "Cajón de depuración rápida"
+          },
+          "text": {
+            "budgetExceeded": "presupuesto excedido",
+            "withinBudget": "dentro del presupuesto",
+            "value1": "· {{value1}}"
+          },
+          "metadata": {
+            "trace": "Rastro",
+            "system": "Sistema",
+            "recent": "Reciente",
+            "user": "Usuario"
+          }
+        },
+        "rpchatlist": {
+          "metadata": {
+            "all": "Todo",
+            "standard": "Estándar"
+          },
+          "text": {
+            "noRpChatsYet": "Aún no hay chats de RP"
+          },
+          "attribute": {
+            "deleteValue1": "Eliminar {{value1}}",
+            "newRpChat": "Nuevo chat de RP",
+            "leaveBlankToUseTheFirstCharacterSScenario": "Déjalo en blanco para usar el escenario del primer personaje."
+          }
+        },
+        "rpchatview": {
+          "attribute": {
+            "back": "Atrás",
+            "streaming": "Transmisión…",
+            "describeASceneAsTheNarrator": "Describe una escena como narrador...",
+            "sendAMessageValue1": "Enviar un mensaje{{value1}}…"
+          },
+          "text": {
+            "value1WillRespondFirst": "{{value1}} responderá primero."
+          }
+        },
+        "rpstudioview": {
+          "metadata": {
+            "generate": "Generar",
+            "gallery": "Galería",
+            "characters": "Personajes",
+            "personas": "Personas",
+            "lorebooks": "libros de historia",
+            "chats": "Charlas",
+            "scenes": "Escenas"
+          }
+        },
+        "scenegenerator": {
+          "notification": {
+            "sceneGenerated": "Escena generada",
+            "savedToRpAssets": "Guardado en activos de RP."
+          },
+          "attribute": {
+            "leaveBlankToExtractFromChat": "Dejar en blanco para extraer del chat",
+            "extractsFromTheMostRecentNonSystemMessage": "Extractos del mensaje más reciente que no pertenece al sistema.",
+            "thingsToAvoid": "Cosas a evitar…"
+          },
+          "text": {
+            "thisChat": "(esta charla)"
+          }
+        },
+        "shared": {
+          "metadata": {
+            "characters": "Personajes",
+            "personas": "Personas",
+            "lorebooks": "libros de historia",
+            "chats": "Charlas",
+            "scenes": "Escenas"
+          }
+        }
+      },
+      "scenes": {
+        "scenecomposerview": {
+          "metadata": {
+            "untitledScene": "Escena sin título",
+            "workflowValue1": "Flujo de trabajo: {{value1}}",
+            "vValue1": "v {{value1}}",
+            "subject": "Sujeto",
+            "character": "Personaje",
+            "location": "Ubicación",
+            "mood": "Ánimo",
+            "style": "Estilo",
+            "camera": "Cámara",
+            "lighting": "Iluminación",
+            "composition": "Composición",
+            "negative": "Negativo"
+          },
+          "attribute": {
+            "searchScenes": "Buscar escenas…",
+            "optionalDescription": "Descripción opcional",
+            "tagsCommaSeparated": "etiquetas, separadas por comas",
+            "modelEGFluxDev": "Modelo (por ejemplo, flux-dev)",
+            "width": "Ancho",
+            "height": "Altura",
+            "aspectEG169": "Aspecto (por ejemplo, 16:9)",
+            "optionalLabel": "Etiqueta opcional",
+            "componentContent": "Contenido del componente...",
+            "typeValue1ToConfirm": "Escriba \"{{value1}}\" para confirmar"
+          },
+          "text": {
+            "noSavedScenesYetClickNewToCreateOne": "Aún no hay escenas guardadas. Haga clic en \"Nuevo\" para crear uno.",
+            "noScenesMatchTheCurrentFilters": "Ninguna escena coincide con los filtros actuales.",
+            "value1OutputValue2": "{{value1}} salida{{value2}}",
+            "project": "Proyecto",
+            "global": "Global",
+            "selectASceneToCompose": "Selecciona una escena para componer.",
+            "noSceneSelectedCreateANewOneToGetStarted": "Ninguna escena seleccionada. Crea uno nuevo para comenzar.",
+            "modelDoesNotSupportReferences": "El modelo no admite referencias.",
+            "favorited": "★ Favorito",
+            "favorite": "☆ Favorito",
+            "unarchive": "Desarchivar",
+            "archive": "Archivo",
+            "projectValue1": "Proyecto: {{value1}}",
+            "off": "Apagado",
+            "hide": "Esconder",
+            "show": "Espectáculo",
+            "value1MediaRefValue2": "· {{value1}} referencia de medios{{value2}}",
+            "value1PromptRefValue2": "· {{value1}} solicitud ref{{value2}}"
+          },
+          "notification": {
+            "newVersionSaved": "Nueva versión guardada",
+            "sceneDeleted": "Escena eliminada",
+            "workflowCreated": "Flujo de trabajo creado",
+            "sceneMetadataSaved": "Metadatos de escena guardados",
+            "addAtLeastOneComponentWithContent": "Agregue al menos un componente con contenido",
+            "sceneHasNoPromptContent": "La escena no tiene contenido rápido.",
+            "sentToImageStudio": "Enviado a Estudio de Imagen",
+            "recipeCopiedToClipboard": "Receta copiada al portapapeles"
+          }
+        }
+      },
+      "search": {
+        "airesearchtab": {
+          "attribute": {
+            "researchQuestion": "Pregunta de investigación",
+            "whatAreTheLatestChangesInSafetyPoliciesOfFrontier": "¿Cuáles son los últimos cambios en las políticas de seguridad de los laboratorios de IA de vanguardia?",
+            "searchProvider": "Proveedor de búsqueda",
+            "veniceSearchEngine": "Buscador de Venecia",
+            "runMode": "Modo de ejecución",
+            "synthesizedAnswersWillBeStreamedHere": "Las respuestas sintetizadas se transmitirán aquí..."
+          },
+          "text": {
+            "researching": "Investigando…",
+            "startResearch": "Iniciar investigación"
+          },
+          "notification": {
+            "answerCopied": "¡Respuesta copiada!",
+            "evidenceSourcesCopied": "¡Fuentes de evidencia copiadas!"
+          }
+        },
+        "profilediscoverytab": {
+          "attribute": {
+            "targetName": "Nombre de destino",
+            "consentingPersonOrBrandName": "Persona que da su consentimiento o nombre de marca",
+            "username": "@nombre de usuario",
+            "knownWebsite": "Sitio web conocido",
+            "knownOrganization": "Organización conocida",
+            "githubInc": "GitHub Inc.",
+            "knownLocation": "Ubicación conocida",
+            "sanFranciscoCa": "San Francisco, California",
+            "maxSearchDepth": "Profundidad máxima de búsqueda"
+          },
+          "text": {
+            "discovering": "Descubriendo…",
+            "discoverProfiles": "Descubrir perfiles",
+            "unknownIdentity": "Identidad desconocida"
+          }
+        },
+        "researchproviderstatus": {
+          "metadata": {
+            "apiKeyConfigured": "Clave API configurada",
+            "veniceApiKeyMissing": "Falta la clave API de Venecia",
+            "jinaAi": "Jina AI",
+            "jinaApiKeyOptionalUnauthenticatedUseSupported": "Clave API de Jina opcional (se admite el uso no autenticado)",
+            "disabledByConfig": "Deshabilitado por configuración",
+            "genericScrape": "Raspado genérico",
+            "enabledNoKeyRequired": "Habilitado (no se requiere clave)",
+            "liveBrowser": "Navegador en vivo",
+            "desktopAvailable": "Escritorio disponible",
+            "webModeUnavailable": "Modo web no disponible"
+          },
+          "attribute": {
+            "configured": "Configurado",
+            "missing": "Desaparecido",
+            "testFailed": "Prueba fallida",
+            "disabled": "Desactivado",
+            "unavailable": "Indisponible"
+          }
+        },
+        "scrapetab": {
+          "attribute": {
+            "urlToScrape": "URL para raspar",
+            "readerProvider": "Proveedor de lectores",
+            "scrapedTextWillAppearHere": "El texto raspado aparecerá aquí..."
+          },
+          "text": {
+            "scraping": "Raspado…",
+            "scrape": "Raspar"
+          },
+          "notification": {
+            "scrapedOutputCopied": "¡Se copió la salida raspada!"
+          }
+        },
+        "searchscrapeview": {
+          "attribute": {
+            "researchingAndSynthesizing": "Investigando y sintetizando...",
+            "readingWebPage": "Leyendo página web…",
+            "searchingTheWeb": "Buscando en la web…",
+            "parsingDocument": "Analizando documento…",
+            "researchTaskInProgress": "Tarea de investigación en progreso…"
+          },
+          "metadata": {
+            "untitled": "Intitulado"
+          },
+          "notification": {
+            "savedToActiveResearchSession": "Guardado en la sesión de investigación activa"
+          }
+        },
+        "searchtab": {
+          "attribute": {
+            "query": "Consulta",
+            "latestModelRoutingBestPractices": "Mejores prácticas de enrutamiento de los últimos modelos",
+            "provider": "Proveedor"
+          },
+          "text": {
+            "searching": "Búsqueda…",
+            "search": "Buscar",
+            "untitledResult": "Resultado sin título"
+          }
+        },
+        "textparsertab": {
+          "text": {
+            "parsing": "Analizando…",
+            "parseDocument": "Analizar documento"
+          },
+          "attribute": {
+            "extractedDocumentText": "Texto del documento extraído..."
+          }
+        }
+      },
+      "settings": {
+        "safetypanel": {
+          "attribute": {
+            "veniceApiSafeMode": "Modo seguro de la API de Venecia"
+          }
+        }
+      },
+      "status": {
+        "diagnosticsdrawer": {
+          "notification": {
+            "safeDiagnosticsCopiedToClipboard": "Diagnóstico seguro copiado al portapapeles",
+            "couldNotCopySafeDiagnostics": "No se pudieron copiar los diagnósticos seguros",
+            "diagnosticsRefreshed": "Diagnóstico actualizado",
+            "diagnosticsRefreshFailed": "Error al actualizar el diagnóstico",
+            "livecountLiveModelsRefreshed": "{{liveCount}} modelos en vivo actualizados"
+          },
+          "attribute": {
+            "diagnostics": "Diagnóstico",
+            "closeDiagnostics": "Cerrar diagnóstico",
+            "close": "Cerca",
+            "includeRedactedPromptExcerptsInSafeDiagnostics": "Incluir extractos informativos redactados en diagnósticos seguros"
+          },
+          "text": {
+            "refreshing": "Refrescante…",
+            "refreshDiagnostics": "Actualizar diagnóstico",
+            "openConfig": "Abrir configuración",
+            "refreshingModels": "Modelos refrescantes...",
+            "refreshModels": "Actualizar modelos",
+            "openStatus": "Estado abierto"
+          },
+          "metadata": {
+            "overview": "Descripción general",
+            "apiKey": "Clave API",
+            "model": "Modelo",
+            "storage": "Almacenamiento",
+            "privacy": "Privacidad",
+            "project": "Proyecto",
+            "safety": "Seguridad",
+            "research": "Investigación",
+            "mode": "Modo",
+            "repair": "Reparar"
+          }
+        },
+        "taskcenterdrawer": {
+          "attribute": {
+            "taskCenter": "Centro de tareas",
+            "closeTaskCenter": "Cerrar el centro de tareas"
+          }
+        }
+      },
+      "ui": {
+        "logo": {
+          "attribute": {
+            "veniceForgeLogo": "Logotipo de la Forja de Venecia"
+          }
+        },
+        "modalRequests": {
+          "attribute": {
+            "confirmPassphrase": "Confirmar contraseña",
+            "titleConfirmation": "{{title}} confirmación"
+          },
+          "text": {
+            "hidePassphrase": "Ocultar frase de contraseña",
+            "showPassphrase": "Mostrar frase de contraseña"
+          }
+        },
+        "select": {
+          "attribute": {
+            "search": "Buscar...",
+            "searchOptions": "Opciones de búsqueda"
+          }
+        }
+      },
+      "video": {
+        "videoView": {
+          "notification": {
+            "unsupportedImageTypeValue1UsePngJpegOrWebp": "Tipo de imagen no admitido: {{value1}}. Utilice PNG, JPEG o WEBP.",
+            "failedToReadImage": "No se pudo leer la imagen",
+            "pleaseChooseAPngJpegOrWebpImageUnderThe": "Elija una imagen PNG, JPEG o WEBP por debajo del límite de tamaño.",
+            "alreadyInMediaStudio": "Ya en Media Studio",
+            "savedToMediaStudio": "Guardado en Media Studio",
+            "saveToMediaStudioFailed": "Error al guardar en Media Studio",
+            "videoSaved": "Vídeo guardado",
+            "videoDownloadFailed": "Error en la descarga del vídeo"
+          },
+          "attribute": {
+            "loading": "Cargando...",
+            "selectModel": "Seleccionar modelo...",
+            "aCinematicDroneShotOverMistyMountainsAtSunrise": "Un dron cinematográfico filmado sobre montañas brumosas al amanecer...",
+            "lowQualityBlurry": "baja calidad, borroso...",
+            "reference": "Referencia",
+            "removeReferenceImage": "Eliminar imagen de referencia",
+            "chooseReferenceImage": "Elige imagen de referencia",
+            "generateAudioEnabled": "Generar audio habilitado",
+            "generateAudioDisabled": "Generar audio deshabilitado",
+            "resetVideoGenerationForm": "Restablecer formulario de generación de video",
+            "alreadySavedToMediaStudio": "Ya guardado en Media Studio",
+            "saveToMediaStudio": "Guardar en Media Studio",
+            "generateAnotherVideo": "Generar otro vídeo",
+            "retrievingVideo": "Recuperando vídeo…",
+            "savingSecurely": "Guardando de forma segura…",
+            "videoQueued": "Vídeo en cola…",
+            "renderingVideo": "Renderizando vídeo…"
+          },
+          "text": {
+            "queued": "En cola...",
+            "processing": "Tratamiento...",
+            "generateVideo": "Generar vídeo",
+            "saved": "Guardado",
+            "saveToMediaStudio": "Guardar en Media Studio"
+          }
+        }
+      },
+      "workflows": {
+        "workflowtemplatesview": {
+          "metadata": {
+            "newWorkflow": "Nuevo flujo de trabajo",
+            "newPromptStep": "Nuevo paso rápido"
+          },
+          "notification": {
+            "workflowImagePromptLoaded": "Mensaje de imagen de flujo de trabajo cargado",
+            "reviewTheModelAndSettingsThenGenerate": "Revise el modelo y la configuración, luego genere.",
+            "workflowsImported": "Flujos de trabajo importados",
+            "failedToImportWorkflows": "No se pudieron importar flujos de trabajo"
+          },
+          "attribute": {
+            "searchWorkflows": "Buscar flujos de trabajo...",
+            "searchWorkflows2": "Buscar flujos de trabajo",
+            "workflowTemplates": "Plantillas de flujo de trabajo",
+            "favorite": "Favorito",
+            "tagsCommaSeparated": "Etiquetas (separadas por comas)...",
+            "workflowStepTitle": "Título del paso del flujo de trabajo",
+            "workflowStepKind": "Tipo de paso del flujo de trabajo",
+            "workflowStepTarget": "Objetivo del paso del flujo de trabajo",
+            "workflowStepPrompt": "Mensaje de paso del flujo de trabajo",
+            "describeTheImageToGenerate": "Describe la imagen a generar…",
+            "enterThePromptOrInstructionsForThisStep": "Ingrese el mensaje o las instrucciones para este paso..."
+          },
+          "text": {
+            "global": "Global",
+            "project": "Proyecto",
+            "unfavorite": "No favorito",
+            "favorite": "Favorito",
+            "untitledVersion": "Versión sin título",
+            "openValue1": "Abrir {{value1}}",
+            "execute": "Ejecutar"
+          }
+        }
+      }
+    },
+    "config": {
+      "configschema": {
+        "metadata": {
+          "pathExceedsPathMaxLengthCharactersRejected": "La ruta supera los {{PATH_MAX_LENGTH}} caracteres; rechazado.",
+          "pathValueLooksLikeAUrlLocalFilePathsOnly": "La ruta \"{{value}}\" parece una URL. Solo rutas de archivos locales.",
+          "pathContainsControlCharactersRejected": "La ruta contiene caracteres de control; rechazado.",
+          "keyLengthExceedsKeyMaxLengthRejected": "La longitud de la clave excede {{KEY_MAX_LENGTH}}; rechazado.",
+          "themeEntryMustBeAnObjectSkipped": "La entrada del tema debe ser un objeto; saltado.",
+          "invalidModeValue1Skipped": "Modo no válido \"{{value1}}\"; saltado.",
+          "displayNameMustBeANonEmptyStringSkipped": "display_name debe ser una cadena que no esté vacía; saltado.",
+          "displayNameExceedsThemeNameMaxLengthCharsSkipped": "display_name supera los {{THEME_NAME_MAX_LENGTH}} caracteres; saltado.",
+          "tokensMustBeAnObjectSkipped": "los tokens deben ser un objeto; saltado.",
+          "unknownThemeTokenIgnored": "Ficha de tema desconocido; ignorado.",
+          "invalidColorValueThemeSkipped": "Valor de color no válido; tema omitido.",
+          "missingRequiredThemeTokenReqThemeSkipped": "Falta el token de tema requerido: {{req}}; tema omitido.",
+          "unknownConfigVersionValue1Expected1FallingBackToDefaults": "Versión de configuración desconocida \"{{value1}}\"; esperado 1. Recurrir a los valores predeterminados.",
+          "themesFileRootMustBeAMappingUsingBuiltIn": "La raíz del archivo de temas debe ser una asignación; utilizando únicamente temas integrados.",
+          "unknownThemesVersionValue1Expected1SkippingFile": "Versión de temas desconocidos \"{{value1}}\"; esperado 1. Saltando archivo.",
+          "themesBlockMustBeAMappingUsingBuiltInThemes": "el bloque de temas debe ser un mapeo; utilizando únicamente temas integrados.",
+          "themeNameMustBe1128CharactersSkipped": "El nombre del tema debe tener entre 1 y 128 caracteres; saltado."
+        }
+      }
+    },
+    "hooks": {
+      "useChat": {
+        "metadata": {
+          "generateAnImage": "Generar una imagen"
+        },
+        "notification": {
+          "memoryRetrievalUnavailable": "Recuperación de memoria no disponible",
+          "sendingYourMessageWithoutMemoryContext": "Envío de su mensaje sin contexto de memoria.",
+          "attachmentContextTruncated": "Contexto del adjunto truncado",
+          "totalAttachmentTextExceededValue1KbSomeAttachmentsWereOmitted": "El texto total del archivo adjunto superó los {{value1}} KB. Algunos archivos adjuntos se omitieron en este mensaje."
+        }
+      },
+      "useDataStorageActions": {
+        "metadata": {
+          "clearLocalSettings": "¿Borrar la configuración local?",
+          "deleteAllIndexeddbHistory": "¿Eliminar todo el historial de IndexedDB?"
+        },
+        "notification": {
+          "localSettingsCleared": "Se borraron las configuraciones locales.",
+          "indexeddbDataClearedSuccessfully": "Los datos de IndexedDB se borraron correctamente.",
+          "encryptedBackupExportedSuccessfully": "Copia de seguridad cifrada exportada correctamente.",
+          "exportFailedPleaseTryAgain": "La exportación falló. Por favor inténtalo de nuevo."
+        }
+      }
+    },
+    "lib": {
+      "workflowValidator": {
+        "metadata": {
+          "workflowIsEmpty": "El flujo de trabajo está vacío.",
+          "unknownNodeTypeValue1": "Tipo de nodo desconocido: {{value1}}",
+          "value1MissingRequiredValue2": "{{value1}}: falta \"{{value2}}\" requerido.",
+          "value1DoesNotAcceptInputs": "{{value1}} no acepta entradas.",
+          "value1NoUpstreamInputConnected": "{{value1}}: no hay entrada ascendente conectada.",
+          "value1HasNoOutputAndCannotFeedAnotherNode": "{{value1}} no tiene salida y no puede alimentar a otro nodo.",
+          "edgeSourceValue1DoesNotExist": "La fuente de borde {{value1}} no existe.",
+          "edgeTargetValue1DoesNotExist": "El objetivo de borde {{value1}} no existe.",
+          "selfLoopsAreNotAllowed": "No se permiten bucles automáticos.",
+          "value1Value2CannotConnectToValue3Value4": "{{value1}} ({{value2}}) no puede conectarse a {{value3}} ({{value4}}).",
+          "value1OutputsValue2Value3ExpectsValue4ConversionMayBeLossy": "{{value1}} genera {{value2}}; {{value3}} espera {{value4}}. La conversión puede generar pérdidas.",
+          "workflowContainsACycle": "El flujo de trabajo contiene un ciclo.",
+          "setParamsKMustBeStringNumberBooleanGotValue2": "set_params: \"{{k}}\" debe ser cadena|número|booleano, obtuvo {{value2}}.",
+          "addNodeUnknownParamKForLabel": "add_node: parámetro desconocido \"{{k}}\" para {{label}}.",
+          "labelParamKMustBeOneOfValue3GotV": "{{label}}: el parámetro \"{{k}}\" debe ser uno de [{{value3}}], obtuvo \"{{v}}\".",
+          "labelParamKMustBeTGotValue4": "{{label}}: el parámetro \"{{k}}\" debe ser {{t}}, obtuvo {{value4}}.",
+          "labelParamKMustBeValue3GotV": "{{label}}: el parámetro \"{{k}}\" debe ser >= {{value3}}, obtuvo {{v}}.",
+          "labelParamKMustBeValue3GotV2": "{{label}}: el parámetro \"{{k}}\" debe ser <= {{value3}}, obtuvo {{v}}."
+        }
+      },
+      "workflowSchema": {
+        "metadata": {
+          "input": "Aporte",
+          "staticTextProvidedByTheUserStartingPointOfA": "Texto estático proporcionado por el usuario. Punto de partida de un flujo de trabajo.",
+          "theTextValue": "El valor del texto.",
+          "output": "Producción",
+          "displaysWhateverItsUpstreamNodeProducedAcceptsAnyKind": "Muestra lo que produjo su nodo ascendente. Acepta cualquier tipo.",
+          "llm": "LLM",
+          "runAVeniceChatCompletionAcceptsUpstreamTextAsContext": "Ejecute una finalización del chat de Venecia. Acepta texto ascendente como contexto.",
+          "veniceChatModelId": "ID del modelo de chat de Venecia.",
+          "instructionUseInputToPositionUpstreamTextOrLeaveEmpty": "Instrucción. Utilice {{input}} para posicionar el texto ascendente o déjelo vacío para agregarlo.",
+          "samplingTemperature": "Temperatura de muestreo.",
+          "maxOutputTokens": "Fichas de salida máxima.",
+          "enableVeniceWebSearch": "Habilite la búsqueda web de Venecia.",
+          "imageGen": "Generación de imágenes",
+          "generateAnImageFromATextPrompt": "Genere una imagen a partir de un mensaje de texto.",
+          "veniceImageModelId": "ID del modelo de imagen de Venecia.",
+          "imagePromptUseInputToPositionUpstreamText": "Aviso de imagen. Utilice {{input}} para posicionar el texto ascendente.",
+          "whatToAvoid": "Qué evitar.",
+          "denoisingSteps": "Pasos para eliminar el ruido.",
+          "imageWidthInPixels": "Ancho de la imagen en píxeles.",
+          "imageHeightInPixels": "Altura de la imagen en píxeles.",
+          "stylePresetName": "Nombre preestablecido de estilo.",
+          "omitWatermarkIfAllowed": "Omita la marca de agua si está permitido.",
+          "textToSpeech": "Texto a voz",
+          "narrateTextIntoSpeechAudio": "Narrar texto en audio de voz.",
+          "ttsModelId": "Identificación del modelo TTS.",
+          "textToSpeakUseInputToPositionUpstreamText": "Texto para hablar. Utilice {{input}} para posicionar el texto ascendente.",
+          "voiceId": "Identificación de voz.",
+          "playbackSpeed": "Velocidad de reproducción.",
+          "audioFormat": "Formato de audio.",
+          "musicGen": "Generación de música",
+          "generateAMusicClipFromATextPrompt": "Genere un clip de música a partir de un mensaje de texto.",
+          "musicModelId": "Identificación del modelo musical.",
+          "musicPrompt": "Aviso musical.",
+          "durationInSeconds": "Duración en segundos.",
+          "forceInstrumental": "Fuerza instrumental.",
+          "optionalLyrics": "Letras opcionales.",
+          "videoGen": "Generación de vídeo",
+          "generateAShortVideoFromATextPrompt": "Genere un video corto a partir de un mensaje de texto.",
+          "videoModelId": "Identificación del modelo de vídeo.",
+          "videoPrompt": "Aviso de vídeo.",
+          "aspectRatio": "Relación de aspecto.",
+          "clipDurationEmptyMeansModelDefault": "Duración del clip. Vacío significa modelo predeterminado.",
+          "resolutionEmptyMeansModelDefault": "Resolución. Vacío significa modelo predeterminado."
+        }
+      }
+    },
+    "research": {
+      "providers": {
+        "generichttpscrapeprovider": {
+          "metadata": {
+            "genericHttp": "HTTP genérico"
+          }
+        },
+        "jinaresearchprovider": {
+          "metadata": {
+            "jinaAi": "Jina AI"
+          }
+        }
+      }
+    },
+    "services": {
+      "backgroundtasktoastbridge": {
+        "metadata": {
+          "queued": "En cola...",
+          "cancel": "Cancelar",
+          "completedSuccessfully": "Completado con éxito.",
+          "open": "Abierto",
+          "titleFailed": "{{title}} falló",
+          "anErrorOccurred": "Se produjo un error.",
+          "retry": "Rever",
+          "dismiss": "Despedir"
+        }
+      },
+      "backupimportservice": {
+        "metadata": {
+          "legacyVersion2BackupAuthenticatedSourceCryptoContentCountAnd": "Copia de seguridad heredada de la versión 2: fuente autenticada, criptografía, recuento de contenido y metadatos de exclusión no están disponibles.",
+          "backupAppVersionValue1DiffersFromThisAppVersionAppversion": "La versión de la aplicación de respaldo {{value1}} difiere de la versión de esta aplicación {{appVersion}}.",
+          "thisBackupIncludesMediaRecords": "Esta copia de seguridad incluye registros multimedia.",
+          "excludedByDesignValue1": "Excluido por diseño: {{value1}}."
+        }
+      },
+      "charactercards": {
+        "charactercardadapter": {
+          "metadata": {
+            "fieldWasTruncatedToMaxCharacters": "El campo se truncó a {{max}} caracteres.",
+            "secretLikeContentWasRedacted": "El contenido que parece secreto fue redactado.",
+            "extensionDataExceededTheMaximumDepth": "Los datos de extensión excedieron la profundidad máxima.",
+            "nonJsonExtensionValueWasRemoved": "Se eliminó el valor de la extensión que no es JSON.",
+            "unsafeObjectKeyWasRemoved": "Se eliminó la clave del objeto inseguro.",
+            "extensionDataExceededThe1MibLimit": "Los datos de la extensión excedieron el límite de 1 MiB.",
+            "onlyTheFirstMaxLorebookEntriesCharacterBookEntriesWere": "Sólo se conservaron las primeras {{MAX_LOREBOOK_ENTRIES}} entradas del libro de caracteres.",
+            "onlyCharacterCardV2SpecVersion20IsSupported": "Solo se admite la versión 2.0 de la especificación Character Card V2.",
+            "keyMustBeAString": "{{key}} debe ser una cadena.",
+            "alternateGreetingsMustBeAnArray": "Alternative_greetings debe ser una matriz.",
+            "tagsMustBeAnArray": "Las etiquetas deben ser una matriz.",
+            "extensionsMustBeAPlainJsonObject": "Las extensiones deben ser un objeto JSON simple.",
+            "formatValidButANameIsRequiredBeforeChat": "Formato válido, pero se requiere un nombre antes de chatear.",
+            "descriptionIsRecommendedForVeniceForgeAuthoring": "Se recomienda la descripción para la autoría de Venice Forge.",
+            "aPrimaryGreetingIsRecommendedForChatReadiness": "Se recomienda un saludo principal para estar preparado para el chat."
+          }
+        }
+      },
+      "chatpromptcompiler": {
+        "metadata": {
+          "contextTruncated": "Contexto truncado",
+          "removedRemovedcountOldTurnwordToFitWithinContextLimitsStart": "Se eliminó el {{removedCount}} antiguo {{turnWord}} para ajustarlo a los límites del contexto. Inicie un nuevo chat o utilice un modelo con una ventana contextual más grande para conservar el historial completo.",
+          "theConversationRequiresValue1TokensButOnlyValue2AreAvailable": "La conversación requiere ~{{value1}} tokens, pero solo {{value2}} están disponibles después de reservar los tokens de salida.",
+          "thisRequestReservesValue1OutputTokensSoTheCustomPrompt": "Esta solicitud reserva {{value1}} tokens de salida para que el mensaje personalizado y la conversación actual se ajusten al modelo seleccionado.",
+          "estkKOfTotalkKEstimatedTokensAreInUse": "{{estK}}K de {{totalK}}K tokens estimados están en uso."
+        }
+      },
+      "chatstorage": {
+        "metadata": {
+          "newChat": "Nuevo chat"
+        }
+      },
+      "chatttscontroller": {
+        "notification": {
+          "ttsPlaybackFailed": "La reproducción TTS falló",
+          "noTextToSpeakInThisMessage": "No hay texto para hablar en este mensaje.",
+          "noSpeakableTextRemainingInMessage": "No queda ningún texto descriptivo en el mensaje.",
+          "ttsPlaybackErrorUnableToLoadAudioElement": "Error de reproducción TTS: no se puede cargar el elemento de audio.",
+          "ttsFailed": "TTS falló",
+          "ttsRestartFailed": "Error al reiniciar TTS"
+        }
+      },
+      "desktopbridge": {
+        "metadata": {
+          "requestFailed": "Solicitud fallida",
+          "jinaConnectionSuccessful": "Conexión de Jina exitosa",
+          "jinaReturnedValue1": "Jina regresó {{value1}}",
+          "networkErrorTestingJinaApiKey": "Error de red al probar la clave API de Jina"
+        }
+      },
+      "imageinspectoranalysis": {
+        "metadata": {
+          "notProvidedByModel": "No proporcionado por modelo."
+        }
+      },
+      "replaceimportservice": {
+        "metadata": {
+          "replaceImportFailedAndAutomaticRollbackAlsoFailedUseThe": "La importación de reemplazo falló y la reversión automática también falló. Utilice la copia de seguridad de recuperación retenida.",
+          "replaceImportFailedTheOriginalProfileDataWasRestoredAutomatically": "Error al reemplazar la importación. Los datos del perfil original se restauraron automáticamente."
+        }
+      },
+      "researchservice": {
+        "metadata": {
+          "searchQueryIsEmpty": "La consulta de búsqueda está vacía.",
+          "untitledResult": "Resultado sin título",
+          "searchFailed": "La búsqueda falló",
+          "invalidOrUnsafeUrl": "URL no válida o insegura",
+          "value1DoesNotSupportScraping": "{{value1}} no admite raspado",
+          "scrapeFailed": "Raspado fallido"
+        }
+      },
+      "researchsummaries": {
+        "metadata": {
+          "sourceIdNotFoundInSession": "Fuente {{id}} no encontrada en la sesión",
+          "findingIdNotFoundInSession": "Encontrar {{id}} no encontrado en la sesión",
+          "researchSummaryValue1": "Resumen de la investigación: {{value1}}"
+        }
+      },
+      "rp": {
+        "promptbuilderservice": {
+          "metadata": {
+            "safetyPreamble": "Preámbulo de seguridad",
+            "modelIdentity": "Identidad modelo",
+            "personaValue1": "Persona: {{value1}}",
+            "persona": "Persona",
+            "characterValue1": "Carácter: {{value1}}",
+            "scenario": "Guión",
+            "lorebookValue1": "Libro de historia: {{value1}}",
+            "lorebookValue1BeforeChar": "Libro de historia {{value1}} (antes de char)",
+            "lorebookValue1AfterChar": "Libro de historia {{value1}} (después del carácter)",
+            "lorebookValue1AtDepth": "Libro de historia {{value1}} (en profundidad)",
+            "memoryBlock": "bloque de memoria",
+            "recentMessagesValue1": "Mensajes recientes ({{value1}})",
+            "postHistoryInstruction": "Instrucción post-historia",
+            "activeTurnValue1": "Turno activo: {{value1}}",
+            "activeTurnInstruction": "Instrucción de giro activo",
+            "userMessage": "Mensaje de usuario"
+          }
+        }
+      },
+      "rphelpers": {
+        "metadata": {
+          "value1SystemPrompt": "{{value1}} - mensaje del sistema",
+          "savedFromCharacterCardValue1OnValue2": "Guardado de la tarjeta de personaje \"{{value1}}\" el {{value2}}.",
+          "chatWithValue1": "Chatea con {{value1}}"
+        }
+      },
+      "rppromptcompiler": {
+        "metadata": {
+          "exampleDialoguesValue1": "Diálogos de ejemplo ({{value1}})"
+        }
+      },
+      "rptokencounter": {
+        "metadata": {
+          "characterExceedsTheSupportedContextBudgetByValue1EstimatedTokens": "El personaje excede el presupuesto de contexto admitido en {{value1}} tokens estimados."
+        }
+      },
+      "storagemaintenance": {
+        "metadata": {
+          "refreshInventory": "Actualizar inventario",
+          "recountAllLocalDataAndCheckForIssues": "Cuente todos los datos locales y verifique si hay problemas.",
+          "clearModelCache": "Borrar caché de modelo",
+          "removeTheLocalCacheOfAvailableVeniceModelsTheyWill": "Elimina el caché local de los modelos Venice disponibles. Se recuperarán en el próximo uso.",
+          "clearCharacterImageCache": "Borrar caché de imágenes de personajes",
+          "deleteLocallyCachedVeniceCharacterAvatarImagesTheyWillBe": "Elimina imágenes de avatar de personajes de Venecia almacenadas en caché local. Se recuperarán según sea necesario.",
+          "analyzeOrphanReferences": "Analizar referencias huérfanas",
+          "reviewItemsThatReferToMissingProjectsNoRecordsAre": "Revisar elementos que se refieran a proyectos faltantes. No se modifican registros."
+        }
+      },
+      "storageprivacyservice": {
+        "metadata": {
+          "rpStudio": "Estudio RP",
+          "apiKeys": "Claves API",
+          "characterImageCache": "Caché de imágenes de personajes",
+          "categoryItemValue2RefersToMissingProject": "{{category}} elemento \"{{value2}}\" se refiere al proyecto faltante",
+          "value1ItemHasAMissingTargetReference": "Al elemento {{value1}} le falta una referencia {{target}}"
+        }
+      },
+      "syncpacketimporter": {
+        "metadata": {
+          "value1ConflictFromValue2": "{{value1}} (Conflicto de {{value2}})"
+        }
+      },
+      "taskmediacatalog": {
+        "metadata": {
+          "value1Generation": "{{value1}} generación"
+        }
+      },
+      "workflowcompiler": {
+        "metadata": {
+          "referencedPromptValue1NotFoundInContext": "El mensaje al que se hace referencia {{value1}} no se encuentra en el contexto.",
+          "referencedSceneValue1NotFoundInContext": "La escena referenciada {{value1}} no se encuentra en contexto.",
+          "referencedCharacterValue1NotFoundInContext": "El carácter referenciado {{value1}} no se encuentra en el contexto.",
+          "unsupportedStepKindValue1": "Tipo de paso no admitido: {{value1}}"
+        }
+      },
+      "workflowrunner": {
+        "metadata": {
+          "duplicateOutputKeyValue1UsesTheLastStepValueAll": "La clave de salida duplicada '{{value1}}' utiliza el valor del último paso; todas las acciones seguirán ejecutándose.",
+          "sendPromptToValue1": "Enviar mensaje a {{value1}}",
+          "sendRecipeToValue1": "Enviar receta a {{value1}}",
+          "sendSceneToValue1": "Enviar escena a {{value1}}",
+          "selectMedia": "Seleccionar medios",
+          "openRpContext": "Contexto RP abierto",
+          "showNote": "Mostrar nota",
+          "openValue1": "Abrir {{value1}}"
+        }
+      }
+    },
+    "stores": {
+      "characterCardStore": {
+        "notification": {
+          "couldNotLoadCharacters": "No se pudieron cargar personajes",
+          "pleaseTryAgain": "Por favor inténtalo de nuevo.",
+          "couldNotSaveCharacter": "No se pudo guardar el personaje",
+          "couldNotDeleteCharacter": "No se pudo eliminar el personaje",
+          "storageRejectedTheRequest": "El almacenamiento rechazó la solicitud."
+        }
+      },
+      "chatFolderStore": {
+        "notification": {
+          "failedToLoadChatFolders": "No se pudieron cargar las carpetas de chat",
+          "folderCreated": "Carpeta creada",
+          "failedToCreateFolder": "No se pudo crear la carpeta",
+          "folderRenamed": "Carpeta renombrada",
+          "failedToRenameFolder": "No se pudo cambiar el nombre de la carpeta",
+          "failedToReorderFolders": "No se pudo reordenar las carpetas",
+          "folderIsLocked": "La carpeta está bloqueada",
+          "unlockValue1BeforeMovingConversationsIntoIt": "Desbloquee \"{{value1}}\" antes de pasar conversaciones a él.",
+          "failedToMoveConversation": "No se pudo mover la conversación",
+          "failedToMoveConversations": "No se pudieron mover las conversaciones",
+          "folderDeleted": "Carpeta eliminada",
+          "failedToDeleteFolder": "No se pudo eliminar la carpeta",
+          "failedToReadFolderBackupPreview": "No se pudo leer la vista previa de la copia de seguridad de la carpeta",
+          "unknownError": "Error desconocido",
+          "folderBackupExported": "Copia de seguridad de carpeta exportada",
+          "encryptedBackupSaved": "Copia de seguridad cifrada guardada",
+          "failedToExportFolderBackup": "No se pudo exportar la copia de seguridad de la carpeta",
+          "failedToPreviewFolderImport": "No se pudo obtener una vista previa de la importación de la carpeta",
+          "folderBackupImported": "Copia de seguridad de carpeta importada",
+          "failedToImportFolderBackup": "No se pudo importar la copia de seguridad de la carpeta",
+          "folderPrivacyGateEnabled": "Puerta de privacidad de carpeta habilitada",
+          "failedToLockFolder": "No se pudo bloquear la carpeta",
+          "folderPrivacyGateOpened": "Se abrió la puerta de privacidad de la carpeta",
+          "failedToUnlockFolder": "No se pudo desbloquear la carpeta"
+        }
+      },
+      "chatStore": {
+        "metadata": {
+          "newChat": "Nuevo chat",
+          "chatWithValue1": "Chatea con {{value1}}",
+          "chatGeneratedMedia": "Medios generados por chat",
+          "value1Fork": "{{value1}} — Horquilla"
+        },
+        "notification": {
+          "systemPromptExceedsMaximumLength": "El mensaje del sistema excede la longitud máxima",
+          "systemPromptApproachingLengthLimit": "Aviso del sistema acercándose al límite de longitud"
+        }
+      },
+      "imageInspectorStore": {
+        "notification": {
+          "couldNotLoadSessionId": "No se pudo cargar la sesión {{id}}",
+          "loadASessionBeforeStartingAnalysis": "Cargue una sesión antes de iniciar el análisis.",
+          "noActiveSessionForSearch": "No hay sesión activa para la búsqueda.",
+          "noQueryAvailableToSearch": "No hay ninguna consulta disponible para buscar.",
+          "foundValue1SearchResultsViaValue2": "Se encontraron {{value1}} resultados de búsqueda a través de {{value2}}",
+          "noSearchResultsReturnedFromValue1": "No se obtuvieron resultados de búsqueda de {{value1}}"
+        },
+        "metadata": {
+          "newSession": "Nueva sesión",
+          "searchResult": "Resultado de la búsqueda"
+        }
+      },
+      "lorebookStore": {
+        "notification": {
+          "couldNotLoadLorebooks": "No se pudieron cargar los libros de historia.",
+          "pleaseTryAgain": "Por favor inténtalo de nuevo.",
+          "couldNotSaveLorebook": "No se pudo guardar el libro de historia",
+          "couldNotDeleteLorebook": "No se pudo eliminar el libro de historia",
+          "storageRejectedTheRequest": "El almacenamiento rechazó la solicitud."
+        }
+      },
+      "mediaStore": {
+        "metadata": {
+          "deleteMediaInUse": "¿Eliminar medios en uso?"
+        },
+        "notification": {
+          "tagUpdatePartiallyFailed": "La actualización de la etiqueta falló parcialmente",
+          "couldNotUpdateTagsForValue1ItemS": "No se pudieron actualizar las etiquetas para {{value1}} elementos.",
+          "tagRemovalPartiallyFailed": "La eliminación de la etiqueta falló parcialmente",
+          "couldNotRemoveTagForValue1ItemS": "No se pudo eliminar la etiqueta de {{value1}} artículos."
+        }
+      },
+      "personaStore": {
+        "notification": {
+          "couldNotSavePersona": "No se pudo salvar la persona",
+          "couldNotDeletePersona": "No se pudo eliminar la persona",
+          "storageRejectedTheRequest": "El almacenamiento rechazó la solicitud."
+        }
+      },
+      "rpChatStore": {
+        "metadata": {
+          "newRp": "Nuevo PR"
+        },
+        "notification": {
+          "couldNotCreateRpChat": "No se pudo crear el chat RP",
+          "pleaseTryAgain": "Por favor inténtalo de nuevo.",
+          "couldNotSaveRpChat": "No se pudo guardar el chat de RP",
+          "couldNotDeleteRpChat": "No se pudo eliminar el chat de RP",
+          "storageRejectedTheRequest": "El almacenamiento rechazó la solicitud.",
+          "couldNotSaveMessage": "No se pudo guardar el mensaje"
+        }
+      },
+      "scenarioStore": {
+        "notification": {
+          "couldNotLoadScenarios": "No se pudieron cargar escenarios",
+          "pleaseTryAgain": "Por favor inténtalo de nuevo.",
+          "couldNotSaveScenario": "No se pudo guardar el escenario",
+          "couldNotDeleteScenario": "No se pudo eliminar el escenario",
+          "storageRejectedTheRequest": "El almacenamiento rechazó la solicitud."
+        }
+      },
+      "sceneAssetStore": {
+        "notification": {
+          "couldNotLoadAssets": "No se pudieron cargar los recursos",
+          "pleaseTryAgain": "Por favor inténtalo de nuevo.",
+          "couldNotSaveAsset": "No se pudo guardar el activo",
+          "couldNotDeleteAsset": "No se pudo eliminar el activo",
+          "storageRejectedTheRequest": "El almacenamiento rechazó la solicitud."
+        }
+      },
+      "storagePrivacyStore": {
+        "notification": {
+          "failedToRefreshStorageInventory": "No se pudo actualizar el inventario de almacenamiento",
+          "noInventoryDataToCopyRefreshFirst": "No hay datos de inventario para copiar. Actualiza primero.",
+          "safePrivacySummaryCopiedToClipboard": "Resumen de privacidad segura copiado al portapapeles",
+          "failedToCopyPrivacySummary": "No se pudo copiar el resumen de privacidad",
+          "noInventoryDataToExportRefreshFirst": "No hay datos de inventario para exportar. Actualiza primero.",
+          "safePrivacySummaryDownloaded": "Resumen de privacidad segura descargado",
+          "maintenanceActionPartiallyFailedValue1": "La acción de mantenimiento falló parcialmente: {{value1}}",
+          "maintenanceActionCompleted": "Acción de mantenimiento completada",
+          "maintenanceActionFailed": "La acción de mantenimiento falló"
+        }
+      },
+      "workflowTemplateStore": {
+        "metadata": {
+          "initialVersion": "Versión inicial",
+          "versionNextversionnumber": "Versión {{nextVersionNumber}}"
+        }
+      }
+    },
+    "types": {
+      "characterCardSpec": {
+        "metadata": {
+          "formatValidButANameIsRequiredBeforeChat": "Formato válido, pero se requiere un nombre antes de chatear.",
+          "descriptionIsRecommendedForVeniceForgeAuthoring": "Se recomienda la descripción para la autoría de Venice Forge.",
+          "aPrimaryGreetingIsRecommendedForChatReadiness": "Se recomienda un saludo principal para estar preparado para el chat."
+        }
+      },
+      "project": {
+        "metadata": {
+          "recipeIsMissingAPrompt": "A la receta le falta un mensaje.",
+          "recipeIsMissingATargetModel": "A la receta le falta un modelo de destino.",
+          "modelValue1IsNotInTheKnownRegistryDefaultsApplied": "El modelo \"{{value1}}\" no está en el registro conocido; se aplican los valores predeterminados.",
+          "value1DoesNotSupportANegativePromptItWillBe": "{{value1}} no admite un mensaje negativo; se eliminará.",
+          "value1DoesNotSupportASeedItWillBeDropped": "{{value1}} no admite una semilla; se eliminará.",
+          "value1DoesNotSupportMultipleVariantsValueWillBeDropped": "{{value1}} no admite múltiples variantes; el valor se eliminará.",
+          "value1DoesNotSupportStepsValueWillBeDropped": "{{value1}} no admite pasos; el valor se eliminará.",
+          "value1DoesNotSupportCfgScaleValueWillBeDropped": "{{value1}} no admite la escala CFG; el valor se eliminará.",
+          "value1DoesNotSupportAStylePresetValueWillBe": "{{value1}} no admite un estilo preestablecido; el valor se eliminará.",
+          "value1UsesPixelSizingAspectRatioWillBeDropped": "{{value1}} usa el tamaño de píxeles: se eliminará la relación de aspecto.",
+          "value1DoesNotSupportAResolutionPresetValueWillBe": "{{value1}} no admite una resolución preestablecida; el valor se eliminará.",
+          "dimensionsOriginalpairAreNotSupportedDefaultedToFinalpair": "Las dimensiones {{originalPair}} no son compatibles; el valor predeterminado es {{finalPair}}.",
+          "aspectRatioValue1IsNotSupportedDefaultedToValue2": "La relación de aspecto \"{{value1}}\" no es compatible; el valor predeterminado es {{value2}}.",
+          "resolutionValue1IsNotSupportedDefaultedToValue2": "La resolución \"{{value1}}\" no es compatible; por defecto es {{value2}}."
+        }
+      },
+      "workflow": {
+        "metadata": {
+          "initialVersion": "Versión inicial"
+        }
+      },
+      "provider": {
+        "metadata": {
+          "primaryPrivateLocalFirstMultimodalPlatform": "Plataforma multimodal primaria, privada y local.",
+          "fastOpenSourceModelInference": "Inferencia de modelos rápida y de código abierto.",
+          "ultraFastLpuInferenceEngine": "Motor de inferencia LPU ultrarrápido.",
+          "highPerformanceLlmApis": "API LLM de alto rendimiento.",
+          "notImplementedNoCredentialsOrRequestsAreAccepted": "No implementado. No se aceptan credenciales ni solicitudes.",
+          "geminiDeveloperApiAiStudio": "API de desarrollador de Géminis (AI Studio).",
+          "mistralAiModelsAndEndpoints": "Modelos y puntos finales de Mistral AI.",
+          "claudeAndOtherSafeFoundationModels": "Claude y otros modelos de cimentaciones seguras.",
+          "searchGroundedAndFastLlmApis": "API LLM rápidas y basadas en búsquedas."
+        }
+      }
+    },
+    "constants": {
+      "prompttemplates": {
+        "metadata": {
+          "animeIllustration": "Ilustración animada",
+          "cinematicFilm": "Película cinematográfica",
+          "value35mmCameraFilmLookNaturalLightingMovieSceneGrain": "Aspecto de película de cámara de 35 mm, iluminación natural, grano de escena de película",
+          "minimalistVectorArt": "Arte vectorial minimalista",
+          "cleanFlatColorVectorDesignSvgStyle": "Diseño vectorial de color plano limpio, estilo SVG",
+          "oilPainting": "Pintura al óleo",
+          "classicalTexturedCanvasBrushstrokes": "Pinceladas de lienzo con textura clásica",
+          "goldenHour": "Hora Dorada",
+          "warmLowAngleSunsetGlow": "Cálido resplandor del atardecer en ángulo bajo",
+          "studioPortrait": "Retrato de estudio",
+          "professionalMultiPointStudioKeyLighting": "Iluminación clave de estudio multipunto profesional",
+          "neonCyberpunk": "Ciberpunk de neón",
+          "vibrantNeonBluesAndMagentasWithDarkShadows": "Vibrantes azules y magentas de neón con sombras oscuras.",
+          "extremeCloseUp": "Primer plano extremo",
+          "tightFocusOnFacialDetailsOrSmallSubjects": "Enfoque preciso en detalles faciales o sujetos pequeños",
+          "aerialDroneView": "Vista aérea de drones",
+          "highAltitudeBirdSEyePerspective": "Perspectiva a vista de pájaro a gran altura",
+          "ruleOfThirdsWide": "Regla de los tercios de ancho",
+          "balancedOffCenterCinematicFocalPoint": "Punto focal cinematográfico descentrado y equilibrado",
+          "photorealistic8k": "Fotorrealista 8k",
+          "maximizesResolutionSkinTexturesAndMaterialRealism": "Maximiza la resolución, las texturas de la piel y el realismo del material.",
+          "standardNegative": "Negativo estándar",
+          "standardPromptsToAvoidDistortionsAndLowQuality": "Avisos estándar para evitar distorsiones y baja calidad."
+        }
+      }
+    },
+    "shared": {
+      "legal": {
+        "metadata": {
+          "welcomeToVeniceForge": "Bienvenido a Forja de Venecia"
+        }
+      }
+    },
+    "utils": {
+      "imageprocessor": {
+        "metadata": {
+          "landscapesNature": "Paisajes y Naturaleza",
+          "animeMangaIllustration": "Anime / Manga / Ilustración",
+          "cinematicFilm": "Cinemática / Película",
+          "portraitsPeople": "Retratos / Personas",
+          "productCommercialStudio": "Producto / Estudio Comercial"
+        }
+      }
+    }
+  },
+  "statusDiagnostics": {
+    "actions": {
+      "openConfig": "Abrir configuración",
+      "openStatus": "Estado abierto"
+    },
+    "external": "{{message}}",
+    "api": {
+      "notChecked": "La clave API de Venecia aún no se ha verificado.",
+      "checking": "Comprobando la configuración de almacenamiento seguro de Venecia...",
+      "inspectionFailed": "La inspección de almacenamiento seguro de Venecia falló.",
+      "notConfigured": "Clave API de Venecia no configurada. Agregue una clave para habilitar la generación.",
+      "openConfigDetail": "Abra la pestaña Configuración para conectar su clave API de Venecia.",
+      "connectivityUnverified": "La clave API está configurada, pero aún no se ha verificado la conectividad en vivo de Venecia.",
+      "testConnectivityDetail": "Utilice la acción de prueba de clave API para verificar la conectividad de /models."
+    },
+    "apiKey": {
+      "notChecked": "La clave API de Venecia aún no se ha verificado.",
+      "checking": "Comprobando la configuración de la clave API de Venecia...",
+      "inspectionFailed": "La inspección del almacenamiento seguro falló.",
+      "secure": "La clave API de Venecia está configurada en un almacenamiento seguro. La clave sin formato está oculta.",
+      "memoryOnly": "Clave presente sólo en memoria. La clave sin procesar está oculta y excluida de diagnósticos y exportaciones.",
+      "missing": "Sin clave API de Venecia. Se bloquea la generación de imágenes, audio y chat.",
+      "addKeyDetail": "Agregue una clave a través del botón de clave API en el encabezado o en la pestaña Configuración."
+    },
+    "model": {
+      "notRequested": "No se ha solicitado el catálogo de modelos.",
+      "loading": "Cargando el catálogo de modelos…",
+      "loaded": "{{count}} modelos cargados.",
+      "selectionUnavailable": "El modelo seleccionado &quot; {{modelId}} &quot; no está presente en el catálogo actual ( {{modelType}} ).",
+      "cached": "Usando un catálogo de modelos en caché de {{timestamp}} .",
+      "loadFailed": "No se pudo cargar el catálogo de modelos."
+    },
+    "storage": {
+      "unavailable": "IndexedDB no está disponible. La historia y los medios locales no persistirán.",
+      "permissionsDetail": "Modo navegador con almacenamiento deshabilitado. Verifique los permisos del sitio.",
+      "web": "Modo web: los registros persisten en el navegador IndexedDB (cifrados en reposo).",
+      "siteDataDetail": "Al borrar los datos del sitio se borrará la bóveda local.",
+      "desktop": "Se puede acceder al escritorio IndexedDB. Los registros se cifran en reposo."
+    },
+    "project": {
+      "allProjects": "Modo Todos los proyectos activo (vista sin alcance).",
+      "missing": "Falta la identificación del proyecto activo o se desconoce. La tienda reparará en la próxima interacción.",
+      "archived": "El proyecto activo &quot; {{projectName}} &quot; está archivado. Cambie a Todos los proyectos para reparar.",
+      "valid": "El proyecto activo &quot; {{projectName}} &quot; es válido."
+    },
+    "safety": {
+      "on": {
+        "on": "Guardia local: activada · Venecia modo_seguro: activada",
+        "off": "Guardia local: activada · Venecia modo_seguro: desactivada"
+      },
+      "off": {
+        "on": "Guardia local: desactivada · Venecia modo_seguro: activado",
+        "off": "Guardia local: desactivada · Venecia modo_seguro: desactivado"
+      }
+    },
+    "provider": {
+      "disabled": "Espacio de trabajo de investigación activo ( {{count}} sesiones). Jina está discapacitada.",
+      "enabled": "Espacio de trabajo de investigación activo ( {{count}} sesiones). Jina habilitado.",
+      "missingKey": "Espacio de trabajo de investigación activo ( {{count}} sesiones). Jina habilitado pero sin clave configurada."
+    },
+    "desktop": {
+      "desktop": "Modo de escritorio: se puede acceder al proceso principal electrónico + al puente de precarga.",
+      "web": "Modo web: las claves API se encuentran en el servidor .env. Las funciones exclusivas de escritorio (sistema de archivos, revelaciones, shell del sistema) no están disponibles."
+    },
+    "diagnostics": {
+      "operational": "Todos los sistemas operativos. No se detectaron problemas.",
+      "issues": "{{count}} cheques registrados; peor gravedad: {{severity}} ."
+    }
+  },
+  "imageCapabilities": {
+    "toolsTab": "Editar / Mejorar / Eliminar BG",
+    "sizes": "{{count}} tamaños",
+    "ratios": "{{count}} proporciones",
+    "ratiosResolutions": "{{ratios}} proporciones × {{resolutions}} resoluciones",
+    "fixedDimensions": "Fijo {{width}} × {{height}}",
+    "fixedSize": "Tamaño fijo",
+    "unknownSizing": "Talla desconocida",
+    "negativePrompt": "mensaje negativo",
+    "noNegativePrompt": "Sin mensaje negativo",
+    "seed": "Semilla",
+    "noSeed": "sin semilla",
+    "variants": "Variantes",
+    "singleOutput": "Salida única",
+    "noSteps": "Sin pasos",
+    "noCfg": "Sin CFG",
+    "noStylePreset": "Sin estilo preestablecido",
+    "references_one": "{{count}} referencia",
+    "references_other": "{{count}} referencias",
+    "noReferences": "Sin referencias",
+    "quality": "Calidad"
+  },
+  "runtimeSlashLabels": {
+    "cancelReset": "Cancelar / Restablecer",
+    "shortDescriptionSummary": "Breve descripción/resumen",
+    "settingWorld": "Escenario / Mundo",
+    "generalPg": "General / Apto para todos",
+    "matureDarkThemes": "Temas maduros/oscuros",
+    "documentNamePath": "Nombre del documento/Ruta",
+    "characterPersonaReferences": "Referencias de personajes/personas"
   }
 }

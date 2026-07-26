@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 import {
   type StorageStoreInventoryItem,
   type StorageReferenceIssue,
@@ -23,7 +24,10 @@ export interface StorageInventoryRecord {
 function formatBytes(bytes: number): string {
   if (bytes === 0) return "0 B";
   const units = ["B", "KiB", "MiB", "GiB"];
-  const i = Math.min(units.length - 1, Math.floor(Math.log(bytes) / Math.log(1024)));
+  const i = Math.min(
+    units.length - 1,
+    Math.floor(Math.log(bytes) / Math.log(1024)),
+  );
   const value = bytes / 1024 ** i;
   return `${value.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 }
@@ -70,7 +74,9 @@ const ENCRYPTED_STORES = [
   "chat_folders",
 ];
 
-export function buildStorageInventory(input: BuildStorageInventoryInput): StorageInventoryResult {
+export function buildStorageInventory(
+  input: BuildStorageInventoryInput,
+): StorageInventoryResult {
   const stores: StorageStoreInventoryItem[] = [];
   const issues: StorageReferenceIssue[] = [];
   const generatedAt = new Date().toISOString();
@@ -107,17 +113,43 @@ export function buildStorageInventory(input: BuildStorageInventoryInput): Storag
   };
 
   addStore("projects", "Projects", "projects", input.projects, "projects");
-  addStore("conversations", "Conversations", "conversations", input.conversations, "conversations");
+  addStore(
+    "conversations",
+    "Conversations",
+    "conversations",
+    input.conversations,
+    "conversations",
+  );
   addStore("media", "Media Studio", "media", input.media, "images");
-  addStore("prompts", "Prompt Library", "prompts", input.prompts, "promptLibrary");
+  addStore(
+    "prompts",
+    "Prompt Library",
+    "prompts",
+    input.prompts,
+    "promptLibrary",
+  );
   addStore("scenes", "Scene Composer", "scenes", input.scenes, "scenes");
-  addStore("workflows", "Workflow Templates", "workflows", input.workflows, "workflowTemplates");
+  addStore(
+    "workflows",
+    "Workflow Templates",
+    "workflows",
+    input.workflows,
+    "workflowTemplates",
+  );
 
   // RP categories
-  const rpCount = (input.characters?.length ?? 0) + (input.lorebooks?.length ?? 0) + (input.personas?.length ?? 0) + (input.scenarios?.length ?? 0) + (input.rpChats?.length ?? 0);
+  const rpCount =
+    (input.characters?.length ?? 0) +
+    (input.lorebooks?.length ?? 0) +
+    (input.personas?.length ?? 0) +
+    (input.scenarios?.length ?? 0) +
+    (input.rpChats?.length ?? 0);
   stores.push({
     id: "rp",
-    label: "RP Studio",
+    label: translateRuntime(
+      "runtimeGenerated.services.storageprivacyservice.metadata.rpStudio",
+      "RP Studio",
+    ),
     category: "rp",
     count: rpCount,
     encrypted: true,
@@ -138,7 +170,10 @@ export function buildStorageInventory(input: BuildStorageInventoryInput): Storag
   const hasVeniceKey = apiKeyMetadata.configured;
   stores.push({
     id: "api_keys",
-    label: "API Keys",
+    label: translateRuntime(
+      "runtimeGenerated.services.storageprivacyservice.metadata.apiKeys",
+      "API Keys",
+    ),
     category: "api_keys",
     encrypted: true,
     containsSecrets: true,
@@ -156,7 +191,10 @@ export function buildStorageInventory(input: BuildStorageInventoryInput): Storag
     const { count, totalBytes } = input.characterImageCache;
     stores.push({
       id: "character-image-cache",
-      label: "Character Image Cache",
+      label: translateRuntime(
+        "runtimeGenerated.services.storageprivacyservice.metadata.characterImageCache",
+        "Character Image Cache",
+      ),
       category: "cache",
       storeName: "character-image-cache",
       count,
@@ -172,7 +210,10 @@ export function buildStorageInventory(input: BuildStorageInventoryInput): Storag
   // Reference checks
   const projectIds = new Set(input.projects?.map((p) => p.id) || []);
 
-  const checkOrphanProject = (items: StorageInventoryRecord[] | undefined, category: StoragePrivacyCategory) => {
+  const checkOrphanProject = (
+    items: StorageInventoryRecord[] | undefined,
+    category: StoragePrivacyCategory,
+  ) => {
     items?.forEach((item) => {
       if (item.projectId && !projectIds.has(item.projectId)) {
         issues.push({
@@ -182,7 +223,11 @@ export function buildStorageInventory(input: BuildStorageInventoryInput): Storag
           sourceId: item.id,
           targetCategory: "projects",
           targetId: item.projectId,
-          message: `${category} item "${item.title || item.name || item.id}" refers to missing project`,
+          message: translateRuntime(
+            "runtimeGenerated.services.storageprivacyservice.metadata.categoryItemValue2RefersToMissingProject",
+            '{{category}} item "{{value2}}" refers to missing project',
+            { category: category, value2: item.title || item.name || item.id },
+          ),
           repairable: true,
         });
       }
@@ -197,7 +242,9 @@ export function buildStorageInventory(input: BuildStorageInventoryInput): Storag
   return { stores, issues, generatedAt };
 }
 
-function sanitizeIssueForSafeSummary(issue: StorageReferenceIssue): StorageReferenceIssue {
+function sanitizeIssueForSafeSummary(
+  issue: StorageReferenceIssue,
+): StorageReferenceIssue {
   // T-168 / VERIFY-168: safe privacy summaries must not include user titles,
   // names, or other free-text content in issue messages. Keep categories, ids,
   // severity, and repairability so the summary remains actionable without
@@ -205,18 +252,28 @@ function sanitizeIssueForSafeSummary(issue: StorageReferenceIssue): StorageRefer
   const target = issue.targetCategory ?? "reference";
   return {
     ...issue,
-    message: `${issue.sourceCategory} item has a missing ${target} reference`,
+    message: translateRuntime(
+      "runtimeGenerated.services.storageprivacyservice.metadata.value1ItemHasAMissingTargetReference",
+      "{{value1}} item has a missing {{target}} reference",
+      { value1: issue.sourceCategory, target: target },
+    ),
   };
 }
 
-export function buildSafePrivacySummary(inventory: StorageInventoryResult): SafePrivacySummary {
+export function buildSafePrivacySummary(
+  inventory: StorageInventoryResult,
+): SafePrivacySummary {
   const counts: Record<string, number> = {};
   inventory.stores.forEach((s: StorageStoreInventoryItem) => {
-    if (s.count !== undefined) counts[s.category] = (counts[s.category] || 0) + s.count;
+    if (s.count !== undefined)
+      counts[s.category] = (counts[s.category] || 0) + s.count;
   });
 
   const exclusions = inventory.stores
-    .filter((s: StorageStoreInventoryItem) => !s.exportableInSafeSummary || s.containsSecrets)
+    .filter(
+      (s: StorageStoreInventoryItem) =>
+        !s.exportableInSafeSummary || s.containsSecrets,
+    )
     .map((s: StorageStoreInventoryItem) => s.label);
 
   // Add generic exclusions
@@ -228,16 +285,22 @@ export function buildSafePrivacySummary(inventory: StorageInventoryResult): Safe
     version: 1,
     generatedAt: inventory.generatedAt,
     app: "Venice Forge",
-    stores: inventory.stores.filter((s: StorageStoreInventoryItem) => s.exportableInSafeSummary),
+    stores: inventory.stores.filter(
+      (s: StorageStoreInventoryItem) => s.exportableInSafeSummary,
+    ),
     counts,
     issues: inventory.issues.map(sanitizeIssueForSafeSummary),
     exclusions,
     apiKey: (() => {
       const apiStore = inventory.stores.find((s) => s.id === "api_keys");
-      const metadata = apiStore?.metadata && typeof apiStore.metadata === "object"
-        ? (apiStore.metadata as { apiKey?: SafeApiKeyMetadata }).apiKey
-        : undefined;
-      return metadata ?? buildSafeApiKeyMetadata({ configured: false, storage: "unavailable" });
+      const metadata =
+        apiStore?.metadata && typeof apiStore.metadata === "object"
+          ? (apiStore.metadata as { apiKey?: SafeApiKeyMetadata }).apiKey
+          : undefined;
+      return (
+        metadata ??
+        buildSafeApiKeyMetadata({ configured: false, storage: "unavailable" })
+      );
     })(),
   };
 }

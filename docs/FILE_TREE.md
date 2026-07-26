@@ -28,6 +28,7 @@ Generated `dist/`, `dist-electron/`, `release/`, and `coverage/` trees are ignor
 | `src/components/image-inspector/` | Image ingestion controls, vision-model analysis configuration, structured results, text-based source discovery, and shared processing animation |
 | `src/components/rp-studio/` | RP Studio and ST Card Studio UI, including the ten-step character editor, character-book editor, library, chats, prompt trace, and scene tools |
 | `src/services/desktopBridge.ts` | Only renderer boundary for Electron preload capabilities; web-safe fallbacks live here |
+| `src/i18n/`, `src/i18n/runtimeTranslator.ts` | Bundled locale catalogs, locale metadata/status, runtime translation helpers, fallback normalization, direction, and formatting |
 | `src/services/characterCards/` | Character Card V1/V2 adapters, generation/refinement proposals, drafts, Studio handoffs, character-book mapping, and sync merge policy |
 | `src/services/veniceClient.ts` | Canonical renderer Venice request/stream entry point |
 | `src/services/storageService.ts`, `src/services/dbMigrations.ts` | IndexedDB storage and migration authority |
@@ -53,6 +54,7 @@ The visible workspace list must be read from `CANONICAL_TAB_ORDER`; do not copy 
 | `electron/services/secureStore.ts` | Profile-scoped OS-secure credential custody |
 | `electron/services/conversationVault.ts`, `electron/services/chatStorage.ts` | Encrypted vault and legacy desktop conversation persistence |
 | `electron/services/backgroundTaskManager.ts` | Profile-scoped durable generation-task recovery |
+| `electron/services/generatedMediaStore.ts`, `electron/services/generatedMediaRecoveryQueue.ts` | SHA-256 generated-media blob persistence, integrity/restart recovery, and bounded process-local custody for failed image writes |
 | `electron/services/syncFolderWatcher.ts` | Authenticated encrypted sync-folder ingestion and outbox handling |
 | `electron/services/characterCardPngCodec.ts` | Bounded Character Card V2 PNG metadata parsing, validation, replacement, and semantic round-trip verification |
 | `inactive-features/research-browser/` | Inactive archive of the former embedded Research Browser; excluded from active build, test, and package surfaces |

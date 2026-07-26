@@ -1,24 +1,25 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /** @fileoverview Research Service (Phase 2I).
- * 
+ *
  * This service provides a high-level API for running research searches and scrapes,
  * wrapping the existing provider architecture with additional safety and normalization.
  */
 
-import { 
-  ResearchProvider, 
-  ResearchSource, 
-  sanitizeResearchSource, 
-  sanitizeResearchUrl 
-} from '../types/research';
-import { 
-  runResearchJob, 
+import {
+  ResearchProvider,
+  ResearchSource,
+  sanitizeResearchSource,
+  sanitizeResearchUrl,
+} from "../types/research";
+import {
+  runResearchJob,
   ResearchJobInput,
-  ResearchJobResult
-} from '../research/agent/researchRunner';
-import { veniceResearchProvider } from '../research/providers/veniceResearchProvider';
-import { createJinaProvider } from '../research/providers/jinaResearchProvider';
-import { createGenericHttpProvider } from '../research/providers/genericHttpScrapeProvider';
-import type { ResearchProvider as ProviderAdapter } from '../research/providerTypes';
+  ResearchJobResult,
+} from "../research/agent/researchRunner";
+import { veniceResearchProvider } from "../research/providers/veniceResearchProvider";
+import { createJinaProvider } from "../research/providers/jinaResearchProvider";
+import { createGenericHttpProvider } from "../research/providers/genericHttpScrapeProvider";
+import type { ResearchProvider as ProviderAdapter } from "../research/providerTypes";
 
 export interface ResearchSearchRequest {
   query: string;
@@ -44,39 +45,64 @@ export interface ResearchServiceResult {
   }>;
 }
 
-function resolveProvider(provider: ResearchProvider | undefined, jinaOptions?: Record<string, unknown>): ProviderAdapter {
+function resolveProvider(
+  provider: ResearchProvider | undefined,
+  jinaOptions?: Record<string, unknown>,
+): ProviderAdapter {
   switch (provider) {
-    case 'jina':
-    case 'jina-search':
-    case 'jina-reader': {
+    case "jina":
+    case "jina-search":
+    case "jina-reader": {
       const baseJina = createJinaProvider();
       if (!jinaOptions) return baseJina;
       return {
         ...baseJina,
-        scrape: baseJina.scrape ? (input) => baseJina.scrape!({ ...input, options: { ...input.options, ...jinaOptions } }) : undefined,
+        scrape: baseJina.scrape
+          ? (input) =>
+              baseJina.scrape!({
+                ...input,
+                options: { ...input.options, ...jinaOptions },
+              })
+          : undefined,
       };
     }
-    case 'generic-http':
+    case "generic-http":
       return createGenericHttpProvider({ enabled: true });
-    case 'venice-brave':
+    case "venice-brave":
       return {
         ...veniceResearchProvider,
-        search: veniceResearchProvider.search ? (input) => veniceResearchProvider.search!({ ...input, options: { ...input.options, provider: 'brave' } }) : undefined,
+        search: veniceResearchProvider.search
+          ? (input) =>
+              veniceResearchProvider.search!({
+                ...input,
+                options: { ...input.options, provider: "brave" },
+              })
+          : undefined,
       };
-    case 'venice-google':
+    case "venice-google":
       return {
         ...veniceResearchProvider,
-        search: veniceResearchProvider.search ? (input) => veniceResearchProvider.search!({ ...input, options: { ...input.options, provider: 'google' } }) : undefined,
+        search: veniceResearchProvider.search
+          ? (input) =>
+              veniceResearchProvider.search!({
+                ...input,
+                options: { ...input.options, provider: "google" },
+              })
+          : undefined,
       };
-    case 'venice':
+    case "venice":
     case undefined:
       return veniceResearchProvider;
     default:
       // Browser and manual aren't executed via this path
-      if (provider === 'browser' || provider === 'manual') {
-        throw new Error(`Provider ${provider} must be handled explicitly, not via network requests`);
+      if (provider === "browser" || provider === "manual") {
+        throw new Error(
+          `Provider ${provider} must be handled explicitly, not via network requests`,
+        );
       }
-      throw new Error(`Research provider ${provider} is not available for network requests`);
+      throw new Error(
+        `Research provider ${provider} is not available for network requests`,
+      );
   }
 }
 
@@ -89,7 +115,16 @@ export async function runResearchSearch(
   if (!request.query || request.query.trim().length === 0) {
     return {
       sources: [],
-      warnings: [{ id: 'empty-query', severity: 'warning', message: 'Search query is empty' }]
+      warnings: [
+        {
+          id: "empty-query",
+          severity: "warning",
+          message: translateRuntime(
+            "runtimeGenerated.services.researchservice.metadata.searchQueryIsEmpty",
+            "Search query is empty",
+          ),
+        },
+      ],
     };
   }
 
@@ -103,45 +138,61 @@ export async function runResearchSearch(
       maxCharsPerPage: 10000,
       perRequestTimeoutMs: 15000,
       totalJobTimeoutMs: 30000,
-    }
+    },
   };
 
   try {
     const jobResult: ResearchJobResult = await runResearchJob(input);
-    
-    const sources: ResearchSource[] = jobResult.evidence.searchResults.map(ev => sanitizeResearchSource({
-      kind: 'search_result',
-      provider: ev.provider || 'unknown',
-      title: ev.title || 'Untitled Result',
-      url: ev.url,
-      query: request.query,
-      excerpt: ev.snippet || ev.content,
-      retrievedAt: new Date().toISOString(),
-      citations: [],
-      metadata: ev.raw as Record<string, unknown>,
-    }));
 
-    const warnings: ResearchServiceResult['warnings'] = [];
+    const sources: ResearchSource[] = jobResult.evidence.searchResults.map(
+      (ev) =>
+        sanitizeResearchSource({
+          kind: "search_result",
+          provider: ev.provider || "unknown",
+          title:
+            ev.title ||
+            translateRuntime(
+              "runtimeGenerated.services.researchservice.metadata.untitledResult",
+              "Untitled Result",
+            ),
+          url: ev.url,
+          query: request.query,
+          excerpt: ev.snippet || ev.content,
+          retrievedAt: new Date().toISOString(),
+          citations: [],
+          metadata: ev.raw as Record<string, unknown>,
+        }),
+    );
+
+    const warnings: ResearchServiceResult["warnings"] = [];
     if (jobResult.error) {
       warnings.push({
-        id: 'provider-error',
-        severity: 'error',
-        message: jobResult.error
+        id: "provider-error",
+        severity: "error",
+        message: jobResult.error,
       });
     }
 
     return {
       sources,
-      warnings
+      warnings,
     };
   } catch (err) {
     return {
       sources: [],
-      warnings: [{ 
-        id: 'search-failed', 
-        severity: 'error', 
-        message: err instanceof Error ? err.message : 'Search failed' 
-      }]
+      warnings: [
+        {
+          id: "search-failed",
+          severity: "error",
+          message:
+            err instanceof Error
+              ? err.message
+              : translateRuntime(
+                  "runtimeGenerated.services.researchservice.metadata.searchFailed",
+                  "Search failed",
+                ),
+        },
+      ],
     };
   }
 }
@@ -156,7 +207,16 @@ export async function runResearchScrape(
   if (!sanitizedUrl) {
     return {
       sources: [],
-      warnings: [{ id: 'invalid-url', severity: 'error', message: 'Invalid or unsafe URL' }]
+      warnings: [
+        {
+          id: "invalid-url",
+          severity: "error",
+          message: translateRuntime(
+            "runtimeGenerated.services.researchservice.metadata.invalidOrUnsafeUrl",
+            "Invalid or unsafe URL",
+          ),
+        },
+      ],
     };
   }
 
@@ -165,7 +225,17 @@ export async function runResearchScrape(
     if (!provider.supports.scrape || !provider.scrape) {
       return {
         sources: [],
-        warnings: [{ id: 'unsupported-provider', severity: 'error', message: `${provider.label} does not support scraping` }],
+        warnings: [
+          {
+            id: "unsupported-provider",
+            severity: "error",
+            message: translateRuntime(
+              "runtimeGenerated.services.researchservice.metadata.value1DoesNotSupportScraping",
+              "{{value1}} does not support scraping",
+              { value1: provider.label },
+            ),
+          },
+        ],
       };
     }
     const scraped = await provider.scrape({
@@ -173,8 +243,8 @@ export async function runResearchScrape(
       timeoutMs: 20_000,
     });
     const source = sanitizeResearchSource({
-      kind: 'scraped_page',
-      provider: scraped.provider || request.provider || 'unknown',
+      kind: "scraped_page",
+      provider: scraped.provider || request.provider || "unknown",
       title: scraped.title || sanitizedUrl,
       url: scraped.finalUrl || scraped.url || sanitizedUrl,
       excerpt: scraped.content || scraped.text || scraped.markdown,
@@ -190,11 +260,19 @@ export async function runResearchScrape(
   } catch (err) {
     return {
       sources: [],
-      warnings: [{ 
-        id: 'scrape-failed', 
-        severity: 'error', 
-        message: err instanceof Error ? err.message : 'Scrape failed' 
-      }]
+      warnings: [
+        {
+          id: "scrape-failed",
+          severity: "error",
+          message:
+            err instanceof Error
+              ? err.message
+              : translateRuntime(
+                  "runtimeGenerated.services.researchservice.metadata.scrapeFailed",
+                  "Scrape failed",
+                ),
+        },
+      ],
     };
   }
 }

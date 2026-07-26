@@ -1,11 +1,28 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /** @fileoverview Service for staging and importing encrypted portable backups. */
 
 import { isElectron, desktopSync } from "./desktopBridge";
-export { saveStoreRecord, deleteStoreRecord, fetchStoreRecords, importDecryptedPacket, type SyncableRecord, IMPORTABLE_STORES } from "./syncPacketImporter";
+export {
+  saveStoreRecord,
+  deleteStoreRecord,
+  fetchStoreRecords,
+  importDecryptedPacket,
+  type SyncableRecord,
+  IMPORTABLE_STORES,
+} from "./syncPacketImporter";
 
-import { fetchStoreRecords, importDecryptedPacket, IMPORTABLE_STORES, type SyncableRecord } from "./syncPacketImporter";
+import {
+  fetchStoreRecords,
+  importDecryptedPacket,
+  IMPORTABLE_STORES,
+  type SyncableRecord,
+} from "./syncPacketImporter";
 import type { SyncStoreName } from "../types/sync";
-import { deriveBackupKey, fromBase64, type EncryptedBackupManifest } from "./backupCryptoWeb";
+import {
+  deriveBackupKey,
+  fromBase64,
+  type EncryptedBackupManifest,
+} from "./backupCryptoWeb";
 import { toEpochMilliseconds } from "../shared/syncTimestamp";
 import { compareSyncRecords } from "../shared/syncConvergence";
 import { BACKUP_PROFILE_METADATA_KEY } from "../shared/backupProfile";
@@ -39,7 +56,11 @@ export interface ImportPlanModel {
 }
 
 export interface ImportPlanWarning {
-  code: "legacy-manifest" | "app-version-mismatch" | "media-included" | "data-exclusions";
+  code:
+    | "legacy-manifest"
+    | "app-version-mismatch"
+    | "media-included"
+    | "data-exclusions";
   severity: "info" | "warning";
   message: string;
 }
@@ -69,34 +90,60 @@ export interface PreparedBackupImport {
 }
 
 function validateManifest(manifest: EncryptedBackupManifest): void {
-  if (!manifest || typeof manifest !== "object"
-    || (manifest.version !== LEGACY_MANUAL_BACKUP_VERSION && manifest.version !== MANUAL_BACKUP_MANIFEST_VERSION)
-    || typeof manifest.exportedAt !== "string" || !Number.isFinite(Date.parse(manifest.exportedAt))
-    || typeof manifest.salt !== "string" || typeof manifest.iv !== "string" || typeof manifest.ciphertext !== "string") {
+  if (
+    !manifest ||
+    typeof manifest !== "object" ||
+    (manifest.version !== LEGACY_MANUAL_BACKUP_VERSION &&
+      manifest.version !== MANUAL_BACKUP_MANIFEST_VERSION) ||
+    typeof manifest.exportedAt !== "string" ||
+    !Number.isFinite(Date.parse(manifest.exportedAt)) ||
+    typeof manifest.salt !== "string" ||
+    typeof manifest.iv !== "string" ||
+    typeof manifest.ciphertext !== "string"
+  ) {
     throw new Error("Malformed encrypted backup manifest.");
   }
-  if (manifest.version === MANUAL_BACKUP_MANIFEST_VERSION
-    && (!manifest.metadata || typeof manifest.metadata !== "object" || Array.isArray(manifest.metadata))) {
+  if (
+    manifest.version === MANUAL_BACKUP_MANIFEST_VERSION &&
+    (!manifest.metadata ||
+      typeof manifest.metadata !== "object" ||
+      Array.isArray(manifest.metadata))
+  ) {
     throw new Error("Malformed encrypted backup manifest metadata.");
   }
 }
 
-async function decryptBackup(manifest: EncryptedBackupManifest, password: string): Promise<string> {
+async function decryptBackup(
+  manifest: EncryptedBackupManifest,
+  password: string,
+): Promise<string> {
   validateManifest(manifest);
   if (!password) throw new Error("Backup password is required.");
   if (isElectron()) {
-    const res = await desktopSync.decryptBackup(manifest.ciphertext, manifest.salt, manifest.iv, password);
-    if (!res.ok || !res.data) throw new Error(res.error || "Decryption failed in main process. Invalid password?");
+    const res = await desktopSync.decryptBackup(
+      manifest.ciphertext,
+      manifest.salt,
+      manifest.iv,
+      password,
+    );
+    if (!res.ok || !res.data)
+      throw new Error(
+        res.error || "Decryption failed in main process. Invalid password?",
+      );
     return res.data;
   }
   const key = await deriveBackupKey(password, fromBase64(manifest.salt));
   try {
     const decryptedBuffer = await crypto.subtle.decrypt(
-      { name: "AES-GCM", iv: fromBase64(manifest.iv) }, key, fromBase64(manifest.ciphertext),
+      { name: "AES-GCM", iv: fromBase64(manifest.iv) },
+      key,
+      fromBase64(manifest.ciphertext),
     );
     return new TextDecoder().decode(decryptedBuffer);
   } catch {
-    throw new Error("Failed to decrypt backup. Invalid password or corrupt data.");
+    throw new Error(
+      "Failed to decrypt backup. Invalid password or corrupt data.",
+    );
   }
 }
 
@@ -119,16 +166,26 @@ function parseAndValidatePayload(decryptedJson: string): {
 
   const data: Record<string, SyncableRecord[]> = {};
   const portableData: Record<string, unknown> = {};
-  const profileMetadata = (parsed as Record<string, unknown>)[BACKUP_PROFILE_METADATA_KEY];
-  const embeddedMetadata = profileMetadata && typeof profileMetadata === "object" && !Array.isArray(profileMetadata)
-    ? (profileMetadata as Record<string, unknown>).manifestMetadata
-    : undefined;
-  const profileId = profileMetadata && typeof profileMetadata === "object" && !Array.isArray(profileMetadata)
-    && typeof (profileMetadata as Record<string, unknown>).profileId === "string"
-    ? (profileMetadata as Record<string, unknown>).profileId as string
-    : undefined;
+  const profileMetadata = (parsed as Record<string, unknown>)[
+    BACKUP_PROFILE_METADATA_KEY
+  ];
+  const embeddedMetadata =
+    profileMetadata &&
+    typeof profileMetadata === "object" &&
+    !Array.isArray(profileMetadata)
+      ? (profileMetadata as Record<string, unknown>).manifestMetadata
+      : undefined;
+  const profileId =
+    profileMetadata &&
+    typeof profileMetadata === "object" &&
+    !Array.isArray(profileMetadata) &&
+    typeof (profileMetadata as Record<string, unknown>).profileId === "string"
+      ? ((profileMetadata as Record<string, unknown>).profileId as string)
+      : undefined;
   let skippedRecords = 0;
-  for (const [storeName, records] of Object.entries(parsed as Record<string, unknown>)) {
+  for (const [storeName, records] of Object.entries(
+    parsed as Record<string, unknown>,
+  )) {
     if (storeName === BACKUP_PROFILE_METADATA_KEY) continue;
     portableData[storeName] = records;
     if (!IMPORTABLE_STORES.has(storeName)) {
@@ -136,25 +193,40 @@ function parseAndValidatePayload(decryptedJson: string): {
       continue;
     }
     if (!Array.isArray(records)) {
-      throw new Error(`Backup store ${storeName} must contain an array of records.`);
+      throw new Error(
+        `Backup store ${storeName} must contain an array of records.`,
+      );
     }
 
     const ids = new Set<string>();
     const validated: SyncableRecord[] = records.map((record, index) => {
       if (!record || typeof record !== "object" || Array.isArray(record)) {
-        throw new Error(`Backup store ${storeName} record ${index} must be an object.`);
+        throw new Error(
+          `Backup store ${storeName} record ${index} must be an object.`,
+        );
       }
       const candidate = record as SyncableRecord;
-      if (typeof candidate.id !== "string" || !RECORD_ID_RE.test(candidate.id) || candidate.id.includes("..")) {
-        throw new Error(`Backup store ${storeName} record ${index} has an invalid record ID.`);
+      if (
+        typeof candidate.id !== "string" ||
+        !RECORD_ID_RE.test(candidate.id) ||
+        candidate.id.includes("..")
+      ) {
+        throw new Error(
+          `Backup store ${storeName} record ${index} has an invalid record ID.`,
+        );
       }
       if (ids.has(candidate.id)) {
-        throw new Error(`Backup store ${storeName} contains duplicate record ID ${candidate.id}.`);
+        throw new Error(
+          `Backup store ${storeName} contains duplicate record ID ${candidate.id}.`,
+        );
       }
       ids.add(candidate.id);
       if (storeName === "tombstones") {
         const tombstone = validateTombstone(candidate);
-        if (!tombstone.ok) throw new Error(`Backup tombstone ${candidate.id} is invalid: ${tombstone.error}`);
+        if (!tombstone.ok)
+          throw new Error(
+            `Backup tombstone ${candidate.id} is invalid: ${tombstone.error}`,
+          );
       }
       return candidate;
     });
@@ -174,7 +246,12 @@ async function buildImportPlan(
   manifest: ImportManifestPreview,
   warnings: ImportPlanWarning[],
 ): Promise<ImportPlanModel> {
-  const plan: ImportPlanModel = { totalRecords: 0, stores: [], manifest, warnings };
+  const plan: ImportPlanModel = {
+    totalRecords: 0,
+    stores: [],
+    manifest,
+    warnings,
+  };
 
   for (const [storeName, importedRecords] of Object.entries(data)) {
     let newRecords = 0;
@@ -234,11 +311,16 @@ function buildManifestPreview(manifest: EncryptedBackupManifest): {
         includesMedia: false,
         exclusions: [],
       },
-      warnings: [{
-        code: "legacy-manifest",
-        severity: "warning",
-        message: "Legacy version-2 backup: authenticated source, crypto, content-count, and exclusion metadata is unavailable.",
-      }],
+      warnings: [
+        {
+          code: "legacy-manifest",
+          severity: "warning",
+          message: translateRuntime(
+            "runtimeGenerated.services.backupimportservice.metadata.legacyVersion2BackupAuthenticatedSourceCryptoContentCountAnd",
+            "Legacy version-2 backup: authenticated source, crypto, content-count, and exclusion metadata is unavailable.",
+          ),
+        },
+      ],
     };
   }
 
@@ -248,17 +330,32 @@ function buildManifestPreview(manifest: EncryptedBackupManifest): {
     warnings.push({
       code: "app-version-mismatch",
       severity: "warning",
-      message: `Backup app version ${metadata.appVersion} differs from this app version ${appVersion}.`,
+      message: translateRuntime(
+        "runtimeGenerated.services.backupimportservice.metadata.backupAppVersionValue1DiffersFromThisAppVersionAppversion",
+        "Backup app version {{value1}} differs from this app version {{appVersion}}.",
+        { value1: metadata.appVersion, appVersion: appVersion },
+      ),
     });
   }
   if (metadata.contents.includesMedia) {
-    warnings.push({ code: "media-included", severity: "info", message: "This backup includes media records." });
+    warnings.push({
+      code: "media-included",
+      severity: "info",
+      message: translateRuntime(
+        "runtimeGenerated.services.backupimportservice.metadata.thisBackupIncludesMediaRecords",
+        "This backup includes media records.",
+      ),
+    });
   }
   if (metadata.contents.exclusions.length > 0) {
     warnings.push({
       code: "data-exclusions",
       severity: "info",
-      message: `Excluded by design: ${metadata.contents.exclusions.join(", ")}.`,
+      message: translateRuntime(
+        "runtimeGenerated.services.backupimportservice.metadata.excludedByDesignValue1",
+        "Excluded by design: {{value1}}.",
+        { value1: metadata.contents.exclusions.join(", ") },
+      ),
     });
   }
   return {
@@ -289,36 +386,65 @@ export async function prepareBackupImport(
   password: string,
 ): Promise<PreparedBackupImport> {
   const decryptedJson = await decryptBackup(manifest, password);
-  const { data, portableData, embeddedMetadata, profileId, skippedRecords } = parseAndValidatePayload(decryptedJson);
+  const { data, portableData, embeddedMetadata, profileId, skippedRecords } =
+    parseAndValidatePayload(decryptedJson);
   if (manifest.version === MANUAL_BACKUP_MANIFEST_VERSION) {
-    const { isBackupManifestMetadata, verifyBackupManifestMetadata } = await import("./backupManifest");
-    if (!manifest.metadata || !embeddedMetadata || manifest.exportedAt !== manifest.metadata.exportedAt) {
+    const { isBackupManifestMetadata, verifyBackupManifestMetadata } =
+      await import("./backupManifest");
+    if (
+      !manifest.metadata ||
+      !embeddedMetadata ||
+      manifest.exportedAt !== manifest.metadata.exportedAt
+    ) {
       throw new Error("Backup manifest metadata authentication failed.");
     }
-    if (!isBackupManifestMetadata(manifest.metadata) || !isBackupManifestMetadata(embeddedMetadata)) {
+    if (
+      !isBackupManifestMetadata(manifest.metadata) ||
+      !isBackupManifestMetadata(embeddedMetadata)
+    ) {
       throw new Error("Backup manifest metadata authentication failed.");
     }
-    if (!profileId) throw new Error("Backup manifest metadata authentication failed.");
-    await verifyBackupManifestMetadata(manifest.metadata, embeddedMetadata, portableData, profileId);
+    if (!profileId)
+      throw new Error("Backup manifest metadata authentication failed.");
+    await verifyBackupManifestMetadata(
+      manifest.metadata,
+      embeddedMetadata,
+      portableData,
+      profileId,
+    );
   }
   const { preview, warnings } = buildManifestPreview(manifest);
-  return { data, skippedRecords, plan: await buildImportPlan(data, preview, warnings) };
+  return {
+    data,
+    skippedRecords,
+    plan: await buildImportPlan(data, preview, warnings),
+  };
 }
 
 /** Parses a manual backup manifest and previews the detailed import plan. */
-export async function previewBackup(manifest: EncryptedBackupManifest, password: string): Promise<ImportPlanModel> {
+export async function previewBackup(
+  manifest: EncryptedBackupManifest,
+  password: string,
+): Promise<ImportPlanModel> {
   return (await prepareBackupImport(manifest, password)).plan;
 }
 
 /** Applies a previously decrypted and validated payload without decrypting again. */
-export async function applyPreparedBackup(prepared: PreparedBackupImport): Promise<ImportSummary> {
+export async function applyPreparedBackup(
+  prepared: PreparedBackupImport,
+): Promise<ImportSummary> {
   let importedCount = 0;
   let skippedCount = prepared.skippedRecords;
   let tombstoneCount = 0;
 
   if (isElectron()) {
-    const suppression = await desktopSync.setEmissionSuppressed({ suppressed: true });
-    if (!suppression.ok) throw new Error(suppression.error || "Could not suppress sync emission during import.");
+    const suppression = await desktopSync.setEmissionSuppressed({
+      suppressed: true,
+    });
+    if (!suppression.ok)
+      throw new Error(
+        suppression.error || "Could not suppress sync emission during import.",
+      );
   }
 
   try {
@@ -343,7 +469,11 @@ export async function applyPreparedBackup(prepared: PreparedBackupImport): Promi
     }
   }
 
-  return { recordsImported: importedCount, recordsSkipped: skippedCount, tombstonesApplied: tombstoneCount };
+  return {
+    recordsImported: importedCount,
+    recordsSkipped: skippedCount,
+    tombstonesApplied: tombstoneCount,
+  };
 }
 
 /** Fully decrypts, validates, and imports an encrypted backup manifest. */

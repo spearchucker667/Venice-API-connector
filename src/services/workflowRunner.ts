@@ -1,4 +1,8 @@
-import { type WorkflowCompileResult, type WorkflowCompileWarning } from "./workflowCompiler";
+import { translateRuntime } from "../i18n/runtimeTranslator";
+import {
+  type WorkflowCompileResult,
+  type WorkflowCompileWarning,
+} from "./workflowCompiler";
 import { type WorkflowStepTarget } from "../types/workflow";
 import { type TabId } from "../config/tabs";
 
@@ -39,11 +43,15 @@ const TARGET_TAB_IDS = {
   none: undefined,
 } as const satisfies Record<WorkflowStepTarget, TabId | undefined>;
 
-export function getWorkflowTargetTabId(target: WorkflowStepTarget): TabId | undefined {
+export function getWorkflowTargetTabId(
+  target: WorkflowStepTarget,
+): TabId | undefined {
   return TARGET_TAB_IDS[target];
 }
 
-export function createWorkflowRunPlan(compiled: WorkflowCompileResult): WorkflowRunPlan {
+export function createWorkflowRunPlan(
+  compiled: WorkflowCompileResult,
+): WorkflowRunPlan {
   const plan: WorkflowRunPlan = {
     workflowId: compiled.workflowId,
     versionId: compiled.versionId,
@@ -66,7 +74,11 @@ export function createWorkflowRunPlan(compiled: WorkflowCompileResult): Workflow
         plan.warnings.push({
           id: `duplicate-output-key:${step.outputKey}`,
           severity: "warning",
-          message: `Duplicate output key '${step.outputKey}' uses the last step value; all actions will still run.`,
+          message: translateRuntime(
+            "runtimeGenerated.services.workflowrunner.metadata.duplicateOutputKeyValue1UsesTheLastStepValueAll",
+            "Duplicate output key '{{value1}}' uses the last step value; all actions will still run.",
+            { value1: step.outputKey },
+          ),
         });
       }
       plan.outputs[step.outputKey] = { ...step.resolvedInput };
@@ -78,7 +90,11 @@ export function createWorkflowRunPlan(compiled: WorkflowCompileResult): Workflow
         kind: "handoff_prompt",
         target: step.target,
         tabId,
-        label: `Send prompt to ${step.target}`,
+        label: translateRuntime(
+          "runtimeGenerated.services.workflowrunner.metadata.sendPromptToValue1",
+          "Send prompt to {{value1}}",
+          { value1: step.target },
+        ),
         payload: { ...step.resolvedInput },
         outputKey: step.outputKey,
       });
@@ -88,7 +104,11 @@ export function createWorkflowRunPlan(compiled: WorkflowCompileResult): Workflow
         kind: "handoff_image_recipe",
         target: step.target,
         tabId,
-        label: `Send recipe to ${step.target}`,
+        label: translateRuntime(
+          "runtimeGenerated.services.workflowrunner.metadata.sendRecipeToValue1",
+          "Send recipe to {{value1}}",
+          { value1: step.target },
+        ),
         payload: { ...step.resolvedInput },
         outputKey: step.outputKey,
       });
@@ -98,7 +118,11 @@ export function createWorkflowRunPlan(compiled: WorkflowCompileResult): Workflow
         kind: "handoff_scene",
         target: step.target,
         tabId,
-        label: `Send scene to ${step.target}`,
+        label: translateRuntime(
+          "runtimeGenerated.services.workflowrunner.metadata.sendSceneToValue1",
+          "Send scene to {{value1}}",
+          { value1: step.target },
+        ),
         payload: { ...step.resolvedInput },
         outputKey: step.outputKey,
       });
@@ -108,7 +132,10 @@ export function createWorkflowRunPlan(compiled: WorkflowCompileResult): Workflow
         kind: "select_media",
         target: step.target,
         tabId,
-        label: `Select media`,
+        label: translateRuntime(
+          "runtimeGenerated.services.workflowrunner.metadata.selectMedia",
+          "Select media",
+        ),
         payload: { ...step.resolvedInput },
         outputKey: step.outputKey,
       });
@@ -118,30 +145,40 @@ export function createWorkflowRunPlan(compiled: WorkflowCompileResult): Workflow
         kind: "open_rp_context",
         target: step.target,
         tabId,
-        label: `Open RP context`,
+        label: translateRuntime(
+          "runtimeGenerated.services.workflowrunner.metadata.openRpContext",
+          "Open RP context",
+        ),
         payload: { ...step.resolvedInput },
         outputKey: step.outputKey,
       });
     } else if (step.kind === "note") {
-       plan.actions.push({
+      plan.actions.push({
         id: step.id,
         kind: "show_note",
         target: step.target,
         tabId,
-        label: `Show note`,
+        label: translateRuntime(
+          "runtimeGenerated.services.workflowrunner.metadata.showNote",
+          "Show note",
+        ),
         payload: { ...step.resolvedInput },
         outputKey: step.outputKey,
       });
     } else {
-        plan.actions.push({
-            id: step.id,
-            kind: "open_tab",
-            target: step.target,
-            tabId,
-            label: `Open ${step.target}`,
-            payload: { ...step.resolvedInput },
-            outputKey: step.outputKey,
-        });
+      plan.actions.push({
+        id: step.id,
+        kind: "open_tab",
+        target: step.target,
+        tabId,
+        label: translateRuntime(
+          "runtimeGenerated.services.workflowrunner.metadata.openValue1",
+          "Open {{value1}}",
+          { value1: step.target },
+        ),
+        payload: { ...step.resolvedInput },
+        outputKey: step.outputKey,
+      });
     }
   }
 

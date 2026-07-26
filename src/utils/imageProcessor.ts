@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /**
  * @fileoverview Isomorphic utility for stripping image metadata (JPEG, PNG, WebP)
  * and routing generated assets dynamically based on prompt keywords and regex.
@@ -27,54 +28,134 @@ export interface AssetRouteRule {
 export const DEFAULT_ASSET_ROUTE_RULES: AssetRouteRule[] = [
   {
     id: "anime",
-    label: "Anime / Manga / Illustration",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.utils.imageprocessor.metadata.animeMangaIllustration",
+        "Anime / Manga / Illustration",
+      );
+    },
     directoryName: "anime",
     priority: 10,
     match: {
-      keywords: ["anime", "manga", "illustration", "drawn", "cartoon", "lineart", "chibi", "comic", "fanart"],
-      regex: [/\b(?:draw|illustrate|sketch|painting|watercolor|vector)\b/i]
-    }
+      keywords: [
+        "anime",
+        "manga",
+        "illustration",
+        "drawn",
+        "cartoon",
+        "lineart",
+        "chibi",
+        "comic",
+        "fanart",
+      ],
+      regex: [/\b(?:draw|illustrate|sketch|painting|watercolor|vector)\b/i],
+    },
   },
   {
     id: "cinematic",
-    label: "Cinematic / Film",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.utils.imageprocessor.metadata.cinematicFilm",
+        "Cinematic / Film",
+      );
+    },
     directoryName: "cinematic",
     priority: 9,
     match: {
-      keywords: ["cinematic", "movie", "film", "hollywood", "shot on", "photorealistic", "ultrarealistic", "bokeh"],
-      regex: [/\b(?:directed by|production design|35mm|imax|panavision)\b/i]
-    }
+      keywords: [
+        "cinematic",
+        "movie",
+        "film",
+        "hollywood",
+        "shot on",
+        "photorealistic",
+        "ultrarealistic",
+        "bokeh",
+      ],
+      regex: [/\b(?:directed by|production design|35mm|imax|panavision)\b/i],
+    },
   },
   {
     id: "portraits",
-    label: "Portraits / People",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.utils.imageprocessor.metadata.portraitsPeople",
+        "Portraits / People",
+      );
+    },
     directoryName: "portraits",
     priority: 8,
     match: {
-      keywords: ["portrait", "face", "close up", "model", "woman", "man", "person", "human", "girl", "boy", "actor", "actress"],
-      regex: [/\b(?:studio lighting|headshot|eyes|skin texture)\b/i]
-    }
+      keywords: [
+        "portrait",
+        "face",
+        "close up",
+        "model",
+        "woman",
+        "man",
+        "person",
+        "human",
+        "girl",
+        "boy",
+        "actor",
+        "actress",
+      ],
+      regex: [/\b(?:studio lighting|headshot|eyes|skin texture)\b/i],
+    },
   },
   {
     id: "landscapes",
-    label: "Landscapes & Nature",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.utils.imageprocessor.metadata.landscapesNature",
+        "Landscapes & Nature",
+      );
+    },
     directoryName: "landscapes",
     priority: 7,
     match: {
-      keywords: ["landscape", "mountain", "river", "forest", "nature", "scenery", "valley", "ocean", "sunset", "sky", "beach"],
-      regex: [/\b(?:golden hour|aerial view|drone shot|scenic)\b/i]
-    }
+      keywords: [
+        "landscape",
+        "mountain",
+        "river",
+        "forest",
+        "nature",
+        "scenery",
+        "valley",
+        "ocean",
+        "sunset",
+        "sky",
+        "beach",
+      ],
+      regex: [/\b(?:golden hour|aerial view|drone shot|scenic)\b/i],
+    },
   },
   {
     id: "product",
-    label: "Product / Commercial Studio",
+    get label() {
+      return translateRuntime(
+        "runtimeGenerated.utils.imageprocessor.metadata.productCommercialStudio",
+        "Product / Commercial Studio",
+      );
+    },
     directoryName: "product",
     priority: 6,
     match: {
-      keywords: ["product", "packaging", "commercial", "advertisement", "studio shot", "mockup", "display", "renders"],
-      regex: [/\b(?:advertising photography|commercial render|studio background)\b/i]
-    }
-  }
+      keywords: [
+        "product",
+        "packaging",
+        "commercial",
+        "advertisement",
+        "studio shot",
+        "mockup",
+        "display",
+        "renders",
+      ],
+      regex: [
+        /\b(?:advertising photography|commercial render|studio background)\b/i,
+      ],
+    },
+  },
 ];
 
 export function base64ToUint8Array(base64: string): Uint8Array {
@@ -90,7 +171,10 @@ export function base64ToUint8Array(base64: string): Uint8Array {
   return bytes;
 }
 
-export function uint8ArrayToBase64(bytes: Uint8Array, mimeType: string): string {
+export function uint8ArrayToBase64(
+  bytes: Uint8Array,
+  mimeType: string,
+): string {
   if (typeof Buffer !== "undefined") {
     return `data:${mimeType};base64,${Buffer.from(bytes).toString("base64")}`;
   }
@@ -102,18 +186,30 @@ export function uint8ArrayToBase64(bytes: Uint8Array, mimeType: string): string 
   return `data:${mimeType};base64,${btoa(binary)}`;
 }
 
-export function detectMimeType(bytes: Uint8Array): { mimeType: string; extension: string } | null {
+export function detectMimeType(
+  bytes: Uint8Array,
+): { mimeType: string; extension: string } | null {
   if (bytes.length >= 4) {
     // PNG: 89 50 4E 47
-    if (bytes[0] === 137 && bytes[1] === 80 && bytes[2] === 78 && bytes[3] === 71) {
+    if (
+      bytes[0] === 137 &&
+      bytes[1] === 80 &&
+      bytes[2] === 78 &&
+      bytes[3] === 71
+    ) {
       return { mimeType: "image/png", extension: "png" };
     }
     // JPEG: FF D8
-    if (bytes[0] === 0xFF && bytes[1] === 0xD8) {
+    if (bytes[0] === 0xff && bytes[1] === 0xd8) {
       return { mimeType: "image/jpeg", extension: "jpg" };
     }
     // WebP: RIFF ... WEBP (offset 8)
-    if (bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46) {
+    if (
+      bytes[0] === 0x52 &&
+      bytes[1] === 0x49 &&
+      bytes[2] === 0x46 &&
+      bytes[3] === 0x46
+    ) {
       const decoder = new TextDecoder("ascii");
       const sub = decoder.decode(bytes.subarray(8, 12));
       if (sub === "WEBP") {
@@ -124,27 +220,31 @@ export function detectMimeType(bytes: Uint8Array): { mimeType: string; extension
   return null;
 }
 
-function stripJpeg(data: Uint8Array, report: ImagePostProcessReport): Uint8Array {
-  if (data.length < 4 || data[0] !== 0xFF || data[1] !== 0xD8) {
+function stripJpeg(
+  data: Uint8Array,
+  report: ImagePostProcessReport,
+): Uint8Array {
+  if (data.length < 4 || data[0] !== 0xff || data[1] !== 0xd8) {
     report.warnings.push("Invalid JPEG signature");
     return data;
   }
 
-  const parts: Uint8Array[] = [new Uint8Array([0xFF, 0xD8])];
+  const parts: Uint8Array[] = [new Uint8Array([0xff, 0xd8])];
   let pos = 2;
   let hasApp1 = false;
 
   while (pos < data.length) {
-    if (data[pos] !== 0xFF) {
+    if (data[pos] !== 0xff) {
       parts.push(data.subarray(pos));
       break;
     }
     const marker = data[pos + 1];
-    if (marker === 0xD9) { // EOI (End of Image)
-      parts.push(new Uint8Array([0xFF, 0xD9]));
+    if (marker === 0xd9) {
+      // EOI (End of Image)
+      parts.push(new Uint8Array([0xff, 0xd9]));
       break;
     }
-    if (marker === 0x00 || (marker >= 0xD0 && marker <= 0xD7)) {
+    if (marker === 0x00 || (marker >= 0xd0 && marker <= 0xd7)) {
       parts.push(data.subarray(pos, pos + 2));
       pos += 2;
       continue;
@@ -163,7 +263,7 @@ function stripJpeg(data: Uint8Array, report: ImagePostProcessReport): Uint8Array
     }
 
     // APP1 marker is 0xE1 (EXIF and XMP metadata)
-    if (marker === 0xE1) {
+    if (marker === 0xe1) {
       hasApp1 = true;
     } else {
       parts.push(data.subarray(pos, nextPos));
@@ -185,7 +285,10 @@ function stripJpeg(data: Uint8Array, report: ImagePostProcessReport): Uint8Array
   return result;
 }
 
-function stripPng(data: Uint8Array, report: ImagePostProcessReport): Uint8Array {
+function stripPng(
+  data: Uint8Array,
+  report: ImagePostProcessReport,
+): Uint8Array {
   const sig = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]);
   if (data.length < 8) {
     report.warnings.push("Invalid PNG signature");
@@ -199,7 +302,14 @@ function stripPng(data: Uint8Array, report: ImagePostProcessReport): Uint8Array 
   }
 
   const parts: Uint8Array[] = [sig];
-  const CRITICAL_CHUNKS = new Set(["IHDR", "PLTE", "IDAT", "IEND", "sRGB", "gAMA"]);
+  const CRITICAL_CHUNKS = new Set([
+    "IHDR",
+    "PLTE",
+    "IDAT",
+    "IEND",
+    "sRGB",
+    "gAMA",
+  ]);
   let pos = 8;
   let metadataRemoved = false;
   const decoder = new TextDecoder("ascii");
@@ -243,7 +353,10 @@ function stripPng(data: Uint8Array, report: ImagePostProcessReport): Uint8Array 
   return result;
 }
 
-function stripWebp(data: Uint8Array, report: ImagePostProcessReport): Uint8Array {
+function stripWebp(
+  data: Uint8Array,
+  report: ImagePostProcessReport,
+): Uint8Array {
   if (data.length < 12) {
     report.warnings.push("Invalid WebP container size");
     return data;
@@ -307,9 +420,10 @@ function stripWebp(data: Uint8Array, report: ImagePostProcessReport): Uint8Array
   return result;
 }
 
-export function stripImageMetadata(
-  bytes: Uint8Array
-): { data: Uint8Array; report: ImagePostProcessReport } {
+export function stripImageMetadata(bytes: Uint8Array): {
+  data: Uint8Array;
+  report: ImagePostProcessReport;
+} {
   const detected = detectMimeType(bytes);
   if (!detected) {
     return {
@@ -351,18 +465,22 @@ export function stripImageMetadata(
   return { data: processed, report };
 }
 
-export function processBase64Image(
-  base64: string
-): { base64: string; report: ImagePostProcessReport } {
+export function processBase64Image(base64: string): {
+  base64: string;
+  report: ImagePostProcessReport;
+} {
   const bytes = base64ToUint8Array(base64);
   const { data, report } = stripImageMetadata(bytes);
   return {
     base64: uint8ArrayToBase64(data, report.mimeType),
-    report
+    report,
   };
 }
 
-export function routeAsset(prompt: string, rules: AssetRouteRule[] = DEFAULT_ASSET_ROUTE_RULES): string {
+export function routeAsset(
+  prompt: string,
+  rules: AssetRouteRule[] = DEFAULT_ASSET_ROUTE_RULES,
+): string {
   const norm = prompt.toLowerCase();
   let bestFolder = "uncategorized";
   let maxPriority = -1;
@@ -371,17 +489,19 @@ export function routeAsset(prompt: string, rules: AssetRouteRule[] = DEFAULT_ASS
     let matches = false;
 
     // Check negative keywords first
-    if (rule.match.negativeKeywords?.some(k => norm.includes(k.toLowerCase()))) {
+    if (
+      rule.match.negativeKeywords?.some((k) => norm.includes(k.toLowerCase()))
+    ) {
       continue;
     }
 
     // Check keywords
-    if (rule.match.keywords?.some(k => norm.includes(k.toLowerCase()))) {
+    if (rule.match.keywords?.some((k) => norm.includes(k.toLowerCase()))) {
       matches = true;
     }
 
     // Check regex
-    if (!matches && rule.match.regex?.some(rx => rx.test(norm))) {
+    if (!matches && rule.match.regex?.some((rx) => rx.test(norm))) {
       matches = true;
     }
 

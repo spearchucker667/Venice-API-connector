@@ -158,6 +158,17 @@ describe("normalizeImageDraft", () => {
 
 /** Tests for buildImagePayload with normalization integration. */
 describe("buildImagePayload", () => {
+  it("uses the generate-endpoint format key and never the edit-only output_format key", () => {
+    const payload = buildImagePayload("flux-dev", {
+      prompt: "test",
+      width: 1024,
+      height: 1024,
+    });
+
+    expect(payload.format).toBe("png");
+    expect(payload).not.toHaveProperty("output_format");
+  });
+
   /** Verifies that invalid imported state is normalized before building payload. */
   it("normalizes invalid imported state before building payload", () => {
     const payload = buildImagePayload("flux-dev", {

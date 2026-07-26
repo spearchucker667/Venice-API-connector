@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /**
  * Central legal, brand, and disclaimer constants for Venice Forge.
  * Import these instead of scattering legal strings across components.
@@ -15,7 +16,7 @@ export const FULL_UNOFFICIAL_NOTICE =
   "Venice Forge is an unofficial, third-party desktop client for the Venice API. It is not affiliated with, endorsed by, sponsored by, approved by, or maintained by Venice.ai, Inc.";
 
 export const TRADEMARK_NOTICE =
-  '“Venice”, “Venice.ai”, the Venice wordmark, the Venice seal, the Venice keys mark, the Venice lockup, and related marks are trademarks or trade dress of Venice.ai, Inc. Use of these names and marks in Venice Forge is solely for nominative identification of API compatibility and provider integration.';
+  "“Venice”, “Venice.ai”, the Venice wordmark, the Venice seal, the Venice keys mark, the Venice lockup, and related marks are trademarks or trade dress of Venice.ai, Inc. Use of these names and marks in Venice Forge is solely for nominative identification of API compatibility and provider integration.";
 
 export const ASSET_NOTICE =
   "Official Venice brand assets displayed in this app remain the property of Venice.ai, Inc. They are not owned by this project and are not covered by this project's open-source license except where Venice.ai, Inc. expressly permits such use.";
@@ -37,7 +38,12 @@ export const OFFICIAL_LINKS = {
  * First-run acknowledgment copy. Shown once per local profile.
  */
 export const FIRST_RUN_COPY = {
-  title: "Welcome to Venice Forge",
+  get title() {
+    return translateRuntime(
+      "runtimeGenerated.shared.legal.metadata.welcomeToVeniceForge",
+      "Welcome to Venice Forge",
+    );
+  },
   body: `**18+ Age Requirement & Content Warning**
 You must be 18 years or older to use this application. This app connects to unrestricted AI endpoints that may generate explicit or sensitive content, including the inherent risk of producing AI-generated images that may inappropriately represent minors (CSAM). By proceeding, you confirm you are 18+ and assume all responsibility for the generated content.
 

@@ -28,11 +28,7 @@
 import type { ImageConstraints } from "../types/venice";
 
 export type ImageDimensionMode =
-  | "widthHeight"
-  | "aspectRatio"
-  | "aspectResolution"
-  | "fixed"
-  | "unknown";
+  "widthHeight" | "aspectRatio" | "aspectResolution" | "fixed" | "unknown";
 
 /**
  * Discriminates between text-to-image models (POST /api/v1/image/generate)
@@ -42,6 +38,10 @@ export type ImageDimensionMode =
 export type ImageModelOperation = "text-to-image" | "image-edit";
 
 export type ImageQuality = "low" | "medium" | "high" | "auto";
+export interface LocalizedImageOption {
+  label?: string;
+  labelKey?: string;
+}
 
 export interface ImageModelCapabilities {
   modelId: string;
@@ -53,11 +53,18 @@ export interface ImageModelCapabilities {
    */
   operation?: ImageModelOperation;
   dimensionMode: ImageDimensionMode;
-  widthHeightOptions?: Array<{ width: number; height: number; label: string }>;
-  aspectRatios?: Array<{ id: string; label: string }>;
-  resolutions?: Array<{ id: string; label: string }>;
-  qualities?: Array<{ id: ImageQuality; label: string }>;
-  defaultDimensions: { width?: number; height?: number; aspectRatio?: string; resolution?: string };
+  widthHeightOptions?: Array<
+    { width: number; height: number } & LocalizedImageOption
+  >;
+  aspectRatios?: Array<{ id: string } & LocalizedImageOption>;
+  resolutions?: Array<{ id: string } & LocalizedImageOption>;
+  qualities?: Array<{ id: ImageQuality } & LocalizedImageOption>;
+  defaultDimensions: {
+    width?: number;
+    height?: number;
+    aspectRatio?: string;
+    resolution?: string;
+  };
   defaultQuality?: ImageQuality;
   supportsNegativePrompt: boolean;
   supportsSeed: boolean;
@@ -95,13 +102,13 @@ export interface ImageModelCapabilities {
 }
 
 export const IMAGE_ASPECT_PRESETS = [
-  { id: "1:1", label: "Square (Default)" },
-  { id: "3:2", label: "Landscape (3:2)" },
-  { id: "16:9", label: "Cinema (16:9)" },
-  { id: "21:9", label: "Widescreen (21:9)" },
-  { id: "9:16", label: "Tall (9:16)" },
-  { id: "2:3", label: "Portrait (2:3)" },
-  { id: "3:4", label: "Instagram (3:4)" },
+  { id: "1:1", labelKey: "imageOptions.squareDefault" },
+  { id: "3:2", labelKey: "imageOptions.landscape32" },
+  { id: "16:9", labelKey: "imageOptions.cinema169" },
+  { id: "21:9", labelKey: "imageOptions.widescreen219" },
+  { id: "9:16", labelKey: "imageOptions.tall916" },
+  { id: "2:3", labelKey: "imageOptions.portrait23" },
+  { id: "3:4", labelKey: "imageOptions.instagram34" },
 ] as const;
 
 export type ImageAspectRatioPreset = (typeof IMAGE_ASPECT_PRESETS)[number];
@@ -115,15 +122,15 @@ const COMMON_ASPECT_RATIOS = [...IMAGE_ASPECT_PRESETS];
  * Includes "auto" which infers the closest ratio from the input image.
  */
 const EDIT_ASPECT_RATIOS = [
-  { id: "auto", label: "Auto (infer from image)" },
-  { id: "1:1", label: "Square (1:1)" },
-  { id: "3:2", label: "Photo (3:2)" },
-  { id: "16:9", label: "Landscape (16:9)" },
-  { id: "21:9", label: "Ultrawide (21:9)" },
-  { id: "9:16", label: "Portrait (9:16)" },
-  { id: "2:3", label: "Portrait (2:3)" },
-  { id: "3:4", label: "Portrait (3:4)" },
-  { id: "4:5", label: "Portrait (4:5)" },
+  { id: "auto", labelKey: "imageOptions.autoInfer" },
+  { id: "1:1", labelKey: "imageOptions.square11" },
+  { id: "3:2", labelKey: "imageOptions.photo32" },
+  { id: "16:9", labelKey: "imageOptions.landscape169" },
+  { id: "21:9", labelKey: "imageOptions.ultrawide219" },
+  { id: "9:16", labelKey: "imageOptions.portrait916" },
+  { id: "2:3", labelKey: "imageOptions.portrait23" },
+  { id: "3:4", labelKey: "imageOptions.portrait34" },
+  { id: "4:5", labelKey: "imageOptions.portrait45" },
 ];
 
 /**
@@ -146,20 +153,20 @@ const COMMON_RESOLUTIONS = [
 
 /** Common quality presets for models that support explicit quality. */
 const COMMON_QUALITIES = [
-  { id: "low" as const, label: "Low" },
-  { id: "medium" as const, label: "Medium" },
-  { id: "high" as const, label: "High" },
+  { id: "low" as const, labelKey: "imageOptions.qualityLow" },
+  { id: "medium" as const, labelKey: "imageOptions.qualityMedium" },
+  { id: "high" as const, labelKey: "imageOptions.qualityHigh" },
 ];
 
 /** Canonical width/height size options for SD-classic models, aligned to the 7 aspect ratio presets. */
 const SD_WIDTH_HEIGHT_PAIRS: ImageModelCapabilities["widthHeightOptions"] = [
-  { width: 1024, height: 1024, label: "Square (Default)" },
-  { width: 1152, height: 768, label: "Landscape (3:2)" },
-  { width: 1280, height: 704, label: "Cinema (16:9)" },
-  { width: 1216, height: 512, label: "Widescreen (21:9)" },
-  { width: 704, height: 1280, label: "Tall (9:16)" },
-  { width: 768, height: 1152, label: "Portrait (2:3)" },
-  { width: 768, height: 1024, label: "Instagram (3:4)" },
+  { width: 1024, height: 1024, labelKey: "imageOptions.squareDefault" },
+  { width: 1152, height: 768, labelKey: "imageOptions.landscape32" },
+  { width: 1280, height: 704, labelKey: "imageOptions.cinema169" },
+  { width: 1216, height: 512, labelKey: "imageOptions.widescreen219" },
+  { width: 704, height: 1280, labelKey: "imageOptions.tall916" },
+  { width: 768, height: 1152, labelKey: "imageOptions.portrait23" },
+  { width: 768, height: 1024, labelKey: "imageOptions.instagram34" },
 ];
 
 /**
@@ -178,6 +185,7 @@ const SD_WIDTH_HEIGHT_PAIRS: ImageModelCapabilities["widthHeightOptions"] = [
 const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   {
     modelId: "flux-dev",
+    // i18n-allow-next-line: provider-defined model display name
     label: "Flux Dev",
     operation: "text-to-image",
     dimensionMode: "widthHeight",
@@ -192,6 +200,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   },
   {
     modelId: "flux-dev-schnell",
+    // i18n-allow-next-line: provider-defined model display name
     label: "Flux Dev Schnell",
     operation: "text-to-image",
     dimensionMode: "widthHeight",
@@ -205,6 +214,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   },
   {
     modelId: "z-image-turbo",
+    // i18n-allow-next-line: provider-defined model display name
     label: "Z Image Turbo",
     operation: "text-to-image",
     dimensionMode: "widthHeight",
@@ -219,6 +229,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   },
   {
     modelId: "hidream-i-flux-dev",
+    // i18n-allow-next-line: provider-defined model display name
     label: "HiDream I Flux Dev",
     operation: "text-to-image",
     dimensionMode: "widthHeight",
@@ -233,6 +244,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   },
   {
     modelId: "sdxl",
+    // i18n-allow-next-line: provider-defined model display name
     label: "SDXL",
     operation: "text-to-image",
     dimensionMode: "widthHeight",
@@ -247,6 +259,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   },
   {
     modelId: "nano-banana-v1",
+    // i18n-allow-next-line: provider-defined model display name
     label: "Nano Banana",
     operation: "text-to-image",
     dimensionMode: "aspectResolution",
@@ -264,6 +277,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   },
   {
     modelId: "venice-character-reference-v1",
+    // i18n-allow-next-line: provider-defined model display name
     label: "Venice Character Reference (Beta)",
     operation: "text-to-image",
     dimensionMode: "widthHeight",
@@ -283,6 +297,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   // NEVER use these models with /image/edit.
   {
     modelId: "seedream-v5-pro",
+    // i18n-allow-next-line: provider-defined model display name
     label: "Seedream V5 Pro",
     operation: "text-to-image",
     dimensionMode: "aspectRatio",
@@ -298,6 +313,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   },
   {
     modelId: "seedream-v5-lite",
+    // i18n-allow-next-line: provider-defined model display name
     label: "Seedream V5 Lite",
     operation: "text-to-image",
     dimensionMode: "aspectRatio",
@@ -313,6 +329,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   },
   {
     modelId: "seedream-v4",
+    // i18n-allow-next-line: provider-defined model display name
     label: "Seedream V4",
     operation: "text-to-image",
     dimensionMode: "aspectRatio",
@@ -335,6 +352,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   // NEVER use these models with /image/generate.
   {
     modelId: "seedream-v5-pro-edit",
+    // i18n-allow-next-line: provider-defined model display name
     label: "Seedream V5 Pro (Edit)",
     operation: "image-edit",
     dimensionMode: "aspectRatio",
@@ -354,6 +372,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   },
   {
     modelId: "seedream-v5-lite-edit",
+    // i18n-allow-next-line: provider-defined model display name
     label: "Seedream V5 Lite (Edit)",
     operation: "image-edit",
     dimensionMode: "aspectRatio",
@@ -373,6 +392,7 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
   },
   {
     modelId: "seedream-v4-edit",
+    // i18n-allow-next-line: provider-defined model display name
     label: "Seedream V4 (Edit)",
     operation: "image-edit",
     dimensionMode: "aspectRatio",
@@ -394,9 +414,15 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
 ];
 
 /** Picks the first string-array field that is non-empty. */
-function pickStringArray(...candidates: ReadonlyArray<unknown>): string[] | undefined {
+function pickStringArray(
+  ...candidates: ReadonlyArray<unknown>
+): string[] | undefined {
   for (const c of candidates) {
-    if (Array.isArray(c) && c.length > 0 && c.every((v) => typeof v === "string")) {
+    if (
+      Array.isArray(c) &&
+      c.length > 0 &&
+      c.every((v) => typeof v === "string")
+    ) {
       return c as string[];
     }
   }
@@ -426,12 +452,24 @@ function normaliseConstraints(
   if (!raw || typeof raw !== "object") return raw ?? null;
   const r = raw as Record<string, unknown>;
   const aspectRatios = pickStringArray(r.aspectRatios, r.aspect_ratios);
-  const defaultAspectRatio = pickString(r.defaultAspectRatio, r.default_aspect_ratio);
+  const defaultAspectRatio = pickString(
+    r.defaultAspectRatio,
+    r.default_aspect_ratio,
+  );
   const resolutions = pickStringArray(r.resolutions);
-  const defaultResolution = pickString(r.defaultResolution, r.default_resolution);
-  const widthHeightDivisor = pickNumber(r.widthHeightDivisor, r.width_height_divisor);
+  const defaultResolution = pickString(
+    r.defaultResolution,
+    r.default_resolution,
+  );
+  const widthHeightDivisor = pickNumber(
+    r.widthHeightDivisor,
+    r.width_height_divisor,
+  );
   return {
-    promptCharacterLimit: pickNumber(r.promptCharacterLimit, r.prompt_character_limit),
+    promptCharacterLimit: pickNumber(
+      r.promptCharacterLimit,
+      r.prompt_character_limit,
+    ),
     aspectRatios,
     defaultAspectRatio,
     resolutions,
@@ -463,7 +501,9 @@ export const SEEDREAM_EDIT_IDS: ReadonlySet<string> = new Set([
 
 /** Returns the known capabilities for a given model ID.
  *  Falls back to widthHeight mode with all common pairs for unknown models. */
-export function getImageModelCapabilities(modelId: string): ImageModelCapabilities {
+export function getImageModelCapabilities(
+  modelId: string,
+): ImageModelCapabilities {
   const exact = IMAGE_MODEL_CAPABILITIES.find((c) => c.modelId === modelId);
   if (exact) return exact;
 
@@ -513,12 +553,14 @@ export function getEditModelCapabilities(
 
 export function buildSupportedAspectPresets(
   supportedRatios: readonly string[] | undefined,
-): Array<{ id: string; label: string }> {
+): Array<{ id: string } & LocalizedImageOption> {
   if (!supportedRatios || supportedRatios.length === 0) {
     return [...IMAGE_ASPECT_PRESETS];
   }
   const supportedSet = new Set(supportedRatios);
-  const canonicalMatched = IMAGE_ASPECT_PRESETS.filter((p) => supportedSet.has(p.id));
+  const canonicalMatched = IMAGE_ASPECT_PRESETS.filter((p) =>
+    supportedSet.has(p.id),
+  );
   if (canonicalMatched.length > 0) {
     return canonicalMatched;
   }
@@ -530,7 +572,10 @@ export function chooseDefaultAspectRatio(input: {
   providerDefault?: string;
 }): string {
   if (input.supported.includes("1:1")) return "1:1";
-  if (input.providerDefault && input.supported.includes(input.providerDefault)) {
+  if (
+    input.providerDefault &&
+    input.supported.includes(input.providerDefault)
+  ) {
     return input.providerDefault;
   }
   return input.supported[0] ?? "1:1";
@@ -543,22 +588,33 @@ export function buildDimensionOptions(
   constraints?: ImageConstraints | null,
 ): Pick<
   ImageModelCapabilities,
-  "dimensionMode" | "widthHeightOptions" | "aspectRatios" | "resolutions" | "defaultDimensions" | "qualities" | "defaultQuality"
+  | "dimensionMode"
+  | "widthHeightOptions"
+  | "aspectRatios"
+  | "resolutions"
+  | "defaultDimensions"
+  | "qualities"
+  | "defaultQuality"
 > {
   const known = getImageModelCapabilities(modelId);
   const normalised = normaliseConstraints(constraints);
 
-  if (normalised && normalised.aspectRatios && normalised.aspectRatios.length > 0) {
+  if (
+    normalised &&
+    normalised.aspectRatios &&
+    normalised.aspectRatios.length > 0
+  ) {
     const aspectRatios = buildSupportedAspectPresets(normalised.aspectRatios);
     const supportedIds = aspectRatios.map((a) => a.id);
     const hasResolutions =
-      Array.isArray(normalised.resolutions) && normalised.resolutions.length > 0;
+      Array.isArray(normalised.resolutions) &&
+      normalised.resolutions.length > 0;
     const defaultAspectRatio = chooseDefaultAspectRatio({
       supported: supportedIds,
       providerDefault: normalised.defaultAspectRatio,
     });
     const defaultResolution = hasResolutions
-      ? normalised.defaultResolution ?? normalised.resolutions![0]
+      ? (normalised.defaultResolution ?? normalised.resolutions![0])
       : undefined;
     return {
       dimensionMode: hasResolutions ? "aspectResolution" : "aspectRatio",
@@ -591,7 +647,8 @@ export function buildDimensionOptions(
     resolutions: known.resolutions,
     defaultDimensions: {
       ...known.defaultDimensions,
-      ...(known.dimensionMode === "aspectRatio" || known.dimensionMode === "aspectResolution"
+      ...(known.dimensionMode === "aspectRatio" ||
+      known.dimensionMode === "aspectResolution"
         ? { aspectRatio: defaultAspectRatio }
         : {}),
     },
@@ -610,10 +667,10 @@ export function isDimensionSupported(
   height: number | undefined,
 ): boolean {
   if (
-    typeof width !== "number"
-    || typeof height !== "number"
-    || !Number.isFinite(width)
-    || !Number.isFinite(height)
+    typeof width !== "number" ||
+    typeof height !== "number" ||
+    !Number.isFinite(width) ||
+    !Number.isFinite(height)
   ) {
     return false;
   }
@@ -624,8 +681,8 @@ export function isDimensionSupported(
       );
     case "fixed":
       return (
-        capabilities.defaultDimensions.width === width
-        && capabilities.defaultDimensions.height === height
+        capabilities.defaultDimensions.width === width &&
+        capabilities.defaultDimensions.height === height
       );
     case "aspectRatio":
     case "aspectResolution":
@@ -675,8 +732,8 @@ export function normalizeDimensionsForModel(
     return out;
   }
   if (
-    capabilities.dimensionMode === "aspectRatio"
-    || capabilities.dimensionMode === "aspectResolution"
+    capabilities.dimensionMode === "aspectRatio" ||
+    capabilities.dimensionMode === "aspectResolution"
   ) {
     const allowedRatios = (capabilities.aspectRatios ?? []).map((o) => o.id);
     out.aspectRatio =
@@ -684,9 +741,9 @@ export function normalizeDimensionsForModel(
         ? input.aspectRatio
         : capabilities.defaultDimensions.aspectRatio;
     if (
-      input.aspectRatio
-      && allowedRatios.length > 0
-      && !allowedRatios.includes(input.aspectRatio)
+      input.aspectRatio &&
+      allowedRatios.length > 0 &&
+      !allowedRatios.includes(input.aspectRatio)
     ) {
       out.warning = `Adjusted aspect ratio to ${out.aspectRatio} (model default).`;
     }
@@ -697,10 +754,10 @@ export function normalizeDimensionsForModel(
           ? input.resolution
           : capabilities.defaultDimensions.resolution;
       if (
-        input.resolution
-        && allowedRes.length > 0
-        && !allowedRes.includes(input.resolution)
-        && !out.warning
+        input.resolution &&
+        allowedRes.length > 0 &&
+        !allowedRes.includes(input.resolution) &&
+        !out.warning
       ) {
         out.warning = `Adjusted resolution to ${out.resolution} (model default).`;
       }
@@ -734,7 +791,10 @@ export function getUnsupportedRecipeFields(
   capabilities: ImageModelCapabilities,
 ): Array<keyof typeof recipe | string> {
   const blocked: Array<keyof typeof recipe | string> = [];
-  if (recipe.negativePrompt !== undefined && !capabilities.supportsNegativePrompt) {
+  if (
+    recipe.negativePrompt !== undefined &&
+    !capabilities.supportsNegativePrompt
+  ) {
     blocked.push("negativePrompt");
   }
   if (recipe.seed !== undefined && !capabilities.supportsSeed) {
@@ -746,7 +806,10 @@ export function getUnsupportedRecipeFields(
   if (recipe.steps !== undefined && capabilities.supportsSteps === false) {
     blocked.push("steps");
   }
-  if (recipe.cfgScale !== undefined && capabilities.supportsCfgScale === false) {
+  if (
+    recipe.cfgScale !== undefined &&
+    capabilities.supportsCfgScale === false
+  ) {
     blocked.push("cfgScale");
   }
   if (recipe.style !== undefined && capabilities.supportsStyle === false) {
@@ -757,8 +820,8 @@ export function getUnsupportedRecipeFields(
     if (recipe.height !== undefined) blocked.push("height");
   }
   if (
-    capabilities.dimensionMode !== "aspectRatio"
-    && capabilities.dimensionMode !== "aspectResolution"
+    capabilities.dimensionMode !== "aspectRatio" &&
+    capabilities.dimensionMode !== "aspectResolution"
   ) {
     if (recipe.aspectRatio !== undefined) blocked.push("aspectRatio");
   }
@@ -770,43 +833,85 @@ export function getUnsupportedRecipeFields(
 
 /** Returns a short, human-readable summary of what a model supports — used
  *  by Image Studio and the Media Inspector as a "Capabilities" line. */
-export function getRecipeCapabilityList(capabilities: ImageModelCapabilities): string[] {
-  const list: string[] = [];
+export interface RecipeCapabilityDescriptor {
+  key: `imageCapabilities.${string}`;
+  values?: Record<string, string | number>;
+}
+
+export function getRecipeCapabilityList(
+  capabilities: ImageModelCapabilities,
+): RecipeCapabilityDescriptor[] {
+  const list: RecipeCapabilityDescriptor[] = [];
   switch (capabilities.dimensionMode) {
     case "widthHeight":
-      list.push(`${capabilities.widthHeightOptions?.length ?? 0} sizes`);
+      list.push({
+        key: "imageCapabilities.sizes",
+        values: { count: capabilities.widthHeightOptions?.length ?? 0 },
+      });
       break;
     case "aspectRatio":
-      list.push(`${capabilities.aspectRatios?.length ?? 0} ratios`);
+      list.push({
+        key: "imageCapabilities.ratios",
+        values: { count: capabilities.aspectRatios?.length ?? 0 },
+      });
       break;
     case "aspectResolution":
-      list.push(
-        `${capabilities.aspectRatios?.length ?? 0} ratios × ${capabilities.resolutions?.length ?? 0} resolutions`,
-      );
+      list.push({
+        key: "imageCapabilities.ratiosResolutions",
+        values: {
+          ratios: capabilities.aspectRatios?.length ?? 0,
+          resolutions: capabilities.resolutions?.length ?? 0,
+        },
+      });
       break;
     case "fixed":
       list.push(
-        capabilities.defaultDimensions.width && capabilities.defaultDimensions.height
-          ? `Fixed ${capabilities.defaultDimensions.width}x${capabilities.defaultDimensions.height}`
-          : "Fixed size",
+        capabilities.defaultDimensions.width &&
+          capabilities.defaultDimensions.height
+          ? {
+              key: "imageCapabilities.fixedDimensions",
+              values: {
+                width: capabilities.defaultDimensions.width,
+                height: capabilities.defaultDimensions.height,
+              },
+            }
+          : { key: "imageCapabilities.fixedSize" },
       );
       break;
     default:
-      list.push("Unknown sizing");
+      list.push({ key: "imageCapabilities.unknownSizing" });
   }
-  list.push(capabilities.supportsNegativePrompt ? "Negative prompt" : "No negative prompt");
-  list.push(capabilities.supportsSeed ? "Seed" : "No seed");
-  list.push(capabilities.supportsVariants ? "Variants" : "Single output");
-  if (capabilities.supportsSteps === false) list.push("No steps");
-  if (capabilities.supportsCfgScale === false) list.push("No CFG");
-  if (capabilities.supportsStyle === false) list.push("No style preset");
+  list.push({
+    key: capabilities.supportsNegativePrompt
+      ? "imageCapabilities.negativePrompt"
+      : "imageCapabilities.noNegativePrompt",
+  });
+  list.push({
+    key: capabilities.supportsSeed
+      ? "imageCapabilities.seed"
+      : "imageCapabilities.noSeed",
+  });
+  list.push({
+    key: capabilities.supportsVariants
+      ? "imageCapabilities.variants"
+      : "imageCapabilities.singleOutput",
+  });
+  if (capabilities.supportsSteps === false)
+    list.push({ key: "imageCapabilities.noSteps" });
+  if (capabilities.supportsCfgScale === false)
+    list.push({ key: "imageCapabilities.noCfg" });
+  if (capabilities.supportsStyle === false)
+    list.push({ key: "imageCapabilities.noStylePreset" });
   if (capabilities.supportsReferences) {
-    list.push(`${capabilities.referenceLimit ?? 0} reference${capabilities.referenceLimit === 1 ? "" : "s"}`);
+    list.push({
+      key: "imageCapabilities.references",
+      values: { count: capabilities.referenceLimit ?? 0 },
+    });
   } else {
-    list.push("No references");
+    list.push({ key: "imageCapabilities.noReferences" });
   }
   if (capabilities.qualities && capabilities.qualities.length > 0) {
-    list.push("Quality");
+    list.push({ key: "imageCapabilities.quality" });
   }
   return list;
 }

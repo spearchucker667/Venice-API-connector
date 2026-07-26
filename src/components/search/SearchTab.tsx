@@ -1,7 +1,7 @@
 import React from "react";
 import { Field } from "../../components/Field";
 import type { SearchResultItem } from "./searchScrapeTypes";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 export function SearchTab({
   query,
@@ -26,28 +26,47 @@ export function SearchTab({
   onReadWithJina?: (url: string) => void;
   onSaveToSession?: (item: SearchResultItem) => void;
 }) {
+  const { t: tRuntime } = useTranslation("common");
   return (
     <div className="rounded-xl border border-border bg-surface-elevated p-5 shadow-lg flex flex-col gap-4">
-      <h3 className="text-[14.5px] font-medium text-text-primary"><Trans i18nKey="common:surface.componentsSearchSearchtab.heading.webSearch" /></h3>
-      
-      <Field label="Query">
+      <h3 className="text-[14.5px] font-medium text-text-primary">
+        <Trans i18nKey="common:surface.componentsSearchSearchtab.heading.webSearch" />
+      </h3>
+
+      <Field
+        label={tRuntime(
+          "runtimeGenerated.components.search.searchtab.attribute.query",
+        )}
+      >
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="latest model routing best practices"
+          placeholder={tRuntime(
+            "runtimeGenerated.components.search.searchtab.attribute.latestModelRoutingBestPractices",
+          )}
           className="w-full bg-surface border border-border rounded-lg px-3.5 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-all placeholder:text-text-muted/50"
         />
       </Field>
 
-      <Field label="Provider">
+      <Field
+        label={tRuntime(
+          "runtimeGenerated.components.search.searchtab.attribute.provider",
+        )}
+      >
         <select
           value={provider}
           onChange={(e) => setProvider(e.target.value)}
           className="w-full bg-surface border border-border rounded-lg px-3.5 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-all cursor-pointer"
         >
-          <option value="brave"><Trans i18nKey="common:surface.componentsSearchSearchtab.option.braveSearchVenice" /></option>
-          <option value="google"><Trans i18nKey="common:surface.componentsSearchSearchtab.option.googleSearchVenice" /></option>
-          <option value="jina"><Trans i18nKey="common:surface.componentsSearchSearchtab.option.jinaSearch" /></option>
+          <option value="brave">
+            <Trans i18nKey="common:surface.componentsSearchSearchtab.option.braveSearchVenice" />
+          </option>
+          <option value="google">
+            <Trans i18nKey="common:surface.componentsSearchSearchtab.option.googleSearchVenice" />
+          </option>
+          <option value="jina">
+            <Trans i18nKey="common:surface.componentsSearchSearchtab.option.jinaSearch" />
+          </option>
         </select>
       </Field>
 
@@ -56,18 +75,33 @@ export function SearchTab({
         onClick={runSearch}
         disabled={loading === "search" || !query.trim()}
       >
-        {loading === "search" ? "Searching…" : "Search"}
+        {loading === "search"
+          ? tRuntime(
+              "runtimeGenerated.components.search.searchtab.text.searching",
+            )
+          : tRuntime(
+              "runtimeGenerated.components.search.searchtab.text.search",
+            )}
       </button>
-      
+
       <div className="flex flex-col gap-3 mt-2 overflow-y-auto max-h-[360px]">
         {searchResults.map((r, idx) => {
           const url = r.url || r.link || "";
           return (
-            <div key={idx} className="rounded-lg bg-surface border border-border p-3 text-[13px]">
+            <div
+              key={idx}
+              className="rounded-lg bg-surface border border-border p-3 text-[13px]"
+            >
               <strong className="text-text-primary block mb-1">
-                {r.title || r.name || "Untitled result"}
+                {r.title ||
+                  r.name ||
+                  tRuntime(
+                    "runtimeGenerated.components.search.searchtab.text.untitledResult",
+                  )}
               </strong>
-              <span className="text-accent break-all text-[12px] block mb-2">{url}</span>
+              <span className="text-accent break-all text-[12px] block mb-2">
+                {url}
+              </span>
               <div className="text-text-secondary leading-relaxed mb-2">
                 {r.snippet || r.content || r.description || ""}
               </div>
@@ -77,21 +111,24 @@ export function SearchTab({
                     onClick={() => onScrapeWithVenice(url)}
                     className="px-2 py-1 rounded bg-surface-elevated border border-border text-[12px] hover:bg-surface-muted transition-colors"
                   >
-                    <Trans i18nKey="common:surface.componentsSearchSearchtab.action.scrapeWithVenice" /></button>
+                    <Trans i18nKey="common:surface.componentsSearchSearchtab.action.scrapeWithVenice" />
+                  </button>
                 )}
                 {onReadWithJina && (
                   <button
                     onClick={() => onReadWithJina(url)}
                     className="px-2 py-1 rounded bg-surface-elevated border border-border text-[12px] hover:bg-surface-muted transition-colors"
                   >
-                    <Trans i18nKey="common:surface.componentsSearchSearchtab.action.readWithJina" /></button>
+                    <Trans i18nKey="common:surface.componentsSearchSearchtab.action.readWithJina" />
+                  </button>
                 )}
                 {onSaveToSession && (
                   <button
                     onClick={() => onSaveToSession(r)}
                     className="px-2 py-1 rounded bg-surface-elevated border border-border text-[12px] hover:bg-surface-muted transition-colors"
                   >
-                    <Trans i18nKey="common:surface.componentsSearchSearchtab.action.saveToSession" /></button>
+                    <Trans i18nKey="common:surface.componentsSearchSearchtab.action.saveToSession" />
+                  </button>
                 )}
               </div>
             </div>
@@ -99,7 +136,8 @@ export function SearchTab({
         })}
         {!searchResults.length && (
           <div className="text-[12px] text-text-muted text-center py-6">
-            <Trans i18nKey="common:surface.componentsSearchSearchtab.text.noSearchResultsYet" /></div>
+            <Trans i18nKey="common:surface.componentsSearchSearchtab.text.noSearchResultsYet" />
+          </div>
         )}
       </div>
     </div>

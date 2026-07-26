@@ -1,59 +1,83 @@
-import { useEffect, useState } from 'react'
-import { useAuthStore } from '../../stores/auth-store'
-import { VeniceLogo } from '../ui/logo'
-import { toast } from '../../stores/toast-store'
-import { isElectron } from '../../services/desktopBridge'
-import { Trans } from 'react-i18next';
+import { useEffect, useState } from "react";
+import { useAuthStore } from "../../stores/auth-store";
+import { VeniceLogo } from "../ui/logo";
+import { toast } from "../../stores/toast-store";
+import { isElectron } from "../../services/desktopBridge";
+import { Trans, useTranslation } from "react-i18next";
 
-export function ApiKeyDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { apiKey, isConfigured, setApiKey, clearApiKey } = useAuthStore()
-  const [value, setValue] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+export function ApiKeyDialog({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  const { t: tRuntime } = useTranslation("common");
+  const { apiKey, isConfigured, setApiKey, clearApiKey } = useAuthStore();
+  const [value, setValue] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!open) return
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [open, onClose])
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [open, onClose]);
 
-  if (!open) return null
+  if (!open) return null;
 
   const handleConnect = async () => {
-    if (!value.trim()) return
-    setBusy(true)
-    setError(null)
+    if (!value.trim()) return;
+    setBusy(true);
+    setError(null);
     try {
-      await setApiKey(value.trim())
-      toast.success('Key saved securely')
-      onClose()
+      await setApiKey(value.trim());
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.layout.apiKeyDialog.notification.keySavedSecurely",
+        ),
+      );
+      onClose();
     } catch {
-      setError('Failed to save key. Please check the value and try again.')
+      setError("Failed to save key. Please check the value and try again.");
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
-  }
+  };
 
   const handleDisconnect = async () => {
-    setBusy(true)
-    setError(null)
+    setBusy(true);
+    setError(null);
     try {
-      await clearApiKey()
-      setValue('')
-      toast.info('API key cleared')
+      await clearApiKey();
+      setValue("");
+      toast.info("API key cleared");
     } catch {
-      setError('Failed to disconnect. Please try again.')
+      setError("Failed to disconnect. Please try again.");
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
-  }
+  };
 
-  const titleId = 'apikey-dialog-title'
+  const titleId = "apikey-dialog-title";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby={titleId}>
-      <button aria-label="Close dialog" className="absolute inset-0 bg-overlay/80 backdrop-blur-sm" onClick={onClose} />
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+    >
+      <button
+        aria-label={tRuntime(
+          "runtimeGenerated.components.layout.apiKeyDialog.attribute.closeDialog",
+        )}
+        className="absolute inset-0 bg-overlay/80 backdrop-blur-sm"
+        onClick={onClose}
+      />
       <div
         className="mesh-panel relative rounded-xl p-6 w-full max-w-sm mx-4 animate-scale-in"
         onClick={(e) => e.stopPropagation()}
@@ -61,15 +85,25 @@ export function ApiKeyDialog({ open, onClose }: { open: boolean; onClose: () => 
         <div className="flex items-center gap-3 mb-5">
           <VeniceLogo size={26} />
           <div>
-            <h2 id={titleId} className="text-[17px] font-semibold text-text-primary">
-              <Trans i18nKey="common:surface.layoutApiKeyDialog.heading.connectToVenice" /></h2>
+            <h2
+              id={titleId}
+              className="text-[17px] font-semibold text-text-primary"
+            >
+              <Trans i18nKey="common:surface.layoutApiKeyDialog.heading.connectToVenice" />
+            </h2>
             <p className="text-[13px] text-text-secondary">
-              {isElectron() ? 'Stored securely in OS Keychain/Credential Manager.' : 'Held in memory for this local development session only.'}
+              {isElectron()
+                ? "Stored securely in OS Keychain/Credential Manager."
+                : tRuntime(
+                    "runtimeGenerated.components.layout.apiKeyDialog.text.heldInMemoryForThisLocalDevelopmentSessionOnly",
+                  )}
             </p>
           </div>
         </div>
 
-        <label htmlFor="apikey-input" className="sr-only"><Trans i18nKey="common:surface.layoutApiKeyDialog.label.veniceApiKey" /></label>
+        <label htmlFor="apikey-input" className="sr-only">
+          <Trans i18nKey="common:surface.layoutApiKeyDialog.label.veniceApiKey" />
+        </label>
         <input
           id="apikey-input"
           type="password"
@@ -79,10 +113,12 @@ export function ApiKeyDialog({ open, onClose }: { open: boolean; onClose: () => 
           className="mesh-input w-full rounded-lg px-3.5 py-2.5 text-[16px] text-text-primary outline-none focus:border-accent font-mono placeholder:text-text-muted/50"
           autoFocus
           autoComplete="off"
-          onKeyDown={(e) => { if (e.key === 'Enter') handleConnect() }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleConnect();
+          }}
         />
         <p className="text-[13px] text-text-muted mt-2">
-          <Trans i18nKey="common:surface.layoutApiKeyDialog.description.getAKeyAt" />{' '}
+          <Trans i18nKey="common:surface.layoutApiKeyDialog.description.getAKeyAt" />{" "}
           <a
             href="https://venice.ai/settings/api"
             target="_blank"
@@ -94,7 +130,11 @@ export function ApiKeyDialog({ open, onClose }: { open: boolean; onClose: () => 
           .
         </p>
 
-        {error && <p role="alert" className="text-[13px] text-danger mt-3">{error}</p>}
+        {error && (
+          <p role="alert" className="text-[13px] text-danger mt-3">
+            {error}
+          </p>
+        )}
 
         <div className="flex flex-wrap gap-2 mt-6 justify-end">
           {(apiKey || isConfigured) && (
@@ -103,20 +143,29 @@ export function ApiKeyDialog({ open, onClose }: { open: boolean; onClose: () => 
               disabled={busy}
               className="px-3 py-1.5 text-[14px] text-text-secondary hover:text-danger cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Trans i18nKey="common:surface.layoutApiKeyDialog.action.disconnect" /></button>
+              <Trans i18nKey="common:surface.layoutApiKeyDialog.action.disconnect" />
+            </button>
           )}
-          <button onClick={onClose} className="px-3 py-1.5 text-[14px] text-text-secondary hover:text-text-primary cursor-pointer transition-colors">
-            <Trans i18nKey="common:surface.layoutApiKeyDialog.action.cancel" /></button>
+          <button
+            onClick={onClose}
+            className="px-3 py-1.5 text-[14px] text-text-secondary hover:text-text-primary cursor-pointer transition-colors"
+          >
+            <Trans i18nKey="common:surface.layoutApiKeyDialog.action.cancel" />
+          </button>
           <button
             onClick={handleConnect}
             disabled={busy || !value.trim()}
             aria-busy={busy || undefined}
             className="px-4 py-1.5 text-[14px] font-medium bg-accent text-accent-fg rounded-md hover:bg-accent-hover transition-colors disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 cursor-pointer"
           >
-            {busy ? '…' : 'Connect'}
+            {busy
+              ? "…"
+              : tRuntime(
+                  "runtimeGenerated.components.layout.apiKeyDialog.text.connect",
+                )}
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }

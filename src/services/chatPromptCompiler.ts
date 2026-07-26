@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 import type { Conversation } from "../types/conversation";
 import type { ChatMessage, ModelInfo, ContentPart } from "../types/venice";
 import { calculateChatContextBudget } from "./chatContextBudget";
@@ -31,10 +32,12 @@ export function compileChatPrompt(
   } else if (mode === "inherit") {
     if (conv.metadata?.character) {
       if (conv.systemPrompt) systemSegments.push(conv.systemPrompt.trim());
-      else if (characterSystemPrompt) systemSegments.push(characterSystemPrompt.trim());
+      else if (characterSystemPrompt)
+        systemSegments.push(characterSystemPrompt.trim());
     } else {
       if (conv.systemPrompt) systemSegments.push(conv.systemPrompt.trim());
-      else if (globalSystemPrompt) systemSegments.push(globalSystemPrompt.trim());
+      else if (globalSystemPrompt)
+        systemSegments.push(globalSystemPrompt.trim());
     }
   }
 
@@ -43,7 +46,12 @@ export function compileChatPrompt(
 
   // 2. Build Messages
   const requestMessages: ChatMessage[] = conv.messages
-    .filter((m: ChatMessage) => m.content !== "" || (m.tool_calls && m.tool_calls.length > 0) || m.tool_call_id)
+    .filter(
+      (m: ChatMessage) =>
+        m.content !== "" ||
+        (m.tool_calls && m.tool_calls.length > 0) ||
+        m.tool_call_id,
+    )
     .map((m: ChatMessage) => {
       // Inline prependInjectedContext equivalent
       let content = m.content;
@@ -52,17 +60,22 @@ export function compileChatPrompt(
           content = `${m.metadata.injectedContext.trim()}\n\n${content}`;
         } else if (Array.isArray(content)) {
           const parts = content as ContentPart[];
-          const textPartIndex = parts.findIndex((p: ContentPart) => p.type === "text");
+          const textPartIndex = parts.findIndex(
+            (p: ContentPart) => p.type === "text",
+          );
 
           if (textPartIndex === -1) {
             content = [
               { type: "text", text: m.metadata.injectedContext.trim() },
-              ...parts
+              ...parts,
             ];
           } else {
             content = parts.map((part: ContentPart, index: number) => {
               return index === textPartIndex && part.type === "text"
-                ? { ...part, text: `${m.metadata!.injectedContext!.trim()}\n\n${part.text}` }
+                ? {
+                    ...part,
+                    text: `${m.metadata!.injectedContext!.trim()}\n\n${part.text}`,
+                  }
                 : part;
             });
           }
@@ -72,12 +85,18 @@ export function compileChatPrompt(
       // `providerContext` carries extracted attachment text wrapped in an
       // untrusted-data envelope. It is NOT part of the persisted visible content
       // and is only appended here, in the provider-facing compiled message.
-      if (m.role === "user" && typeof m.metadata?.providerContext === "string" && m.metadata.providerContext.trim()) {
+      if (
+        m.role === "user" &&
+        typeof m.metadata?.providerContext === "string" &&
+        m.metadata.providerContext.trim()
+      ) {
         if (typeof content === "string") {
           content = `${content}${m.metadata.providerContext}`;
         } else if (Array.isArray(content)) {
           const parts = content as ContentPart[];
-          const textPartIndex = parts.findIndex((p: ContentPart) => p.type === "text");
+          const textPartIndex = parts.findIndex(
+            (p: ContentPart) => p.type === "text",
+          );
           if (textPartIndex === -1) {
             content = [
               { type: "text", text: m.metadata.providerContext.trim() },
@@ -86,7 +105,10 @@ export function compileChatPrompt(
           } else {
             content = parts.map((part: ContentPart, index: number) => {
               return index === textPartIndex && part.type === "text"
-                ? { ...part, text: `${part.text}${m.metadata!.providerContext}` }
+                ? {
+                    ...part,
+                    text: `${part.text}${m.metadata!.providerContext}`,
+                  }
                 : part;
             });
           }
@@ -119,7 +141,9 @@ export function compileChatPrompt(
   const initialMessagesCount = requestMessages.length;
 
   if (budget.remainingInputBudget < 0 && requestMessages.length > 2) {
-    compactionId = notify.loading("Compacting context...", { dedupeKey: "compaction" });
+    compactionId = notify.loading("Compacting context...", {
+      dedupeKey: "compaction",
+    });
   }
 
   const minimumUsefulOutputTokens = Math.min(256, Math.max(1, maxTokens));
@@ -131,9 +155,14 @@ export function compileChatPrompt(
     includeVeniceSystemPrompt,
   );
 
-  while (minimumOutputBudget.remainingInputBudget < 0 && requestMessages.length > 2) {
+  while (
+    minimumOutputBudget.remainingInputBudget < 0 &&
+    requestMessages.length > 2
+  ) {
     compacted = true;
-    const firstNonSystemIndex = requestMessages.findIndex((m) => m.role !== "system");
+    const firstNonSystemIndex = requestMessages.findIndex(
+      (m) => m.role !== "system",
+    );
     if (firstNonSystemIndex === -1) break;
 
     const firstMsg = requestMessages[firstNonSystemIndex];
@@ -154,8 +183,13 @@ export function compileChatPrompt(
     // Post-splice guard: if the oldest remaining non-system message is now an
     // assistant message (e.g. the pair before it was partially removed), strip it
     // so we never send an assistant-first history to the provider.
-    const afterSpliceIdx = requestMessages.findIndex((m) => m.role !== "system");
-    if (afterSpliceIdx !== -1 && requestMessages[afterSpliceIdx].role === "assistant") {
+    const afterSpliceIdx = requestMessages.findIndex(
+      (m) => m.role !== "system",
+    );
+    if (
+      afterSpliceIdx !== -1 &&
+      requestMessages[afterSpliceIdx].role === "assistant"
+    ) {
       requestMessages.splice(afterSpliceIdx, 1);
     }
 
@@ -180,28 +214,53 @@ export function compileChatPrompt(
     const turnWord = removedCount === 1 ? "message" : "messages";
     notify.update(compactionId, {
       severity: "info",
-      title: "Context truncated",
-      message: `Removed ${removedCount} old ${turnWord} to fit within context limits. Start a new chat or use a model with a larger context window to preserve full history.`,
-      durationMs: 5500
+      title: translateRuntime(
+        "runtimeGenerated.services.chatpromptcompiler.metadata.contextTruncated",
+        "Context truncated",
+      ),
+      message: translateRuntime(
+        "runtimeGenerated.services.chatpromptcompiler.metadata.removedRemovedcountOldTurnwordToFitWithinContextLimitsStart",
+        "Removed {{removedCount}} old {{turnWord}} to fit within context limits. Start a new chat or use a model with a larger context window to preserve full history.",
+        { removedCount: removedCount, turnWord: turnWord },
+      ),
+      durationMs: 5500,
     });
   }
 
   if (minimumOutputBudget.remainingInputBudget < 0) {
     if (compactionId) notify.dismiss(compactionId);
     notify.error("Context limit exceeded", {
-      message: `The conversation requires ~${budget.totalEstimatedInput.toLocaleString()} tokens, but only ${budget.contextLimit.toLocaleString()} are available after reserving output tokens.`
+      message: translateRuntime(
+        "runtimeGenerated.services.chatpromptcompiler.metadata.theConversationRequiresValue1TokensButOnlyValue2AreAvailable",
+        "The conversation requires ~{{value1}} tokens, but only {{value2}} are available after reserving output tokens.",
+        {
+          value1: budget.totalEstimatedInput.toLocaleString(),
+          value2: budget.contextLimit.toLocaleString(),
+        },
+      ),
     });
     throw new Error(
-      `Context budget exceeded. The conversation requires ~${budget.totalEstimatedInput.toLocaleString()} tokens, but only ${budget.contextLimit.toLocaleString()} are available after reserving output tokens. Try starting a new chat or reducing max_tokens.`
+      `Context budget exceeded. The conversation requires ~${budget.totalEstimatedInput.toLocaleString()} tokens, but only ${budget.contextLimit.toLocaleString()} are available after reserving output tokens. Try starting a new chat or reducing max_tokens.`,
     );
   }
 
   const providerMaxOutput = modelInfo?.maxOutputTokens ?? 4096;
-  const availableOutputTokens = Math.max(1, budget.contextLimit - budget.totalEstimatedInput);
-  const effectiveMaxTokens = Math.min(maxTokens, providerMaxOutput, availableOutputTokens);
+  const availableOutputTokens = Math.max(
+    1,
+    budget.contextLimit - budget.totalEstimatedInput,
+  );
+  const effectiveMaxTokens = Math.min(
+    maxTokens,
+    providerMaxOutput,
+    availableOutputTokens,
+  );
   if (effectiveMaxTokens < Math.min(maxTokens, providerMaxOutput)) {
     notify.warning("Max output reduced to fit context", {
-      message: `This request reserves ${effectiveMaxTokens.toLocaleString()} output tokens so the custom prompt and current conversation fit the selected model.`,
+      message: translateRuntime(
+        "runtimeGenerated.services.chatpromptcompiler.metadata.thisRequestReservesValue1OutputTokensSoTheCustomPrompt",
+        "This request reserves {{value1}} output tokens so the custom prompt and current conversation fit the selected model.",
+        { value1: effectiveMaxTokens.toLocaleString() },
+      ),
       dedupeKey: "context-output-clamp",
     });
     budget = calculateChatContextBudget(
@@ -215,11 +274,17 @@ export function compileChatPrompt(
 
   if (budget.percentUsed >= 0.8) {
     const usageStr = Math.round(budget.percentUsed * 100);
-    const estK = Math.round((budget.totalEstimatedInput + budget.reservedOutputTokens) / 1000);
+    const estK = Math.round(
+      (budget.totalEstimatedInput + budget.reservedOutputTokens) / 1000,
+    );
     const totalK = Math.round(budget.contextLimit / 1000);
     notify.warning(`Context usage is at ${usageStr}%`, {
-      message: `${estK}K of ${totalK}K estimated tokens are in use.`,
-      dedupeKey: 'context-warning',
+      message: translateRuntime(
+        "runtimeGenerated.services.chatpromptcompiler.metadata.estkKOfTotalkKEstimatedTokensAreInUse",
+        "{{estK}}K of {{totalK}}K estimated tokens are in use.",
+        { estK: estK, totalK: totalK },
+      ),
+      dedupeKey: "context-warning",
     });
   }
 

@@ -8,9 +8,10 @@ import { useRpChatStore } from "../../stores/rp-chat-store";
 import { GhostButton, ErrorText, EmptyState, PillGroup } from "../ui/shared";
 import { Spinner } from "../ui/spinner";
 import { formatRelativeTime, truncate } from "./_shared";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 export function AssetGallery() {
+  const { t: tRuntime } = useTranslation("common");
   const load = useSceneAssetStore((s) => s.load);
   const hasLoaded = useSceneAssetStore((s) => s.hasLoaded);
   const isLoading = useSceneAssetStore((s) => s.isLoading);
@@ -60,26 +61,49 @@ export function AssetGallery() {
     return assets.filter((a) => a.chatId === chatFilter);
   }, [assets, chatFilter]);
 
-  const selected = useMemo(() => assets.find((a) => a.id === selectedId), [assets, selectedId]);
+  const selected = useMemo(
+    () => assets.find((a) => a.id === selectedId),
+    [assets, selectedId],
+  );
 
   return (
     <div className="flex h-full min-h-0">
       <div className="flex-1 flex flex-col min-w-0">
         <div className="flex flex-wrap items-center gap-2 px-4 py-3 soft-separator-y mesh-header mesh-surface">
           <PillGroup
-            options={[{ value: "", label: "All chats" }, ...chats.map((c) => ({ value: c.id, label: c.title }))]}
+            options={[
+              {
+                value: "",
+                label: tRuntime(
+                  "runtimeGenerated.components.rpStudio.assetgallery.metadata.allChats",
+                ),
+              },
+              ...chats.map((c) => ({ value: c.id, label: c.title })),
+            ]}
             value={chatFilter}
             onChange={setChatFilter}
             ariaLabel="Filter by chat"
           />
         </div>
-        {error && <div className="px-4 py-3"><ErrorText>{error}</ErrorText></div>}
+        {error && (
+          <div className="px-4 py-3">
+            <ErrorText>{error}</ErrorText>
+          </div>
+        )}
         <div className="flex-1 overflow-y-auto p-4">
           {isLoading && !hasLoaded ? (
             <div className="flex items-center justify-center h-full text-text-muted gap-2 text-[13px]">
-              <Spinner className="text-text-muted" /> <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.loadingAssets" /></div>
+              <Spinner className="text-text-muted" />{" "}
+              <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.loadingAssets" />
+            </div>
           ) : filtered.length === 0 ? (
-            <EmptyState>{hasLoaded ? "No assets yet" : ""}</EmptyState>
+            <EmptyState>
+              {hasLoaded
+                ? tRuntime(
+                    "runtimeGenerated.components.rpStudio.assetgallery.text.noAssetsYet",
+                  )
+                : ""}
+            </EmptyState>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {filtered.map((a) => (
@@ -94,14 +118,24 @@ export function AssetGallery() {
                   >
                     <div className="aspect-video w-full bg-surface-elevated border-b border-border/40">
                       {a.url ? (
-                        <img src={a.url} alt="" className="w-full h-full object-cover" />
+                        <img
+                          src={a.url}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-text-muted text-[12px]"><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.noImage" /></div>
+                        <div className="w-full h-full flex items-center justify-center text-text-muted text-[12px]">
+                          <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.noImage" />
+                        </div>
                       )}
                     </div>
                     <div className="p-2">
-                      <div className="text-[12px] text-text-secondary line-clamp-2">{truncate(a.prompt, 120)}</div>
-                      <div className="text-[12px] text-text-muted mt-0.5">{a.model} · {formatRelativeTime(a.createdAt)}</div>
+                      <div className="text-[12px] text-text-secondary line-clamp-2">
+                        {truncate(a.prompt, 120)}
+                      </div>
+                      <div className="text-[12px] text-text-muted mt-0.5">
+                        {a.model} · {formatRelativeTime(a.createdAt)}
+                      </div>
                     </div>
                   </button>
                   <div className="px-2 pb-2">
@@ -117,10 +151,14 @@ export function AssetGallery() {
                           }}
                           className="flex-1 text-[12px] py-1 rounded border border-rose-500/30 text-rose-300 hover:bg-rose-500/10"
                         >
-                          <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.action.delete" /></button>
+                          <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.action.delete" />
+                        </button>
                         <button
                           type="button"
-                          onClick={(e) => { e.stopPropagation(); cancelConfirmDelete(); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            cancelConfirmDelete();
+                          }}
                           className="text-[12px] py-1 px-2 rounded text-text-muted hover:text-text-primary"
                         >
                           No
@@ -129,11 +167,17 @@ export function AssetGallery() {
                     ) : (
                       <button
                         type="button"
-                        onClick={(e) => { e.stopPropagation(); armConfirmDelete(a.id); }}
-                        aria-label="Delete asset"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          armConfirmDelete(a.id);
+                        }}
+                        aria-label={tRuntime(
+                          "runtimeGenerated.components.rpStudio.assetgallery.attribute.deleteAsset",
+                        )}
                         className="w-full text-[12px] py-1 rounded text-text-muted hover:text-rose-300 transition-colors"
                       >
-                        <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.action.deletef6fdbe4" /></button>
+                        <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.action.deletef6fdbe4" />
+                      </button>
                     )}
                   </div>
                 </div>
@@ -147,24 +191,52 @@ export function AssetGallery() {
           <>
             <div className="aspect-video w-full rounded-lg overflow-hidden border border-border bg-surface-elevated">
               {selected.url ? (
-                <img src={selected.url} alt="" className="w-full h-full object-contain" />
+                <img
+                  src={selected.url}
+                  alt=""
+                  className="w-full h-full object-contain"
+                />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-text-muted text-[12px]"><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.noImage" /></div>
+                <div className="w-full h-full flex items-center justify-center text-text-muted text-[12px]">
+                  <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.noImage" />
+                </div>
               )}
             </div>
-            <div className="text-[12px] text-text-secondary whitespace-pre-wrap">{selected.prompt}</div>
+            <div className="text-[12px] text-text-secondary whitespace-pre-wrap">
+              {selected.prompt}
+            </div>
             <div className="text-[12px] text-text-muted space-y-0.5">
-              <div><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.model" /> {selected.model}</div>
-              {selected.seed !== undefined && <div><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.seed" /> {selected.seed}</div>}
-              {selected.negativePrompt && <div><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.negative" /> {selected.negativePrompt}</div>}
-              <div><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.created" /> {formatRelativeTime(selected.createdAt)}</div>
+              <div>
+                <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.model" />{" "}
+                {selected.model}
+              </div>
+              {selected.seed !== undefined && (
+                <div>
+                  <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.seed" />{" "}
+                  {selected.seed}
+                </div>
+              )}
+              {selected.negativePrompt && (
+                <div>
+                  <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.negative" />{" "}
+                  {selected.negativePrompt}
+                </div>
+              )}
+              <div>
+                <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.created" />{" "}
+                {formatRelativeTime(selected.createdAt)}
+              </div>
             </div>
             <div className="pt-2">
-              <GhostButton onClick={() => setSelectedId(null)}><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.closePreview" /></GhostButton>
+              <GhostButton onClick={() => setSelectedId(null)}>
+                <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.closePreview" />
+              </GhostButton>
             </div>
           </>
         ) : (
-          <div className="text-[12px] text-text-muted italic"><Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.clickAnAssetToPreview" /></div>
+          <div className="text-[12px] text-text-muted italic">
+            <Trans i18nKey="common:surface.componentsRpStudioAssetgallery.text.clickAnAssetToPreview" />
+          </div>
         )}
       </div>
     </div>

@@ -217,6 +217,12 @@ Vision requests use the canonical Venice client and main-authoritative safety pi
 
 Direct source-image web matching is fail-closed. The configured Google/Brave contracts accept text queries rather than image bytes, so the former query-derived action is disabled and historical results remain explicitly labeled. A future implementation requires an allowlisted provider, main-owned credentials, explicit transmission disclosure, cost handling, and bounded response validation. See the [user guide](docs/user/IMAGE_INSPECTOR.md) and [architecture contract](docs/developer/image-inspector-architecture.md).
 
+## Generated Media Persistence Boundary
+
+Desktop generated PNG, JPEG, and WebP results cross a main-frame-only typed IPC after strict data-URL, base64, MIME, size, and signature validation. The main process persists them as SHA-256-addressed blobs, writes metadata atomically, fsyncs before commit, and verifies byte count and digest after writes and before native export. Renderer records receive only the stable media ID and `venice-media://` URL.
+
+If persistence fails after validation, the main process may retain a bounded memory-only copy for retry or user-directed Save As. Recovery references are opaque UUIDs; renderer paths are ignored. The queue is limited to eight items / 128 MiB / 30 minutes and releases/zeroes entries after success, expiry, or eviction. Logs contain only safe error class and bounded metadata, never bytes, prompts, credentials, signed URLs, or absolute paths.
+
 ## Headless Bridge Security
 
 When started with `--headless`, the application runs an Express loopback bridge server (`electron/services/bridgeServer.ts`). The following safety measures are strictly enforced:

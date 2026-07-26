@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /** @fileoverview State for the local RP asset gallery.
  *  Assets are images generated for RP chats (scene images, character portraits)
  *  plus their provenance (prompt, model, seed, source messageId). */
@@ -50,9 +51,21 @@ export const useSceneAssetStore = create<SceneAssetState>((set, get) => ({
       const sorted = items.slice().sort((a, b) => b.createdAt - a.createdAt);
       set({ assets: sorted, isLoading: false, hasLoaded: true });
     } catch (e) {
-      logger.error("[scene-asset-store] load failed", sanitizeErrorText(String(e)));
+      logger.error(
+        "[scene-asset-store] load failed",
+        sanitizeErrorText(String(e)),
+      );
       set({ isLoading: false, error: "Could not load assets." });
-      toast.error("Could not load assets", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.sceneAssetStore.notification.couldNotLoadAssets",
+          "Could not load assets",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.sceneAssetStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
     }
   },
 
@@ -65,7 +78,13 @@ export const useSceneAssetStore = create<SceneAssetState>((set, get) => ({
     if (!normalized) {
       const msg = "Invalid asset data.";
       set({ error: msg });
-      toast.error("Could not save asset", msg);
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.sceneAssetStore.notification.couldNotSaveAsset",
+          "Could not save asset",
+        ),
+        msg,
+      );
       return null;
     }
     try {
@@ -79,9 +98,21 @@ export const useSceneAssetStore = create<SceneAssetState>((set, get) => ({
       });
       return saved;
     } catch (e) {
-      logger.error("[scene-asset-store] upsert failed", sanitizeErrorText(String(e)));
+      logger.error(
+        "[scene-asset-store] upsert failed",
+        sanitizeErrorText(String(e)),
+      );
       set({ error: "Could not save asset." });
-      toast.error("Could not save asset", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.sceneAssetStore.notification.couldNotSaveAsset",
+          "Could not save asset",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.sceneAssetStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
       return null;
     }
   },
@@ -90,7 +121,16 @@ export const useSceneAssetStore = create<SceneAssetState>((set, get) => ({
     try {
       const ok = await svcDelete(id);
       if (!ok) {
-        toast.error("Could not delete asset", "Storage rejected the request.");
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.sceneAssetStore.notification.couldNotDeleteAsset",
+            "Could not delete asset",
+          ),
+          translateRuntime(
+            "runtimeGenerated.stores.sceneAssetStore.notification.storageRejectedTheRequest",
+            "Storage rejected the request.",
+          ),
+        );
         return false;
       }
       set((s) => ({
@@ -99,9 +139,21 @@ export const useSceneAssetStore = create<SceneAssetState>((set, get) => ({
       }));
       return true;
     } catch (e) {
-      logger.error("[scene-asset-store] remove failed", sanitizeErrorText(String(e)));
+      logger.error(
+        "[scene-asset-store] remove failed",
+        sanitizeErrorText(String(e)),
+      );
       set({ error: "Could not delete asset." });
-      toast.error("Could not delete asset", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.sceneAssetStore.notification.couldNotDeleteAsset",
+          "Could not delete asset",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.sceneAssetStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
       return false;
     }
   },

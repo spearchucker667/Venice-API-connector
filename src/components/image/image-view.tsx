@@ -1,293 +1,544 @@
-import { useState, useMemo, useEffect, useCallback, useRef, useId } from 'react'
-import { useSettingsStore } from '../../stores/settings-store'
-import { useModels } from '../../hooks/use-models'
-import { useStyles } from '../../hooks/use-styles'
-import { useFocusTrap } from '../../hooks/useFocusTrap'
-import { useImageGenerate } from '../../hooks/use-image'
-import { selectHasVeniceKey, useAuthStore } from '../../stores/auth-store'
-import { Select } from '../ui/select'
-import { Label, TextArea, PrimaryButton, PillGroup, ErrorText, ExamplePrompts } from '../ui/shared'
-import { GenerationView } from '../ui/generation-view'
-import type { ImageConstraints } from '../../types/venice'
-import { useMediaStore } from '../../stores/media-store'
-import { usePromptLibraryStore, resolvePromptProjectId } from '../../stores/prompt-library-store'
-import { toast } from '../../stores/toast-store'
-import { redactErrorMessage } from '../../shared/redaction'
-import type { MediaItem } from '../../types/media'
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  useRef,
+  useId,
+} from "react";
+import { useSettingsStore } from "../../stores/settings-store";
+import { useModels } from "../../hooks/use-models";
+import { useStyles } from "../../hooks/use-styles";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
+import { useImageGenerate } from "../../hooks/use-image";
+import { selectHasVeniceKey, useAuthStore } from "../../stores/auth-store";
+import { Select } from "../ui/select";
+import {
+  Label,
+  TextArea,
+  PrimaryButton,
+  PillGroup,
+  ErrorText,
+  ExamplePrompts,
+} from "../ui/shared";
+import { GenerationView } from "../ui/generation-view";
+import type { ImageConstraints } from "../../types/venice";
+import { useMediaStore } from "../../stores/media-store";
+import {
+  usePromptLibraryStore,
+  resolvePromptProjectId,
+} from "../../stores/prompt-library-store";
+import { toast } from "../../stores/toast-store";
+import { redactErrorMessage } from "../../shared/redaction";
+import type { MediaItem } from "../../types/media";
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
-import { generateId } from '../../lib/utils'
-import { getPromptStartersForCategory } from '../../services/promptStarterService'
-import { isElectron, desktopMedia } from '../../services/desktopBridge'
-import { PROMPT_TEMPLATES } from '../../constants/promptTemplates'
-import { processBase64Image, routeAsset } from '../../utils/imageProcessor'
-import { getExtensionFromDataUrl } from '../../utils/image'
-import { downloadImage as downloadImageUtil } from '../../utils/download'
-import { getImageModelCapabilities, buildDimensionOptions, getRecipeCapabilityList } from '../../config/image-model-capabilities'
-import { enhancePrompt } from '../../services/prompt-enhancer-service'
+import { generateId } from "../../lib/utils";
+import { getPromptStartersForCategory } from "../../services/promptStarterService";
+import { isElectron, desktopMedia } from "../../services/desktopBridge";
+import { PROMPT_TEMPLATES } from "../../constants/promptTemplates";
+import { processBase64Image, routeAsset } from "../../utils/imageProcessor";
+import { getExtensionFromDataUrl } from "../../utils/image";
+import { downloadImage as downloadImageUtil } from "../../utils/download";
+import {
+  getImageModelCapabilities,
+  buildDimensionOptions,
+  getRecipeCapabilityList,
+} from "../../config/image-model-capabilities";
+import { enhancePrompt } from "../../services/prompt-enhancer-service";
 import {
   buildImagePayload,
   clampSeed,
   IMAGE_PROMPT_MAX_CHARS,
   randomSeed,
   type ImageSeedState,
-} from '../../utils/payloadBuilders'
-import { useConfigStore } from '../../stores/config-store'
-import { useImageWorkspaceStore, type ImageGenerateHandoff } from '../../stores/image-workspace-store'
-import { GenerationLoadingIndicator } from '../generation/GenerationLoadingIndicator'
+} from "../../utils/payloadBuilders";
+import { useConfigStore } from "../../stores/config-store";
+import {
+  useImageWorkspaceStore,
+  type ImageGenerateHandoff,
+} from "../../stores/image-workspace-store";
+import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
 
-import { DEFAULT_IMAGE_MODEL } from '../../constants/venice'
-import { Trans } from 'react-i18next';
-
+import { DEFAULT_IMAGE_MODEL } from "../../constants/venice";
+import { Trans, useTranslation } from "react-i18next";
 
 function toImageSrc(b64: string): string {
-  if (!b64) return ''
-  if (b64.startsWith('data:') || b64.startsWith('http://') || b64.startsWith('https://') || b64.startsWith('blob:') || b64.startsWith('venice-media:')) return b64
-  return `data:image/png;base64,${b64}`
+  if (!b64) return "";
+  if (
+    b64.startsWith("data:") ||
+    b64.startsWith("http://") ||
+    b64.startsWith("https://") ||
+    b64.startsWith("blob:") ||
+    b64.startsWith("venice-media:")
+  )
+    return b64;
+  return `data:image/png;base64,${b64}`;
 }
 
+const MEDIA_RECORD_RETRY_DELAYS_MS = [25, 100, 250] as const;
+const TRANSIENT_MEDIA_RECORD_ERRORS = new Set([
+  "AbortError",
+  "InvalidStateError",
+  "TransactionInactiveError",
+  "UnknownError",
+]);
+
+async function persistMediaRecordWithRetry(
+  operation: () => Promise<unknown>,
+): Promise<void> {
+  for (
+    let attempt = 0;
+    attempt <= MEDIA_RECORD_RETRY_DELAYS_MS.length;
+    attempt += 1
+  ) {
+    try {
+      await operation();
+      return;
+    } catch (error) {
+      const name = error instanceof Error ? error.name : "";
+      if (
+        !TRANSIENT_MEDIA_RECORD_ERRORS.has(name) ||
+        attempt === MEDIA_RECORD_RETRY_DELAYS_MS.length
+      ) {
+        throw error;
+      }
+      await new Promise((resolve) =>
+        setTimeout(resolve, MEDIA_RECORD_RETRY_DELAYS_MS[attempt]),
+      );
+    }
+  }
+}
+
+interface PendingImageSave {
+  mediaItem: MediaItem;
+  parentId?: string;
+  recoveryId?: string;
+}
 
 export function ImageView() {
-  const promptId = useId()
-  const negativePromptId = useId()
-  const styleId = useId()
-  const seedId = useId()
-  const stepsId = useId()
-  const variantsId = useId()
-  const hasVeniceKey = useAuthStore(selectHasVeniceKey)
-  const selectedModel = useSettingsStore((s) => s.selectedModels.image)
-  const setSelectedModel = useSettingsStore((s) => s.setSelectedModel)
-  const veniceApiSafeMode = useSettingsStore((s) => s.veniceApiSafeMode)
-  const { data: models } = useModels('image')
-  const { data: styles } = useStyles()
-  const model = selectedModel || models?.[0]?.id || DEFAULT_IMAGE_MODEL
+  const { t: tRuntime } = useTranslation("common");
+  const { t } = useTranslation("media");
+  const promptId = useId();
+  const negativePromptId = useId();
+  const styleId = useId();
+  const seedId = useId();
+  const stepsId = useId();
+  const variantsId = useId();
+  const hasVeniceKey = useAuthStore(selectHasVeniceKey);
+  const selectedModel = useSettingsStore((s) => s.selectedModels.image);
+  const setSelectedModel = useSettingsStore((s) => s.setSelectedModel);
+  const veniceApiSafeMode = useSettingsStore((s) => s.veniceApiSafeMode);
+  const { data: models } = useModels("image");
+  const { data: styles } = useStyles();
+  const model = selectedModel || models?.[0]?.id || DEFAULT_IMAGE_MODEL;
 
-  const modelData = models?.find((m) => m.id === model)
-  const constraints = modelData?.model_spec?.constraints as ImageConstraints | undefined
+  const modelData = models?.find((m) => m.id === model);
+  const constraints = modelData?.model_spec?.constraints as
+    ImageConstraints | undefined;
 
-  const caps = useMemo(() => getImageModelCapabilities(model), [model])
-  const dimOptions = useMemo(() => buildDimensionOptions(model, constraints), [model, constraints])
-  const capabilitySummary = useMemo(() => getRecipeCapabilityList(caps), [caps])
+  const caps = useMemo(() => getImageModelCapabilities(model), [model]);
+  const dimOptions = useMemo(
+    () => buildDimensionOptions(model, constraints),
+    [model, constraints],
+  );
+  const capabilitySummary = useMemo(
+    () =>
+      getRecipeCapabilityList(caps).map((descriptor) =>
+        tRuntime(descriptor.key, descriptor.values),
+      ),
+    [caps, tRuntime],
+  );
   const compatibleNegativeModel = useMemo(
-    () => models?.find((candidate) => getImageModelCapabilities(candidate.id).supportsNegativePrompt)?.id,
+    () =>
+      models?.find(
+        (candidate) =>
+          getImageModelCapabilities(candidate.id).supportsNegativePrompt,
+      )?.id,
     [models],
-  )
+  );
 
-  const modelPricing = modelData?.model_spec?.pricing
+  const modelPricing = modelData?.model_spec?.pricing;
   const modelCostLabel = useMemo(() => {
-    if (!modelPricing) return null
-    const parts: string[] = []
-    if (modelPricing.input?.usd !== undefined) parts.push(`$${modelPricing.input.usd}/1M in`)
-    if (modelPricing.output?.usd !== undefined) parts.push(`$${modelPricing.output.usd}/1M out`)
-    return parts.length > 0 ? parts.join(' · ') : null
-  }, [modelPricing])
+    if (!modelPricing) return null;
+    const parts: string[] = [];
+    if (modelPricing.input?.usd !== undefined)
+      parts.push(`$${modelPricing.input.usd}/1M in`);
+    if (modelPricing.output?.usd !== undefined)
+      parts.push(`$${modelPricing.output.usd}/1M out`);
+    return parts.length > 0 ? parts.join(" · ") : null;
+  }, [modelPricing]);
 
-  const hasAspectRatios = (dimOptions.dimensionMode === "aspectRatio" || dimOptions.dimensionMode === "aspectResolution") && !!dimOptions.aspectRatios?.length
-  const maxSteps = constraints?.steps?.max || 50
-  const defaultSteps = constraints?.steps?.default || 20
-  const promptLimit = Math.min(constraints?.promptCharacterLimit || IMAGE_PROMPT_MAX_CHARS, IMAGE_PROMPT_MAX_CHARS)
+  const hasAspectRatios =
+    (dimOptions.dimensionMode === "aspectRatio" ||
+      dimOptions.dimensionMode === "aspectResolution") &&
+    !!dimOptions.aspectRatios?.length;
+  const maxSteps = constraints?.steps?.max || 50;
+  const defaultSteps = constraints?.steps?.default || 20;
+  const promptLimit = Math.min(
+    constraints?.promptCharacterLimit || IMAGE_PROMPT_MAX_CHARS,
+    IMAGE_PROMPT_MAX_CHARS,
+  );
 
-  const [prompt, setPrompt] = useState('')
+  const [prompt, setPrompt] = useState("");
   const setPromptClamped = useCallback(
     (next: React.SetStateAction<string>) => {
       setPrompt((prev) => {
-        const base = typeof next === 'function' ? (next as (prev: string) => string)(prev) : next
-        return base.slice(0, promptLimit)
-      })
+        const base =
+          typeof next === "function"
+            ? (next as (prev: string) => string)(prev)
+            : next;
+        return base.slice(0, promptLimit);
+      });
     },
     [promptLimit],
-  )
-  const [negativePrompt, setNegativePrompt] = useState('')
-  const [starters, setStarters] = useState<string[]>(() => getPromptStartersForCategory('image', 4))
-  const [sizeKey, setSizeKey] = useState('1024x1024')
-  const [aspectRatio, setAspectRatio] = useState('')
-  const [resolution, setResolution] = useState('')
-  const [quality, setQuality] = useState('')
-  const [style, setStyle] = useState('')
-  const [steps, setSteps] = useState(defaultSteps)
-  const [cfgScale, setCfgScale] = useState(1)
-  const [variants, setVariants] = useState(1)
-  const [hideWatermark] = useState(true)
-  const [images, setImages] = useState<string[]>([])
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const lightboxRef = useRef<HTMLDivElement>(null)
-  useFocusTrap(lightboxRef, !!selectedImage, () => setSelectedImage(null))
-  const [generationContext, setGenerationContext] = useState<Pick<ImageGenerateHandoff, 'parentId' | 'operation'> & { recipeMeta?: Record<string, unknown> } | null>(null)
-  const [queuedAutoGenerateId, setQueuedAutoGenerateId] = useState<string | null>(null)
-  const pendingHandoff = useImageWorkspaceStore((state) => state.pending)
+  );
+  const [negativePrompt, setNegativePrompt] = useState("");
+  const [starters, setStarters] = useState(() =>
+    getPromptStartersForCategory("image", 4),
+  );
+  const [sizeKey, setSizeKey] = useState("1024x1024");
+  const [aspectRatio, setAspectRatio] = useState("");
+  const [resolution, setResolution] = useState("");
+  const [quality, setQuality] = useState("");
+  const [style, setStyle] = useState("");
+  const [steps, setSteps] = useState(defaultSteps);
+  const [cfgScale, setCfgScale] = useState(1);
+  const [variants, setVariants] = useState(1);
+  const [hideWatermark] = useState(true);
+  const [images, setImages] = useState<string[]>([]);
+  const [pendingImageSaves, setPendingImageSaves] = useState<
+    Record<string, PendingImageSave>
+  >({});
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(lightboxRef, !!selectedImage, () => setSelectedImage(null));
+  const [generationContext, setGenerationContext] = useState<
+    | (Pick<ImageGenerateHandoff, "parentId" | "operation"> & {
+        recipeMeta?: Record<string, unknown>;
+      })
+    | null
+  >(null);
+  const [queuedAutoGenerateId, setQueuedAutoGenerateId] = useState<
+    string | null
+  >(null);
+  const pendingHandoff = useImageWorkspaceStore((state) => state.pending);
 
   // Seed state — mode "off" omits the field entirely; "fixed" sends an
   // integer in [-999999999, 999999999]. We do not expose a "null" mode
   // because the Venice swagger does not document `seed: null` as a
   // first-class value.
-  const [seedMode, setSeedMode] = useState<'off' | 'fixed'>('off')
-  const [seedValue, setSeedValue] = useState<number>(() => randomSeed())
+  const [seedMode, setSeedMode] = useState<"off" | "fixed">("off");
+  const [seedValue, setSeedValue] = useState<number>(() => randomSeed());
 
   // Enhance prompt review flow
-  const [enhancing, setEnhancing] = useState(false)
-  const [enhancedPrompt, setEnhancedPrompt] = useState<string | null>(null)
-  const [showEnhanceReview, setShowEnhanceReview] = useState(false)
+  const [enhancing, setEnhancing] = useState(false);
+  const [enhancedPrompt, setEnhancedPrompt] = useState<string | null>(null);
+  const [showEnhanceReview, setShowEnhanceReview] = useState(false);
 
   // Template preview flow
-  const [previewTemplate, setPreviewTemplate] = useState<typeof PROMPT_TEMPLATES[number] | null>(null)
+  const [previewTemplate, setPreviewTemplate] = useState<
+    (typeof PROMPT_TEMPLATES)[number] | null
+  >(null);
   const appendTemplateText = (current: string, incoming: string) => {
-    const left = current.trim().replace(/[\s,]+$/, '')
-    const right = incoming.trim().replace(/^[\s,]+/, '')
-    return left && right ? `${left}, ${right}` : left || right
-  }
+    const left = current.trim().replace(/[\s,]+$/, "");
+    const right = incoming.trim().replace(/^[\s,]+/, "");
+    return left && right ? `${left}, ${right}` : left || right;
+  };
 
   // Prompt-enhancer config (renderer-bound snapshot of internal_prompt_enhancer).
   // When `enabled` is false, the enhance button is disabled and the
   // user is told why.
-  const enhancerConfig = useConfigStore((s) => s.config?.internal_prompt_enhancer ?? null)
-  const enhancerEnabled = enhancerConfig?.enabled !== false
+  const enhancerConfig = useConfigStore(
+    (s) => s.config?.internal_prompt_enhancer ?? null,
+  );
+  const enhancerEnabled = enhancerConfig?.enabled !== false;
 
   const aspectOptions = useMemo(() => {
-    if (!hasAspectRatios) return []
+    if (!hasAspectRatios) return [];
     return [
-      ...(dimOptions.aspectRatios?.map((a) => ({ value: a.id, label: a.label })) ?? []),
-    ]
-  }, [dimOptions, hasAspectRatios])
+      ...(dimOptions.aspectRatios?.map((a) => ({
+        value: a.id,
+        label: a.labelKey ? t(a.labelKey) : (a.label ?? a.id),
+      })) ?? []),
+    ];
+  }, [dimOptions, hasAspectRatios, t]);
 
   const whOptions = useMemo(() => {
-    if (hasAspectRatios || !dimOptions.widthHeightOptions) return []
-    return dimOptions.widthHeightOptions.map(o => ({ value: `${o.width}x${o.height}`, label: o.label }))
-  }, [dimOptions, hasAspectRatios])
+    if (hasAspectRatios || !dimOptions.widthHeightOptions) return [];
+    return dimOptions.widthHeightOptions.map((o) => ({
+      value: `${o.width}x${o.height}`,
+      label: o.labelKey
+        ? t(o.labelKey)
+        : (o.label ??
+          tRuntime(
+            "runtimeGenerated.components.image.imageView.metadata.value1Value2",
+            { value1: o.width, value2: o.height },
+          )),
+    }));
+  }, [dimOptions, hasAspectRatios, t, tRuntime]);
 
   const resolutionOptions = useMemo(() => {
-    if (!(dimOptions.resolutions?.length)) return []
-    return dimOptions.resolutions.map((r) => ({ value: r.id, label: r.label }))
-  }, [dimOptions])
+    if (!dimOptions.resolutions?.length) return [];
+    return dimOptions.resolutions.map((r) => ({
+      value: r.id,
+      label: r.labelKey ? t(r.labelKey) : (r.label ?? r.id),
+    }));
+  }, [dimOptions, t]);
 
   // Reset dimensions when model changes
   useEffect(() => {
     if (hasAspectRatios) {
-      const next = dimOptions.defaultDimensions.aspectRatio ?? aspectOptions[0]?.value ?? '';
+      const next =
+        dimOptions.defaultDimensions.aspectRatio ??
+        aspectOptions[0]?.value ??
+        "";
       setAspectRatio(next);
-      setResolution(dimOptions.defaultDimensions.resolution ?? resolutionOptions[0]?.value ?? '');
-      setSizeKey('1024x1024');
+      setResolution(
+        dimOptions.defaultDimensions.resolution ??
+          resolutionOptions[0]?.value ??
+          "",
+      );
+      setSizeKey("1024x1024");
     } else {
       const def = caps.defaultDimensions;
       setSizeKey(`${def.width ?? 1024}x${def.height ?? 1024}`);
-      setAspectRatio('');
-      setResolution('');
+      setAspectRatio("");
+      setResolution("");
     }
-    setQuality(dimOptions.defaultQuality ?? '');
+    setQuality(dimOptions.defaultQuality ?? "");
     if (defaultSteps && steps === 0) setSteps(defaultSteps);
-  }, [caps, dimOptions, hasAspectRatios, aspectOptions, resolutionOptions, defaultSteps, steps]);
+  }, [
+    caps,
+    dimOptions,
+    hasAspectRatios,
+    aspectOptions,
+    resolutionOptions,
+    defaultSteps,
+    steps,
+  ]);
 
   const downloadImage = async (b64: string, index?: number) => {
     const ext = getExtensionFromDataUrl(b64);
-    const filename = `venice-image${index !== undefined ? `-${index + 1}` : ''}.${ext}`;
+    const filename = `venice-image${index !== undefined ? `-${index + 1}` : ""}.${ext}`;
     const routedFolder = routeAsset(prompt);
     try {
       if (isElectron()) {
-        const result = await desktopMedia.saveRoutedImage(b64, filename, routedFolder);
+        const pending = pendingImageSaves[b64];
+        if (pending?.recoveryId) {
+          const recoveryExport = await desktopMedia.saveGeneratedImageRecovery(
+            pending.recoveryId,
+            filename,
+          );
+          if (recoveryExport.ok) {
+            if (!recoveryExport.canceled) {
+              toast.success(t("imageStudioRuntime.imageDownloaded"));
+            }
+            return;
+          }
+        }
+        const result = await desktopMedia.saveRoutedImage(
+          b64,
+          filename,
+          routedFolder,
+        );
         if (result.ok) {
-          toast.success(`Image saved to Pictures/Venice Forge/${routedFolder}/${filename}`);
+          toast.success(
+            `Image saved to Pictures/Venice Forge/${routedFolder}/${filename}`,
+          );
         } else {
           const fallback = await downloadImageUtil(toImageSrc(b64), filename);
           if (fallback.confirmed) {
-            toast.success('Image downloaded');
+            toast.success(t("imageStudioRuntime.imageDownloaded"));
           } else {
-            toast.error('Image save failed', 'The image could not be downloaded.');
+            toast.error(
+              t("imageStudioRuntime.imageSaveFailed"),
+              t("imageStudioRuntime.imageDownloadFailedDetail"),
+            );
           }
         }
       } else {
         const fallback = await downloadImageUtil(toImageSrc(b64), filename);
         if (fallback.confirmed) {
-          toast.success('Image downloaded');
+          toast.success(t("imageStudioRuntime.imageDownloaded"));
         } else {
-          toast.error('Image save failed', 'The image could not be downloaded.');
+          toast.error(
+            t("imageStudioRuntime.imageSaveFailed"),
+            t("imageStudioRuntime.imageDownloadFailedDetail"),
+          );
         }
       }
     } catch (err) {
-      toast.error('Image save failed', redactErrorMessage(err));
+      toast.error(
+        t("imageStudioRuntime.imageSaveFailed"),
+        redactErrorMessage(err),
+      );
     }
-  }
+  };
 
-  const mutation = useImageGenerate()
-  const styleOptions = [{ value: '', label: 'None' }, ...(styles?.map((s) => ({ value: s, label: s })) ?? [])]
+  const retryPendingImageSave = async (image: string) => {
+    const pending = pendingImageSaves[image];
+    if (!pending) return;
+    try {
+      let mediaItem = { ...pending.mediaItem };
+      let durableImage = image;
+      if (pending.recoveryId) {
+        const persistence = await desktopMedia.retryGeneratedImage(
+          pending.recoveryId,
+        );
+        if (!persistence.ok || !persistence.media) {
+          throw new Error(
+            persistence.error || "Generated image could not be persisted.",
+          );
+        }
+        durableImage = persistence.media.url;
+        mediaItem = {
+          ...mediaItem,
+          image: durableImage,
+          processedBytes: persistence.media.byteCount,
+          mimeType: persistence.media.mimeType,
+          generatedMediaId: persistence.media.id,
+          sha256: persistence.media.sha256,
+        };
+      }
+      if (pending.parentId) {
+        await persistMediaRecordWithRetry(() =>
+          useMediaStore
+            .getState()
+            .upsertDerivative(mediaItem, pending.parentId!),
+        );
+      } else {
+        await persistMediaRecordWithRetry(() =>
+          useMediaStore.getState().upsert(mediaItem, {
+            attachActiveProject: true,
+            source: "generated",
+          }),
+        );
+      }
+      setImages((current) =>
+        current.map((candidate) =>
+          candidate === image ? durableImage : candidate,
+        ),
+      );
+      setSelectedImage((current) =>
+        current === image ? durableImage : current,
+      );
+      setPendingImageSaves((current) => {
+        const next = { ...current };
+        delete next[image];
+        return next;
+      });
+      toast.success(t("imageTools.savedToMedia"));
+    } catch (error) {
+      toast.error(
+        t("imageStudioRuntime.imageSaveFailed"),
+        redactErrorMessage(error),
+      );
+    }
+  };
+
+  const mutation = useImageGenerate();
+  const styleOptions = [
+    { value: "", label: t("imageStudioRuntime.none") },
+    ...(styles?.map((s) => ({ value: s, label: s })) ?? []),
+  ];
 
   const handleEnhance = useCallback(async () => {
-    if (!prompt.trim()) return
-    if (!enhancerEnabled) return
-    setEnhancing(true)
+    if (!prompt.trim()) return;
+    if (!enhancerEnabled) return;
+    setEnhancing(true);
     try {
       const result = await enhancePrompt(
         {
-          mode: 'enhance',
+          mode: "enhance",
           prompt: prompt.trim(),
           negativePrompt: null,
         },
         enhancerConfig,
-      )
-      setEnhancedPrompt(result.prompt)
+      );
+      setEnhancedPrompt(result.prompt);
       if (result.truncated) {
-        toast.warn('Enhanced prompt shortened', `Prompt enhancer output was trimmed to ${IMAGE_PROMPT_MAX_CHARS} characters.`)
+        toast.warn(
+          t("imageStudioRuntime.enhancedPromptShortened"),
+          t("imageStudioRuntime.enhancedPromptShortenedDetail", {
+            max: IMAGE_PROMPT_MAX_CHARS,
+          }),
+        );
       }
-      setShowEnhanceReview(true)
+      setShowEnhanceReview(true);
     } catch {
       // error handled silently — user keeps original prompt
     } finally {
-      setEnhancing(false)
+      setEnhancing(false);
     }
-  }, [prompt, enhancerEnabled, enhancerConfig])
+  }, [prompt, enhancerEnabled, enhancerConfig, t]);
 
   const applyEnhancedPrompt = useCallback(() => {
-    if (enhancedPrompt) setPromptClamped(enhancedPrompt)
-    setShowEnhanceReview(false)
-    setEnhancedPrompt(null)
-  }, [enhancedPrompt, setPromptClamped])
+    if (enhancedPrompt) setPromptClamped(enhancedPrompt);
+    setShowEnhanceReview(false);
+    setEnhancedPrompt(null);
+  }, [enhancedPrompt, setPromptClamped]);
 
   const cancelEnhanceReview = useCallback(() => {
-    setShowEnhanceReview(false)
-    setEnhancedPrompt(null)
-  }, [])
+    setShowEnhanceReview(false);
+    setEnhancedPrompt(null);
+  }, []);
 
   const handleSavePromptToLibrary = useCallback(
-    async (kind: 'image' | 'negative', content: string) => {
-      const trimmed = content.trim()
-      if (!trimmed) return
-      const firstLine = trimmed.split('\n')[0]?.slice(0, 80) || (kind === 'negative' ? 'Negative prompt' : 'Image prompt')
+    async (kind: "image" | "negative", content: string) => {
+      const trimmed = content.trim();
+      if (!trimmed) return;
+      const firstLine =
+        trimmed.split("\n")[0]?.slice(0, 80) ||
+        (kind === "negative" ? "Negative prompt" : "Image prompt");
       try {
         await usePromptLibraryStore.getState().createPrompt({
           title: firstLine,
           kind,
           content: trimmed,
-          scope: 'global',
+          scope: "global",
           projectId: resolvePromptProjectId(null),
-          source: { type: 'image' },
-        })
-        toast.success(`Saved ${kind} prompt to library`)
+          source: { type: "image" },
+        });
+        toast.success(
+          t("imageStudioRuntime.savedPrompt", {
+            kind: t(`imageStudioRuntime.promptKinds.${kind}`),
+          }),
+        );
       } catch (err) {
-        toast.fromError(err, 'Could not save prompt')
+        toast.fromError(err, t("imageStudioRuntime.couldNotSavePrompt"));
       }
     },
-    [],
-  )
+    [t],
+  );
 
   // Add effect to listen for save current prompt command
   useEffect(() => {
     const handleSaveCurrentPrompt = () => {
       // Save both prompt and negative prompt
       if (prompt.trim()) {
-        void handleSavePromptToLibrary('image', prompt);
+        void handleSavePromptToLibrary("image", prompt);
       }
       if (negativePrompt.trim()) {
-        void handleSavePromptToLibrary('negative', negativePrompt);
+        void handleSavePromptToLibrary("negative", negativePrompt);
       }
     };
 
-    window.addEventListener('saveCurrentPromptToLibrary', handleSaveCurrentPrompt);
+    window.addEventListener(
+      "saveCurrentPromptToLibrary",
+      handleSaveCurrentPrompt,
+    );
     return () => {
-      window.removeEventListener('saveCurrentPromptToLibrary', handleSaveCurrentPrompt);
+      window.removeEventListener(
+        "saveCurrentPromptToLibrary",
+        handleSaveCurrentPrompt,
+      );
     };
   }, [prompt, negativePrompt, handleSavePromptToLibrary]);
 
   const buildSeedState = useCallback((): ImageSeedState => {
-    if (seedMode === 'fixed') return { mode: 'fixed', value: seedValue }
-    return { mode: 'off', value: null }
-  }, [seedMode, seedValue])
+    if (seedMode === "fixed") return { mode: "fixed", value: seedValue };
+    return { mode: "off", value: null };
+  }, [seedMode, seedValue]);
 
   /**
    * Applies a draft (typically derived from a gallery item) to the
@@ -316,12 +567,20 @@ export function ImageView() {
       const neg = draft.negativePrompt ?? draft.negative;
       if (typeof neg === "string") setNegativePrompt(neg);
       if (typeof draft.style === "string") setStyle(draft.style);
-      if (typeof draft.steps === "number" && Number.isFinite(draft.steps)) setSteps(draft.steps);
-      if (typeof draft.cfgScale === "number" && Number.isFinite(draft.cfgScale)) setCfgScale(draft.cfgScale);
-      if (typeof draft.imageCount === "number" && Number.isFinite(draft.imageCount)) {
+      if (typeof draft.steps === "number" && Number.isFinite(draft.steps))
+        setSteps(draft.steps);
+      if (typeof draft.cfgScale === "number" && Number.isFinite(draft.cfgScale))
+        setCfgScale(draft.cfgScale);
+      if (
+        typeof draft.imageCount === "number" &&
+        Number.isFinite(draft.imageCount)
+      ) {
         setVariants(Math.max(1, Math.min(4, Math.round(draft.imageCount))));
       }
-      if (typeof draft.aspectRatio === "string" && draft.aspectRatio.length > 0) {
+      if (
+        typeof draft.aspectRatio === "string" &&
+        draft.aspectRatio.length > 0
+      ) {
         setAspectRatio(draft.aspectRatio);
         setSizeKey("1024x1024");
       } else if (
@@ -343,32 +602,38 @@ export function ImageView() {
       // commit before the shared payload builder reads them.
     },
     [setPromptClamped],
-  )
+  );
 
   const handleGenerate = () => {
-    if (!prompt.trim()) return
+    if (!prompt.trim()) return;
 
-    const currentPrompt = enhancedPrompt && showEnhanceReview ? enhancedPrompt : prompt.trim()
+    const currentPrompt =
+      enhancedPrompt && showEnhanceReview ? enhancedPrompt : prompt.trim();
     if (currentPrompt.length > IMAGE_PROMPT_MAX_CHARS) {
-      toast.warn('Prompt is too long', `Image prompts must be ${IMAGE_PROMPT_MAX_CHARS} characters or fewer.`)
-      return
+      toast.warn(
+        t("imageStudioRuntime.promptTooLong"),
+        t("imageStudioRuntime.promptTooLongDetail", {
+          max: IMAGE_PROMPT_MAX_CHARS,
+        }),
+      );
+      return;
     }
 
-    let width: number | undefined
-    let height: number | undefined
-    let aspectRatioField: string | undefined
+    let width: number | undefined;
+    let height: number | undefined;
+    let aspectRatioField: string | undefined;
 
     if (hasAspectRatios) {
-      aspectRatioField = aspectRatio || undefined
+      aspectRatioField = aspectRatio || undefined;
     } else {
-      const parts = sizeKey.split('x')
-      width = Number(parts[0])
-      height = Number(parts[1])
+      const parts = sizeKey.split("x");
+      width = Number(parts[0]);
+      height = Number(parts[1]);
     }
 
-    const seedState = buildSeedState()
-    const activeGenerationContext = generationContext
-    setGenerationContext(null)
+    const seedState = buildSeedState();
+    const activeGenerationContext = generationContext;
+    setGenerationContext(null);
 
     // Use the shared payload builder. The builder enforces exactly one
     // sizing shape (aspect_ratio vs width/height), respects the model's
@@ -381,8 +646,13 @@ export function ImageView() {
         width,
         height,
         aspectRatio: aspectRatioField,
-        resolution: dimOptions.dimensionMode === 'aspectResolution' ? resolution || undefined : undefined,
-        quality: dimOptions.qualities?.length ? quality || undefined : undefined,
+        resolution:
+          dimOptions.dimensionMode === "aspectResolution"
+            ? resolution || undefined
+            : undefined,
+        quality: dimOptions.qualities?.length
+          ? quality || undefined
+          : undefined,
         steps,
         cfg: cfgScale,
         style: style || undefined,
@@ -399,33 +669,64 @@ export function ImageView() {
       undefined,
       seedState,
     ) as Record<string, unknown> & {
-    prompt: string;
-    model: string;
-    steps: number;
-    cfg_scale: number;
-    hide_watermark: boolean;
-    return_binary: boolean;
-  }
+      prompt: string;
+      model: string;
+      steps: number;
+      cfg_scale: number;
+      hide_watermark: boolean;
+      return_binary: boolean;
+    };
 
-    mutation.mutate(
-      req as unknown as Parameters<typeof mutation.mutate>[0],
-      {
-        onSuccess: async (data) => {
-          const rawImages = data.images.map((img) => typeof img === 'string' ? img : img.b64_json)
-          const processedImages: string[] = []
-          const batchId = variants > 1 ? generateId() : null;
-          const now = Date.now();
-          const isEnhanced = enhancedPrompt !== null && prompt !== currentPrompt;
+    mutation.mutate(req as unknown as Parameters<typeof mutation.mutate>[0], {
+      onSuccess: async (data) => {
+        const rawImages = data.images.map((img) =>
+          typeof img === "string" ? img : img.b64_json,
+        );
+        const processedImages: string[] = [];
+        const batchId = variants > 1 ? generateId() : null;
+        const now = Date.now();
+        const isEnhanced = enhancedPrompt !== null && prompt !== currentPrompt;
 
-          await Promise.all(rawImages.map(async (img, index) => {
+        for (const [index, img] of rawImages.entries()) {
+          let displayImage: string | undefined;
+          let pendingMediaItem: MediaItem | undefined;
+          let persistenceFailure:
+            | { error?: string; recoveryId?: string }
+            | undefined;
+          try {
             const { base64: processedImg, report } = processBase64Image(img);
             const routedFolder = routeAsset(currentPrompt);
-            processedImages.push(processedImg);
+            displayImage = processedImg;
+            let durableMedia:
+              | {
+                  id: string;
+                  url: string;
+                  mimeType: string;
+                  byteCount: number;
+                  sha256: string;
+                }
+              | undefined;
+
+            if (isElectron()) {
+              const persistence = await desktopMedia.persistGeneratedImage(
+                processedImg,
+              );
+              if (!persistence.ok || !persistence.media) {
+                persistenceFailure = persistence;
+              } else {
+                durableMedia = persistence.media;
+                displayImage = durableMedia.url;
+              }
+            }
+
+            // Only stable main-owned URLs are written to desktop IndexedDB;
+            // web mode retains its existing data-URL fallback.
+            processedImages.push(displayImage);
 
             const id = generateId();
             const mediaItem: MediaItem = {
               id,
-              image: processedImg,
+              image: displayImage,
               prompt: currentPrompt,
               negative: negativePrompt.trim() || undefined,
               model,
@@ -439,28 +740,36 @@ export function ImageView() {
               cfg: req.cfg_scale as number | undefined,
               safeMode: req.safe_mode as boolean | undefined,
               disableWatermark: req.hide_watermark as boolean | undefined,
-              seed: seedState.mode === 'fixed' ? seedState.value : undefined,
-              source: 'image-page',
+              seed: seedState.mode === "fixed" ? seedState.value : undefined,
+              source: "image-page",
               batchId,
               batchIndex: batchId ? index : null,
               batchCount: batchId ? rawImages.length : null,
               timestamp: now,
               upscaled: false,
-              mediaType: 'image',
-              operation: activeGenerationContext?.operation ?? 'generate',
+              mediaType: "image",
+              operation: activeGenerationContext?.operation ?? "generate",
               parentId: activeGenerationContext?.parentId ?? null,
               childrenIds: [],
               tags: [],
-              note: '',
+              note: "",
               favorite: false,
               metadataRemoved: report.metadataRemoved,
               originalBytes: report.originalBytes,
-              processedBytes: report.processedBytes,
-              mimeType: report.mimeType,
+              processedBytes:
+                durableMedia?.byteCount ?? report.processedBytes,
+              mimeType: durableMedia?.mimeType ?? report.mimeType,
+              generatedMediaId: durableMedia?.id,
+              sha256: durableMedia?.sha256,
               assetCategory: routedFolder,
-              cost: modelPricing?.input?.usd !== undefined || modelPricing?.output?.usd !== undefined
-                ? { inputPrice: modelPricing?.input?.usd, outputPrice: modelPricing?.output?.usd }
-                : undefined,
+              cost:
+                modelPricing?.input?.usd !== undefined ||
+                modelPricing?.output?.usd !== undefined
+                  ? {
+                      inputPrice: modelPricing?.input?.usd,
+                      outputPrice: modelPricing?.output?.usd,
+                    }
+                  : undefined,
             };
 
             if (isEnhanced) {
@@ -472,11 +781,11 @@ export function ImageView() {
               mediaItem.recipe = {
                 prompt: currentPrompt,
                 model: model,
-                negativePrompt: (negativePrompt.trim() || undefined),
+                negativePrompt: negativePrompt.trim() || undefined,
                 width: req.width as number | undefined,
                 height: req.height as number | undefined,
                 aspectRatio: req.aspect_ratio as string | undefined,
-                seed: seedState.mode === 'fixed' ? seedState.value : undefined,
+                seed: seedState.mode === "fixed" ? seedState.value : undefined,
                 steps: req.steps as number | undefined,
                 cfgScale: req.cfg_scale as number | undefined,
                 style: req.style_preset as string | undefined,
@@ -486,47 +795,92 @@ export function ImageView() {
               };
             }
 
-            if (activeGenerationContext?.parentId) {
-              await useMediaStore.getState().upsertDerivative(mediaItem, activeGenerationContext.parentId);
-            } else {
-              await useMediaStore.getState().upsert(mediaItem, {
-                attachActiveProject: true,
-                source: 'generated',
-              });
+            pendingMediaItem = mediaItem;
+            if (persistenceFailure) {
+              throw new Error(
+                persistenceFailure.error ||
+                  "Generated image could not be persisted.",
+              );
             }
-          }));
 
-          setImages((prev) => [...processedImages, ...prev])
-          setShowEnhanceReview(false)
-          setEnhancedPrompt(null)
-        },
+            if (activeGenerationContext?.parentId) {
+              await persistMediaRecordWithRetry(() =>
+                useMediaStore
+                  .getState()
+                  .upsertDerivative(
+                    mediaItem,
+                    activeGenerationContext.parentId!,
+                  ),
+              );
+            } else {
+              await persistMediaRecordWithRetry(() =>
+                useMediaStore.getState().upsert(mediaItem, {
+                  attachActiveProject: true,
+                  source: "generated",
+                }),
+              );
+            }
+          } catch (saveError) {
+            // If the main-process persistence boundary itself failed, retain
+            // the decoded provider image so the user can still download it.
+            if (displayImage && !processedImages.includes(displayImage)) {
+              processedImages.push(displayImage);
+            }
+            if (displayImage && pendingMediaItem) {
+              setPendingImageSaves((current) => ({
+                ...current,
+                [displayImage!]: {
+                  mediaItem: pendingMediaItem!,
+                  parentId: activeGenerationContext?.parentId ?? undefined,
+                  recoveryId: persistenceFailure?.recoveryId,
+                },
+              }));
+            }
+            toast.error(
+              t("imageStudioRuntime.imageSaveFailed"),
+              redactErrorMessage(saveError),
+            );
+          }
+        }
+
+        if (processedImages.length > 0) {
+          setImages((prev) => [...processedImages, ...prev]);
+        }
+        setShowEnhanceReview(false);
+        setEnhancedPrompt(null);
       },
-    )
-  }
+    });
+  };
 
   useEffect(() => {
-    if (!pendingHandoff || pendingHandoff.target !== 'generate') return
+    if (!pendingHandoff || pendingHandoff.target !== "generate") return;
     if (pendingHandoff.draft.model) {
-      useSettingsStore.getState().setSelectedModel('image', pendingHandoff.draft.model)
+      useSettingsStore
+        .getState()
+        .setSelectedModel("image", pendingHandoff.draft.model);
     }
-    applyDraftFromGallery(pendingHandoff.draft)
-    setGenerationContext(pendingHandoff.autoGenerate ? {
-      parentId: pendingHandoff.parentId,
-      operation: pendingHandoff.operation,
-      recipeMeta: pendingHandoff.draft.recipeMeta,
-    } : null)
-    if (pendingHandoff.autoGenerate) setQueuedAutoGenerateId(pendingHandoff.id)
-    useImageWorkspaceStore.getState().consume(pendingHandoff.id)
-  }, [pendingHandoff, applyDraftFromGallery])
+    applyDraftFromGallery(pendingHandoff.draft);
+    setGenerationContext(
+      pendingHandoff.autoGenerate
+        ? {
+            parentId: pendingHandoff.parentId,
+            operation: pendingHandoff.operation,
+            recipeMeta: pendingHandoff.draft.recipeMeta,
+          }
+        : null,
+    );
+    if (pendingHandoff.autoGenerate) setQueuedAutoGenerateId(pendingHandoff.id);
+    useImageWorkspaceStore.getState().consume(pendingHandoff.id);
+  }, [pendingHandoff, applyDraftFromGallery]);
 
   useEffect(() => {
-    if (!queuedAutoGenerateId) return
-    setQueuedAutoGenerateId(null)
-    handleGenerate()
-  // The queue id is the one-shot trigger. Depending on the render-local
-  // handler would retrigger this effect on every render.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queuedAutoGenerateId])
+    if (!queuedAutoGenerateId) return;
+    setQueuedAutoGenerateId(null);
+    handleGenerate();
+    // The queue id is the one-shot trigger. Depending on the render-local
+    // handler would retrigger this effect on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queuedAutoGenerateId]);
 
   const controls = (
     <>
@@ -534,54 +888,66 @@ export function ImageView() {
           knows what is and is not available BEFORE they fill out the form. */}
       <div
         className="text-[12px] text-text-secondary flex flex-wrap gap-x-2 gap-y-0.5 px-2 py-1.5 rounded-md bg-surface/40 border border-border/60"
-        aria-label={`Capabilities for ${caps.label}: ${capabilitySummary.join(', ')}`}
+        aria-label={t("imageStudioRuntime.capabilitiesFor", {
+          model: caps.label,
+          capabilities: capabilitySummary.join(", "),
+        })}
         data-testid="image-capability-summary"
       >
         <span className="text-text-primary font-medium">{caps.label}</span>
         <span aria-hidden="true">·</span>
         {capabilitySummary.map((item) => (
-          <span key={item} className="opacity-90">{item}</span>
+          <span key={item} className="opacity-90">
+            {item}
+          </span>
         ))}
         {modelCostLabel && (
           <>
             <span aria-hidden="true">·</span>
-            <span className="opacity-90" data-testid="image-model-cost">{modelCostLabel}</span>
+            <span className="opacity-90" data-testid="image-model-cost">
+              {modelCostLabel}
+            </span>
           </>
         )}
       </div>
       <div>
         <div className="flex flex-col gap-1.5 mb-1.5">
-          <Label htmlFor={promptId} hint={`${prompt.length}/${promptLimit}`}><Trans i18nKey="common:surface.componentsImageImageView.text.prompt" /></Label>
+          <Label htmlFor={promptId} hint={`${prompt.length}/${promptLimit}`}>
+            <Trans i18nKey="common:surface.componentsImageImageView.text.prompt" />
+          </Label>
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={() => void handleSavePromptToLibrary('image', prompt)}
+              onClick={() => void handleSavePromptToLibrary("image", prompt)}
               disabled={!prompt.trim()}
               className="text-[12px] px-2 py-1 rounded-md border border-border text-text-secondary hover:border-accent hover:text-accent disabled:opacity-50"
-              aria-label="Save prompt to library"
+              aria-label={t("imageStudioRuntime.savePromptToLibrary")}
               data-testid="image-save-prompt-to-library"
             >
-              <Trans i18nKey="common:surface.componentsImageImageView.action.saveToLibrary" /></button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.saveToLibrary" />
+            </button>
             <button
               type="button"
               onClick={handleEnhance}
               disabled={!prompt.trim() || enhancing || !enhancerEnabled}
               className="text-[12px] px-2 py-1 rounded-md bg-accent/10 text-accent hover:bg-accent/20 border border-accent/30 transition-colors disabled:opacity-50 cursor-pointer"
-              aria-label="Enhance prompt"
+              aria-label={t("imageStudioRuntime.enhancePrompt")}
               title={
                 !enhancerEnabled
-                  ? 'Disabled: internal_prompt_enhancer.enabled is false in config.yaml'
-                  : 'Use internal LLM to enhance this prompt'
+                  ? t("imageStudioRuntime.enhancerDisabled")
+                  : t("imageStudioRuntime.enhancerTitle")
               }
             >
-              {enhancing ? 'Enhancing…' : 'Enhance prompt'}
+              {enhancing
+                ? t("imageStudioRuntime.enhancing")
+                : t("imageStudioRuntime.enhancePrompt")}
             </button>
             <select
-              aria-label="Prompt template"
+              aria-label={t("imageStudioRuntime.promptTemplate")}
               onChange={(e) => {
                 const val = e.target.value;
                 if (val) {
-                  const t = PROMPT_TEMPLATES.find(x => x.id === val);
+                  const t = PROMPT_TEMPLATES.find((x) => x.id === val);
                   if (t) {
                     setPreviewTemplate(t);
                   }
@@ -591,17 +957,28 @@ export function ImageView() {
               className="relative z-40 text-[12px] bg-surface-elevated text-text-secondary border border-border rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-accent hover:text-text-secondary transition-colors cursor-pointer min-w-[120px]"
               defaultValue=""
             >
-              <option value="" disabled><Trans i18nKey="common:surface.componentsImageImageView.option.addTemplate" /></option>
+              <option value="" disabled>
+                <Trans i18nKey="common:surface.componentsImageImageView.option.addTemplate" />
+              </option>
               {Object.entries(
-                PROMPT_TEMPLATES.filter((t) => t.compatibleModes.includes('image')).reduce((acc, t) => {
-                  if (!acc[t.category]) acc[t.category] = [];
-                  acc[t.category].push(t);
-                  return acc;
-                }, {} as Record<string, typeof PROMPT_TEMPLATES>)
+                PROMPT_TEMPLATES.filter((t) =>
+                  t.compatibleModes.includes("image"),
+                ).reduce(
+                  (acc, t) => {
+                    if (!acc[t.category]) acc[t.category] = [];
+                    acc[t.category].push(t);
+                    return acc;
+                  },
+                  {} as Record<string, typeof PROMPT_TEMPLATES>,
+                ),
               ).map(([category, items]) => (
                 <optgroup key={category} label={category.toUpperCase()}>
-                  {items.map(item => (
-                    <option key={item.id} value={item.id} title={item.description}>
+                  {items.map((item) => (
+                    <option
+                      key={item.id}
+                      value={item.id}
+                      title={item.description}
+                    >
                       {item.label}
                     </option>
                   ))}
@@ -610,13 +987,22 @@ export function ImageView() {
             </select>
           </div>
         </div>
-        <TextArea id={promptId} value={prompt} onChange={setPromptClamped} maxLength={promptLimit} placeholder="A serene mountain landscape at golden hour…" />
+        <TextArea
+          id={promptId}
+          value={prompt}
+          onChange={setPromptClamped}
+          maxLength={promptLimit}
+          placeholder={t("imageStudioRuntime.promptPlaceholder")}
+          ariaLabel={t("imageStudioRuntime.imagePrompt")}
+        />
       </div>
 
       {/* Enhance prompt review flow */}
       {showEnhanceReview && enhancedPrompt && (
         <div className="p-3 mt-2 rounded-lg border border-accent/30 bg-accent/5">
-          <Label><Trans i18nKey="common:surface.componentsImageImageView.text.enhancedPromptPreview" /></Label>
+          <Label>
+            <Trans i18nKey="common:surface.componentsImageImageView.text.enhancedPromptPreview" />
+          </Label>
           <div className="text-[12.5px] text-text-primary mt-1 p-2 rounded bg-surface border border-border break-words [overflow-wrap:anywhere] whitespace-pre-wrap">
             {enhancedPrompt}
           </div>
@@ -626,13 +1012,15 @@ export function ImageView() {
               onClick={applyEnhancedPrompt}
               className="px-3 py-1 text-[12px] rounded-md bg-accent text-accent-fg hover:bg-accent-hover transition-colors cursor-pointer"
             >
-              <Trans i18nKey="common:surface.componentsImageImageView.action.useEnhancedPrompt" /></button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.useEnhancedPrompt" />
+            </button>
             <button
               type="button"
               onClick={cancelEnhanceReview}
               className="px-3 py-1 text-[12px] rounded-md bg-surface border border-border text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
             >
-              <Trans i18nKey="common:surface.componentsImageImageView.action.keepOriginal" /></button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.keepOriginal" />
+            </button>
           </div>
         </div>
       )}
@@ -640,21 +1028,44 @@ export function ImageView() {
       {/* Template preview flow */}
       {previewTemplate && (
         <div className="p-3 mt-2 rounded-lg border border-accent/30 bg-accent/5">
-          <Label><Trans i18nKey="common:surface.componentsImageImageView.text.applyTemplate" /> {previewTemplate.label}</Label>
+          <Label>
+            <Trans i18nKey="common:surface.componentsImageImageView.text.applyTemplate" />{" "}
+            {previewTemplate.label}
+          </Label>
           {previewTemplate.positiveText && (
             <div className="text-[12.5px] text-text-primary mt-1 mb-2 p-2 rounded bg-surface border border-border break-all whitespace-pre-wrap">
-              <strong className="text-text-secondary"><Trans i18nKey="common:surface.componentsImageImageView.text.positive" /></strong> {previewTemplate.positiveText}
+              <strong className="text-text-secondary">
+                <Trans i18nKey="common:surface.componentsImageImageView.text.positive" />
+              </strong>{" "}
+              {previewTemplate.positiveText}
             </div>
           )}
           {previewTemplate.negativeText && (
             <div className="text-[12.5px] text-text-primary mt-1 mb-2 p-2 rounded bg-surface border border-border break-all whitespace-pre-wrap">
-              <strong className="text-text-secondary"><Trans i18nKey="common:surface.componentsImageImageView.text.negative" /></strong> {previewTemplate.negativeText}
+              <strong className="text-text-secondary">
+                <Trans i18nKey="common:surface.componentsImageImageView.text.negative" />
+              </strong>{" "}
+              {previewTemplate.negativeText}
             </div>
           )}
           {previewTemplate.negativeText && !caps.supportsNegativePrompt && (
-            <div role="alert" className="mt-2 rounded-md border border-warning/40 bg-warning/10 p-2 text-[12px] text-warning">
-              {model} <Trans i18nKey="common:surface.componentsImageImageView.text.doesNotSupportNegativePromptsTheTemplate" />{compatibleNegativeModel && (
-                <button type="button" onClick={() => setSelectedModel('image', compatibleNegativeModel)} className="ml-2 underline underline-offset-2"><Trans i18nKey="common:surface.componentsImageImageView.action.switchTo" /> {compatibleNegativeModel}</button>
+            <div
+              role="alert"
+              className="mt-2 rounded-md border border-warning/40 bg-warning/10 p-2 text-[12px] text-warning"
+            >
+              {model}{" "}
+              <Trans i18nKey="common:surface.componentsImageImageView.text.doesNotSupportNegativePromptsTheTemplate" />
+              {compatibleNegativeModel && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setSelectedModel("image", compatibleNegativeModel)
+                  }
+                  className="ml-2 underline underline-offset-2"
+                >
+                  <Trans i18nKey="common:surface.componentsImageImageView.action.switchTo" />{" "}
+                  {compatibleNegativeModel}
+                </button>
               )}
             </div>
           )}
@@ -662,33 +1073,58 @@ export function ImageView() {
             <button
               type="button"
               onClick={() => {
-                if (previewTemplate.negativeText && !caps.supportsNegativePrompt) return;
-                if (previewTemplate.positiveText) setPromptClamped((prev) => appendTemplateText(prev, previewTemplate.positiveText!));
-                if (previewTemplate.negativeText) setNegativePrompt((prev) => appendTemplateText(prev, previewTemplate.negativeText!));
+                if (
+                  previewTemplate.negativeText &&
+                  !caps.supportsNegativePrompt
+                )
+                  return;
+                if (previewTemplate.positiveText)
+                  setPromptClamped((prev) =>
+                    appendTemplateText(prev, previewTemplate.positiveText!),
+                  );
+                if (previewTemplate.negativeText)
+                  setNegativePrompt((prev) =>
+                    appendTemplateText(prev, previewTemplate.negativeText!),
+                  );
                 setPreviewTemplate(null);
               }}
-              disabled={Boolean(previewTemplate.negativeText && !caps.supportsNegativePrompt)}
+              disabled={Boolean(
+                previewTemplate.negativeText && !caps.supportsNegativePrompt,
+              )}
               className="px-3 py-1 text-[12px] rounded-md bg-accent text-accent-fg hover:bg-accent-hover transition-colors cursor-pointer"
             >
-              <Trans i18nKey="common:surface.componentsImageImageView.action.append" /></button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.append" />
+            </button>
             <button
               type="button"
               onClick={() => {
-                if (previewTemplate.negativeText && !caps.supportsNegativePrompt) return;
-                if (previewTemplate.positiveText) setPromptClamped(previewTemplate.positiveText.replace(/^, /, ""));
-                if (previewTemplate.negativeText) setNegativePrompt(previewTemplate.negativeText!);
+                if (
+                  previewTemplate.negativeText &&
+                  !caps.supportsNegativePrompt
+                )
+                  return;
+                if (previewTemplate.positiveText)
+                  setPromptClamped(
+                    previewTemplate.positiveText.replace(/^, /, ""),
+                  );
+                if (previewTemplate.negativeText)
+                  setNegativePrompt(previewTemplate.negativeText!);
                 setPreviewTemplate(null);
               }}
-              disabled={Boolean(previewTemplate.negativeText && !caps.supportsNegativePrompt)}
+              disabled={Boolean(
+                previewTemplate.negativeText && !caps.supportsNegativePrompt,
+              )}
               className="px-3 py-1 text-[12px] rounded-md border border-accent text-accent hover:bg-accent/10 transition-colors cursor-pointer"
             >
-              <Trans i18nKey="common:surface.componentsImageImageView.action.replace" /></button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.replace" />
+            </button>
             <button
               type="button"
               onClick={() => setPreviewTemplate(null)}
               className="px-3 py-1 text-[12px] rounded-md bg-surface border border-border text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
             >
-              <Trans i18nKey="common:surface.componentsImageImageView.action.cancel" /></button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.cancel" />
+            </button>
           </div>
         </div>
       )}
@@ -696,74 +1132,131 @@ export function ImageView() {
       {caps.supportsNegativePrompt && (
         <div>
           <div className="flex items-center justify-between">
-            <Label htmlFor={negativePromptId}><Trans i18nKey="common:surface.componentsImageImageView.text.negativePrompt" /></Label>
+            <Label htmlFor={negativePromptId}>
+              <Trans i18nKey="common:surface.componentsImageImageView.text.negativePrompt" />
+            </Label>
             <button
               type="button"
-              onClick={() => void handleSavePromptToLibrary('negative', negativePrompt)}
+              onClick={() =>
+                void handleSavePromptToLibrary("negative", negativePrompt)
+              }
               disabled={!negativePrompt.trim()}
               className="text-[12px] px-2 py-1 rounded-md border border-border text-text-secondary hover:border-accent hover:text-accent disabled:opacity-50"
-              aria-label="Save negative prompt to library"
+              aria-label={t("imageStudioRuntime.saveNegativePromptToLibrary")}
               data-testid="image-save-negative-to-library"
             >
-              <Trans i18nKey="common:surface.componentsImageImageView.action.saveToLibrary" /></button>
+              <Trans i18nKey="common:surface.componentsImageImageView.action.saveToLibrary" />
+            </button>
           </div>
-          <TextArea id={negativePromptId} value={negativePrompt} onChange={setNegativePrompt} placeholder="blurry, low quality…" rows={2} />
-        </div>
-      )}
-
-      {hasAspectRatios ? (
-        <div><Label><Trans i18nKey="common:surface.componentsImageImageView.text.aspectRatio" /></Label><PillGroup options={aspectOptions} value={aspectRatio} onChange={setAspectRatio} ariaLabel="Image aspect ratio" /></div>
-      ) : (
-        <div>
-          <Label><Trans i18nKey="common:surface.componentsImageImageView.text.aspectRatio" /></Label>
-          <PillGroup
-            options={whOptions}
-            value={sizeKey}
-            onChange={setSizeKey}
-            ariaLabel="Image aspect ratio"
+          <TextArea
+            id={negativePromptId}
+            value={negativePrompt}
+            onChange={setNegativePrompt}
+            placeholder={t("imageStudioRuntime.negativePromptPlaceholder")}
+            rows={2}
           />
         </div>
       )}
 
-      {(dimOptions.resolutions?.length) && (
-        <div><Label><Trans i18nKey="common:surface.componentsImageImageView.text.resolution" /></Label><PillGroup options={resolutionOptions} value={resolution || resolutionOptions[0]?.value || ''} onChange={setResolution} ariaLabel="Image resolution" /></div>
+      {hasAspectRatios ? (
+        <div>
+          <Label>
+            <Trans i18nKey="common:surface.componentsImageImageView.text.aspectRatio" />
+          </Label>
+          <PillGroup
+            options={aspectOptions}
+            value={aspectRatio}
+            onChange={setAspectRatio}
+            ariaLabel={t("imageStudioRuntime.imageAspectRatio")}
+          />
+        </div>
+      ) : (
+        <div>
+          <Label>
+            <Trans i18nKey="common:surface.componentsImageImageView.text.aspectRatio" />
+          </Label>
+          <PillGroup
+            options={whOptions}
+            value={sizeKey}
+            onChange={setSizeKey}
+            ariaLabel={t("imageStudioRuntime.imageAspectRatio")}
+          />
+        </div>
       )}
 
-      {(dimOptions.qualities?.length) && (
+      {dimOptions.resolutions?.length && (
         <div>
-          <Label><Trans i18nKey="common:surface.componentsImageImageView.text.quality" /></Label>
+          <Label>
+            <Trans i18nKey="common:surface.componentsImageImageView.text.resolution" />
+          </Label>
           <PillGroup
-            options={dimOptions.qualities.map((option) => ({ value: option.id, label: option.label }))}
-            value={quality || dimOptions.defaultQuality || ''}
+            options={resolutionOptions}
+            value={resolution || resolutionOptions[0]?.value || ""}
+            onChange={setResolution}
+            ariaLabel={t("imageStudioRuntime.imageResolution")}
+          />
+        </div>
+      )}
+
+      {dimOptions.qualities?.length && (
+        <div>
+          <Label>
+            <Trans i18nKey="common:surface.componentsImageImageView.text.quality" />
+          </Label>
+          <PillGroup
+            options={dimOptions.qualities.map((option) => ({
+              value: option.id,
+              label: option.labelKey
+                ? t(option.labelKey)
+                : (option.label ?? option.id),
+            }))}
+            value={quality || dimOptions.defaultQuality || ""}
             onChange={setQuality}
-            ariaLabel="Image quality"
+            ariaLabel={t("imageStudioRuntime.imageQuality")}
           />
         </div>
       )}
 
       {caps.supportsStyle !== false && styles && styles.length > 0 && (
         <div>
-          <Label htmlFor={styleId}><Trans i18nKey="common:surface.componentsImageImageView.text.style" /></Label>
-          <Select id={styleId} value={style} onChange={setStyle} options={styleOptions} searchable placeholder="None" />
+          <Label htmlFor={styleId}>
+            <Trans i18nKey="common:surface.componentsImageImageView.text.style" />
+          </Label>
+          <Select
+            id={styleId}
+            value={style}
+            onChange={setStyle}
+            options={styleOptions}
+            searchable
+            placeholder={t("imageStudioRuntime.none")}
+          />
         </div>
       )}
 
       {/* Seed controls */}
       {caps.supportsSeed && (
         <div>
-          <Label htmlFor={seedId}><Trans i18nKey="common:surface.componentsImageImageView.text.seed" /></Label>
+          <Label htmlFor={seedId}>
+            <Trans i18nKey="common:surface.componentsImageImageView.text.seed" />
+          </Label>
           <div className="flex items-center gap-2 mt-1">
-            <label htmlFor={seedId} className="flex items-center gap-1.5 text-[12px] text-text-secondary cursor-pointer select-none">
+            <label
+              htmlFor={seedId}
+              className="flex items-center gap-1.5 text-[12px] text-text-secondary cursor-pointer select-none"
+            >
               <input
                 id={seedId}
                 type="checkbox"
-                checked={seedMode === 'fixed'}
-                onChange={(e) => setSeedMode(e.target.checked ? 'fixed' : 'off')}
+                checked={seedMode === "fixed"}
+                onChange={(e) =>
+                  setSeedMode(e.target.checked ? "fixed" : "off")
+                }
                 className="rounded border-border bg-surface-elevated text-accent w-3.5 h-3.5 cursor-pointer"
               />
-              <Trans i18nKey="common:surface.componentsImageImageView.label.useFixedSeed" /></label>
+              <Trans i18nKey="common:surface.componentsImageImageView.label.useFixedSeed" />
+            </label>
           </div>
-          {seedMode === 'fixed' && (
+          {seedMode === "fixed" && (
             <div className="flex items-center gap-2 mt-1">
               <input
                 id={`${seedId}-value`}
@@ -779,22 +1272,24 @@ export function ImageView() {
                 min={-999999999}
                 max={999999999}
                 className="w-32 bg-surface-elevated border border-border rounded-md px-2 py-1 text-[12.5px] text-text-primary outline-none focus:border-accent transition-colors"
-                aria-label="Seed value"
+                aria-label={t("imageStudioRuntime.seedValue")}
               />
               <button
                 type="button"
                 onClick={() => setSeedValue(randomSeed())}
                 className="px-2 py-1 text-[12px] rounded-md bg-surface border border-border text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-                aria-label="Randomize seed"
+                aria-label={t("imageStudioRuntime.randomizeSeed")}
               >
-                <Trans i18nKey="common:surface.componentsImageImageView.action.randomize" /></button>
+                <Trans i18nKey="common:surface.componentsImageImageView.action.randomize" />
+              </button>
               <button
                 type="button"
-                onClick={() => setSeedMode('off')}
+                onClick={() => setSeedMode("off")}
                 className="px-2 py-1 text-[12px] rounded-md bg-surface border border-border text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-                aria-label="Clear seed"
+                aria-label={t("imageStudioRuntime.clearSeed")}
               >
-                <Trans i18nKey="common:surface.componentsImageImageView.action.clear" /></button>
+                <Trans i18nKey="common:surface.componentsImageImageView.action.clear" />
+              </button>
             </div>
           )}
         </div>
@@ -802,21 +1297,68 @@ export function ImageView() {
 
       {caps.supportsSteps !== false && (
         <div>
-          <div className="flex justify-between"><Label htmlFor={stepsId}><Trans i18nKey="common:surface.componentsImageImageView.text.steps" /></Label><output htmlFor={stepsId} className="text-xs text-text-secondary">{steps}</output></div>
-          <input id={stepsId} type="range" min={1} max={maxSteps} value={steps} onChange={(e) => setSteps(Number(e.target.value))} className="w-full" aria-valuetext={`${steps} steps`} />
+          <div className="flex justify-between">
+            <Label htmlFor={stepsId}>
+              <Trans i18nKey="common:surface.componentsImageImageView.text.steps" />
+            </Label>
+            <output htmlFor={stepsId} className="text-xs text-text-secondary">
+              {steps}
+            </output>
+          </div>
+          <input
+            id={stepsId}
+            type="range"
+            min={1}
+            max={maxSteps}
+            value={steps}
+            onChange={(e) => setSteps(Number(e.target.value))}
+            className="w-full"
+            aria-valuetext={t("imageStudioRuntime.stepsValue", {
+              count: steps,
+            })}
+          />
         </div>
       )}
       <div>
-        <div className="flex justify-between"><Label htmlFor={variantsId}><Trans i18nKey="common:surface.componentsImageImageView.text.variants" /></Label><output htmlFor={variantsId} className="text-xs text-text-secondary">{variants}</output></div>
-        <input id={variantsId} type="range" min={1} max={4} value={variants} onChange={(e) => setVariants(Number(e.target.value))} className="w-full" aria-valuetext={`${variants} variants`} />
+        <div className="flex justify-between">
+          <Label htmlFor={variantsId}>
+            <Trans i18nKey="common:surface.componentsImageImageView.text.variants" />
+          </Label>
+          <output htmlFor={variantsId} className="text-xs text-text-secondary">
+            {variants}
+          </output>
+        </div>
+        <input
+          id={variantsId}
+          type="range"
+          min={1}
+          max={4}
+          value={variants}
+          onChange={(e) => setVariants(Number(e.target.value))}
+          className="w-full"
+          aria-valuetext={t("imageStudioRuntime.variantsValue", {
+            count: variants,
+          })}
+        />
       </div>
 
-      <PrimaryButton onClick={handleGenerate} disabled={!prompt.trim() || prompt.length > promptLimit || !hasVeniceKey} loading={mutation.isPending} size="lg">
-        {mutation.isPending ? 'Generating…' : 'Generate'}
+      <PrimaryButton
+        onClick={handleGenerate}
+        disabled={
+          !prompt.trim() || prompt.length > promptLimit || !hasVeniceKey
+        }
+        loading={mutation.isPending}
+        size="lg"
+      >
+        {mutation.isPending
+          ? t("imageStudioRuntime.generating")
+          : t("imageStudioRuntime.generate")}
       </PrimaryButton>
-      {mutation.error && <ErrorText>{redactErrorMessage(mutation.error)}</ErrorText>}
+      {mutation.error && (
+        <ErrorText>{redactErrorMessage(mutation.error)}</ErrorText>
+      )}
     </>
-  )
+  );
 
   const output = (
     <>
@@ -825,29 +1367,70 @@ export function ImageView() {
           ref={lightboxRef}
           role="dialog"
           aria-modal="true"
-          aria-label="Image preview"
+          aria-label={t("imageStudioRuntime.imagePreview")}
           className="fixed inset-0 z-50 flex items-center justify-center bg-overlay backdrop-blur-sm animate-fade-in"
           onClick={() => setSelectedImage(null)}
         >
           <div className="relative" onClick={(e) => e.stopPropagation()}>
-            <img src={toImageSrc(selectedImage)} alt="Generated" className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl" />
+            <img
+              src={toImageSrc(selectedImage)}
+              alt={t("imageStudioRuntime.generated")}
+              className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl"
+            />
             <div className="absolute top-3 right-3 flex gap-1.5">
-              <button onClick={() => downloadImage(selectedImage)} aria-label="Download" className="p-2 bg-overlay hover:bg-overlay rounded-lg text-text-secondary hover:text-text-primary transition-colors backdrop-blur-sm">
-                <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
+              <button
+                onClick={() => downloadImage(selectedImage)}
+                aria-label={t("imageStudioRuntime.download")}
+                className="p-2 bg-overlay hover:bg-overlay rounded-lg text-text-secondary hover:text-text-primary transition-colors backdrop-blur-sm"
+              >
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                </svg>
               </button>
-              <button onClick={() => setSelectedImage(null)} aria-label="Close" className="p-2 bg-overlay hover:bg-overlay rounded-lg text-text-secondary hover:text-text-primary transition-colors backdrop-blur-sm">
-                <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+              <button
+                onClick={() => setSelectedImage(null)}
+                aria-label={t("imageStudioRuntime.close")}
+                className="p-2 bg-overlay hover:bg-overlay rounded-lg text-text-secondary hover:text-text-primary transition-colors backdrop-blur-sm"
+              >
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
               </button>
             </div>
           </div>
         </div>
       )}
       {mutation.isPending ? (
-        <div className="flex min-h-[20rem] items-center justify-center" aria-live="polite">
+        <div
+          className="flex min-h-[20rem] items-center justify-center"
+          aria-live="polite"
+        >
           <GenerationLoadingIndicator
             state="generating"
-            label="Generating image…"
-            detail="Your generated image will appear here when it is ready."
+            label={t("imageStudioRuntime.generatingImage")}
+            detail={t("imageStudioRuntime.generatingImageDetail")}
           />
         </div>
       ) : images.length === 0 ? (
@@ -855,47 +1438,106 @@ export function ImageView() {
           <ExamplePrompts
             items={starters}
             onPick={setPromptClamped}
-            onShuffle={() => setStarters(getPromptStartersForCategory('image', 4))}
+            onShuffle={() =>
+              setStarters(getPromptStartersForCategory("image", 4))
+            }
           />
         </div>
       ) : (
         <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
           {images.map((img, i) => (
             <div key={img} className="relative group">
-              <button type="button" onClick={(event) => { event.currentTarget.focus(); setSelectedImage(img) }} aria-label={`Open generated image ${i + 1}`} className="block w-full rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">
-                <img src={toImageSrc(img)} alt={`Generated ${i + 1}`} className="w-full rounded-xl border border-border hover:border-accent transition-all duration-200" />
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.currentTarget.focus();
+                  setSelectedImage(img);
+                }}
+                aria-label={t("imageStudioRuntime.openGeneratedImage", {
+                  number: i + 1,
+                })}
+                className="block w-full rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+              >
+                <img
+                  src={toImageSrc(img)}
+                  alt={t("imageStudioRuntime.generatedNumber", {
+                    number: i + 1,
+                  })}
+                  className="w-full rounded-xl border border-border hover:border-accent transition-all duration-200"
+                />
               </button>
               <button
                 type="button"
-                onClick={(e) => { e.stopPropagation(); downloadImage(img, i) }}
-                aria-label="Download"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  downloadImage(img, i);
+                }}
+                aria-label={t("imageStudioRuntime.download")}
                 className="absolute top-2 right-2 p-1.5 bg-overlay hover:bg-overlay rounded-lg text-text-secondary hover:text-text-primary opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100 transition-all backdrop-blur-sm"
-                title="Download"
+                title={t("imageStudioRuntime.download")}
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" /></svg>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                </svg>
               </button>
+              {pendingImageSaves[img] && (
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    void retryPendingImageSave(img);
+                  }}
+                  className="absolute top-2 left-2 rounded-md border border-warning/60 bg-overlay px-2 py-1 text-xs text-warning backdrop-blur-sm"
+                  aria-label={tRuntime(
+                    "surface.componentsCharacterCreatorCharactercreatorview.action.retrySave",
+                  )}
+                  title={t("imageStudioRuntime.imageSaveFailed")}
+                >
+                  {tRuntime(
+                    "surface.componentsCharacterCreatorCharactercreatorview.action.retrySave",
+                  )}
+                </button>
+              )}
               <button
                 type="button"
                 onClick={async (event) => {
                   event.stopPropagation();
-                  const media = useMediaStore.getState().items.find((item) => item.image === img);
-                  if (!media) { toast.error('Save the image to Media Studio before creating a card.'); return; }
+                  const media = useMediaStore
+                    .getState()
+                    .items.find((item) => item.image === img);
+                  if (!media) {
+                    toast.error(t("imageStudioRuntime.saveBeforeCard"));
+                    return;
+                  }
                   useCharacterCreatorLaunchStore.getState().launch({
-                    mode: 'new-from-image',
+                    mode: "new-from-image",
                     sourceMediaId: media.id,
                   });
-                  useSettingsStore.getState().setActiveTab('character-creator');
-                  toast.success('AI Character Creator launched');
+                  useSettingsStore.getState().setActiveTab("character-creator");
+                  toast.success(
+                    t("imageStudioRuntime.characterCreatorLaunched"),
+                  );
                 }}
                 className="absolute bottom-2 left-2 rounded-lg border border-accent bg-overlay px-2 py-1 text-[11px] text-accent opacity-0 transition-all group-hover:opacity-100 group-focus-within:opacity-100 focus:opacity-100"
                 data-testid="image-create-st-card"
-              ><Trans i18nKey="common:surface.componentsImageImageView.action.createStCard" /></button>
+              >
+                <Trans i18nKey="common:surface.componentsImageImageView.action.createStCard" />
+              </button>
             </div>
           ))}
         </div>
       )}
     </>
-  )
+  );
 
-  return <GenerationView controls={controls} output={output} />
+  return <GenerationView controls={controls} output={output} />;
 }

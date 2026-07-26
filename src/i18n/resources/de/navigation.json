@@ -258,5 +258,18 @@
     "toggleInspector": "Inspector umschalten",
     "toggleHint": "⌘K zum Umschalten",
     "navigateHint": "↑↓ zum Navigieren · Enter zum Auswählen"
+  },
+  "header": {
+    "openMenu": "Menü öffnen",
+    "toggleSidebar": "Seitenleiste umschalten",
+    "selectModel": "Modell auswählen…",
+    "selectedModel": "Ausgewähltes Modell",
+    "toggleTaskCenter": "Taskcenter umschalten",
+    "tasks": "Aufgaben",
+    "checkingApiKey": "API-Schlüssel wird überprüft",
+    "apiKeyConnectedManage": "API-Schlüssel verbunden, verwalten",
+    "connectApiKey": "API-Schlüssel verbinden",
+    "checkingKey": "Schlüssel wird überprüft...",
+    "connected": "Verbunden"
   }
 }

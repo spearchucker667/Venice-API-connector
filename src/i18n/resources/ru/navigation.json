@@ -258,5 +258,18 @@
     "toggleInspector": "Переключить инспектор",
     "toggleHint": "⌘K для переключения",
     "navigateHint": "↑↓ для навигации · Enter для выбора"
+  },
+  "header": {
+    "openMenu": "Открыть меню",
+    "toggleSidebar": "Переключить боковую панель",
+    "selectModel": "Выберите модель…",
+    "selectedModel": "Выбранная модель",
+    "toggleTaskCenter": "Переключить центр задач",
+    "tasks": "Задачи",
+    "checkingApiKey": "Проверка ключа API",
+    "apiKeyConnectedManage": "Ключ API подключен, управляйте",
+    "connectApiKey": "Подключить API-ключ",
+    "checkingKey": "Проверка ключа…",
+    "connected": "Подключено"
   }
 }

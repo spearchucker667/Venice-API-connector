@@ -1,5 +1,7 @@
 # Character Creator Integration, Visible Process & Hardening Report
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 **Repository:** `spearchucker667/Venice_Forge`  
 **Date:** July 24, 2026  
 **Status:** Shipped, Fully Integrated & Verified  

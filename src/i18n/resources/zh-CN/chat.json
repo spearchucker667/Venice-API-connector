@@ -16,5 +16,57 @@
   "folders": "文件夹",
   "unfiled": "未分类",
   "attachFile": "附加文件",
-  "managedDocument": "受管文档"
+  "managedDocument": "受管文档",
+  "composer": {
+    "visionUnsupportedTitle": "AI不具备视觉能力",
+    "visionUnsupportedDetail": "“{{model}}”无法读取图像附件。首先选择支持视觉的模型或将图像/PDF 转换为文本。",
+    "attachTitle": "附加文件（或拖动/粘贴）",
+    "attachmentLimitTitle": "已达到附件限制",
+    "attachmentLimitDetail": "每条消息最多可以附加 {{max}} 文件。",
+    "tooManyAttachmentsTitle": "附件太多",
+    "tooManyAttachmentsDetail": "仅添加了 {{requested}} 文件中的 {{added}}。每条消息的限制是 {{max}} 文件。",
+    "attachmentNote": "附件说明",
+    "attachmentFailed": "附件失败",
+    "attachmentAlt": "附件{{number}}",
+    "removeAttachment": "删除附件 {{name}}",
+    "disabledPlaceholder": "连接 API 密钥以开始...",
+    "dropPlaceholder": "拖放要附加的文件",
+    "placeholder": "询问任何内容 — Enter 发送，Shift+Enter 换行。附加要发送的不带文本的文件。",
+    "messageInput": "留言输入",
+    "attachFile": "附加文件",
+    "stopGenerating": "停止生成",
+    "sendMessage": "发送消息"
+  },
+  "memory": {
+    "disabledLabel": "内存关闭",
+    "disabledTitle": "在“设置”中禁用内存检索。",
+    "loadingLabel": "记忆…",
+    "loadingTitle": "正在检索该消息的相关内存。",
+    "activeLabel": "内存活跃",
+    "activeTitle": "相关内存上下文将包含在此消息中。",
+    "failedLabel": "内存故障",
+    "failedTitle": "记忆检索失败。您的消息是在没有记忆上下文的情况下发送的。"
+  },
+  "controls": {
+    "autoRead": "自动读取",
+    "citations": "引文",
+    "scrape": "刮",
+    "xSearch": "X搜索",
+    "searchInStream": "在流中搜索",
+    "documentTools": "文档工具",
+    "newChatShortcut": "新聊天 (⌘N)",
+    "systemPromptPlaceholder": "选修的。留空以避免添加应用程序编写的系统消息。",
+    "temperature": "温度",
+    "topP": "顶P",
+    "maxTokens": "最大代币数",
+    "veniceDefaultPrompt": "威尼斯默认提示符",
+    "disableThinking": "禁用思维",
+    "stripThinking": "条形思维",
+    "searchMode": "搜索：{{mode}}",
+    "searchModes": {
+      "off": "离开",
+      "on": "在",
+      "auto": "自动"
+    }
+  }
 }

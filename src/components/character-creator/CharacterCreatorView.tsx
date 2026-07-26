@@ -21,15 +21,25 @@ import {
   regenerateCharacterFieldAI,
   reviseCharacterDraftAI,
 } from "../../services/characterCreatorAiService";
-import { CharacterCreatorImportService, validateCardForApproval } from "../../services/characterCreatorImportService";
-import { analyzeCharacterImage, getVisionCapableCharacterModels } from "../../services/characterCards/characterCardGenerationService";
+import {
+  CharacterCreatorImportService,
+  validateCardForApproval,
+} from "../../services/characterCreatorImportService";
+import {
+  analyzeCharacterImage,
+  getVisionCapableCharacterModels,
+} from "../../services/characterCards/characterCardGenerationService";
 import { useModels } from "../../hooks/use-models";
 import { startNormalChatForCharacter } from "../../services/rpHelpers";
 import { useMediaStore } from "../../stores/media-store";
 import { useCharacterCardStore } from "../../stores/character-card-store";
 import { useSettingsStore } from "../../stores/settings-store";
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
-import { isElectron, desktopCharacterCreator, desktopCharacterCards } from "../../services/desktopBridge";
+import {
+  isElectron,
+  desktopCharacterCreator,
+  desktopCharacterCards,
+} from "../../services/desktopBridge";
 import { toast } from "../../stores/toast-store";
 import { AlertTriangle } from "lucide-react";
 
@@ -40,21 +50,37 @@ import { CharacterCreatorReady } from "./CharacterCreatorReady";
 import { CharacterCreatorCompleted } from "./CharacterCreatorCompleted";
 import { CharacterCreatorError } from "./CharacterCreatorError";
 import { CharacterCreatorLocalPickerModal } from "./CharacterCreatorLocalPickerModal";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 export function CharacterCreatorView() {
+  const { t: tRuntime } = useTranslation("common");
   const activeTab = useSettingsStore((s) => s.activeTab);
   const { data: liveTextModels } = useModels("text");
-  const [viewState, setViewState] = useState<CharacterCreatorViewState>("welcome");
-  const [activeDraft, setActiveDraft] = useState<CharacterCreatorDraft | null>(null);
-  const [recentDrafts, setRecentDrafts] = useState<CharacterCreatorDraftSummary[]>([]);
-  const [createdCharacter, setCreatedCharacter] = useState<CharacterCardV1 | null>(null);
+  const [viewState, setViewState] =
+    useState<CharacterCreatorViewState>("welcome");
+  const [activeDraft, setActiveDraft] = useState<CharacterCreatorDraft | null>(
+    null,
+  );
+  const [recentDrafts, setRecentDrafts] = useState<
+    CharacterCreatorDraftSummary[]
+  >([]);
+  const [createdCharacter, setCreatedCharacter] =
+    useState<CharacterCardV1 | null>(null);
   const [activeIdea, setActiveIdea] = useState("");
-  const [avatarDataUrl, setAvatarDataUrl] = useState<string | undefined>(undefined);
+  const [avatarDataUrl, setAvatarDataUrl] = useState<string | undefined>(
+    undefined,
+  );
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
-  const [processEvents, setProcessEvents] = useState<CharacterCreatorProcessEvent[]>([]);
+  const [processEvents, setProcessEvents] = useState<
+    CharacterCreatorProcessEvent[]
+  >([]);
   const [showLocalPicker, setShowLocalPicker] = useState(false);
-  const [validationResults, setValidationResults] = useState<{ valid: boolean; errors: string[]; warnings: string[]; recommendations: string[] }>({
+  const [validationResults, setValidationResults] = useState<{
+    valid: boolean;
+    errors: string[];
+    warnings: string[];
+    recommendations: string[];
+  }>({
     valid: true,
     errors: [],
     warnings: [],
@@ -62,7 +88,9 @@ export function CharacterCreatorView() {
   });
 
   const abortControllerRef = useRef<AbortController | null>(null);
-  const pendingSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const pendingDraftRef = useRef<CharacterCreatorDraft | null>(null);
 
   const loadRecentDrafts = async () => {
@@ -76,7 +104,10 @@ export function CharacterCreatorView() {
 
   const [autosaveError, setAutosaveError] = useState<string | null>(null);
 
-  const flushPendingSave = async (): Promise<{ ok: boolean; error?: string }> => {
+  const flushPendingSave = async (): Promise<{
+    ok: boolean;
+    error?: string;
+  }> => {
     if (pendingSaveTimerRef.current) {
       clearTimeout(pendingSaveTimerRef.current);
       pendingSaveTimerRef.current = null;
@@ -84,12 +115,15 @@ export function CharacterCreatorView() {
     if (pendingDraftRef.current) {
       const draftToSave = pendingDraftRef.current;
       try {
-        await CharacterDraftService.update(draftToSave.id, { card: draftToSave.card });
+        await CharacterDraftService.update(draftToSave.id, {
+          card: draftToSave.card,
+        });
         pendingDraftRef.current = null;
         setAutosaveError(null);
         return { ok: true };
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "Failed to save draft changes.";
+        const msg =
+          err instanceof Error ? err.message : "Failed to save draft changes.";
         setAutosaveError(msg);
         return { ok: false, error: msg };
       }
@@ -107,14 +141,20 @@ export function CharacterCreatorView() {
             switch (intent.mode) {
               case "new-from-idea":
                 if (intent.sourceIdea) {
-                  await handleCreateDraft(intent.sourceIdea, intent.optionalContext);
+                  await handleCreateDraft(
+                    intent.sourceIdea,
+                    intent.optionalContext,
+                  );
                 } else {
                   setViewState("welcome");
                 }
                 break;
               case "new-from-image":
                 if (intent.sourceMediaId) {
-                  await handleCreateDraftFromImage(intent.sourceMediaId, intent.optionalContext);
+                  await handleCreateDraftFromImage(
+                    intent.sourceMediaId,
+                    intent.optionalContext,
+                  );
                 } else {
                   setViewState("welcome");
                 }
@@ -128,7 +168,10 @@ export function CharacterCreatorView() {
                 break;
               case "edit-local-character":
                 if (intent.localCharacterId) {
-                  const draft = await CharacterCreatorImportService.loadExistingCharacterAsDraft(intent.localCharacterId);
+                  const draft =
+                    await CharacterCreatorImportService.loadExistingCharacterAsDraft(
+                      intent.localCharacterId,
+                    );
                   setActiveDraft(draft);
                   setViewState("draft");
                   await loadRecentDrafts();
@@ -138,7 +181,10 @@ export function CharacterCreatorView() {
                 break;
               case "import-card":
                 if (intent.importHandle) {
-                  const draft = await CharacterCreatorImportService.loadImportHandleAsDraft(intent.importHandle);
+                  const draft =
+                    await CharacterCreatorImportService.loadImportHandleAsDraft(
+                      intent.importHandle,
+                    );
                   setActiveDraft(draft);
                   setViewState("draft");
                   await loadRecentDrafts();
@@ -148,7 +194,10 @@ export function CharacterCreatorView() {
                 break;
               case "duplicate-hosted-character":
                 if (intent.hostedCharacterId) {
-                  const draft = await CharacterCreatorImportService.loadHostedCharacterAsLocalDraft(intent.hostedCharacterId);
+                  const draft =
+                    await CharacterCreatorImportService.loadHostedCharacterAsLocalDraft(
+                      intent.hostedCharacterId,
+                    );
                   setActiveDraft(draft);
                   setViewState("draft");
                   await loadRecentDrafts();
@@ -177,7 +226,10 @@ export function CharacterCreatorView() {
     };
   }, []);
 
-  const handleCreateDraft = async (idea: string, optionalContext?: OptionalDraftContext) => {
+  const handleCreateDraft = async (
+    idea: string,
+    optionalContext?: OptionalDraftContext,
+  ) => {
     setActiveIdea(idea);
     setViewState("generating");
     setErrorDetails(null);
@@ -204,12 +256,19 @@ export function CharacterCreatorView() {
         sourceIdea: idea,
         card: res.response.draft,
         creatorMetadata: {
-          inspiration: idea.includes("mimics") ? "User requested archetype inspiration" : undefined,
+          inspiration: idea.includes("mimics")
+            ? "User requested archetype inspiration"
+            : undefined,
           designSummary: res.response.design_summary,
           assumptions: res.response.assumptions,
           warnings: res.response.warnings,
           suggestedTags: res.response.draft.data.tags || [],
-          avatarPrompt: (res.response.draft.data.extensions?.["venice-forge"] as Record<string, unknown>)?.avatarPrompt as string | undefined,
+          avatarPrompt: (
+            res.response.draft.data.extensions?.["venice-forge"] as Record<
+              string,
+              unknown
+            >
+          )?.avatarPrompt as string | undefined,
           processSummary: res.response.process_summary,
         },
       });
@@ -233,7 +292,10 @@ export function CharacterCreatorView() {
     }
   };
 
-  const handleCreateDraftFromImage = async (mediaId: string, optionalContext?: OptionalDraftContext) => {
+  const handleCreateDraftFromImage = async (
+    mediaId: string,
+    optionalContext?: OptionalDraftContext,
+  ) => {
     setActiveIdea("Analyzing image...");
     setViewState("generating");
     setErrorDetails(null);
@@ -242,12 +304,29 @@ export function CharacterCreatorView() {
     abortControllerRef.current = new AbortController();
 
     try {
-      setProcessEvents([{ id: crypto.randomUUID(), phase: "concept-analysis", status: "active", source: "application", title: "Analyzing Image", summary: "Extracting visual appearance, genre, and setting from the image.", createdAt: new Date().toISOString() }]);
-      const visionModels = await getVisionCapableCharacterModels(liveTextModels ?? []);
+      setProcessEvents([
+        {
+          id: crypto.randomUUID(),
+          phase: "concept-analysis",
+          status: "active",
+          source: "application",
+          title: tRuntime(
+            "runtimeGenerated.components.characterCreator.charactercreatorview.metadata.analyzingImage",
+          ),
+          summary:
+            "Extracting visual appearance, genre, and setting from the image.",
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+      const visionModels = await getVisionCapableCharacterModels(
+        liveTextModels ?? [],
+      );
       const model = visionModels.length > 0 ? visionModels[0] : undefined;
-      
+
       if (!model) {
-        throw new Error("No vision-capable AI model is available to analyze this image.");
+        throw new Error(
+          "No vision-capable AI model is available to analyze this image.",
+        );
       }
 
       const analysis = await analyzeCharacterImage({
@@ -279,12 +358,19 @@ export function CharacterCreatorView() {
         sourceIdea: idea,
         card: res.response.draft,
         creatorMetadata: {
-          inspiration: idea.includes("mimics") ? "User requested archetype inspiration" : undefined,
+          inspiration: idea.includes("mimics")
+            ? "User requested archetype inspiration"
+            : undefined,
           designSummary: res.response.design_summary,
           assumptions: res.response.assumptions,
           warnings: res.response.warnings,
           suggestedTags: res.response.draft.data.tags || [],
-          avatarPrompt: (res.response.draft.data.extensions?.["venice-forge"] as Record<string, unknown>)?.avatarPrompt as string | undefined,
+          avatarPrompt: (
+            res.response.draft.data.extensions?.["venice-forge"] as Record<
+              string,
+              unknown
+            >
+          )?.avatarPrompt as string | undefined,
           processSummary: res.response.process_summary,
         },
       });
@@ -294,7 +380,9 @@ export function CharacterCreatorView() {
         processTrace: res.processEvents,
       });
 
-      const media = useMediaStore.getState().items.find(m => m.id === mediaId);
+      const media = useMediaStore
+        .getState()
+        .items.find((m) => m.id === mediaId);
       if (media && media.image) {
         setAvatarDataUrl(media.image);
       }
@@ -328,27 +416,51 @@ export function CharacterCreatorView() {
       setActiveDraft(d);
       setViewState("draft");
     } catch (err) {
-      toast.error("Could not load draft", String(err));
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.couldNotLoadDraft",
+        ),
+        String(err),
+      );
     }
   };
 
   const handleDuplicateDraft = async (draftId: string) => {
     try {
       const dup = await CharacterDraftService.duplicate(draftId);
-      toast.success("Draft duplicated", dup.card.data.name);
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.draftDuplicated",
+        ),
+        dup.card.data.name,
+      );
       await loadRecentDrafts();
     } catch (err) {
-      toast.error("Could not duplicate draft", String(err));
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.couldNotDuplicateDraft",
+        ),
+        String(err),
+      );
     }
   };
 
   const handleDeleteDraft = async (draftId: string) => {
     try {
       await CharacterDraftService.delete(draftId);
-      toast.success("Draft deleted");
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.draftDeleted",
+        ),
+      );
       await loadRecentDrafts();
     } catch (err) {
-      toast.error("Could not delete draft", String(err));
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.couldNotDeleteDraft",
+        ),
+        String(err),
+      );
     }
   };
 
@@ -375,23 +487,50 @@ export function CharacterCreatorView() {
   const handleSaveDraft = async () => {
     const flushRes = await flushPendingSave();
     if (!flushRes.ok) {
-      toast.error("Autosave failed", flushRes.error || "Cannot save draft while pending changes failed to persist.");
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.autosaveFailed",
+        ),
+        flushRes.error ||
+          tRuntime(
+            "runtimeGenerated.components.characterCreator.charactercreatorview.notification.cannotSaveDraftWhilePendingChangesFailedToPersist",
+          ),
+      );
       return;
     }
     if (!activeDraft) return;
     try {
-      await CharacterDraftService.update(activeDraft.id, { card: activeDraft.card });
-      toast.success("Draft saved locally");
+      await CharacterDraftService.update(activeDraft.id, {
+        card: activeDraft.card,
+      });
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.draftSavedLocally",
+        ),
+      );
       await loadRecentDrafts();
     } catch (err) {
-      toast.error("Could not save draft", String(err));
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.couldNotSaveDraft",
+        ),
+        String(err),
+      );
     }
   };
 
   const handleReviseDraft = async (instruction: string) => {
     const flushRes = await flushPendingSave();
     if (!flushRes.ok) {
-      toast.error("Autosave failed", flushRes.error || "Cannot revise draft while pending changes failed to persist.");
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.autosaveFailed",
+        ),
+        flushRes.error ||
+          tRuntime(
+            "runtimeGenerated.components.characterCreator.charactercreatorview.notification.cannotReviseDraftWhilePendingChangesFailedToPersist",
+          ),
+      );
       return;
     }
     if (!activeDraft) return;
@@ -424,7 +563,11 @@ export function CharacterCreatorView() {
 
       setActiveDraft(updated);
       setViewState("draft");
-      toast.success("Draft revised");
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.draftRevised",
+        ),
+      );
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       setErrorDetails(msg);
@@ -432,10 +575,21 @@ export function CharacterCreatorView() {
     }
   };
 
-  const handleRegenerateField = async (field: CharacterCreatorEditableField, instruction?: string) => {
+  const handleRegenerateField = async (
+    field: CharacterCreatorEditableField,
+    instruction?: string,
+  ) => {
     const flushRes = await flushPendingSave();
     if (!flushRes.ok) {
-      toast.error("Autosave failed", flushRes.error || "Cannot regenerate field while pending changes failed to persist.");
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.autosaveFailed",
+        ),
+        flushRes.error ||
+          tRuntime(
+            "runtimeGenerated.components.characterCreator.charactercreatorview.notification.cannotRegenerateFieldWhilePendingChangesFailedToPersist",
+          ),
+      );
       return;
     }
     if (!activeDraft) return;
@@ -462,7 +616,12 @@ export function CharacterCreatorView() {
 
       setActiveDraft(updated);
       setViewState("draft");
-      toast.success(`Field '${field}' regenerated`);
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.fieldFieldRegenerated",
+          { field: field },
+        ),
+      );
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       setErrorDetails(msg);
@@ -473,7 +632,15 @@ export function CharacterCreatorView() {
   const handleValidateDraft = async () => {
     const flushRes = await flushPendingSave();
     if (!flushRes.ok) {
-      toast.error("Autosave failed", flushRes.error || "Cannot validate draft while pending changes failed to persist.");
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.autosaveFailed",
+        ),
+        flushRes.error ||
+          tRuntime(
+            "runtimeGenerated.components.characterCreator.charactercreatorview.notification.cannotValidateDraftWhilePendingChangesFailedToPersist",
+          ),
+      );
       return;
     }
     if (!activeDraft) return;
@@ -487,26 +654,50 @@ export function CharacterCreatorView() {
     setViewState("ready");
   };
 
-  const handleApproveAndCreate = async (startChatImmediately = false, saveAsCopy = false) => {
+  const handleApproveAndCreate = async (
+    startChatImmediately = false,
+    saveAsCopy = false,
+  ) => {
     const flushRes = await flushPendingSave();
     if (!flushRes.ok) {
-      toast.error("Autosave failed", flushRes.error || "Cannot approve character while pending changes failed to persist.");
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.autosaveFailed",
+        ),
+        flushRes.error ||
+          tRuntime(
+            "runtimeGenerated.components.characterCreator.charactercreatorview.notification.cannotApproveCharacterWhilePendingChangesFailedToPersist",
+          ),
+      );
       return;
     }
     if (!activeDraft) return;
     setViewState("saving");
     try {
-      const result = await CharacterCreatorImportService.approveAndCreateCharacter(activeDraft.id, {
-        saveAsCopy,
-        avatarDataUrl,
-      });
+      const result =
+        await CharacterCreatorImportService.approveAndCreateCharacter(
+          activeDraft.id,
+          {
+            saveAsCopy,
+            avatarDataUrl,
+          },
+        );
 
       setCreatedCharacter(result.character);
       setActiveDraft(result.draft);
       setViewState("completed");
       toast.success(
-        result.isUpdate ? "Character updated!" : "Character created!",
-        `"${result.character.name}" saved to local library.`,
+        result.isUpdate
+          ? tRuntime(
+              "runtimeGenerated.components.characterCreator.charactercreatorview.notification.characterUpdated",
+            )
+          : tRuntime(
+              "runtimeGenerated.components.characterCreator.charactercreatorview.notification.characterCreated",
+            ),
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.value1SavedToLocalLibrary",
+          { value1: result.character.name },
+        ),
       );
 
       if (startChatImmediately) {
@@ -522,7 +713,15 @@ export function CharacterCreatorView() {
   const handleExportCard = async () => {
     const flushRes = await flushPendingSave();
     if (!flushRes.ok) {
-      toast.error("Autosave failed", flushRes.error || "Cannot export card while pending changes failed to persist.");
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.autosaveFailed",
+        ),
+        flushRes.error ||
+          tRuntime(
+            "runtimeGenerated.components.characterCreator.charactercreatorview.notification.cannotExportCardWhilePendingChangesFailedToPersist",
+          ),
+      );
       return;
     }
     if (!activeDraft) return;
@@ -534,20 +733,39 @@ export function CharacterCreatorView() {
           avatarDataUrl,
         });
         if (res.ok && !res.canceled) {
-          toast.success("Character Card exported", res.filename);
+          toast.success(
+            tRuntime(
+              "runtimeGenerated.components.characterCreator.charactercreatorview.notification.characterCardExported",
+            ),
+            res.filename,
+          );
         }
       } catch (err) {
-        toast.error("Export failed", String(err));
+        toast.error(
+          tRuntime(
+            "runtimeGenerated.components.characterCreator.charactercreatorview.notification.exportFailed",
+          ),
+          String(err),
+        );
       }
     } else {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(activeDraft.card, null, 2));
+      const dataStr =
+        "data:text/json;charset=utf-8," +
+        encodeURIComponent(JSON.stringify(activeDraft.card, null, 2));
       const downloadAnchor = document.createElement("a");
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `${activeDraft.card.data.name || "character"}-v2.json`);
+      downloadAnchor.setAttribute(
+        "download",
+        `${activeDraft.card.data.name || "character"}-v2.json`,
+      );
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
-      toast.success("Exported Character Card JSON");
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.exportedCharacterCardJson",
+        ),
+      );
     }
   };
 
@@ -556,14 +774,30 @@ export function CharacterCreatorView() {
       try {
         const res = await desktopCharacterCards.chooseImportFile();
         if (res.ok && res.handle) {
-          const draft = await CharacterCreatorImportService.loadImportHandleAsDraft(res.handle);
+          const draft =
+            await CharacterCreatorImportService.loadImportHandleAsDraft(
+              res.handle,
+            );
           setActiveDraft(draft);
           setViewState("draft");
           await loadRecentDrafts();
-          toast.success("Card imported into Character Creator", draft.card.data.name || "Imported Card");
+          toast.success(
+            tRuntime(
+              "runtimeGenerated.components.characterCreator.charactercreatorview.notification.cardImportedIntoCharacterCreator",
+            ),
+            draft.card.data.name ||
+              tRuntime(
+                "runtimeGenerated.components.characterCreator.charactercreatorview.notification.importedCard",
+              ),
+          );
         }
       } catch (err) {
-        toast.error("Import failed", String(err));
+        toast.error(
+          tRuntime(
+            "runtimeGenerated.components.characterCreator.charactercreatorview.notification.importFailed",
+          ),
+          String(err),
+        );
       }
     } else {
       const input = document.createElement("input");
@@ -574,13 +808,24 @@ export function CharacterCreatorView() {
         if (!file) return;
         try {
           const text = await file.text();
-          const draft = await CharacterCreatorImportService.loadImportHandleAsDraft(text);
+          const draft =
+            await CharacterCreatorImportService.loadImportHandleAsDraft(text);
           setActiveDraft(draft);
           setViewState("draft");
           await loadRecentDrafts();
-          toast.success("Card imported into Character Creator", draft.card.data.name);
+          toast.success(
+            tRuntime(
+              "runtimeGenerated.components.characterCreator.charactercreatorview.notification.cardImportedIntoCharacterCreator",
+            ),
+            draft.card.data.name,
+          );
         } catch (err) {
-          toast.error("Could not parse card file", String(err));
+          toast.error(
+            tRuntime(
+              "runtimeGenerated.components.characterCreator.charactercreatorview.notification.couldNotParseCardFile",
+            ),
+            String(err),
+          );
         }
       };
       input.click();
@@ -590,12 +835,20 @@ export function CharacterCreatorView() {
   const handleSelectLocalCharacterToEdit = async (characterId: string) => {
     setShowLocalPicker(false);
     try {
-      const draft = await CharacterCreatorImportService.loadExistingCharacterAsDraft(characterId);
+      const draft =
+        await CharacterCreatorImportService.loadExistingCharacterAsDraft(
+          characterId,
+        );
       setActiveDraft(draft);
       setViewState("draft");
       await loadRecentDrafts();
     } catch (err) {
-      toast.error("Could not load character", String(err));
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.characterCreator.charactercreatorview.notification.couldNotLoadCharacter",
+        ),
+        String(err),
+      );
     }
   };
 
@@ -605,13 +858,19 @@ export function CharacterCreatorView() {
         <div className="mx-6 mt-4 p-3 bg-red-950/60 border border-red-500/40 rounded-lg flex items-center justify-between text-red-200 text-sm shrink-0">
           <div className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
-            <span><strong><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorview.text.autosaveFailed" /></strong> {autosaveError}</span>
+            <span>
+              <strong>
+                <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorview.text.autosaveFailed" />
+              </strong>{" "}
+              {autosaveError}
+            </span>
           </div>
           <button
             onClick={() => void flushPendingSave()}
             className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-xs transition-colors" // THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR
           >
-            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorview.action.retrySave" /></button>
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorview.action.retrySave" />
+          </button>
         </div>
       )}
       {viewState === "welcome" && (
@@ -663,7 +922,9 @@ export function CharacterCreatorView() {
       {viewState === "saving" && (
         <div className="flex flex-col items-center justify-center h-full p-6">
           <div className="w-12 h-12 rounded-full border-2 border-accent border-t-transparent animate-spin mb-4" />
-          <p className="text-sm font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorview.description.savingCharacterToLocalLibrary" /></p>
+          <p className="text-sm font-semibold text-text-primary">
+            <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorview.description.savingCharacterToLocalLibrary" />
+          </p>
         </div>
       )}
 

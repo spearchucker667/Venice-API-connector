@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /**
  * @fileoverview Phase 2F — RP Prompt Stack Compiler.
  *
@@ -120,7 +121,8 @@ export interface RpCompileInput {
   memories: RpMemoryV1[];
   modelSystemPrompt?: string;
   globalPostHistoryInstruction?: string;
-  characterSystemPromptBehavior?: "respect-card" | "prefer-global" | "append-global" | "prepend-global";
+  characterSystemPromptBehavior?:
+    "respect-card" | "prefer-global" | "append-global" | "prepend-global";
   currentUserMessage: string;
   /** Soft cap on the total system block (chars). Defaults to 16_000. */
   systemBlockBudget?: number;
@@ -142,13 +144,27 @@ export interface RpCompileResult {
   systemPrompt: string;
   /** User/assistant/character/narrator messages for the recent turn
    *  history. Empty when there is no recent turn. */
-  recentMessages: { role: "user" | "assistant" | "character" | "narrator" | "tool"; content: string; characterId?: string; name?: string }[];
-  postHistoryMessages: { role: "system"; content: string; characterId?: string }[];
+  recentMessages: {
+    role: "user" | "assistant" | "character" | "narrator" | "tool";
+    content: string;
+    characterId?: string;
+    name?: string;
+  }[];
+  postHistoryMessages: {
+    role: "system";
+    content: string;
+    characterId?: string;
+  }[];
   /** The user message (verbatim). */
   userMessage: { role: "user"; content: string };
   /** Optional first message from the expected character. Rendered as
    *  an assistant/character turn only when `recentMessages` is empty. */
-  firstMessage?: { role: "character"; content: string; characterId: string; name: string };
+  firstMessage?: {
+    role: "character";
+    content: string;
+    characterId: string;
+    name: string;
+  };
   /** Optional example-dialogues block (rendered as a single section). */
   exampleDialogue?: { content: string; characterId?: string; name?: string };
   /** Non-fatal warnings (over budget, missing refs, etc.). */
@@ -171,7 +187,9 @@ function sid(kind: string, key: string | number): string {
 
 /** Joins non-empty lines with single newlines. */
 function block(...lines: (string | undefined | null | false)[]): string {
-  return lines.filter((l): l is string => typeof l === "string" && l.length > 0).join("\n");
+  return lines
+    .filter((l): l is string => typeof l === "string" && l.length > 0)
+    .join("\n");
 }
 
 /** Build the deterministic example-dialogues block for the expected
@@ -201,7 +219,9 @@ function buildExampleDialoguesBlock(
 function buildFirstMessageTurn(
   characters: CharacterCardV1[],
   expectedId: string | undefined,
-): { role: "character"; content: string; characterId: string; name: string } | undefined {
+):
+  | { role: "character"; content: string; characterId: string; name: string }
+  | undefined {
   const target = characters.find((c) => c.id === expectedId) ?? characters[0];
   if (!target || !target.firstMessage) return undefined;
   return {
@@ -290,12 +310,19 @@ export function compileRpPrompt(input: RpCompileInput): RpCompileResult {
   // 5) Insert the example-dialogues block after memory, before recent
   //    messages. We splice it into the trace just before the first
   //    recent-message entry (or at the end if there is none).
-  const exampleBlock = buildExampleDialoguesBlock(input.characters, input.expectedCharacterId);
+  const exampleBlock = buildExampleDialoguesBlock(
+    input.characters,
+    input.expectedCharacterId,
+  );
   if (exampleBlock) {
     const ex: RpCompileSection = {
       id: sid("example-dialogue", exampleBlock.characterId ?? "default"),
       kind: "example-dialogue",
-      label: `Example dialogues (${exampleBlock.name ?? "character"})`,
+      label: translateRuntime(
+        "runtimeGenerated.services.rppromptcompiler.metadata.exampleDialoguesValue1",
+        "Example dialogues ({{value1}})",
+        { value1: exampleBlock.name ?? "character" },
+      ),
       content: exampleBlock.content,
       sourceId: exampleBlock.characterId,
       chars: exampleBlock.content.length,
@@ -313,10 +340,14 @@ export function compileRpPrompt(input: RpCompileInput): RpCompileResult {
   //    sections first when over budget. Priority: inner-system > prompt-library
   //    refs (newer first) > scene-compiler > example-dialogues.
   let running = sections
-    .filter((s) => s.included && s.kind !== "user-message" && s.kind !== "recent-message")
+    .filter(
+      (s) =>
+        s.included && s.kind !== "user-message" && s.kind !== "recent-message",
+    )
     .reduce((acc, s) => acc + s.chars, 0);
   const systemSections = sections.filter(
-    (s) => s.included && s.kind !== "user-message" && s.kind !== "recent-message",
+    (s) =>
+      s.included && s.kind !== "user-message" && s.kind !== "recent-message",
   );
   let budgetExceeded = inner.budgetExceeded;
   if (running > systemBudget) {
@@ -330,32 +361,50 @@ export function compileRpPrompt(input: RpCompileInput): RpCompileResult {
         s.included = false;
         s.reason = "budget-exceeded";
         running -= s.chars;
-        warnings.push(`Dropped section "${s.label}" — system block budget exceeded.`);
+        warnings.push(
+          `Dropped section "${s.label}" — system block budget exceeded.`,
+        );
       }
     }
     budgetExceeded = true;
   }
 
   const includedSystemSections = sections.filter(
-    (s) => s.included && s.kind !== "user-message" && s.kind !== "recent-message",
+    (s) =>
+      s.included && s.kind !== "user-message" && s.kind !== "recent-message",
   );
-  const addedSystemSections = includedSystemSections.filter((section) =>
-    section.kind === "prompt-library" || section.kind === "scene-compiler" || section.kind === "example-dialogue",
+  const addedSystemSections = includedSystemSections.filter(
+    (section) =>
+      section.kind === "prompt-library" ||
+      section.kind === "scene-compiler" ||
+      section.kind === "example-dialogue",
   );
   const systemPrompt = [
-    inner.systemMessages.map((message) => message.content).filter(Boolean).join("\n\n"),
+    inner.systemMessages
+      .map((message) => message.content)
+      .filter(Boolean)
+      .join("\n\n"),
     ...addedSystemSections.map((section) => section.content),
-  ].filter(Boolean).join("\n\n");
-  const totalSystemChars = includedSystemSections.reduce((acc, s) => acc + s.chars, 0);
-  const totalSystemTokens = includedSystemSections.reduce((acc, s) => acc + s.tokens, 0);
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+  const totalSystemChars = includedSystemSections.reduce(
+    (acc, s) => acc + s.chars,
+    0,
+  );
+  const totalSystemTokens = includedSystemSections.reduce(
+    (acc, s) => acc + s.tokens,
+    0,
+  );
 
   // 7) Resolve the optional first-message greeting. We only inject it
   //    when there is no recent history (so it does not duplicate the
   //    model's last turn). The caller can override this by passing
   //    `recentMessageBudget: 0` and providing no messages.
-  const firstMessageTurn = inner.recentMessages.length === 0
-    ? buildFirstMessageTurn(input.characters, input.expectedCharacterId)
-    : undefined;
+  const firstMessageTurn =
+    inner.recentMessages.length === 0
+      ? buildFirstMessageTurn(input.characters, input.expectedCharacterId)
+      : undefined;
 
   // 8) Compose the result. The first message is delivered to the caller
   //    as a separate field — it can choose to render it before the user
@@ -418,7 +467,8 @@ function traceKindContent(
   if (t.kind === "user-message") {
     return inner.userMessage?.content ?? "";
   }
-  if (t.kind === "post-history-instruction") return inner.postHistoryMessages[0]?.content ?? "";
+  if (t.kind === "post-history-instruction")
+    return inner.postHistoryMessages[0]?.content ?? "";
   if (t.kind === "recent-message") {
     const idx = Number(t.id.split(":").pop() ?? "-1");
     if (Number.isFinite(idx) && idx >= 0 && idx < inner.recentMessages.length) {

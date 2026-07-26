@@ -48,4 +48,17 @@ The same status JSON drives `LOCALE_COMPLETION[<locale>].isProductionComplete` i
 
 ## Hardcoded-String Audit
 
-`scripts/verify-hardcoded-strings.cjs` walks `.ts`/`.tsx` under `src/` and emits `artifacts/i18n/hardcoded-strings.{json,md}` — 1,304 candidates across 92 files, 1,016 unique strings (mostly common button labels). The verifier is currently advisory; per-component rewiring of these candidates is the multi-session Phase 6 deliverable. Reviewers asked to migrate specific UI should pipe the candidates through `i18n:extract → i18n:coverage → i18n:sync-catalogs → translate-missing --write` and then refactor each component to call `t(...)` instead of the literal.
+`scripts/verify-hardcoded-strings.cjs` uses the TypeScript Compiler API to inspect production `.ts`/`.tsx` files for visible JSX text and attributes, conditional/logical expression branches, semantic registries, toast/dialog arguments, and status-item prose. The historical 1,667-candidate runtime inventory has been migrated; both the strict scan and `config/i18n-hardcoded-baseline.json` now report zero candidates across the production surface.
+
+Run both gates before merging visible UI work:
+
+```bash
+npm run i18n:verify-hardcoded
+npm run verify:i18n-hardcoded-regressions
+```
+
+Do not add broad allowlists or increase the baseline to accept new prose. A necessary technical/proper-name exception must be narrow, reasoned in source, and reviewed alongside the generated inventory. Generated reports under `artifacts/i18n/` are validation output, not documentation authority.
+
+## Runtime Translation Status
+
+Catalog structure, runtime-surface coverage, and linguistic approval are separate measurements. `en-US` is the canonical source language. The other 11 catalogs currently have complete key/runtime coverage but remain `first-pass-machine` and `isProductionComplete: false` until a qualified reviewer and review date are recorded in the native-review metadata. Never describe structural coverage as native-speaker completion.

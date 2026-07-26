@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 export type JsonPrimitive = string | number | boolean | null;
 export type JsonValue = JsonPrimitive | JsonValue[] | JsonObject;
 
@@ -84,13 +85,34 @@ export function validateCharacterCardAuthoring(
 ): CharacterCardValidationIssue[] {
   const issues: CharacterCardValidationIssue[] = [];
   if (!card.name.trim()) {
-    issues.push({ severity: "warning", path: "data.name", message: "Format valid, but a name is required before chat." });
+    issues.push({
+      severity: "warning",
+      path: "data.name",
+      message: translateRuntime(
+        "runtimeGenerated.types.characterCardSpec.metadata.formatValidButANameIsRequiredBeforeChat",
+        "Format valid, but a name is required before chat.",
+      ),
+    });
   }
   if (!card.description.trim()) {
-    issues.push({ severity: "info", path: "data.description", message: "Description is recommended for Venice Forge authoring." });
+    issues.push({
+      severity: "info",
+      path: "data.description",
+      message: translateRuntime(
+        "runtimeGenerated.types.characterCardSpec.metadata.descriptionIsRecommendedForVeniceForgeAuthoring",
+        "Description is recommended for Venice Forge authoring.",
+      ),
+    });
   }
   if (!card.firstMessage?.trim()) {
-    issues.push({ severity: "info", path: "data.first_mes", message: "A primary greeting is recommended for chat readiness." });
+    issues.push({
+      severity: "info",
+      path: "data.first_mes",
+      message: translateRuntime(
+        "runtimeGenerated.types.characterCardSpec.metadata.aPrimaryGreetingIsRecommendedForChatReadiness",
+        "A primary greeting is recommended for chat readiness.",
+      ),
+    });
   }
   return issues;
 }

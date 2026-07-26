@@ -12,7 +12,7 @@ import { FALLBACK_MODELS } from "../../constants/venice";
 import { extractScenePrompt, generateScene } from "../../services/rp";
 import { toast } from "../../stores/toast-store";
 import { formatRelativeTime, truncate } from "./_shared";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 interface Props {
   filterChatId?: string;
@@ -22,7 +22,12 @@ interface Props {
   disabled?: boolean;
 }
 
-export function SceneGenerator({ filterChatId, onViewAsset, disabled = false }: Props) {
+export function SceneGenerator({
+  filterChatId,
+  onViewAsset,
+  disabled = false,
+}: Props) {
+  const { t: tRuntime } = useTranslation("common");
   const chats = useRpChatStore((s) => s.chats);
   const chatsLoaded = useRpChatStore((s) => s.hasLoaded);
   const loadChats = useRpChatStore((s) => s.load);
@@ -32,8 +37,12 @@ export function SceneGenerator({ filterChatId, onViewAsset, disabled = false }: 
   const assets = useSceneAssetStore((s) => s.assets);
   const assetsLoaded = useSceneAssetStore((s) => s.hasLoaded);
   const loadAssets = useSceneAssetStore((s) => s.load);
-  const [selectedChatId, setSelectedChatId] = useState<string>(filterChatId ?? "");
-  const [model, setModel] = useState(FALLBACK_MODELS.image[0]?.id ?? "flux-dev");
+  const [selectedChatId, setSelectedChatId] = useState<string>(
+    filterChatId ?? "",
+  );
+  const [model, setModel] = useState(
+    FALLBACK_MODELS.image[0]?.id ?? "flux-dev",
+  );
   const [negativePrompt, setNegativePrompt] = useState("");
   const [seed, setSeed] = useState<string>("");
   const [override, setOverride] = useState("");
@@ -43,8 +52,17 @@ export function SceneGenerator({ filterChatId, onViewAsset, disabled = false }: 
   useEffect(() => {
     if (!chatsLoaded) void loadChats();
     if (!cardsLoaded) void loadCards();
-    if (!assetsLoaded) void loadAssets(filterChatId ? { chatId: filterChatId } : undefined);
-  }, [chatsLoaded, cardsLoaded, assetsLoaded, loadChats, loadCards, loadAssets, filterChatId]);
+    if (!assetsLoaded)
+      void loadAssets(filterChatId ? { chatId: filterChatId } : undefined);
+  }, [
+    chatsLoaded,
+    cardsLoaded,
+    assetsLoaded,
+    loadChats,
+    loadCards,
+    loadAssets,
+    filterChatId,
+  ]);
 
   const visibleChats = useMemo(() => {
     if (filterChatId) return chats.filter((c) => c.id === filterChatId);
@@ -84,12 +102,23 @@ export function SceneGenerator({ filterChatId, onViewAsset, disabled = false }: 
       rpChatId: selectedChat.id,
       ...(override.trim() ? { promptOverride: override.trim() } : {}),
       model,
-      ...(negativePrompt.trim() ? { negativePrompt: negativePrompt.trim() } : {}),
-      ...(seedNum !== undefined && !Number.isNaN(seedNum) ? { seed: seedNum } : {}),
+      ...(negativePrompt.trim()
+        ? { negativePrompt: negativePrompt.trim() }
+        : {}),
+      ...(seedNum !== undefined && !Number.isNaN(seedNum)
+        ? { seed: seedNum }
+        : {}),
     });
     setRunning(false);
     if (outcome.ok) {
-      toast.success("Scene generated", "Saved to RP assets.");
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.rpStudio.scenegenerator.notification.sceneGenerated",
+        ),
+        tRuntime(
+          "runtimeGenerated.components.rpStudio.scenegenerator.notification.savedToRpAssets",
+        ),
+      );
       if (onViewAsset) onViewAsset(outcome.asset.id);
       await useSceneAssetStore.getState().load({ chatId: selectedChat.id });
     } else {
@@ -99,7 +128,8 @@ export function SceneGenerator({ filterChatId, onViewAsset, disabled = false }: 
 
   const filteredAssets = useMemo(() => {
     if (filterChatId) return assets;
-    if (selectedChatId) return assets.filter((a) => a.chatId === selectedChatId);
+    if (selectedChatId)
+      return assets.filter((a) => a.chatId === selectedChatId);
     return assets;
   }, [assets, filterChatId, selectedChatId]);
 
@@ -107,21 +137,29 @@ export function SceneGenerator({ filterChatId, onViewAsset, disabled = false }: 
     <div className="flex h-full min-h-0">
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         <div>
-          <Label htmlFor="scene-chat"><Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.chat" /></Label>
+          <Label htmlFor="scene-chat">
+            <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.chat" />
+          </Label>
           <select
             id="scene-chat"
             value={selectedChatId}
             onChange={(e) => setSelectedChatId(e.target.value)}
             className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-colors"
           >
-            <option value=""><Trans i18nKey="common:surface.componentsRpStudioScenegenerator.option.selectAChat" /></option>
+            <option value="">
+              <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.option.selectAChat" />
+            </option>
             {visibleChats.map((c) => (
-              <option key={c.id} value={c.id}>{c.title}</option>
+              <option key={c.id} value={c.id}>
+                {c.title}
+              </option>
             ))}
           </select>
         </div>
         <div>
-          <Label htmlFor="scene-model"><Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.imageModel" /></Label>
+          <Label htmlFor="scene-model">
+            <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.imageModel" />
+          </Label>
           <select
             id="scene-model"
             value={model}
@@ -129,40 +167,58 @@ export function SceneGenerator({ filterChatId, onViewAsset, disabled = false }: 
             className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-colors"
           >
             {FALLBACK_MODELS.image.map((m) => (
-              <option key={m.id} value={m.id}>{m.name}</option>
+              <option key={m.id} value={m.id}>
+                {m.name}
+              </option>
             ))}
           </select>
         </div>
         <div>
-          <Label htmlFor="scene-prompt" hint="Leave blank to extract from chat">
-            <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.prompt" /></Label>
+          <Label
+            htmlFor="scene-prompt"
+            hint={tRuntime(
+              "runtimeGenerated.components.rpStudio.scenegenerator.attribute.leaveBlankToExtractFromChat",
+            )}
+          >
+            <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.prompt" />
+          </Label>
           <TextArea
             value={override}
             onChange={setOverride}
             rows={4}
-            placeholder={extractedPrompt || "Extracts from the most recent non-system message."}
+            placeholder={
+              extractedPrompt ||
+              tRuntime(
+                "runtimeGenerated.components.rpStudio.scenegenerator.attribute.extractsFromTheMostRecentNonSystemMessage",
+              )
+            }
             ariaLabel="Prompt override"
           />
           {!override.trim() && selectedChat && (
             <div className="text-[12px] text-text-muted mt-1.5">
-              <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.extracted" /> <span className="italic">{truncate(extractedPrompt, 200)}</span>
+              <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.extracted" />{" "}
+              <span className="italic">{truncate(extractedPrompt, 200)}</span>
             </div>
           )}
         </div>
         <div>
           <Label htmlFor="scene-negative" hint="optional">
-            <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.negativePrompt" /></Label>
+            <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.negativePrompt" />
+          </Label>
           <TextArea
             value={negativePrompt}
             onChange={setNegativePrompt}
             rows={2}
-            placeholder="Things to avoid…"
+            placeholder={tRuntime(
+              "runtimeGenerated.components.rpStudio.scenegenerator.attribute.thingsToAvoid",
+            )}
             ariaLabel="Negative prompt"
           />
         </div>
         <div>
           <Label htmlFor="scene-seed" hint="optional">
-            <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.seed" /></Label>
+            <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.seed" />
+          </Label>
           <input
             id="scene-seed"
             type="number"
@@ -173,15 +229,27 @@ export function SceneGenerator({ filterChatId, onViewAsset, disabled = false }: 
           />
         </div>
         {error && <ErrorText>{error}</ErrorText>}
-        <PrimaryButton loading={running} onClick={() => void handleGenerate()} disabled={!selectedChat || disabled}>
-          <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.generateScene" /></PrimaryButton>
+        <PrimaryButton
+          loading={running}
+          onClick={() => void handleGenerate()}
+          disabled={!selectedChat || disabled}
+        >
+          <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.generateScene" />
+        </PrimaryButton>
       </div>
       <div className="w-72 shrink-0 soft-separator-x mesh-surface overflow-y-auto p-3 space-y-2">
         <div className="text-[12px] uppercase tracking-[0.08em] text-text-muted font-semibold">
-          <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.recentScenes" />{filterChatId ? "" : " (this chat)"}
+          <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.recentScenes" />
+          {filterChatId
+            ? ""
+            : tRuntime(
+                "runtimeGenerated.components.rpStudio.scenegenerator.text.thisChat",
+              )}
         </div>
         {filteredAssets.length === 0 ? (
-          <div className="text-[12px] text-text-muted italic"><Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.noScenesYet" /></div>
+          <div className="text-[12px] text-text-muted italic">
+            <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.noScenesYet" />
+          </div>
         ) : (
           filteredAssets.slice(0, 24).map((a) => (
             <button
@@ -192,13 +260,23 @@ export function SceneGenerator({ filterChatId, onViewAsset, disabled = false }: 
             >
               <div className="aspect-video w-full rounded overflow-hidden bg-surface-elevated border border-border mb-1.5">
                 {a.url ? (
-                  <img src={a.url} alt="" className="w-full h-full object-cover" />
+                  <img
+                    src={a.url}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-text-muted text-[12px]"><Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.noImage" /></div>
+                  <div className="w-full h-full flex items-center justify-center text-text-muted text-[12px]">
+                    <Trans i18nKey="common:surface.componentsRpStudioScenegenerator.text.noImage" />
+                  </div>
                 )}
               </div>
-              <div className="text-[12px] text-text-secondary truncate">{truncate(a.prompt, 100)}</div>
-              <div className="text-[12px] text-text-muted mt-0.5">{a.model} · {formatRelativeTime(a.createdAt)}</div>
+              <div className="text-[12px] text-text-secondary truncate">
+                {truncate(a.prompt, 100)}
+              </div>
+              <div className="text-[12px] text-text-muted mt-0.5">
+                {a.model} · {formatRelativeTime(a.createdAt)}
+              </div>
             </button>
           ))
         )}

@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /** @fileoverview State for the local Character Card library (distinct from the
  *  Venice-hosted `character-store`).
  *
@@ -18,7 +19,11 @@ import {
   generateId as svcGenerateId,
   normalizeCard,
 } from "../services/rp/characterCardService";
-import type { CharacterCardV1, CharacterCardExport, CharacterCardVersion } from "../types/rp";
+import type {
+  CharacterCardV1,
+  CharacterCardExport,
+  CharacterCardVersion,
+} from "../types/rp";
 import { RP_CARD_EXPORT_VERSION } from "../types/rp";
 import { toast } from "./toast-store";
 import { useRpChatStore } from "./rp-chat-store";
@@ -56,7 +61,10 @@ export interface CharacterCardState {
   archiveCard: (id: string) => Promise<CharacterCardV1 | null>;
   unarchiveCard: (id: string) => Promise<CharacterCardV1 | null>;
   addVersion: (id: string, reason?: string) => Promise<CharacterCardV1 | null>;
-  setCurrentVersion: (id: string, versionId: string) => Promise<CharacterCardV1 | null>;
+  setCurrentVersion: (
+    id: string,
+    versionId: string,
+  ) => Promise<CharacterCardV1 | null>;
 }
 
 export const useCharacterCardStore = create<CharacterCardState>((set, get) => ({
@@ -77,7 +85,16 @@ export const useCharacterCardStore = create<CharacterCardState>((set, get) => ({
       set({ cards: sorted, isLoading: false, hasLoaded: true, error: null });
     } catch {
       set({ isLoading: false, error: SAFE_LOAD_ERROR });
-      toast.error("Could not load characters", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.characterCardStore.notification.couldNotLoadCharacters",
+          "Could not load characters",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.characterCardStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
     }
   },
 
@@ -114,13 +131,25 @@ export const useCharacterCardStore = create<CharacterCardState>((set, get) => ({
     if (!normalized) {
       const msg = "Invalid character card data.";
       set({ error: msg });
-      toast.error("Could not save character", msg);
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.characterCardStore.notification.couldNotSaveCharacter",
+          "Could not save character",
+        ),
+        msg,
+      );
       return null;
     }
     const budgetCheck = validateCharacterForPersistence(normalized);
     if (!budgetCheck.ok) {
       set({ error: budgetCheck.message });
-      toast.error("Could not save character", budgetCheck.message);
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.characterCardStore.notification.couldNotSaveCharacter",
+          "Could not save character",
+        ),
+        budgetCheck.message,
+      );
       return null;
     }
     try {
@@ -135,7 +164,16 @@ export const useCharacterCardStore = create<CharacterCardState>((set, get) => ({
       return saved;
     } catch {
       set({ error: SAFE_UPSERT_ERROR });
-      toast.error("Could not save character", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.characterCardStore.notification.couldNotSaveCharacter",
+          "Could not save character",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.characterCardStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
       return null;
     }
   },
@@ -144,7 +182,16 @@ export const useCharacterCardStore = create<CharacterCardState>((set, get) => ({
     try {
       const ok = await svcDelete(id);
       if (!ok) {
-        toast.error("Could not delete character", "Storage rejected the request.");
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.characterCardStore.notification.couldNotDeleteCharacter",
+            "Could not delete character",
+          ),
+          translateRuntime(
+            "runtimeGenerated.stores.characterCardStore.notification.storageRejectedTheRequest",
+            "Storage rejected the request.",
+          ),
+        );
         return false;
       }
       set((s) => ({
@@ -168,13 +215,23 @@ export const useCharacterCardStore = create<CharacterCardState>((set, get) => ({
       return true;
     } catch {
       set({ error: SAFE_REMOVE_ERROR });
-      toast.error("Could not delete character", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.characterCardStore.notification.couldNotDeleteCharacter",
+          "Could not delete character",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.characterCardStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
       return false;
     }
   },
 
   importCards: async (json) => {
-    const { parseCharacterCardImport } = await import("../services/characterCardImportExport");
+    const { parseCharacterCardImport } =
+      await import("../services/characterCardImportExport");
     const result = await parseCharacterCardImport(json);
     let count = 0;
     for (const card of result.imported) {
@@ -243,7 +300,11 @@ export const useCharacterCardStore = create<CharacterCardState>((set, get) => ({
       },
     };
     const versions = [...(current.versions ?? []), ver];
-    const saved = await get().upsert({ ...current, versions, currentVersionId: ver.id });
+    const saved = await get().upsert({
+      ...current,
+      versions,
+      currentVersionId: ver.id,
+    });
     return saved;
   },
 
@@ -293,7 +354,8 @@ export function useFilteredCharacterCards(): CharacterCardV1[] {
     if (c.archivedAt) continue;
     if (!includeAdult && c.adult) continue;
     if (needle) {
-      const hay = `${c.name}\n${c.description}\n${c.tags.join(" ")}`.toLowerCase();
+      const hay =
+        `${c.name}\n${c.description}\n${c.tags.join(" ")}`.toLowerCase();
       if (!hay.includes(needle)) continue;
     }
     out.push(c);

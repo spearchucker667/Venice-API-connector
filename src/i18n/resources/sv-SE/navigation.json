@@ -258,5 +258,18 @@
     "toggleInspector": "Växla inspektör",
     "toggleHint": "⌘K för att växla",
     "navigateHint": "↑↓ för att navigera · Enter för att välja"
+  },
+  "header": {
+    "openMenu": "Öppna menyn",
+    "toggleSidebar": "Växla sidofältet",
+    "selectModel": "Välj modell...",
+    "selectedModel": "Vald modell",
+    "toggleTaskCenter": "Växla aktivitetscenter",
+    "tasks": "Uppgifter",
+    "checkingApiKey": "Kontrollerar API-nyckel",
+    "apiKeyConnectedManage": "API-nyckel ansluten, hantera",
+    "connectApiKey": "Anslut API-nyckel",
+    "checkingKey": "Kontrollerar nyckel...",
+    "connected": "Ansluten"
   }
 }

@@ -57,9 +57,19 @@ vi.mock('electron', () => ({
   }
 }))
 
-import { createGeneratedMediaResponse, persistGeneratedMedia, resolveGeneratedMedia } from './generatedMediaStore'
+import {
+  auditGeneratedMediaIntegrity,
+  classifyGeneratedMediaPersistenceError,
+  createGeneratedMediaResponse,
+  persistGeneratedMedia,
+  recoverPendingGeneratedMediaWrites,
+  retryGeneratedMediaPersistence,
+  resolveGeneratedMedia,
+  verifyGeneratedMediaIntegrity,
+} from './generatedMediaStore'
 
 describe('generatedMediaStore', () => {
+  const blobRoot = path.join(root, 'media', 'blobs', 'sha256')
   beforeEach(async () => { await fs.rm(root, { recursive: true, force: true }) })
 
   it('atomically persists and resolves an MP4 by content hash', async () => {
@@ -75,6 +85,72 @@ describe('generatedMediaStore', () => {
     await expect(persistGeneratedMedia(Buffer.alloc(0), 'audio/mpeg')).rejects.toThrow(/empty/i)
     await expect(persistGeneratedMedia(Buffer.from('x'), 'text/plain')).rejects.toThrow(/unsupported/i)
     await expect(persistGeneratedMedia(Buffer.from('not-mp4'), 'video/mp4')).rejects.toThrow(/did not match/i)
+  })
+
+  it('classifies persistence failures without exposing filesystem paths', () => {
+    expect(classifyGeneratedMediaPersistenceError(Object.assign(new Error('/private/full'), { code: 'ENOSPC' }))).toMatchObject({
+      kind: 'storage-full', retryable: false,
+    })
+    expect(classifyGeneratedMediaPersistenceError(Object.assign(new Error('/private/busy'), { code: 'EBUSY' }))).toMatchObject({
+      kind: 'storage-busy', retryable: true,
+    })
+    expect(classifyGeneratedMediaPersistenceError(Object.assign(new Error('/private/denied'), { code: 'EACCES' })).message).not.toContain('/private')
+    expect(classifyGeneratedMediaPersistenceError(Object.assign(new Error('/Volumes/offline'), { code: 'EIO' }))).toMatchObject({
+      kind: 'storage-unavailable', retryable: false,
+    })
+  })
+
+  it.runIf(process.platform !== 'win32')('classifies a real read-only media directory without changing app data', async () => {
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64')
+    await fs.mkdir(blobRoot, { recursive: true, mode: 0o700 })
+    await fs.chmod(blobRoot, 0o500)
+    try {
+      const error = await persistGeneratedMedia(png, 'image/png').catch((value) => value)
+      expect(classifyGeneratedMediaPersistenceError(error)).toMatchObject({ kind: 'permission-denied', retryable: false })
+    } finally {
+      await fs.chmod(blobRoot, 0o700)
+    }
+  })
+
+  it('retries transient persistence failures and stops after success', async () => {
+    const operation = vi.fn()
+      .mockRejectedValueOnce(Object.assign(new Error('busy'), { code: 'EBUSY' }))
+      .mockRejectedValueOnce(Object.assign(new Error('again'), { code: 'EAGAIN' }))
+      .mockResolvedValue('saved')
+
+    await expect(retryGeneratedMediaPersistence(operation)).resolves.toBe('saved')
+    expect(operation).toHaveBeenCalledTimes(3)
+  })
+
+  it('verifies size and content hash and reports tampering during audit', async () => {
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64')
+    const saved = await persistGeneratedMedia(png, 'image/png')
+    await expect(verifyGeneratedMediaIntegrity(saved.id)).resolves.toMatchObject({ ok: true })
+
+    const resolved = await resolveGeneratedMedia(saved.id)
+    await fs.writeFile(resolved!.path, Buffer.from('tampered'))
+    await expect(verifyGeneratedMediaIntegrity(saved.id)).resolves.toMatchObject({ ok: false, reason: 'size-mismatch' })
+    await expect(auditGeneratedMediaIntegrity()).resolves.toEqual({ checked: 1, healthy: 0, failed: 1 })
+  })
+
+  it('recovers a journaled image write after restart', async () => {
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64')
+    const sha256 = (await import('node:crypto')).createHash('sha256').update(png).digest('hex')
+    const temporaryName = `.incoming-${'a'.repeat(24)}.tmp`
+    await fs.mkdir(blobRoot, { recursive: true })
+    await fs.writeFile(path.join(blobRoot, temporaryName), png)
+    await fs.writeFile(path.join(blobRoot, `.pending-${sha256}.json`), JSON.stringify({
+      version: 1,
+      temporaryName,
+      mimeType: 'image/png',
+      byteCount: png.length,
+      sha256,
+      createdAt: Date.now(),
+    }))
+
+    await expect(recoverPendingGeneratedMediaWrites()).resolves.toEqual({ recovered: 1, failed: 0 })
+    await expect(verifyGeneratedMediaIntegrity(sha256)).resolves.toMatchObject({ ok: true })
+    await expect(fs.stat(path.join(blobRoot, `.pending-${sha256}.json`))).rejects.toMatchObject({ code: 'ENOENT' })
   })
 
   // VERIFY-143: app-owned generated video supports browser media range reads.

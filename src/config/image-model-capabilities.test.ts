@@ -90,7 +90,10 @@ describe("buildDimensionOptions — snake_case constraints", () => {
       aspect_ratios: ["1:1", "3:2"],
       default_aspect_ratio: "3:2",
     };
-    const out = buildDimensionOptions("some-model", raw as unknown as ImageConstraints);
+    const out = buildDimensionOptions(
+      "some-model",
+      raw as unknown as ImageConstraints,
+    );
     expect(out.dimensionMode).toBe("aspectRatio");
     expect(out.aspectRatios?.map((a) => a.id)).toEqual(["1:1", "3:2"]);
     expect(out.defaultDimensions.aspectRatio).toBe("1:1");
@@ -102,7 +105,10 @@ describe("buildDimensionOptions — snake_case constraints", () => {
       resolutions: ["1k", "4k"],
       default_resolution: "4k",
     };
-    const out = buildDimensionOptions("some-model", raw as unknown as ImageConstraints);
+    const out = buildDimensionOptions(
+      "some-model",
+      raw as unknown as ImageConstraints,
+    );
     expect(out.dimensionMode).toBe("aspectResolution");
     expect(out.resolutions?.map((r) => r.id)).toEqual(["1k", "4k"]);
     expect(out.defaultDimensions.resolution).toBe("4k");
@@ -113,7 +119,10 @@ describe("buildDimensionOptions — snake_case constraints", () => {
       aspect_ratios: ["1:1"],
       width_height_divisor: 128,
     };
-    const out = buildDimensionOptions("some-model", raw as unknown as ImageConstraints);
+    const out = buildDimensionOptions(
+      "some-model",
+      raw as unknown as ImageConstraints,
+    );
     expect(out.dimensionMode).toBe("aspectRatio");
   });
 });
@@ -160,7 +169,10 @@ describe("isDimensionSupported", () => {
 describe("normalizeDimensionsForModel", () => {
   it("keeps a supported widthHeight pair and returns no warning", () => {
     const caps = getImageModelCapabilities("flux-dev");
-    const out = normalizeDimensionsForModel(caps, { width: 1024, height: 1024 });
+    const out = normalizeDimensionsForModel(caps, {
+      width: 1024,
+      height: 1024,
+    });
     expect(out.width).toBe(1024);
     expect(out.height).toBe(1024);
     expect(out.warning).toBeUndefined();
@@ -237,17 +249,24 @@ describe("getRecipeCapabilityList", () => {
   it("describes a widthHeight SD-classic model", () => {
     const caps = getImageModelCapabilities("flux-dev");
     const list = getRecipeCapabilityList(caps);
-    expect(list.join(" ")).toMatch(/sizes/);
-    expect(list.join(" ")).toMatch(/Negative prompt/);
-    expect(list.join(" ")).toMatch(/Seed/);
+    expect(list.map((item) => item.key)).toEqual(
+      expect.arrayContaining([
+        "imageCapabilities.sizes",
+        "imageCapabilities.negativePrompt",
+        "imageCapabilities.seed",
+      ]),
+    );
   });
 
   it("describes an aspect-resolution model with ratio × resolution count", () => {
     const caps = getImageModelCapabilities("nano-banana-v1");
     const list = getRecipeCapabilityList(caps);
-    expect(list.join(" ")).toMatch(/ratios/);
-    expect(list.join(" ")).toMatch(/resolutions/);
-    expect(list.join(" ")).toMatch(/Quality/);
+    expect(list.map((item) => item.key)).toEqual(
+      expect.arrayContaining([
+        "imageCapabilities.ratiosResolutions",
+        "imageCapabilities.quality",
+      ]),
+    );
   });
 
   it("flags disabled features when the model does not support them", () => {
@@ -264,17 +283,25 @@ describe("getRecipeCapabilityList", () => {
       supportsStyle: false,
     };
     const list = getRecipeCapabilityList(caps);
-    expect(list.join(" ")).toMatch(/No negative prompt/);
-    expect(list.join(" ")).toMatch(/No steps/);
-    expect(list.join(" ")).toMatch(/No CFG/);
-    expect(list.join(" ")).toMatch(/No style preset/);
+    expect(list.map((item) => item.key)).toEqual(
+      expect.arrayContaining([
+        "imageCapabilities.noNegativePrompt",
+        "imageCapabilities.noSteps",
+        "imageCapabilities.noCfg",
+        "imageCapabilities.noStylePreset",
+      ]),
+    );
   });
 });
 
 // ── Seedream model registration and operation discrimination ─────────────────
 
 describe("Seedream text-to-image models", () => {
-  const TEXT_TO_IMAGE_IDS = ["seedream-v5-pro", "seedream-v5-lite", "seedream-v4"];
+  const TEXT_TO_IMAGE_IDS = [
+    "seedream-v5-pro",
+    "seedream-v5-lite",
+    "seedream-v4",
+  ];
 
   it("SEEDREAM_TEXT_TO_IMAGE_IDS contains all three generate model IDs", () => {
     for (const id of TEXT_TO_IMAGE_IDS) {
@@ -334,7 +361,11 @@ describe("Seedream text-to-image models", () => {
 });
 
 describe("Seedream image-edit models", () => {
-  const EDIT_IDS = ["seedream-v5-pro-edit", "seedream-v5-lite-edit", "seedream-v4-edit"];
+  const EDIT_IDS = [
+    "seedream-v5-pro-edit",
+    "seedream-v5-lite-edit",
+    "seedream-v4-edit",
+  ];
 
   it("SEEDREAM_EDIT_IDS contains all three edit model IDs", () => {
     for (const id of EDIT_IDS) {

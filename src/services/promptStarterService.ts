@@ -1,4 +1,8 @@
-import { PROMPT_STARTERS, type PromptStarter, type PromptStarterCategory } from "../data/promptStarters";
+import {
+  PROMPT_STARTERS,
+  type PromptStarter,
+  type PromptStarterCategory,
+} from "../data/promptStarters";
 
 // Remote config scaffolding (disabled by default)
 export const ENABLE_REMOTE_PROMPT_STARTERS = false;
@@ -11,11 +15,17 @@ const RECENT_KEY = "venice-forge.recentPromptStarterIds";
 let memoryStorage: Record<string, string> = {};
 
 function getStorage(): Storage | null {
-  if (typeof window !== "undefined" && window.localStorage /* localStorage-allowed: prompt-starter rotation tracking */) {
+  if (
+    typeof window !== "undefined" &&
+    window.localStorage /* localStorage-allowed: prompt-starter rotation tracking */
+  ) {
     return window.localStorage; /* localStorage-allowed: prompt-starter rotation tracking */
   }
   try {
-    if (typeof localStorage !== "undefined" && localStorage /* localStorage-allowed: prompt-starter rotation tracking */) {
+    if (
+      typeof localStorage /* localStorage-allowed: prompt-starter rotation tracking */ !== "undefined" &&
+      localStorage /* localStorage-allowed: prompt-starter rotation tracking */
+    ) {
       return localStorage; /* localStorage-allowed: prompt-starter rotation tracking */
     }
   } catch {
@@ -23,10 +33,18 @@ function getStorage(): Storage | null {
   }
   return {
     getItem: (key: string) => memoryStorage[key] || null,
-    setItem: (key: string, value: string) => { memoryStorage[key] = value; },
-    removeItem: (key: string) => { delete memoryStorage[key]; },
-    clear: () => { memoryStorage = {}; },
-    get length() { return Object.keys(memoryStorage).length; },
+    setItem: (key: string, value: string) => {
+      memoryStorage[key] = value;
+    },
+    removeItem: (key: string) => {
+      delete memoryStorage[key];
+    },
+    clear: () => {
+      memoryStorage = {};
+    },
+    get length() {
+      return Object.keys(memoryStorage).length;
+    },
     key: (index: number) => Object.keys(memoryStorage)[index] || null,
   };
 }
@@ -89,8 +107,21 @@ function isValidPromptStarter(item: unknown): item is PromptStarter {
   return (
     Boolean(i) &&
     typeof i["id"] === "string" &&
-    typeof i["prompt"] === "string" &&
-    ["writing", "coding", "learning", "research", "creative", "productivity", "analysis", "image", "audio", "music", "embeddings"].includes(i["category"] as string)
+    typeof i["translationKey"] === "string" &&
+    typeof i["fallbackPrompt"] === "string" &&
+    [
+      "writing",
+      "coding",
+      "learning",
+      "research",
+      "creative",
+      "productivity",
+      "analysis",
+      "image",
+      "audio",
+      "music",
+      "embeddings",
+    ].includes(i["category"] as string)
   );
 }
 
@@ -120,8 +151,18 @@ export async function fetchRemotePromptStarters(): Promise<void> {
  */
 export function getBalancedPromptStarters(count = 4): PromptStarter[] {
   const recentIds = getRecentIds();
-  const chatCategories: PromptStarterCategory[] = ["writing", "coding", "learning", "research", "creative", "productivity", "analysis"];
-  const chatStarters = cachedPromptStarters.filter((p) => chatCategories.includes(p.category));
+  const chatCategories: PromptStarterCategory[] = [
+    "writing",
+    "coding",
+    "learning",
+    "research",
+    "creative",
+    "productivity",
+    "analysis",
+  ];
+  const chatStarters = cachedPromptStarters.filter((p) =>
+    chatCategories.includes(p.category),
+  );
   let pool = chatStarters.filter((p) => !recentIds.includes(p.id));
 
   // If the available pool without recent IDs is too small to fulfill the count,
@@ -164,7 +205,10 @@ export function getBalancedPromptStarters(count = 4): PromptStarter[] {
  * Returns exactly `count` prompts for a specific category (e.g. image, audio, music, embeddings).
  * Excludes recently shown IDs based on a partitioned localStorage tracking key.
  */
-export function getPromptStartersForCategory(category: PromptStarterCategory, count = 4): string[] {
+export function getPromptStartersForCategory(
+  category: PromptStarterCategory,
+  count = 4,
+): PromptStarter[] {
   const recentKey = `venice-forge.recentPromptStarterIds.${category}`;
 
   const getRecent = (): string[] => {
@@ -176,7 +220,9 @@ export function getPromptStartersForCategory(category: PromptStarterCategory, co
         if (stored) {
           const parsed = JSON.parse(stored) as unknown;
           if (Array.isArray(parsed)) {
-            return (parsed as unknown[]).filter((id): id is string => typeof id === "string");
+            return (parsed as unknown[]).filter(
+              (id): id is string => typeof id === "string",
+            );
           }
         }
       }
@@ -198,7 +244,9 @@ export function getPromptStartersForCategory(category: PromptStarterCategory, co
     }
   };
 
-  const allByCategory = cachedPromptStarters.filter((p) => p.category === category);
+  const allByCategory = cachedPromptStarters.filter(
+    (p) => p.category === category,
+  );
   if (allByCategory.length === 0) return [];
 
   const recentIds = getRecent();
@@ -214,7 +262,7 @@ export function getPromptStartersForCategory(category: PromptStarterCategory, co
   const updatedRecentIds = [...recentIds, ...selected.map((p) => p.id)];
   saveRecent(updatedRecentIds);
 
-  return selected.map((p) => p.prompt);
+  return selected;
 }
 
 // Reset helper for testing

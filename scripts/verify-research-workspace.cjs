@@ -42,7 +42,8 @@ if (!agents.includes("VERIFY-051") || !agents.includes("verify:research-workspac
 console.log("✅ AGENTS.md updated with VERIFY-051.");
 
 const tabs = readFileSync("src/config/tabs.ts", "utf8");
-if (!tabs.includes("'search'") || !tabs.includes("Research")) {
+const navigationCatalog = readFileSync("src/i18n/resources/en-US/navigation.json", "utf8");
+if (!/id:\s*["']search["']/.test(tabs) || !navigationCatalog.includes('"label": "Research"')) {
   console.error("[verify:research-workspace] canonical search/Research tab missing.");
   process.exit(1);
 }

@@ -152,10 +152,10 @@ describe("verify-document-ingestion (VERIFY-058)", () => {
         mkdirSync(dirname(join(root, file)), { recursive: true });
         writeFileSync(join(root, file), [
           "DOCUMENT_EXTS TEXT_EXTS MARKDOWN_EXTS IMAGE_EXTS CODE_EXTS \".dockerfile\"",
-          "processFileAttachment SUPPORTED_ATTACHMENT_ACCEPT AI is not vision capable setAttachments((prev) => [...prev, attachment])",
-          "modelRequirements.requiresVision disableImageAttach={!visionSupported}",
+          "processFileAttachment SUPPORTED_ATTACHMENT_ACCEPT composer.visionUnsupportedTitle setAttachments((prev) => [...prev, attachment])",
+          "modelRequirements.requiresVision chat:composer.visionUnsupportedTitle disableImageAttach={!visionSupported}",
           "remarkMath rehypeKatex rehypeSanitize safeUrlTransform",
-          "kind: 'manual_note' localFile: true extractionRoute",
+          'kind: "manual_note" localFile: true extractionRoute',
         ].join("\n"));
       }
 

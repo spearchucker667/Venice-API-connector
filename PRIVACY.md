@@ -7,6 +7,7 @@ This is the user-facing privacy summary for Venice Forge. For the full technical
 ## 1. Local-First Architecture
 Venice Forge is designed around a **local-first** philosophy. The default behavior is to keep your data under your custody on your own machine.
 - **Your Chats & Media:** All your conversation logs, generated images, research sessions, character cards, encrypted character-card drafts, and workflows are stored locally on your device.
+- **Generated-image recovery:** If the desktop media store cannot accept a validated image, the Electron main process may retain its bytes temporarily so you can retry or save to another volume. This recovery custody is memory-only, bounded to eight items / 128 MiB / 30 minutes, and does not contain prompts, credentials, or renderer-selected filesystem paths.
 - **No First-Party Hosted Sync:** Venice Forge does not operate a centralized sync service or require a cloud account. If you opt into sync-folder mode, the app writes encrypted packets to a folder you select; iCloud, Dropbox, OneDrive, Syncthing, or another folder provider may then copy that ciphertext off-device.
 - **No Telemetry or Tracking:** Venice Forge does not collect analytics, crash reports, usage telemetry, or identifier tokens.
 

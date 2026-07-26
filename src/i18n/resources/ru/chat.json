@@ -16,5 +16,57 @@
   "folders": "Папки",
   "unfiled": "Без папки",
   "attachFile": "Прикрепить файл",
-  "managedDocument": "Управляемый документ"
+  "managedDocument": "Управляемый документ",
+  "composer": {
+    "visionUnsupportedTitle": "ИИ не способен видеть",
+    "visionUnsupportedDetail": "«{{model}}» не может читать вложенные изображения. Выберите модель с поддержкой машинного зрения или сначала преобразуйте изображение/PDF в текст.",
+    "attachTitle": "Прикрепить файл (или перетащить/вставить)",
+    "attachmentLimitTitle": "Достигнут лимит вложений",
+    "attachmentLimitDetail": "К одному сообщению можно прикрепить до {{max}} файлов.",
+    "tooManyAttachmentsTitle": "Слишком много вложений",
+    "tooManyAttachmentsDetail": "Было добавлено только {{added}} из {{requested}} файлов. Ограничение — {{max}} файлов на сообщение.",
+    "attachmentNote": "Примечание к приложению",
+    "attachmentFailed": "Не удалось прикрепить файл.",
+    "attachmentAlt": "Вложение {{number}}",
+    "removeAttachment": "Удалить вложение {{name}}",
+    "disabledPlaceholder": "Подключите ключ API, чтобы начать…",
+    "dropPlaceholder": "Перетащите файл, чтобы прикрепить",
+    "placeholder": "Спросите что угодно — Enter для отправки, Shift+Enter для перехода на новую строку. Прикрепите файл для отправки без текста.",
+    "messageInput": "Ввод сообщения",
+    "attachFile": "Прикрепить файл",
+    "stopGenerating": "Прекратить генерировать",
+    "sendMessage": "Отправить сообщение"
+  },
+  "memory": {
+    "disabledLabel": "Память отключена",
+    "disabledTitle": "Извлечение из памяти отключено в настройках.",
+    "loadingLabel": "Память…",
+    "loadingTitle": "Получение соответствующей памяти для этого сообщения.",
+    "activeLabel": "Память активна",
+    "activeTitle": "Соответствующий контекст памяти будет включен в это сообщение.",
+    "failedLabel": "Ошибка памяти",
+    "failedTitle": "Восстановление памяти не удалось. Ваше сообщение было отправлено без контекста памяти."
+  },
+  "controls": {
+    "autoRead": "Авточтение",
+    "citations": "Цитаты",
+    "scrape": "Царапать",
+    "xSearch": "X поиск",
+    "searchInStream": "Искать в потоке",
+    "documentTools": "Инструменты для документов",
+    "newChatShortcut": "Новый чат (⌘N)",
+    "systemPromptPlaceholder": "Необязательный. Оставьте пустым, чтобы избежать добавления системного сообщения, созданного приложением.",
+    "temperature": "Температура",
+    "topP": "Топ П",
+    "maxTokens": "Макс. жетонов",
+    "veniceDefaultPrompt": "Подсказка по умолчанию в Венеции",
+    "disableThinking": "Отключить мышление",
+    "stripThinking": "Раздеть мышление",
+    "searchMode": "Поиск: {{mode}}",
+    "searchModes": {
+      "off": "выключенный",
+      "on": "на",
+      "auto": "авто"
+    }
+  }
 }

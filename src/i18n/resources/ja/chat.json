@@ -16,5 +16,57 @@
   "folders": "フォルダ",
   "unfiled": "未分類",
   "attachFile": "ファイルを添付",
-  "managedDocument": "管理ドキュメント"
+  "managedDocument": "管理ドキュメント",
+  "composer": {
+    "visionUnsupportedTitle": "AIには視覚能力がない",
+    "visionUnsupportedDetail": "「{{model}}」は添付画像を読み取れません。ビジョン対応モデルを選択するか、最初に画像/PDF をテキストに変換します。",
+    "attachTitle": "ファイルを添付 (またはドラッグ/ペースト)",
+    "attachmentLimitTitle": "添付ファイルの制限に達しました",
+    "attachmentLimitDetail": "メッセージごとに最大 {{max}} ファイルを添付できます。",
+    "tooManyAttachmentsTitle": "添付ファイルが多すぎます",
+    "tooManyAttachmentsDetail": "{{requested}} ファイルのうち {{added}} のみが追加されました。制限はメッセージあたり {{max}} ファイルです。",
+    "attachmentNote": "添付メモ",
+    "attachmentFailed": "添付に失敗しました",
+    "attachmentAlt": "添付ファイル {{number}}",
+    "removeAttachment": "添付ファイル {{name}} を削除します",
+    "disabledPlaceholder": "API キーを接続して開始します…",
+    "dropPlaceholder": "ファイルをドロップして添付する",
+    "placeholder": "何でも質問する — Enter で送信、Shift+Enter で改行。ファイルを添付してテキストなしで送信します。",
+    "messageInput": "メッセージ入力",
+    "attachFile": "ファイルを添付する",
+    "stopGenerating": "生成を停止する",
+    "sendMessage": "メッセージを送信する"
+  },
+  "memory": {
+    "disabledLabel": "メモリオフ",
+    "disabledTitle": "メモリの取得は設定で無効になっています。",
+    "loadingLabel": "メモリ…",
+    "loadingTitle": "このメッセージに関連するメモリを取得しています。",
+    "activeLabel": "メモリがアクティブです",
+    "activeTitle": "関連するメモリ コンテキストがこのメッセージに含まれます。",
+    "failedLabel": "メモリに障害が発生しました",
+    "failedTitle": "メモリの取得に失敗しました。メッセージはメモリコンテキストなしで送信されました。"
+  },
+  "controls": {
+    "autoRead": "自動読み取り",
+    "citations": "引用",
+    "scrape": "こする",
+    "xSearch": "X検索",
+    "searchInStream": "ストリーム内を検索",
+    "documentTools": "ドキュメントツール",
+    "newChatShortcut": "新しいチャット (⌘N)",
+    "systemPromptPlaceholder": "オプション。アプリ作成のシステム メッセージの追加を避けるには、空のままにします。",
+    "temperature": "温度",
+    "topP": "トップP",
+    "maxTokens": "最大トークン数",
+    "veniceDefaultPrompt": "ヴェニスのデフォルトプロンプト",
+    "disableThinking": "思考を無効にする",
+    "stripThinking": "ストリップ思考",
+    "searchMode": "検索: {{mode}}",
+    "searchModes": {
+      "off": "オフ",
+      "on": "の上",
+      "auto": "自動"
+    }
+  }
 }

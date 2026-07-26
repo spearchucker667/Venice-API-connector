@@ -16,5 +16,57 @@
   "folders": "Dossiers",
   "unfiled": "Non classés",
   "attachFile": "Joindre un fichier",
-  "managedDocument": "Document géré"
+  "managedDocument": "Document géré",
+  "composer": {
+    "visionUnsupportedTitle": "L'IA n'est pas capable de vision",
+    "visionUnsupportedDetail": "« {{model}} » ne peut pas lire les pièces jointes aux images. Sélectionnez un modèle compatible avec la vision ou convertissez d'abord l'image/le PDF en texte.",
+    "attachTitle": "Joindre un fichier (ou glisser/coller)",
+    "attachmentLimitTitle": "Limite de pièces jointes atteinte",
+    "attachmentLimitDetail": "Vous pouvez joindre jusqu'à {{max}} fichiers par message.",
+    "tooManyAttachmentsTitle": "Trop de pièces jointes",
+    "tooManyAttachmentsDetail": "Seuls {{added}} des {{requested}} fichiers ont été ajoutés. La limite est de {{max}} fichiers par message.",
+    "attachmentNote": "Note de pièce jointe",
+    "attachmentFailed": "Échec de la pièce jointe",
+    "attachmentAlt": "Pièce jointe {{number}}",
+    "removeAttachment": "Supprimer la pièce jointe {{name}}",
+    "disabledPlaceholder": "Connectez une clé API pour démarrer…",
+    "dropPlaceholder": "Déposer le fichier à joindre",
+    "placeholder": "Demandez n'importe quoi - Entrez pour envoyer, Maj + Entrée pour une nouvelle ligne. Joindre un fichier à envoyer sans texte.",
+    "messageInput": "Saisie des messages",
+    "attachFile": "Joindre un fichier",
+    "stopGenerating": "Arrêter de générer",
+    "sendMessage": "Envoyer un message"
+  },
+  "memory": {
+    "disabledLabel": "Mémoire désactivée",
+    "disabledTitle": "La récupération de mémoire est désactivée dans les paramètres.",
+    "loadingLabel": "Mémoire…",
+    "loadingTitle": "Récupération de la mémoire pertinente pour ce message.",
+    "activeLabel": "Mémoire active",
+    "activeTitle": "Le contexte de mémoire pertinent sera inclus avec ce message.",
+    "failedLabel": "Échec de la mémoire",
+    "failedTitle": "La récupération de la mémoire a échoué. Votre message a été envoyé sans contexte mémoire."
+  },
+  "controls": {
+    "autoRead": "Lecture automatique",
+    "citations": "Citations",
+    "scrape": "Gratter",
+    "xSearch": "X recherche",
+    "searchInStream": "Rechercher dans le flux",
+    "documentTools": "Outils de documentation",
+    "newChatShortcut": "Nouveau chat (⌘N)",
+    "systemPromptPlaceholder": "Facultatif. Laissez vide pour éviter d’ajouter un message système créé par l’application.",
+    "temperature": "Température",
+    "topP": "Haut P",
+    "maxTokens": "Nombre maximum de jetons",
+    "veniceDefaultPrompt": "Invite par défaut de Venise",
+    "disableThinking": "Désactiver la pensée",
+    "stripThinking": "Pensée en bande",
+    "searchMode": "Rechercher : {{mode}}",
+    "searchModes": {
+      "off": "désactivé",
+      "on": "sur",
+      "auto": "Automatique"
+    }
+  }
 }

@@ -1,5 +1,5 @@
-import type { CharacterSceneGenerationStatus } from '../../types/characterSceneGeneration';
-import { Trans } from 'react-i18next';
+import type { CharacterSceneGenerationStatus } from "../../types/characterSceneGeneration";
+import { Trans, useTranslation } from "react-i18next";
 
 interface CharacterSceneCardProps {
   status: CharacterSceneGenerationStatus;
@@ -15,13 +15,13 @@ interface CharacterSceneCardProps {
 }
 
 const statusLabels: Record<CharacterSceneGenerationStatus, string> = {
-  queued: 'Scene queued',
-  compiling: 'Compiling scene',
-  generating: 'Generating scene',
-  complete: 'Scene complete',
-  failed: 'Scene failed',
-  blocked: 'Scene blocked',
-  rate_limited: 'Scene generation paused',
+  queued: "Scene queued",
+  compiling: "Compiling scene",
+  generating: "Generating scene",
+  complete: "Scene complete",
+  failed: "Scene failed",
+  blocked: "Scene blocked",
+  rate_limited: "Scene generation paused",
 };
 
 export function CharacterSceneCard({
@@ -36,80 +36,104 @@ export function CharacterSceneCard({
   onOpenInMediaStudio,
   onCopyPrompt,
 }: CharacterSceneCardProps) {
-  const isRunning = status === 'queued' || status === 'compiling' || status === 'generating';
-  const isError = status === 'failed' || status === 'blocked' || status === 'rate_limited';
+  const { t: tRuntime } = useTranslation("common");
+  const isRunning =
+    status === "queued" || status === "compiling" || status === "generating";
+  const isError =
+    status === "failed" || status === "blocked" || status === "rate_limited";
 
   return (
     <div className="my-3 rounded-xl border border-border bg-surface-elevated p-4 shadow-sm max-w-md">
       <div className="flex items-center gap-2 mb-2">
         <span
           className={`inline-block w-2 h-2 rounded-full ${
-            status === 'complete'
-              ? 'bg-success'
+            status === "complete"
+              ? "bg-success"
               : isError
-                ? 'bg-danger'
+                ? "bg-danger"
                 : isRunning
-                  ? 'bg-accent animate-pulse'
-                  : 'bg-text-muted'
+                  ? "bg-accent animate-pulse"
+                  : "bg-text-muted"
           }`}
         />
-        <span className="text-[13.5px] font-medium text-text-primary">{statusLabels[status]}</span>
+        <span className="text-[13.5px] font-medium text-text-primary">
+          {statusLabels[status]}
+        </span>
       </div>
 
       {prompt && (
         <div className="mb-3">
-          <p className="text-[12px] text-text-muted uppercase tracking-wide mb-1"><Trans i18nKey="common:surface.componentsChatCharacterscenecard.description.scenePrompt" /></p>
-          <p className="text-[13.5px] text-text-secondary leading-relaxed line-clamp-4">{prompt}</p>
+          <p className="text-[12px] text-text-muted uppercase tracking-wide mb-1">
+            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.description.scenePrompt" />
+          </p>
+          <p className="text-[13.5px] text-text-secondary leading-relaxed line-clamp-4">
+            {prompt}
+          </p>
         </div>
       )}
 
       {isError && (
         <div className="mb-3 text-[13px] text-danger bg-danger/5 border border-danger/10 rounded-lg px-3 py-2">
-          {rateLimitReason || error || 'Unable to generate scene.'}
+          {rateLimitReason ||
+            error ||
+            tRuntime(
+              "runtimeGenerated.components.chat.characterscenecard.text.unableToGenerateScene",
+            )}
         </div>
       )}
 
-      {imageUrl && status === 'complete' && (
+      {imageUrl && status === "complete" && (
         <div className="mb-3 rounded-lg border border-border overflow-hidden">
-          <img src={imageUrl} alt="Generated scene" className="w-full h-auto object-cover" />
+          <img
+            src={imageUrl}
+            alt={tRuntime(
+              "runtimeGenerated.components.chat.characterscenecard.attribute.generatedScene",
+            )}
+            className="w-full h-auto object-cover"
+          />
         </div>
       )}
 
       <div className="flex flex-wrap gap-2">
-        {status === 'complete' && onOpenInMediaStudio && (
+        {status === "complete" && onOpenInMediaStudio && (
           <button
             onClick={onOpenInMediaStudio}
             className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-accent text-accent-fg hover:bg-accent-hover transition-colors cursor-pointer"
           >
-            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.openInMediaStudio" /></button>
+            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.openInMediaStudio" />
+          </button>
         )}
         {prompt && onCopyPrompt && (
           <button
             onClick={onCopyPrompt}
             className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
           >
-            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.copyPrompt" /></button>
+            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.copyPrompt" />
+          </button>
         )}
-        {(status === 'failed' || status === 'rate_limited') && onRetry && (
+        {(status === "failed" || status === "rate_limited") && onRetry && (
           <button
             onClick={onRetry}
             className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
           >
-            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.retry" /></button>
+            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.retry" />
+          </button>
         )}
-        {status === 'complete' && onRegenerate && (
+        {status === "complete" && onRegenerate && (
           <button
             onClick={onRegenerate}
             className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
           >
-            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.regenerate" /></button>
+            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.regenerate" />
+          </button>
         )}
         {isRunning && onCancel && (
           <button
             onClick={onCancel}
             className="px-3 py-1.5 rounded-lg text-[12.5px] font-medium bg-surface border border-border text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors cursor-pointer"
           >
-            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.cancel" /></button>
+            <Trans i18nKey="common:surface.componentsChatCharacterscenecard.action.cancel" />
+          </button>
         )}
       </div>
     </div>

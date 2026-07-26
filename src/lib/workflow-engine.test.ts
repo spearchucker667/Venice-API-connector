@@ -80,6 +80,27 @@ describe('workflow-engine', () => {
     expect(updates).toContainEqual(expect.objectContaining({ nodeId: 'n2', status: 'done', output: 'AI Response' }))
   })
 
+  it('uses the generate-endpoint format key for image nodes', async () => {
+    vi.mocked(venice).mockResolvedValue({
+      images: ['iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB'],
+      id: 'image-1',
+      model: 'flux-dev',
+    })
+
+    const nodes: Node<VeniceNodeData>[] = [
+      { id: 'n1', type: 'venice', position: { x: 0, y: 0 }, data: { label: 'Image', nodeType: 'imageGen', model: 'flux-dev', prompt: 'A lighthouse' } },
+    ]
+
+    await executeWorkflow(nodes, [], (_nodeId, _result) => undefined)
+
+    const request = vi.mocked(venice).mock.calls[0][1]
+    expect(request).toBeDefined()
+    if (!request) throw new Error('Expected image generation request')
+    const body = JSON.parse(request.body as string) as Record<string, unknown>
+    expect(body.format).toBe('png')
+    expect(body).not.toHaveProperty('output_format')
+  })
+
   it('should fail-closed and report a safe error when a node fails', async () => {
     vi.mocked(venice).mockRejectedValue(new Error('Venice rate limit exceeded'))
 

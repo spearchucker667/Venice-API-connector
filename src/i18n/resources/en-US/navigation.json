@@ -258,5 +258,18 @@
     "toggleInspector": "Toggle Inspector",
     "toggleHint": "⌘K to toggle",
     "navigateHint": "↑↓ to navigate · Enter to choose"
+  },
+  "header": {
+    "openMenu": "Open menu",
+    "toggleSidebar": "Toggle sidebar",
+    "selectModel": "Select model…",
+    "selectedModel": "Selected model",
+    "toggleTaskCenter": "Toggle task center",
+    "tasks": "Tasks",
+    "checkingApiKey": "Checking API key",
+    "apiKeyConnectedManage": "API key connected, manage",
+    "connectApiKey": "Connect API key",
+    "checkingKey": "Checking key…",
+    "connected": "Connected"
   }
 }

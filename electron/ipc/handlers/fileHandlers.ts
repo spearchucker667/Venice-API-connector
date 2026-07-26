@@ -20,7 +20,19 @@ import {
 } from "../../services/characterImageCache";
 import { registerIpcChannel } from "./common";
 import { getProfileSessionId } from "../../services/profileSession";
-import { saveGeneratedMediaAs } from "../../services/generatedMediaExport";
+import {
+  saveGeneratedMediaAs,
+  saveGeneratedMediaBytesAs,
+} from "../../services/generatedMediaExport";
+import {
+  classifyGeneratedMediaPersistenceError,
+  persistGeneratedMedia,
+} from "../../services/generatedMediaStore";
+import {
+  getGeneratedMediaRecovery,
+  retainGeneratedMediaForRecovery,
+  retryGeneratedMediaRecovery,
+} from "../../services/generatedMediaRecoveryQueue";
 
 /** Maximum size in bytes for JSON import and export files. */
 const MAX_JSON_FILE_BYTES = VENICE_MAX_BODY_BYTES;
@@ -96,6 +108,94 @@ const SAVE_ROUTED_IMAGE_BLOCKED_EXTS = new Set([
 ]);
 
 export function registerFileHandlers(): void {
+  registerIpcChannel("app:media:persist-generated-image", async (event, input: unknown) => {
+    let validatedBytes: Buffer | undefined;
+    let validatedMime: string | undefined;
+    try {
+      const owner = BrowserWindow.fromWebContents(event.sender);
+      if (!owner || event.senderFrame !== event.sender.mainFrame) {
+        return { ok: false, error: "Generated image persistence sender was rejected." };
+      }
+      if (!input || typeof input !== "object") {
+        return { ok: false, error: "Generated image persistence payload was invalid." };
+      }
+      const dataUrl = (input as Record<string, unknown>).dataUrl;
+      if (typeof dataUrl !== "string") {
+        return { ok: false, error: "Generated image data must be a base64 data URL." };
+      }
+      if (dataUrl.length > 50 * 1024 * 1024 * 1.37) {
+        return { ok: false, error: "Generated image data is too large." };
+      }
+      const parsed = parseRoutedImageDataUrl(dataUrl);
+      if (!parsed?.mime) {
+        return { ok: false, error: "Generated image data URL was invalid or unsupported." };
+      }
+      const bytes = decodeStrictRoutedBase64(parsed.rawBase64);
+      if (!bytes || sniffRoutedImageContentType(bytes) !== parsed.mime) {
+        return { ok: false, error: "Generated image bytes did not match the declared content type." };
+      }
+      validatedBytes = bytes;
+      validatedMime = parsed.mime;
+      const media = await persistGeneratedMedia(bytes, parsed.mime);
+      return { ok: true, media };
+    } catch (error) {
+      const failure = classifyGeneratedMediaPersistenceError(error);
+      const retained = validatedBytes && validatedMime && failure.kind !== "invalid-media"
+        ? retainGeneratedMediaForRecovery(validatedBytes, validatedMime)
+        : null;
+      return {
+        ok: false,
+        error: failure.message,
+        errorKind: failure.kind,
+        retryable: failure.retryable,
+        recoveryId: retained?.recoveryId,
+      };
+    }
+  });
+
+  registerIpcChannel("app:media:retry-generated-image", async (event, input: unknown) => {
+    try {
+      const owner = BrowserWindow.fromWebContents(event.sender);
+      if (!owner || event.senderFrame !== event.sender.mainFrame) {
+        return { ok: false, error: "Generated image recovery sender was rejected." };
+      }
+      const recoveryId = input && typeof input === "object"
+        ? (input as Record<string, unknown>).recoveryId
+        : undefined;
+      if (typeof recoveryId !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(recoveryId)) {
+        return { ok: false, error: "Generated image recovery ID was invalid." };
+      }
+      const media = await retryGeneratedMediaRecovery(recoveryId);
+      return { ok: true, media };
+    } catch (error) {
+      const failure = classifyGeneratedMediaPersistenceError(error);
+      return { ok: false, error: failure.message, errorKind: failure.kind, retryable: failure.retryable };
+    }
+  });
+
+  registerIpcChannel("app:media:save-generated-recovery", async (event, input: unknown) => {
+    try {
+      const owner = BrowserWindow.fromWebContents(event.sender);
+      if (!owner || event.senderFrame !== event.sender.mainFrame) {
+        return { ok: false, canceled: false, error: "Generated image recovery export sender was rejected." };
+      }
+      const record = input && typeof input === "object" ? input as Record<string, unknown> : {};
+      const recoveryId = typeof record.recoveryId === "string" ? record.recoveryId : "";
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(recoveryId)) {
+        return { ok: false, canceled: false, error: "Generated image recovery ID was invalid." };
+      }
+      const recovery = getGeneratedMediaRecovery(recoveryId);
+      if (!recovery) return { ok: false, canceled: false, error: "Generated image recovery data expired or is unavailable." };
+      return await saveGeneratedMediaBytesAs({
+        bytes: recovery.bytes,
+        mimeType: recovery.mimeType,
+        suggestedName: typeof record.suggestedName === "string" ? record.suggestedName : undefined,
+      });
+    } catch (error) {
+      return { ok: false, canceled: false, error: redactErrorMessage(error) };
+    }
+  });
+
   registerIpcChannel("app:media:save-generated", async (event, input: unknown) => {
     try {
       const owner = BrowserWindow.fromWebContents(event.sender);

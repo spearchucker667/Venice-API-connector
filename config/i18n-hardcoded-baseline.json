@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "extractor": "typescript-compiler-api-jsx-text",
+  "schemaVersion": 2,
+  "extractor": "typescript-compiler-api-runtime-visible-text-v2",
   "candidateCount": 0,
   "entryCount": 0,
   "entries": []

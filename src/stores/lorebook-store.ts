@@ -1,3 +1,4 @@
+import { translateRuntime } from "../i18n/runtimeTranslator";
 /** @fileoverview State for the local lorebook library.
  *  Lorebooks are keyed sets of world-info entries that trigger on keywords
  *  found in the chat history. They are bound to RP chats at chat-creation
@@ -48,7 +49,16 @@ export const useLorebookStore = create<LorebookState>((set, get) => ({
       set({ lorebooks: sorted, isLoading: false, hasLoaded: true });
     } catch {
       set({ isLoading: false, error: "Could not load lorebooks." });
-      toast.error("Could not load lorebooks", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.lorebookStore.notification.couldNotLoadLorebooks",
+          "Could not load lorebooks",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.lorebookStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
     }
   },
 
@@ -77,7 +87,13 @@ export const useLorebookStore = create<LorebookState>((set, get) => ({
     if (!normalized) {
       const msg = "Invalid lorebook data.";
       set({ error: msg });
-      toast.error("Could not save lorebook", msg);
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.lorebookStore.notification.couldNotSaveLorebook",
+          "Could not save lorebook",
+        ),
+        msg,
+      );
       return null;
     }
     try {
@@ -92,7 +108,16 @@ export const useLorebookStore = create<LorebookState>((set, get) => ({
       return saved;
     } catch {
       set({ error: "Could not save lorebook." });
-      toast.error("Could not save lorebook", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.lorebookStore.notification.couldNotSaveLorebook",
+          "Could not save lorebook",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.lorebookStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
       return null;
     }
   },
@@ -101,7 +126,16 @@ export const useLorebookStore = create<LorebookState>((set, get) => ({
     try {
       const ok = await svcDelete(id);
       if (!ok) {
-        toast.error("Could not delete lorebook", "Storage rejected the request.");
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.stores.lorebookStore.notification.couldNotDeleteLorebook",
+            "Could not delete lorebook",
+          ),
+          translateRuntime(
+            "runtimeGenerated.stores.lorebookStore.notification.storageRejectedTheRequest",
+            "Storage rejected the request.",
+          ),
+        );
         return false;
       }
       set((s) => ({
@@ -111,7 +145,16 @@ export const useLorebookStore = create<LorebookState>((set, get) => ({
       return true;
     } catch {
       set({ error: "Could not delete lorebook." });
-      toast.error("Could not delete lorebook", "Please try again.");
+      toast.error(
+        translateRuntime(
+          "runtimeGenerated.stores.lorebookStore.notification.couldNotDeleteLorebook",
+          "Could not delete lorebook",
+        ),
+        translateRuntime(
+          "runtimeGenerated.stores.lorebookStore.notification.pleaseTryAgain",
+          "Please try again.",
+        ),
+      );
       return false;
     }
   },

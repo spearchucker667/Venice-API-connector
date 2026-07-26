@@ -1,3 +1,4 @@
+import { translateRuntime } from "../../i18n/runtimeTranslator";
 /**
  * @fileoverview Pure prompt builder for the local-first Character RP Studio.
  *
@@ -65,7 +66,9 @@ function clamp(s: string, max: number): string {
 
 /** Joins lines with single newlines; trims trailing whitespace. */
 function block(...lines: (string | undefined | null | false)[]): string {
-  return lines.filter((l): l is string => typeof l === "string" && l.length > 0).join("\n");
+  return lines
+    .filter((l): l is string => typeof l === "string" && l.length > 0)
+    .join("\n");
 }
 
 /** Determines which character(s) should be marked as the active responder. */
@@ -96,9 +99,14 @@ function keywordMatches(
 function entryTriggers(entry: LorebookEntryV1, recentText: string): boolean {
   if (!entry.enabled) return false;
   if (entry.constant) return true;
-  const keys = entry.keys.length > 0 ? entry.keys : entry.secondaryKeys ?? [];
+  const keys = entry.keys.length > 0 ? entry.keys : (entry.secondaryKeys ?? []);
   for (const k of keys) {
-    if (keywordMatches(k, recentText, { caseSensitive: entry.caseSensitive, matchWholeWords: entry.matchWholeWords })) {
+    if (
+      keywordMatches(k, recentText, {
+        caseSensitive: entry.caseSensitive,
+        matchWholeWords: entry.matchWholeWords,
+      })
+    ) {
       return true;
     }
   }
@@ -118,7 +126,12 @@ export function buildCharactersBlock(characters: CharacterCardV1[]): string {
         .map((d) => `  ${d.speaker}: ${d.text}`)
         .join("\n");
       const contextFiles = (c.contextFiles ?? [])
-        .filter((f) => f.content && f.content.trim() && (!f.targetField || f.targetField === "general"))
+        .filter(
+          (f) =>
+            f.content &&
+            f.content.trim() &&
+            (!f.targetField || f.targetField === "general"),
+        )
         .map((f) => `[Sourced File: ${f.name}]\n${f.content.trim()}`)
         .join("\n\n");
       return block(
@@ -135,22 +148,35 @@ export function buildCharactersBlock(characters: CharacterCardV1[]): string {
 }
 
 /** Replaces only the first placeholder occurrence; replacement text is never recursively expanded. */
-export function replaceOriginalOnce(template: string, original: string): string {
+export function replaceOriginalOnce(
+  template: string,
+  original: string,
+): string {
   const index = template.indexOf("{{original}}");
-  return index < 0 ? template : `${template.slice(0, index)}${original}${template.slice(index + "{{original}}".length)}`;
+  return index < 0
+    ? template
+    : `${template.slice(0, index)}${original}${template.slice(index + "{{original}}".length)}`;
 }
 
 export function resolveCharacterSystemPrompt(
   cardPrompt: string | undefined,
   globalPrompt: string | undefined,
-  behavior: NonNullable<RpPromptContext["characterSystemPromptBehavior"]> = "respect-card",
+  behavior: NonNullable<
+    RpPromptContext["characterSystemPromptBehavior"]
+  > = "respect-card",
 ): string {
   const card = cardPrompt?.trim() ?? "";
   const global = globalPrompt?.trim() ?? "";
   const expanded = replaceOriginalOnce(card, global);
   if (behavior === "prefer-global") return global || expanded;
-  if (behavior === "append-global") return card.includes("{{original}}") ? expanded : [expanded, global].filter(Boolean).join("\n\n");
-  if (behavior === "prepend-global") return card.includes("{{original}}") ? expanded : [global, expanded].filter(Boolean).join("\n\n");
+  if (behavior === "append-global")
+    return card.includes("{{original}}")
+      ? expanded
+      : [expanded, global].filter(Boolean).join("\n\n");
+  if (behavior === "prepend-global")
+    return card.includes("{{original}}")
+      ? expanded
+      : [global, expanded].filter(Boolean).join("\n\n");
   return expanded || global;
 }
 
@@ -160,7 +186,9 @@ function buildPersonaBlock(persona: UserPersonaV1 | undefined): string {
   return block(
     `[User persona: ${persona.name}]`,
     persona.description,
-    persona.reference ? `Refer to the user as "${persona.reference}".` : undefined,
+    persona.reference
+      ? `Refer to the user as "${persona.reference}".`
+      : undefined,
   );
 }
 
@@ -175,7 +203,10 @@ function buildScenarioBlock(ctx: RpPromptContext): string {
 }
 
 /** Returns the recent message window used for lorebook trigger scanning. */
-function buildTriggerWindow(messages: RpMessageV1[], recentBudget: number): string {
+function buildTriggerWindow(
+  messages: RpMessageV1[],
+  recentBudget: number,
+): string {
   const tail = messages.slice(-Math.max(1, recentBudget));
   return tail
     .filter((m) => m.role !== "tool" && m.content)
@@ -184,10 +215,17 @@ function buildTriggerWindow(messages: RpMessageV1[], recentBudget: number): stri
 }
 
 /** Builds the memory block with strict scoping order. */
-function buildMemoryBlock(memories: RpMemoryV1[], budget: number): { text: string; included: number } {
+function buildMemoryBlock(
+  memories: RpMemoryV1[],
+  budget: number,
+): { text: string; included: number } {
   if (memories.length === 0 || budget <= 0) return { text: "", included: 0 };
   // Order: pinned -> character (any character) -> long-term. Stable within scope by createdAt asc.
-  const scopeOrder: Record<RpMemoryV1["scope"], number> = { pinned: 0, character: 1, "long-term": 2 };
+  const scopeOrder: Record<RpMemoryV1["scope"], number> = {
+    pinned: 0,
+    character: 1,
+    "long-term": 2,
+  };
   const sorted = [...memories].sort((a, b) => {
     const so = scopeOrder[a.scope] - scopeOrder[b.scope];
     if (so !== 0) return so;
@@ -198,7 +236,12 @@ function buildMemoryBlock(memories: RpMemoryV1[], budget: number): { text: strin
   let used = 0;
   for (const m of sorted) {
     if (!m.content) continue;
-    const prefix = m.scope === "pinned" ? "[pinned] " : m.scope === "character" ? `[${m.characterId ?? "character"}] ` : "";
+    const prefix =
+      m.scope === "pinned"
+        ? "[pinned] "
+        : m.scope === "character"
+          ? `[${m.characterId ?? "character"}] `
+          : "";
     const line = `- ${prefix}${m.content}`;
     if (used + line.length > budget) {
       const remaining = budget - used;
@@ -219,17 +262,25 @@ interface PartitionedLorebookEntries {
   after: LorebookEntryV1[];
   atDepth: Array<{ entry: LorebookEntryV1; depth: number }>;
 }
-function partitionLorebookEntries(entries: LorebookEntryV1[]): PartitionedLorebookEntries {
-  const out: PartitionedLorebookEntries = { before: [], after: [], atDepth: [] };
+function partitionLorebookEntries(
+  entries: LorebookEntryV1[],
+): PartitionedLorebookEntries {
+  const out: PartitionedLorebookEntries = {
+    before: [],
+    after: [],
+    atDepth: [],
+  };
   for (const e of entries) {
     if (e.insertionMode === "before_char") out.before.push(e);
     else if (e.insertionMode === "after_char") out.after.push(e);
     else {
-      const depth = typeof e.depth === "number" ? Math.max(0, Math.floor(e.depth)) : 0;
+      const depth =
+        typeof e.depth === "number" ? Math.max(0, Math.floor(e.depth)) : 0;
       out.atDepth.push({ entry: e, depth });
     }
   }
-  const byOrderAsc = (a: LorebookEntryV1, b: LorebookEntryV1) => a.order - b.order || a.id.localeCompare(b.id);
+  const byOrderAsc = (a: LorebookEntryV1, b: LorebookEntryV1) =>
+    a.order - b.order || a.id.localeCompare(b.id);
   out.before.sort(byOrderAsc);
   out.after.sort(byOrderAsc);
   out.atDepth.sort((a, b) => a.depth - b.depth || byOrderAsc(a.entry, b.entry));
@@ -242,14 +293,26 @@ function pickRecentMessages(
   recentBudget: number,
 ): RpMessageV1[] {
   if (recentBudget <= 0) return [];
-  const filtered = messages.filter((m) => m.role === "user" || m.role === "character" || m.role === "narrator");
+  const filtered = messages.filter(
+    (m) => m.role === "user" || m.role === "character" || m.role === "narrator",
+  );
   return filtered.slice(-recentBudget);
 }
 
 /** Formats a character response to an internal chat message (no truncation here).
  *  Caller guarantees `m.role` is one of "user" | "character" | "narrator". */
-function toRecentMessage(m: RpMessageV1): { role: "user" | "character" | "narrator"; content: string; characterId?: string; name?: string } {
-  const out: { role: "user" | "character" | "narrator"; content: string; characterId?: string; name?: string } = {
+function toRecentMessage(m: RpMessageV1): {
+  role: "user" | "character" | "narrator";
+  content: string;
+  characterId?: string;
+  name?: string;
+} {
+  const out: {
+    role: "user" | "character" | "narrator";
+    content: string;
+    characterId?: string;
+    name?: string;
+  } = {
     role: m.role as "user" | "character" | "narrator",
     content: m.content,
   };
@@ -264,31 +327,99 @@ function toRecentMessage(m: RpMessageV1): { role: "user" | "character" | "narrat
  */
 export function buildRpPrompt(ctx: RpPromptContext): PromptAssemblyResult {
   const trace: PromptAssemblyTraceEntry[] = [];
-  const systemMessages: { role: "system"; content: string; name?: string }[] = [];
-  const recentMessages: { role: "user" | "character" | "narrator"; content: string; characterId?: string; name?: string }[] = [];
+  const systemMessages: { role: "system"; content: string; name?: string }[] =
+    [];
+  const recentMessages: {
+    role: "user" | "character" | "narrator";
+    content: string;
+    characterId?: string;
+    name?: string;
+  }[] = [];
 
   // 1. Safety preamble — always present.
   systemMessages.push({ role: "system", content: SAFETY_PREAMBLE });
-  trace.push({ id: tid("safety-preamble", "static"), kind: "safety-preamble", label: "Safety preamble", chars: SAFETY_PREAMBLE.length, included: true });
+  trace.push({
+    id: tid("safety-preamble", "static"),
+    kind: "safety-preamble",
+    label: translateRuntime(
+      "runtimeGenerated.services.rp.promptbuilderservice.metadata.safetyPreamble",
+      "Safety preamble",
+    ),
+    chars: SAFETY_PREAMBLE.length,
+    included: true,
+  });
 
-  const expectedCard = ctx.characters.find((card) => card.id === (ctx.expectedCharacterId ?? ctx.rpChat.characterIds[0])) ?? ctx.characters[0];
+  const expectedCard =
+    ctx.characters.find(
+      (card) =>
+        card.id === (ctx.expectedCharacterId ?? ctx.rpChat.characterIds[0]),
+    ) ?? ctx.characters[0];
   // 2. System prompt. A card prompt replaces/falls back to the global prompt
   // according to the explicit behavior; it is not duplicated in the character definition.
-  const modelSys = resolveCharacterSystemPrompt(expectedCard?.systemPrompt, ctx.modelSystemPrompt, ctx.characterSystemPromptBehavior);
+  const modelSys = resolveCharacterSystemPrompt(
+    expectedCard?.systemPrompt,
+    ctx.modelSystemPrompt,
+    ctx.characterSystemPromptBehavior,
+  );
   if (modelSys) {
     systemMessages.push({ role: "system", content: modelSys });
-    trace.push({ id: tid("model-identity", "model"), kind: "model-identity", label: "Model identity", chars: modelSys.length, included: true });
+    trace.push({
+      id: tid("model-identity", "model"),
+      kind: "model-identity",
+      label: translateRuntime(
+        "runtimeGenerated.services.rp.promptbuilderservice.metadata.modelIdentity",
+        "Model identity",
+      ),
+      chars: modelSys.length,
+      included: true,
+    });
   } else {
-    trace.push({ id: tid("model-identity", "model"), kind: "model-identity", label: "Model identity", chars: 0, included: false, reason: "empty" });
+    trace.push({
+      id: tid("model-identity", "model"),
+      kind: "model-identity",
+      label: translateRuntime(
+        "runtimeGenerated.services.rp.promptbuilderservice.metadata.modelIdentity",
+        "Model identity",
+      ),
+      chars: 0,
+      included: false,
+      reason: "empty",
+    });
   }
 
   // 3. Persona.
   const personaBlock = buildPersonaBlock(ctx.persona);
   if (personaBlock) {
     systemMessages.push({ role: "system", content: personaBlock });
-    trace.push({ id: tid("persona", ctx.persona?.id ?? "none"), kind: "persona", label: ctx.persona ? `Persona: ${ctx.persona.name}` : "Persona", chars: personaBlock.length, included: true, sourceId: ctx.persona?.id });
+    trace.push({
+      id: tid("persona", ctx.persona?.id ?? "none"),
+      kind: "persona",
+      label: ctx.persona
+        ? translateRuntime(
+            "runtimeGenerated.services.rp.promptbuilderservice.metadata.personaValue1",
+            "Persona: {{value1}}",
+            { value1: ctx.persona.name },
+          )
+        : translateRuntime(
+            "runtimeGenerated.services.rp.promptbuilderservice.metadata.persona",
+            "Persona",
+          ),
+      chars: personaBlock.length,
+      included: true,
+      sourceId: ctx.persona?.id,
+    });
   } else {
-    trace.push({ id: tid("persona", "none"), kind: "persona", label: "Persona", chars: 0, included: false, reason: "empty" });
+    trace.push({
+      id: tid("persona", "none"),
+      kind: "persona",
+      label: translateRuntime(
+        "runtimeGenerated.services.rp.promptbuilderservice.metadata.persona",
+        "Persona",
+      ),
+      chars: 0,
+      included: false,
+      reason: "empty",
+    });
   }
 
   // 4. Characters — one block per active card, in chat order. Validated against the cap.
@@ -301,9 +432,32 @@ export function buildRpPrompt(ctx: RpPromptContext): PromptAssemblyResult {
     const content = buildCharactersBlock([card]);
     if (content) {
       systemMessages.push({ role: "system", content, name: card.name });
-      trace.push({ id: tid("character", card.id), kind: "character", label: `Character: ${card.name}`, chars: content.length, included: true, sourceId: card.id });
+      trace.push({
+        id: tid("character", card.id),
+        kind: "character",
+        label: translateRuntime(
+          "runtimeGenerated.services.rp.promptbuilderservice.metadata.characterValue1",
+          "Character: {{value1}}",
+          { value1: card.name },
+        ),
+        chars: content.length,
+        included: true,
+        sourceId: card.id,
+      });
     } else {
-      trace.push({ id: tid("character", card.id), kind: "character", label: `Character: ${card.name}`, chars: 0, included: false, reason: "empty", sourceId: card.id });
+      trace.push({
+        id: tid("character", card.id),
+        kind: "character",
+        label: translateRuntime(
+          "runtimeGenerated.services.rp.promptbuilderservice.metadata.characterValue1",
+          "Character: {{value1}}",
+          { value1: card.name },
+        ),
+        chars: 0,
+        included: false,
+        reason: "empty",
+        sourceId: card.id,
+      });
     }
   }
 
@@ -311,28 +465,76 @@ export function buildRpPrompt(ctx: RpPromptContext): PromptAssemblyResult {
   const scenario = buildScenarioBlock(ctx);
   if (scenario) {
     systemMessages.push({ role: "system", content: scenario });
-    trace.push({ id: tid("scenario", "ctx"), kind: "scenario", label: "Scenario", chars: scenario.length, included: true });
+    trace.push({
+      id: tid("scenario", "ctx"),
+      kind: "scenario",
+      label: translateRuntime(
+        "runtimeGenerated.services.rp.promptbuilderservice.metadata.scenario",
+        "Scenario",
+      ),
+      chars: scenario.length,
+      included: true,
+    });
   } else {
-    trace.push({ id: tid("scenario", "ctx"), kind: "scenario", label: "Scenario", chars: 0, included: false, reason: "empty" });
+    trace.push({
+      id: tid("scenario", "ctx"),
+      kind: "scenario",
+      label: translateRuntime(
+        "runtimeGenerated.services.rp.promptbuilderservice.metadata.scenario",
+        "Scenario",
+      ),
+      chars: 0,
+      included: false,
+      reason: "empty",
+    });
   }
 
   // 6. Lorebooks.
-  const recentWindow = buildTriggerWindow(ctx.rpChat.messages, ctx.recentMessageBudget);
-  const embeddedLorebooks = activeCards.flatMap((card) => card.embeddedCharacterBook
-    ? [mapCharacterBookV2ToLorebookV1(card.embeddedCharacterBook, { id: `embedded-${card.id}`, characterId: card.id, now: card.updatedAt })]
-    : []);
+  const recentWindow = buildTriggerWindow(
+    ctx.rpChat.messages,
+    ctx.recentMessageBudget,
+  );
+  const embeddedLorebooks = activeCards.flatMap((card) =>
+    card.embeddedCharacterBook
+      ? [
+          mapCharacterBookV2ToLorebookV1(card.embeddedCharacterBook, {
+            id: `embedded-${card.id}`,
+            characterId: card.id,
+            now: card.updatedAt,
+          }),
+        ]
+      : [],
+  );
   for (const lb of [...ctx.lorebooks, ...embeddedLorebooks]) {
     const triggered = lb.entries.filter((e) => entryTriggers(e, recentWindow));
     if (triggered.length === 0) {
-      trace.push({ id: tid("lorebook", lb.id), kind: "lorebook-entry", label: `Lorebook: ${lb.name}`, chars: 0, included: false, reason: "no-trigger", sourceId: lb.id });
+      trace.push({
+        id: tid("lorebook", lb.id),
+        kind: "lorebook-entry",
+        label: translateRuntime(
+          "runtimeGenerated.services.rp.promptbuilderservice.metadata.lorebookValue1",
+          "Lorebook: {{value1}}",
+          { value1: lb.name },
+        ),
+        chars: 0,
+        included: false,
+        reason: "no-trigger",
+        sourceId: lb.id,
+      });
       continue;
     }
     const partitioned = partitionLorebookEntries(triggered);
     // before_char: prepend at the start of the character block (here: at the current end of systemMessages, before scenario/memory)
     // For simplicity and determinism, we insert "before_char" entries BEFORE the active-turn-instruction (at the end of system).
     // The caller treats all system messages as an ordered list, so we just append in the right places.
-    const beforeText = partitioned.before.map((e) => e.content).filter(Boolean).join("\n");
-    const afterText = partitioned.after.map((e) => e.content).filter(Boolean).join("\n");
+    const beforeText = partitioned.before
+      .map((e) => e.content)
+      .filter(Boolean)
+      .join("\n");
+    const afterText = partitioned.after
+      .map((e) => e.content)
+      .filter(Boolean)
+      .join("\n");
     const atDepthText = partitioned.atDepth
       .sort((a, b) => a.depth - b.depth)
       .map((p) => p.entry.content)
@@ -344,48 +546,152 @@ export function buildRpPrompt(ctx: RpPromptContext): PromptAssemblyResult {
     const afterChars = afterText.length;
     const atDepthChars = atDepthText.length;
     if (beforeChars > 0) {
-      trace.push({ id: tid("lorebook-entry", `${lb.id}:before`), kind: "lorebook-entry", label: `Lorebook ${lb.name} (before char)`, chars: beforeChars, included: true, sourceId: lb.id });
+      trace.push({
+        id: tid("lorebook-entry", `${lb.id}:before`),
+        kind: "lorebook-entry",
+        label: translateRuntime(
+          "runtimeGenerated.services.rp.promptbuilderservice.metadata.lorebookValue1BeforeChar",
+          "Lorebook {{value1}} (before char)",
+          { value1: lb.name },
+        ),
+        chars: beforeChars,
+        included: true,
+        sourceId: lb.id,
+      });
     }
     if (afterChars > 0) {
-      trace.push({ id: tid("lorebook-entry", `${lb.id}:after`), kind: "lorebook-entry", label: `Lorebook ${lb.name} (after char)`, chars: afterChars, included: true, sourceId: lb.id });
+      trace.push({
+        id: tid("lorebook-entry", `${lb.id}:after`),
+        kind: "lorebook-entry",
+        label: translateRuntime(
+          "runtimeGenerated.services.rp.promptbuilderservice.metadata.lorebookValue1AfterChar",
+          "Lorebook {{value1}} (after char)",
+          { value1: lb.name },
+        ),
+        chars: afterChars,
+        included: true,
+        sourceId: lb.id,
+      });
     }
     if (atDepthChars > 0) {
-      trace.push({ id: tid("lorebook-entry", `${lb.id}:at_depth`), kind: "lorebook-entry", label: `Lorebook ${lb.name} (at depth)`, chars: atDepthChars, included: true, sourceId: lb.id });
+      trace.push({
+        id: tid("lorebook-entry", `${lb.id}:at_depth`),
+        kind: "lorebook-entry",
+        label: translateRuntime(
+          "runtimeGenerated.services.rp.promptbuilderservice.metadata.lorebookValue1AtDepth",
+          "Lorebook {{value1}} (at depth)",
+          { value1: lb.name },
+        ),
+        chars: atDepthChars,
+        included: true,
+        sourceId: lb.id,
+      });
     }
     // We bundle them into a single system message keyed on the lorebook name to keep order deterministic.
     const bundled = block(
       beforeText ? `[Lorebook: ${lb.name}]\n${beforeText}` : undefined,
-      afterText ? `[Lorebook: ${lb.name} (continued)]\n${afterText}` : undefined,
-      atDepthText ? `[Lorebook: ${lb.name} (depth)]\n${atDepthText}` : undefined,
+      afterText
+        ? `[Lorebook: ${lb.name} (continued)]\n${afterText}`
+        : undefined,
+      atDepthText
+        ? `[Lorebook: ${lb.name} (depth)]\n${atDepthText}`
+        : undefined,
     );
     if (bundled) systemMessages.push({ role: "system", content: bundled });
   }
 
   // 7. Memory.
-  const mem = buildMemoryBlock(ctx.memories, Math.max(0, Math.floor(ctx.systemBlockBudget / 4)));
+  const mem = buildMemoryBlock(
+    ctx.memories,
+    Math.max(0, Math.floor(ctx.systemBlockBudget / 4)),
+  );
   if (mem.text) {
     systemMessages.push({ role: "system", content: `[Memory]\n${mem.text}` });
-    trace.push({ id: tid("memory", "block"), kind: "memory", label: "Memory block", chars: mem.text.length, included: true });
+    trace.push({
+      id: tid("memory", "block"),
+      kind: "memory",
+      label: translateRuntime(
+        "runtimeGenerated.services.rp.promptbuilderservice.metadata.memoryBlock",
+        "Memory block",
+      ),
+      chars: mem.text.length,
+      included: true,
+    });
   } else if (ctx.memories.length > 0) {
-    trace.push({ id: tid("memory", "block"), kind: "memory", label: "Memory block", chars: 0, included: false, reason: "budget-exceeded" });
+    trace.push({
+      id: tid("memory", "block"),
+      kind: "memory",
+      label: translateRuntime(
+        "runtimeGenerated.services.rp.promptbuilderservice.metadata.memoryBlock",
+        "Memory block",
+      ),
+      chars: 0,
+      included: false,
+      reason: "budget-exceeded",
+    });
   } else {
-    trace.push({ id: tid("memory", "block"), kind: "memory", label: "Memory block", chars: 0, included: false, reason: "empty" });
+    trace.push({
+      id: tid("memory", "block"),
+      kind: "memory",
+      label: translateRuntime(
+        "runtimeGenerated.services.rp.promptbuilderservice.metadata.memoryBlock",
+        "Memory block",
+      ),
+      chars: 0,
+      included: false,
+      reason: "empty",
+    });
   }
 
   // 8. Recent messages — append to the recent list (NOT to system). Trace records the pick.
-  const recent = pickRecentMessages(ctx.rpChat.messages, ctx.recentMessageBudget);
+  const recent = pickRecentMessages(
+    ctx.rpChat.messages,
+    ctx.recentMessageBudget,
+  );
   for (const m of recent) {
     recentMessages.push(toRecentMessage(m));
   }
-  trace.push({ id: tid("recent-message", "list"), kind: "recent-message", label: `Recent messages (${recent.length})`, chars: recent.reduce((s, m) => s + m.content.length, 0), included: recent.length > 0 });
+  trace.push({
+    id: tid("recent-message", "list"),
+    kind: "recent-message",
+    label: translateRuntime(
+      "runtimeGenerated.services.rp.promptbuilderservice.metadata.recentMessagesValue1",
+      "Recent messages ({{value1}})",
+      { value1: recent.length },
+    ),
+    chars: recent.reduce((s, m) => s + m.content.length, 0),
+    included: recent.length > 0,
+  });
 
   // Post-history stays outside the pre-history system block so provider
   // adapters can place it immediately before the final generation boundary.
-  const postHistory = replaceOriginalOnce(expectedCard?.postHistoryInstructions?.trim() ?? "", ctx.globalPostHistoryInstruction?.trim() ?? "") || ctx.globalPostHistoryInstruction?.trim() || "";
+  const postHistory =
+    replaceOriginalOnce(
+      expectedCard?.postHistoryInstructions?.trim() ?? "",
+      ctx.globalPostHistoryInstruction?.trim() ?? "",
+    ) ||
+    ctx.globalPostHistoryInstruction?.trim() ||
+    "";
   const postHistoryMessages = postHistory
-    ? [{ role: "system" as const, content: postHistory, ...(expectedCard ? { characterId: expectedCard.id } : {}) }]
+    ? [
+        {
+          role: "system" as const,
+          content: postHistory,
+          ...(expectedCard ? { characterId: expectedCard.id } : {}),
+        },
+      ]
     : [];
-  trace.push({ id: tid("post-history-instruction", expectedCard?.id ?? "none"), kind: "post-history-instruction", label: "Post-history instruction", chars: postHistory.length, included: postHistory.length > 0, ...(postHistory ? {} : { reason: "empty" as const }) });
+  trace.push({
+    id: tid("post-history-instruction", expectedCard?.id ?? "none"),
+    kind: "post-history-instruction",
+    label: translateRuntime(
+      "runtimeGenerated.services.rp.promptbuilderservice.metadata.postHistoryInstruction",
+      "Post-history instruction",
+    ),
+    chars: postHistory.length,
+    included: postHistory.length > 0,
+    ...(postHistory ? {} : { reason: "empty" as const }),
+  });
 
   // 9. Active-turn instruction — names the responding character(s).
   const expected = resolveExpectedCharacterIds(ctx);
@@ -395,9 +701,29 @@ export function buildRpPrompt(ctx: RpPromptContext): PromptAssemblyResult {
   if (expectedNames.length > 0) {
     const turnText = `You are now playing: ${expectedNames.join(", ")}. Respond in character.`;
     systemMessages.push({ role: "system", content: turnText });
-    trace.push({ id: tid("active-turn-instruction", expected.join(",")), kind: "active-turn-instruction", label: `Active turn: ${expectedNames.join(", ")}`, chars: turnText.length, included: true });
+    trace.push({
+      id: tid("active-turn-instruction", expected.join(",")),
+      kind: "active-turn-instruction",
+      label: translateRuntime(
+        "runtimeGenerated.services.rp.promptbuilderservice.metadata.activeTurnValue1",
+        "Active turn: {{value1}}",
+        { value1: expectedNames.join(", ") },
+      ),
+      chars: turnText.length,
+      included: true,
+    });
   } else {
-    trace.push({ id: tid("active-turn-instruction", "none"), kind: "active-turn-instruction", label: "Active turn instruction", chars: 0, included: false, reason: "empty" });
+    trace.push({
+      id: tid("active-turn-instruction", "none"),
+      kind: "active-turn-instruction",
+      label: translateRuntime(
+        "runtimeGenerated.services.rp.promptbuilderservice.metadata.activeTurnInstruction",
+        "Active turn instruction",
+      ),
+      chars: 0,
+      included: false,
+      reason: "empty",
+    });
   }
 
   // Budget enforcement on the system block. Drop trailing system messages until we fit.
@@ -414,7 +740,15 @@ export function buildRpPrompt(ctx: RpPromptContext): PromptAssemblyResult {
     for (let i = trace.length - 1; i >= 0; i--) {
       const e = trace[i];
       if (!e) continue;
-      if (e.included && (e.kind === "lorebook-entry" || e.kind === "scenario" || e.kind === "character" || e.kind === "memory" || e.kind === "model-identity" || e.kind === "persona")) {
+      if (
+        e.included &&
+        (e.kind === "lorebook-entry" ||
+          e.kind === "scenario" ||
+          e.kind === "character" ||
+          e.kind === "memory" ||
+          e.kind === "model-identity" ||
+          e.kind === "persona")
+      ) {
         lastIdx = i;
         break;
       }
@@ -430,8 +764,20 @@ export function buildRpPrompt(ctx: RpPromptContext): PromptAssemblyResult {
   }
 
   // Final user message — verbatim, never traced as content.
-  const userMessage = { role: "user" as const, content: ctx.currentUserMessage };
-  trace.push({ id: tid("user-message", "final"), kind: "user-message", label: "User message", chars: userMessage.content.length, included: true });
+  const userMessage = {
+    role: "user" as const,
+    content: ctx.currentUserMessage,
+  };
+  trace.push({
+    id: tid("user-message", "final"),
+    kind: "user-message",
+    label: translateRuntime(
+      "runtimeGenerated.services.rp.promptbuilderservice.metadata.userMessage",
+      "User message",
+    ),
+    chars: userMessage.content.length,
+    included: true,
+  });
 
   return {
     systemMessages,

@@ -29,19 +29,23 @@ export const STATUS_SEVERITIES: readonly StatusSeverity[] = [
   "ok",
 ] as const;
 
+/** Locale-neutral message descriptor resolved only at a presentation boundary. */
+export interface StatusText {
+  key: `statusDiagnostics.${string}`;
+  values?: Record<string, string | number | boolean>;
+}
+
 /** A single status item rendered by the header cluster / drawer. */
 export interface AppStatusItem {
   /** Stable id used for tests + (future) telemetry. */
   id: string;
-  /** Short human label, e.g. `API`, `API Key`, `Model`, `Storage`. */
-  label: string;
   severity: StatusSeverity;
-  /** One-sentence status summary (no secrets). */
-  summary: string;
-  /** Optional longer description (no secrets). */
-  detail?: string;
-  /** Optional label for the "next action" button. */
-  actionLabel?: string;
+  /** Locale-neutral one-sentence status summary (no secrets). */
+  summary: StatusText;
+  /** Optional locale-neutral longer description (no secrets). */
+  detail?: StatusText;
+  /** Optional translation key for the "next action" button. */
+  actionLabelKey?: `statusDiagnostics.actions.${string}`;
   /** Optional canonical tab id to route to when the action fires. */
   actionTargetTabId?: string;
   /** Optional id of a drawer section to focus when the action fires. */
@@ -67,7 +71,7 @@ export interface AppStatusSnapshot {
 export interface AppDiagnosticCheck {
   id: string;
   severity: StatusSeverity;
-  summary: string;
+  summary: StatusText;
 }
 
 /**

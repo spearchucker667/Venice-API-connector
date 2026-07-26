@@ -19,14 +19,26 @@ import { usePersonaStore } from "../../stores/persona-store";
 import { useLorebookStore } from "../../stores/lorebook-store";
 import { useSettingsStore } from "../../stores/settings-store";
 import { getEffectiveRendererLocalFamilySafeModeEnabled } from "../../safetyHydration";
-import { GhostButton, Label, PrimaryButton, ErrorText, TextArea } from "../ui/shared";
+import {
+  GhostButton,
+  Label,
+  PrimaryButton,
+  ErrorText,
+  TextArea,
+} from "../ui/shared";
 import { avatarDataUri, formatRelativeTime } from "./_shared";
 import { buildRpPrompt } from "../../services/rp/promptBuilderService";
 import { assessRpContext } from "../../shared/safety/characterImportSafety";
-import type { CharacterCardV1, LorebookV1, PromptAssemblyResult, RpMessageV1, UserPersonaV1 } from "../../types/rp";
+import type {
+  CharacterCardV1,
+  LorebookV1,
+  PromptAssemblyResult,
+  RpMessageV1,
+  UserPersonaV1,
+} from "../../types/rp";
 import { veniceStreamChat } from "../../services/veniceClient";
 import { selectTriggeredEntries } from "../../services/rp/lorebookService";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 const SYSTEM_BLOCK_BUDGET = 8_000;
 const RECENT_MESSAGE_BUDGET = 12;
@@ -38,10 +50,18 @@ interface Props {
   onOpenDebug: (trace: PromptAssemblyResult) => void;
 }
 
-export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) {
+export function RpChatView({
+  chatId,
+  onBack,
+  onOpenScene,
+  onOpenDebug,
+}: Props) {
+  const { t: tRuntime } = useTranslation("common");
   const chats = useRpChatStore((s) => s.chats);
   const appendUserMessage = useRpChatStore((s) => s.appendUserMessage);
-  const appendCharacterMessage = useRpChatStore((s) => s.appendCharacterMessage);
+  const appendCharacterMessage = useRpChatStore(
+    (s) => s.appendCharacterMessage,
+  );
   const appendNarratorMessage = useRpChatStore((s) => s.appendNarratorMessage);
   const setStreaming = useRpChatStore((s) => s.setStreaming);
   const isStreaming = useRpChatStore((s) => s.isStreaming);
@@ -61,7 +81,10 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
   const abortRef = useRef<AbortController | null>(null);
   const mountedRef = useRef(true);
 
-  const chat = useMemo(() => chats.find((c) => c.id === chatId), [chats, chatId]);
+  const chat = useMemo(
+    () => chats.find((c) => c.id === chatId),
+    [chats, chatId],
+  );
 
   useEffect(() => {
     if (!cardsLoaded) void useCharacterCardStore.getState().load();
@@ -70,7 +93,10 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
   }, [cardsLoaded, personasLoaded, lorebooksLoaded]);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: "smooth",
+    });
   }, [chat?.messages.length, isStreaming]);
 
   // Cancel in-flight stream on unmount or chat switch.
@@ -92,13 +118,24 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
     return (
       <div className="flex flex-col items-center justify-center h-full text-center px-6">
         <div className="w-16 h-16 mb-4 rounded-full bg-surface-elevated flex items-center justify-center text-text-muted">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          >
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
         </div>
-        <h2 className="text-[15px] font-semibold text-text-primary"><Trans i18nKey="common:surface.componentsRpStudioRpchatview.heading.chatNotFound" /></h2>
+        <h2 className="text-[15px] font-semibold text-text-primary">
+          <Trans i18nKey="common:surface.componentsRpStudioRpchatview.heading.chatNotFound" />
+        </h2>
         <p className="text-[13px] text-text-secondary mt-1 max-w-[260px]">
-          <Trans i18nKey="common:surface.componentsRpStudioRpchatview.description.theConversationYouReLookingForDoesn" /></p>
+          <Trans i18nKey="common:surface.componentsRpStudioRpchatview.description.theConversationYouReLookingForDoesn" />
+        </p>
       </div>
     );
   }
@@ -115,7 +152,9 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
     ? personas.find((p) => p.id === chat.personaId)
     : undefined;
 
-  const expectedCharacterId = narratorMode ? undefined : roster[speakerIdx]?.id ?? roster[0]?.id;
+  const expectedCharacterId = narratorMode
+    ? undefined
+    : (roster[speakerIdx]?.id ?? roster[0]?.id);
 
   const buildContext = (text: string) => {
     const recentText = chat.messages
@@ -160,12 +199,15 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
     }
 
     // Mandatory safety guard.
-    const decision = assessRpContext({
-      rpChat: chat,
-      characters: roster,
-      ...(persona ? { persona } : {}),
-      userMessage: text,
-    }, getEffectiveRendererLocalFamilySafeModeEnabled());
+    const decision = assessRpContext(
+      {
+        rpChat: chat,
+        characters: roster,
+        ...(persona ? { persona } : {}),
+        userMessage: text,
+      },
+      getEffectiveRendererLocalFamilySafeModeEnabled(),
+    );
     if (!decision.allow || decision.action === "block") {
       setError(decision.userMessage);
       return;
@@ -176,7 +218,13 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
       setError("Could not assemble prompt.");
       return;
     }
-    const { assembly, systemMessages, recentMessages, postHistoryMessages, userMessage } = built;
+    const {
+      assembly,
+      systemMessages,
+      recentMessages,
+      postHistoryMessages,
+      userMessage,
+    } = built;
 
     const userMsg = await appendUserMessage(chat.id, text);
     if (!userMsg) {
@@ -195,10 +243,17 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
     abortRef.current = ctrl;
     try {
       const messages = [
-        ...systemMessages.map((m) => ({ role: "system" as const, content: m.content })),
+        ...systemMessages.map((m) => ({
+          role: "system" as const,
+          content: m.content,
+        })),
         ...recentMessages.map((m) => {
-          const role: "user" | "assistant" = m.role === "user" ? "user" : "assistant";
-          const prefix = m.role === "character" || m.role === "narrator" ? `[${m.role}] ` : "";
+          const role: "user" | "assistant" =
+            m.role === "user" ? "user" : "assistant";
+          const prefix =
+            m.role === "character" || m.role === "narrator"
+              ? `[${m.role}] `
+              : "";
           return { role, content: `${prefix}${m.content}` };
         }),
         ...postHistoryMessages,
@@ -228,7 +283,8 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
         // Never surface raw upstream error text in the RP UI: it may contain
         // secrets, file paths, or model-specific diagnostics. A generic safe
         // message is enough; detailed diagnostics live in the Inspector log.
-        streamError = "The character response could not be generated. Please try again.";
+        streamError =
+          "The character response could not be generated. Please try again.";
       }
     } finally {
       if (abortRef.current === ctrl) abortRef.current = null;
@@ -245,7 +301,12 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
         } else {
           const speaker = expectedCharacterId ?? roster[0]?.id;
           if (speaker) {
-            await appendCharacterMessage(chat.id, speaker, truncated, reasoningAcc || undefined);
+            await appendCharacterMessage(
+              chat.id,
+              speaker,
+              truncated,
+              reasoningAcc || undefined,
+            );
           }
         }
       }
@@ -261,7 +322,12 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
     } else {
       const speaker = expectedCharacterId ?? roster[0]?.id;
       if (speaker) {
-        await appendCharacterMessage(chat.id, speaker, acc, reasoningAcc || undefined);
+        await appendCharacterMessage(
+          chat.id,
+          speaker,
+          acc,
+          reasoningAcc || undefined,
+        );
       }
     }
 
@@ -281,44 +347,81 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
         <button
           type="button"
           onClick={onBack}
-          aria-label="Back"
+          aria-label={tRuntime(
+            "runtimeGenerated.components.rpStudio.rpchatview.attribute.back",
+          )}
           className="text-text-secondary hover:text-text-primary p-2 rounded-md hover:bg-surface-elevated"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          >
             <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
-        <h2 className="text-[15px] font-semibold text-text-primary truncate">{chat.title}</h2>
+        <h2 className="text-[15px] font-semibold text-text-primary truncate">
+          {chat.title}
+        </h2>
         {chat.adult && (
-          <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-200 border border-rose-500/30">18+</span>
+          <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-rose-500/30 text-rose-200 border border-rose-500/30">
+            18+
+          </span>
         )}
         <div className="ml-auto flex items-center gap-1.5">
-          <GhostButton onClick={() => onOpenScene(chat.id)}><Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.scene" /></GhostButton>
-          <GhostButton onClick={() => setShowInspector(true)}><Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.inspector" /></GhostButton>
+          <GhostButton onClick={() => onOpenScene(chat.id)}>
+            <Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.scene" />
+          </GhostButton>
+          <GhostButton onClick={() => setShowInspector(true)}>
+            <Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.inspector" />
+          </GhostButton>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3" ref={scrollRef}>
+      <div
+        className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
+        ref={scrollRef}
+      >
         {chat.messages.length === 0 && (
           <div className="text-center text-text-muted text-[13px] mt-12">
-            <Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.startTheRoleplayBySendingAMessage" /> {roster[0] ? `${roster[0].name} will respond first.` : ""}
+            <Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.startTheRoleplayBySendingAMessage" />{" "}
+            {roster[0]
+              ? tRuntime(
+                  "runtimeGenerated.components.rpStudio.rpchatview.text.value1WillRespondFirst",
+                  { value1: roster[0].name },
+                )
+              : ""}
           </div>
         )}
         {chat.messages.map((m) => {
-          const speaker = m.role === "character"
-            ? roster.find((c) => c.id === m.characterId)
-            : undefined;
-          return (
-            <MessageBubble key={m.id} message={m} speaker={speaker} />
-          );
+          const speaker =
+            m.role === "character"
+              ? roster.find((c) => c.id === m.characterId)
+              : undefined;
+          return <MessageBubble key={m.id} message={m} speaker={speaker} />;
         })}
         {isStreaming && (
           <div className="mt-4 p-4 rounded-xl border border-border bg-surface shadow-sm">
-            <GenerationLoadingIndicator size="sm" state="streaming" label="Streaming…" className="text-text-muted justify-start" />
+            <GenerationLoadingIndicator
+              size="sm"
+              state="streaming"
+              label={tRuntime(
+                "runtimeGenerated.components.rpStudio.rpchatview.attribute.streaming",
+              )}
+              className="text-text-muted justify-start"
+            />
             {reasoning && (
               <details className="text-text-muted text-[12px] mt-2 group">
-                <summary className="cursor-pointer select-none"><Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.thinking" /></summary>
-                <pre className="mt-1 whitespace-pre-wrap font-sans">{reasoning}</pre>
+                <summary className="cursor-pointer select-none">
+                  <Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.thinking" />
+                </summary>
+                <pre className="mt-1 whitespace-pre-wrap font-sans">
+                  {reasoning}
+                </pre>
               </details>
             )}
           </div>
@@ -334,13 +437,18 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
       <div className="border-t border-border/50 px-4 py-3 space-y-2">
         {roster.length > 1 && (
           <div className="flex items-center gap-2">
-            <Label><Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.speaker" /></Label>
+            <Label>
+              <Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.speaker" />
+            </Label>
             <div className="flex flex-wrap gap-1.5">
               {roster.map((c, i) => (
                 <button
                   key={c.id}
                   type="button"
-                  onClick={() => { setSpeakerIdx(i); setNarratorMode(false); }}
+                  onClick={() => {
+                    setSpeakerIdx(i);
+                    setNarratorMode(false);
+                  }}
                   aria-pressed={!narratorMode && speakerIdx === i}
                   className={`text-[12px] px-2.5 py-1 rounded-md border transition-colors ${!narratorMode && speakerIdx === i ? "border-[var(--color-accent)] bg-[var(--color-accent-soft)] text-[var(--color-accent)]" : "border-border text-text-secondary hover:text-text-primary"}`}
                 >
@@ -353,7 +461,8 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
                 aria-pressed={narratorMode}
                 className={`text-[12px] px-2.5 py-1 rounded-md border transition-colors ${narratorMode ? "border-amber-400/40 bg-amber-400/10 text-amber-200" : "border-border text-text-secondary hover:text-text-primary"}`}
               >
-                <Trans i18nKey="common:surface.componentsRpStudioRpchatview.action.narrator" /></button>
+                <Trans i18nKey="common:surface.componentsRpStudioRpchatview.action.narrator" />
+              </button>
             </div>
           </div>
         )}
@@ -361,7 +470,20 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
           value={draft}
           onChange={setDraft}
           rows={3}
-          placeholder={narratorMode ? "Describe a scene as the narrator…" : `Send a message${roster[speakerIdx] ? ` to ${roster[speakerIdx].name}` : ""}…`}
+          placeholder={
+            narratorMode
+              ? tRuntime(
+                  "runtimeGenerated.components.rpStudio.rpchatview.attribute.describeASceneAsTheNarrator",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.rpStudio.rpchatview.attribute.sendAMessageValue1",
+                  {
+                    value1: roster[speakerIdx]
+                      ? ` to ${roster[speakerIdx].name}`
+                      : "",
+                  },
+                )
+          }
           ariaLabel="RP message"
         />
         <div className="flex justify-end">
@@ -371,41 +493,68 @@ export function RpChatView({ chatId, onBack, onOpenScene, onOpenDebug }: Props) 
             disabled={!draft.trim()}
             onClick={() => void handleSend()}
           >
-            <Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.send" /></PrimaryButton>
+            <Trans i18nKey="common:surface.componentsRpStudioRpchatview.text.send" />
+          </PrimaryButton>
         </div>
       </div>
     </div>
   );
 
-  function buildRpContext(text: string): { assembly: PromptAssemblyResult; systemMessages: Array<{ role: "system"; content: string }>; recentMessages: Array<{ role: "user" | "assistant" | "character" | "narrator"; content: string; characterId?: string }>; postHistoryMessages: Array<{ role: "system"; content: string }>; userMessage: { role: "user"; content: string } } | null {
+  function buildRpContext(text: string): {
+    assembly: PromptAssemblyResult;
+    systemMessages: Array<{ role: "system"; content: string }>;
+    recentMessages: Array<{
+      role: "user" | "assistant" | "character" | "narrator";
+      content: string;
+      characterId?: string;
+    }>;
+    postHistoryMessages: Array<{ role: "system"; content: string }>;
+    userMessage: { role: "user"; content: string };
+  } | null {
     const ctx = buildContextForTrace(text);
     if (!ctx) return null;
     const result = buildRpPrompt(ctx);
     return {
       assembly: result,
-      systemMessages: result.systemMessages.map((m) => ({ role: "system" as const, content: m.content })),
+      systemMessages: result.systemMessages.map((m) => ({
+        role: "system" as const,
+        content: m.content,
+      })),
       recentMessages: result.recentMessages.map((m) => ({
         role: m.role as "user" | "assistant" | "character" | "narrator",
         content: m.content,
         ...(m.characterId ? { characterId: m.characterId } : {}),
       })),
-      postHistoryMessages: (result.postHistoryMessages ?? []).map((message) => ({ role: "system" as const, content: message.content })),
+      postHistoryMessages: (result.postHistoryMessages ?? []).map(
+        (message) => ({ role: "system" as const, content: message.content }),
+      ),
       userMessage: result.userMessage,
     };
   }
 }
 
-function MessageBubble({ message, speaker }: { message: RpMessageV1; speaker?: CharacterCardV1 }) {
+function MessageBubble({
+  message,
+  speaker,
+}: {
+  message: RpMessageV1;
+  speaker?: CharacterCardV1;
+}) {
   const isUser = message.role === "user";
   const isNarrator = message.role === "narrator";
-  const name = speaker?.name ?? (isNarrator ? "Narrator" : isUser ? "You" : "Character");
+  const name =
+    speaker?.name ?? (isNarrator ? "Narrator" : isUser ? "You" : "Character");
   return (
     <div className={`flex gap-2.5 ${isUser ? "justify-end" : "justify-start"}`}>
       {!isUser && (
         <div className="shrink-0 w-8 h-8 rounded-full overflow-hidden border border-border bg-surface-elevated flex items-center justify-center text-[12px] font-semibold text-text-muted">
           {speaker ? (
             avatarDataUri(speaker.avatar) ? (
-              <img src={avatarDataUri(speaker.avatar)} alt="" className="w-full h-full object-cover" />
+              <img
+                src={avatarDataUri(speaker.avatar)}
+                alt=""
+                className="w-full h-full object-cover"
+              />
             ) : (
               speaker.name.slice(0, 1).toUpperCase()
             )
@@ -416,12 +565,20 @@ function MessageBubble({ message, speaker }: { message: RpMessageV1; speaker?: C
           )}
         </div>
       )}
-      <div className={`max-w-[80%] flex flex-col gap-1 ${isUser ? "items-end" : "items-start"}`}>
+      <div
+        className={`max-w-[80%] flex flex-col gap-1 ${isUser ? "items-end" : "items-start"}`}
+      >
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-[12.5px] font-semibold text-text-primary">{name}</span>
-          <span className="text-[12px] text-text-muted">{formatRelativeTime(message.createdAt)}</span>
+          <span className="text-[12.5px] font-semibold text-text-primary">
+            {name}
+          </span>
+          <span className="text-[12px] text-text-muted">
+            {formatRelativeTime(message.createdAt)}
+          </span>
         </div>
-        <div className={`rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-relaxed whitespace-pre-wrap ${isUser ? "bg-surface border border-border text-text-primary" : "bg-surface-elevated text-text-primary"} ${isNarrator ? "italic" : ""}`}>
+        <div
+          className={`rounded-2xl px-3.5 py-2.5 text-[13.5px] leading-relaxed whitespace-pre-wrap ${isUser ? "bg-surface border border-border text-text-primary" : "bg-surface-elevated text-text-primary"} ${isNarrator ? "italic" : ""}`}
+        >
           {message.content}
         </div>
       </div>

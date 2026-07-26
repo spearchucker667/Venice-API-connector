@@ -258,5 +258,18 @@
     "toggleInspector": "निरीक्षक टॉगल करें",
     "toggleHint": "टॉगल करने के लिए ⌘K",
     "navigateHint": "नेविगेट करने के लिए ↑↓ · चुनने के लिए Enter"
+  },
+  "header": {
+    "openMenu": "मेनू खोलें",
+    "toggleSidebar": "साइडबार टॉगल करें",
+    "selectModel": "मॉडल चुनें...",
+    "selectedModel": "चयनित मॉडल",
+    "toggleTaskCenter": "कार्य केंद्र टॉगल करें",
+    "tasks": "कार्य",
+    "checkingApiKey": "एपीआई कुंजी की जाँच की जा रही है",
+    "apiKeyConnectedManage": "एपीआई कुंजी कनेक्ट, प्रबंधित करें",
+    "connectApiKey": "एपीआई कुंजी कनेक्ट करें",
+    "checkingKey": "कुंजी जांची जा रही है...",
+    "connected": "जुड़े हुए"
   }
 }

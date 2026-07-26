@@ -4,21 +4,59 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
-**Date:** 2026-07-26 (ChatGPT 5.6 audit implementation — local execution complete, external review retained)
+**Date:** 2026-07-26 (documentation, repository hygiene, and publication readiness)
 
-**Work order:** `docs/audits/TODO/CHATGPT_5_6_REPOSITORY_AUDIT_HANDOFF_2026-07-26.md`, reconciled against the canonical `main` checkout rather than accepted from the supplied ZIP snapshot.
+**Scope:** reconciled the accumulated runtime-localization and generated-media recovery implementation with the public README, privacy/security guidance, release documentation, repository maps, canonical roadmap, contributor-agent rules, historical evidence, and executable repository contracts before publication.
 
-**Verified finding:** the audit's 1,291 production JSX-text candidates across 84 files were reproducible in the live checkout. The application had also drifted from i18next v26's supported interpolation-call shape, the safety verifier treated localized copy as executable bypass code, translation status conflated catalog completeness with native review, two feature verifiers depended on English literals, and the generated locale payload was being absorbed into an unrelated 1.47 MiB feature chunk.
+**Documentation and hygiene:** README now describes all 12 shipped locale catalogs without presenting first-pass machine translations as native-reviewed, documents endpoint-correct image payloads and non-destructive generated-media recovery, and restores the canonical workspace table. Privacy and security docs describe main-process byte custody, bounded recovery, Retry Save, and Save As behavior. `AGENTS.md` and Copilot guidance now lock runtime-localization and media-recovery contracts. Historical reports carry the required snapshot banner, local i18n screenshots/run output are ignored, and stale release links were repaired. `docs/ROADMAP.md` now retains only qualified native review and external packaged/accessibility verification as current localization work.
 
-**Implemented local audit work:** P1-01 migrated all 1,291 production candidates to scoped `Trans` keys and expanded all 12 `common` catalogs; the strict scanner and ratchet baseline now report zero candidates across 479 production files. P2-01 remains wired into `verify:contracts:static`, with exact-count, rename, decrease, reappearance, and reason-required escape-hatch coverage. Translation tooling is read-only by default, requires explicit status writes, separates 100% catalog coverage from native review, uses explicit HTTPS translation endpoint policy, and discards provider response bodies from errors. All 11 non-English locales are truthfully `first-pass-machine` and `isProductionComplete: false`; identical technical/cognate values are recorded in a locale-specific exception file but do not count as native review. The i18next v26 interpolation calls were normalized and protected by a real hook regression test. Locale catalogs now build as one bounded chunk per locale, restoring the unchanged 300 KiB unknown-chunk budget.
+**Gate repairs:** locale bundles are split by locale plus namespace, keeping the largest Hindi catalog at 290.32 KB under the unchanged 300 KB generic chunk ceiling. Theme overlays now use semantic tokens. Prompt Library, Scene Composer, and Research Workspace verifiers accept either JavaScript quote style and the Research verifier reads the canonical navigation catalog. Formatter-moved `localStorage` policy markers were restored inline. The image retry success toast now reuses the existing canonical `media:imageTools.savedToMedia` key.
 
-**Safety, hygiene, and verifier reconciliation:** comment/string stripping prevents the safety guard from rejecting harmless localized copy while preserving executable bypass detection. English-literal feature verifiers now assert stable translation keys. Stale Markdown paths and handoff checks were updated for the user-owned documentation relocation. `.agent-backups/` and `patch_runner.js` are removed from repository tracking while their ignored local copies remain intact.
+**Validation under Node 22.13.1/npm 10.9.2:** zero-warning ESLint, both TypeScript projects, full Vitest, safety guard, 244-file Markdown link validation, aggregate contracts, web/server/Electron build, and aggregate CI were executed for this worktree. The aggregate contract run passed after the verified gate corrections above. `npm run ci` passed lint, typecheck, and all segmented tests, then stopped at `npm audit --audit-level=moderate` on 16 high-severity transitive `brace-expansion` findings; npm offers only a forced breaking downgrade to Electron Builder 25.1.8, so dependency metadata was not destructively rewritten. Manual headed/package QA was not rerun; external locale review and packaged OS/device fault verification remain on `docs/ROADMAP.md`.
 
-**Validation under Node 22.13.1/npm 10.9.2:** `npm ci`, zero-warning ESLint, both TypeScript projects, `npm test` (432 files / 4,732 tests passed; one file / one test skipped), the segmented `test:ci` matrix, strict hardcoded-string verification, catalog/status generation, safety, Markdown, archive, handoff, bundle, static/feature/release contracts, build, and unsigned x64+arm64 macOS DMG/ZIP packaging/checksum verification passed. The first monolithic test run had one suite-load timeout and one stale English-literal assertion; the exact server case passed in 16 ms in isolation, the assertion was corrected to validate the translation key plus en-US value, and the full rerun passed. `npm audit fix` upgraded Electron Builder within its declared range and removed the moderate `tar` advisory; `npm audit --audit-level=moderate` still fails on 16 high transitive `brace-expansion` findings for which npm offers only a breaking Electron Builder downgrade.
+### Prior Session Summary (generated-image failure recovery and real-filesystem fault verification)
 
-**Rendered/manual evidence:** the in-app Browser completed onboarding and Language & Region switches for all 12 locales at desktop and compact checks, confirmed Arabic `dir=rtl`, found no unresolved keys or horizontal document overflow, and exercised the four-step onboarding flow. Unsigned macOS packages were built and structurally verified, but qualified native-speaker review, signed/notarized launch evidence, screen-reader/keyboard/high-zoom review, and cross-platform packaged review remain external acceptance work and are not inferred from automated coverage.
+**Date:** 2026-07-26 (generated-image failure recovery and real-filesystem fault verification)
 
-**Remaining audit work:** no further local code migration from this work order is known. P1-02 remains blocked on qualified native reviewers and dated sign-off. The human-only portion of P2-02 remains open. P2-03 is locally green except for the upstream transitive `brace-expansion` audit advisory; `npm run ci` cannot be honestly green until a compatible upstream fix lands or the project explicitly approves a reviewed dependency strategy.
+**Scope:** closed the actionable failure-recovery gaps left after durable generated-image storage: retain validated bytes outside renderer lifecycle, let users retry after restoring storage, permit native Save As to another volume, and exercise real macOS permission/full-volume failures without touching application data.
+
+**Verified finding:** the previous durable-store correction still held failed bytes only in renderer state and exposed no explicit retry. A tab remount could therefore discard the fallback even though the Electron process remained alive, and the generic Pictures-folder download path was not a reliable escape when that volume was full or read-only. Native export also removed an existing destination before replacement, creating an avoidable overwrite-loss window if the final rename failed.
+
+**Implementation:** validated bytes that encounter a storage failure are now copied into a main-process-only recovery queue bounded to eight items / 128 MiB / 30 minutes. Opaque UUIDs—not paths or bytes—cross preload IPC. Image Studio displays Retry Save, retries the canonical content-addressed store after space/permissions return, then replaces the volatile data URL with the durable `venice-media://` URL and writes gallery metadata. Download on an unsaved image invokes a native Save As directly from main-process custody so the user can select another volume. The queue survives renderer remounts, removes and zeroes entries after successful persistence/expiry/eviction, and never stores prompts or credentials. Recovery export uses fsynced sibling files and recoverable destination displacement instead of deleting the destination before rename. Disconnected-device `EIO`/network-device error codes now classify as `storage-unavailable`.
+
+**Validation under Node 22.13.1/npm 10.9.2:** focused blob-store/queue/recovery/export/IPC/Image Studio tests pass (5 files / 38 tests), including a real read-only temporary-directory failure. An isolated 32 MiB APFS image was filled until macOS returned real `ENOSPC`; the actual persistence service preserved `kind=storage-full`, `retryable=false` (1/1). Full Electron and image UI segments, zero-warning ESLint, both TypeScript projects, web/server/Electron build, safety, network, native-dialog, and custom-protocol gates pass.
+
+**Remaining work:** no locally actionable persistence defect remains. If the entire application exits while every destination is unwritable, volatile bytes cannot survive because there is physically nowhere to write them; while the process remains alive, the bounded recovery queue and Save As escape preserve user access. Physical device removal and Windows packaged behavior remain external verification under `VF-VERIFY-005`; no result is inferred for hardware unavailable on this Mac.
+
+### Prior Session Summary (image generation request and save resilience repair)
+
+**Date:** 2026-07-26 (image generation request and save resilience repair)
+
+**Scope:** reproduced the reported `/image/generate` rejection and traced the Image Studio persistence path without changing the endpoint-correct `/image/edit` contract.
+
+**Verified finding:** the bundled Swagger defines `GenerateImageRequest.format` and rejects unknown properties, while `output_format` belongs to `EditImageRequest`. Three active generation paths incorrectly sent `output_format: "png"`: the shared payload builder, Workflow image nodes, and RP scene generation. Image Studio also awaited gallery writes as one rejecting batch, so a storage failure after a successful provider response prevented the returned image from remaining available for manual download.
+
+**Implementation:** all generation paths now send `format: "png"`; edit continues to send `output_format`. Image Studio persists variants sequentially, catches and redacts each storage failure, reports it to the user, and retains successfully decoded provider bytes in the UI for immediate download even when durable gallery persistence fails. Endpoint-specific regression assertions cover the shared builder, Image Studio, Workflow, and RP scene paths.
+
+**Validation under Node 22.13.1/npm 10.9.2:** focused generation/persistence tests pass (4 files / 90 tests), native generated-media export tests pass (2 files / 6 tests), zero-warning ESLint passes, and `verify:image-policy` passes. The initial typecheck found two type errors in the new Workflow test harness; those test-only annotations were corrected and the check was rerun as recorded below. No paid Venice request or headed Electron save was run.
+
+**Remaining work:** no locally actionable item remains for these two reported symptoms. Paid-provider generation and headed native save remain external verification under `VF-VERIFY-005`; repository-wide pre-existing contract/audit blockers are unchanged.
+
+### Prior Session Summary (runtime i18n full-UI remediation — local implementation complete)
+
+**Date:** 2026-07-26 (runtime i18n full-UI remediation — local implementation complete)
+
+**Work order:** the attached runtime-localization architecture work order, reconciled against the canonical `main` checkout and the existing i18n tooling rather than accepting the previous zero-candidate claim.
+
+**Verified finding:** the earlier zero result measured only raw `JsxText`. The expanded TypeScript Compiler API inventory reproduced 1,667 candidates across 146 production files by detecting visible attributes/expressions, conditional/logical branches, semantic registries, toast/dialog calls, and status-item arguments. After classification and migration, the same scanner reports zero candidates across 480 production files and the schema-v2 exact baseline is zero.
+
+**Implementation:** all 149 bundled prompt starters use stable IDs/keys and render-time translation. The full production sweep migrated app-authored runtime prose across shell, Chat, Header, Status, Image/Media, Gallery, Character Creator, RP Studio, Documents, Research/Search, Playground, Privacy, Settings, Themes, Workflows, shared UI, and service/store status paths. `AppStatusItem` stores structured translation keys/values instead of English summaries/details/actions. Locale-sensitive memo/callback dependencies were repaired, and diagnostics now use stable locale-neutral IDs rather than ASCII slugs of translated headings.
+
+**Truthful status:** catalog structural coverage and runtime-surface coverage are 100%. `en-US` is source-language complete. All 11 non-English locales remain `first-pass-machine` and `isProductionComplete=false` because no qualified reviewer/date exists; first-pass catalog completion is not represented as native review.
+
+**Validation under Node 22.13.1/npm 10.9.2:** `npm ci`, extraction/sync, 12-locale verification, zero-debt scanner/baseline gates, `test:i18n` (49/49), required focused tests (89/89), focused status/scanner/image tests (116/116), zero-warning lint, both typechecks, full Vitest (4,745 passed / 1 skipped), segmented `test:ci`, safety, 244-file Markdown links, and the web/server/Electron build pass. Rendered QA selected all 12 locales; Swedish-to-Arabic live switching updated headings, Arabic applied RTL, and 390×844 document/body width remained 390 with no unresolved markers. Aggregate contracts still stop at 13 pre-existing historical reports missing the repository-identity banner. Aggregate CI passes lint/typecheck/tests and then stops on 16 high transitive `brace-expansion` findings whose offered fix is a breaking Electron Builder downgrade.
+
+**Remaining work:** no locally actionable item remains in `VF-RUNTIME-I18N-FULL-UI-20260726`. Qualified native-language review and packaged/signed Windows/macOS, assistive-technology, restart-persistence, and paid-provider evidence remain external acceptance; repository-wide historical-banner and dependency-audit blockers remain separately tracked. Full evidence is in `docs/reports/historical/RUNTIME_I18N_FULL_UI_REMEDIATION_REPORT_2026-07-26.md`.
 
 ### Prior Session Summary (i18n Full-App Remediation — Phases 0–9 closed; Phase 6 sweep and external manual QA deferred)
 
@@ -1172,7 +1210,11 @@ The earlier P1 audit closure (P1 #1–#8 with `VERIFY-128..131`) remains the con
 
 ## Open TODO Ledger
 
-**ChatGPT 5.6 localization audit reconciliation (2026-07-26):** local implementation is closed. P1-01 migrated all 1,291 production candidates and the strict/ratchet inventory is zero. P2-01 is closed. P2-02 has all-locale browser/RTL/unresolved-key/overflow evidence and verified unsigned macOS packages, but native-speaker, signed/notarized, keyboard/screen-reader/high-zoom, and Windows packaged acceptance remain external. P2-03 is green across clean install, lint, typecheck, full and segmented tests, build, bundle, contracts, and macOS artifacts; the configured audit/CI gate remains blocked by 16 high transitive `brace-expansion` findings with no compatible non-breaking Electron Builder remediation currently available. The audit and handoff under `docs/audits/TODO/` are evidence and execution input; `docs/ROADMAP.md` remains status authority.
+**Generated-image durability hardening (2026-07-26, locally closed):** desktop Image Studio now persists PNG/JPEG/WebP bytes through the main-owned SHA-256 blob store before writing gallery metadata. Transient filesystem and IndexedDB operations retry; interrupted blob commits retain a bounded journal/temp pair for startup recovery; post-write, startup, periodic, and export-time integrity checks cover size and SHA-256; user-visible failures are classified without leaking paths or payloads. Web mode retains the existing data-URL persistence fallback because it has no Electron filesystem boundary. Packaged Windows/macOS fault injection remains external under `VF-VERIFY-005`.
+
+**Image generation/save regression (2026-07-26, locally closed):** `/image/generate` now uses Swagger-supported `format: "png"` in the shared Image Studio builder, Workflow engine, and RP scene generation; edit retains its endpoint-specific `output_format`. Image Studio no longer loses provider-returned bytes when encrypted gallery persistence rejects: failures are redacted and surfaced while the image remains downloadable. Paid-provider and headed packaged Save As evidence remains external under `VF-VERIFY-005` rather than a local implementation TODO.
+
+**Runtime i18n full-UI remediation (2026-07-26, locally closed):** the expanded scanner now reports zero candidates across 480 production files, the exact baseline is zero, prompt/status/presentation data use stable locale-neutral keys, and all 12 catalogs have complete first-pass runtime coverage. Headed web QA covered all locales plus live Swedish-to-Arabic switching and 390×844 RTL overflow. Qualified native review and packaged/signed/accessibility/persistence/cross-platform evidence remain external acceptance, not local TODOs. Canonical disposition is `VF-RUNTIME-I18N-FULL-UI-20260726` in `docs/ROADMAP.md`.
 
 **Draft Store Hardening verification blockers (2026-07-24, partial resolution 2026-07-24):** `VF-CHARACTER-CREATOR-HARDENING-001` in `docs/ROADMAP.md` tracks the reproduced concurrent-approval duplicate creation, orphaned-character rollback failure, backup compatibility regression, mocked/incomplete acceptance coverage, reachable minimal IPC validation, missing JPEG/WebP end-to-end evidence, unresolved 390×844 RP Studio overflow/clipping, and missing README/repository-tree synchronization. The 2026-07-24 implementation session resolved the three originally authorised items:
 
@@ -1296,9 +1338,74 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 - **Combined Phase 3 §3.7 validation:** `npx vitest run electron/agent/runtime/` → **26/26 PASS in 1.65 s**. `tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.electron.json` → **0 errors**. `lint:eslint --max-warnings=0` → **0 warnings**.
 - **Phase 3 remaining sub-steps** (§3.1 dedicated Component, §3.2 dedicated IPC channel, §3.3 grantId-from-model leak in `agent-tool-executor.ts`, §3.4 schema matrix, §3.5 unified `document.create`, §3.6 unimplemented-tool unadvertise, §3.10 `media.generateImage` executor contract hardening, §3.11 `DocumentAgentChat.tsx` UI, §3.12 17-bullet acceptance matrix) remain pending and progress to continuation 12.
 
-**Dependency-audit status (refreshed 2026-07-23):** the prior July 22 transitive-vulnerability note is superseded by the current locked dependency tree. `npm audit --audit-level=moderate` now reports zero vulnerabilities inside the passing `npm run ci` gate; no dependency edit was required in this session.
+**Dependency-audit status (refreshed 2026-07-26):** `npm audit --audit-level=moderate` reports 16 high-severity transitive `brace-expansion` findings in Electron packaging dependencies. npm offers only `npm audit fix --force`, which would install the breaking Electron Builder 25.1.8 downgrade. No forced downgrade or advisory suppression was applied; the aggregate `npm run ci` gate therefore remains blocked at the audit step while every later gate is independently validated.
 
 ## Validation Matrix
+
+| Command | Result | Evidence |
+| --- | --- | --- |
+| `npm run lint:eslint` | PASS | Zero warnings under Node 22.13.1. |
+| `npm run typecheck` | PASS | Renderer and Electron TypeScript projects clean. |
+| `npm test` | PASS | Full Vitest command exited 0. |
+| `npm run verify:safety-guard` | PASS | Renderer, IPC, proxy, research, and raw-log guards clean. |
+| `npm run verify:markdown-links` | PASS | 244 Markdown files checked. |
+| `npm run verify:contracts` | PASS | Static, feature, and release contract groups passed after correcting stale quote/label assumptions and storage marker formatting. |
+| `npm run build` | PASS | Vite web, Express server, Electron main/preload; locale/namespace chunks remain within budget. |
+| `npm run ci` | FAIL (dependency audit) | Lint, typecheck, and all segmented tests passed; `npm audit --audit-level=moderate` then reported 16 high-severity transitive `brace-expansion` findings and offered only `npm audit fix --force` with a breaking Electron Builder 25.1.8 downgrade. |
+
+
+### July 26 — generated-image durable persistence hardening
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| Focused blob/queue/recovery/export/IPC/Image Studio Vitest | PASS | 5 files / 38 tests cover content-addressed persistence, bounded volatile custody, error classification, transient retry, tamper detection, restart recovery, main-frame/MIME validation, integrity-gated and recovery export, explicit UI retry, stable desktop URLs, and IndexedDB retry. |
+| Isolated real APFS `ENOSPC` fault injection | PASS | A temporary 32 MiB APFS image was filled to an OS-reported `ENOSPC`; the actual store returned classified `storage-full` / non-retryable behavior. The image was detached and moved to Trash after the 1/1 test passed. |
+| Real temporary-directory permission fault | PASS | Focused store coverage removes write permission from an isolated temporary media directory, observes `EACCES`, validates `permission-denied`, and restores permissions in `finally`; live app data is never targeted. |
+| `npm run lint:eslint` | PASS | Zero errors or warnings. |
+| `npm run typecheck` | PASS | Renderer and Electron TypeScript projects pass. |
+| `npm run test:electron` | PASS | Full Electron segment exited zero. The suite intentionally emitted its shutdown-coordinator failure-path fixture line while remaining green. |
+| `npm run test:ui:media:image` | PASS | 3 files / 30 tests. |
+| `npm run build` | PASS | Web, server, and Electron builds pass. |
+| Safety/network/native-dialog/image/custom-protocol verifiers | PASS | Safety guard, network boundaries, no native blocking dialogs, image policy, and custom-protocol privileges pass. |
+| Media Studio, Markdown, roadmap, and handoff verifiers | PASS | Media Studio power tools, 244 Markdown files, current roadmap, and handoff hygiene pass. |
+| `npm run verify:storage-policy` | FAIL — PRE-EXISTING | Five untagged `localStorage` references in prompt-starter, storage-maintenance, and chat-store paths outside this persistence change; execution stopped before the separately rerun custom-protocol verifier, which passed. |
+| Paid provider generation; physical device removal; Windows packaged fault injection | NOT RUN | External acceptance; no success inferred. macOS real `ENOSPC` and permission behavior are covered above. |
+
+### July 26 — image generation request and save resilience repair
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| Bundled Swagger review (`GenerateImageRequest`, `EditImageRequest`) | PASS | Generation supports `format`; edit supports `output_format`; both reject unknown properties. |
+| Focused generation/persistence Vitest | PASS | 4 files / 90 tests. |
+| Native generated-media export Vitest | PASS | 2 files / 6 tests. |
+| `npm run lint:eslint` | PASS | Zero errors or warnings. |
+| `npm run verify:image-policy` | PASS | PNG/JPEG/WebP ingress policy remains valid. |
+| `npm run typecheck` (initial) | FAIL — CORRECTED | New Workflow test used an overly broad mock callback and did not narrow an optional request. |
+| `npm run typecheck` (rerun) | PASS | Renderer and Electron TypeScript projects pass. |
+| `npm run build` | PASS | Web, server, and Electron builds pass. |
+| Paid provider generation; headed Electron/gallery/save QA | NOT RUN | Requires an explicit paid call and interactive desktop evidence; no success inferred. |
+
+### July 26 — runtime i18n full-UI remediation (local implementation complete)
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| Mandatory repository bootstrap; Node 22.13.1/npm 10.9.2 | PASS | Correct canonical root and `main`; clean worktree before edits. |
+| `npm run typecheck` | PASS | Renderer and Electron TypeScript projects pass. |
+| `npm run i18n:extract` | PASS | 2,049 usages / 1,941 unique / 0 missing. |
+| `npm run i18n:sync-catalogs` | PASS | Idempotent; no keys added. |
+| `npm run verify:i18n` | PASS | 12 locales / 12 namespaces; all structural and runtime coverage 100%. |
+| `npm run i18n:verify-hardcoded` | PASS | 0 candidates across 480 production files. |
+| `npm run i18n:hardcoded-baseline`; `npm run verify:i18n-hardcoded-regressions` | PASS | 0 entries; 0 regressions / 0 decreases. |
+| Required focused localization Vitest surface | PASS | 8 files / 89 tests. |
+| Focused scanner/status/header/image suite | PASS | 6 files / 116 tests. |
+| `npm run test:i18n` | PASS | 5 files / 49 tests. |
+| `npm run lint:eslint`; `npm run typecheck`; `npm test`; `npm run test:ci`; `npm run build` | PASS | Zero-warning lint; both TS projects; 4,745 full-suite tests with 1 skip; all segmented shards; renderer/server/Electron build. |
+| `npm run verify:safety-guard`; `npm run verify:markdown-links` | PASS | Safety boundary clean; 244 Markdown files checked. |
+| `npm run verify:contracts` | FAIL — PRE-EXISTING | Stops at 13 retained historical reports missing the repository-identity banner; the new runtime-i18n report carries the required banner. |
+| `npm run ci` | FAIL — UPSTREAM AUDIT | Lint/typecheck/segmented tests pass; 16 high transitive `brace-expansion` findings stop the chain before build/contracts/dist. No breaking force-fix applied. |
+| In-app Browser 12-locale matrix | PASS | Every locale selected; expected `lang`; Arabic RTL; no unresolved markers or document overflow. |
+| Swedish → Arabic live switch at 390×844 | PASS | Memoized diagnostics headings updated to Arabic; stable IDs remained unique; document/body client and scroll width all 390. |
+| Packaged locale, accessibility, persistence, Windows, native review | NOT RUN | External acceptance; no success claim made. |
 
 ### July 26 — ChatGPT 5.6 audit implementation closeout
 
@@ -1852,6 +1959,50 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-07-26 — documentation, hygiene, and publication readiness:** reconciled README, privacy/security, release, i18n, repository-map, roadmap, and contributor-agent documentation with the completed runtime-localization and generated-media recovery behavior. Added historical-snapshot banners required by repository identity, ignored local i18n captures, split locale bundles by namespace without raising budgets, replaced fixed overlay colors with semantic tokens, repaired three format-sensitive tab verifiers, restored inline storage-policy markers, and reused the canonical media-save translation key. Ran the documented Node 22 validation sequence; aggregate contracts and build pass. Manual packaged QA remains explicitly external.
+
+### 2026-07-26 — Generated-image failure recovery and real-filesystem verification
+
+- Added bounded main-process custody for validated images that cannot reach disk; recovery uses opaque UUIDs and releases/zeroes entries after success, expiry, or eviction.
+- Added main-frame-only retry and recovery-export IPCs, Image Studio Retry Save, durable URL replacement after recovery, and native Save As to an alternate destination while primary storage is unavailable.
+- Reworked generated-media export replacement so a failed temporary write or final rename does not pre-delete the existing destination.
+- Added unavailable-device classifications for `EIO` and network/device-disconnect errno families.
+- Passed 5 focused files / 38 tests, the full Electron segment, 3 image UI files / 30 tests, lint, both typechecks, build, and relevant security/IPC verifiers.
+- Filled an isolated APFS image to a real macOS `ENOSPC` and verified the actual persistence service returned the safe `storage-full` contract; isolated permission denial is also exercised without touching application data.
+
+### 2026-07-26 — Generated-image durable persistence hardening
+
+- Routed desktop Image Studio bytes through a new narrow, main-frame-only persistence IPC into the existing SHA-256 `venice-media://` blob store; IndexedDB receives a stable URL and identifiers instead of a large data URL.
+- Added safe ENOSPC/EDQUOT, EACCES/EPERM, transient-busy, unavailable-storage, integrity, invalid-media, and unknown error classes plus bounded retry for transient filesystem and IndexedDB transaction failures.
+- Added fsynced temporary writes, atomic metadata replacement, pending-write journals, startup recovery, post-write/export/startup/periodic SHA-256 and byte-count integrity verification, and redacted metadata-only logging.
+- Added recovery, tamper, IPC validation, stable-URL, retry, and export regression coverage; focused tests, lint, and typecheck pass.
+
+### 2026-07-26 — Image generation request and save resilience repair
+
+- Reproduced the reported rejection statically against the bundled Venice Swagger and found three generation paths using the edit-only `output_format` property.
+- Replaced those generation fields with `format: "png"` while preserving the valid `/image/edit` request shape.
+- Changed Image Studio variant persistence from one fail-fast parallel batch to per-item guarded persistence; decoded provider images remain available for manual download if encrypted gallery storage rejects.
+- Added regression assertions across the shared payload builder, Image Studio, Workflow image nodes, and RP scene generation.
+- Focused tests, native export tests, lint, typecheck, image-policy verification, and the web/server/Electron build pass.
+
+### 2026-07-26 — Runtime i18n full-UI remediation completion
+
+- Migrated and classified the expanded 1,667-candidate runtime-visible inventory to a zero-candidate, zero-baseline result across 480 production files.
+- Completed stable prompt-starter keys, structured locale-neutral status text/actions, full application runtime translation, image capability descriptors, and locale-reactive hook dependencies.
+- Replaced localized-label-derived diagnostics keys/IDs with stable semantic IDs after rendered Arabic exposed non-Latin collisions.
+- Completed first-pass catalogs for all 11 non-source locales while preserving truthful `first-pass-machine` / incomplete native-review status.
+- Passed clean install, i18n gates, focused suites, zero-warning lint, both typechecks, 4,745-test full Vitest, segmented CI tests, safety, Markdown links, and production build.
+- Rendered all 12 locales and verified live Swedish-to-Arabic switching plus Arabic RTL at 390×844 without unresolved markers or document overflow.
+- Recorded the independent aggregate blockers: 13 older historical reports missing repository-identity banners and 16 high transitive `brace-expansion` audit findings. No breaking force-fix, commit, push, or PR was performed.
+
+### 2026-07-26 — Runtime i18n full-UI remediation, critical-surface tranche
+
+- Reproduced the false-green scanner and expanded it from `JsxText` to visible attributes, expressions/branches, semantic registries, and toast/dialog arguments with regression fixtures and reason-required exceptions.
+- Replaced final-string prompt starters and tab presentation metadata with stable IDs/keys; localized the chat composer/control strip, header/category/severity surface, Image Studio, and Image Tools across all catalogs.
+- Added runtime Swedish reactivity tests for prompt cards, composer accessibility, status accessible names, and Image Studio options while preserving canonical API/state values.
+- Split structural catalog coverage, runtime-surface coverage, and linguistic review in schema-v4 status. Recorded 1,667 remaining candidates and kept every locale production-incomplete.
+- Registered the active roadmap row and retained detailed implementation/validation evidence in the runtime i18n report. No commit, push, package publication, or PR was performed.
 
 ### 2026-07-26 — ChatGPT 5.6 audit local implementation closeout
 

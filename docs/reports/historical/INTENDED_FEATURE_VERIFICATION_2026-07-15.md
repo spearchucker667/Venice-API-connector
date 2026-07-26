@@ -1,5 +1,7 @@
 # Intended-Feature Verification Report — 2026-07-15
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 > **HISTORICAL SNAPSHOT — NOT CURRENT STATE.** This report is bound to the commit/version recorded below. Current work is authoritative only in [`../ROADMAP.md`](../../ROADMAP.md); current command evidence belongs in [`../summary_of_work.md`](../../summary_of_work.md).
 
 ## Scope and status inheritance

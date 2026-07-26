@@ -1,3 +1,4 @@
+import { translateRuntime } from "../../i18n/runtimeTranslator";
 // Code Owner: fayeblade (@spearchucker667)
 /** @fileoverview Generic public HTTP scrape provider with SSRF defenses.
  *
@@ -41,7 +42,10 @@ export function isSafeUrl(url: string): boolean {
     return false;
   }
 
-  const hostname = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, "").replace(/\.$/, "");
+  const hostname = parsed.hostname
+    .toLowerCase()
+    .replace(/^\[|\]$/g, "")
+    .replace(/\.$/, "");
 
   // Reject URLs with embedded credentials
   if (parsed.username || parsed.password) {
@@ -100,7 +104,9 @@ export function isSafeUrl(url: string): boolean {
   // Without this, https://[::192.168.1.1]/ and https://[::c0a8:101]/
   // bypass the IPv4 blocklist above. (Bug 3.1 / SSRF regression)
   if (hostname.startsWith("::")) {
-    const suffix = hostname.startsWith("::ffff:") ? hostname.slice(7) : hostname.slice(2);
+    const suffix = hostname.startsWith("::ffff:")
+      ? hostname.slice(7)
+      : hostname.slice(2);
     let mappedV4: string | null = null;
     if (suffix.includes(".")) {
       // Dotted-quad form: ::127.0.0.1 / ::ffff:127.0.0.1
@@ -199,13 +205,22 @@ function isIpv6InCidr(ip: string, network: string, prefix: number): boolean {
 }
 
 /** Returns true if string starts with a tag. */
-function startsWithTag(lowerHtml: string, index: number, tagName: string): boolean {
+function startsWithTag(
+  lowerHtml: string,
+  index: number,
+  tagName: string,
+): boolean {
   if (!lowerHtml.startsWith(`<${tagName}`, index)) return false;
   const next = lowerHtml[index + tagName.length + 1];
   return next === undefined || next === ">" || next === "/" || /\s/.test(next);
 }
 
-function findRawTextTagEnd(html: string, lowerHtml: string, fromIndex: number, tagName: string): number {
+function findRawTextTagEnd(
+  html: string,
+  lowerHtml: string,
+  fromIndex: number,
+  tagName: string,
+): number {
   let searchFrom = fromIndex;
   const closingPrefix = `</${tagName}`;
   while (searchFrom < lowerHtml.length) {
@@ -258,12 +273,17 @@ import { createTimeoutSignal } from "../../utils/timeout";
 import { isElectron, desktopApp } from "../../services/desktopBridge";
 import { useSettingsStore } from "../../stores/settings-store";
 
-export function createGenericHttpProvider(config: GenericHttpConfig = {}): ResearchProvider {
+export function createGenericHttpProvider(
+  config: GenericHttpConfig = {},
+): ResearchProvider {
   const enabled = config.enabled === true;
 
   return {
     id: "generic-http",
-    label: "Generic HTTP",
+    label: translateRuntime(
+      "runtimeGenerated.research.providers.generichttpscrapeprovider.metadata.genericHttp",
+      "Generic HTTP",
+    ),
     supports: {
       search: false,
       scrape: true,
@@ -274,7 +294,7 @@ export function createGenericHttpProvider(config: GenericHttpConfig = {}): Resea
     async scrape(input: ScrapeInput): Promise<ScrapeResult> {
       if (!enabled) {
         throw new Error(
-          "Generic HTTP provider is disabled by default. Enable it explicitly in settings."
+          "Generic HTTP provider is disabled by default. Enable it explicitly in settings.",
         );
       }
 
@@ -283,23 +303,32 @@ export function createGenericHttpProvider(config: GenericHttpConfig = {}): Resea
         throw new Error("URL blocked by SSRF safety check.");
       }
 
-      const timeout = input.timeoutMs && input.timeoutMs > 0
-        ? createTimeoutSignal(input.timeoutMs, input.signal)
-        : null;
+      const timeout =
+        input.timeoutMs && input.timeoutMs > 0
+          ? createTimeoutSignal(input.timeoutMs, input.signal)
+          : null;
       const signal = timeout?.signal ?? input.signal;
 
-      let proxyData: { url: string; finalUrl: string; contentType: string; body: string };
+      let proxyData: {
+        url: string;
+        finalUrl: string;
+        contentType: string;
+        body: string;
+      };
 
       if (isElectron()) {
         const result = await desktopApp.proxyScrape(url);
-        if (!result.ok || !result.data) throw new Error(result.error || "Desktop proxy scrape failed");
+        if (!result.ok || !result.data)
+          throw new Error(result.error || "Desktop proxy scrape failed");
         proxyData = result.data;
       } else {
         const proxyRes = await fetch("/api/proxy-scrape", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-Venice-Forge-Family-Safe-Mode": String(useSettingsStore.getState().localFamilySafeModeEnabled),
+            "X-Venice-Forge-Family-Safe-Mode": String(
+              useSettingsStore.getState().localFamilySafeModeEnabled,
+            ),
           },
           body: JSON.stringify({ url }),
           signal,
@@ -310,7 +339,9 @@ export function createGenericHttpProvider(config: GenericHttpConfig = {}): Resea
           try {
             const errJson = await proxyRes.json();
             if (errJson.error) errMsg = errJson.error;
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
           throw new Error(errMsg);
         }
         proxyData = await proxyRes.json();

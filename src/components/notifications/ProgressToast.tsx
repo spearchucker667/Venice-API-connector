@@ -1,13 +1,15 @@
-import React, { useRef, useEffect } from 'react';
-import { useToastStore, type Toast } from '../../stores/toast-store';
-import { uiSoundController } from '../../services/uiSoundController';
-import { GenerationLoadingIndicator } from '../generation/GenerationLoadingIndicator';
+import { useTranslation } from "react-i18next";
+import React, { useRef, useEffect } from "react";
+import { useToastStore, type Toast } from "../../stores/toast-store";
+import { uiSoundController } from "../../services/uiSoundController";
+import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
 
 export function ProgressToast({ toast }: { toast: Toast }) {
+  const { t: tRuntime } = useTranslation("common");
   const progressRef = useRef<HTMLDivElement>(null);
-  const dismiss = useToastStore((state) => state.dismiss)
-  const pauseToast = useToastStore((state) => state.pauseToast)
-  const resumeToast = useToastStore((state) => state.resumeToast)
+  const dismiss = useToastStore((state) => state.dismiss);
+  const pauseToast = useToastStore((state) => state.pauseToast);
+  const resumeToast = useToastStore((state) => state.resumeToast);
 
   useEffect(() => {
     if (progressRef.current && toast.progressRatio !== undefined) {
@@ -43,10 +45,15 @@ export function ProgressToast({ toast }: { toast: Toast }) {
             <div
               className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-surface-elevated ring-1 ring-inset ring-border/20"
               role="progressbar"
-              aria-label={`${toast.title} progress`}
+              aria-label={tRuntime(
+                "runtimeGenerated.components.notifications.progresstoast.attribute.value1Progress",
+                { value1: toast.title },
+              )}
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-valuenow={Math.round(Math.max(0, Math.min(1, toast.progressRatio)) * 100)}
+              aria-valuenow={Math.round(
+                Math.max(0, Math.min(1, toast.progressRatio)) * 100,
+              )}
             >
               <div
                 ref={progressRef}
@@ -55,16 +62,19 @@ export function ProgressToast({ toast }: { toast: Toast }) {
             </div>
           )}
 
-          {(toast.actions && toast.actions.length > 0) && (
+          {toast.actions && toast.actions.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
-              {toast.actions.map(action => (
+              {toast.actions.map((action) => (
                 <button
                   key={action.id}
                   type="button"
                   onClick={() => {
-                    uiSoundController.play('secondaryClick');
+                    uiSoundController.play("secondaryClick");
                     Promise.resolve(action.onClick?.()).finally(() => {
-                      if (action.dismissAfterAction || action.kind === 'dismiss') {
+                      if (
+                        action.dismissAfterAction ||
+                        action.kind === "dismiss"
+                      ) {
                         dismiss(toast.id);
                       }
                     });
@@ -81,12 +91,26 @@ export function ProgressToast({ toast }: { toast: Toast }) {
         {toast.dismissible !== false && (
           <button
             type="button"
-            onClick={() => { uiSoundController.play('secondaryClick'); dismiss(toast.id); }}
-            aria-label="Dismiss notification"
+            onClick={() => {
+              uiSoundController.play("secondaryClick");
+              dismiss(toast.id);
+            }}
+            aria-label={tRuntime(
+              "runtimeGenerated.components.notifications.progresstoast.attribute.dismissNotification",
+            )}
             className="text-text-muted hover:text-text-primary transition-colors p-1 -m-1 shrink-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         )}

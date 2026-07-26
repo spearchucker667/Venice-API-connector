@@ -23,6 +23,7 @@ import type {
   AppDiagnosticCheck,
   SafeDiagnosticsSnapshot,
   RedactedPromptExcerpt,
+  StatusText,
   StatusSeverity,
 } from "../types/status";
 import {
@@ -68,14 +69,21 @@ function isoNow(): string {
   return new Date().toISOString();
 }
 
+function statusText(key: string, values?: StatusText["values"]): StatusText {
+  return { key: `statusDiagnostics.${key}`, ...(values ? { values } : {}) };
+}
+
+function externalStatusText(value: string): StatusText {
+  return statusText("external", { message: sanitizeErrorText(value) });
+}
+
 function makeItem(
   id: AppStatusItem["id"],
-  label: string,
   severity: StatusSeverity,
-  summary: string,
-  extras: Partial<Omit<AppStatusItem, "id" | "label" | "severity" | "summary">> = {},
+  summary: StatusText,
+  extras: Partial<Omit<AppStatusItem, "id" | "severity" | "summary">> = {},
 ): AppStatusItem {
-  return { id, label, severity, summary, updatedAt: isoNow(), ...extras };
+  return { id, severity, summary, updatedAt: isoNow(), ...extras };
 }
 
 /* ------------------------------------------------------------------ *
@@ -89,79 +97,68 @@ function buildApiStatus(): AppStatusItem {
   // runs the request when the user wants it.
   const auth = useAuthStore.getState();
   if (auth.hydrationStatus === "idle") {
-    return makeItem("api", "API", "unknown", "Venice API key has not been checked yet.");
+    return makeItem("api", "unknown", statusText("api.notChecked"));
   }
   if (auth.hydrationStatus === "checking") {
-    return makeItem("api", "API", "unknown", "Checking Venice secure-storage configuration…");
+    return makeItem("api", "unknown", statusText("api.checking"));
   }
   if (auth.hydrationStatus === "error") {
-    return makeItem("api", "API", "error", auth.hydrationError || "Venice secure-storage inspection failed.");
+    return makeItem(
+      "api",
+      "error",
+      auth.hydrationError
+        ? externalStatusText(auth.hydrationError)
+        : statusText("api.inspectionFailed"),
+    );
   }
   const hasKey = selectHasVeniceKey(auth);
   if (!hasKey) {
-    return makeItem(
-      "api",
-      "API",
-      "warn",
-      "Venice API key not configured. Add a key to enable generation.",
-      {
-        detail: "Open the Config tab to connect your Venice API key.",
-        actionLabel: "Open Config",
-        actionTargetTabId: "settings",
-      },
-    );
+    return makeItem("api", "warn", statusText("api.notConfigured"), {
+      detail: statusText("api.openConfigDetail"),
+      actionLabelKey: "statusDiagnostics.actions.openConfig",
+      actionTargetTabId: "settings",
+    });
   }
-  return makeItem(
-    "api",
-    "API",
-    "warn",
-    "API key is configured, but live Venice connectivity has not been verified yet.",
-    { detail: "Use the API-key test action to verify /models connectivity." },
-  );
+  return makeItem("api", "warn", statusText("api.connectivityUnverified"), {
+    detail: statusText("api.testConnectivityDetail"),
+  });
 }
 
 function buildApiKeyStatus(): AppStatusItem {
   const auth = useAuthStore.getState();
   if (auth.hydrationStatus === "idle") {
-    return makeItem("apiKey", "API Key", "unknown", "Venice API key has not been checked yet.");
+    return makeItem("apiKey", "unknown", statusText("apiKey.notChecked"));
   }
   if (auth.hydrationStatus === "checking") {
-    return makeItem("apiKey", "API Key", "unknown", "Checking Venice API-key configuration…");
+    return makeItem("apiKey", "unknown", statusText("apiKey.checking"));
   }
   if (auth.hydrationStatus === "error") {
-    return makeItem("apiKey", "API Key", "error", auth.hydrationError || "Secure-storage inspection failed.");
+    return makeItem(
+      "apiKey",
+      "error",
+      auth.hydrationError
+        ? externalStatusText(auth.hydrationError)
+        : statusText("apiKey.inspectionFailed"),
+    );
   }
   if (auth.isConfigured) {
-    return makeItem(
-      "apiKey",
-      "API Key",
-      "ok",
-      "Venice API key is configured in secure storage. Raw key is hidden.",
-    );
+    return makeItem("apiKey", "ok", statusText("apiKey.secure"));
   }
   if (auth.apiKey) {
-    return makeItem(
-      "apiKey",
-      "API Key",
-      "warn",
-      "Key present in memory only. Raw key is hidden and excluded from diagnostics and exports.",
-    );
+    return makeItem("apiKey", "warn", statusText("apiKey.memoryOnly"));
   }
-  return makeItem(
-    "apiKey",
-    "API Key",
-    "error",
-    "No Venice API key. Image, audio, and chat generation are blocked.",
-    {
-      detail: "Add a key via the API key button in the header or the Config tab.",
-      actionLabel: "Open Config",
-      actionTargetTabId: "settings",
-    },
-  );
+  return makeItem("apiKey", "error", statusText("apiKey.missing"), {
+    detail: statusText("apiKey.addKeyDetail"),
+    actionLabelKey: "statusDiagnostics.actions.openConfig",
+    actionTargetTabId: "settings",
+  });
 }
 
-function getApiKeyStorage(auth: ReturnType<typeof useAuthStore.getState>): SafeApiKeyStorage {
-  if (auth.isConfigured) return isElectron() ? "secure-storage" : "web-environment";
+function getApiKeyStorage(
+  auth: ReturnType<typeof useAuthStore.getState>,
+): SafeApiKeyStorage {
+  if (auth.isConfigured)
+    return isElectron() ? "secure-storage" : "web-environment";
   if (auth.apiKey) return "memory";
   return "unavailable";
 }
@@ -169,69 +166,85 @@ function getApiKeyStorage(auth: ReturnType<typeof useAuthStore.getState>): SafeA
 function buildModelStatus(): AppStatusItem {
   const catalog = useModelCatalogRuntimeStore.getState();
   const settings = useSettingsStore.getState();
-  const unavailableSelection = Object.entries(settings.selectedModels ?? {}).find(([selectionKey, modelId]) => {
+  const unavailableSelection = Object.entries(
+    settings.selectedModels ?? {},
+  ).find(([selectionKey, modelId]) => {
     if (typeof modelId !== "string" || modelId.length === 0) return false;
-    const modelType = resolveTab(selectionKey)?.modelType ?? (selectionKey === "rp-studio" ? "text" : undefined);
+    const modelType =
+      resolveTab(selectionKey)?.modelType ??
+      (selectionKey === "rp-studio" ? "text" : undefined);
     if (!modelType) return false;
-    const authoritative = catalog.loadedTypes.includes("all") || catalog.loadedTypes.includes(modelType);
+    const authoritative =
+      catalog.loadedTypes.includes("all") ||
+      catalog.loadedTypes.includes(modelType);
     if (!authoritative) return false;
     const authoritativeIds = catalog.loadedTypes.includes("all")
       ? catalog.liveModelIds
-      : catalog.modelsByType[modelType] ?? [];
+      : (catalog.modelsByType[modelType] ?? []);
     return !authoritativeIds.includes(modelId);
   });
   switch (catalog.status) {
     case "idle":
-      return makeItem("model", "Model", "unknown", "Model catalog has not been requested.");
+      return makeItem("model", "unknown", statusText("model.notRequested"));
     case "loading":
-      return makeItem("model", "Model", "unknown", "Loading the model catalog…");
+      return makeItem("model", "unknown", statusText("model.loading"));
     case "ready": {
       if (unavailableSelection) {
         const [modelType, modelId] = unavailableSelection;
-        return makeItem("model", "Model", "warn", `${catalog.totalCount} models loaded.`, {
-          detail: `Selected model “${modelId}” is not present in the current catalog (${modelType}).`,
-        });
+        return makeItem(
+          "model",
+          "warn",
+          statusText("model.loaded", { count: catalog.totalCount }),
+          {
+            detail: statusText("model.selectionUnavailable", {
+              modelId,
+              modelType,
+            }),
+          },
+        );
       }
-      return makeItem("model", "Model", "ok", `${catalog.totalCount} models loaded.`);
+      return makeItem(
+        "model",
+        "ok",
+        statusText("model.loaded", { count: catalog.totalCount }),
+      );
     }
     case "stale":
       return makeItem(
         "model",
-        "Model",
         "warn",
-        `Using a cached model catalog from ${catalog.lastSuccessAt ?? "an earlier request"}.`,
-        { detail: catalog.lastError ?? undefined },
+        statusText("model.cached", {
+          timestamp: catalog.lastSuccessAt ?? "",
+        }),
+        {
+          detail: catalog.lastError
+            ? externalStatusText(catalog.lastError)
+            : undefined,
+        },
       );
     case "error":
-      return makeItem("model", "Model", "error", catalog.lastError || "Model catalog could not be loaded.");
+      return makeItem(
+        "model",
+        "error",
+        catalog.lastError
+          ? externalStatusText(catalog.lastError)
+          : statusText("model.loadFailed"),
+      );
   }
 }
 
 function buildStorageStatus(): AppStatusItem {
   if (typeof indexedDB === "undefined") {
-    return makeItem(
-      "storage",
-      "Storage",
-      "error",
-      "IndexedDB is not available. Local history and media will not persist.",
-      { detail: "Browser mode with storage disabled. Check site permissions." },
-    );
+    return makeItem("storage", "error", statusText("storage.unavailable"), {
+      detail: statusText("storage.permissionsDetail"),
+    });
   }
   if (!isElectron()) {
-    return makeItem(
-      "storage",
-      "Storage",
-      "warn",
-      "Web mode: records persist in browser IndexedDB (encrypted at rest).",
-      { detail: "Clearing site data will erase the local vault." },
-    );
+    return makeItem("storage", "warn", statusText("storage.web"), {
+      detail: statusText("storage.siteDataDetail"),
+    });
   }
-  return makeItem(
-    "storage",
-    "Storage",
-    "ok",
-    "Desktop IndexedDB is reachable. Records are encrypted at rest.",
-  );
+  return makeItem("storage", "ok", statusText("storage.desktop"));
 }
 
 function buildProjectStatus(): AppStatusItem {
@@ -240,32 +253,30 @@ function buildProjectStatus(): AppStatusItem {
   const activeId = settings.activeProjectId;
   if (activeId === null) {
     // "All Projects" / unscoped mode is valid by Phase 1 contract.
-    return makeItem("project", "Project", "ok", "All Projects mode active (unscoped view).");
+    return makeItem("project", "ok", statusText("project.allProjects"));
   }
   const project = projects.find((p) => p.id === activeId);
   if (!project) {
-    return makeItem(
-      "project",
-      "Project",
-      "error",
-      "Active project id is missing or unknown. The store will repair on next interaction.",
-      { actionLabel: "Open Status", actionTargetTabId: "status" },
-    );
+    return makeItem("project", "error", statusText("project.missing"), {
+      actionLabelKey: "statusDiagnostics.actions.openStatus",
+      actionTargetTabId: "status",
+    });
   }
   if (project.archivedAt) {
     return makeItem(
       "project",
-      "Project",
       "warn",
-      `Active project "${project.name}" is archived. Switch to All Projects to repair.`,
-      { actionLabel: "Open Status", actionTargetTabId: "status" },
+      statusText("project.archived", { projectName: project.name }),
+      {
+        actionLabelKey: "statusDiagnostics.actions.openStatus",
+        actionTargetTabId: "status",
+      },
     );
   }
   return makeItem(
     "project",
-    "Project",
     "ok",
-    `Active project "${project.name}" is valid.`,
+    statusText("project.valid", { projectName: project.name }),
   );
 }
 
@@ -276,15 +287,20 @@ function buildSafetyStatus(): AppStatusItem {
   // see which layer is active.
   const localEnabled = settings.localFamilySafeModeEnabled === true;
   const providerEnabled = settings.veniceApiSafeMode === true;
-  const summary =
-    `Local guard: ${localEnabled ? "on" : "off"} · Venice safe_mode: ${providerEnabled ? "on" : "off"}`;
   // The local guard is the primary safety boundary.
   // If it is off (Adult Mode), we warn. The upstream Venice safe_mode is supplementary.
   const sev = localEnabled ? "ok" : "warn";
-  return makeItem("safety", "Safety", sev, summary, {
-    actionLabel: "Open Config",
-    actionTargetTabId: "settings",
-  });
+  return makeItem(
+    "safety",
+    sev,
+    statusText(
+      `safety.${localEnabled ? "on" : "off"}.${providerEnabled ? "on" : "off"}`,
+    ),
+    {
+      actionLabelKey: "statusDiagnostics.actions.openConfig",
+      actionTargetTabId: "settings",
+    },
+  );
 }
 
 function buildProviderStatus(): AppStatusItem {
@@ -297,28 +313,25 @@ function buildProviderStatus(): AppStatusItem {
   if (!jinaEnabled) {
     return makeItem(
       "provider",
-      "Research",
       "ok",
-      `Research Workspace active (${sessions.length} sessions). Jina is disabled.`
+      statusText("provider.disabled", { count: sessions.length }),
     );
   }
 
   if (auth.jinaIsConfigured) {
     return makeItem(
       "provider",
-      "Research",
       "ok",
-      `Research Workspace active (${sessions.length} sessions). Jina enabled.`
+      statusText("provider.enabled", { count: sessions.length }),
     );
   }
 
   return makeItem(
     "provider",
-    "Research",
     "warn",
-    `Research Workspace active (${sessions.length} sessions). Jina enabled but no key configured.`,
+    statusText("provider.missingKey", { count: sessions.length }),
     {
-      actionLabel: "Open Config",
+      actionLabelKey: "statusDiagnostics.actions.openConfig",
       actionTargetTabId: "settings",
     },
   );
@@ -326,19 +339,9 @@ function buildProviderStatus(): AppStatusItem {
 
 function buildDesktopStatus(): AppStatusItem {
   if (isElectron()) {
-    return makeItem(
-      "desktop",
-      "Mode",
-      "ok",
-      "Desktop mode: Electron main process + preload bridge are reachable.",
-    );
+    return makeItem("desktop", "ok", statusText("desktop.desktop"));
   }
-  return makeItem(
-    "desktop",
-    "Mode",
-    "warn",
-    "Web mode: API keys live in the server .env. Desktop-only features (filesystem, reveals, system shell) are unavailable.",
-  );
+  return makeItem("desktop", "warn", statusText("desktop.web"));
 }
 
 function buildDiagnosticsStatus(
@@ -348,11 +351,13 @@ function buildDiagnosticsStatus(
   const worst = pickWorst(items.map((it) => it.severity));
   return makeItem(
     "diagnostics",
-    "Diagnostics",
     worst,
     worst === "ok"
-      ? "All systems operational. No issues detected."
-      : `${checks.length} checks recorded; worst severity: ${worst}.`,
+      ? statusText("diagnostics.operational")
+      : statusText("diagnostics.issues", {
+          count: checks.length,
+          severity: worst,
+        }),
   );
 }
 
@@ -385,7 +390,17 @@ export function computeAppStatusSnapshot(): AppStatusSnapshot {
     [api, apiKey, model, storage, project, safety, provider, desktop],
     checks,
   );
-  return { api, apiKey, model, storage, project, safety, provider, desktop, diagnostics };
+  return {
+    api,
+    apiKey,
+    model,
+    storage,
+    project,
+    safety,
+    provider,
+    desktop,
+    diagnostics,
+  };
 }
 
 /* ------------------------------------------------------------------ *
@@ -445,8 +460,9 @@ export function collectPromptRedactedExcerpts(
   const out: RedactedPromptExcerpt[] = [];
   for (const item of promptItems) {
     if (out.length >= MAX_PROMPT_EXCERPTS) break;
-    const current = item.versions.find((v) => v.id === item.currentVersionId)
-      || item.versions[item.versions.length - 1];
+    const current =
+      item.versions.find((v) => v.id === item.currentVersionId) ||
+      item.versions[item.versions.length - 1];
     if (!current || typeof current.content !== "string") continue;
     const createdAtMs = Date.parse(item.createdAt);
     out.push({
@@ -526,9 +542,13 @@ export function computeSafeDiagnosticsSnapshot(
       research: {
         count: useResearchStore.getState().sessions.length,
       },
-      prompts: buildPromptLibrarySnapshotEntry(settings.diagnosticsIncludePrompts),
+      prompts: buildPromptLibrarySnapshotEntry(
+        settings.diagnosticsIncludePrompts,
+      ),
       scenes: { count: useSceneComposerStore.getState().scenes.length },
-      workflows: { count: useWorkflowTemplateStore.getState().workflows.length },
+      workflows: {
+        count: useWorkflowTemplateStore.getState().workflows.length,
+      },
       rp: {
         count:
           useCharacterCardStore.getState().cards.length +
@@ -536,7 +556,8 @@ export function computeSafeDiagnosticsSnapshot(
           usePersonaStore.getState().personas.length +
           useScenarioStore.getState().scenarios.length,
       },
-      issuesCount: useStoragePrivacyStore.getState().inventory?.issues.length || 0,
+      issuesCount:
+        useStoragePrivacyStore.getState().inventory?.issues.length || 0,
       privacyExclusions: [
         "API Keys",
         settings.diagnosticsIncludePrompts
@@ -578,6 +599,8 @@ function buildPromptLibrarySnapshotEntry(
  * keys, bearer tokens, auth headers, raw prompts, base64 media
  * data, or full local absolute paths.
  */
-export function serialiseSafeDiagnosticsSnapshot(snapshot: SafeDiagnosticsSnapshot): string {
+export function serialiseSafeDiagnosticsSnapshot(
+  snapshot: SafeDiagnosticsSnapshot,
+): string {
   return JSON.stringify(snapshot, null, 2);
 }

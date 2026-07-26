@@ -258,5 +258,18 @@
     "toggleInspector": "Alternar inspector",
     "toggleHint": "⌘K para alternar",
     "navigateHint": "↑↓ para navegar · Enter para elegir"
+  },
+  "header": {
+    "openMenu": "abrir menú",
+    "toggleSidebar": "Alternar barra lateral",
+    "selectModel": "Seleccionar modelo…",
+    "selectedModel": "Modelo seleccionado",
+    "toggleTaskCenter": "Alternar centro de tareas",
+    "tasks": "Tareas",
+    "checkingApiKey": "Comprobando la clave API",
+    "apiKeyConnectedManage": "Clave API conectada, administrar",
+    "connectApiKey": "Conectar clave API",
+    "checkingKey": "Comprobando clave…",
+    "connected": "Conectado"
   }
 }

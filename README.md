@@ -68,6 +68,13 @@
 - [日本語](docs/i18n/ja/README.md)
 - [हिन्दी](docs/i18n/hi/README.md)
 - [العربية](docs/i18n/ar/README.md)
+- [한국어](docs/i18n/ko/README.md)
+- [Svenska](docs/i18n/sv-SE/README.md)
+
+English is the canonical source language. All 12 bundled catalogs have complete
+runtime-surface coverage, including Arabic RTL behavior. The 11 non-English
+catalogs are first-pass machine translations and remain marked
+production-incomplete until qualified native reviewers record dated approval.
 
 ---
 
@@ -81,12 +88,12 @@ By prioritizing local data ownership, Venice Forge runs all storage operations l
 
 ## Feature Highlights
 
-- **Multi-Language Support:** Full localization in 12 languages (including Arabic RTL support) with instant switching and global persistence.
+- **Multi-Language Runtime:** Twelve bundled catalogs cover the complete application surface, with instant switching, persisted selection, locale-aware formatting, and Arabic RTL layout. English is source-complete; the other catalogs are clearly identified as first-pass translations pending native review.
 - **Local-First Backup & Sync:** Manually export/import encrypted `.vfbackup` archives, or use a background sync folder (e.g. iCloud, Dropbox) with automated end-to-end encrypted packet syncing and robust conflict resolution.
 - **Streaming AI Conversations:** Experience highly responsive model outputs with full Markdown, LaTeX math rendering, prompt limits enforcement, and attachment context.
 - **Projects & Workspaces:** Organize your chat histories, generation parameters, and media assets into logical local projects.
 - **Document Tools & Workspace Grants:** Create non-overwriting managed documents, review exact edit diffs, retain immutable revisions, search text files across granted workspace directories, and export through native save boundaries.
-- **Model-Aware Image Generation:** Image Studio UI dynamically adapts inputs to selected image models, preventing payload errors across edit, inpaint, background removal, and API-compliant 2×/4× upscaling.
+- **Model-Aware Image Generation:** Image Studio adapts inputs to selected model capabilities and uses endpoint-correct payloads across generation, edit, inpaint, background removal, and API-compliant 2×/4× upscaling. Generated desktop images are verified and persisted through the main-owned media store, with explicit retry and Save As recovery when local storage fails.
 - **Image Inspector & Prompt Reconstruction:** Analyze PNG, JPEG, or WebP images with a selected vision model and generate structured visual breakdowns and target-specific replication prompts. Direct image-based web matching remains provider-blocked; the former query-derived action is disabled.
 - **Media Studio Command Center:** Gallery view equipped with multi-select bulk operations, lineage graph tracing, visual diff comparison, and metadata-preserving exports.
 - **Video & Music Studios:** Queue text/image-to-video and lyrics-driven music requests with explicit stage tracking (`queued` → `generating` → `retrieving` → `saving` → `completed`), durable stream persistence, and MP4/audio exports.
@@ -98,7 +105,7 @@ By prioritizing local data ownership, Venice Forge runs all storage operations l
 
 ---
 
-## Current Workspace Map
+## Navigation Overview
 
 The navigation below uses the canonical tab labels from `src/config/tabs.ts`:
 
@@ -118,8 +125,10 @@ flowchart LR
 | Area | Status | Purpose |
 | :--- | :---: | :--- |
 | **Chat** | Beta | Streaming conversations, projects, prompt injects, attachments, classical/agent modes |
-| **Image Studio** | Beta | Model-aware generation, prompt enhancement, image editing, background removal, and 2×/4× upscaling |
-| **Media Studio** | Beta | Visual gallery, multi-image comparison, lineage tracking, metadata bundle exports |
+| **Character Chats** | Beta | Conversation-scoped hosted/local character chats with isolated identity and greeting ownership |
+| **History** | Beta | Browse, restore, organize, and inspect saved conversation state |
+| **Image Studio** | Beta | Model-aware generation, prompt enhancement, image editing, background removal, 2×/4× upscaling, and recoverable durable desktop persistence |
+| **Media Studio** | Beta | Main-owned generated-media custody, visual gallery, multi-image comparison, lineage tracking, integrity-gated Save As, and metadata bundle exports |
 | **Image Inspector** | Beta | Bounded local-image ingestion, schema-validated visual analysis, target-specific replication prompts, deletable inspection history, and live model pricing |
 | **Prompts** | Beta | Prompt Library with global/project scopes, version chains, and tag management |
 | **Scene Composer** | Beta | Visual composition tool for arranging prompts, media references, and models into scenes |
@@ -134,6 +143,9 @@ flowchart LR
 | **Workflows** | Beta | Versioned template-based automation chains |
 | **Playground** | Beta | Interactive visual node graph builder and multi-model workflow execution engine |
 | **Documents** | Beta | Managed-document tools, immutable revisions, workspace search/inspection, and directory grants |
+| **Privacy** | Beta | Local storage inventory, encrypted backup/sync controls, safe summaries, and maintenance actions |
+| **Config** | Beta | Credentials, providers, language/region, themes, safety, backup/sync, and application settings |
+| **Status** | Beta | Diagnostics, task activity, connectivity, rate limits, and redacted log access |
 
 ---
 
@@ -158,7 +170,7 @@ Roleplay and creative writing features are consolidated into a comprehensive **R
 ## Image, Media, Audio, Music, Video, and Embeddings
 
 Venice Forge provides a rich multimedia pipeline:
-- **Image Generation:** The Image Studio handles prompts, negatives, seeds, aspect ratios, and model-specific parameters.
+- **Image Generation:** Image Studio handles prompts, negatives, seeds, aspect ratios, and model-specific parameters. Desktop results are MIME/signature checked, written as SHA-256-addressed `venice-media://` blobs through main-frame-only IPC, and verified after persistence. If the primary store is full, read-only, or temporarily unavailable, the app retains a bounded process-local recovery copy, displays **Retry Save**, and lets the user choose another destination with native Save As.
 - **Image Inspection:** Image Inspector accepts bounded PNG, JPEG, and WebP inputs, uses live model capability metadata to select vision models and display pricing, validates structured analysis before persistence, and produces prompts for Generic Natural Language, Venice Image Studio, FLUX, or Midjourney. Saved inspections can be deleted independently of Media Studio images. Direct source-image Google/Brave matching is not exposed because the configured contracts accept text queries rather than image bytes. See the [Image Inspector guide](docs/user/IMAGE_INSPECTOR.md).
 - **Media Studio:** The gallery indexes all outputs. You can select up to 4 images for a side-by-side field diff comparison, walk the parent-child lineage tree of remixed images, and export a redacted JSON manifest with deterministic sidecar filenames.
 - **Audio & Music:** Supports Text-to-Speech speech queues and lyrics-driven Music generation.
@@ -174,6 +186,7 @@ Privacy is the core design pillar of Venice Forge:
 - **Secure Key Storage:** In Electron, profile-scoped API keys are encrypted with Electron `safeStorage` and the ciphertext is stored in the owner-only `secure-prefs.json` app-data file (`safeStorage` uses Keychain-backed encryption on macOS and DPAPI on Windows; password-verifier records protect profile passwords, and it does not store API keys in plaintext).
 - **Profiles & Isolation:** Profiles separate settings, conversations, and API keys. Locked profiles can be password-protected; password-verifier records and PBKDF2-SHA256 verifiers are managed entirely in the main process with a 5-attempt brute-force lockout.
 - **Data Redaction:** The Traffic Inspector, application log files, and diagnostics exports automatically strip bearer tokens, API keys (`sk-...`, `vn-...`), local system paths, and raw prompt/response bodies.
+- **Generated-media custody:** Desktop gallery records contain stable media IDs and `venice-media://` URLs rather than full image data URLs. Recovery custody is main-process-only, bounded to eight items / 128 MiB / 30 minutes, and contains media bytes plus integrity metadata—never prompts, credentials, or renderer-selected paths.
 - **Local Family Safe Mode:** Run-time guardrails screen outgoing prompts and inbound scrape responses locally. This is independent of the provider-side Venice API `safe_mode`.
 
 ---
@@ -247,6 +260,10 @@ npm run build
 # 6. Verify release packaging hardening and dist output
 npm run verify:release-packaging-hardening
 npm run verify:dist
+
+# Localization integrity and zero-hardcoded-prose regression gates
+npm run verify:i18n
+npm run verify:i18n-hardcoded-regressions
 ```
 
 ---

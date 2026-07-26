@@ -47,9 +47,15 @@ export interface MigrationStep {
 export const MIGRATIONS: MigrationStep[] = [
   {
     toVersion: 1,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Initial schema — images, chats, settings, diagnostics",
     up(db) {
-      for (const name of ["images", "chats", "settings", "diagnostics"] as const) {
+      for (const name of [
+        "images",
+        "chats",
+        "settings",
+        "diagnostics",
+      ] as const) {
         if (!db.objectStoreNames.contains(name)) {
           db.createObjectStore(name, { keyPath: "id" });
         }
@@ -58,6 +64,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 2,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add conversations store for multi-conversation persistence",
     up(db) {
       if (!db.objectStoreNames.contains("conversations")) {
@@ -67,6 +74,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 3,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add ai_memory and files stores",
     up(db) {
       if (!db.objectStoreNames.contains("ai_memory")) {
@@ -79,7 +87,8 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 4,
-    description: "Reserved version bump (theme token invariant / dual-client audit)",
+    description:
+      "Reserved version bump (theme token invariant / dual-client audit)", // i18n-allow: immutable internal migration metadata used for diagnostics
     up(_db) {
       // No schema change — version 4 was a non-schema release bump.
       // This step is kept as a placeholder to keep toVersion numbering
@@ -88,7 +97,9 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 5,
-    description: "Add Character RP Studio stores (character_cards, personas, lorebooks, rp_chats, rp_assets)",
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
+    description:
+      "Add Character RP Studio stores (character_cards, personas, lorebooks, rp_chats, rp_assets)", // i18n-allow: immutable internal migration metadata used for diagnostics
     up(db) {
       for (const name of [
         "character_cards",
@@ -105,6 +116,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 6,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add timestamp index for paginated Media Studio reads",
     up(db, tx) {
       if (!db.objectStoreNames.contains("images")) return;
@@ -116,7 +128,9 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 7,
-    description: "Add projects store for Project Workspace (first-class metadata + asset tagging support)",
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
+    description:
+      "Add projects store for Project Workspace (first-class metadata + asset tagging support)", // i18n-allow: immutable internal migration metadata used for diagnostics
     up(db) {
       if (!db.objectStoreNames.contains("projects")) {
         db.createObjectStore("projects", { keyPath: "id" });
@@ -125,7 +139,9 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 8,
-    description: "Add promptLibrary store for Phase 2D Prompt Library Foundation",
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
+    description:
+      "Add promptLibrary store for Phase 2D Prompt Library Foundation", // i18n-allow: immutable internal migration metadata used for diagnostics
     up(db) {
       if (!db.objectStoreNames.contains("promptLibrary")) {
         db.createObjectStore("promptLibrary", { keyPath: "id" });
@@ -134,6 +150,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 9,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add scenes store for Phase 2E Scene Composer Foundation",
     up(db) {
       if (!db.objectStoreNames.contains("scenes")) {
@@ -143,7 +160,9 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 10,
-    description: "Add rpScenarios store for Phase 2F RP Studio Polish (ScenarioV1)",
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
+    description:
+      "Add rpScenarios store for Phase 2F RP Studio Polish (ScenarioV1)", // i18n-allow: immutable internal migration metadata used for diagnostics
     up(db) {
       if (!db.objectStoreNames.contains("rpScenarios")) {
         db.createObjectStore("rpScenarios", { keyPath: "id" });
@@ -152,6 +171,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 11,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add workflowTemplates store for Phase 2G Workflow Templates",
     up(db) {
       if (!db.objectStoreNames.contains("workflowTemplates")) {
@@ -161,6 +181,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 12,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add researchSessions store for Phase 2I Research Workspace",
     up(db) {
       if (!db.objectStoreNames.contains("researchSessions")) {
@@ -170,6 +191,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 13,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add visualWorkflows store for visual workflow persistence",
     up(db) {
       if (!db.objectStoreNames.contains("visualWorkflows")) {
@@ -179,6 +201,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 14,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add playground store for Phase 2 Playgrounds",
     up(db) {
       if (!db.objectStoreNames.contains("playground")) {
@@ -188,7 +211,9 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 15,
-    description: "Add profileId index to every store for multi-profile isolation",
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
+    description:
+      "Add profileId index to every store for multi-profile isolation", // i18n-allow: immutable internal migration metadata used for diagnostics
     up(db, tx) {
       const stores = [
         "images",
@@ -223,6 +248,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 16,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add tombstones store for Phase 2G Sync hard deletes",
     up(db) {
       if (!db.objectStoreNames.contains("tombstones")) {
@@ -232,6 +258,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 17,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add encrypted local-only ST Card Studio drafts",
     up(db) {
       if (!db.objectStoreNames.contains("characterCardDrafts")) {
@@ -241,6 +268,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 18,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add chat_folders store for organizing conversations",
     up(db) {
       if (!db.objectStoreNames.contains("chat_folders")) {
@@ -250,6 +278,7 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 19,
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
     description: "Add imageInspectorSessions store for Image Inspector feature",
     up(db) {
       if (!db.objectStoreNames.contains("imageInspectorSessions")) {
@@ -259,7 +288,9 @@ export const MIGRATIONS: MigrationStep[] = [
   },
   {
     toVersion: 20,
-    description: "Add character_creator_drafts store for Character Creator feature",
+    // i18n-allow-next-line: immutable internal migration metadata used for diagnostics
+    description:
+      "Add character_creator_drafts store for Character Creator feature", // i18n-allow: immutable internal migration metadata used for diagnostics
     up(db) {
       if (!db.objectStoreNames.contains("character_creator_drafts")) {
         db.createObjectStore("character_creator_drafts", { keyPath: "id" });
@@ -288,11 +319,11 @@ export function applyMigrations(
   db: IDBDatabase,
   tx: IDBTransaction,
   oldVersion: number,
-  newVersion: number
+  newVersion: number,
 ): void {
-  const pending = MIGRATIONS
-    .filter((m) => m.toVersion > oldVersion && m.toVersion <= newVersion)
-    .sort((a, b) => a.toVersion - b.toVersion);
+  const pending = MIGRATIONS.filter(
+    (m) => m.toVersion > oldVersion && m.toVersion <= newVersion,
+  ).sort((a, b) => a.toVersion - b.toVersion);
 
   for (const step of pending) {
     try {
@@ -302,13 +333,19 @@ export function applyMigrations(
       throw new Error(
         `[dbMigrations] Migration to v${step.toVersion} ("${step.description}") failed: ${
           err instanceof Error ? err.message : String(err)
-        }`
+        }`,
       );
     }
   }
 }
 
 /** Returns a summary of all migration steps for diagnostics / Settings UI. */
-export function getMigrationHistory(): Array<{ toVersion: number; description: string }> {
-  return MIGRATIONS.map(({ toVersion, description }) => ({ toVersion, description }));
+export function getMigrationHistory(): Array<{
+  toVersion: number;
+  description: string;
+}> {
+  return MIGRATIONS.map(({ toVersion, description }) => ({
+    toVersion,
+    description,
+  }));
 }

@@ -231,6 +231,30 @@ const veniceForge = {
   },
 
   files: {
+    persistGeneratedImage(input: { dataUrl: string }): Promise<{
+      ok: boolean;
+      media?: { id: string; url: string; mimeType: string; byteCount: number; sha256: string };
+      error?: string;
+      errorKind?: string;
+      retryable?: boolean;
+      recoveryId?: string;
+    }> {
+      return ipcRenderer.invoke("app:media:persist-generated-image", input);
+    },
+    retryGeneratedImage(input: { recoveryId: string }): Promise<{
+      ok: boolean;
+      media?: { id: string; url: string; mimeType: string; byteCount: number; sha256: string };
+      error?: string;
+      errorKind?: string;
+      retryable?: boolean;
+    }> {
+      return ipcRenderer.invoke("app:media:retry-generated-image", input);
+    },
+    saveGeneratedImageRecovery(input: { recoveryId: string; suggestedName?: string }): Promise<{
+      ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string;
+    }> {
+      return ipcRenderer.invoke("app:media:save-generated-recovery", input);
+    },
     saveGeneratedMedia(input: { mediaId: string; suggestedName?: string }): Promise<{ ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string }> {
       return ipcRenderer.invoke("app:media:save-generated", input);
     },

@@ -1,5 +1,7 @@
 # Video Gallery, Character Chats, and UI Surface Remediation Report
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 > **HISTORICAL SNAPSHOT — NOT CURRENT STATE.** This report is retained as dated implementation evidence and does not override the live tree.
 
 > **Status:** Snapshot implementation evidence. Open work remains authoritative in [`../ROADMAP.md`](../../ROADMAP.md); command evidence is also recorded in [`../summary_of_work.md`](../../summary_of_work.md).

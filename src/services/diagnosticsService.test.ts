@@ -12,8 +12,19 @@ vi.mock("../services/desktopBridge", () => {
     desktopApiKey: { isConfigured: () => Promise.resolve(false) },
     desktopJinaApiKey: { isConfigured: () => Promise.resolve(false) },
     desktopApp: { getDiagnostics: () => Promise.resolve({}) },
-    desktopConversations: { list: () => Promise.resolve({ ok: false, records: [], error: "mock" }) },
-    desktopChat: { list: () => Promise.resolve({ ok: false, conversations: [], truncated: false, totalScanned: 0, error: "mock" }) },
+    desktopConversations: {
+      list: () => Promise.resolve({ ok: false, records: [], error: "mock" }),
+    },
+    desktopChat: {
+      list: () =>
+        Promise.resolve({
+          ok: false,
+          conversations: [],
+          truncated: false,
+          totalScanned: 0,
+          error: "mock",
+        }),
+    },
   };
 });
 
@@ -31,6 +42,12 @@ import { _resetAuditCounters_TEST_ONLY } from "../shared/safety";
 import { useModelCatalogRuntimeStore } from "../stores/model-catalog-runtime-store";
 import { usePromptLibraryStore } from "../stores/prompt-library-store";
 import type { PromptLibraryItem } from "../types/prompt-library";
+import type { StatusText } from "../types/status";
+import { i18n } from "../i18n";
+
+function renderStatusText(message: StatusText | undefined): string {
+  return message ? i18n.t(message.key, message.values) : "";
+}
 
 function resetStores() {
   _resetAuditCounters_TEST_ONLY();
@@ -51,7 +68,12 @@ function resetStores() {
     veniceApiSafeMode: true,
     diagnosticsIncludePrompts: false,
   } as never);
-  useProjectStore.setState({ projects: [], loaded: true, loading: false, lastError: null });
+  useProjectStore.setState({
+    projects: [],
+    loaded: true,
+    loading: false,
+    lastError: null,
+  });
   useMediaStore.setState({
     items: [],
     loading: false,
@@ -65,7 +87,10 @@ function resetStores() {
     conversations: [],
     activeConversationId: null,
     isStreaming: false,
-    veniceParams: { include_venice_system_prompt: false, enable_web_search: "off" },
+    veniceParams: {
+      include_venice_system_prompt: false,
+      enable_web_search: "off",
+    },
     systemPrompt: "",
     temperature: 0.7,
     topP: 1,
@@ -139,20 +164,23 @@ describe("computeAppStatusSnapshot (VERIFY-045)", () => {
   });
 
   it("configured API key separates stored key from live connectivity (no key material in payload)", () => {
-    useAuthStore.setState({ isConfigured: true, apiKey: "VENICE-SECRET-KEY-XYZ" } as never);
+    useAuthStore.setState({
+      isConfigured: true,
+      apiKey: "VENICE-SECRET-KEY-XYZ",
+    } as never);
     const s = computeAppStatusSnapshot();
     expect(s.api.severity).toBe("warn");
-    expect(s.api.summary).toMatch(/not been verified/i);
+    expect(renderStatusText(s.api.summary)).toMatch(/not been verified/i);
     expect(s.apiKey.severity).toBe("ok");
-    expect(s.apiKey.summary).toMatch(/raw key is hidden/i);
+    expect(renderStatusText(s.apiKey.summary)).toMatch(/raw key is hidden/i);
     // The secret MUST NOT appear in any status field.
     const dump = JSON.stringify(s);
-    expect(dump).not.toContain("VENICE-SECRET-KEY-XYZ")
-    expect(dump).not.toMatch(/Bearer\s+[A-Za-z0-9_-]{20,}/i)
-    expect(dump).not.toMatch(/authorization/i)
+    expect(dump).not.toContain("VENICE-SECRET-KEY-XYZ");
+    expect(dump).not.toMatch(/Bearer\s+[A-Za-z0-9_-]{20,}/i);
+    expect(dump).not.toMatch(/authorization/i);
     // Negative control: a plain "API Key" label is fine.
-    expect(dump).toMatch(/API Key/i)
-  })
+    expect(dump).toMatch(/apiKey/i);
+  });
 
   it("archived active project is warn", () => {
     useSettingsStore.setState({ activeProjectId: "arc" } as never);
@@ -173,12 +201,17 @@ describe("computeAppStatusSnapshot (VERIFY-045)", () => {
     });
     const s = computeAppStatusSnapshot();
     expect(s.project.severity).toBe("warn");
-    expect(s.project.summary).toMatch(/archived/i);
+    expect(renderStatusText(s.project.summary)).toMatch(/archived/i);
   });
 
   it("missing active project id is error", () => {
     useSettingsStore.setState({ activeProjectId: "ghost" } as never);
-    useProjectStore.setState({ projects: [], loaded: true, loading: false, lastError: null });
+    useProjectStore.setState({
+      projects: [],
+      loaded: true,
+      loading: false,
+      lastError: null,
+    });
     const s = computeAppStatusSnapshot();
     expect(s.project.severity).toBe("error");
   });
@@ -187,7 +220,7 @@ describe("computeAppStatusSnapshot (VERIFY-045)", () => {
     useSettingsStore.setState({ activeProjectId: null } as never);
     const s = computeAppStatusSnapshot();
     expect(s.project.severity).toBe("ok");
-    expect(s.project.summary).toMatch(/all projects/i);
+    expect(renderStatusText(s.project.summary)).toMatch(/all projects/i);
   });
 
   it("local safety off is warn, not error", () => {
@@ -204,15 +237,15 @@ describe("computeAppStatusSnapshot (VERIFY-045)", () => {
     const s = computeAppStatusSnapshot();
     // Worst-of: local-off + provider-on → warn
     expect(s.safety.severity).toBe("warn");
-    expect(s.safety.summary).toMatch(/Local guard: off/);
-    expect(s.safety.summary).toMatch(/Venice safe_mode: on/);
+    expect(renderStatusText(s.safety.summary)).toMatch(/Local guard: off/);
+    expect(renderStatusText(s.safety.summary)).toMatch(/Venice safe_mode: on/);
   });
 
   it("web mode desktop status is warn, not error", () => {
     // The default mock forces isElectron() to false (web mode).
     const s = computeAppStatusSnapshot();
     expect(s.desktop.severity).toBe("warn");
-    expect(s.desktop.summary).toMatch(/web/i);
+    expect(renderStatusText(s.desktop.summary)).toMatch(/web/i);
   });
 
   it("model is unknown when no model is selected", () => {
@@ -229,7 +262,7 @@ describe("computeAppStatusSnapshot (VERIFY-045)", () => {
     });
     const s = computeAppStatusSnapshot();
     expect(s.model.severity).toBe("ok");
-    expect(s.model.summary).toBe("2 models loaded.");
+    expect(renderStatusText(s.model.summary)).toBe("2 models loaded.");
   });
 
   it("reports a missing selected model separately from a healthy catalog", () => {
@@ -242,8 +275,8 @@ describe("computeAppStatusSnapshot (VERIFY-045)", () => {
     useSettingsStore.setState({ selectedModels: { chat: "missing" } } as never);
     const s = computeAppStatusSnapshot();
     expect(s.model.severity).toBe("warn");
-    expect(s.model.summary).toBe("1 models loaded.");
-    expect(s.model.detail).toMatch(/missing.*not present/i);
+    expect(renderStatusText(s.model.summary)).toBe("1 models loaded.");
+    expect(renderStatusText(s.model.detail)).toMatch(/missing.*not present/i);
   });
 
   it("does not validate an unloaded modality against a partial catalog", () => {
@@ -255,7 +288,9 @@ describe("computeAppStatusSnapshot (VERIFY-045)", () => {
       liveModelIds: ["text-model"],
       modelsByType: { text: ["text-model"] },
     });
-    useSettingsStore.setState({ selectedModels: { chat: "text-model", image: "valid-but-unloaded-image" } } as never);
+    useSettingsStore.setState({
+      selectedModels: { chat: "text-model", image: "valid-but-unloaded-image" },
+    } as never);
     const s = computeAppStatusSnapshot();
     expect(s.model.severity).toBe("ok");
   });
@@ -269,7 +304,10 @@ describe("computeSafeDiagnosticsSnapshot (VERIFY-045)", () => {
   });
 
   it("includes redacted API-key metadata but no raw key", () => {
-    useAuthStore.setState({ isConfigured: true, apiKey: "VENICE-SECRET-KEY-XYZ" } as never);
+    useAuthStore.setState({
+      isConfigured: true,
+      apiKey: "VENICE-SECRET-KEY-XYZ",
+    } as never);
     const snap = computeSafeDiagnosticsSnapshot();
     expect(snap.stores.apiKey).toMatchObject({
       configured: true,
@@ -285,8 +323,22 @@ describe("computeSafeDiagnosticsSnapshot (VERIFY-045)", () => {
   it("includes status severities, project count, media count, conversation count", () => {
     useProjectStore.setState({
       projects: [
-        { id: "p1", name: "A", createdAt: 1, updatedAt: 1, archivedAt: null, version: 1 },
-        { id: "p2", name: "B", createdAt: 1, updatedAt: 1, archivedAt: null, version: 1 },
+        {
+          id: "p1",
+          name: "A",
+          createdAt: 1,
+          updatedAt: 1,
+          archivedAt: null,
+          version: 1,
+        },
+        {
+          id: "p2",
+          name: "B",
+          createdAt: 1,
+          updatedAt: 1,
+          archivedAt: null,
+          version: 1,
+        },
       ],
       loaded: true,
       loading: false,
@@ -333,9 +385,30 @@ describe("computeSafeDiagnosticsSnapshot (VERIFY-045)", () => {
     });
     useChatStore.setState({
       conversations: [
-        { id: "c1", title: "C", messages: [], createdAt: 1, updatedAt: 1, model: "x" } as never,
-        { id: "c2", title: "D", messages: [], createdAt: 1, updatedAt: 1, model: "x" } as never,
-        { id: "c3", title: "E", messages: [], createdAt: 1, updatedAt: 1, model: "x" } as never,
+        {
+          id: "c1",
+          title: "C",
+          messages: [],
+          createdAt: 1,
+          updatedAt: 1,
+          model: "x",
+        } as never,
+        {
+          id: "c2",
+          title: "D",
+          messages: [],
+          createdAt: 1,
+          updatedAt: 1,
+          model: "x",
+        } as never,
+        {
+          id: "c3",
+          title: "E",
+          messages: [],
+          createdAt: 1,
+          updatedAt: 1,
+          model: "x",
+        } as never,
       ],
     } as never);
     useSettingsStore.setState({ activeProjectId: "p1" } as never);
@@ -352,13 +425,17 @@ describe("computeSafeDiagnosticsSnapshot (VERIFY-045)", () => {
   });
 
   it("EXCLUDES API keys, bearer tokens, auth headers, raw prompts, base64 media data, full local absolute paths", () => {
-    useAuthStore.setState({ isConfigured: true, apiKey: "VENICE-SECRET-KEY-XYZ" } as never);
+    useAuthStore.setState({
+      isConfigured: true,
+      apiKey: "VENICE-SECRET-KEY-XYZ",
+    } as never);
     useSettingsStore.setState({ activeProjectId: null } as never);
     useMediaStore.setState({
       items: [
         {
           id: "m1",
-          image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEX///+nxBvIAAAAC0lEQVQI12NgAAIAAAUAAeImBZsAAAAASUVORK5CYII=",
+          image:
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEX///+nxBvIAAAAC0lEQVQI12NgAAIAAAUAAeImBZsAAAAASUVORK5CYII=",
           prompt: "A copper city at dusk with neon signs",
           model: "flux-dev",
           timestamp: 1,
@@ -381,7 +458,9 @@ describe("computeSafeDiagnosticsSnapshot (VERIFY-045)", () => {
             {
               id: "m",
               role: "user",
-              content: "My secret API key is s" + "k-1234567890ABCDEF. Please do not leak it.",
+              content:
+                "My secret API key is s" +
+                "k-1234567890ABCDEF. Please do not leak it.",
               timestamp: 1,
             } as never,
           ],
@@ -396,12 +475,12 @@ describe("computeSafeDiagnosticsSnapshot (VERIFY-045)", () => {
     const text = serialiseSafeDiagnosticsSnapshot(snap);
 
     // Forbidden substrings
-    expect(text).not.toContain("VENICE-SECRET-KEY-XYZ")
-    expect(text).not.toContain("s" + "k-1234567890ABCDEF")
-    expect(text).not.toContain("iVBORw0KGgo")
-    expect(text).not.toContain("A copper city at dusk with neon signs")
-    expect(text).not.toMatch(/Bearer\s+[A-Za-z0-9_-]{20,}/i)
-    expect(text).not.toMatch(/authorization/i)
+    expect(text).not.toContain("VENICE-SECRET-KEY-XYZ");
+    expect(text).not.toContain("s" + "k-1234567890ABCDEF");
+    expect(text).not.toContain("iVBORw0KGgo");
+    expect(text).not.toContain("A copper city at dusk with neon signs");
+    expect(text).not.toMatch(/Bearer\s+[A-Za-z0-9_-]{20,}/i);
+    expect(text).not.toMatch(/authorization/i);
     // No full local absolute path (the snapshot does not include
     // userDataPath / logsPath by design).
     expect(text).not.toMatch(/[A-Z]:\\Program Files/);
@@ -416,7 +495,8 @@ describe("computeSafeDiagnosticsSnapshot (VERIFY-045)", () => {
     // jsdom sets userAgent to "node.js" in tests — that's fine.
     if (typeof navigator !== "undefined") {
       // The fields are best-effort: any subset is acceptable.
-      if (navigator.userAgent) expect(snap.environment.userAgent).toBe(navigator.userAgent);
+      if (navigator.userAgent)
+        expect(snap.environment.userAgent).toBe(navigator.userAgent);
     }
   });
 
@@ -449,7 +529,9 @@ describe("Phase 9 diagnostics prompt opt-in", () => {
     expect(snap.stores.prompts?.redactedExcerpts).toBeUndefined();
     // privacyExclusions marker must say "Raw Prompt Content" (no opt-in)
     expect(snap.stores.privacyExclusions).toContain("Raw Prompt Content");
-    expect(snap.stores.privacyExclusions).not.toContain("Raw Prompt Content (opt-in)");
+    expect(snap.stores.privacyExclusions).not.toContain(
+      "Raw Prompt Content (opt-in)",
+    );
   });
 
   it("includes bounded redacted excerpts when diagnosticsIncludePrompts is true", () => {
@@ -470,7 +552,9 @@ describe("Phase 9 diagnostics prompt opt-in", () => {
     expect(excerpts?.[0].hash.length).toBe(8);
     // excerpt is sanitised + collapsed (single trailing ellipsis if truncated)
     expect(excerpts?.[0].redactedExcerpt).not.toContain("\n");
-    expect(snap.stores.privacyExclusions).toContain("Raw Prompt Content (opt-in)");
+    expect(snap.stores.privacyExclusions).toContain(
+      "Raw Prompt Content (opt-in)",
+    );
   });
 
   it("redacts API keys and bearer tokens inside redacted excerpts", () => {

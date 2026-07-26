@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 /**
  * @fileoverview Animated Mio anime mascot component for Character Creator.
  * Uses repository mascot GIF assets with prefers-reduced-motion static fallback.
@@ -13,7 +14,10 @@ export interface CharacterCreatorMascotProps {
   className?: string;
 }
 
-const SIZE_CLASSES: Record<NonNullable<CharacterCreatorMascotProps["size"]>, string> = {
+const SIZE_CLASSES: Record<
+  NonNullable<CharacterCreatorMascotProps["size"]>,
+  string
+> = {
   nav: "w-[20px] h-[20px]",
   sm: "w-8 h-8",
   md: "w-12 h-12",
@@ -25,6 +29,7 @@ export function CharacterCreatorMascot({
   decorative = true,
   className = "",
 }: CharacterCreatorMascotProps) {
+  const { t: tRuntime } = useTranslation("common");
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -46,7 +51,13 @@ export function CharacterCreatorMascot({
   return (
     <img
       src={imageSrc}
-      alt={decorative ? "" : "Character Creator Mascot"}
+      alt={
+        decorative
+          ? ""
+          : tRuntime(
+              "runtimeGenerated.components.characterCreator.charactercreatormascot.attribute.characterCreatorMascot",
+            )
+      }
       aria-hidden={decorative}
       className={`object-contain bg-transparent shrink-0 ${sizeClass} ${className}`.trim()}
     />

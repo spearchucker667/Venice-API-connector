@@ -9,11 +9,9 @@ import {
   type GenerationRecipe,
   type RecipeCompatibilityReport,
 } from "../../types/project";
-import {
-  getImageModelCapabilities,
-} from "../../config/image-model-capabilities";
+import { getImageModelCapabilities } from "../../config/image-model-capabilities";
 import { RecipeComparison } from "./recipe-comparison";
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from "react-i18next";
 
 const STATUS_TONE: Record<RecipeCompatibilityReport["status"], string> = {
   compatible: "bg-success/10 text-success border-success/30",
@@ -52,7 +50,11 @@ export function RecipeCompatibilityCard({
   onToggleComparison,
   className,
 }: RecipeCompatibilityCardProps) {
-  const caps = useMemo(() => getImageModelCapabilities(currentModel), [currentModel]);
+  const { t: tRuntime } = useTranslation("common");
+  const caps = useMemo(
+    () => getImageModelCapabilities(currentModel),
+    [currentModel],
+  );
   const report = useMemo<RecipeCompatibilityReport | null>(() => {
     if (!recipe) return null;
     return getRecipeCompatibilityReport(recipe, caps, true);
@@ -62,7 +64,8 @@ export function RecipeCompatibilityCard({
     return (
       <div className={className} data-testid="recipe-compatibility-empty">
         <div className="text-[12px] text-text-secondary">
-          <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.text.thisItemHasNoRecipeToCompare" /></div>
+          <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.text.thisItemHasNoRecipeToCompare" />
+        </div>
       </div>
     );
   }
@@ -79,17 +82,26 @@ export function RecipeCompatibilityCard({
         <div className="flex items-center gap-2">
           <span className="font-medium">{STATUS_LABEL[report.status]}</span>
           <span className="opacity-90">
-            <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.text.for" /> <span className="font-medium">{caps.label}</span>
+            <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.text.for" />{" "}
+            <span className="font-medium">{caps.label}</span>
           </span>
         </div>
         {report.unsupportedFields.length > 0 && (
-          <span className="text-[12px] opacity-80" title={report.unsupportedFields.join(", ")}>
-            {report.unsupportedFields.length} <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.text.unsupportedField" />{report.unsupportedFields.length === 1 ? "" : "s"}
+          <span
+            className="text-[12px] opacity-80"
+            title={report.unsupportedFields.join(", ")}
+          >
+            {report.unsupportedFields.length}{" "}
+            <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.text.unsupportedField" />
+            {report.unsupportedFields.length === 1 ? "" : "s"}
           </span>
         )}
       </div>
       {report.issues.length > 0 && (
-        <ul className="mt-1.5 space-y-0.5" data-testid="recipe-compatibility-issues">
+        <ul
+          className="mt-1.5 space-y-0.5"
+          data-testid="recipe-compatibility-issues"
+        >
           {report.issues.map((issue, idx) => (
             <li
               key={`${issue.field}-${idx}`}
@@ -101,7 +113,8 @@ export function RecipeCompatibilityCard({
                     : "text-text-secondary"
               }`}
             >
-              <span className="font-medium">{issue.field}:</span> {issue.message}
+              <span className="font-medium">{issue.field}:</span>{" "}
+              {issue.message}
             </li>
           ))}
         </ul>
@@ -114,7 +127,8 @@ export function RecipeCompatibilityCard({
             className="px-2 py-1 text-[12px] rounded-md bg-accent text-accent-fg hover:bg-accent-hover transition-colors cursor-pointer"
             data-testid="recipe-use-with-current-model"
           >
-            <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.action.useWith" /> {caps.label}
+            <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.action.useWith" />{" "}
+            {caps.label}
           </button>
         )}
         {onUseOriginal && (
@@ -123,9 +137,12 @@ export function RecipeCompatibilityCard({
             onClick={() => onUseOriginal(recipe)}
             className="px-2 py-1 text-[12px] rounded-md bg-surface border border-border text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
             data-testid="recipe-use-original"
-            title="Send the original recipe to Image Studio without sanitization"
+            title={tRuntime(
+              "runtimeGenerated.components.gallery.recipeCompatibilityCard.attribute.sendTheOriginalRecipeToImageStudioWithoutSanitization",
+            )}
           >
-            <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.action.useOriginal" /></button>
+            <Trans i18nKey="common:surface.galleryRecipeCompatibilityCard.action.useOriginal" />
+          </button>
         )}
         {onToggleComparison && (
           <button
@@ -135,13 +152,22 @@ export function RecipeCompatibilityCard({
             data-testid="recipe-toggle-comparison"
             aria-expanded={showComparison}
           >
-            {showComparison ? "Hide comparison" : "Show comparison"}
+            {showComparison
+              ? tRuntime(
+                  "runtimeGenerated.components.gallery.recipeCompatibilityCard.text.hideComparison",
+                )
+              : tRuntime(
+                  "runtimeGenerated.components.gallery.recipeCompatibilityCard.text.showComparison",
+                )}
           </button>
         )}
       </div>
       {showComparison && (
         <div className="mt-2">
-          <RecipeComparison original={recipe} sanitized={report.sanitizedRecipe} />
+          <RecipeComparison
+            original={recipe}
+            sanitized={report.sanitizedRecipe}
+          />
         </div>
       )}
     </div>

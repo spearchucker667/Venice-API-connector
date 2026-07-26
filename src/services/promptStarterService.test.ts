@@ -42,7 +42,9 @@ describe("promptStarterService", () => {
     ];
 
     for (const promptText of originalPrompts) {
-      const found = PROMPT_STARTERS.find((p) => p.prompt === promptText);
+      const found = PROMPT_STARTERS.find(
+        (p) => p.fallbackPrompt === promptText,
+      );
       expect(found).toBeDefined();
     }
   });
@@ -79,8 +81,18 @@ describe("promptStarterService", () => {
     // But if we mock getRecentIds or manipulate localStorage directly to simulate 82 recent IDs:
     const recentKey = "venice-forge.recentPromptStarterIds";
     const almostAllIds = PROMPT_STARTERS.filter((p) =>
-      ["writing", "coding", "learning", "research", "creative", "productivity", "analysis"].includes(p.category)
-    ).slice(0, 82).map((p) => p.id);
+      [
+        "writing",
+        "coding",
+        "learning",
+        "research",
+        "creative",
+        "productivity",
+        "analysis",
+      ].includes(p.category),
+    )
+      .slice(0, 82)
+      .map((p) => p.id);
     if (typeof localStorage !== "undefined") {
       localStorage.setItem(recentKey, JSON.stringify(almostAllIds));
     }
@@ -103,23 +115,22 @@ describe("promptStarterService", () => {
     // Image category — 20 starters available
     const imagePrompts = getPromptStartersForCategory("image", 4);
     expect(imagePrompts).toHaveLength(4);
-    // All returned prompts should be unique strings
-    expect(new Set(imagePrompts).size).toBe(4);
+    expect(new Set(imagePrompts.map((prompt) => prompt.id)).size).toBe(4);
 
     // Audio category — 15 starters available
     const audioPrompts = getPromptStartersForCategory("audio", 3);
     expect(audioPrompts).toHaveLength(3);
-    expect(new Set(audioPrompts).size).toBe(3);
+    expect(new Set(audioPrompts.map((prompt) => prompt.id)).size).toBe(3);
 
     // Music category — 15 starters available
     const musicPrompts = getPromptStartersForCategory("music", 4);
     expect(musicPrompts).toHaveLength(4);
-    expect(new Set(musicPrompts).size).toBe(4);
+    expect(new Set(musicPrompts.map((prompt) => prompt.id)).size).toBe(4);
 
     // Embeddings category — 15 starters available
     const embeddingsPrompts = getPromptStartersForCategory("embeddings", 3);
     expect(embeddingsPrompts).toHaveLength(3);
-    expect(new Set(embeddingsPrompts).size).toBe(3);
+    expect(new Set(embeddingsPrompts.map((prompt) => prompt.id)).size).toBe(3);
 
     // Category boundaries: prompts from 'image' should not appear in 'audio'
     const imageSet = new Set(imagePrompts);
