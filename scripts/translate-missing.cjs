@@ -36,11 +36,11 @@ const RESOURCES_DIR = path.join(PROJECT_ROOT, 'src/i18n/resources');
 const STATE_PATH = path.join(PROJECT_ROOT, 'artifacts/i18n/translate-state.json');
 const REPORT_PATH = path.join(PROJECT_ROOT, 'artifacts/i18n/translate-report.json');
 const VENICE_BASE_URL = process.env.OPENAI_BASE_URL || 'https://api.venice.ai/api/v1';
-const VENICE_API_KEY = process.env.VENICE_API_KEY;
+const veniceAuth = process.env.VENICE_API_KEY;
 const MODEL = process.env.VENICE_TRANSLATE_MODEL || 'zai-org-glm-5-2';
 
-if (!VENICE_API_KEY) {
-  console.error('VENICE_API_KEY is required.');
+if (!veniceAuth) {
+  console.error('Venice API key is required. Set VENICE_API_KEY in the environment.');
   process.exit(2);
 }
 
@@ -227,7 +227,7 @@ async function callVenice(messages, attemptBudget = 3) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${VENICE_API_KEY}`,
+          Authorization: `Bearer ${veniceAuth}`,
         },
         body: JSON.stringify({
           model: MODEL,
