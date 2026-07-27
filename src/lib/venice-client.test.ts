@@ -187,7 +187,7 @@ describe('venice-client (lib)', () => {
     )
   })
 
-  // VERIFY-006 extension: BUG-2 / veniceBlob() and veniceFormData() must
+  // VERIFY-006 extension: BUG-2 (FIXED) / veniceBlob() and veniceFormData() must
   // also forward the AbortSignal. The previous implementation declared
   // `init.signal` but never passed it to desktopVenice.request(), only
   // consulting it post-hoc for an `aborted` check. The IPC layer never
