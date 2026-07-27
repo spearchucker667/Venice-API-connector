@@ -25,6 +25,13 @@ describe('readBoundedJsonFile helper', () => {
     );
   });
 
+  it('rejects valid JSON that is not an object or array', async () => {
+    const file = new File(['123'], 'test.json', { type: 'application/json' });
+    await expect(readBoundedJsonFile(file, { maxBytes: 1000 })).rejects.toThrow(
+      /Invalid JSON structure: expected an object or array/
+    );
+  });
+
   it('rejects invalid JSON content without surfacing raw parser messages', async () => {
     const file = new File(['{invalid'], 'test.json', { type: 'application/json' });
     await expect(readBoundedJsonFile(file, { maxBytes: 1000 })).rejects.toThrow(
