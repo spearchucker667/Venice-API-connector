@@ -112,6 +112,38 @@ describe("extractPdfText()", () => {
     expect(result.text.length).toBeLessThanOrEqual(100_100); // small buffer for ellipsis
   });
 
+
+  it("continues to next page if getPage rejects", async () => {
+    mockGetPage.mockImplementation(async (pageNum: number) => {
+      if (pageNum === 1) {
+        throw new Error("getPage failure");
+      }
+      return {
+        getTextContent: async () => makeTextContent([{ str: `Page ${pageNum} text.`, hasEOL: true }]),
+      };
+    });
+
+    const result = await extractPdfText(makeFileLike());
+    expect(result.pageCount).toBe(2);
+    expect(result.text).not.toContain("Page 1 text.");
+    expect(result.text).toContain("Page 2 text.");
+  });
+
+  it("continues to next page if getTextContent rejects", async () => {
+    mockGetPage.mockImplementation(async (pageNum: number) => ({
+      getTextContent: async () => {
+        if (pageNum === 1) {
+          throw new Error("getTextContent failure");
+        }
+        return makeTextContent([{ str: `Page ${pageNum} text.`, hasEOL: true }]);
+      },
+    }));
+
+    const result = await extractPdfText(makeFileLike());
+    expect(result.pageCount).toBe(2);
+    expect(result.text).not.toContain("Page 1 text.");
+    expect(result.text).toContain("Page 2 text.");
+  });
   it("throws on corrupt PDFs (getDocument rejects)", async () => {
     const { getDocument } = await import("pdfjs-dist");
     vi.mocked(getDocument).mockReturnValueOnce({
