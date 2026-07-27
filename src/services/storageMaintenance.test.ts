@@ -32,27 +32,38 @@ describe("storageMaintenance", () => {
     generatedAt: new Date().toISOString(),
   };
 
+  let plan: ReturnType<typeof createStorageMaintenancePlan>;
+  let actionsById: Record<string, ReturnType<typeof createStorageMaintenancePlan>['actions'][0]>;
+
   beforeEach(() => {
     for (const k of Object.keys(localStorageStore)) delete localStorageStore[k]
     vi.restoreAllMocks()
+    plan = createStorageMaintenancePlan(mockInventory);
+    actionsById = plan.actions.reduce((acc, a) => {
+      acc[a.id] = a;
+      return acc;
+    }, {} as Record<string, typeof plan.actions[0]>);
   });
 
   it("creates non-destructive actions", () => {
-    const plan = createStorageMaintenancePlan(mockInventory);
-    const refresh = plan.actions.find((a) => a.id === "refresh-inventory");
+    const refresh = actionsById["refresh-inventory"];
     expect(refresh?.destructive).toBe(false);
   });
 
   it("destructive actions require confirmation", () => {
-    const plan = createStorageMaintenancePlan(mockInventory);
-    const clearCache = plan.actions.find((a) => a.id === "clear-model-cache");
+    const clearCache = actionsById["clear-model-cache"];
     expect(clearCache?.destructive).toBe(true);
     expect(clearCache?.requiresConfirmation).toBe(true);
   });
 
   it("does not create forbidden actions like delete-all", () => {
-    const plan = createStorageMaintenancePlan(mockInventory);
-    const deleteAll = plan.actions.find((a) => a.id.includes("delete-all"));
+    let deleteAll;
+    for (const id in actionsById) {
+      if (id.includes("delete-all")) {
+        deleteAll = actionsById[id];
+        break;
+      }
+    }
     expect(deleteAll).toBeUndefined();
   });
 
@@ -66,8 +77,7 @@ describe("storageMaintenance", () => {
   });
 
   it("includes a clear-character-image-cache action", () => {
-    const plan = createStorageMaintenancePlan(mockInventory);
-    const action = plan.actions.find((a) => a.id === "clear-character-image-cache");
+    const action = actionsById["clear-character-image-cache"];
     expect(action).toBeDefined();
     expect(action?.destructive).toBe(true);
     expect(action?.affectedCategories).toContain("cache");
@@ -89,8 +99,12 @@ describe("storageMaintenance", () => {
       issues: [{ id: "issue-1", severity: "warn", sourceCategory: "prompts", message: "missing project", repairable: true }],
       generatedAt: new Date().toISOString(),
     };
-    const plan = createStorageMaintenancePlan(inventoryWithIssues);
-    const archiveOrphans = plan.actions.find((a) => a.id === "archive-orphans");
+    const planWithIssues = createStorageMaintenancePlan(inventoryWithIssues);
+    const actionsWithIssuesById = planWithIssues.actions.reduce((acc, a) => {
+      acc[a.id] = a;
+      return acc;
+    }, {} as Record<string, typeof planWithIssues.actions[0]>);
+    const archiveOrphans = actionsWithIssuesById["archive-orphans"];
     expect(archiveOrphans).toBeDefined();
     expect(archiveOrphans?.dryRunOnly).toBe(true);
 
