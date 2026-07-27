@@ -70,4 +70,10 @@ describe("cryptoService", () => {
     expect(decrypted.every((d) => d !== null)).toBe(true);
     expect(decrypted).toEqual(payloads);
   });
+
+  it("rejects circular or non-serializable data", async () => {
+    const circularObj: any = {};
+    circularObj.self = circularObj;
+    await expect(encryptData(circularObj)).rejects.toThrow("Cannot encrypt circular or non-serializable data.");
+  });
 });
