@@ -86,7 +86,12 @@ export function extractCharacterSceneContext(input: CharacterSceneContextInput):
     characterName: character?.name,
     visibleContext: contextText.trim(),
     selectedTurnText: activeMessageId ? visible[selectedIndex]?.text.trim() : undefined,
-    sourceMessageIds: window.map((m) => m.id).filter((id): id is string => typeof id === 'string'),
+    sourceMessageIds: window.reduce<string[]>((acc, m) => {
+      if (typeof m.id === 'string') {
+        acc.push(m.id);
+      }
+      return acc;
+    }, []),
   };
 }
 
