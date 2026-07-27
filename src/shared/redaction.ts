@@ -64,23 +64,17 @@ export function redactSecrets<T>(value: T, seen = new WeakSet<object>()): T {
   if (seen.has(value)) return "[Circular]" as T;
   seen.add(value);
 
-  let result: unknown;
-  if (Array.isArray(value)) {
-    result = value.map((item) => redactSecrets(item, seen));
-  } else {
-    const redacted: Record<string, unknown> = {};
-    for (const [key, entry] of Object.entries(value as Record<string, unknown>)) {
-      if (SECRET_KEY_PATTERN.test(key)) {
-        redacted[key] = "[REDACTED]";
-      } else {
-        redacted[key] = redactSecrets(entry, seen);
-      }
-    }
-    result = redacted;
-  }
+  if (Array.isArray(value)) return value.map((item) => redactSecrets(item, seen)) as T;
 
-  seen.delete(value);
-  return result as T;
+  const redacted: Record<string, unknown> = {};
+  for (const [key, entry] of Object.entries(value as Record<string, unknown>)) {
+    if (SECRET_KEY_PATTERN.test(key)) {
+      redacted[key] = "[REDACTED]";
+    } else {
+      redacted[key] = redactSecrets(entry, seen);
+    }
+  }
+  return redacted as T;
 }
 
 /**
