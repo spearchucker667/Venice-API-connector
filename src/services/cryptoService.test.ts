@@ -3,10 +3,11 @@
 import { describe, expect, it, beforeEach } from "vitest";
 // @ts-expect-error — fake-indexeddb ESM exports lack proper typings
 import FDBFactory from "fake-indexeddb/lib/FDBFactory";
-import { encryptData, decryptData, decryptDataResult } from "./cryptoService";
+import { encryptData, decryptData, decryptDataResult, _resetKeyCache } from "./cryptoService";
 
 /** Resets the IndexedDB instance before each test. */
 beforeEach(() => {
+  _resetKeyCache();
   global.indexedDB = new FDBFactory();
 });
 
@@ -62,7 +63,26 @@ describe("cryptoService", () => {
     expect(result).toBeNull();
   });
 
-  /** BUG-001 regression: concurrent encrypt calls must not overwrite the key. */
+
+  it("re-generates the key when the DB is wiped (stale-latch guard)", async () => {
+    // First encrypt creates and caches the key in the DB
+    const first = await encryptData({ v: 1 });
+    expect(first).not.toBeNull();
+
+    // Simulate site-data clear + service restart
+    _resetKeyCache();
+    global.indexedDB = new FDBFactory();
+
+    // After the reset a new key must be generated;
+    // data encrypted with the old key must NOT decrypt
+    const second = await encryptData({ v: 2 });
+    const oldResult = await decryptData(first);   // old ciphertext, new key
+    expect(oldResult).toBeNull();                 // must fail — different key
+    const newResult = await decryptData(second);  // new ciphertext, new key
+    expect(newResult).toEqual({ v: 2 });          // must succeed
+  });
+
+  /** Regression test for bug 001: concurrent encrypt calls must not overwrite the key. */
   it("survives concurrent encrypt calls without key overwrite", async () => {
     const payloads = Array.from({ length: 10 }, (_, i) => ({ id: `race-${i}`, value: Math.random() }));
     const encrypted = await Promise.all(payloads.map((p) => encryptData(p)));

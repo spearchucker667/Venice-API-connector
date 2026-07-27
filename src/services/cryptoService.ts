@@ -139,3 +139,8 @@ export async function decryptData<T>(encryptedPayload: EncryptedPayload | T): Pr
   const result = await decryptDataResult<T>(encryptedPayload);
   return result.ok ? result.data : null;
 }
+
+/** @internal — call only from test teardown. */
+export function _resetKeyCache(): void {
+  keyPromise = null;
+}
