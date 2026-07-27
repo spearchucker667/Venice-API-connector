@@ -29,6 +29,31 @@ import {
 } from "../../types/rp";
 import { Trans, useTranslation } from "react-i18next";
 
+
+const parseKeys = (value: string) => {
+  const result: string[] = [];
+  const parts = value.split(",");
+
+  if (parts.length > 30) {
+    const seen = new Set<string>();
+    for (let i = 0; i < parts.length; i++) {
+      const k = parts[i].trim().toLowerCase();
+      if (k && !seen.has(k)) {
+        seen.add(k);
+        result.push(k);
+      }
+    }
+  } else {
+    for (let i = 0; i < parts.length; i++) {
+      const k = parts[i].trim().toLowerCase();
+      if (k && !result.includes(k)) {
+        result.push(k);
+      }
+    }
+  }
+  return result;
+};
+
 const INSERTION_MODES: Array<{ value: LorebookInsertionMode; label: string }> =
   [
     {
@@ -383,14 +408,7 @@ export function LorebookEditor({
               id="lb-tags"
               value={draft.tags.join(", ")}
               onChange={(e) => {
-                const tags = Array.from(
-                  new Set(
-                    e.target.value
-                      .split(",")
-                      .map((t) => t.trim().toLowerCase())
-                      .filter(Boolean),
-                  ),
-                ).slice(0, MAX_TAGS);
+                const tags = parseKeys(e.target.value).slice(0, MAX_TAGS);
                 update("tags", tags);
               }}
               className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-[14px] text-text-primary outline-none focus:border-accent transition-colors"
@@ -453,15 +471,7 @@ function EntryRow({
 }) {
   const { t: tRuntime } = useTranslation("common");
   const [keysText, setKeysText] = useState(entry.keys.join(", "));
-  const parseKeys = (value: string) =>
-    Array.from(
-      new Set(
-        value
-          .split(",")
-          .map((k) => k.trim().toLowerCase())
-          .filter(Boolean),
-      ),
-    );
+
   return (
     <div className="bg-surface-elevated border border-border rounded-lg p-3 space-y-2">
       <div className="flex items-center gap-2">
