@@ -144,7 +144,7 @@ export async function saveRpChat(chat: RpChatV1): Promise<RpChatV1> {
   }
   const normalized = normalizeChat(next);
   if (!normalized) throw new Error("Invalid RP chat.");
-  // VERIFY-014 / B1 fix: gate the save with the safety guard. The `userMessage`
+  // VERIFY-014 / B1: gate the save with the safety guard. The `userMessage`
   // is the most recent user message (or empty on a brand-new chat) — the guard
   // also walks the full `messages` array so historical content is checked.
   const lastUser = [...normalized.messages].reverse().find((m) => m.role === "user");
