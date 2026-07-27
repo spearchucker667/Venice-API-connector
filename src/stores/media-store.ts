@@ -61,7 +61,7 @@ interface MediaState {
   byId: (id: string) => MediaItem | undefined;
   childrenOf: (id: string) => MediaItem[];
   parentOf: (id: string) => MediaItem | undefined;
-  /** BUG-008 regression guard: fetch a single record by id from IDB. Used
+  /** Bug 008 regression guard: fetch a single record by id from IDB. Used
    *  by the gallery inspector when the parent/child of the inspected
    *  record is outside the currently loaded page. The returned record is
    *  also merged into the in-memory cache so subsequent byId / childrenOf

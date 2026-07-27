@@ -669,7 +669,7 @@ describe('media filter / sort / search', () => {
   })
 })
 
-// BUG-008 regression guard: the gallery inspector must be able to
+// Bug 008 regression guard: the gallery inspector must be able to
 // resolve the parent/children of an inspected record even when those
 // records are not in the currently loaded page. The store exposes
 // `loadById(id)` which fetches a single record from IDB, migrates it
@@ -677,7 +677,7 @@ describe('media filter / sort / search', () => {
 // cache. Without this, a user who has scrolled past page 1 cannot see
 // lineage information for a record whose parent/children live on
 // page 1.
-describe('media store — BUG-008 loadById', () => {
+describe('media store — Bug 008 loadById', () => {
   beforeEach(() => {
     mockService.__reset()
     useMediaStore.setState({
