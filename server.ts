@@ -146,7 +146,9 @@ export function applyVeniceProxyHeaders(
     proxyReq.removeHeader(header);
   }
 
-  proxyReq.setHeader("Authorization", `Bearer ${apiKey}`);
+  // eslint-disable-next-line no-control-regex
+  const safeApiKey = (apiKey || "").replace(/[\x00-\x1F\x7F]/g, "");
+  proxyReq.setHeader("Authorization", `Bearer ${safeApiKey}`);
   proxyReq.setHeader("Host", VENICE_API_HOST);
 
   if (req.method !== "GET" && req.body) {
@@ -277,7 +279,8 @@ export function createServerApp() {
     }
     if (req.method === "POST") {
       const key = typeof req.body?.key === "string" ? req.body.key.trim() : "";
-      if (!key || key.length > 512) {
+      // eslint-disable-next-line no-control-regex
+      if (!key || key.length > 512 || /[\x00-\x1F\x7F]/.test(key)) {
         res.status(400).json({ error: "A valid API key is required." });
         return;
       }
@@ -309,7 +312,8 @@ export function createServerApp() {
     }
     if (req.method === "POST") {
       const key = typeof req.body?.key === "string" ? req.body.key.trim() : "";
-      if (!key || key.length > 512) {
+      // eslint-disable-next-line no-control-regex
+      if (!key || key.length > 512 || /[\x00-\x1F\x7F]/.test(key)) {
         res.status(400).json({ error: "A valid Jina API key is required." });
         return;
       }
