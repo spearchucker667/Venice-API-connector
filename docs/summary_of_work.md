@@ -4,7 +4,30 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
-**Date:** 2026-07-27 (Right-click context menus + Image Studio Save As correction — `VF-CONTEXT-MENUS-001`)
+**Date:** 2026-07-27 (Media Studio "Save As" affordance — `VF-MEDIA-STUDIO-SAVEAS-001`)
+
+**Work order:** user-reported bug: "When saving from Media Studio, only a JSON sidecar file is saved instead of the actual image."
+
+**Scope:** the user clicked the existing "Export" toolbar button on Media Studio and received a JSON sidecar envelope (`venice-forge-export-YYYY-MM-DD.json` produced by `buildExportBundle` + `serialiseBundle` in `src/stores/media-export-bundle.ts` and written by `runExport` in `src/components/gallery/gallery-view.tsx`). AGENTS.md §13 confirms this is intentional behaviour for the sync-folder export flow — the bundle references durable `venice-media://HASH` URLs but does NOT bundle the actual bytes. The user expected a single-image Save As that writes the raw PNG to disk via the canonical desktop Save As dialog, mirroring the Image Studio flow committed in `301ad518`.
+
+**Verified finding:** until now the Media Studio had **no** single-item "Save As" affordance. The card quick actions were Favorite / Lock / Delete only, and the context menu (added in `301ad518`) was Open / Favorite / Lock / Delete. The Inspector's `inspector-download-generated-media` button writes the actual PNG via `desktopFiles.saveGeneratedMedia(item.generatedMediaId, ...)` but is gated behind `item.generatedMediaId && isElectron()`, so legacy items and items without `generatedMediaId` could not be saved at all.
+
+**Implementation:**
+- `src/components/gallery/media-card.tsx` — added `handleSaveAs(item)` that resolves the card's validated source URL via `mediaItemSource(item)`, fetches it as a Blob, converts to a data URL with `FileReader`, and on Electron routes through `desktopMedia.persistGeneratedImage(dataUrl)` then `desktopFiles.saveGeneratedMedia(mediaId, filename)` (the canonical atomic-byte-custody, MIME-sniffed, content-addressed-store write followed by native `dialog.showSaveDialog`). On Web the same code falls back to a `URL.createObjectURL(blob)` anchor with `revokeObjectURL` cleanup. Filename pattern `venice-media-{id-slice(0,8)}.{ext}` keyed off item `id` + MIME extension, similar to Image Studio's `venice-image-{n}.{ext}`.
+- New entry `Save As…` in the card context menu, positioned between `Open` and the favorite/lock group, hidden for video and audio cards (which need a different save path). Uses the canonical `common:actions.saveAs` key that was added to `en-US/common.json` during `301ad518`.
+- Errors are caught and surfaced via the existing `toast.error(t("imageStudioRuntime.imageSaveFailed"))` / `toast.error(t("imageStudioRuntime.imageSaveFailed"))` channels; the renderer never assumes Electron mode and the same code path produces the correct behaviour on both transports per §9 single-dispatch-bottleneck contract.
+
+**Regression coverage:**
+- 21 tests in `src/stores/media-export-bundle.test.ts` continue to pass — the JSON sidecar writer is unchanged (the user's expectation is now served by a different affordance rather than by changing the sidecar semantics).
+- 8 tests in `src/services/desktopBridge.test.ts` continue to pass — the IPC contract surface is unchanged.
+- 63 tests in the gallery segment pass — including the gallery commands, lineage viewer, recipe comparison, and compatibility-card segments that consume `mediaItemSource(item)`. The new menu item does not regress the existing render pathway.
+- Full Vitest serial run: 4818 passed / 1 skipped / 442 files in 339 s. zero-warning ESLint, both TypeScript projects clean.
+
+**Validation under Node 22.13.0 / npm 10.9.2:** zero-warning ESLint (`--max-warnings=0`), both TypeScript projects clean, full Vitest serial run 4818 passed / 1 skipped / 442 files, `verify:i18n` PASS (12 locales / 12 namespaces — new `contextMenu.*` and `actions.*` keys register cleanly via `--allow-missing-markers`), `verify:i18n-hardcoded-regressions` reports 0 regressions, `verify:contracts` 103 PASS, `verify:safety-guard` PASS, `verify:markdown-links` 245 files OK. `npm run build` (Vite + esbuild + Electron main+preload) PASS. Manual headed native-dialog and sync-folder exercise remain external under `VF-VERIFY-005`.
+
+**Remaining work:** no locally actionable item remains in `VF-MEDIA-STUDIO-SAVEAS-001`. Headed native Save As on macOS/Win and packaged app verification remain on `VF-VERIFY-005`. Headed renderer-IPC byte-custody correctness for `desktopMedia.persistGeneratedImage` + `desktopFiles.saveGeneratedMedia` remains external.
+
+### Prior Session Summary (Right-click context menus + Image Studio Save As correction — `VF-CONTEXT-MENUS-001`)
 
 **Work order:** user-reported bugs:
 1. Cannot right-click within app (chat copy/paste, media save/save-as).
