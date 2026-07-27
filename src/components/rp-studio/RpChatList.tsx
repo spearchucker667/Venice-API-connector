@@ -375,8 +375,9 @@ export function NewChatDialog({
       setError("Pick at least one character.");
       return;
     }
+    const cardsMap = new Map(cards.map((c) => [c.id, c]));
     const resolvedCards = selectedCards
-      .map((id) => cards.find((c) => c.id === id))
+      .map((id) => cardsMap.get(id))
       .filter((c): c is NonNullable<typeof c> => c !== undefined);
     if (resolvedCards.length === 0) {
       setError("Picked characters could not be resolved.");
