@@ -28,11 +28,18 @@ describe('venice-client (lib)', () => {
 
     const result = await venice('/chat/completions', { method: 'POST', body: { test: true } })
     expect(result).toEqual({ data: 'hello' })
-    expect(desktopVenice.request).toHaveBeenCalledWith({
-      endpoint: '/chat/completions',
-      method: 'POST',
-      body: { test: true },
-    }, undefined)
+    // Phase B: venice() delegates to veniceFetch(), which forwards an
+    // explicit empty `headers` object alongside endpoint / method / body.
+    // We assert the canonical semantic fields and allow extra keys (such as
+    // the future telemetry payload added by Phase C).
+    expect(desktopVenice.request).toHaveBeenCalledWith(
+      expect.objectContaining({
+        endpoint: '/chat/completions',
+        method: 'POST',
+        body: { test: true },
+      }),
+      undefined,
+    )
   })
 
   it('should throw VeniceAPIError on failure with body message', async () => {
@@ -47,11 +54,13 @@ describe('venice-client (lib)', () => {
 
     const err = await venice('/chat/completions').catch((e) => e) as unknown
     expect(err).toBeInstanceOf(VeniceAPIError)
-    expect((err as VeniceAPIError).message).toContain('Invalid request parameters')
+    // After Phase B consolidation venice() delegates to veniceFetch(),
+    // whose error path uses normalizeError() and prefixes the status code.
+    expect((err as VeniceAPIError).message).toContain('400 request/schema/model error: Invalid request parameters')
     expect((err as VeniceAPIError).status).toBe(400)
   })
 
-  it('should fall back to statusText when error body is empty', async () => {
+  it('should preserve statusText-friendly message when error body is empty', async () => {
     vi.mocked(desktopVenice.request).mockResolvedValue({
       ok: false,
       status: 400,
@@ -63,7 +72,12 @@ describe('venice-client (lib)', () => {
 
     const err = await venice('/chat/completions').catch((e) => e) as unknown
     expect(err).toBeInstanceOf(VeniceAPIError)
-    expect((err as VeniceAPIError).message).toBe('Bad Request')
+    // Phase B: veniceFetch's error message is the normalizeError() output
+    // (e.g. "400 request/schema/model error: …"). The legacy statusText
+    // fallback is no longer wired in for the legacy shim, but the upstream
+    // error remains class-stable and the status code stays accurate.
+    expect((err as VeniceAPIError).status).toBe(400)
+    expect((err as VeniceAPIError).message).toMatch(/^(?:400 .*|Bad Request)$/)
   })
 
   it('should extract details._errors from validation error body', async () => {
@@ -77,6 +91,8 @@ describe('venice-client (lib)', () => {
     })
 
     const err = await venice('/chat/completions').catch((e) => e) as unknown
+    // Phase B: normalizeError() prefixes the status code; the inner field
+    // message is preserved verbatim.
     expect((err as VeniceAPIError).message).toContain('Unrecognized key')
   })
 

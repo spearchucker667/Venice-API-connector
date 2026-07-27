@@ -23,6 +23,7 @@ import { sanitizeErrorText } from "../../src/shared/redaction";
 import { MUSIC_SAFE_ERROR_MESSAGES, toUserFacingMusicError, toUserFacingVideoError } from "../../src/services/task-errors";
 import { performVeniceRequest } from "./veniceClient";
 import { logError } from "./logger";
+import { publishInspectorRequest, publishInspectorCompletion } from "./inspectorTelemetry";
 import { buildAudioRetrieveRequest } from '../../src/services/media-request-adapter';
 import { normalizeAudioRetrieveResponse } from '../../src/services/audio-retrieve-normalizer';
 import { persistGeneratedMedia } from './generatedMediaStore';
@@ -446,6 +447,13 @@ async function runPoll(taskId: string): Promise<void> {
         schedulePoll(taskId, POLL_INTERVAL_MS);
       }
     } else if (task.type === "music") {
+      const musicTelemetryId = publishInspectorRequest({
+        source: "main-background",
+        transport: "venice",
+        endpoint: "/audio/retrieve",
+        method: "POST",
+        summaries: { taskId, model: taskModel || undefined },
+      });
       const response = await performVeniceRequest({
         endpoint: "/audio/retrieve",
         method: "POST",
@@ -454,13 +462,34 @@ async function runPoll(taskId: string): Promise<void> {
       });
 
       const latestTask = state.tasks[taskId];
-      if (!latestTask || isTerminalStatus(latestTask.status)) return;
+      if (!latestTask || isTerminalStatus(latestTask.status)) {
+        publishInspectorCompletion({
+          source: "main-background",
+          transport: "venice",
+          endpoint: "/audio/retrieve",
+          method: "POST",
+          summaries: { taskId, model: taskModel || undefined },
+          eventId: musicTelemetryId,
+          error: "aborted",
+        });
+        return;
+      }
 
       const currentPolls = (latestTask.pollAttempts ?? 0) + 1;
 
       if (!response.ok) {
         const body = response.body as Record<string, unknown> | undefined;
         const message = typeof body?.error === "string" ? body.error : "Audio retrieve failed";
+        publishInspectorCompletion({
+          source: "main-background",
+          transport: "venice",
+          endpoint: "/audio/retrieve",
+          method: "POST",
+          summaries: { taskId, model: taskModel || undefined },
+          eventId: musicTelemetryId,
+          status: response.status,
+          error: message,
+        });
         throw Object.assign(new Error(message), { status: response.status, currentPolls });
       }
 
@@ -469,12 +498,39 @@ async function runPoll(taskId: string): Promise<void> {
         const media = await persistGeneratedMedia(Buffer.from(normalized.dataBase64, 'base64'), normalized.mimeType);
         await applyUpdate(taskId, { status: 'completed', progress: 1, resultUrl: media.url, resultMediaId: media.id, pollAttempts: currentPolls, consecutiveFailures: 0 });
         stopPolling(taskId);
+        publishInspectorCompletion({
+          source: "main-background",
+          transport: "venice",
+          endpoint: "/audio/retrieve",
+          method: "POST",
+          summaries: { taskId, model: taskModel || undefined, bytes: media.byteCount, durationMs: Date.now() - startedAt },
+          eventId: musicTelemetryId,
+          status: response.status,
+        });
       } else if (normalized.kind === 'failed') {
-        await applyUpdate(taskId, { status: 'failed', error: toUserFacingMusicError(normalized.error, MUSIC_SAFE_ERROR_MESSAGES.generation), pollAttempts: currentPolls, consecutiveFailures: 0 });
+        const userError = toUserFacingMusicError(normalized.error, MUSIC_SAFE_ERROR_MESSAGES.generation);
+        await applyUpdate(taskId, { status: 'failed', error: userError, pollAttempts: currentPolls, consecutiveFailures: 0 });
         stopPolling(taskId);
+        publishInspectorCompletion({
+          source: "main-background",
+          transport: "venice",
+          endpoint: "/audio/retrieve",
+          method: "POST",
+          summaries: { taskId, model: taskModel || undefined },
+          eventId: musicTelemetryId,
+          error: userError,
+        });
       } else {
         await applyUpdate(taskId, { status: 'processing', progress: normalized.progressRatio, pollAttempts: currentPolls, consecutiveFailures: 0 });
         schedulePoll(taskId, POLL_INTERVAL_MS);
+        publishInspectorCompletion({
+          source: "main-background",
+          transport: "venice",
+          endpoint: "/audio/retrieve",
+          method: "POST",
+          summaries: { taskId, model: taskModel || undefined, durationMs: Date.now() - startedAt },
+          eventId: musicTelemetryId,
+        });
       }
     }
   } catch (err: unknown) {

@@ -596,6 +596,19 @@ export const desktopImageInspector = {
   },
 };
 
+/** Inspector Telemetry bridge — surfaces events from the main-process
+ *  Inspector telemetry bus (see `electron/services/inspectorTelemetry.ts`)
+ *  to renderer-side code. In web mode the subscription is a no-op so callers
+ *  don't have to guard the transport split. */
+export const desktopInspector = {
+  onTelemetry(callback: (event: import("../shared/inspectorTelemetryContracts").InspectorTelemetryEvent) => void): () => void {
+    if (!isElectron()) {
+      return () => {};
+    }
+    return window.veniceForge!.inspector.onTelemetry(callback);
+  },
+};
+
 /** Handles JSON file export and import, falling back to browser downloads in web mode. */
 export const desktopFiles = {
   async saveGeneratedMedia(

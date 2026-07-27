@@ -814,6 +814,20 @@ const veniceForge = {
       return ipcRenderer.invoke("characterCreator:validateCard", payload);
     },
   },
+  inspector: {
+    /** Subscribe to live main-process inspector telemetry events. Returns
+     *  an unsubscribe function; renderer-side store merges events through
+     *  `useInspectorStore.upsertByEventId`. */
+    onTelemetry(callback: (event: import("../src/shared/inspectorTelemetryContracts").InspectorTelemetryEvent) => void) {
+      void ipcRenderer.invoke("inspector:telemetry:subscribe").catch(() => {});
+      const listener = (_event: Electron.IpcRendererEvent, payload: import("../src/shared/inspectorTelemetryContracts").InspectorTelemetryEvent) => callback(payload);
+      ipcRenderer.on("inspector:telemetry", listener);
+      return () => {
+        ipcRenderer.removeListener("inspector:telemetry", listener);
+        void ipcRenderer.invoke("inspector:telemetry:unsubscribe").catch(() => {});
+      };
+    },
+  },
 };
 
 contextBridge.exposeInMainWorld("veniceForge", veniceForge);

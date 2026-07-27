@@ -54,11 +54,11 @@
     "restoreUnavailable": "Conversation is no longer available to restore."
   },
   "inspector": {
-    "title": "Traffic Inspector",
-    "description": "Shows raw model output and local safety decisions.",
-    "toggle": "Toggle Traffic Inspector",
-    "enabled": "Traffic Inspector enabled",
-    "disabled": "Traffic Inspector disabled",
+      "title": "Traffic Inspector",
+      "description": "Shows raw model output and local safety decisions.",
+      "toggle": "Toggle Traffic Inspector",
+      "enabled": "Traffic Inspector enabled",
+      "disabled": "Traffic Inspector disabled",
     "enabledDetail": "Raw responses, safety decisions, and adult character controls are visible.",
     "disabledDetail": "Standard rendering restored.",
     "show": "Show Inspector",

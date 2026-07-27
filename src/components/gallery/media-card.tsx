@@ -1,7 +1,7 @@
 /** @fileoverview Card used in the Media Studio grid. Renders a generated-or-video
  * thumbnail, title, badges, and quick action buttons. */
 
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import {
   Heart,
   Star,
@@ -78,6 +78,14 @@ function MediaCardImpl({
   const { t: tRuntime } = useTranslation("common");
   const [thumbFailed, setThumbFailed] = useState(false);
   const { url, loading } = useMediaThumb(item);
+
+  // Reset stale failed-thumbnail state when the underlying record changes
+  // (repair, line-source update, or thumbnail-source swap). Without this,
+  // a once-failed card stays in the fallback forever and never retries.
+  // VERIFY-MEDIA-DURABLE-001 regression guard.
+  useEffect(() => {
+    setThumbFailed(false);
+  }, [item.id, item.image, item.thumbHash]);
   const isVideo = isVideoItem(item);
   const isAudio = isAudioItem(item);
   const dims = formatDimensions(item);

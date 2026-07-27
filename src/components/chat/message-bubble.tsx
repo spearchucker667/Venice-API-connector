@@ -30,6 +30,7 @@ import type { CharacterSceneGenerationResult } from "../../types/characterSceneG
 import type { ChatDocumentRef } from "../../types/chatDocument";
 import { ManagedDocumentAttachmentCard } from "../documents/ManagedDocumentAttachmentCard";
 import { Trans, useTranslation } from "react-i18next";
+import { safeVeniceMediaUrl } from "../../utils/mediaItem";
 
 const ChatTtsPlayer = lazy(async () => {
   const module = await import("./ChatTtsPlayer");
@@ -974,7 +975,13 @@ function MessageBubbleImpl({
                 className="relative group mt-2 mb-1 w-full max-w-sm rounded-lg overflow-hidden border border-border bg-surface-sunken"
               >
                 <img
-                  src={r.displayUrl || "venice-media://" + r.mediaId}
+                  src={
+                    safeVeniceMediaUrl(r.displayUrl) ??
+                    safeVeniceMediaUrl(
+                      r.mediaId ? `venice-media://${r.mediaId}` : null,
+                    ) ??
+                    ""
+                  }
                   className="w-full h-auto object-cover"
                 />
                 <button

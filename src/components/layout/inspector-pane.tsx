@@ -75,6 +75,7 @@ export function InspectorPane() {
   const setShowInspector = useSettingsStore((s) => s.setShowInspector);
   const inspectorWidth = useSettingsStore((s) => s.inspectorWidth);
   const setInspectorWidth = useSettingsStore((s) => s.setInspectorWidth);
+  const redTeamMode = useSettingsStore((s) => s.redTeamMode);
   const logs = useInspectorStore((s) => s.logs);
   const clearLogs = useInspectorStore((s) => s.clearLogs);
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
@@ -359,6 +360,39 @@ export function InspectorPane() {
             </svg>
           </button>
         </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-2 px-3 pt-1 pb-2 soft-separator-y">
+        <span
+          className={cn(
+            "flex items-center gap-1.5 text-[11px] uppercase tracking-wider",
+            redTeamMode ? "text-accent" : "text-text-muted",
+          )}
+        >
+          <span
+            aria-hidden="true"
+            className={cn(
+              "w-1.5 h-1.5 rounded-full",
+              redTeamMode ? "bg-accent animate-pulse" : "bg-border",
+            )}
+          />
+          {redTeamMode
+            ? tRuntime(
+                "runtimeGenerated.components.layout.inspectorPane.captureState.capturing",
+                "Traffic Inspector: Capturing",
+              )
+            : tRuntime(
+                "runtimeGenerated.components.layout.inspectorPane.captureState.disabled",
+                "Traffic Inspector: Disabled",
+              )}
+        </span>
+        <span className="text-[11px] text-text-muted tabular-nums">
+          {tRuntime(
+            "runtimeGenerated.components.layout.inspectorPane.captureState.requestCount",
+            "Traffic Inspector requests: {{count}}",
+            { count: filteredLogs.length },
+          )}
+        </span>
       </div>
 
       <div className="flex px-3 gap-1 soft-separator-y pb-2 pt-2">

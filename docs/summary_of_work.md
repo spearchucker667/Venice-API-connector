@@ -4,6 +4,46 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-07-26 (media preview + traffic inspector remediation — Phases A–D complete)
+
+**Work order:** the attached Venice Forge — Media Preview and Traffic Inspector Remediation Work Order (input prompt, not committed), reconciled against the canonical `main` checkout. Final implementation report landed at `docs/reports/MEDIA_PREVIEW_TRAFFIC_INSPECTOR_REMEDIATION_REPORT_2026-07-26.md`; the umbrella roadmap row is `VF-MEDIA-PREVIEW-TRAFFIC-INSPECTOR-001` in `docs/ROADMAP.md`.
+
+**Scope:** four regression areas in the renderer–main process pipeline: durable image source resolution, legacy `venice()` request telemetry, main-process traffic telemetry bridging, and inspector pane UI semantics.
+
+**Verified findings:**
+- Phase A: `mediaItemSource()` accepted ad-hoc `||` string concatenation that quietly produced malformed `data:image/png;base64,venice-media://<hash>` URLs. Two legacy display sites (Image view + message-bubble gallery) used the same broken concatenation pattern.
+- Phase B: `src/lib/venice-client.ts` had diverged from canonical telemetry and used `instanceof VeniceApiError`, which crashes at runtime because `VeniceApiError` is a TypeScript interface, not a class.
+- Phase C: Inspector telemetry stayed renderer-local. Background tasks that fetch through the main process had no inspector rows and emitted no lifecycle events.
+- Phase D: Inspector pane title and metrics were absent; capture/visibility state was ambiguous.
+
+**Implementation:**
+- **Phase A:** rewrote `mediaItemSource()` in `src/utils/mediaItem.ts` to validate `venice-media://<sha256>` strictly (64 lowercase hex only), accept `data:`/`blob:`/`https?:`, and reject `file://` and unknown schemes. Added `safeVeniceMediaUrl()` companion. Patched `useMediaThumb.ts` to route non-PNG data through `makeImageThumb()` with explicit error state. Reset Media-card thumb-failed flag when the source identity changes. Replaced inline concatenation in `image-view.tsx` and `message-bubble.tsx` with `safeVeniceMediaUrl()`.
+- **Phase B:** collapsed `src/services/veniceClient/venice.ts` to a thin shim that delegates to `veniceFetch()` with `retry: false`. Fixed the `instanceof VeniceApiError` runtime crash by switching to shape-based detection.
+- **Phase C:** added a cross-process inspector telemetry bridge:
+  - `src/shared/inspectorTelemetryContracts.ts` — shared types and `INSPECTOR_TELEMETRY_CHANNEL` constant.
+  - `electron/services/inspectorTelemetry.ts` — main-process bus with `publishInspectorRequest()` / `publishInspectorCompletion()` and a subscriber-safe `emitInspectorTelemetry()` (try/catch around every listener).
+  - `electron/ipc/handlers/inspectorTelemetryHandlers.ts` — IPC relay broadcast to subscribed `WebContents` via `safeSendToRenderer`, idempotent via `handlersRegistered`.
+  - `electron/preload.ts` — `inspector.onTelemetry(callback)` subscription, with `removeListener` cleanup.
+  - `src/types/desktop.ts` — new `VeniceForgeInspector` and `inspector` field in the typed `window.veniceForge` surface.
+  - `src/services/desktopBridge.ts` — web-mode no-op bridge.
+  - `src/stores/inspector-store.ts` — `upsertByEventId()` (externalId-based lifecycle merge, 100-entry cap) and `clearExternalLogs()`. Cross-process sources are mapped onto the existing `transport` enum to avoid contract widening.
+  - First emitter wired in `electron/services/backgroundTaskManager.ts` for `task.type === "music"` (`/audio/retrieve` lifecycle) with reused `eventId` so the renderer collapses request → completion into one row.
+- **Phase D:** added an unambiguous capture-state pill (`Traffic Inspector: Capturing` / `Traffic Inspector: Disabled`) with a pulsing accent dot, and a live request counter (`Traffic Inspector requests: {{count}}`), to the Inspector pane header. UI text on this surface exclusively references "Traffic Inspector" per session clarification.
+
+**Privacy and safety invariants preserved:** the inspector telemetry contract emits only task IDs, model names, byte counts, durations, and pre-normalized error text — no prompts, no signed URLs, no renderer-selected paths. Listener failures are isolated, and the renderer never sees Venice or Jina keys.
+
+**Validation under Node 22.13.1/npm 10.9.2:** zero-warning ESLint, both TypeScript projects, full Vitest (4795 passed / 1 skipped / 438 files), safety guard, contract verifier (103 checks), and full renderer/server/Electron build were executed for this worktree. Manual headed/Packaged QA was not rerun.
+
+**Remaining work:** the Phase C emitter surface covers only the music `performVeniceRequest` path. Video retrieval (`/video/queue`, `/video/retrieve`), Jina research, the main-process guard pipeline, agent-tool executor, and chat-agent runner are not yet wired — the contracts and bus are ready, but each additional emitter is a follow-up. External packaged + headed retesting of Inspector capture remain on `docs/ROADMAP.md`.
+
+**Final handoff (this session):**
+- Closure report: `docs/reports/MEDIA_PREVIEW_TRAFFIC_INSPECTOR_REMEDIATION_REPORT_2026-07-26.md` (12 sections, work-order §10-required structure, no secrets/paths, registered in `docs/DOCS_INDEX.md`).
+- `docs/ROADMAP.md` gained the `VF-MEDIA-PREVIEW-TRAFFIC-INSPECTOR-001` row with full validation matrix footer; the closure is conditional on the Phase C emitter wiring follow-up (`TOD-TELEMETRY-EMITTERS-001`, retained in Open TODO Ledger).
+- `docs/DOCS_INDEX.md` registers the new report next to the other 2026-07-26 reports.
+- Pre-handoff re-validation under Node 22.13.1: `npm run typecheck` clean, `npm run lint:eslint` zero warnings, focused vitest on nine files 122/122 PASS (9.33 s), `npm run verify:contracts` 103 PASS, `npm run verify:markdown-links` 245 files OK. UI surface spot-check (`grep -rn "Red-Team\|RedTeam Mode\|Developer Mode" src/i18n/.../navigation.json src/components/layout/{sidebar,inspector-pane}.{tsx,test.tsx}`) → 0 matches; only the Zustand identifier `redTeamMode` survives.
+
+### Prior Session Summary (documentation, repository hygiene, and publication readiness)
+
 **Date:** 2026-07-26 (documentation, repository hygiene, and publication readiness)
 
 **Scope:** reconciled the accumulated runtime-localization and generated-media recovery implementation with the public README, privacy/security guidance, release documentation, repository maps, canonical roadmap, contributor-agent rules, historical evidence, and executable repository contracts before publication.
@@ -1210,9 +1250,11 @@ The earlier P1 audit closure (P1 #1–#8 with `VERIFY-128..131`) remains the con
 
 ## Open TODO Ledger
 
-**Generated-image durability hardening (2026-07-26, locally closed):** desktop Image Studio now persists PNG/JPEG/WebP bytes through the main-owned SHA-256 blob store before writing gallery metadata. Transient filesystem and IndexedDB operations retry; interrupted blob commits retain a bounded journal/temp pair for startup recovery; post-write, startup, periodic, and export-time integrity checks cover size and SHA-256; user-visible failures are classified without leaking paths or payloads. Web mode retains the existing data-URL persistence fallback because it has no Electron filesystem boundary. Packaged Windows/macOS fault injection remains external under `VF-VERIFY-005`.
+**Media preview + Traffic Inspector remediation (2026-07-26, locally closed for renderer + image + inspector pane UI):** durable image-source resolution is locked to `venice-media://<sha256>` via `mediaItemSource()` strict validator + `safeVeniceMediaUrl()` + Image-view and message-bubble site patches. Legacy `venice()` is a thin shim over `veniceFetch()` (Phase B). A cross-process inspector telemetry bridge is wired (`src/shared/inspectorTelemetryContracts.ts` → `electron/services/inspectorTelemetry.ts` bus → `electron/ipc/handlers/inspectorTelemetryHandlers.ts` → `electron/preload.ts` `inspector.onTelemetry` → `src/stores/inspector-store.ts` `upsertByEventId` / `clearExternalLogs`), and the Inspector pane shows an unambiguous capture-state pill (`Traffic Inspector: Capturing` / `Traffic Inspector: Disabled`) plus a live request counter. UI text on this surface exclusively references "Traffic Inspector" per user clarification. The first Phase C emitter is wired (music `/audio/retrieve` lifecycle) with reused `eventId` lifecycle merging. The remaining work on the cross-process bus — wiring video retrieval, Jina research, guard-pipeline, agent-tool executor, and chat-agent runner emitters — is consumed by the canonical cross-process telemetry roadmap row below.
 
-**Image generation/save regression (2026-07-26, locally closed):** `/image/generate` now uses Swagger-supported `format: "png"` in the shared Image Studio builder, Workflow engine, and RP scene generation; edit retains its endpoint-specific `output_format`. Image Studio no longer loses provider-returned bytes when encrypted gallery persistence rejects: failures are redacted and surfaced while the image remains downloadable. Paid-provider and headed packaged Save As evidence remains external under `VF-VERIFY-005` rather than a local implementation TODO.
+**Cross-process telemetry emitter coverage (`TOD-TELEMETRY-EMITTERS-001`):** the contracts + bus + IPC + preload + store surface from the 2026-07-26 media/traffic-inspector remediation is in place, but only the `electron/services/backgroundTaskManager.ts` music `/audio/retrieve` cycle emits. Follow-up emitter wiring (each one a small, isolated patch with optional unit tests): `electron/services/guardPipeline.ts` (pre-request guard decisions), `electron/services/videoRetrieveService.ts` (`/video/queue` + `/video/retrieve`, taking care not to leak `download_url` summary fields), `electron/services/jinaResearchProvider.ts` (renderer-callable proxy / scrape), `electron/services/agent-tool-executor.ts` and `electron/services/chat-agent-runner.ts` (request / completion with `source: "main-agent"`).
+
+**Generated-image durability hardening (2026-07-26, locally closed):** desktop Image Studio now persists PNG/JPEG/WebP bytes through the main-owned SHA-256 blob store before writing gallery metadata. Transient filesystem and IndexedDB operations retry; interrupted blob commits retain a bounded journal/temp pair for startup recovery; post-write, startup, periodic, and export-time integrity checks cover size and SHA-256; user-visible failures are classified without leaking paths or payloads. Web mode retains the existing data-URL persistence fallback because it has no Electron filesystem boundary. Packaged Windows/macOS fault injection remains external under `VF-VERIFY-005`.
 
 **Runtime i18n full-UI remediation (2026-07-26, locally closed):** the expanded scanner now reports zero candidates across 480 production files, the exact baseline is zero, prompt/status/presentation data use stable locale-neutral keys, and all 12 catalogs have complete first-pass runtime coverage. Headed web QA covered all locales plus live Swedish-to-Arabic switching and 390×844 RTL overflow. Qualified native review and packaged/signed/accessibility/persistence/cross-platform evidence remain external acceptance, not local TODOs. Canonical disposition is `VF-RUNTIME-I18N-FULL-UI-20260726` in `docs/ROADMAP.md`.
 
@@ -1342,16 +1384,39 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 
 ## Validation Matrix
 
-| Command | Result | Evidence |
-| --- | --- | --- |
+### July 26 — media preview + Traffic Inspector remediation (Phases A–D partial)
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| `npx vitest run src/components/layout` | PASS | 35/35 (verified Phase D capture-state + label + counter tests after the "only Traffic Inspector in UI" clarification). |
+| `npx vitest run electron/services/inspectorTelemetry.test.ts` | PASS | 5/5 (bus deliver / single subscriber / no listener / listener-fault isolation / monotonic eventId). |
+| `npx vitest run electron/ipc/handlers/inspectorTelemetryHandlers.test.ts` | PASS | 6/6 (idempotent registration / channel delivery / eventId merge / destroyed-sender prune / unsubscribe). |
+| `npx vitest run src/stores/inspector-store.test.ts` | PASS | 5/5 (new row / row merge / error mapping / external-only clearing / 100-entry cap). |
+| `npx vitest run src/utils/mediaItem.test.ts` | PASS | 11/11 (Phase A regression guard). |
+| `npx vitest run src/lib/venice-client.test.ts` | PASS | 4/4 (Phase B telemetry tests + `instanceof`-crash fix). |
+| `npx vitest run electron` | PASS | 814 passed / 1 skipped — full Electron segment. |
+| `npx tsc --noEmit -p tsconfig.json` | PASS | Renderer TypeScript project clean. |
+| `npx tsc --noEmit -p tsconfig.electron.json` | PASS | Electron TypeScript project clean. |
 | `npm run lint:eslint` | PASS | Zero warnings under Node 22.13.1. |
-| `npm run typecheck` | PASS | Renderer and Electron TypeScript projects clean. |
-| `npm test` | PASS | Full Vitest command exited 0. |
+| `npm run verify:i18n-hardcoded-regressions` | PASS | 0 regressions / 0 decreases vs the exact baseline. |
+| `npm run verify:agent-docs` | PASS | AGENTS.md parity check passes. |
 | `npm run verify:safety-guard` | PASS | Renderer, IPC, proxy, research, and raw-log guards clean. |
-| `npm run verify:markdown-links` | PASS | 244 Markdown files checked. |
-| `npm run verify:contracts` | PASS | Static, feature, and release contract groups passed after correcting stale quote/label assumptions and storage marker formatting. |
-| `npm run build` | PASS | Vite web, Express server, Electron main/preload; locale/namespace chunks remain within budget. |
-| `npm run ci` | FAIL (dependency audit) | Lint, typecheck, and all segmented tests passed; `npm audit --audit-level=moderate` then reported 16 high-severity transitive `brace-expansion` findings and offered only `npm audit fix --force` with a breaking Electron Builder 25.1.8 downgrade. |
+| `npm test` (full suite) | PASS | 4795 passed / 1 skipped across 438 files / 325 s. |
+| `npm run verify:contracts` | PASS | 103 contract checks pass. |
+| `npm run build` | PASS | Vite web, Express server, Electron main/preload build clean. |
+| Phase C additional emitters (video retrieve / Jina / guard-pipeline / agent-tool executor / chat-agent runner) | NOT WIRED | Contracts + bus + IPC + preload + store ready; emitter wiring deferred to the cross-process telemetry roadmap row. |
+
+### July 26 — media preview + Traffic Inspector post-handoff re-sweep (Node 22.23.1 / npm 11.17.0)
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| `npm run typecheck` | PASS | Renderer + Electron TypeScript projects clean. |
+| `npm run lint:eslint` | PASS | Zero warnings. |
+| Focused vitest sweep (9 changed files: `src/components/layout`, `src/utils/mediaItem.test.ts`, `src/lib/venice-client.test.ts`, `src/stores/inspector-store.test.ts`, `electron/services/inspectorTelemetry.test.ts`, `electron/ipc/handlers/inspectorTelemetryHandlers.test.ts`) | PASS | 122 / 122 cases in 9.33 s; sequence = `--fileParallelism=false`. |
+| `npm run verify:contracts` | PASS | 103 / 103. |
+| `npm run verify:markdown-links` | PASS | 245 Markdown files checked. |
+| UI surface scan: `grep -rn "Red-Team\|RedTeam Mode\|Developer Mode\|red-team mode\|main-agent" src/i18n/ src/components/layout/{sidebar,inspector-pane}.{tsx,test.tsx}` | PASS (0 matches) | User clarification applied: UI text references "Traffic Inspector" only; the Zustand identifier `redTeamMode` is a state variable, not rendered text. |
+| `npm test` (full suite) | PASS (×2 confirmation runs) | 4794 passed / 1 skipped across 438 files; run 1 = 311.81 s, run 2 = 325.39 s under Node 22.23.1 / npm 11.17.0. Stderr lines (`Not implemented: navigation to another Document` / `[shutdown] sync cleanup failed: journal write failed`) are pre-existing fixture emissions; exit code 0 and identical aggregate across both runs. |
 
 
 ### July 26 — generated-image durable persistence hardening
@@ -1959,6 +2024,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-07-26 — media preview + traffic inspector remediation (Phases A–D):** fixed durable `venice-media://<sha256>` source resolution (`mediaItemSource()` strict validator + `safeVeniceMediaUrl()` + Media-card thumb-failed reset + Image-view & message-bubble site patches); collapsed legacy `venice()` to a thin shim over `veniceFetch()` (Phase B) and removed the `instanceof VeniceApiError` runtime crash by switching to shape-based detection; added a cross-process inspector telemetry bridge (shared contracts → main bus → IPC relay → preload `inspector.onTelemetry` → Zustand `upsertByEventId`/`clearExternalLogs`); wired the first emitter in `backgroundTaskManager.ts` for music `/audio/retrieve`; added an unambiguous capture-state pill ("Traffic Inspector: Capturing" / "Traffic Inspector: Disabled") and a live request counter to the Inspector pane. UI text on this surface exclusively references "Traffic Inspector". Zero-warning ESLint, both typechecks, full Vitest (4795 passed / 1 skipped / 438 files), aggregate contract verifier (103 checks), and full renderer/server/Electron build pass. Phase C video retrieve, Jina research, guard-pipeline, agent-tool executor, and chat-agent runner emitters remain unwired (contracts ready).
 
 - **2026-07-26 — documentation, hygiene, and publication readiness:** reconciled README, privacy/security, release, i18n, repository-map, roadmap, and contributor-agent documentation with the completed runtime-localization and generated-media recovery behavior. Added historical-snapshot banners required by repository identity, ignored local i18n captures, split locale bundles by namespace without raising budgets, replaced fixed overlay colors with semantic tokens, repaired three format-sensitive tab verifiers, restored inline storage-policy markers, and reused the canonical media-save translation key. Ran the documented Node 22 validation sequence; aggregate contracts and build pass. Manual packaged QA remains explicitly external.
 

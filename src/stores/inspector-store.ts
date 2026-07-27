@@ -7,6 +7,7 @@ import type {
   InspectorGuardOutcome,
   InspectorTransport,
 } from '../services/inspectorTelemetry'
+import type { InspectorTelemetryEvent } from '../shared/inspectorTelemetryContracts'
 
 export interface InspectorRequestLog {
   id: string
@@ -38,6 +39,15 @@ interface InspectorState {
   addLog: (log: Omit<InspectorRequestLog, 'id' | 'timestamp'>) => string
   updateLog: (id: string, updates: Partial<Omit<InspectorRequestLog, 'id' | 'timestamp'>>) => void
   clearLogs: () => void
+  /**
+   * Merge a main-process telemetry event into the inspector list. Looks up
+   * an existing row by `event.eventId` (stored under `externalId`) and updates
+   * it; otherwise inserts a new redacted row. Idempotent under repeated
+   * `phase: "updated"` emissions.
+   */
+  upsertByEventId: (event: InspectorTelemetryEvent) => void
+  /** Remove all rows originating from cross-process buses. */
+  clearExternalLogs: () => void
 }
 
 export const useInspectorStore = create<InspectorState>((set) => ({
@@ -55,4 +65,65 @@ export const useInspectorStore = create<InspectorState>((set) => ({
     }))
   },
   clearLogs: () => set({ logs: [] }),
+  upsertByEventId: (event) => {
+    set((state) => {
+      // Cross-process events get bucketed into the existing `transport`
+      // enum. Treat renderer-originated events as "local" so they can
+      // co-exist with the canonical veniceFetch telemetry stream; all
+      // main-process emitters route through `veniceFetch` or are tasks
+      // that produce Venice traffic (`main-background`, `main-video`,
+      // `main-audio`, `main-agent`) so they map to "venice".
+      const transport: InspectorRequestLog['transport'] = event.source === 'renderer' ? 'local' : 'venice'
+      const guardOutcome: InspectorGuardOutcome | undefined =
+        event.guardOutcome === 'allow' || event.guardOutcome === 'block'
+          ? event.guardOutcome
+          : undefined
+      const callOutcome: InspectorCallOutcome =
+        event.phase === 'completed'
+          ? 'success'
+          : event.phase === 'failed'
+            ? 'error'
+            : event.phase === 'aborted'
+              ? 'aborted'
+              : event.phase === 'timeout'
+                ? 'timeout'
+                : 'pending'
+      const merged: Partial<InspectorRequestLog> = {
+        transport,
+        endpoint: event.endpoint,
+        method: event.method,
+        timestamp: event.timestamp,
+        guardOutcome,
+        callOutcome,
+        status: event.status,
+        durationMs: event.summaries?.durationMs,
+        error: event.error,
+      }
+      const existingIndex = state.logs.findIndex((log) => (log as InspectorRequestLog & { externalId?: string }).externalId === event.eventId)
+      if (existingIndex >= 0) {
+        const existing = state.logs[existingIndex]
+        const updated: InspectorRequestLog = { ...existing, ...merged }
+        const next = state.logs.slice()
+        next[existingIndex] = updated
+        return { logs: next }
+      }
+      const newLog: InspectorRequestLog & { externalId: string } = {
+        id: event.eventId,
+        timestamp: event.timestamp,
+        endpoint: event.endpoint,
+        method: event.method,
+        transport,
+        requestHeaders: {},
+        requestBody: event.summaries ? { summaries: event.summaries } : {},
+        callOutcome,
+        guardOutcome,
+        status: event.status,
+        durationMs: event.summaries?.durationMs,
+        error: event.error,
+        externalId: event.eventId,
+      }
+      return { logs: [newLog, ...state.logs].slice(0, 100) }
+    })
+  },
+  clearExternalLogs: () => set((state) => ({ logs: state.logs.filter((log) => !(log as InspectorRequestLog & { externalId?: string }).externalId) })),
 }))

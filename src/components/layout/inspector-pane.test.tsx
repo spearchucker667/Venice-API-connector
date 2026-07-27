@@ -42,4 +42,50 @@ describe('InspectorPane', () => {
     fireEvent.keyDown(window, { key: 'Escape' })
     expect(useSettingsStore.getState().showInspector).toBe(false)
   })
+
+  it('renders Traffic Inspector capturing state with pulsing accent dot when enabled', () => {
+    useSettingsStore.setState({ redTeamMode: true })
+    const { container } = render(<InspectorPane />)
+    const wrapper = container.querySelector('span[class*="text-accent"]') as HTMLElement
+    expect(wrapper).toBeTruthy()
+    expect(wrapper.querySelector('span[class*="bg-accent animate-pulse"]')).toBeTruthy()
+    expect(screen.getByText('Traffic Inspector: Capturing')).toBeInTheDocument()
+  })
+
+  it('renders Traffic Inspector disabled state without pulse when disabled', () => {
+    useSettingsStore.setState({ redTeamMode: false })
+    const { container } = render(<InspectorPane />)
+    const wrapper = container.querySelector('span[class*="text-text-muted"]') as HTMLElement
+    expect(wrapper).toBeTruthy()
+    const dot = wrapper.querySelector('span[class*="bg-border"]') as HTMLElement
+    expect(dot).toBeTruthy()
+    expect(dot.className).not.toMatch(/animate-pulse/)
+    expect(screen.getByText('Traffic Inspector: Disabled')).toBeInTheDocument()
+  })
+
+  it('shows live Traffic Inspector request counter that reflects filtered log count', () => {
+    useSettingsStore.setState({ redTeamMode: true })
+    useInspectorStore.getState().addLog({
+      endpoint: '/chat/completions',
+      method: 'POST',
+      transport: 'venice',
+      requestHeaders: {},
+      requestBody: {},
+      status: 200,
+      callOutcome: 'success',
+    })
+    useInspectorStore.getState().addLog({
+      endpoint: '/image/generate',
+      method: 'POST',
+      transport: 'venice',
+      requestHeaders: {},
+      requestBody: {},
+      status: 500,
+      callOutcome: 'error',
+      errorClass: 'server',
+      error: 'boom',
+    })
+    render(<InspectorPane />)
+    expect(screen.getByText('Traffic Inspector requests: 2')).toBeInTheDocument()
+  })
 })

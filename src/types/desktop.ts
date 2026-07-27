@@ -365,6 +365,14 @@ export interface VeniceForgeConversations {
 }
 
 /** Persistent main-process background task bridge. */
+export interface VeniceForgeInspector {
+  /** Subscribe to live main-process inspector telemetry events. The
+   *  renderer-side `useInspectorStore` merges each event through
+   *  `upsertByEventId`, so multiple `phase: "updated"` emissions for the
+   *  same `eventId` collapse into a single row. */
+  onTelemetry(callback: (event: import("../shared/inspectorTelemetryContracts").InspectorTelemetryEvent) => void): () => void;
+}
+
 export interface VeniceForgeBackgroundTask {
   subscribe(): Promise<{ ok: boolean; error?: string }>;
   unsubscribe(): Promise<{ ok: boolean; error?: string }>;
@@ -529,6 +537,7 @@ export interface VeniceForge {
   rpAssets: VeniceForgeRpAssets;
   scenarios: VeniceForgeScenarios;
   backgroundTask: VeniceForgeBackgroundTask;
+  inspector: VeniceForgeInspector;
   documentAgent: VeniceForgeDocumentAgent;
 }
 

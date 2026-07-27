@@ -170,20 +170,38 @@ export function useMediaThumb(item: MediaItem | null | undefined): { url: string
         if (item.mediaType === "video") {
           thumb = await makeVideoPoster(source);
         } else if (item.mediaType === "audio") {
+          // Audio items have no visual thumbnail; pass the source through so
+          // the card can render the audio affordance. If the source is a
+          // structured URL (data / https / venice-media://) this is fine.
           thumb = source;
-        } else if (source.startsWith("data:") || source.startsWith("http")) {
+        } else if (source.startsWith("data:image/png")) {
           if (!isCanvasAvailable()) {
             thumb = source;
           } else {
             const b64 = extractBase64(source);
-            thumb = b64 && source.startsWith("data:image/png")
-              ? `data:image/png;base64,${b64}`
-              : await makeImageThumb(source);
+            thumb = b64 ? `data:image/png;base64,${b64}` : source;
+          }
+        } else {
+          // Covers venice-media://, https://, blob:, and non-PNG data URLs.
+          if (!isCanvasAvailable()) {
+            thumb = source;
+          } else {
+            thumb = await makeImageThumb(source);
           }
         }
         if (cancelled) return;
-        cacheSet(item.id, thumb);
-        setUrl(thumb);
+        // Only cache a non-empty thumb so a transient decode miss never
+        // poisons the cache and forces every subsequent render to fall back.
+        // VERIFY-MEDIA-DURABLE-001 regression guard.
+        if (thumb && thumb.length > 0) {
+          cacheSet(item.id, thumb);
+          setUrl(thumb);
+        } else {
+          setError("Failed to generate thumbnail");
+          const blank = makeBlankThumb(MAX_THUMB_DIM, MAX_THUMB_DIM);
+          cacheSet(item.id, blank);
+          setUrl(blank);
+        }
         setLoading(false);
       } catch (err) {
         if (cancelled) return;

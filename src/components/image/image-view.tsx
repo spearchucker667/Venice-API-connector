@@ -39,6 +39,7 @@ import { PROMPT_TEMPLATES } from "../../constants/promptTemplates";
 import { processBase64Image, routeAsset } from "../../utils/imageProcessor";
 import { getExtensionFromDataUrl } from "../../utils/image";
 import { downloadImage as downloadImageUtil } from "../../utils/download";
+import { safeVeniceMediaUrl } from "../../utils/mediaItem";
 import {
   getImageModelCapabilities,
   buildDimensionOptions,
@@ -64,12 +65,16 @@ import { Trans, useTranslation } from "react-i18next";
 
 function toImageSrc(b64: string): string {
   if (!b64) return "";
+  // `venice-media:` strings MUST pass the strict 64-hex validator. Without
+  // this guard, malformed durable URLs (wrong length / case / non-hex) are
+  // forwarded verbatim to image elements, producing the broken card seen
+  // in the screenshot regression. See VERIFY-MEDIA-DURABLE-001.
+  if (safeVeniceMediaUrl(b64)) return b64;
   if (
     b64.startsWith("data:") ||
     b64.startsWith("http://") ||
     b64.startsWith("https://") ||
-    b64.startsWith("blob:") ||
-    b64.startsWith("venice-media:")
+    b64.startsWith("blob:")
   )
     return b64;
   return `data:image/png;base64,${b64}`;

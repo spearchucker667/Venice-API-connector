@@ -148,6 +148,84 @@ describe("mediaItem utils", () => {
       it("prepends data URI if it is an arbitrary string (assumed base64)", () => {
         expect(mediaItemSource({ mediaType: "image", image: "aGkh" } as MediaItem)).toBe("data:image/png;base64,aGkh");
       });
+
+      // VERIFY-MEDIA-DURABLE-001 regression guard: the screenshot regression
+      // where 4 generated image cards displayed "Preview unavailable" was
+      // caused by mediaItemSource() returning
+      //   `data:image/png;base64,venice-media://<hash>`
+      // for durable image URLs. The fixed contract accepts the validated
+      // URL for image/video/audio, and rejects anything else that *looks*
+      // like a venice-media URL (so it is never reinterpreted as base64).
+
+      it("accepts a valid venice-media:// durable URL", () => {
+        const hash = "a".repeat(64);
+        const url = `venice-media://${hash}`;
+        expect(mediaItemSource({ mediaType: "image", image: url } as MediaItem)).toBe(url);
+      });
+
+      it("rejects a venice-media:// URL with invalid hash length (63)", () => {
+        expect(
+          mediaItemSource({ mediaType: "image", image: `venice-media://${'a'.repeat(63)}` } as MediaItem),
+        ).toBeNull();
+      });
+
+      it("rejects a venice-media:// URL with invalid hash length (65)", () => {
+        expect(
+          mediaItemSource({ mediaType: "image", image: `venice-media://${'a'.repeat(65)}` } as MediaItem),
+        ).toBeNull();
+      });
+
+      it("rejects a venice-media:// URL with uppercase hex", () => {
+        expect(
+          mediaItemSource({ mediaType: "image", image: `venice-media://${'A'.repeat(64)}` } as MediaItem),
+        ).toBeNull();
+      });
+
+      it("rejects a venice-media:// URL with non-hex characters", () => {
+        expect(
+          mediaItemSource({ mediaType: "image", image: `venice-media://${'g'.repeat(64)}` } as MediaItem),
+        ).toBeNull();
+      });
+
+      it("never base64-wraps a malformed venice-media:// URL (regression)", () => {
+        const bad = `venice-media://${'a'.repeat(63)}`;
+        const result = mediaItemSource({ mediaType: "image", image: bad } as MediaItem);
+        // The previous bug returned `data:image/png;base64,venice-media://...`
+        // which the renderer then treated as broken PNG bytes.
+        expect(result ?? "").not.toMatch(/^data:image\/png;base64,venice-media:/);
+        expect(result).toBeNull();
+      });
+
+      it("rejects file://", () => {
+        expect(
+          mediaItemSource({ mediaType: "image", image: `file:///tmp/${'a'.repeat(64)}.png` } as MediaItem),
+        ).toBeNull();
+      });
+
+      it("rejects unknown custom schemes", () => {
+        expect(
+          mediaItemSource({ mediaType: "image", image: "venice-forge://abcdef/123" } as MediaItem),
+        ).toBeNull();
+        expect(
+          mediaItemSource({ mediaType: "image", image: "venice-media:/oops" } as MediaItem),
+        ).toBeNull();
+        expect(
+          mediaItemSource({ mediaType: "image", image: "venice-media/not-a-url" } as MediaItem),
+        ).toBeNull();
+      });
+
+      it("preserves legacy raw base64 fallback for images", () => {
+        expect(mediaItemSource({ mediaType: "image", image: "aGkh" } as MediaItem)).toBe(
+          "data:image/png;base64,aGkh",
+        );
+      });
+
+      it("returns null for non-image media types when raw is unusual", () => {
+        // Audio that arrives as raw base64 does NOT get base64-wrapped
+        // and does NOT have a displayable source.
+        expect(mediaItemSource({ mediaType: "audio", image: "abcd" } as MediaItem)).toBeNull();
+        expect(mediaItemSource({ mediaType: "video", image: "abcd" } as MediaItem)).toBeNull();
+      });
     });
   });
 
