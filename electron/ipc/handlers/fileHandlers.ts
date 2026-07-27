@@ -21,8 +21,11 @@ import {
 import { registerIpcChannel } from "./common";
 import { getProfileSessionId } from "../../services/profileSession";
 import {
+  exportMediaBatchAs,
+  saveDataUrlAs,
   saveGeneratedMediaAs,
   saveGeneratedMediaBytesAs,
+  type BulkExportItem,
 } from "../../services/generatedMediaExport";
 import {
   classifyGeneratedMediaPersistenceError,
@@ -213,6 +216,55 @@ export function registerFileHandlers(): void {
       return result;
     } catch (err) {
       return { ok: false, canceled: false, error: redactErrorMessage(err) };
+    }
+  });
+
+  registerIpcChannel("app:media:save-data-url", async (event, input: unknown) => {
+    try {
+      const owner = BrowserWindow.fromWebContents(event.sender);
+      if (!owner || event.senderFrame !== event.sender.mainFrame) {
+        return { ok: false, canceled: false, error: "Save Data URL sender was rejected." };
+      }
+      if (!input || typeof input !== "object") {
+        return { ok: false, canceled: false, error: "Save Data URL payload was invalid." };
+      }
+      const record = input as Record<string, unknown>;
+      return await saveDataUrlAs({
+        dataUrl: typeof record.dataUrl === "string" ? record.dataUrl : "",
+        suggestedName: typeof record.suggestedName === "string" ? record.suggestedName : undefined,
+      });
+    } catch (err) {
+      return { ok: false, canceled: false, error: redactErrorMessage(err) };
+    }
+  });
+
+  registerIpcChannel("app:media:export-files", async (event, input: unknown) => {
+    try {
+      const owner = BrowserWindow.fromWebContents(event.sender);
+      if (!owner || event.senderFrame !== event.sender.mainFrame) {
+        return { ok: false, canceled: false, succeeded: [], failed: [], error: "Export files sender was rejected." };
+      }
+      if (!input || typeof input !== "object") {
+        return { ok: false, canceled: false, succeeded: [], failed: [], error: "Export files payload was invalid." };
+      }
+      const record = input as Record<string, unknown>;
+      const rawItems = record.items;
+      if (!Array.isArray(rawItems) || rawItems.length === 0) {
+        return { ok: true, canceled: false, succeeded: [], failed: [] };
+      }
+      const items: BulkExportItem[] = rawItems.map((raw: unknown) => {
+        const it = (raw ?? {}) as Record<string, unknown>;
+        return {
+          itemId: typeof it.itemId === "string" ? it.itemId : "",
+          mediaId: typeof it.mediaId === "string" ? it.mediaId : undefined,
+          dataUrl: typeof it.dataUrl === "string" ? it.dataUrl : undefined,
+          mimeType: typeof it.mimeType === "string" ? it.mimeType : undefined,
+          suggestedName: typeof it.suggestedName === "string" ? it.suggestedName : "venice-forge-export",
+        };
+      });
+      return await exportMediaBatchAs({ items, ownerWindow: owner });
+    } catch (err) {
+      return { ok: false, canceled: false, succeeded: [], failed: [], error: redactErrorMessage(err) };
     }
   });
 

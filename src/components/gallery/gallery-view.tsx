@@ -61,6 +61,7 @@ import { askDecision, askText } from "../ui/modal-requests";
 import { Lock, Unlock } from "lucide-react";
 import { MasterPasswordDialog } from "../settings/MasterPasswordDialog";
 import {
+  desktopFiles,
   desktopMasterPassword,
   desktopMedia,
   isElectron,
@@ -667,10 +668,9 @@ export function MediaStudioView() {
     setCompareOpen(true);
   }, []);
 
-  // Phase 2B: export the selected media as actual image files. Each item is
-  // fetched from its resolved source and downloaded individually. In Electron
-  // the files are saved to the Pictures/Venice Forge/Media Studio/Export
-  // folder; in web mode each file triggers a browser download.
+  // Phase 2B: export the selected media as actual image files.
+  // Electron: opens a native Save dialog (single) or directory chooser (multi).
+  // Web: triggers blob downloads (unchanged).
   const runExport = useCallback(
     async (ids: string[]) => {
       if (ids.length === 0) {
@@ -682,33 +682,22 @@ export function MediaStudioView() {
         return;
       }
       const exportItems = items.filter((it) => ids.includes(it.id));
-      let exportedCount = 0;
+      if (exportItems.length === 0) {
+        toast.error("No exportable media items found.");
+        return;
+      }
 
-      for (const item of exportItems) {
-        const src = mediaItemSource(item);
-        if (!src) continue;
-        try {
-          const response = await fetch(src);
-          const blob = await response.blob();
-          if (!blob || blob.size === 0) continue;
-
-          const filename = buildMediaFilename(item);
-
-          if (isElectron()) {
-            const dataUrl = await new Promise<string>((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onload = () => resolve(reader.result as string);
-              reader.onerror = () =>
-                reject(reader.error ?? new Error("FileReader failed"));
-              reader.readAsDataURL(blob);
-            });
-            const result = await desktopMedia.exportMedia({
-              base64Data: dataUrl,
-              filename,
-              subfolder: "Export",
-            });
-            if (result.ok) exportedCount++;
-          } else {
+      if (!isElectron()) {
+        // Web mode: trigger a blob download per item.
+        let exportedCount = 0;
+        for (const item of exportItems) {
+          const src = mediaItemSource(item);
+          if (!src) continue;
+          try {
+            const response = await fetch(src);
+            const blob = await response.blob();
+            if (!blob || blob.size === 0) continue;
+            const filename = buildMediaFilename(item);
             const blobUrl = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = blobUrl;
@@ -718,15 +707,147 @@ export function MediaStudioView() {
             a.remove();
             setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
             exportedCount++;
+          } catch {
+            // continue
           }
-        } catch {
-          // Continue with next item on failure
         }
+        if (exportedCount === 0) {
+          toast.error("Media export failed. No files were saved.");
+        } else if (exportedCount < exportItems.length) {
+          toast.warn(
+            `Exported ${exportedCount} of ${exportItems.length} media files. Some items could not be resolved.`,
+          );
+        } else {
+          toast.success(`Exported ${exportedCount} media files.`);
+        }
+        return;
       }
 
-      toast.success(
-        `Exported ${exportedCount} of ${exportItems.length} item${exportItems.length === 1 ? "" : "s"}.`,
-      );
+      // Electron desktop path.
+      if (exportItems.length === 1) {
+        const item = exportItems[0];
+        const src = mediaItemSource(item);
+        if (!src) {
+          toast.error("Selected media item could not be resolved.");
+          return;
+        }
+        if (item.generatedMediaId) {
+          try {
+            const saved = await desktopFiles.saveGeneratedMedia(
+              item.generatedMediaId,
+              buildMediaFilename(item),
+            );
+            if (saved) {
+              toast.success("Exported 1 media file.");
+            }
+          } catch (err) {
+            const msg =
+              err instanceof Error ? err.message : "Save As failed.";
+            toast.error(`Media export failed. ${msg}`);
+          }
+          return;
+        }
+        // Legacy item without generatedMediaId: fetch and send through native dialog.
+        try {
+          const response = await fetch(src);
+          const blob = await response.blob();
+          if (!blob || blob.size === 0) {
+            toast.error("Media export failed. No bytes could be read.");
+            return;
+          }
+          const dataUrl = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = () =>
+              reject(reader.error ?? new Error("FileReader failed"));
+            reader.readAsDataURL(blob);
+          });
+          const result = await desktopMedia.saveMediaDataUrl({
+            dataUrl,
+            suggestedName: buildMediaFilename(item),
+          });
+          if (result.canceled) return;
+          if (result.ok) {
+            toast.success("Exported 1 media file.");
+          } else {
+            toast.error(
+              result.error || "Media export failed. No files were saved.",
+            );
+          }
+        } catch (err) {
+          const msg =
+            err instanceof Error ? err.message : "Unknown error";
+          toast.error(`Media export failed. ${msg}`);
+        }
+        return;
+      }
+
+      // 2+ items: open one native directory chooser, export all selected files.
+      const itemsForExport: Array<{
+        itemId: string;
+        mediaId?: string;
+        dataUrl?: string;
+        mimeType?: string;
+        suggestedName: string;
+      }> = [];
+      for (const item of exportItems) {
+        const filename = buildMediaFilename(item);
+        if (item.generatedMediaId) {
+          itemsForExport.push({
+            itemId: item.id,
+            mediaId: item.generatedMediaId,
+            suggestedName: filename,
+          });
+        } else {
+          const src = mediaItemSource(item);
+          if (!src) continue;
+          try {
+            const response = await fetch(src);
+            const blob = await response.blob();
+            if (!blob || blob.size === 0) continue;
+            const dataUrl = await new Promise<string>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result as string);
+              reader.onerror = () =>
+                reject(reader.error ?? new Error("FileReader failed"));
+              reader.readAsDataURL(blob);
+            });
+            itemsForExport.push({
+              itemId: item.id,
+              dataUrl,
+              mimeType: blob.type,
+              suggestedName: filename,
+            });
+          } catch {
+            // skip this item
+          }
+        }
+      }
+      if (itemsForExport.length === 0) {
+        toast.error("Media export failed. No files could be prepared.");
+        return;
+      }
+      try {
+        const result = await desktopMedia.exportMediaFiles({
+          items: itemsForExport,
+        });
+        if (result.canceled) return;
+        if (result.failed.length === 0) {
+          toast.success(
+            `Exported ${result.succeeded.length} media files.`,
+          );
+        } else if (result.succeeded.length > 0) {
+          toast.warn(
+            `Exported ${result.succeeded.length} of ${itemsForExport.length} media files. Some items could not be resolved.`,
+          );
+        } else {
+          toast.error("Media export failed. No files were saved.");
+        }
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "Unknown error";
+        toast.error(`Media export failed. ${msg}`);
+      }
     },
     [items, tRuntime],
   );

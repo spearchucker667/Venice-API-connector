@@ -162,6 +162,25 @@ export interface VeniceForgeFiles {
   saveGeneratedMedia(input: { mediaId: string; suggestedName?: string }): Promise<{
     ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string;
   }>;
+  /** Opens a native save dialog and writes the decoded data URL bytes. */
+  saveMediaDataUrl(input: { dataUrl: string; suggestedName?: string }): Promise<{
+    ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string;
+  }>;
+  /** Opens a native directory chooser and exports all items. */
+  exportMediaFiles(input: {
+    items: Array<{
+      itemId: string;
+      mediaId?: string;
+      dataUrl?: string;
+      mimeType?: string;
+      suggestedName: string;
+    }>;
+  }): Promise<{
+    ok: boolean;
+    canceled: boolean;
+    succeeded: Array<{ itemId: string; filename: string; bytes: number }>;
+    failed: Array<{ itemId: string; error: string }>;
+  }>;
   saveJsonFile(data: string, defaultPath?: string): Promise<{ ok: boolean; canceled: boolean }>;
   loadJsonFile(): Promise<{ ok: boolean; canceled: boolean; data?: string; error?: string }>;
   saveYamlFile(data: string, defaultPath?: string): Promise<{ ok: boolean; canceled: boolean }>;

@@ -258,6 +258,18 @@ const veniceForge = {
     saveGeneratedMedia(input: { mediaId: string; suggestedName?: string }): Promise<{ ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string }> {
       return ipcRenderer.invoke("app:media:save-generated", input);
     },
+    saveMediaDataUrl(input: { dataUrl: string; suggestedName?: string }): Promise<{ ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string }> {
+      return ipcRenderer.invoke("app:media:save-data-url", input);
+    },
+    exportMediaFiles(input: {
+      items: Array<{ itemId: string; mediaId?: string; dataUrl?: string; mimeType?: string; suggestedName: string }>;
+    }): Promise<{
+      ok: boolean; canceled: boolean;
+      succeeded: Array<{ itemId: string; filename: string; bytes: number }>;
+      failed: Array<{ itemId: string; error: string }>;
+    }> {
+      return ipcRenderer.invoke("app:media:export-files", input);
+    },
     /** Shows a save dialog and writes JSON data to the selected file.
      *  @param data The JSON string to write.
      *  @param defaultPath Optional default filename for the dialog.

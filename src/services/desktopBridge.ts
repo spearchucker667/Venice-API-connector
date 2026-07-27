@@ -1021,6 +1021,33 @@ export const desktopMedia = {
     return window.veniceForge!.files.exportMedia(input);
   },
 
+  /** Opens a native save dialog and writes the decoded data URL bytes.
+   *  Desktop-only. For web mode returns an error — caller should fall back
+   *  to browser download. */
+  async saveMediaDataUrl(input: {
+    dataUrl: string;
+    suggestedName?: string;
+  }): Promise<{ ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string }> {
+    if (!isElectron()) {
+      return { ok: false, canceled: false, error: "Save As dialog is only available in desktop mode." };
+    }
+    return window.veniceForge!.files.saveMediaDataUrl(input);
+  },
+
+  /** Opens a native directory chooser and exports all items. Desktop-only. */
+  async exportMediaFiles(input: {
+    items: Array<{ itemId: string; mediaId?: string; dataUrl?: string; mimeType?: string; suggestedName: string }>;
+  }): Promise<{
+    ok: boolean; canceled: boolean;
+    succeeded: Array<{ itemId: string; filename: string; bytes: number }>;
+    failed: Array<{ itemId: string; error: string }>;
+  }> {
+    if (!isElectron()) {
+      return { ok: false, canceled: false, succeeded: [], failed: [] };
+    }
+    return window.veniceForge!.files.exportMediaFiles(input);
+  },
+
   /** Reads an app-managed media path and returns it as a data URL.
    *  Desktop-only. Arbitrary user-library paths are rejected by the main
    *  process; user-selected imports require a main-process dialog flow. */
