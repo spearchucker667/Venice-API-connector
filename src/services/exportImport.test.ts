@@ -71,6 +71,11 @@ describe("export/import schema validation", () => {
     ).toThrow(/unexpected/i);
   });
 
+  /** Verifies rejection of invalid JSON format. */
+  it("rejects invalid JSON format", () => {
+    expect(() => validateImportJson("{invalid}")).toThrow("Import file is not valid JSON.");
+  });
+
   /** Verifies that a custom theme round-trips through export and import intact. */
   it("round-trips a custom theme through export and import", () => {
     const customTheme = {
