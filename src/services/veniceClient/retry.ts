@@ -15,20 +15,11 @@ export interface InFlightResult {
 const inFlight = new Map<string, Promise<InFlightResult>>();
 
 // Clear in-flight map on navigation to prevent promise leaks (BUG-013).
-const cleanupInFlightUnloadListener = (() => {
-  const handler = () => inFlight.clear();
-  if (typeof window !== "undefined") {
-    window.addEventListener("beforeunload", handler);
-  }
-  return () => {
-    if (typeof window !== "undefined") {
-      window.removeEventListener("beforeunload", handler);
-    }
-  };
-})();
-
-/** Exported for test cleanup only. */
-export { cleanupInFlightUnloadListener };
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeunload", () => {
+    inFlight.clear();
+  });
+}
 
 /** Returns whether an identical request is already in flight. */
 export function hasInFlight(key: string): boolean {
