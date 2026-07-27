@@ -68,12 +68,18 @@ export const useInspectorStore = create<InspectorState>((set) => ({
   upsertByEventId: (event) => {
     set((state) => {
       // Cross-process events get bucketed into the existing `transport`
-      // enum. Treat renderer-originated events as "local" so they can
-      // co-exist with the canonical veniceFetch telemetry stream; all
-      // main-process emitters route through `veniceFetch` or are tasks
-      // that produce Venice traffic (`main-background`, `main-video`,
-      // `main-audio`, `main-agent`) so they map to "venice".
-      const transport: InspectorRequestLog['transport'] = event.source === 'renderer' ? 'local' : 'venice'
+      // enum. The shared contract's `transport` field is authoritative —
+      // derived from the calling subsystem (Venice client, Jina research
+      // bridge, local Family Safe guard, background music/video tasks).
+      // Renderer-originated events that arrive via the bus are forwarded
+      // as `local` so they co-exist with the canonical `veniceFetch`
+      // telemetry stream.
+      const transport: InspectorRequestLog['transport'] =
+        event.transport === 'jina'
+          ? 'jina'
+          : event.transport === 'local'
+            ? 'local'
+            : 'venice'
       const guardOutcome: InspectorGuardOutcome | undefined =
         event.guardOutcome === 'allow' || event.guardOutcome === 'block'
           ? event.guardOutcome

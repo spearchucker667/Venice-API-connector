@@ -20,6 +20,14 @@ vi.mock("../../services/guardPipeline", () => ({
   performGuardedVeniceRequest: (...args: unknown[]) => performGuardedVeniceRequest(...args),
 }));
 
+// Inspector telemetry must be invoked for each /image/generate call.
+const publishInspectorRequest = vi.fn(() => "evt-tool-1");
+const publishInspectorCompletion = vi.fn();
+vi.mock("../../services/inspectorTelemetry", () => ({
+  publishInspectorRequest: (...args: unknown[]) => publishInspectorRequest(...args),
+  publishInspectorCompletion: (...args: unknown[]) => publishInspectorCompletion(...args),
+}));
+
 // Audit must be invoked under a non-empty session id.
 const audit = { record: vi.fn() };
 vi.mock("./agent-services", () => ({
@@ -54,6 +62,9 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
     audit.record.mockReset();
     persistGeneratedMedia.mockReset();
     fakeFetch.mockReset();
+    publishInspectorRequest.mockReset();
+    publishInspectorRequest.mockReturnValue("evt-tool-1");
+    publishInspectorCompletion.mockReset();
     persistGeneratedMedia.mockResolvedValue({
       id: "media-123",
       url: "venice-media://abc123.png",
@@ -206,6 +217,109 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
     expect(result.ok).toBe(false);
     expect((result.error as any).code).toBe("INTERNAL_ERROR");
     expect(persistGeneratedMedia).not.toHaveBeenCalled();
+  });
+});
+
+describe("executeMediaTool — Phase C inspector telemetry (VERIFY-156)", () => {
+  beforeEach(() => {
+    performGuardedVeniceRequest.mockReset();
+    audit.record.mockReset();
+    persistGeneratedMedia.mockReset();
+    fakeFetch.mockReset();
+    publishInspectorRequest.mockReset();
+    publishInspectorRequest.mockReturnValue("evt-tool-1");
+    publishInspectorCompletion.mockReset();
+    persistGeneratedMedia.mockResolvedValue({
+      id: "media-123",
+      url: "venice-media://abc123.png",
+      mimeType: "image/png",
+      byteCount: 12,
+      sha256: SHAM_SHA256,
+    });
+  });
+
+  it("emits request with source=main-agent, transport=venice on success", async () => {
+    performGuardedVeniceRequest.mockResolvedValueOnce({
+      kind: "response",
+      response: {
+        ok: true,
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        body: { images: [{ b64_json: PNG_PIXEL_BASE64 }] },
+        contentType: "application/json",
+      },
+    });
+    await executeMediaTool("default", "media.generateImage", "call-A", {
+      prompt: "p", model: "nano-banana",
+    });
+    expect(publishInspectorRequest).toHaveBeenCalledTimes(1);
+    const reqCall = publishInspectorRequest.mock.calls[0][0];
+    expect(reqCall.source).toBe("main-agent");
+    expect(reqCall.transport).toBe("venice");
+    expect(reqCall.endpoint).toBe("/image/generate");
+    expect(reqCall.method).toBe("POST");
+    expect(publishInspectorCompletion).toHaveBeenCalledTimes(1);
+    const compCall = publishInspectorCompletion.mock.calls[0][0];
+    expect(compCall.source).toBe("main-agent");
+    expect(compCall.eventId).toBe("evt-tool-1");
+    expect(compCall.summaries.model).toBe("nano-banana");
+  });
+
+  it("emits completion with status=451 when guard returns blocked", async () => {
+    performGuardedVeniceRequest.mockResolvedValueOnce({
+      kind: "blocked",
+      block: {
+        ok: false,
+        status: 451,
+        statusText: "Blocked",
+        headers: {},
+        body: { error: "blocked", reasonCode: "TEST", category: "TEST_CAT" },
+        contentType: "application/json",
+      },
+    });
+    const result = await executeMediaTool("default", "media.generateImage", "call-B", {
+      prompt: "p", model: "m",
+    });
+    expect(result.ok).toBe(false);
+    expect(publishInspectorCompletion).toHaveBeenCalledTimes(1);
+    const compCall = publishInspectorCompletion.mock.calls[0][0];
+    expect(compCall.status).toBe(451);
+    expect(compCall.error).toMatch(/blocked/i);
+  });
+
+  it("does NOT emit telemetry when dispatcher throws before reaching dispatch", async () => {
+    const err = new Error("dispatcher exploded");
+    performGuardedVeniceRequest.mockImplementationOnce(() => {
+      throw err;
+    });
+    await executeMediaTool("default", "media.generateImage", "call-C", {
+      prompt: "p", model: "m",
+    });
+    expect(publishInspectorRequest).toHaveBeenCalledTimes(1);
+    expect(publishInspectorCompletion).toHaveBeenCalledTimes(1);
+    expect(publishInspectorCompletion.mock.calls[0][0].error).toMatch(/exploded/i);
+  });
+
+  it("does NOT break tool execution when publishInspectorCompletion throws", async () => {
+    publishInspectorCompletion.mockImplementationOnce(() => {
+      throw new Error("bus offline");
+    });
+    performGuardedVeniceRequest.mockResolvedValueOnce({
+      kind: "response",
+      response: {
+        ok: true,
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        body: { images: [{ b64_json: PNG_PIXEL_BASE64 }] },
+        contentType: "application/json",
+      },
+    });
+    const result = await executeMediaTool("default", "media.generateImage", "call-D", {
+      prompt: "p", model: "m",
+    });
+    expect(result.ok).toBe(true);
   });
 
   it("non-image media tools fail closed with CAPABILITY_DENIED", async () => {

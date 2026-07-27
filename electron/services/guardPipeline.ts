@@ -21,7 +21,14 @@ import {
 } from "../../src/shared/safety";
 import type { SafetyGuardInput } from "../../src/shared/safety";
 import { performVeniceRequest } from "./veniceClient";
-import { getRuntimeLocalFamilySafeModeEnabled, getRuntimeVeniceApiSafeMode } from "./runtimeSafetySettings";
+import {
+  getRuntimeLocalFamilySafeModeEnabled,
+  getRuntimeVeniceApiSafeMode,
+} from "./runtimeSafetySettings";
+import {
+  publishInspectorRequest,
+  publishInspectorCompletion,
+} from "./inspectorTelemetry";
 import type { VeniceIpcResponse } from "./veniceClient";
 import { applyVeniceApiSafeMode } from "../../src/shared/veniceSafeMode";
 import { composeTrustedRequest } from "../agent/runtime/trusted-agent-request";
@@ -72,10 +79,49 @@ export function buildGuardedBlock(decision: Extract<ReturnType<typeof maybeRunLo
  *  continue. Uses the main-process runtime snapshot — never the
  *  renderer-supplied flag. */
 export function checkLocalFamilyGuard(input: SafetyGuardInput): GuardedBlock | null {
+  const endpoint = typeof input.endpoint === "string" ? input.endpoint : "/unknown";
+  const method = typeof input.method === "string" ? input.method : "POST";
+  const startedAt = Date.now();
+  let eventId = "";
+  try {
+    eventId = publishInspectorRequest({
+      source: "main-guard",
+      transport: "local",
+      endpoint,
+      method,
+    });
+  } catch {
+    // Inspector telemetry must never break guard evaluation.
+  }
   const enabled = getRuntimeLocalFamilySafeModeEnabled();
   const decision = maybeRunLocalFamilyGuard(input, enabled);
-  if (isGuardBlock(decision)) {
-    return buildGuardedBlock(decision);
+  try {
+    if (isGuardBlock(decision)) {
+      publishInspectorCompletion({
+        source: "main-guard",
+        transport: "local",
+        endpoint,
+        method,
+        guardOutcome: "block",
+        summaries: { durationMs: Date.now() - startedAt },
+        eventId,
+        status: 451,
+        error: `blocked:${decision.guardDecision.reasonCode}:${decision.guardDecision.category}`,
+      });
+      return buildGuardedBlock(decision);
+    }
+    publishInspectorCompletion({
+      source: "main-guard",
+      transport: "local",
+      endpoint,
+      method,
+      guardOutcome: decision.skipped ? "skipped" : "allow",
+      summaries: { durationMs: Date.now() - startedAt },
+      eventId,
+      status: 200,
+    });
+  } catch {
+    // Telemetry failures must not affect guard evaluation outcome.
   }
   return null;
 }
@@ -189,11 +235,43 @@ export async function performGuardedVeniceRequest(
     requestForDispatch = composeTrustedRequest(requestForDispatch);
     const response = await performVeniceRequest(requestForDispatch, options);
     const responseBlock = screenUpstreamResponse(endpoint, method, response);
-    if (responseBlock) return { kind: "blocked", block: responseBlock };
+    if (responseBlock) {
+      try {
+        publishInspectorCompletion({
+          source: "main-guard",
+          transport: "local",
+          endpoint,
+          method,
+          guardOutcome: "block",
+          summaries: { durationMs: 0 },
+          status: 451,
+          error: `blocked:${responseBlock.body.reasonCode ?? "RESPONSE_BLOCKED"}:${
+            responseBlock.body.category ?? "unknown"
+          }`,
+        });
+      } catch {
+        // Telemetry failures must not affect guard evaluation.
+      }
+      return { kind: "blocked", block: responseBlock };
+    }
     return { kind: "response", response };
   } catch (err) {
     if (err instanceof SafetyGuardBlockedError) {
       // Re-wrap any inline guard from performVeniceRequest.
+      try {
+        publishInspectorCompletion({
+          source: "main-guard",
+          transport: "local",
+          endpoint,
+          method,
+          guardOutcome: "block",
+          summaries: { durationMs: 0 },
+          status: 451,
+          error: `blocked:${err.decision.reasonCode}:${err.decision.category}`,
+        });
+      } catch {
+        // ignore
+      }
       return {
         kind: "blocked",
         block: {

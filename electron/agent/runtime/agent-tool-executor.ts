@@ -8,6 +8,7 @@ import { serializableDocumentToBlocks } from "../../../src/agent/documents/docum
 import type { AssistantToolCall } from "../../../src/types/venice";
 import { sanitizeErrorText } from "../../../src/shared/redaction";
 import { performGuardedVeniceRequest } from "../../services/guardPipeline";
+import { publishInspectorRequest, publishInspectorCompletion } from "../../services/inspectorTelemetry";
 
 export async function executeAgentTool(profileId: string, toolCall: AssistantToolCall, agentSessionId?: string): Promise<ToolResult> {
   const services = getAgentServices();
@@ -303,17 +304,74 @@ export async function executeMediaTool(
       imagePayload.height = height;
     }
 
-    const guarded = await performGuardedVeniceRequest({
-      endpoint: "/image/generate",
-      method: "POST",
-      body: imagePayload,
-      profileId,
-    });
+    const startedAt = Date.now();
+    let eventId = "";
+    try {
+      eventId = publishInspectorRequest({
+        source: "main-agent",
+        transport: "venice",
+        endpoint: "/image/generate",
+        method: "POST",
+      });
+    } catch {
+      // Telemetry must never break tool execution.
+    }
+    let guarded: Awaited<ReturnType<typeof performGuardedVeniceRequest>>;
+    try {
+      guarded = await performGuardedVeniceRequest({
+        endpoint: "/image/generate",
+        method: "POST",
+        body: imagePayload,
+        profileId,
+      });
+    } catch (err) {
+      try {
+        publishInspectorCompletion({
+          source: "main-agent",
+          transport: "venice",
+          endpoint: "/image/generate",
+          method: "POST",
+          summaries: { durationMs: Date.now() - startedAt, model: requestedModel },
+          eventId,
+          error: sanitizeErrorText(err instanceof Error ? err.message : String(err)),
+        });
+      } catch {
+        // ignore
+      }
+      return safeToolError(internalName as any, requestId, "INTERNAL_ERROR", sanitizeErrorText(err instanceof Error ? err.message : String(err)));
+    }
 
     if (guarded.kind === "blocked") {
       const reason = (guarded.block.body as { error?: unknown } | undefined)?.error;
       const reasonText = typeof reason === "string" ? reason : "image-generate request blocked by Family Safe Mode";
+      try {
+        publishInspectorCompletion({
+          source: "main-agent",
+          transport: "venice",
+          endpoint: "/image/generate",
+          method: "POST",
+          summaries: { durationMs: Date.now() - startedAt, model: requestedModel },
+          eventId,
+          status: 451,
+          error: sanitizeErrorText(reasonText),
+        });
+      } catch {
+        // ignore
+      }
       return safeToolError(internalName as any, requestId, "CAPABILITY_DENIED", sanitizeErrorText(reasonText));
+    }
+    try {
+      publishInspectorCompletion({
+        source: "main-agent",
+        transport: "venice",
+        endpoint: "/image/generate",
+        method: "POST",
+        summaries: { durationMs: Date.now() - startedAt, model: requestedModel },
+        eventId,
+        status: guarded.response.ok ? guarded.response.status : 0,
+      });
+    } catch {
+      // ignore
     }
     const response = guarded.response;
     if (!response.ok) {

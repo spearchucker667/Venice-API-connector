@@ -22,6 +22,27 @@ import { checkLocalFamilyGuard } from "../../services/guardPipeline";
 import { getProfileSessionId } from "../../services/profileSession";
 import { getRuntimeLocalFamilySafeModeEnabled } from "../../services/runtimeSafetySettings";
 import { registerIpcChannel } from "./common";
+import {
+  publishInspectorRequest,
+  publishInspectorCompletion,
+} from "../../services/inspectorTelemetry";
+
+function jinaEndpointTag(parsedUrl: URL): "/jina/reader" | "/jina/search" {
+  return parsedUrl.hostname === "s.jina.ai" ? "/jina/search" : "/jina/reader";
+}
+
+type JinaRequestResponse = {
+  ok: boolean;
+  status: number;
+  body?: unknown;
+  contentType?: string;
+  error?: string;
+};
+
+type JinaRunResult =
+  | { kind: "fail"; status: number; error: string; endpoint: "/jina/reader" | "/jina/search"; body?: unknown }
+  | { kind: "ok"; endpoint: "/jina/reader" | "/jina/search"; status: number; bytes: number; response: JinaRequestResponse };
+
 
 const JINA_ALLOWED_FORWARD_HEADERS = new Set([
   "accept",
@@ -99,29 +120,94 @@ export function registerJinaHandlers(): void {
     }
   });
 
+  /* INSPECTOR_TELEMETRY_JINA_WIRED */
   registerIpcChannel("jina:request", async (event, input: unknown) => {
+    const startedAt = Date.now();
+    const eventId = publishInspectorRequest({
+      source: "main-research",
+      transport: "jina",
+      endpoint: "/jina/pending",
+      method: "GET",
+    });
+    try {
+      const run = await runJinaRequest(event, input);
+      if (run.kind === "fail") {
+        publishInspectorCompletion({
+          source: "main-research",
+          transport: "jina",
+          endpoint: run.endpoint,
+          method: "GET",
+          summaries: { durationMs: Date.now() - startedAt },
+          eventId,
+          status: run.status,
+          error: run.error,
+        });
+        return {
+          ok: false,
+          status: run.status,
+          ...(run.body !== undefined ? { body: run.body } : {}),
+          ...(run.error ? { error: run.error } : {}),
+        };
+      }
+      publishInspectorCompletion({
+        source: "main-research",
+        transport: "jina",
+        endpoint: run.endpoint,
+        method: "GET",
+        summaries: { bytes: run.bytes, durationMs: Date.now() - startedAt },
+        eventId,
+        status: run.status,
+        ...(run.response.error ? { error: run.response.error } : {}),
+      });
+      return run.response;
+    } catch (err) {
+      publishInspectorCompletion({
+        source: "main-research",
+        transport: "jina",
+        endpoint: "/jina/reader",
+        method: "GET",
+        summaries: { durationMs: Date.now() - startedAt },
+        eventId,
+        error: redactErrorMessage(err),
+      });
+      if (err instanceof FetchBodyTooLargeError) {
+        return { ok: false, status: 413, error: "Jina response exceeded the 2 MiB limit." };
+      }
+      return { ok: false, status: 0, error: redactErrorMessage(err) };
+    }
+  });
+
+  async function runJinaRequest(
+    event: import("electron").IpcMainInvokeEvent,
+    input: unknown,
+  ): Promise<JinaRunResult> {
     try {
       const request = input as { url?: unknown; headers?: unknown; timeoutMs?: unknown; profileId?: unknown };
       if (typeof request.url !== "string") {
-        return { ok: false, status: 400, error: "Missing Jina request URL." };
+        return { kind: "fail", status: 400, error: "Missing Jina request URL.", endpoint: "/jina/reader" };
       }
 
       const parsed = new URL(request.url);
       const allowedHosts = ["r.jina.ai", "s.jina.ai"];
       if (parsed.protocol !== "https:" || !allowedHosts.includes(parsed.hostname)) {
-        return { ok: false, status: 403, error: "Only Jina Reader/Search HTTPS endpoints are allowed." };
+        return {
+          kind: "fail",
+          status: 403,
+          error: "Only Jina Reader/Search HTTPS endpoints are allowed.",
+          endpoint: "/jina/reader",
+        };
       }
 
       const decision = checkLocalFamilyGuard(
         { endpoint: request.url, method: "GET", text: decodeURIComponent(request.url), source: "ipc" },
       );
-      if (decision) return { ok: false, status: 451, error: decision.body.error };
+      if (decision) {
+        return { kind: "fail", status: 451, error: decision.body.error, endpoint: jinaEndpointTag(parsed), body: decision.body };
+      }
 
       const headers = sanitizeJinaForwardHeaders(request.headers);
 
       // Provider-use credential selection is main-process authoritative.
-      // The request field remains accepted for backwards compatibility but
-      // cannot select a key or cause a validation denial.
       const validProfileId = getProfileSessionId(event.sender);
       const jinaKey = (() => { try { return getJinaApiKey(validProfileId); } catch { return null; } })();
       if (jinaKey) headers["Authorization"] = `Bearer ${jinaKey}`;
@@ -145,10 +231,6 @@ export function registerJinaHandlers(): void {
         const rawBody = await readBoundedFetchBody(response, JINA_MAX_RESPONSE_BYTES);
         const body = contentType.includes("application/json") ? parseJsonOrNull(rawBody) : rawBody;
 
-        // P0/P1-015: screen the returned body through the local Family Safe
-        // Mode guard using the main-process runtime snapshot. The renderer-
-        // supplied `localFamilySafeModeEnabled` is intentionally NOT consulted
-        // here — only the canonical main-process snapshot is authoritative.
         const serialized = typeof body === "string" ? body : JSON.stringify(body ?? "");
         const bodyScreen = screenResponseBody(
           serialized,
@@ -156,26 +238,53 @@ export function registerJinaHandlers(): void {
           getRuntimeLocalFamilySafeModeEnabled(),
         );
         if (!bodyScreen.allowed) {
-          return { ok: false, status: 451, body: safetyBlockBodyFromResponseScreen(bodyScreen) };
+          const safetyBlock = safetyBlockBodyFromResponseScreen(bodyScreen);
+          return {
+            kind: "fail",
+            status: 451,
+            error: safetyBlock.error,
+            endpoint: jinaEndpointTag(parsed),
+            body: safetyBlock,
+          };
         }
 
-        return {
+        const responseObj: JinaRequestResponse = {
           ok: response.ok,
           status: response.status,
           body,
           contentType,
           error: response.ok ? undefined : `Jina returned ${response.status}`,
         };
+        return {
+          kind: "ok",
+          endpoint: jinaEndpointTag(parsed),
+          status: response.status,
+          bytes: rawBody.length,
+          response: responseObj,
+        };
       } finally {
         clearTimeout(timeout);
       }
     } catch (err) {
       if (err instanceof FetchBodyTooLargeError) {
-        return { ok: false, status: 413, error: "Jina response exceeded the 2 MiB limit." };
+        return {
+          kind: "fail",
+          status: 413,
+          error: "Jina response exceeded the 2 MiB limit.",
+          endpoint: "/jina/reader",
+        };
       }
-      return { ok: false, status: 0, error: redactErrorMessage(err) };
+      return {
+        kind: "fail",
+        status: 0,
+        error: redactErrorMessage(err),
+        endpoint: "/jina/reader",
+      };
     }
-  });
+  };
+
+
+  
 
   registerIpcChannel("jinaApiKey:test", async (event, _profileId?: unknown) => {
     const validProfileId = getProfileSessionId(event.sender);

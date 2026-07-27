@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { performGuardedVeniceRequest, type GuardedVeniceResult } from "../../services/guardPipeline";
+import { publishInspectorRequest, publishInspectorCompletion } from "../../services/inspectorTelemetry";
+import { sanitizeErrorText } from "../../../src/shared/redaction";
 import { executeAgentTool } from "./agent-tool-executor";
 import type { AssistantToolCall } from "../../../src/types/venice";
 import {
@@ -143,48 +145,94 @@ async function streamAndExecuteTurn(
   const aggregatedToolCalls = new Map<number, AssistantToolCall>();
   let finalFinishReason: string | null = null;
 
+  const endpoint = request.endpoint ?? "/chat/completions";
+  const method = request.method ?? "POST";
+  const startedAt = Date.now();
+  let eventId = "";
+  try {
+    eventId = publishInspectorRequest({
+      source: "main-agent",
+      transport: "venice",
+      endpoint,
+      method,
+    });
+  } catch {
+    // Telemetry must never break agent execution.
+  }
   const fullRequest = {
-    endpoint: request.endpoint ?? "/chat/completions",
-    method: request.method ?? "POST",
+    endpoint,
+    method,
     ...request,
   };
 
-  const result = await performGuardedVeniceRequest(fullRequest, {
-    onDelta: (chunk: SseChunk) => {
-      if (chunk.tool_calls) {
-        for (const tc of chunk.tool_calls) {
-          if (!aggregatedToolCalls.has(tc.index)) {
-            aggregatedToolCalls.set(tc.index, {
-              id: tc.id || "",
-              type: "function",
-              function: { name: tc.function?.name || "", arguments: "" },
-            });
-          }
-          const existing = aggregatedToolCalls.get(tc.index)!;
-          if (tc.function?.arguments) {
-            existing.function.arguments += tc.function.arguments;
+  let result: GuardedVeniceResult;
+  try {
+    result = await performGuardedVeniceRequest(fullRequest, {
+      onDelta: (chunk: SseChunk) => {
+        if (chunk.tool_calls) {
+          for (const tc of chunk.tool_calls) {
+            if (!aggregatedToolCalls.has(tc.index)) {
+              aggregatedToolCalls.set(tc.index, {
+                id: tc.id || "",
+                type: "function",
+                function: { name: tc.function?.name || "", arguments: "" },
+              });
+            }
+            const existing = aggregatedToolCalls.get(tc.index)!;
+            if (tc.function?.arguments) {
+              existing.function.arguments += tc.function.arguments;
+            }
           }
         }
-      }
-      if (chunk.finish_reason) {
-        finalFinishReason = chunk.finish_reason;
-      }
-      if (chunk.tool_calls) {
-        const formattedToolCalls = chunk.tool_calls.map(tc => ({
-           id: tc.id || "",
-           type: "function" as const,
-           function: {
-             name: tc.function?.name || "",
-             arguments: tc.function?.arguments || ""
-           }
-        }));
-        (chunk as { tool_calls: unknown }).tool_calls = formattedToolCalls;
-      }
-      onDelta(chunk);
-    },
-  });
+        if (chunk.finish_reason) {
+          finalFinishReason = chunk.finish_reason;
+        }
+        if (chunk.tool_calls) {
+          const formattedToolCalls = chunk.tool_calls.map(tc => ({
+             id: tc.id || "",
+             type: "function" as const,
+             function: {
+               name: tc.function?.name || "",
+               arguments: tc.function?.arguments || ""
+             }
+          }));
+          (chunk as { tool_calls: unknown }).tool_calls = formattedToolCalls;
+        }
+        onDelta(chunk);
+      },
+    });
+  } catch (err) {
+    try {
+      publishInspectorCompletion({
+        source: "main-agent",
+        transport: "venice",
+        endpoint,
+        method,
+        summaries: { durationMs: Date.now() - startedAt },
+        eventId,
+        error: sanitizeErrorText(err instanceof Error ? err.message : String(err)),
+      });
+    } catch {
+      // ignore
+    }
+    throw err;
+  }
 
   if (result.kind === "blocked") {
+    try {
+      publishInspectorCompletion({
+        source: "main-agent",
+        transport: "venice",
+        endpoint,
+        method,
+        summaries: { durationMs: Date.now() - startedAt },
+        eventId,
+        status: 451,
+        error: result.block.body?.error ?? "blocked",
+      });
+    } catch {
+      // ignore
+    }
     return {
       result,
       finishReason: null,
@@ -192,6 +240,19 @@ async function streamAndExecuteTurn(
       appendedMessages: [],
       hasToolCalls: false,
     };
+  }
+  try {
+    publishInspectorCompletion({
+      source: "main-agent",
+      transport: "venice",
+      endpoint,
+      method,
+      summaries: { durationMs: Date.now() - startedAt },
+      eventId,
+      status: result.response.status,
+    });
+  } catch {
+    // ignore
   }
 
   const appendedMessages: ToolResultMessage[] = [];

@@ -28,7 +28,8 @@ export type InspectorTelemetrySource =
   | "main-background"
   | "main-video"
   | "main-audio"
-  | "main-agent";
+  | "main-agent"
+  | "main-research";
 
 export interface InspectorTelemetryEvent {
   /** Stable id used to merge creates and updates into a single store row. */
