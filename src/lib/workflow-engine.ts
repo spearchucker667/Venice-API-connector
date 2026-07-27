@@ -64,9 +64,15 @@ function topoLevels(nodes: Node<VeniceNodeData>[], edges: Edge[]): string[][] | 
 }
 
 function getInputs(nodeId: string, edges: Edge[], outputs: Map<string, string>): string {
-  const parentEdges = edges.filter((e) => e.target === nodeId)
-  const inputs = parentEdges.map((e) => outputs.get(e.source) ?? '').filter(Boolean)
-  return inputs.join('\n\n')
+  return edges.reduce((acc, e) => {
+    if (e.target === nodeId) {
+      const output = outputs.get(e.source)
+      if (output) {
+        return acc ? `${acc}\n\n${output}` : output
+      }
+    }
+    return acc
+  }, '')
 }
 
 function resolvePrompt(template: string, input: string): string {
