@@ -78,6 +78,23 @@ describe("extractPdfText()", () => {
     expect(result.truncated).toBe(false);
   });
 
+
+  it("skips pages that throw an error during getPage", async () => {
+    mockGetPage.mockImplementation(async (pageNum) => {
+      if (pageNum === 1) {
+        throw new Error("Page load failed");
+      }
+      return {
+        getTextContent: async () => makeTextContent([{ str: `Page ${pageNum} text.`, hasEOL: true }]),
+      };
+    });
+
+    const result = await extractPdfText(makeFileLike());
+    expect(result.pageCount).toBe(2);
+    expect(result.text).not.toContain("Page 1 text.");
+    expect(result.text).toContain("Page 2 text.");
+  });
+
   it("returns isImageOnly=true when all pages have empty text", async () => {
     mockGetPage.mockImplementation(async () => ({
       getTextContent: async () => makeTextContent([]),
