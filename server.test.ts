@@ -570,6 +570,32 @@ describe("server.ts Jina proxy header allowlist", () => {
     expect(forwardHeaders).not.toHaveProperty("X-Forwarded-For");
   });
 
+  it("drops Jina headers with malicious values (CRLF/Null injection)", async () => {
+    const fetchMock = vi.fn(async () => new Response("ok", {
+      status: 200,
+      headers: { "content-type": "text/plain" },
+    })) as unknown as typeof globalThis.fetch;
+    globalThis.fetch = fetchMock;
+
+    await request(createServerApp())
+      .post("/api/proxy-jina")
+      .set("X-Venice-Forge-Family-Safe-Mode", "false")
+      .send({
+        url: "https://r.jina.ai/http://example.com",
+        headers: {
+          "X-Return-Format": "markdown\r\nInject: true",
+          "X-Wait-For-Selector": "body\0",
+          "X-With-Iframe": "true\n",
+        },
+      });
+
+    expect(fetchMock).toHaveBeenCalled();
+    const init = (fetchMock as unknown as { mock: { calls: Array<[string, RequestInit | undefined]> } }).mock.calls[0]?.[1];
+    expect(init?.headers).not.toHaveProperty("x-return-format");
+    expect(init?.headers).not.toHaveProperty("x-wait-for-selector");
+    expect(init?.headers).not.toHaveProperty("x-with-iframe");
+  });
+
   it("drops renderer-supplied Jina credentials", async () => {
     const fetchMock = vi.fn(async () => new Response("ok", {
       status: 200,
