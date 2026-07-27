@@ -128,15 +128,19 @@ function MediaCardImpl({
       const stem = item.id.slice(0, 8) || "media";
       const filename = `venice-media-${stem}.${ext}`;
       if (isElectron()) {
-        const persisted = await desktopMedia.persistGeneratedImage(dataUrl);
-        if (!persisted.ok || !persisted.media) {
-          toast.error(
-            persisted.error ??
-              tRuntime("imageStudioRuntime.imageDownloadFailedDetail"),
-          );
-          return;
+        if (item.generatedMediaId) {
+          await desktopFiles.saveGeneratedMedia(item.generatedMediaId, filename);
+        } else {
+          const persisted = await desktopMedia.persistGeneratedImage(dataUrl);
+          if (!persisted.ok || !persisted.media) {
+            toast.error(
+              persisted.error ??
+                tRuntime("imageStudioRuntime.imageDownloadFailedDetail"),
+            );
+            return;
+          }
+          await desktopFiles.saveGeneratedMedia(persisted.media.id, filename);
         }
-        await desktopFiles.saveGeneratedMedia(persisted.media.id, filename);
         toast.success(tRuntime("imageStudioRuntime.imageDownloaded"));
       } else {
         const blobUrl = URL.createObjectURL(blob);
@@ -211,6 +215,7 @@ function MediaCardImpl({
         onContextMenu={(event) => {
           event.stopPropagation();
           onSelect(item, !multiSelectMode);
+          cardMenu.openAt(event);
         }}
         className="relative block aspect-square w-full overflow-hidden bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
         aria-label={tRuntime(

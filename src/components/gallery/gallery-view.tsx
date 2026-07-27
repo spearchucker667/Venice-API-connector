@@ -33,11 +33,7 @@ import {
   bulkSetFavorite,
   listAssignableProjects,
 } from "../../stores/media-bulk-actions";
-import {
-  buildExportBundle,
-  buildMediaFilename,
-  serialiseBundle,
-} from "../../stores/media-export-bundle";
+import { buildMediaFilename } from "../../stores/media-export-bundle";
 import {
   sendToChat,
   sendToImageStudio,
@@ -60,10 +56,15 @@ import { CompareView } from "./compare-view";
 import { LineageViewer } from "./lineage-viewer";
 import type { MediaItem, MediaItemPatch } from "../../types/media";
 import { cn } from "../../lib/utils";
+import { mediaItemSource } from "../../utils/mediaItem";
 import { askDecision, askText } from "../ui/modal-requests";
 import { Lock, Unlock } from "lucide-react";
 import { MasterPasswordDialog } from "../settings/MasterPasswordDialog";
-import { desktopMasterPassword } from "../../services/desktopBridge";
+import {
+  desktopMasterPassword,
+  desktopMedia,
+  isElectron,
+} from "../../services/desktopBridge";
 import { Trans, useTranslation } from "react-i18next";
 
 export function MediaStudioView() {
@@ -666,9 +667,10 @@ export function MediaStudioView() {
     setCompareOpen(true);
   }, []);
 
-  // Phase 2B: export the selected media as a JSON bundle (browser side).
-  // The renderer never gets filesystem access; we trigger a download via
-  // the same Blob+anchor path the inspector already uses.
+  // Phase 2B: export the selected media as actual image files. Each item is
+  // fetched from its resolved source and downloaded individually. In Electron
+  // the files are saved to the Pictures/Venice Forge/Media Studio/Export
+  // folder; in web mode each file triggers a browser download.
   const runExport = useCallback(
     async (ids: string[]) => {
       if (ids.length === 0) {
@@ -680,23 +682,50 @@ export function MediaStudioView() {
         return;
       }
       const exportItems = items.filter((it) => ids.includes(it.id));
-      const bundle = buildExportBundle(exportItems);
-      const json = serialiseBundle(bundle);
-      const blob = new Blob([json], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `venice-forge-export-${new Date().toISOString().slice(0, 10)}.json`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 0);
-      // Surface deterministic sidecar filenames alongside the JSON manifest.
-      const filenameList = exportItems
-        .map((it) => buildMediaFilename(it))
-        .join("\n");
+      let exportedCount = 0;
+
+      for (const item of exportItems) {
+        const src = mediaItemSource(item);
+        if (!src) continue;
+        try {
+          const response = await fetch(src);
+          const blob = await response.blob();
+          if (!blob || blob.size === 0) continue;
+
+          const filename = buildMediaFilename(item);
+
+          if (isElectron()) {
+            const dataUrl = await new Promise<string>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result as string);
+              reader.onerror = () =>
+                reject(reader.error ?? new Error("FileReader failed"));
+              reader.readAsDataURL(blob);
+            });
+            const result = await desktopMedia.exportMedia({
+              base64Data: dataUrl,
+              filename,
+              subfolder: "Export",
+            });
+            if (result.ok) exportedCount++;
+          } else {
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
+            exportedCount++;
+          }
+        } catch {
+          // Continue with next item on failure
+        }
+      }
+
       toast.success(
-        `Exported ${ids.length} item${ids.length === 1 ? "" : "s"}. Sidecar filenames:\n${filenameList}`,
+        `Exported ${exportedCount} of ${exportItems.length} item${exportItems.length === 1 ? "" : "s"}.`,
       );
     },
     [items, tRuntime],

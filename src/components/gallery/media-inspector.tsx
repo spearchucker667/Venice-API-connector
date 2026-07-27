@@ -46,7 +46,7 @@ import { toast } from "../../stores/toast-store";
 import { copyText } from "../../stores/media-send-to";
 import { useSettingsStore } from "../../stores/settings-store";
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
-import { desktopFiles, isElectron } from "../../services/desktopBridge";
+import { desktopFiles, desktopMedia, isElectron } from "../../services/desktopBridge";
 import { Trans, useTranslation } from "react-i18next";
 
 interface MediaInspectorProps {
@@ -215,6 +215,60 @@ export function MediaInspector({
   const handleCopySeed = useCallback(() => {
     if (hasSeed) void copyText(String(item.seed));
   }, [hasSeed, item.seed]);
+
+  const handleInspectorDownload = useCallback(async () => {
+    try {
+      if (item.generatedMediaId) {
+        const saved = await desktopFiles.saveGeneratedMedia(
+          item.generatedMediaId,
+          item.mediaType === "video"
+            ? "venice-video.mp4"
+            : item.mediaType === "audio"
+              ? "venice-audio"
+              : "venice-image",
+        );
+        if (saved)
+          toast.success(
+            tRuntime(
+              "runtimeGenerated.components.gallery.mediaInspector.notification.mediaSaved",
+            ),
+          );
+      } else {
+        const src = typeof item.image === "string" ? item.image : null;
+        if (!src) return;
+        const response = await fetch(src);
+        const blob = await response.blob();
+        if (!blob || blob.size === 0) return;
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = () =>
+            reject(reader.error ?? new Error("FileReader failed"));
+          reader.readAsDataURL(blob);
+        });
+        const ext = item.mimeType?.split("/")[1] || "png";
+        const stem = item.id.slice(0, 8);
+        const result = await desktopMedia.exportMedia({
+          base64Data: dataUrl,
+          filename: `venice-media-${stem}.${ext}`,
+          subfolder: "Export",
+        });
+        if (result.ok)
+          toast.success(
+            tRuntime(
+              "runtimeGenerated.components.gallery.mediaInspector.notification.mediaSaved",
+            ),
+          );
+      }
+    } catch (error) {
+      toast.fromError(
+        error,
+        tRuntime(
+          "runtimeGenerated.components.gallery.mediaInspector.notification.mediaDownloadFailed",
+        ),
+      );
+    }
+  }, [item, tRuntime]);
 
   const handleCopyMetadata = useCallback(() => {
     const meta: Record<string, unknown> = {};
@@ -715,36 +769,10 @@ export function MediaInspector({
               <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.edit" />
             </button>
           )}
-          {item.generatedMediaId && isElectron() && (
+          {(item.generatedMediaId || (typeof item.image === "string" && item.image.startsWith("venice-media://"))) && isElectron() && (
             <button
               type="button"
-              onClick={() =>
-                void desktopFiles
-                  .saveGeneratedMedia(
-                    item.generatedMediaId!,
-                    item.mediaType === "video"
-                      ? "venice-video.mp4"
-                      : item.mediaType === "audio"
-                        ? "venice-audio"
-                        : "venice-image",
-                  )
-                  .then((saved) => {
-                    if (saved)
-                      toast.success(
-                        tRuntime(
-                          "runtimeGenerated.components.gallery.mediaInspector.notification.mediaSaved",
-                        ),
-                      );
-                  })
-                  .catch((error) =>
-                    toast.fromError(
-                      error,
-                      tRuntime(
-                        "runtimeGenerated.components.gallery.mediaInspector.notification.mediaDownloadFailed",
-                      ),
-                    ),
-                  )
-              }
+              onClick={() => void handleInspectorDownload()}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
               title={tRuntime(
                 "runtimeGenerated.components.gallery.mediaInspector.attribute.saveTheMainProcessMediaFileWithANativeDialog",

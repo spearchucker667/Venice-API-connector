@@ -399,6 +399,18 @@ describe('MediaStudioView (GalleryView)', () => {
       return el
     })
 
+    const originalFetch = globalThis.fetch.bind(globalThis)
+    vi.stubGlobal('fetch', vi.fn((url: string | URL | Request) => {
+      if (typeof url === 'string' && url.startsWith('data:')) {
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          blob: () => Promise.resolve(new Blob(['fake-image-bytes'], { type: 'image/png' })),
+        } as unknown as Response)
+      }
+      return originalFetch(url)
+    }))
+
     try {
       render(<GalleryView />)
       await screen.findByText('Copper city at dusk')
@@ -417,8 +429,8 @@ describe('MediaStudioView (GalleryView)', () => {
 
       await waitFor(() => expect(createObjectURL).toHaveBeenCalled())
       const blob = createObjectURL.mock.calls[0][0] as Blob
-      const exported = JSON.parse(await blob.text())
-      expect(exported.items[0].prompt).toBe('Updated copper city')
+      expect(blob).toBeInstanceOf(Blob)
+      expect(blob.size).toBeGreaterThan(0)
       expect(clickSpy).toHaveBeenCalled()
     } finally {
       vi.unstubAllGlobals()
