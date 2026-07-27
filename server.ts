@@ -714,7 +714,7 @@ export function createServerApp() {
             if (/^authorization$/i.test(key) || /^x-jina-api-key$/i.test(key)) {
               // Dropped: renderer is not allowed to supply Jina keys
               continue;
-            } else if (isAllowedJinaForwardHeader(key)) {
+            } else if (isAllowedJinaForwardHeader(key) && /^[^\r\n\0]*$/.test(value)) {
               headers[key] = value;
             }
             // Dropped: all other renderer-supplied headers
