@@ -98,6 +98,10 @@ export function RpChatList({ onOpen }: Props) {
     loadLorebooks,
   ]);
 
+  const cardsMap = useMemo(() => {
+    return new Map(cards.map((c) => [c.id, c]));
+  }, [cards]);
+
   const filteredChats = useMemo(() => {
     if (adultFilter === "all") return chats;
     return chats.filter((c) => !c.adult);
@@ -162,7 +166,7 @@ export function RpChatList({ onOpen }: Props) {
           <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
             {filteredChats.map((chat) => {
               const roster = chat.characterIds
-                .map((id) => cards.find((c) => c.id === id))
+                .map((id) => cardsMap.get(id))
                 .filter((c): c is NonNullable<typeof c> => c !== undefined);
               return (
                 <li
@@ -296,6 +300,7 @@ export function RpChatList({ onOpen }: Props) {
             return id;
           }}
           cards={cards}
+          cardsMap={cardsMap}
           personas={personas}
           lorebooks={lorebooks}
           defaultModel={defaultModel}
@@ -309,6 +314,7 @@ export function NewChatDialog({
   onClose,
   onCreate,
   cards,
+  cardsMap,
   personas,
   lorebooks,
   defaultModel,
@@ -331,6 +337,7 @@ export function NewChatDialog({
     };
   }) => Promise<string | null>;
   cards: CharacterCardV1[];
+  cardsMap: Map<string, CharacterCardV1>;
   personas: UserPersonaV1[];
   lorebooks: LorebookV1[];
   defaultModel: string;
@@ -376,7 +383,7 @@ export function NewChatDialog({
       return;
     }
     const resolvedCards = selectedCards
-      .map((id) => cards.find((c) => c.id === id))
+      .map((id) => cardsMap.get(id))
       .filter((c): c is NonNullable<typeof c> => c !== undefined);
     if (resolvedCards.length === 0) {
       setError("Picked characters could not be resolved.");

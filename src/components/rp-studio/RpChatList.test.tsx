@@ -15,6 +15,7 @@ describe("NewChatDialog focus management", () => {
         onClose={onClose}
         onCreate={vi.fn()}
         cards={[]}
+        cardsMap={new Map()}
         personas={[]}
         lorebooks={[]}
         defaultModel="test-model"
