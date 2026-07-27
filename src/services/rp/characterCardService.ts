@@ -321,7 +321,7 @@ export async function saveCharacterCard(card: CharacterCardV1): Promise<Characte
   };
   const normalized = normalizeCard(next);
   if (!normalized) throw new Error("Invalid character card.");
-  // VERIFY-014 / B1 fix: run the safety guard at the save boundary so user-
+  // VERIFY-014 / B1 resolution: run the safety guard at the save boundary so user-
   // authored content is vetted before it is persisted (B1).
   const safety = assessCharacterImport(normalized, getEffectiveRendererLocalFamilySafeModeEnabled());
   if (!safety.allow || safety.action === "block") {

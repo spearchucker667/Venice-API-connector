@@ -143,7 +143,7 @@ export async function savePersona(persona: UserPersonaV1): Promise<UserPersonaV1
   };
   const normalized = normalizePersona(next);
   if (!normalized) throw new Error("Invalid persona.");
-  // VERIFY-014 / B1 fix: gate the save with the safety guard.
+  // VERIFY-014 / B1 resolution: gate the save with the safety guard.
   const safety = assessPersonaImport(normalized, getEffectiveRendererLocalFamilySafeModeEnabled());
   if (!safety.allow || safety.action === "block") {
     throw new SafetyGuardBlockedError(safety);
