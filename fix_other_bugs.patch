@@ -1,7 +1,0 @@
---- src/shared/safety/childExploitationGuard.test.ts
-+++ src/shared/safety/childExploitationGuard.test.ts
-@@ -66,3 +66,3 @@
-
--  // BUG-001 regression guard: char-stitching evasion
-+  // Evasion guard: char-stitching evasion
-   it("blocks char-stitching evasions (c.h.i.l.d)", () => {

@@ -1,7 +1,0 @@
---- src/shared/safety/childExploitationGuard.test.ts
-+++ src/shared/safety/childExploitationGuard.test.ts
-@@ -4,3 +4,3 @@
-  * Test suite covers basic detection, safe-context allowances, image-specific restrictions,
-- * age detection (regression for leet-fold bug), char-stitching evasion,
-+ * age detection, char-stitching evasion,
-  * and cross-sentence evaluation.
