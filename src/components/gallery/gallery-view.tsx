@@ -314,7 +314,7 @@ export function MediaStudioView() {
     [items, inspectorId],
   );
 
-  // BUG-008 lineage handling (unchanged from Phase 2A).
+  // Lineage handling (regression guard for parent/child resolution across pages).
   const loadById = useMediaStore((state) => state.loadById);
   const [missingChildIds, setMissingChildIds] = useState<string[]>([]);
   // BUG-React#11 regression guard: mirror `missingChildIds` through a ref so the
