@@ -36,7 +36,14 @@
     "preview": "预览",
     "unlock": "解锁",
     "saving": "保存中...",
-    "importAll": "全部导入"
+    "importAll": "全部导入",
+    "saveAs": "__MISSING__:actions.saveAs",
+    "lock": "__MISSING__:actions.lock",
+    "favorite": "__MISSING__:actions.favorite",
+    "unfavorite": "__MISSING__:actions.unfavorite",
+    "regenerate": "__MISSING__:actions.regenerate",
+    "download": "__MISSING__:actions.download",
+    "open": "__MISSING__:actions.open"
   },
   "status": {
     "active": "已激活",

@@ -36,7 +36,14 @@
     "preview": "पूर्वावलोकन",
     "unlock": "अनलॉक करें",
     "saving": "सहेजा जा रहा है...",
-    "importAll": "सभी आयात करें"
+    "importAll": "सभी आयात करें",
+    "saveAs": "__MISSING__:actions.saveAs",
+    "lock": "__MISSING__:actions.lock",
+    "favorite": "__MISSING__:actions.favorite",
+    "unfavorite": "__MISSING__:actions.unfavorite",
+    "regenerate": "__MISSING__:actions.regenerate",
+    "download": "__MISSING__:actions.download",
+    "open": "__MISSING__:actions.open"
   },
   "status": {
     "active": "सक्रिय",

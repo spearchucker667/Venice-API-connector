@@ -41,11 +41,21 @@ import {
 import { inspectImageInput } from "../../services/media-request-adapter";
 import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
 import { Trans, useTranslation } from "react-i18next";
+import { ContextMenu, useContextMenu } from "../ui/ContextMenu";
+import type { ContextMenuItem } from "../ui/ContextMenu";
+import {
+  desktopFiles,
+  desktopMedia,
+  isElectron,
+} from "../../services/desktopBridge";
+import { copyText } from "../../utils/download";
 
 type Tool = "edit" | "upscale" | "remove-bg";
 
 export function ImageTools() {
   const { t } = useTranslation("media");
+  const sourceMenu = useContextMenu();
+  const resultMenu = useContextMenu();
   const editPromptId = useId();
   const editModelId = useId();
   const hasVeniceKey = useAuthStore(selectHasVeniceKey);
@@ -267,11 +277,64 @@ export function ImageTools() {
   }, [error]);
 
   const downloadResult = () => {
-    if (!resultUrl) return;
-    const a = document.createElement("a");
-    a.href = resultUrl;
-    a.download = `venice-${tool}-result.png`;
-    a.click();
+    void handleSaveAsResult();
+  };
+
+  const handleSaveAsResult = async () => {
+    const blob = resultBlobRef.current;
+    if (!blob) {
+      toast.error(t("imageTools.noResult"));
+      return;
+    }
+    const suggestedName = `venice-${tool}-result.png`;
+    try {
+      if (isElectron()) {
+        const dataUrl = await blobToDataUrl(blob);
+        const persisted = await desktopMedia.persistGeneratedImage(dataUrl);
+        if (!persisted.ok || !persisted.media) {
+          toast.fromError(
+            new Error(persisted.error ?? "Failed to persist result"),
+            t("imageTools.saveFailed"),
+          );
+          return;
+        }
+        await desktopFiles.saveGeneratedMedia(
+          persisted.media.id,
+          suggestedName,
+        );
+        toast.success(t("imageTools.savedToMedia"));
+      } else {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = suggestedName;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 0);
+        toast.success(t("imageTools.savedToMedia"));
+      }
+    } catch (err) {
+      toast.fromError(err, t("imageTools.saveFailed"));
+    }
+  };
+
+  const handleCopyResult = async () => {
+    const blob = resultBlobRef.current;
+    if (!blob) return;
+    try {
+      await copyText(await blobToDataUrl(blob));
+      toast.success(t("imageTools.savedToMedia"));
+    } catch {
+      toast.fromError(new Error("Copy failed"), t("imageTools.saveFailed"));
+    }
+  };
+
+  const handleCopySource = async () => {
+    if (!imageData) return;
+    try {
+      await copyText(imageData);
+      toast.success(t("imageTools.savedToMedia"));
+    } catch {
+      toast.fromError(new Error("Copy failed"), t("imageTools.saveFailed"));
+    }
   };
 
   return (
@@ -304,7 +367,10 @@ export function ImageTools() {
             <Trans i18nKey="common:surface.componentsImageImageTools.text.sourceImage" />
           </Label>
           {imageData ? (
-            <div className="relative group">
+            <div
+              className="relative group"
+              onContextMenu={sourceMenu.openAt}
+            >
               <img
                 src={imageData}
                 alt={t("imageTools.source")}
@@ -515,7 +581,7 @@ export function ImageTools() {
               detail={t("imageTools.processingDetail")}
             />
           </div>
-        ) : resultUrl ? (
+) : resultUrl ? (
           <div className="animate-fade-in flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <Label>
@@ -545,6 +611,7 @@ export function ImageTools() {
                 </button>
                 <button
                   onClick={downloadResult}
+                  onContextMenu={(event) => event.stopPropagation()}
                   className="text-[14px] text-text-muted hover:text-text-muted transition-colors flex items-center gap-1.5"
                 >
                   <svg
@@ -566,6 +633,7 @@ export function ImageTools() {
             <img
               src={resultUrl}
               alt={t("imageTools.result")}
+              onContextMenu={resultMenu.openAt}
               className={cn(
                 "w-full rounded-lg border border-border",
                 tool === "remove-bg" &&
@@ -577,6 +645,48 @@ export function ImageTools() {
           <EmptyState>{t(`imageTools.empty.${tool}`)}</EmptyState>
         )}
       </div>
+      <ContextMenu
+        position={sourceMenu.menu}
+        items={
+          imageData
+            ? ([
+                {
+                  key: "copy",
+                  label: t("contextMenu.copyImage"),
+                  onSelect: () => void handleCopySource(),
+                },
+              ] satisfies ContextMenuItem[])
+            : []
+        }
+        onClose={sourceMenu.close}
+        ariaLabel="Source image actions"
+      />
+      <ContextMenu
+        position={resultMenu.menu}
+        items={
+          resultUrl
+            ? ([
+                {
+                  key: "save-as",
+                  label: t("contextMenu.saveAs"),
+                  onSelect: () => void handleSaveAsResult(),
+                },
+                {
+                  key: "save-media",
+                  label: t("contextMenu.saveToMediaStudio"),
+                  onSelect: () => void handleSaveToMedia(),
+                },
+                {
+                  key: "copy",
+                  label: t("contextMenu.copyImage"),
+                  onSelect: () => void handleCopyResult(),
+                },
+              ] satisfies ContextMenuItem[])
+            : []
+        }
+        onClose={resultMenu.close}
+        ariaLabel="Result image actions"
+      />
     </div>
   );
 }

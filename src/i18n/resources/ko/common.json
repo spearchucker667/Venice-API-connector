@@ -36,7 +36,14 @@
     "preview": "미리보기",
     "unlock": "잠금 해제",
     "saving": "저장 중...",
-    "importAll": "모두 가져오기"
+    "importAll": "모두 가져오기",
+    "saveAs": "__MISSING__:actions.saveAs",
+    "lock": "__MISSING__:actions.lock",
+    "favorite": "__MISSING__:actions.favorite",
+    "unfavorite": "__MISSING__:actions.unfavorite",
+    "regenerate": "__MISSING__:actions.regenerate",
+    "download": "__MISSING__:actions.download",
+    "open": "__MISSING__:actions.open"
   },
   "status": {
     "active": "활성",

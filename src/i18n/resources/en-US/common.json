@@ -3,6 +3,7 @@
   "appSubtitle": "The private local workbench.",
   "actions": {
     "save": "Save",
+    "saveAs": "Save As…",
     "cancel": "Cancel",
     "delete": "Delete",
     "confirm": "Confirm",
@@ -34,7 +35,13 @@
     "testing": "Testing...",
     "testKey": "Test Key",
     "preview": "Preview",
+    "lock": "Lock",
     "unlock": "Unlock",
+    "favorite": "Favorite",
+    "unfavorite": "Unfavorite",
+    "regenerate": "Regenerate",
+    "download": "Download",
+    "open": "Open",
     "saving": "Saving...",
     "importAll": "Import all"
   },

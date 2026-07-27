@@ -36,7 +36,14 @@
     "preview": "Pré-visualizar",
     "unlock": "Desbloquear",
     "saving": "Salvando...",
-    "importAll": "Importar tudo"
+    "importAll": "Importar tudo",
+    "saveAs": "__MISSING__:actions.saveAs",
+    "lock": "__MISSING__:actions.lock",
+    "favorite": "__MISSING__:actions.favorite",
+    "unfavorite": "__MISSING__:actions.unfavorite",
+    "regenerate": "__MISSING__:actions.regenerate",
+    "download": "__MISSING__:actions.download",
+    "open": "__MISSING__:actions.open"
   },
   "status": {
     "active": "Ativo",

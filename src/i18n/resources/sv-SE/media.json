@@ -128,5 +128,15 @@
     "generatedNumber": "Genererad {{number}}",
     "saveBeforeCard": "Spara bilden i Media Studio innan du skapar ett kort.",
     "characterCreatorLaunched": "AI Character Creator lanseras"
+  },
+  "contextMenu": {
+    "saveAs": "__MISSING__:contextMenu.saveAs",
+    "copyImage": "__MISSING__:contextMenu.copyImage",
+    "openInInspector": "__MISSING__:contextMenu.openInInspector",
+    "sendToImageTools": "__MISSING__:contextMenu.sendToImageTools",
+    "sendToCharacterCreator": "__MISSING__:contextMenu.sendToCharacterCreator",
+    "saveToMediaStudio": "__MISSING__:contextMenu.saveToMediaStudio",
+    "revealInFinder": "__MISSING__:contextMenu.revealInFinder",
+    "removeFromChat": "__MISSING__:contextMenu.removeFromChat"
   }
 }
