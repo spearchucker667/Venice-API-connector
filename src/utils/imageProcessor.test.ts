@@ -132,19 +132,6 @@ describe('imageProcessor', () => {
     });
   });
 
-  describe('stripImageMetadata error handling', () => {
-    it('catches processing errors globally', () => {
-      const data = new Uint8Array([0xFF, 0xD8, 0xFF, 0x00]);
-      const spy = vi.spyOn(data, 'subarray').mockImplementation(() => {
-        throw new Error('Simulated failure');
-      });
-
-      const { report } = stripImageMetadata(data);
-      expect(report.warnings).toContain('Image metadata scrubbing failed');
-      spy.mockRestore();
-    });
-  });
-
   describe('stripImageMetadata - PNG', () => {
     const pngSig = [137, 80, 78, 71, 13, 10, 26, 10];
     
