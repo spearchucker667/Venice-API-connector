@@ -28,6 +28,16 @@ describe("redactSecrets", () => {
     expect(value).toBe("OPENAI_API_KEY=[REDACTED] JINA_TOKEN=[REDACTED]");
   });
 
+  it("processes multiple identical references correctly", () => {
+    const obj = { name: "diagnostics", apiKey: "secret" };
+    const arr = [obj, obj];
+
+    expect(redactSecrets(arr)).toEqual([
+      { name: "diagnostics", apiKey: "[REDACTED]" },
+      { name: "diagnostics", apiKey: "[REDACTED]" },
+    ]);
+  });
+
   // BUG-011 regression guard: redaction must not recurse forever on cyclic objects.
   it("replaces cyclic references with a placeholder", () => {
     const value: { name: string; self?: unknown } = { name: "diagnostics" };
