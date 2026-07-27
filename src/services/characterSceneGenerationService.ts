@@ -88,6 +88,7 @@ export async function generateCharacterScene(
   const nowIso = new Date().toISOString();
   const requestId = deps.generateId();
   let resultPrompt: string | undefined;
+  let limiterSlotAcquired = false;
 
   try {
     const character = conversation.metadata?.character;
@@ -125,6 +126,7 @@ export async function generateCharacterScene(
     }
 
     limiter.recordStart({ conversationId: conversation.id, assistantMessageId });
+    limiterSlotAcquired = true;
 
     const model = options.model || character.modelId || useSettingsStore.getState().selectedModels.image || 'flux-dev';
     const caps = deps.getImageModelCapabilities(model) as ImageModelCapabilities;
@@ -231,7 +233,9 @@ export async function generateCharacterScene(
       updatedAt: new Date().toISOString(),
     };
   } catch {
-    limiter.recordFailure({ conversationId: conversation.id, assistantMessageId });
+    if (limiterSlotAcquired) {
+      limiter.recordFailure({ conversationId: conversation.id, assistantMessageId });
+    }
     return {
       requestId,
       status: 'failed',

@@ -129,6 +129,19 @@ describe('generateCharacterScene', () => {
     expect(limiter.check({ conversationId: 'conv-1' }).allowed).toBe(true);
   });
 
+  it('does not release the concurrency limiter slot if it was never acquired', async () => {
+    const limiter = new CharacterSceneRateLimiter({ maxConcurrentSceneGenerations: 2 });
+
+    limiter.recordStart({ conversationId: 'other' }); // concurrent = 1
+    const deps = makeDeps({ assessScenePrompt: vi.fn().mockRejectedValue(new Error('fail')) });
+    const result = await generateCharacterScene({ conversation: makeConversation(), source: 'on_demand', limiter }, deps);
+    expect(result.status).toBe('failed');
+
+    // We can verify that concurrent is still 1. If we record another start, it will be 2 (the max).
+    limiter.recordStart({ conversationId: 'other2' });
+    expect(limiter.check({ conversationId: 'conv-3' }).allowed).toBe(false);
+  });
+
   // T-159 regression guard: catch block must not return raw exception text.
   it('returns a safe error message when veniceFetch fails', async () => {
     const deps = makeDeps({ veniceFetch: vi.fn().mockRejectedValue(new Error('Venice unreachable')) });
