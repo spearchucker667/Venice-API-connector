@@ -307,4 +307,71 @@ describe('VideoView accessibility', () => {
     fireEvent.click(modelButton)
     expect(screen.getAllByText('No Text Model').length).toBeGreaterThanOrEqual(1)
   })
+
+
+  it('BUG-004 regression guard: the manual save button must be idempotent and not save duplicates', async () => {
+    const upsertMock = vi.fn().mockResolvedValue(undefined)
+
+    // In our test, useMediaStore.getState is mocked manually above using Object.assign.
+    // Let's directly mock the return value.
+    const mediaStore = await import('../../stores/media-store')
+    mediaStore.useMediaStore.getState = vi.fn().mockReturnValue({ items: [], upsert: upsertMock })
+
+    const useVideoModule = await import('../../hooks/use-video')
+
+    // We can't vi.mocked(useVideoModule.useVideo) because it's a getter maybe? Or just mock it directly.
+    vi.spyOn(useVideoModule, 'useVideo').mockReturnValue({
+      queue: queueMock as any,
+      isQueueing: false,
+      error: null,
+      reset: resetMock,
+      cancel: cancelMock,
+      progress: null,
+      stage: null,
+      resultMediaId: null,
+      elapsedMs: 0,
+      videoUrl: 'venice-video://test',
+      queueId: 'test-queue-id',
+      status: 'idle',
+      lastRequest: null,
+    })
+
+    const { toast } = await import('../../stores/toast-store')
+
+    render(<VideoView />)
+
+    // Wait for the save button
+    const saveButton = await screen.findByRole('button', { name: /Save to Media Studio/i })
+
+    // First click
+    await act(async () => {
+      fireEvent.click(saveButton)
+    })
+
+    expect(upsertMock).toHaveBeenCalledTimes(1)
+
+    // In the second click, since the component marks the item as saved in the ref,
+    // the button should be rendered as disabled. However, if the user manually triggers onClick
+    // (e.g. by race condition or JS execution), it shouldn't upsert again.
+    // Testing the onClick logic when queueId is in savedQueueIdsRef.
+    // Instead of relying on fireEvent.click which ignores disabled buttons,
+    // we extract the onClick prop and call it directly.
+
+    // But since it's a test for idempotency based on ref, we can just click it
+    // using fireEvent if it's not disabled, or call onClick manually.
+    // Let's just remove the disabled attribute for a moment to test the guard logic.
+    saveButton.removeAttribute('disabled')
+
+    await act(async () => {
+      fireEvent.click(saveButton)
+    })
+
+    // Upsert shouldn't be called a second time
+    expect(upsertMock).toHaveBeenCalledTimes(1)
+
+    // Verify toast success was called for the already saved case
+    expect(toast.success).toHaveBeenCalledWith(
+      expect.stringContaining('Already in Media Studio')
+    )
+  })
 })
