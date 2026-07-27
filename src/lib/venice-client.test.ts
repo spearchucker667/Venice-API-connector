@@ -165,7 +165,7 @@ describe('venice-client (lib)', () => {
     )
   })
 
-  // VERIFY-006 regression guard: BUG-1 / venice() must forward the AbortSignal
+  // VERIFY-006 regression guard: venice() must forward the AbortSignal
   // to desktopVenice.request() as the second positional arg so the IPC
   // layer's `venice:abort` channel is triggered when the caller cancels.
   // The previous implementation dropped the signal on the floor, leaving a
@@ -187,7 +187,7 @@ describe('venice-client (lib)', () => {
     )
   })
 
-  // VERIFY-006 extension: BUG-2 / veniceBlob() and veniceFormData() must
+  // VERIFY-006 extension: veniceBlob() and veniceFormData() must
   // also forward the AbortSignal. The previous implementation declared
   // `init.signal` but never passed it to desktopVenice.request(), only
   // consulting it post-hoc for an `aborted` check. The IPC layer never
