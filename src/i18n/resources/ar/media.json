@@ -128,5 +128,15 @@
     "generatedNumber": "تم إنشاؤها {{number}}",
     "saveBeforeCard": "احفظ الصورة في Media Studio قبل إنشاء البطاقة.",
     "characterCreatorLaunched": "تم إطلاق برنامج AI Character Creator"
+  },
+  "contextMenu": {
+    "saveAs": "__MISSING__:contextMenu.saveAs",
+    "copyImage": "__MISSING__:contextMenu.copyImage",
+    "openInInspector": "__MISSING__:contextMenu.openInInspector",
+    "sendToImageTools": "__MISSING__:contextMenu.sendToImageTools",
+    "sendToCharacterCreator": "__MISSING__:contextMenu.sendToCharacterCreator",
+    "saveToMediaStudio": "__MISSING__:contextMenu.saveToMediaStudio",
+    "revealInFinder": "__MISSING__:contextMenu.revealInFinder",
+    "removeFromChat": "__MISSING__:contextMenu.removeFromChat"
   }
 }

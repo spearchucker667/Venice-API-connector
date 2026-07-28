@@ -3,13 +3,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const root = path.join(os.tmpdir(), 'vf-generated-media-test')
 vi.mock('electron', () => ({ 
   app: { getPath: () => root },
   net: {
     fetch: async (url: string, init: any) => {
-      const filePath = new URL(url).pathname;
+      const filePath = fileURLToPath(url);
       const stat = await fs.stat(filePath);
       const totalSize = stat.size;
       const rangeHeader = init?.headers?.Range || init?.headers?.range;
@@ -85,6 +86,18 @@ describe('generatedMediaStore', () => {
     await expect(persistGeneratedMedia(Buffer.alloc(0), 'audio/mpeg')).rejects.toThrow(/empty/i)
     await expect(persistGeneratedMedia(Buffer.from('x'), 'text/plain')).rejects.toThrow(/unsupported/i)
     await expect(persistGeneratedMedia(Buffer.from('not-mp4'), 'video/mp4')).rejects.toThrow(/did not match/i)
+  })
+
+  it.each([
+    { mimeType: 'audio/aac', bytes: Buffer.from([0xff, 0xf1, 0x50, 0x80]) },
+    { mimeType: 'audio/ogg', bytes: Buffer.from('OggSaudio') },
+    { mimeType: 'audio/opus', bytes: Buffer.from('OggSOpusHead') },
+    { mimeType: 'audio/mp4', bytes: Buffer.from('\x00\x00\x00\x18ftypM4A audio', 'binary') },
+  ])('persists future provider output $mimeType through the shared format policy', async ({ mimeType, bytes }) => {
+    const saved = await persistGeneratedMedia(bytes, mimeType)
+    const resolved = await resolveGeneratedMedia(saved.id)
+    expect(resolved?.mimeType).toBe(mimeType)
+    expect(await fs.readFile(resolved!.path)).toEqual(bytes)
   })
 
   it('classifies persistence failures without exposing filesystem paths', () => {

@@ -62,6 +62,9 @@ import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndic
 
 import { DEFAULT_IMAGE_MODEL } from "../../constants/venice";
 import { Trans, useTranslation } from "react-i18next";
+import { ContextMenu, useContextMenu } from "../ui/ContextMenu";
+import type { ContextMenuItem } from "../ui/ContextMenu";
+import { copyText } from "../../utils/download";
 
 function toImageSrc(b64: string): string {
   if (!b64) return "";
@@ -123,6 +126,7 @@ interface PendingImageSave {
 export function ImageView() {
   const { t: tRuntime } = useTranslation("common");
   const { t } = useTranslation("media");
+  const lightboxMenu = useContextMenu();
   const promptId = useId();
   const negativePromptId = useId();
   const styleId = useId();
@@ -325,7 +329,6 @@ export function ImageView() {
   const downloadImage = async (b64: string, index?: number) => {
     const ext = getExtensionFromDataUrl(b64);
     const filename = `venice-image${index !== undefined ? `-${index + 1}` : ""}.${ext}`;
-    const routedFolder = routeAsset(prompt);
     try {
       if (isElectron()) {
         const pending = pendingImageSaves[b64];
@@ -341,26 +344,12 @@ export function ImageView() {
             return;
           }
         }
-        const result = await desktopMedia.saveRoutedImage(
-          b64,
-          filename,
-          routedFolder,
-        );
-        if (result.ok) {
-          toast.success(
-            `Image saved to Pictures/Venice Forge/${routedFolder}/${filename}`,
-          );
-        } else {
-          const fallback = await downloadImageUtil(toImageSrc(b64), filename);
-          if (fallback.confirmed) {
-            toast.success(t("imageStudioRuntime.imageDownloaded"));
-          } else {
-            toast.error(
-              t("imageStudioRuntime.imageSaveFailed"),
-              t("imageStudioRuntime.imageDownloadFailedDetail"),
-            );
-          }
-        }
+        const result = await desktopMedia.saveMediaAs({
+          source: toImageSrc(b64),
+          suggestedName: filename,
+        });
+        if (result.status === "saved") toast.success(t("imageStudioRuntime.imageDownloaded"));
+        if (result.status === "failed") throw new Error(result.error);
       } else {
         const fallback = await downloadImageUtil(toImageSrc(b64), filename);
         if (fallback.confirmed) {
@@ -1380,6 +1369,10 @@ export function ImageView() {
             <img
               src={toImageSrc(selectedImage)}
               alt={t("imageStudioRuntime.generated")}
+              onContextMenu={(e) => {
+                e.stopPropagation();
+                lightboxMenu.openAt(e);
+              }}
               className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-2xl"
             />
             <div className="absolute top-3 right-3 flex gap-1.5">
@@ -1425,6 +1418,31 @@ export function ImageView() {
               </button>
             </div>
           </div>
+          <ContextMenu
+            position={lightboxMenu.menu}
+            items={
+              selectedImage
+                ? ([
+                    {
+                      key: "save-as",
+                      label: tRuntime("actions.saveAs"),
+                      onSelect: () => {
+                        void downloadImage(selectedImage);
+                      },
+                    },
+                    {
+                      key: "copy",
+                      label: t("contextMenu.copyImage"),
+                      onSelect: () => {
+                        void copyText(toImageSrc(selectedImage));
+                      },
+                    },
+                  ] satisfies ContextMenuItem[])
+                : []
+            }
+            onClose={lightboxMenu.close}
+            ariaLabel="Image preview actions"
+          />
         </div>
       )}
       {mutation.isPending ? (

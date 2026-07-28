@@ -79,7 +79,7 @@ vi.mock("../../services/desktopBridge", () => ({
     persistGeneratedImage,
     retryGeneratedImage,
     saveGeneratedImageRecovery,
-    saveRoutedImage: vi.fn(),
+    saveMediaAs: vi.fn(),
   },
 }));
 

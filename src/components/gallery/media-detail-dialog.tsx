@@ -3,7 +3,7 @@
  * Inspector is rendered alongside as a side panel. */
 
 import { useEffect, useMemo, useRef } from "react";
-import { ChevronLeft, ChevronRight, Heart, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Heart, Trash2 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { Badge } from "../ui/shared";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
@@ -24,6 +24,7 @@ interface MediaDetailDialogProps {
   onClose: () => void;
   onNavigate: (direction: "prev" | "next") => void;
   onToggleFavorite: (item: MediaItem) => void;
+  onSaveAs: (item: MediaItem) => unknown | Promise<unknown>;
   onDelete: (item: MediaItem) => void;
   onSelect: (item: MediaItem) => void;
 }
@@ -34,6 +35,7 @@ export function MediaDetailDialog({
   onClose,
   onNavigate,
   onToggleFavorite,
+  onSaveAs,
   onDelete,
   onSelect,
 }: MediaDetailDialogProps) {
@@ -124,6 +126,16 @@ export function MediaDetailDialog({
                 : tRuntime(
                     "runtimeGenerated.components.gallery.mediaDetailDialog.text.favorite",
                   )}
+            </button>
+            <button
+              type="button"
+              onClick={() => void onSaveAs(item)}
+              disabled={!src && !item.generatedMediaId}
+              aria-label={tRuntime("actions.saveAs")}
+              className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <Download className="h-3.5 w-3.5" />
+              {tRuntime("actions.saveAs")}
             </button>
             <button
               type="button"

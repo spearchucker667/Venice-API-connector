@@ -33,11 +33,7 @@ import {
   bulkSetFavorite,
   listAssignableProjects,
 } from "../../stores/media-bulk-actions";
-import {
-  buildExportBundle,
-  buildMediaFilename,
-  serialiseBundle,
-} from "../../stores/media-export-bundle";
+import { buildMediaFilename } from "../../stores/media-export-bundle";
 import {
   sendToChat,
   sendToImageStudio,
@@ -60,10 +56,15 @@ import { CompareView } from "./compare-view";
 import { LineageViewer } from "./lineage-viewer";
 import type { MediaItem, MediaItemPatch } from "../../types/media";
 import { cn } from "../../lib/utils";
+import { mediaItemSource } from "../../utils/mediaItem";
 import { askDecision, askText } from "../ui/modal-requests";
 import { Lock, Unlock } from "lucide-react";
 import { MasterPasswordDialog } from "../settings/MasterPasswordDialog";
-import { desktopMasterPassword } from "../../services/desktopBridge";
+import {
+  desktopMasterPassword,
+  desktopMedia,
+  isElectron,
+} from "../../services/desktopBridge";
 import { Trans, useTranslation } from "react-i18next";
 
 export function MediaStudioView() {
@@ -666,9 +667,34 @@ export function MediaStudioView() {
     setCompareOpen(true);
   }, []);
 
-  // Phase 2B: export the selected media as a JSON bundle (browser side).
-  // The renderer never gets filesystem access; we trigger a download via
-  // the same Blob+anchor path the inspector already uses.
+  const saveMediaItemAs = useCallback(async (item: MediaItem): Promise<"saved" | "cancelled" | "failed"> => {
+    const src = mediaItemSource(item);
+    if (!src && !item.generatedMediaId) {
+      toast.error(tRuntime("mediaSave.failed"));
+      return "failed";
+    }
+    try {
+      const filename = buildMediaFilename(item);
+      const result = await desktopMedia.saveMediaAs({
+        source: src ?? undefined,
+        mediaId: item.generatedMediaId,
+        mimeType: item.mimeType,
+        suggestedName: filename,
+      });
+      if (result.status === "cancelled") return "cancelled";
+      if (result.status === "failed") throw new Error(result.error || tRuntime("mediaSave.failed"));
+      toast.success(tRuntime("mediaSave.success"));
+      return "saved";
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : tRuntime("mediaSave.failed");
+      toast.error(tRuntime("mediaSave.failed"), detail);
+      return "failed";
+    }
+  }, [tRuntime]);
+
+  // Phase 2B: export the selected media as actual image files.
+  // Electron: opens a native Save dialog (single) or directory chooser (multi).
+  // Web: triggers blob downloads (unchanged).
   const runExport = useCallback(
     async (ids: string[]) => {
       if (ids.length === 0) {
@@ -680,26 +706,121 @@ export function MediaStudioView() {
         return;
       }
       const exportItems = items.filter((it) => ids.includes(it.id));
-      const bundle = buildExportBundle(exportItems);
-      const json = serialiseBundle(bundle);
-      const blob = new Blob([json], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `venice-forge-export-${new Date().toISOString().slice(0, 10)}.json`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 0);
-      // Surface deterministic sidecar filenames alongside the JSON manifest.
-      const filenameList = exportItems
-        .map((it) => buildMediaFilename(it))
-        .join("\n");
-      toast.success(
-        `Exported ${ids.length} item${ids.length === 1 ? "" : "s"}. Sidecar filenames:\n${filenameList}`,
-      );
+      if (exportItems.length === 0) {
+        toast.error(tRuntime("mediaSave.noItems"));
+        return;
+      }
+
+      if (!isElectron()) {
+        // Web mode: trigger a blob download per item.
+        let exportedCount = 0;
+        for (const item of exportItems) {
+          const src = mediaItemSource(item);
+          if (!src) continue;
+          try {
+            const response = await fetch(src);
+            const blob = await response.blob();
+            if (!blob || blob.size === 0) continue;
+            const filename = buildMediaFilename(item);
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
+            exportedCount++;
+          } catch {
+            // continue
+          }
+        }
+        if (exportedCount === 0) {
+          toast.error(tRuntime("mediaSave.exportFailed"));
+        } else if (exportedCount < exportItems.length) {
+          toast.warn(
+            tRuntime("mediaSave.partiallyExported", { saved: exportedCount, total: exportItems.length }),
+          );
+        } else {
+          toast.success(tRuntime("mediaSave.exported", { count: exportedCount }));
+        }
+        return;
+      }
+
+      // Electron desktop path.
+      if (exportItems.length === 1) {
+        await saveMediaItemAs(exportItems[0]);
+        return;
+      }
+
+      // 2+ items: open one native directory chooser, export all selected files.
+      const itemsForExport: Array<{
+        itemId: string;
+        mediaId?: string;
+        dataUrl?: string;
+        mimeType?: string;
+        suggestedName: string;
+      }> = [];
+      for (const item of exportItems) {
+        const filename = buildMediaFilename(item);
+        if (item.generatedMediaId) {
+          itemsForExport.push({
+            itemId: item.id,
+            mediaId: item.generatedMediaId,
+            suggestedName: filename,
+          });
+        } else {
+          const src = mediaItemSource(item);
+          if (!src) continue;
+          try {
+            const response = await fetch(src);
+            const blob = await response.blob();
+            if (!blob || blob.size === 0) continue;
+            const dataUrl = await new Promise<string>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result as string);
+              reader.onerror = () =>
+                reject(reader.error ?? new Error("FileReader failed"));
+              reader.readAsDataURL(blob);
+            });
+            itemsForExport.push({
+              itemId: item.id,
+              dataUrl,
+              mimeType: blob.type,
+              suggestedName: filename,
+            });
+          } catch {
+            // skip this item
+          }
+        }
+      }
+      if (itemsForExport.length === 0) {
+        toast.error(tRuntime("mediaSave.prepareFailed"));
+        return;
+      }
+      try {
+        const result = await desktopMedia.exportMediaFiles({
+          items: itemsForExport,
+        });
+        if (result.canceled) return;
+        if (result.failed.length === 0) {
+          toast.success(
+            tRuntime("mediaSave.exported", { count: result.succeeded.length }),
+          );
+        } else if (result.succeeded.length > 0) {
+          toast.warn(
+            tRuntime("mediaSave.partiallyExported", { saved: result.succeeded.length, total: itemsForExport.length }),
+          );
+        } else {
+          toast.error(tRuntime("mediaSave.exportFailed"));
+        }
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "Unknown error";
+        toast.error(tRuntime("mediaSave.failedWithDetail", { detail: msg }));
+      }
     },
-    [items, tRuntime],
+    [items, saveMediaItemAs, tRuntime],
   );
 
   const handleBatchExport = useCallback(() => {
@@ -1162,6 +1283,7 @@ export function MediaStudioView() {
                       }
                     }}
                     onToggleFavorite={(it) => void toggleFavorite(it.id)}
+                    onSaveAs={saveMediaItemAs}
                     onVaultToggle={(it) => void toggleVault(it.id)}
                     onDelete={(it) => void handleDelete(it)}
                   />
@@ -1231,6 +1353,7 @@ export function MediaStudioView() {
           onClose={() => setDetailId(null)}
           onNavigate={handleNavigate}
           onToggleFavorite={(it) => void toggleFavorite(it.id)}
+          onSaveAs={saveMediaItemAs}
           onDelete={(it) => void handleDelete(it)}
           onSelect={(it) => setDetailId(it.id)}
         />

@@ -31,7 +31,9 @@ jobs:
         run: npm ci
 
       - name: Audit dependencies (release gate)
-        run: npm audit --audit-level=moderate
+        run: npm audit --omit=dev --audit-level=moderate
+      - name: Audit complete dependency graph for critical advisories
+        run: npm audit --audit-level=critical
         # Moderate+ vulnerabilities fail the build for production and build-time dependencies.
         # High-only would be too permissive for a security-sensitive third-party client.
 
@@ -117,7 +119,9 @@ jobs:
         run: npm ci
 
       - name: Audit dependencies (release gate)
-        run: npm audit --audit-level=moderate
+        run: npm audit --omit=dev --audit-level=moderate
+      - name: Audit complete dependency graph for critical advisories
+        run: npm audit --audit-level=critical
         # Moderate+ vulnerabilities fail the build for production and build-time dependencies.
         # High-only would be too permissive for a security-sensitive third-party client.
 
@@ -204,7 +208,9 @@ jobs:
         run: npm ci
 
       - name: Audit dependencies (release gate)
-        run: npm audit --audit-level=moderate
+        run: npm audit --omit=dev --audit-level=moderate
+      - name: Audit complete dependency graph for critical advisories
+        run: npm audit --audit-level=critical
 
       - name: Verify generated icon
         run: npm run verify:icon

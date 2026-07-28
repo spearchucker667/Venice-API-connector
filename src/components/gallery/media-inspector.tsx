@@ -23,6 +23,7 @@ import { cn } from "../../lib/utils";
 import { GhostButton, Label, TextArea, Badge } from "../ui/shared";
 import {
   mediaCapabilities,
+  mediaItemSource,
   normalizedTags,
   splitTags,
 } from "../../utils/mediaItem";
@@ -46,7 +47,8 @@ import { toast } from "../../stores/toast-store";
 import { copyText } from "../../stores/media-send-to";
 import { useSettingsStore } from "../../stores/settings-store";
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
-import { desktopFiles, isElectron } from "../../services/desktopBridge";
+import { desktopMedia, isElectron } from "../../services/desktopBridge";
+import { buildMediaFilename } from "../../stores/media-export-bundle";
 import { Trans, useTranslation } from "react-i18next";
 
 interface MediaInspectorProps {
@@ -215,6 +217,30 @@ export function MediaInspector({
   const handleCopySeed = useCallback(() => {
     if (hasSeed) void copyText(String(item.seed));
   }, [hasSeed, item.seed]);
+
+  const handleInspectorDownload = useCallback(async () => {
+    try {
+      const result = await desktopMedia.saveMediaAs({
+        source: mediaItemSource(item) ?? undefined,
+        mediaId: item.generatedMediaId,
+        mimeType: item.mimeType,
+        suggestedName: buildMediaFilename(item),
+      });
+      if (result.status === "failed") throw new Error(result.error);
+      if (result.status === "saved") toast.success(
+        tRuntime(
+          "runtimeGenerated.components.gallery.mediaInspector.notification.mediaSaved",
+        ),
+      );
+    } catch (error) {
+      toast.fromError(
+        error,
+        tRuntime(
+          "runtimeGenerated.components.gallery.mediaInspector.notification.mediaDownloadFailed",
+        ),
+      );
+    }
+  }, [item, tRuntime]);
 
   const handleCopyMetadata = useCallback(() => {
     const meta: Record<string, unknown> = {};
@@ -715,36 +741,10 @@ export function MediaInspector({
               <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.edit" />
             </button>
           )}
-          {item.generatedMediaId && isElectron() && (
+          {(item.generatedMediaId || mediaItemSource(item)) && isElectron() && (
             <button
               type="button"
-              onClick={() =>
-                void desktopFiles
-                  .saveGeneratedMedia(
-                    item.generatedMediaId!,
-                    item.mediaType === "video"
-                      ? "venice-video.mp4"
-                      : item.mediaType === "audio"
-                        ? "venice-audio"
-                        : "venice-image",
-                  )
-                  .then((saved) => {
-                    if (saved)
-                      toast.success(
-                        tRuntime(
-                          "runtimeGenerated.components.gallery.mediaInspector.notification.mediaSaved",
-                        ),
-                      );
-                  })
-                  .catch((error) =>
-                    toast.fromError(
-                      error,
-                      tRuntime(
-                        "runtimeGenerated.components.gallery.mediaInspector.notification.mediaDownloadFailed",
-                      ),
-                    ),
-                  )
-              }
+              onClick={() => void handleInspectorDownload()}
               className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
               title={tRuntime(
                 "runtimeGenerated.components.gallery.mediaInspector.attribute.saveTheMainProcessMediaFileWithANativeDialog",

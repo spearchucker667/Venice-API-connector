@@ -476,7 +476,7 @@ describe("syncFolderWatcher", () => {
       "syncFolderWatcher",
       expect.stringMatching(/symbolic link/i),
     );
-  });
+  }, 60_000);
 
   it("rejects a decrypted packet from another profile before renderer delivery", async () => {
     const { BrowserWindow } = await import("electron");

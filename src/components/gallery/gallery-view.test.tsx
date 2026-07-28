@@ -32,6 +32,7 @@ import { GalleryView } from './gallery-view'
 import { useImageWorkspaceStore } from '../../stores/image-workspace-store'
 import { useSettingsStore } from '../../stores/settings-store'
 import { askDecision } from '../ui/modal-requests'
+import { toast } from '../../stores/toast-store'
 
 vi.mock('../ui/modal-requests', () => ({
   askDecision: vi.fn(),
@@ -399,6 +400,18 @@ describe('MediaStudioView (GalleryView)', () => {
       return el
     })
 
+    const originalFetch = globalThis.fetch.bind(globalThis)
+    vi.stubGlobal('fetch', vi.fn((url: string | URL | Request) => {
+      if (typeof url === 'string' && url.startsWith('data:')) {
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          blob: () => Promise.resolve(new Blob(['fake-image-bytes'], { type: 'image/png' })),
+        } as unknown as Response)
+      }
+      return originalFetch(url)
+    }))
+
     try {
       render(<GalleryView />)
       await screen.findByText('Copper city at dusk')
@@ -417,12 +430,73 @@ describe('MediaStudioView (GalleryView)', () => {
 
       await waitFor(() => expect(createObjectURL).toHaveBeenCalled())
       const blob = createObjectURL.mock.calls[0][0] as Blob
-      const exported = JSON.parse(await blob.text())
-      expect(exported.items[0].prompt).toBe('Updated copper city')
+      expect(blob).toBeInstanceOf(Blob)
+      expect(blob.size).toBeGreaterThan(0)
       expect(clickSpy).toHaveBeenCalled()
     } finally {
       vi.unstubAllGlobals()
       vi.restoreAllMocks()
     }
+  })
+
+  it('uses the generated-media native Save As route and keeps the detail dialog open', async () => {
+    const saveGeneratedMedia = vi.fn().mockResolvedValue({ ok: true, canceled: false })
+    Object.defineProperty(window, 'veniceForge', {
+      configurable: true,
+      value: { isDesktop: true, files: { saveGeneratedMedia } },
+    })
+    vi.mocked(StorageService.getItemsPageWithMeta).mockResolvedValue({
+      items: [{ ...sampleRecord, generatedMediaId: 'generated-1' }], decryptFailures: 0, total: 1, offset: 0, limit: 60, hasMore: false,
+    })
+    render(<GalleryView />)
+    fireEvent.click(await screen.findByRole('button', { name: /open image: copper city at dusk/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Save As…' }))
+    await waitFor(() => expect(saveGeneratedMedia).toHaveBeenCalledWith(expect.objectContaining({ mediaId: 'generated-1' })))
+    expect(screen.getByRole('dialog', { name: 'Media detail' })).toBeInTheDocument()
+    delete (window as typeof window & { veniceForge?: unknown }).veniceForge
+  })
+
+  it.each(['edit', 'upscale', 'background-remove', 'generate'] as const)(
+    'routes %s image records through the same generated-media Save As channel',
+    async (operation) => {
+      const saveGeneratedMedia = vi.fn().mockResolvedValue({ ok: true, canceled: false, filename: 'result.png', bytes: 68 })
+      Object.defineProperty(window, 'veniceForge', {
+        configurable: true,
+        value: { isDesktop: true, files: { saveGeneratedMedia } },
+      })
+      vi.mocked(StorageService.getItemsPageWithMeta).mockResolvedValue({
+        items: [{ ...sampleRecord, operation, generatedMediaId: 'generated-1' }], decryptFailures: 0, total: 1, offset: 0, limit: 60, hasMore: false,
+      })
+      const view = render(<GalleryView />)
+      fireEvent.click(await screen.findByRole('button', { name: /open image: copper city at dusk/i }))
+      fireEvent.click(screen.getByRole('button', { name: 'Save As…' }))
+      await waitFor(() => expect(saveGeneratedMedia).toHaveBeenCalledTimes(1))
+      expect(saveGeneratedMedia).toHaveBeenCalledWith(expect.objectContaining({ mediaId: 'generated-1' }))
+      view.unmount()
+      delete (window as typeof window & { veniceForge?: unknown }).veniceForge
+    },
+  )
+
+  it('uses the legacy byte Save As route and treats native cancellation silently', async () => {
+    const saveMediaDataUrl = vi.fn().mockResolvedValue({ ok: false, canceled: true })
+    const success = vi.spyOn(toast, 'success')
+    const error = vi.spyOn(toast, 'error')
+    Object.defineProperty(window, 'veniceForge', {
+      configurable: true,
+      value: { isDesktop: true, files: { saveMediaDataUrl } },
+    })
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      blob: () => Promise.resolve(new Blob(['legacy-bytes'], { type: 'image/png' })),
+    }))
+    render(<GalleryView />)
+    fireEvent.click(await screen.findByRole('button', { name: /open image: copper city at dusk/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Save As…' }))
+    await waitFor(() => expect(saveMediaDataUrl).toHaveBeenCalledWith(expect.objectContaining({ suggestedName: expect.stringMatching(/\.png$/) })))
+    expect(success).not.toHaveBeenCalled()
+    expect(error).not.toHaveBeenCalled()
+    expect(screen.getByRole('dialog', { name: 'Media detail' })).toBeInTheDocument()
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+    delete (window as typeof window & { veniceForge?: unknown }).veniceForge
   })
 })

@@ -117,7 +117,10 @@ function extensionFor(item: MediaItem): string {
 
 function safeBase64ByteLength(image: string | undefined): number {
   if (typeof image !== "string") return 0;
-  // Strip the data-URL prefix if any, then count the base64 length.
+  // Only compute bytes for data-URL values. Non-base64 URIs such as
+  // venice-media://HASH are durable references with no inlined bytes.
+  if (!image.startsWith("data:")) return 0;
+  // Strip the data-URL prefix, then count the base64 length.
   const comma = image.indexOf(",");
   const b64 = comma >= 0 ? image.slice(comma + 1) : image;
   // Base64 chars are 4 → 3 bytes, but padding may add slack. We
