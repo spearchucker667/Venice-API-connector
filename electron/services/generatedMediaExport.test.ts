@@ -1,6 +1,6 @@
 // @vitest-environment node
 // VERIFY-144: native generated-media Save As accepts an ID, derives the extension, and returns no path.
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
@@ -15,16 +15,20 @@ vi.mock('./generatedMediaStore', () => ({
 import { saveGeneratedMediaAs, saveGeneratedMediaBytesAs } from './generatedMediaExport'
 
 describe('saveGeneratedMediaAs', () => {
-  const root = path.join(os.tmpdir(), `vf-export-${process.pid}`)
-  const source = path.join(root, 'source.mp4')
+  let root = ''
+  let source = ''
 
   beforeEach(async () => {
     vi.clearAllMocks()
-    await fs.rm(root, { recursive: true, force: true })
-    await fs.mkdir(root, { recursive: true })
+    root = await fs.mkdtemp(path.join(os.tmpdir(), 'vf-export-'))
+    source = path.join(root, 'source.mp4')
     await fs.writeFile(source, Buffer.from('video'))
     mocks.verifyGeneratedMediaIntegrity.mockResolvedValue({ ok: true })
     mocks.resolveGeneratedMedia.mockResolvedValue({ path: source, mimeType: 'video/mp4' })
+  })
+
+  afterEach(async () => {
+    await fs.rm(root, { recursive: true, force: true })
   })
 
   it('copies the resolved media through a native Save As dialog', async () => {
