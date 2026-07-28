@@ -162,6 +162,25 @@ export interface VeniceForgeFiles {
   saveGeneratedMedia(input: { mediaId: string; suggestedName?: string }): Promise<{
     ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string;
   }>;
+  /** Opens a native save dialog and writes the decoded data URL bytes. */
+  saveMediaDataUrl(input: { dataUrl: string; suggestedName?: string }): Promise<{
+    ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string;
+  }>;
+  /** Opens a native directory chooser and exports all items. */
+  exportMediaFiles(input: {
+    items: Array<{
+      itemId: string;
+      mediaId?: string;
+      dataUrl?: string;
+      mimeType?: string;
+      suggestedName: string;
+    }>;
+  }): Promise<{
+    ok: boolean;
+    canceled: boolean;
+    succeeded: Array<{ itemId: string; filename: string; bytes: number }>;
+    failed: Array<{ itemId: string; error: string }>;
+  }>;
   saveJsonFile(data: string, defaultPath?: string): Promise<{ ok: boolean; canceled: boolean }>;
   loadJsonFile(): Promise<{ ok: boolean; canceled: boolean; data?: string; error?: string }>;
   saveYamlFile(data: string, defaultPath?: string): Promise<{ ok: boolean; canceled: boolean }>;
@@ -170,8 +189,6 @@ export interface VeniceForgeFiles {
    *  @returns A promise resolving with the file contents and filename.
    */
   readLocalFile(): Promise<{ ok: boolean; canceled?: boolean; content?: string; filename?: string; error?: string }>;
-  saveRoutedImage(base64Data: string, filename: string, subfolder: string): Promise<{ ok: boolean; filePath?: string; error?: string }>;
-  exportMedia(input: { base64Data: string; filename: string; subfolder?: string; dryRun?: boolean }): Promise<{ ok: boolean; filePath?: string; canceled?: boolean; error?: string }>;
   importMedia(input: { filePath: string }): Promise<{
     ok: boolean; canceled?: boolean; dataUrl?: string; filePath?: string;
     filename?: string; bytes?: number; contentType?: string; error?: string;

@@ -6,13 +6,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const queueMock = vi.fn()
 const resetMock = vi.fn()
 const cancelMock = vi.fn()
+const { saveMediaAs } = vi.hoisted(() => ({ saveMediaAs: vi.fn() }))
+let videoState = { videoUrl: null as string | null, resultMediaId: null as string | null }
 
 vi.mock('../../hooks/use-video', () => ({
   useVideo: () => ({
     queue: queueMock,
     isQueueing: false,
     status: 'idle',
-    videoUrl: null,
+    videoUrl: videoState.videoUrl,
+    resultMediaId: videoState.resultMediaId,
     error: null,
     reset: resetMock,
     cancel: cancelMock,
@@ -21,6 +24,8 @@ vi.mock('../../hooks/use-video', () => ({
     lastRequest: null,
   }),
 }))
+
+vi.mock('../../services/desktopBridge', () => ({ desktopMedia: { saveMediaAs } }))
 
 vi.mock('../../hooks/use-models', () => ({
   useVideoModels: () => ({
@@ -132,6 +137,8 @@ describe('VideoView accessibility', () => {
     queueMock.mockReset()
     resetMock.mockReset()
     cancelMock.mockReset()
+    saveMediaAs.mockReset()
+    videoState = { videoUrl: null, resultMediaId: null }
     useSettingsStore.setState({ selectedVideoMode: 'text' })
     mockIsSupportedImageFile.mockImplementation(
       (file: File) => file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/webp',
@@ -306,5 +313,20 @@ describe('VideoView accessibility', () => {
     const modelButton = screen.getByRole('button', { name: 'Model' })
     fireEvent.click(modelButton)
     expect(screen.getAllByText('No Text Model').length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('routes completed videos through the canonical Save As service', async () => {
+    videoState = { videoUrl: 'venice-media://video-id', resultMediaId: 'video-id' }
+    saveMediaAs.mockResolvedValueOnce({ status: 'saved', filename: 'venice-video.mp4' })
+    render(<VideoView />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Download' }))
+
+    await waitFor(() => expect(saveMediaAs).toHaveBeenCalledWith({
+      source: 'venice-media://video-id',
+      mediaId: 'video-id',
+      suggestedName: 'venice-video.mp4',
+    }))
+    expect(toast.success).toHaveBeenCalled()
   })
 })

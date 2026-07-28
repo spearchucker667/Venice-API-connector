@@ -36,7 +36,14 @@
     "preview": "Предпросмотр",
     "unlock": "Разблокировать",
     "saving": "Сохранение...",
-    "importAll": "Импортировать все"
+    "importAll": "Импортировать все",
+    "saveAs": "__MISSING__:actions.saveAs",
+    "lock": "__MISSING__:actions.lock",
+    "favorite": "__MISSING__:actions.favorite",
+    "unfavorite": "__MISSING__:actions.unfavorite",
+    "regenerate": "__MISSING__:actions.regenerate",
+    "download": "__MISSING__:actions.download",
+    "open": "__MISSING__:actions.open"
   },
   "status": {
     "active": "Активно",
@@ -4512,5 +4519,23 @@
     "matureDarkThemes": "Зрелые/Тёмные темы",
     "documentNamePath": "Имя документа/путь",
     "characterPersonaReferences": "Ссылки на персонажей / персоны"
+  },
+  "mediaSave": {
+    "success": "__MISSING__:mediaSave.success",
+    "failed": "__MISSING__:mediaSave.failed",
+    "noBytes": "__MISSING__:mediaSave.noBytes",
+    "noItems": "__MISSING__:mediaSave.noItems",
+    "exportFailed": "__MISSING__:mediaSave.exportFailed",
+    "prepareFailed": "__MISSING__:mediaSave.prepareFailed",
+    "exported": "__MISSING__:mediaSave.exported {{count}}",
+    "partiallyExported": "__MISSING__:mediaSave.partiallyExported {{saved}} {{total}}",
+    "failedWithDetail": "__MISSING__:mediaSave.failedWithDetail {{detail}}"
+  },
+  "layout": {
+    "sidebar": {
+      "resize": "__MISSING__:layout.sidebar.resize",
+      "resetWidth": "__MISSING__:layout.sidebar.resetWidth",
+      "width": "__MISSING__:layout.sidebar.width"
+    }
   }
 }

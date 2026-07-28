@@ -15,6 +15,16 @@ export type Tab = TabId
 import type { LocaleSetting } from '../i18n/locale-types'
 import { changeLanguage } from '../i18n'
 
+export const SIDEBAR_COLLAPSED_WIDTH = 60
+export const SIDEBAR_DEFAULT_WIDTH = 256
+export const SIDEBAR_MIN_WIDTH = 220
+export const SIDEBAR_MAX_WIDTH = 480
+
+export function clampSidebarWidth(width: unknown): number {
+  const numeric = typeof width === 'number' && Number.isFinite(width) ? width : SIDEBAR_DEFAULT_WIDTH
+  return Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, Math.round(numeric)))
+}
+
 /** Canonical sub-section id within the Settings tab. Used by the
  *  onboarding "Create Profile" deep-link and any future external entry
  *  points to land users on the right surface (Profiles, API Keys, …). */
@@ -111,7 +121,10 @@ interface SettingsState {
   activeTab: Tab
   setActiveTab: (tab: Tab) => void
   sidebarOpen: boolean
+  sidebarWidth: number
   setSidebarOpen: (open: boolean) => void
+  setSidebarWidth: (width: number) => void
+  resetSidebarWidth: () => void
   toggleSidebar: () => void
   selectedModels: Record<string, string>
   setSelectedModel: (tab: string, modelId: string) => void
@@ -228,7 +241,10 @@ export const useSettingsStore = create<SettingsState>()(
   activeTab: 'chat' as Tab,
   setActiveTab: (tab) => set({ activeTab: safeNormaliseTab(tab) as Tab }),
   sidebarOpen: true,
+  sidebarWidth: SIDEBAR_DEFAULT_WIDTH,
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
+  setSidebarWidth: (width) => set({ sidebarWidth: clampSidebarWidth(width) }),
+  resetSidebarWidth: () => set({ sidebarWidth: SIDEBAR_DEFAULT_WIDTH }),
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
   pendingSettingsSection: null,
   setPendingSettingsSection: (section) => set({ pendingSettingsSection: section }),
@@ -361,7 +377,7 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'venice-settings',
-      version: 13,
+      version: 14,
       storage: createJSONStorage(() => createSafeStorage()),
       migrate: (persisted) => {
         const state = persisted && typeof persisted === 'object'
@@ -370,9 +386,9 @@ export const useSettingsStore = create<SettingsState>()(
         return {
           ...state,
           uiLocale: state.uiLocale ?? 'system',
-          // v6: collapsed state is session-only. Old false/corrupt values must
-          // never hide the labeled desktop menu on the next launch.
-          sidebarOpen: true,
+          // v14: collapse state and the separately clamped expanded width persist.
+          sidebarOpen: typeof state.sidebarOpen === 'boolean' ? state.sidebarOpen : true,
+          sidebarWidth: clampSidebarWidth(state.sidebarWidth),
           localFamilySafeModeEnabled: state.localFamilySafeModeEnabled ?? true,
           veniceApiSafeMode: state.veniceApiSafeMode ?? true,
           // v3: normalise legacy tab aliases (e.g. 'gallery' → 'media').
@@ -423,10 +439,14 @@ export const useSettingsStore = create<SettingsState>()(
         } as SettingsState
       },
       merge: (persisted, current) => {
+        const persistedState = persisted && typeof persisted === 'object'
+          ? persisted as Partial<SettingsState>
+          : {}
         const merged = {
           ...current,
-          ...(persisted && typeof persisted === 'object' ? persisted : {}),
-          sidebarOpen: true,
+          ...persistedState,
+          sidebarOpen: typeof persistedState.sidebarOpen === 'boolean' ? persistedState.sidebarOpen : true,
+          sidebarWidth: clampSidebarWidth(persistedState.sidebarWidth),
         };
         if (merged.uiLocale) {
           changeLanguage(merged.uiLocale);

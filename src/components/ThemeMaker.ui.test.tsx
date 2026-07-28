@@ -46,6 +46,19 @@ describe("ThemeMaker built-in theme selection", () => {
     expect(screen.getByRole("button", { name: "Neon Dusk" })).toBeInTheDocument();
   });
 
+  it("orders actual themes by visible label and keeps Custom Theme last", () => {
+    render(<ThemeMaker />);
+    const themeButtons = screen.getAllByRole("button").filter((button) =>
+      ["Amber Archive", "Circuit Mint", "Forge Nord", "Custom Theme"].includes(button.textContent ?? ""),
+    );
+    expect(themeButtons.map((button) => button.textContent)).toEqual([
+      "Amber Archive",
+      "Circuit Mint",
+      "Forge Nord",
+      "Custom Theme",
+    ]);
+  });
+
   it.each([
     ["Forge Nord", "builtin-nord"],
     ["Forge Tokyo", "builtin-tokyo-night"],

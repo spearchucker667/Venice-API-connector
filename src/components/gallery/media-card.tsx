@@ -24,6 +24,8 @@ import {
 import { cn } from "../../lib/utils";
 import type { MediaItem } from "../../types/media";
 import { Trans, useTranslation } from "react-i18next";
+import { ContextMenu, useContextMenu } from "../ui/ContextMenu";
+import type { ContextMenuItem } from "../ui/ContextMenu";
 
 const OP_TONE: Record<
   string,
@@ -60,6 +62,7 @@ interface MediaCardProps {
   onSelect: (item: MediaItem, multi: boolean) => void;
   onOpen: (item: MediaItem) => void;
   onToggleFavorite: (item: MediaItem) => void;
+  onSaveAs: (item: MediaItem) => unknown | Promise<unknown>;
   onVaultToggle: (item: MediaItem) => void;
   onDelete: (item: MediaItem) => void;
 }
@@ -72,10 +75,12 @@ function MediaCardImpl({
   onSelect,
   onOpen,
   onToggleFavorite,
+  onSaveAs,
   onVaultToggle,
   onDelete,
 }: MediaCardProps) {
   const { t: tRuntime } = useTranslation("common");
+  const cardMenu = useContextMenu();
   const [thumbFailed, setThumbFailed] = useState(false);
   const { url, loading } = useMediaThumb(item);
 
@@ -92,6 +97,38 @@ function MediaCardImpl({
   const duration = formatDuration(item.duration);
   const fallbackSrc = mediaItemSource(item);
 
+  const cardMenuItems: ContextMenuItem[] = [
+    {
+      key: "open",
+      label: tRuntime("actions.open"),
+      onSelect: () => onOpen(item),
+    },
+    {
+      key: "save-as",
+      label: tRuntime("actions.saveAs"),
+      onSelect: () => void onSaveAs(item),
+      disabled: !fallbackSrc && !item.generatedMediaId,
+    },
+    { kind: "separator", key: "sep-open" },
+    {
+      key: "favorite",
+      label: tRuntime(item.favorite ? "actions.unfavorite" : "actions.favorite"),
+      onSelect: () => onToggleFavorite(item),
+    },
+    {
+      key: "vault",
+      label: tRuntime(item.vaultHidden ? "actions.unlock" : "actions.lock"),
+      onSelect: () => onVaultToggle(item),
+    },
+    { kind: "separator", key: "sep-1" },
+    {
+      key: "delete",
+      label: tRuntime("actions.delete"),
+      destructive: true,
+      onSelect: () => onDelete(item),
+    },
+  ];
+
   return (
     <article
       className={cn(
@@ -102,6 +139,7 @@ function MediaCardImpl({
             ? "border-accent/60"
             : "border-border hover:border-accent/40",
       )}
+      onContextMenu={cardMenu.openAt}
     >
       <button
         type="button"
@@ -112,8 +150,10 @@ function MediaCardImpl({
           }
           onOpen(item);
         }}
-        onContextMenu={(_e) => {
+        onContextMenu={(event) => {
+          event.stopPropagation();
           onSelect(item, !multiSelectMode);
+          cardMenu.openAt(event);
         }}
         className="relative block aspect-square w-full overflow-hidden bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
         aria-label={tRuntime(
@@ -335,6 +375,12 @@ function MediaCardImpl({
           </button>
         </div>
       </div>
+      <ContextMenu
+        position={cardMenu.menu}
+        items={cardMenuItems}
+        onClose={cardMenu.close}
+        ariaLabel="Media card actions"
+      />
     </article>
   );
 }

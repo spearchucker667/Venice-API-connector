@@ -31,6 +31,8 @@ import type { ChatDocumentRef } from "../../types/chatDocument";
 import { ManagedDocumentAttachmentCard } from "../documents/ManagedDocumentAttachmentCard";
 import { Trans, useTranslation } from "react-i18next";
 import { safeVeniceMediaUrl } from "../../utils/mediaItem";
+import { ContextMenu, useContextMenu } from "../ui/ContextMenu";
+import type { ContextMenuItem } from "../ui/ContextMenu";
 
 const ChatTtsPlayer = lazy(async () => {
   const module = await import("./ChatTtsPlayer");
@@ -189,6 +191,7 @@ function MessageBubbleImpl({
   assistantCharacterCacheKey,
 }: MessageBubbleProps) {
   const { t: tRuntime } = useTranslation("common");
+  const bubbleMenu = useContextMenu();
   useKatexCss();
 
   const [hovering, setHovering] = useState(false);
@@ -515,6 +518,110 @@ function MessageBubbleImpl({
     </div>
   );
 
+  const bubbleMenuItems: ContextMenuItem[] = [
+    {
+      key: "copy",
+      label: tRuntime(
+        "runtimeGenerated.components.chat.messageBubble.attribute.copy",
+      ),
+      onSelect: () => {
+        handleCopy();
+      },
+      separatorAfter: !isUser && !!onRegenerate,
+    },
+    ...(onEdit
+      ? [
+          {
+            key: "edit",
+            label: tRuntime(
+              "runtimeGenerated.components.chat.messageBubble.attribute.editMessage",
+            ),
+            hidden: !isUser,
+            onSelect: () => {
+              beginEdit();
+            },
+          } satisfies ContextMenuItem,
+        ]
+      : []),
+    ...(onForkFromHere
+      ? [
+          {
+            key: "fork",
+            label: tRuntime(
+              "runtimeGenerated.components.chat.messageBubble.attribute.forkChatFromHere",
+            ),
+            onSelect: () => {
+              onForkFromHere();
+            },
+          } satisfies ContextMenuItem,
+        ]
+      : []),
+    ...(onDeleteFromHere
+      ? [
+          {
+            key: "deleteFromHere",
+            label: tRuntime(
+              "runtimeGenerated.components.chat.messageBubble.attribute.deleteFromHere",
+            ),
+            destructive: true,
+            onSelect: () => {
+              onDeleteFromHere();
+            },
+          } satisfies ContextMenuItem,
+        ]
+      : []),
+    ...(onRegenerateFromHere
+      ? [
+          {
+            key: "regenerateFromHere",
+            label: tRuntime(
+              "runtimeGenerated.components.chat.messageBubble.attribute.regenerateFromHere",
+            ),
+            onSelect: () => {
+              onRegenerateFromHere();
+            },
+          } satisfies ContextMenuItem,
+        ]
+      : []),
+    ...(onRegenerate && !isUser
+      ? [
+          {
+            key: "regenerate",
+            label: tRuntime(
+              "runtimeGenerated.components.chat.messageBubble.attribute.regenerate",
+            ),
+            onSelect: () => {
+              onRegenerate();
+            },
+          } satisfies ContextMenuItem,
+        ]
+      : []),
+    ...(onGenerateScene && !isUser && isCharacterBound
+      ? [
+          {
+            key: "createScene",
+            label: tRuntime(
+              "runtimeGenerated.components.chat.messageBubble.attribute.createScene",
+            ),
+            onSelect: () => {
+              onGenerateScene();
+            },
+          } satisfies ContextMenuItem,
+        ]
+      : []),
+    { kind: "separator", key: "sep-end" },
+    {
+      key: "delete",
+      label: tRuntime(
+        "runtimeGenerated.components.chat.messageBubble.attribute.delete",
+      ),
+      destructive: true,
+      onSelect: () => {
+        onDelete();
+      },
+    },
+  ];
+
   if (isUser) {
     // Resolve structured attachment refs from message metadata.
     // Historical records may use the legacy `attachments: string[]` shape;
@@ -526,11 +633,13 @@ function MessageBubbleImpl({
       : [];
 
     return (
-      <div
-        className="flex justify-end"
-        onMouseEnter={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
-      >
+      <>
+        <div
+          className="flex justify-end"
+          onContextMenu={bubbleMenu.openAt}
+          onMouseEnter={() => setHovering(true)}
+          onMouseLeave={() => setHovering(false)}
+        >
         <div className="flex items-end gap-1.5 max-w-[78%]">
           {actions}
           <div className="bg-surface-elevated border border-border rounded-2xl rounded-br-md px-4 py-2.5 shadow-sm">
@@ -705,15 +814,24 @@ function MessageBubbleImpl({
           </div>
         </div>
       </div>
+        <ContextMenu
+          position={bubbleMenu.menu}
+          items={bubbleMenuItems}
+          onClose={bubbleMenu.close}
+          ariaLabel="Message actions"
+        />
+      </>
     );
   }
 
   return (
-    <div
-      className="flex gap-3"
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-    >
+    <>
+      <div
+        className="flex gap-3"
+        onContextMenu={bubbleMenu.openAt}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
+      >
       <div className="w-8 h-8 rounded-lg bg-surface-elevated border border-border flex items-center justify-center shrink-0 mt-0.5 shadow-sm overflow-hidden">
         {assistantCharacter && assistantCharacterCacheKey ? (
           <CharacterAvatar
@@ -1059,7 +1177,14 @@ function MessageBubbleImpl({
           )}
         </div>
       </div>
-    </div>
+      </div>
+      <ContextMenu
+        position={bubbleMenu.menu}
+        items={bubbleMenuItems}
+        onClose={bubbleMenu.close}
+        ariaLabel="Message actions"
+      />
+    </>
   );
 }
 

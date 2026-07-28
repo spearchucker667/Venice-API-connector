@@ -37,7 +37,8 @@ export class ApprovalCoordinator {
     const temporary = path.join(directory, `.pending-approvals.vf-tmp-${randomUUID()}`);
     try {
       await fs.promises.writeFile(temporary, JSON.stringify(value), { encoding: "utf8", mode: 0o600, flag: "wx" });
-      const handle = await fs.promises.open(temporary, "r");
+      // Windows requires a writable handle for FlushFileBuffers/fsync.
+      const handle = await fs.promises.open(temporary, "r+");
       try { await handle.sync(); } finally { await handle.close(); }
       await fs.promises.rename(temporary, this.storageFile);
     } finally {

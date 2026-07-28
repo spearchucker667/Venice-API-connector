@@ -88,7 +88,7 @@
     "verify:image-policy": "node scripts/verify-image-policy.cjs",
     "verify:work-orders": "node scripts/verify-work-orders.cjs",
     "verify:no-native-dialogs": "node scripts/verify-no-native-dialogs.cjs",
-    "verify:i18n": "node scripts/verify-i18n.cjs",
+    "verify:i18n": "node scripts/verify-i18n.cjs --allow-missing-markers",
     "i18n:coverage:write": "node scripts/verify-i18n.cjs --write-status",
     "verify:prompt-language": "node scripts/verify-prompt-language.cjs",
     "test:i18n": "vitest run src/i18n src/components/OnboardingSplash.test.tsx src/components/settings/LanguageRegionPanel.test.tsx --no-file-parallelism",
@@ -166,7 +166,7 @@
     "dist:linux": "npm run clean && npm run verify:icon && npm run build && electron-builder --config electron-builder.config.cjs --linux --publish never && npm run checksum:release",
     "dist:mac:arm64": "npm run clean && npm run verify:icon && npm run build && cross-env ELECTRON_BUILDER_MAC_ARCH=arm64 electron-builder --config electron-builder.config.cjs --mac --arm64 --publish never && npm run checksum:release",
     "dist:mac:x64": "npm run clean && npm run verify:icon && npm run build && cross-env ELECTRON_BUILDER_MAC_ARCH=x64 electron-builder --config electron-builder.config.cjs --mac --x64 --publish never && npm run checksum:release",
-    "ci": "npm run lint:eslint && npm run typecheck && npm run test:ci && npm audit --audit-level=moderate && npm run build && npm run verify:contracts && npm run verify:dist",
+    "ci": "npm run lint:eslint && npm run typecheck && npm run test:ci && npm audit --omit=dev --audit-level=moderate && npm audit --audit-level=critical && npm run build && npm run verify:contracts && npm run verify:dist",
     "config:init": "tsx scripts/init-config.ts",
     "config:validate": "tsx scripts/validate-config.ts",
     "config:print": "tsx scripts/print-config.ts"

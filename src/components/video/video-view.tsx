@@ -29,7 +29,7 @@ import {
   readImageAttachment,
 } from "../../services/attachmentService";
 import { formatModelLabelWithCost } from "../../utils/pricing";
-import { desktopFiles, isElectron } from "../../services/desktopBridge";
+import { desktopMedia } from "../../services/desktopBridge";
 import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
 import { ManagedVideoPlayer } from "../media/ManagedVideoPlayer";
 import { Trans, useTranslation } from "react-i18next";
@@ -709,27 +709,17 @@ export function VideoView() {
                 onClick={() =>
                   void (async () => {
                     try {
-                      if (isElectron()) {
-                        if (!resultMediaId)
-                          throw new Error(
-                            "The durable video is not ready to save yet.",
-                          );
-                        const saved = await desktopFiles.saveGeneratedMedia(
-                          resultMediaId,
-                          "venice-video.mp4",
-                        );
-                        if (saved)
-                          toast.success(
-                            tRuntime(
-                              "runtimeGenerated.components.video.videoView.notification.videoSaved",
-                            ),
-                          );
-                        return;
-                      }
-                      const anchor = document.createElement("a");
-                      anchor.href = videoUrl;
-                      anchor.download = "venice-video.mp4";
-                      anchor.click();
+                      const result = await desktopMedia.saveMediaAs({
+                        source: videoUrl,
+                        mediaId: resultMediaId ?? undefined,
+                        suggestedName: "venice-video.mp4",
+                      });
+                      if (result.status === "failed") throw new Error(result.error);
+                      if (result.status === "saved") toast.success(
+                        tRuntime(
+                          "runtimeGenerated.components.video.videoView.notification.videoSaved",
+                        ),
+                      );
                     } catch (downloadError) {
                       toast.fromError(
                         downloadError,

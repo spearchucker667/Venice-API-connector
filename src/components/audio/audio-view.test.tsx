@@ -1,9 +1,15 @@
 /** @fileoverview Audio view accessibility (Wave 2). */
 
 import '@testing-library/jest-dom/vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { AudioView } from './audio-view'
+
+const { saveMediaAs } = vi.hoisted(() => ({ saveMediaAs: vi.fn() }))
+
+vi.mock('../../services/desktopBridge', () => ({
+  desktopMedia: { saveMediaAs },
+}))
 
 vi.mock('../../hooks/use-models', () => ({
   useModels: () => ({ data: [] }),
@@ -28,7 +34,7 @@ vi.mock('../../stores/settings-store', () => ({
 }))
 
 vi.mock('../../stores/toast-store', () => ({
-  toast: { fromError: vi.fn() },
+  toast: { fromError: vi.fn(), success: vi.fn(), error: vi.fn() },
 }))
 
 vi.mock('../../services/promptStarterService', () => ({
@@ -55,5 +61,16 @@ describe('AudioView accessibility', () => {
     })
     fireEvent.error(audio!)
     expect(screen.getByText(/not supported/i)).toBeInTheDocument()
+  })
+
+  it('routes TTS audio downloads through the canonical Save As service', async () => {
+    saveMediaAs.mockResolvedValueOnce({ status: 'cancelled' })
+    render(<AudioView />)
+    fireEvent.click(screen.getByRole('button', { name: 'Download' }))
+    await waitFor(() => expect(saveMediaAs).toHaveBeenCalledWith({
+      source: 'blob:mock-audio-url',
+      mimeType: 'audio/mpeg',
+      suggestedName: 'venice-speech.mp3',
+    }))
   })
 })

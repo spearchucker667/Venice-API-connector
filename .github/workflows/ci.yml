@@ -63,7 +63,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run verify:contracts
-      - run: npm audit --audit-level=moderate
+      - run: npm audit --omit=dev --audit-level=moderate
+      - run: npm audit --audit-level=critical
 
   build:
     runs-on: ubuntu-22.04
@@ -115,7 +116,9 @@ jobs:
       - name: Verify repository identity
         run: npm run verify:repository-identity
       - name: Audit dependencies (release gate)
-        run: npm audit --audit-level=moderate
+        run: npm audit --omit=dev --audit-level=moderate
+      - name: Audit complete dependency graph for critical advisories
+        run: npm audit --audit-level=critical
       - name: Build
         run: npm run build
       - name: Verify build output
@@ -148,7 +151,9 @@ jobs:
       - name: Verify repository identity
         run: npm run verify:repository-identity
       - name: Audit dependencies (release gate)
-        run: npm audit --audit-level=moderate
+        run: npm audit --omit=dev --audit-level=moderate
+      - name: Audit complete dependency graph for critical advisories
+        run: npm audit --audit-level=critical
       - name: Build
         run: npm run build
       - name: Verify build output

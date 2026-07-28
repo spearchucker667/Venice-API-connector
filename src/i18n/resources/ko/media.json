@@ -128,5 +128,15 @@
     "generatedNumber": "{{number}} 생성됨",
     "saveBeforeCard": "카드를 만들기 전에 이미지를 Media Studio에 저장하세요.",
     "characterCreatorLaunched": "AI 캐릭터 크리에이터 출시"
+  },
+  "contextMenu": {
+    "saveAs": "__MISSING__:contextMenu.saveAs",
+    "copyImage": "__MISSING__:contextMenu.copyImage",
+    "openInInspector": "__MISSING__:contextMenu.openInInspector",
+    "sendToImageTools": "__MISSING__:contextMenu.sendToImageTools",
+    "sendToCharacterCreator": "__MISSING__:contextMenu.sendToCharacterCreator",
+    "saveToMediaStudio": "__MISSING__:contextMenu.saveToMediaStudio",
+    "revealInFinder": "__MISSING__:contextMenu.revealInFinder",
+    "removeFromChat": "__MISSING__:contextMenu.removeFromChat"
   }
 }

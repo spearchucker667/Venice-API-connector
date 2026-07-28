@@ -22,6 +22,16 @@
   "lineage": "Lineage Graph",
   "itemSelected": "{{count}} item selected",
   "itemsSelected": "{{count}} items selected",
+  "contextMenu": {
+    "saveAs": "Save As…",
+    "copyImage": "Copy image",
+    "openInInspector": "Open in Inspector",
+    "sendToImageTools": "Send to Image Tools",
+    "sendToCharacterCreator": "Send to Character Creator",
+    "saveToMediaStudio": "Save to Media Studio",
+    "revealInFinder": "Reveal in Finder",
+    "removeFromChat": "Remove from chat"
+  },
   "imageOptions": {
     "squareDefault": "Square (Default)",
     "landscape32": "Landscape (3:2)",

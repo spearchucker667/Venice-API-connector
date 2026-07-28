@@ -113,6 +113,17 @@ export function RpChatView({
       useRpChatStore.setState({ isStreaming: false });
     };
   }, [chatId]);
+  const cardsMap = useMemo(() => {
+    const map = new Map<string, CharacterCardV1>();
+    for (const c of cards) map.set(c.id, c);
+    return map;
+  }, [cards]);
+
+  const lorebooksMap = useMemo(() => {
+    const map = new Map<string, LorebookV1>();
+    for (const l of lorebooks) map.set(l.id, l);
+    return map;
+  }, [lorebooks]);
 
   if (!chat) {
     return (
@@ -141,11 +152,11 @@ export function RpChatView({
   }
 
   const roster: CharacterCardV1[] = chat.characterIds
-    .map((id) => cards.find((c) => c.id === id))
+    .map((id) => cardsMap.get(id))
     .filter((c): c is CharacterCardV1 => c !== undefined);
 
   const activeLorebooks: LorebookV1[] = chat.lorebookIds
-    .map((id) => lorebooks.find((l) => l.id === id))
+    .map((id) => lorebooksMap.get(id))
     .filter((l): l is LorebookV1 => l !== undefined);
 
   const persona: UserPersonaV1 | undefined = chat.personaId

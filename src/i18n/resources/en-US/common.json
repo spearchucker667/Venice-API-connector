@@ -3,6 +3,7 @@
   "appSubtitle": "The private local workbench.",
   "actions": {
     "save": "Save",
+    "saveAs": "Save As…",
     "cancel": "Cancel",
     "delete": "Delete",
     "confirm": "Confirm",
@@ -34,9 +35,33 @@
     "testing": "Testing...",
     "testKey": "Test Key",
     "preview": "Preview",
+    "lock": "Lock",
     "unlock": "Unlock",
+    "favorite": "Favorite",
+    "unfavorite": "Unfavorite",
+    "regenerate": "Regenerate",
+    "download": "Download",
+    "open": "Open",
     "saving": "Saving...",
     "importAll": "Import all"
+  },
+  "mediaSave": {
+    "success": "Media saved successfully",
+    "failed": "Media save failed",
+    "noBytes": "No media bytes could be read",
+    "noItems": "No exportable media items found.",
+    "exportFailed": "Media export failed. No files were saved.",
+    "prepareFailed": "Media export failed. No files could be prepared.",
+    "exported": "Exported {{count}} media files.",
+    "partiallyExported": "Exported {{saved}} of {{total}} media files. Some items could not be resolved.",
+    "failedWithDetail": "Media export failed. {{detail}}"
+  },
+  "layout": {
+    "sidebar": {
+      "resize": "Resize sidebar",
+      "resetWidth": "Reset sidebar width",
+      "width": "Sidebar width"
+    }
   },
   "status": {
     "active": "Active",
@@ -849,7 +874,7 @@
         "selectAll": "Select all",
         "clear": "Clear",
         "compare": "Compare",
-        "export": "Export",
+        "export": "Export\u2026",
         "addTag": "Add tag",
         "apply": "Apply",
         "unstar": "Unstar",

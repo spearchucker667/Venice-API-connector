@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { useSettingsStore } from './settings-store'
+import { SIDEBAR_DEFAULT_WIDTH, SIDEBAR_MAX_WIDTH, SIDEBAR_MIN_WIDTH, useSettingsStore } from './settings-store'
 import type { Theme } from '../theme'
 
 describe('settings-store', () => {
@@ -8,6 +8,7 @@ describe('settings-store', () => {
     useSettingsStore.setState({
       activeTab: 'chat',
       sidebarOpen: true,
+      sidebarWidth: SIDEBAR_DEFAULT_WIDTH,
       selectedModels: {},
       playgroundAgentModel: '',
       selectedThemeId: 'builtin-venice',
@@ -30,6 +31,20 @@ describe('settings-store', () => {
   })
 
   describe('tabs and sidebar', () => {
+    it('clamps, resets, and preserves the expanded width while collapsed', () => {
+      const store = useSettingsStore.getState()
+      store.setSidebarWidth(999)
+      expect(useSettingsStore.getState().sidebarWidth).toBe(SIDEBAR_MAX_WIDTH)
+      store.setSidebarWidth(1)
+      expect(useSettingsStore.getState().sidebarWidth).toBe(SIDEBAR_MIN_WIDTH)
+      store.setSidebarWidth(320)
+      store.setSidebarOpen(false)
+      expect(useSettingsStore.getState().sidebarWidth).toBe(320)
+      store.setSidebarOpen(true)
+      expect(useSettingsStore.getState().sidebarWidth).toBe(320)
+      store.resetSidebarWidth()
+      expect(useSettingsStore.getState().sidebarWidth).toBe(SIDEBAR_DEFAULT_WIDTH)
+    })
     it('setActiveTab normalises valid tabs', () => {
       const store = useSettingsStore.getState()
       store.setActiveTab('image')
@@ -212,8 +227,8 @@ describe('settings-store', () => {
       const merged = merge({ activeTab: 'image', sidebarOpen: false }, { activeTab: 'chat' })
       
       expect(merged.activeTab).toBe('image')
-      // Merge should always force sidebarOpen to true
-      expect(merged.sidebarOpen).toBe(true)
+      expect(merged.sidebarOpen).toBe(false)
+      expect(merged.sidebarWidth).toBe(SIDEBAR_DEFAULT_WIDTH)
     })
     
     it('handles empty merge gracefully', () => {

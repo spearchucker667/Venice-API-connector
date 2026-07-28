@@ -128,5 +128,15 @@
     "generatedNumber": "उत्पन्न {{number}}",
     "saveBeforeCard": "कार्ड बनाने से पहले छवि को मीडिया स्टूडियो में सहेजें।",
     "characterCreatorLaunched": "एआई कैरेक्टर क्रिएटर लॉन्च किया गया"
+  },
+  "contextMenu": {
+    "saveAs": "__MISSING__:contextMenu.saveAs",
+    "copyImage": "__MISSING__:contextMenu.copyImage",
+    "openInInspector": "__MISSING__:contextMenu.openInInspector",
+    "sendToImageTools": "__MISSING__:contextMenu.sendToImageTools",
+    "sendToCharacterCreator": "__MISSING__:contextMenu.sendToCharacterCreator",
+    "saveToMediaStudio": "__MISSING__:contextMenu.saveToMediaStudio",
+    "revealInFinder": "__MISSING__:contextMenu.revealInFinder",
+    "removeFromChat": "__MISSING__:contextMenu.removeFromChat"
   }
 }
