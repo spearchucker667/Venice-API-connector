@@ -16,6 +16,8 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 **Hosted-CI remediation:** after GitHub Actions service was restored, PR #82 exposed and fixed Windows-only durability and symlink-containment defects, clean-checkout documentation drift, and a coverage gap in the new media-format policy. Direct `mediaFormat` tests now exercise MIME normalization, every supported extension, valid image/audio/video signatures, malformed/empty inputs, and unsupported types without changing the repository coverage thresholds. The focused test contains 48 passing cases; the exact pushed commit still requires a fresh protected-CI run before merge.
 
+**Branch integration:** GitHub Actions resumed after the account payment issue was resolved. PR #82 merged to protected `main` as `ef61fe07` after all required checks passed on `40d02bfb`, including 4,877 coverage tests at the unchanged 68% function threshold and both packaged Electron smoke jobs. PR #51 was updated by merging current `main` without rewriting history, locally passed its focused RP test, lint, typecheck, and aggregate contracts, then merged as `b6766509` after all required hosted checks passed. The remaining Unicode-copy regression branch was updated from that exact `main`; its final protected-CI result is intentionally not claimed in this entry until the run completes.
+
 ### Prior Session Summary (Media Save As, Bulk Image Export, Context Menu Remediation — `VF-MEDIA-EXPORT-FIXES-001`)
 
 **Date:** 2026-07-27 (Media Save As, Bulk Image Export, Context Menu Remediation — `VF-MEDIA-EXPORT-FIXES-001`)
