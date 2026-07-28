@@ -113,8 +113,6 @@ export function RpChatView({
       useRpChatStore.setState({ isStreaming: false });
     };
   }, [chatId]);
-
-
   const cardsMap = useMemo(() => {
     const map = new Map<string, CharacterCardV1>();
     for (const c of cards) map.set(c.id, c);
