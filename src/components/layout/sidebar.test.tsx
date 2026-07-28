@@ -23,7 +23,7 @@ vi.mock('../../stores/config-store', () => ({ reloadConfig: vi.fn() }))
 
 import { buildConversationSearchText, Sidebar } from './sidebar'
 import { useChatStore } from '../../stores/chat-store'
-import { useSettingsStore } from '../../stores/settings-store'
+import { SIDEBAR_DEFAULT_WIDTH, SIDEBAR_MAX_WIDTH, SIDEBAR_MIN_WIDTH, useSettingsStore } from '../../stores/settings-store'
 import { useProjectStore } from '../../stores/project-store'
 import { ModalRequestHost } from '../ui/modal-requests'
 import { DEFAULT_CHAT_MODEL } from '../../constants/venice'
@@ -36,6 +36,7 @@ describe('Sidebar controls', () => {
     // update-depth loops in serial runs.
     useSettingsStore.setState({
       sidebarOpen: true,
+      sidebarWidth: SIDEBAR_DEFAULT_WIDTH,
       activeTab: 'chat',
       redTeamMode: false,
       showInspector: false,
@@ -108,13 +109,41 @@ describe('Sidebar controls', () => {
     expect(screen.getAllByRole('listitem').length).toBeLessThanOrEqual(200)
   })
 
-  it('forces persisted collapsed state open during hydration while allowing in-session collapse', () => {
+  it('restores persisted collapse state and expanded width during hydration', () => {
     const merge = useSettingsStore.persist.getOptions().merge
     expect(merge).toBeTypeOf('function')
-    const merged = merge?.({ sidebarOpen: false }, useSettingsStore.getState()) as { sidebarOpen: boolean }
-    expect(merged.sidebarOpen).toBe(true)
-    useSettingsStore.getState().setSidebarOpen(false)
-    expect(useSettingsStore.getState().sidebarOpen).toBe(false)
+    const merged = merge?.({ sidebarOpen: false, sidebarWidth: 320 }, useSettingsStore.getState()) as { sidebarOpen: boolean; sidebarWidth: number }
+    expect(merged.sidebarOpen).toBe(false)
+    expect(merged.sidebarWidth).toBe(320)
+  })
+
+  it('exposes an accessible desktop resize separator and supports keyboard/reset/collapse', () => {
+    render(<Sidebar />)
+    const separator = screen.getByRole('separator', { name: 'Resize sidebar' })
+    expect(separator).toHaveAttribute('aria-valuemin', String(SIDEBAR_MIN_WIDTH))
+    expect(separator).toHaveAttribute('aria-valuemax', String(SIDEBAR_MAX_WIDTH))
+    expect(separator).toHaveAttribute('aria-valuenow', String(SIDEBAR_DEFAULT_WIDTH))
+    fireEvent.keyDown(separator, { key: 'ArrowRight' })
+    expect(useSettingsStore.getState().sidebarWidth).toBe(SIDEBAR_DEFAULT_WIDTH + 10)
+    fireEvent.keyDown(separator, { key: 'End' })
+    expect(useSettingsStore.getState().sidebarWidth).toBe(SIDEBAR_MAX_WIDTH)
+    fireEvent.doubleClick(separator)
+    expect(useSettingsStore.getState().sidebarWidth).toBe(SIDEBAR_DEFAULT_WIDTH)
+    act(() => useSettingsStore.getState().setSidebarOpen(false))
+    expect(screen.queryByRole('separator', { name: 'Resize sidebar' })).not.toBeInTheDocument()
+    expect(useSettingsStore.getState().sidebarWidth).toBe(SIDEBAR_DEFAULT_WIDTH)
+  })
+
+  it('updates the DOM during pointer drag and persists only the completed width', () => {
+    render(<Sidebar />)
+    const separator = screen.getByRole('separator', { name: 'Resize sidebar' })
+    const sidebar = screen.getByRole('complementary', { name: 'Primary navigation' })
+    fireEvent.pointerDown(separator, { pointerId: 1, clientX: 256 })
+    fireEvent.pointerMove(separator, { pointerId: 1, clientX: 320 })
+    expect(sidebar.style.getPropertyValue('--sidebar-width')).toBe('320px')
+    expect(useSettingsStore.getState().sidebarWidth).toBe(SIDEBAR_DEFAULT_WIDTH)
+    fireEvent.pointerUp(separator, { pointerId: 1, clientX: 320 })
+    expect(useSettingsStore.getState().sidebarWidth).toBe(320)
   })
 
   it('places the primary New chat action directly after the project selector', () => {

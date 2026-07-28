@@ -26,9 +26,6 @@ import type { MediaItem } from "../../types/media";
 import { Trans, useTranslation } from "react-i18next";
 import { ContextMenu, useContextMenu } from "../ui/ContextMenu";
 import type { ContextMenuItem } from "../ui/ContextMenu";
-import { desktopFiles, desktopMedia, isElectron } from "../../services/desktopBridge";
-import { toast } from "../../stores/toast-store";
-import { getExtensionFromDataUrl } from "../../utils/image";
 
 const OP_TONE: Record<
   string,
@@ -65,6 +62,7 @@ interface MediaCardProps {
   onSelect: (item: MediaItem, multi: boolean) => void;
   onOpen: (item: MediaItem) => void;
   onToggleFavorite: (item: MediaItem) => void;
+  onSaveAs: (item: MediaItem) => unknown | Promise<unknown>;
   onVaultToggle: (item: MediaItem) => void;
   onDelete: (item: MediaItem) => void;
 }
@@ -77,6 +75,7 @@ function MediaCardImpl({
   onSelect,
   onOpen,
   onToggleFavorite,
+  onSaveAs,
   onVaultToggle,
   onDelete,
 }: MediaCardProps) {
@@ -98,67 +97,6 @@ function MediaCardImpl({
   const duration = formatDuration(item.duration);
   const fallbackSrc = mediaItemSource(item);
 
-  const handleSaveAs = async () => {
-    if (isVideo || isAudio) {
-      toast.error("Save As is currently image-only.");
-      return;
-    }
-    const src = mediaItemSource(item);
-    if (!src) {
-      toast.error(tRuntime("imageStudioRuntime.imageDownloadFailedDetail"));
-      return;
-    }
-    try {
-      const response = await fetch(src);
-      const blob = await response.blob();
-      if (!blob || blob.size === 0) {
-        toast.error(tRuntime("imageStudioRuntime.imageDownloadFailedDetail"));
-        return;
-      }
-      const dataUrl = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = () => reject(reader.error ?? new Error("FileReader failed"));
-        reader.readAsDataURL(blob);
-      });
-      const ext =
-        getExtensionFromDataUrl(dataUrl) ||
-        item.mimeType?.split("/")[1] ||
-        "png";
-      const stem = item.id.slice(0, 8) || "media";
-      const filename = `venice-media-${stem}.${ext}`;
-      if (isElectron()) {
-        if (item.generatedMediaId) {
-          await desktopFiles.saveGeneratedMedia(item.generatedMediaId, filename);
-        } else {
-          const persisted = await desktopMedia.persistGeneratedImage(dataUrl);
-          if (!persisted.ok || !persisted.media) {
-            toast.error(
-              persisted.error ??
-                tRuntime("imageStudioRuntime.imageDownloadFailedDetail"),
-            );
-            return;
-          }
-          await desktopFiles.saveGeneratedMedia(persisted.media.id, filename);
-        }
-        toast.success(tRuntime("imageStudioRuntime.imageDownloaded"));
-      } else {
-        const blobUrl = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = blobUrl;
-        a.download = filename;
-        a.click();
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 0);
-        toast.success(tRuntime("imageStudioRuntime.imageDownloaded"));
-      }
-    } catch (err) {
-      toast.error(
-        tRuntime("imageStudioRuntime.imageSaveFailed"),
-        err instanceof Error ? err.message : String(err),
-      );
-    }
-  };
-
   const cardMenuItems: ContextMenuItem[] = [
     {
       key: "open",
@@ -168,8 +106,8 @@ function MediaCardImpl({
     {
       key: "save-as",
       label: tRuntime("actions.saveAs"),
-      onSelect: () => void handleSaveAs(),
-      hidden: isVideo || isAudio,
+      onSelect: () => void onSaveAs(item),
+      disabled: !fallbackSrc && !item.generatedMediaId,
     },
     { kind: "separator", key: "sep-open" },
     {

@@ -32,6 +32,7 @@ import { GalleryView } from './gallery-view'
 import { useImageWorkspaceStore } from '../../stores/image-workspace-store'
 import { useSettingsStore } from '../../stores/settings-store'
 import { askDecision } from '../ui/modal-requests'
+import { toast } from '../../stores/toast-store'
 
 vi.mock('../ui/modal-requests', () => ({
   askDecision: vi.fn(),
@@ -436,5 +437,45 @@ describe('MediaStudioView (GalleryView)', () => {
       vi.unstubAllGlobals()
       vi.restoreAllMocks()
     }
+  })
+
+  it('uses the generated-media native Save As route and keeps the detail dialog open', async () => {
+    const saveGeneratedMedia = vi.fn().mockResolvedValue({ ok: true, canceled: false })
+    Object.defineProperty(window, 'veniceForge', {
+      configurable: true,
+      value: { isDesktop: true, files: { saveGeneratedMedia } },
+    })
+    vi.mocked(StorageService.getItemsPageWithMeta).mockResolvedValue({
+      items: [{ ...sampleRecord, generatedMediaId: 'generated-1' }], decryptFailures: 0, total: 1, offset: 0, limit: 60, hasMore: false,
+    })
+    render(<GalleryView />)
+    fireEvent.click(await screen.findByRole('button', { name: /open image: copper city at dusk/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Save As…' }))
+    await waitFor(() => expect(saveGeneratedMedia).toHaveBeenCalledWith(expect.objectContaining({ mediaId: 'generated-1' })))
+    expect(screen.getByRole('dialog', { name: 'Media detail' })).toBeInTheDocument()
+    delete (window as typeof window & { veniceForge?: unknown }).veniceForge
+  })
+
+  it('uses the legacy byte Save As route and treats native cancellation silently', async () => {
+    const saveMediaDataUrl = vi.fn().mockResolvedValue({ ok: false, canceled: true })
+    const success = vi.spyOn(toast, 'success')
+    const error = vi.spyOn(toast, 'error')
+    Object.defineProperty(window, 'veniceForge', {
+      configurable: true,
+      value: { isDesktop: true, files: { saveMediaDataUrl } },
+    })
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      blob: () => Promise.resolve(new Blob(['legacy-bytes'], { type: 'image/png' })),
+    }))
+    render(<GalleryView />)
+    fireEvent.click(await screen.findByRole('button', { name: /open image: copper city at dusk/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'Save As…' }))
+    await waitFor(() => expect(saveMediaDataUrl).toHaveBeenCalledWith(expect.objectContaining({ suggestedName: expect.stringMatching(/\.png$/) })))
+    expect(success).not.toHaveBeenCalled()
+    expect(error).not.toHaveBeenCalled()
+    expect(screen.getByRole('dialog', { name: 'Media detail' })).toBeInTheDocument()
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+    delete (window as typeof window & { veniceForge?: unknown }).veniceForge
   })
 })

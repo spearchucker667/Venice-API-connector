@@ -4519,5 +4519,23 @@
     "matureDarkThemes": "Thèmes matures/sombres",
     "documentNamePath": "Nom/Chemin du document",
     "characterPersonaReferences": "Références de personnages/personas"
+  },
+  "mediaSave": {
+    "success": "__MISSING__:mediaSave.success",
+    "failed": "__MISSING__:mediaSave.failed",
+    "noBytes": "__MISSING__:mediaSave.noBytes",
+    "noItems": "__MISSING__:mediaSave.noItems",
+    "exportFailed": "__MISSING__:mediaSave.exportFailed",
+    "prepareFailed": "__MISSING__:mediaSave.prepareFailed",
+    "exported": "__MISSING__:mediaSave.exported {{count}}",
+    "partiallyExported": "__MISSING__:mediaSave.partiallyExported {{saved}} {{total}}",
+    "failedWithDetail": "__MISSING__:mediaSave.failedWithDetail {{detail}}"
+  },
+  "layout": {
+    "sidebar": {
+      "resize": "__MISSING__:layout.sidebar.resize",
+      "resetWidth": "__MISSING__:layout.sidebar.resetWidth",
+      "width": "__MISSING__:layout.sidebar.width"
+    }
   }
 }

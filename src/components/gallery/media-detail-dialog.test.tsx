@@ -16,7 +16,7 @@ describe('MediaDetailDialog accessibility', () => {
     trigger.focus()
     const onClose = vi.fn()
     const { unmount } = render(
-      <MediaDetailDialog item={item} allItems={[item]} onClose={onClose} onNavigate={vi.fn()} onToggleFavorite={vi.fn()} onDelete={vi.fn()} onSelect={vi.fn()} />,
+      <MediaDetailDialog item={item} allItems={[item]} onClose={onClose} onNavigate={vi.fn()} onToggleFavorite={vi.fn()} onSaveAs={vi.fn()} onDelete={vi.fn()} onSelect={vi.fn()} />,
     )
 
     expect(screen.getByRole('button', { name: 'Close (Esc)' })).toHaveFocus()
@@ -25,5 +25,29 @@ describe('MediaDetailDialog accessibility', () => {
     unmount()
     expect(trigger).toHaveFocus()
     trigger.remove()
+  })
+
+  it('places Save As between Favorite and Delete and invokes only Save As', () => {
+    const onSaveAs = vi.fn()
+    const onFavorite = vi.fn()
+    const onDelete = vi.fn()
+    const onClose = vi.fn()
+    const onNavigate = vi.fn()
+    render(
+      <MediaDetailDialog item={item} allItems={[item]} onClose={onClose} onNavigate={onNavigate} onToggleFavorite={onFavorite} onSaveAs={onSaveAs} onDelete={onDelete} onSelect={vi.fn()} />,
+    )
+    const buttons = screen.getAllByRole('button')
+    const favoriteIndex = buttons.indexOf(screen.getByRole('button', { name: 'Favorite' }))
+    const saveIndex = buttons.indexOf(screen.getByRole('button', { name: 'Save As…' }))
+    const deleteIndex = buttons.indexOf(screen.getByRole('button', { name: 'Delete' }))
+    expect(favoriteIndex).toBeLessThan(saveIndex)
+    expect(saveIndex).toBeLessThan(deleteIndex)
+    fireEvent.click(screen.getByRole('button', { name: 'Save As…' }))
+    expect(onSaveAs).toHaveBeenCalledWith(item)
+    expect(onFavorite).not.toHaveBeenCalled()
+    expect(onDelete).not.toHaveBeenCalled()
+    expect(onClose).not.toHaveBeenCalled()
+    expect(onNavigate).not.toHaveBeenCalled()
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
   })
 })

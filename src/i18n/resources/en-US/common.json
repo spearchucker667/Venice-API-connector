@@ -45,6 +45,24 @@
     "saving": "Saving...",
     "importAll": "Import all"
   },
+  "mediaSave": {
+    "success": "Media saved successfully",
+    "failed": "Media save failed",
+    "noBytes": "No media bytes could be read",
+    "noItems": "No exportable media items found.",
+    "exportFailed": "Media export failed. No files were saved.",
+    "prepareFailed": "Media export failed. No files could be prepared.",
+    "exported": "Exported {{count}} media files.",
+    "partiallyExported": "Exported {{saved}} of {{total}} media files. Some items could not be resolved.",
+    "failedWithDetail": "Media export failed. {{detail}}"
+  },
+  "layout": {
+    "sidebar": {
+      "resize": "Resize sidebar",
+      "resetWidth": "Reset sidebar width",
+      "width": "Sidebar width"
+    }
+  },
   "status": {
     "active": "Active",
     "inactive": "Inactive",

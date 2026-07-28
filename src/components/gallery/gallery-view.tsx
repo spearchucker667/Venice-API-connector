@@ -668,6 +668,51 @@ export function MediaStudioView() {
     setCompareOpen(true);
   }, []);
 
+  const saveMediaItemAs = useCallback(async (item: MediaItem): Promise<"saved" | "cancelled" | "failed"> => {
+    const src = mediaItemSource(item);
+    if (!src && !item.generatedMediaId) {
+      toast.error(tRuntime("mediaSave.failed"));
+      return "failed";
+    }
+    try {
+      const filename = buildMediaFilename(item);
+      if (isElectron() && item.generatedMediaId) {
+        const saved = await desktopFiles.saveGeneratedMedia(item.generatedMediaId, filename);
+        if (!saved) return "cancelled";
+      } else if (src) {
+        const response = await fetch(src);
+        const blob = await response.blob();
+        if (!blob || blob.size === 0) throw new Error(tRuntime("mediaSave.noBytes"));
+        if (isElectron()) {
+          const dataUrl = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = () => reject(reader.error ?? new Error("FileReader failed"));
+            reader.readAsDataURL(blob);
+          });
+          const result = await desktopMedia.saveMediaDataUrl({ dataUrl, suggestedName: filename });
+          if (result.canceled) return "cancelled";
+          if (!result.ok) throw new Error(result.error || tRuntime("mediaSave.failed"));
+        } else {
+          const blobUrl = URL.createObjectURL(blob);
+          const anchor = document.createElement("a");
+          anchor.href = blobUrl;
+          anchor.download = filename;
+          document.body.appendChild(anchor);
+          anchor.click();
+          anchor.remove();
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
+        }
+      } else throw new Error(tRuntime("mediaSave.failed"));
+      toast.success(tRuntime("mediaSave.success"));
+      return "saved";
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : tRuntime("mediaSave.failed");
+      toast.error(tRuntime("mediaSave.failed"), detail);
+      return "failed";
+    }
+  }, [tRuntime]);
+
   // Phase 2B: export the selected media as actual image files.
   // Electron: opens a native Save dialog (single) or directory chooser (multi).
   // Web: triggers blob downloads (unchanged).
@@ -683,7 +728,7 @@ export function MediaStudioView() {
       }
       const exportItems = items.filter((it) => ids.includes(it.id));
       if (exportItems.length === 0) {
-        toast.error("No exportable media items found.");
+        toast.error(tRuntime("mediaSave.noItems"));
         return;
       }
 
@@ -712,73 +757,20 @@ export function MediaStudioView() {
           }
         }
         if (exportedCount === 0) {
-          toast.error("Media export failed. No files were saved.");
+          toast.error(tRuntime("mediaSave.exportFailed"));
         } else if (exportedCount < exportItems.length) {
           toast.warn(
-            `Exported ${exportedCount} of ${exportItems.length} media files. Some items could not be resolved.`,
+            tRuntime("mediaSave.partiallyExported", { saved: exportedCount, total: exportItems.length }),
           );
         } else {
-          toast.success(`Exported ${exportedCount} media files.`);
+          toast.success(tRuntime("mediaSave.exported", { count: exportedCount }));
         }
         return;
       }
 
       // Electron desktop path.
       if (exportItems.length === 1) {
-        const item = exportItems[0];
-        const src = mediaItemSource(item);
-        if (!src) {
-          toast.error("Selected media item could not be resolved.");
-          return;
-        }
-        if (item.generatedMediaId) {
-          try {
-            const saved = await desktopFiles.saveGeneratedMedia(
-              item.generatedMediaId,
-              buildMediaFilename(item),
-            );
-            if (saved) {
-              toast.success("Exported 1 media file.");
-            }
-          } catch (err) {
-            const msg =
-              err instanceof Error ? err.message : "Save As failed.";
-            toast.error(`Media export failed. ${msg}`);
-          }
-          return;
-        }
-        // Legacy item without generatedMediaId: fetch and send through native dialog.
-        try {
-          const response = await fetch(src);
-          const blob = await response.blob();
-          if (!blob || blob.size === 0) {
-            toast.error("Media export failed. No bytes could be read.");
-            return;
-          }
-          const dataUrl = await new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = () =>
-              reject(reader.error ?? new Error("FileReader failed"));
-            reader.readAsDataURL(blob);
-          });
-          const result = await desktopMedia.saveMediaDataUrl({
-            dataUrl,
-            suggestedName: buildMediaFilename(item),
-          });
-          if (result.canceled) return;
-          if (result.ok) {
-            toast.success("Exported 1 media file.");
-          } else {
-            toast.error(
-              result.error || "Media export failed. No files were saved.",
-            );
-          }
-        } catch (err) {
-          const msg =
-            err instanceof Error ? err.message : "Unknown error";
-          toast.error(`Media export failed. ${msg}`);
-        }
+        await saveMediaItemAs(exportItems[0]);
         return;
       }
 
@@ -824,7 +816,7 @@ export function MediaStudioView() {
         }
       }
       if (itemsForExport.length === 0) {
-        toast.error("Media export failed. No files could be prepared.");
+        toast.error(tRuntime("mediaSave.prepareFailed"));
         return;
       }
       try {
@@ -834,22 +826,22 @@ export function MediaStudioView() {
         if (result.canceled) return;
         if (result.failed.length === 0) {
           toast.success(
-            `Exported ${result.succeeded.length} media files.`,
+            tRuntime("mediaSave.exported", { count: result.succeeded.length }),
           );
         } else if (result.succeeded.length > 0) {
           toast.warn(
-            `Exported ${result.succeeded.length} of ${itemsForExport.length} media files. Some items could not be resolved.`,
+            tRuntime("mediaSave.partiallyExported", { saved: result.succeeded.length, total: itemsForExport.length }),
           );
         } else {
-          toast.error("Media export failed. No files were saved.");
+          toast.error(tRuntime("mediaSave.exportFailed"));
         }
       } catch (err) {
         const msg =
           err instanceof Error ? err.message : "Unknown error";
-        toast.error(`Media export failed. ${msg}`);
+        toast.error(tRuntime("mediaSave.failedWithDetail", { detail: msg }));
       }
     },
-    [items, tRuntime],
+    [items, saveMediaItemAs, tRuntime],
   );
 
   const handleBatchExport = useCallback(() => {
@@ -1312,6 +1304,7 @@ export function MediaStudioView() {
                       }
                     }}
                     onToggleFavorite={(it) => void toggleFavorite(it.id)}
+                    onSaveAs={saveMediaItemAs}
                     onVaultToggle={(it) => void toggleVault(it.id)}
                     onDelete={(it) => void handleDelete(it)}
                   />
@@ -1381,6 +1374,7 @@ export function MediaStudioView() {
           onClose={() => setDetailId(null)}
           onNavigate={handleNavigate}
           onToggleFavorite={(it) => void toggleFavorite(it.id)}
+          onSaveAs={saveMediaItemAs}
           onDelete={(it) => void handleDelete(it)}
           onSelect={(it) => setDetailId(it.id)}
         />

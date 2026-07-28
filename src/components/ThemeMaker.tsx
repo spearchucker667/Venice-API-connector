@@ -54,6 +54,7 @@ import { toast } from "../stores/toast-store";
 import { redactErrorMessage } from "../shared/redaction";
 import { desktopConfig } from "../services/desktopBridge";
 import { Trans, useTranslation } from "react-i18next";
+import { sortThemeOptions } from "../utils/themeOptions";
 
 const TOKEN_LABELS: Record<keyof ThemeTokens, string> = {
   background: "Background",
@@ -669,7 +670,7 @@ export function ThemeMaker() {
       optionsMap.set(theme.id, { id: theme.id, label: theme.name }),
     );
 
-    const options = Array.from(optionsMap.values());
+    const options = sortThemeOptions(Array.from(optionsMap.values()));
     if (!optionsMap.has("custom")) {
       options.push({
         id: "custom",

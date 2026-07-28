@@ -1,7 +1,15 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "../../lib/utils";
-import { useSettingsStore } from "../../stores/settings-store";
+import {
+  clampSidebarWidth,
+  SIDEBAR_COLLAPSED_WIDTH,
+  SIDEBAR_DEFAULT_WIDTH,
+  SIDEBAR_MAX_WIDTH,
+  SIDEBAR_MIN_WIDTH,
+  useSettingsStore,
+} from "../../stores/settings-store";
 import {
   selectConversationSummaries,
   useChatStore,
@@ -170,6 +178,11 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
   const activeTab = useSettingsStore((s) => s.activeTab);
   const setActiveTab = useSettingsStore((s) => s.setActiveTab);
   const sidebarOpen = useSettingsStore((s) => s.sidebarOpen);
+  const sidebarWidth = useSettingsStore((s) => s.sidebarWidth);
+  const setSidebarWidth = useSettingsStore((s) => s.setSidebarWidth);
+  const sidebarRef = useRef<HTMLElement>(null);
+  const dragStartRef = useRef<{ x: number; width: number } | null>(null);
+  const [dragging, setDragging] = useState(false);
   const redTeamMode = useSettingsStore((s) => s.redTeamMode);
   const setRedTeamMode = useSettingsStore((s) => s.setRedTeamMode);
   const localFamilySafeModeEnabled = useSettingsStore(
@@ -380,16 +393,60 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
 
   const expanded = sidebarOpen || mobileOpen;
 
+  useEffect(() => {
+    sidebarRef.current?.style.setProperty(
+      "--sidebar-width",
+      `${sidebarOpen ? clampSidebarWidth(sidebarWidth) : SIDEBAR_COLLAPSED_WIDTH}px`,
+    );
+  }, [sidebarOpen, sidebarWidth]);
+
+  const handleResizePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    dragStartRef.current = { x: event.clientX, width: clampSidebarWidth(sidebarWidth) };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    document.body.classList.add("select-none");
+    setDragging(true);
+  };
+
+  const handleResizePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const start = dragStartRef.current;
+    if (!start) return;
+    const next = clampSidebarWidth(start.width + event.clientX - start.x);
+    sidebarRef.current?.style.setProperty("--sidebar-width", `${next}px`);
+  };
+
+  const finishResize = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const start = dragStartRef.current;
+    if (start) setSidebarWidth(start.width + event.clientX - start.x);
+    dragStartRef.current = null;
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    document.body.classList.remove("select-none");
+    setDragging(false);
+  };
+
+  const handleResizeKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    const step = event.shiftKey ? 40 : 10;
+    let next: number | null = null;
+    if (event.key === "ArrowLeft") next = sidebarWidth - step;
+    if (event.key === "ArrowRight") next = sidebarWidth + step;
+    if (event.key === "Home") next = SIDEBAR_MIN_WIDTH;
+    if (event.key === "End") next = SIDEBAR_MAX_WIDTH;
+    if (next === null) return;
+    event.preventDefault();
+    setSidebarWidth(next);
+  };
+
   return (
     <aside
+      ref={sidebarRef}
       aria-label={tRuntime(
         "runtimeGenerated.components.layout.sidebar.attribute.primaryNavigation",
       )}
       className={cn(
         "flex flex-col h-full min-h-0 mesh-surface mesh-sidebar soft-separator-x shell-region",
-        "fixed top-0 left-0 z-40 w-72 h-[100dvh] md:static md:h-full md:w-auto",
+        "relative fixed top-0 left-0 z-40 w-72 h-[100dvh] md:static md:h-full md:w-[var(--sidebar-width,256px)] md:shrink-0",
         mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
-        sidebarOpen ? "md:w-64" : "md:w-[60px]",
       )}
     >
       <div
@@ -972,6 +1029,30 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
             </div>
           </div>
         </div>
+      )}
+      {sidebarOpen && (
+        <div
+          role="separator"
+          tabIndex={0}
+          aria-orientation="vertical"
+          aria-label={tRuntime("layout.sidebar.resize")}
+          aria-valuemin={SIDEBAR_MIN_WIDTH}
+          aria-valuemax={SIDEBAR_MAX_WIDTH}
+          aria-valuenow={clampSidebarWidth(sidebarWidth)}
+          title={tRuntime("layout.sidebar.resize")}
+          onPointerDown={handleResizePointerDown}
+          onPointerMove={handleResizePointerMove}
+          onPointerUp={finishResize}
+          onPointerCancel={finishResize}
+          onDoubleClick={() => setSidebarWidth(SIDEBAR_DEFAULT_WIDTH)}
+          onKeyDown={handleResizeKeyDown}
+          className={cn(
+            "absolute inset-y-0 right-0 z-20 hidden w-2 translate-x-1/2 cursor-col-resize md:block",
+            "after:absolute after:inset-y-0 after:left-1/2 after:w-px after:-translate-x-1/2 after:bg-border",
+            "hover:after:bg-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:after:bg-accent",
+            dragging && "after:bg-accent",
+          )}
+        />
       )}
     </aside>
   );
