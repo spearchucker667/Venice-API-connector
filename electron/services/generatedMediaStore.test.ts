@@ -87,6 +87,18 @@ describe('generatedMediaStore', () => {
     await expect(persistGeneratedMedia(Buffer.from('not-mp4'), 'video/mp4')).rejects.toThrow(/did not match/i)
   })
 
+  it.each([
+    { mimeType: 'audio/aac', bytes: Buffer.from([0xff, 0xf1, 0x50, 0x80]) },
+    { mimeType: 'audio/ogg', bytes: Buffer.from('OggSaudio') },
+    { mimeType: 'audio/opus', bytes: Buffer.from('OggSOpusHead') },
+    { mimeType: 'audio/mp4', bytes: Buffer.from('\x00\x00\x00\x18ftypM4A audio', 'binary') },
+  ])('persists future provider output $mimeType through the shared format policy', async ({ mimeType, bytes }) => {
+    const saved = await persistGeneratedMedia(bytes, mimeType)
+    const resolved = await resolveGeneratedMedia(saved.id)
+    expect(resolved?.mimeType).toBe(mimeType)
+    expect(await fs.readFile(resolved!.path)).toEqual(bytes)
+  })
+
   it('classifies persistence failures without exposing filesystem paths', () => {
     expect(classifyGeneratedMediaPersistenceError(Object.assign(new Error('/private/full'), { code: 'ENOSPC' }))).toMatchObject({
       kind: 'storage-full', retryable: false,

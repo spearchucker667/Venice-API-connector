@@ -44,9 +44,7 @@ import { Trans, useTranslation } from "react-i18next";
 import { ContextMenu, useContextMenu } from "../ui/ContextMenu";
 import type { ContextMenuItem } from "../ui/ContextMenu";
 import {
-  desktopFiles,
   desktopMedia,
-  isElectron,
 } from "../../services/desktopBridge";
 import { copyText } from "../../utils/download";
 
@@ -288,29 +286,10 @@ export function ImageTools() {
     }
     const suggestedName = `venice-${tool}-result.png`;
     try {
-      if (isElectron()) {
-        const dataUrl = await blobToDataUrl(blob);
-        const persisted = await desktopMedia.persistGeneratedImage(dataUrl);
-        if (!persisted.ok || !persisted.media) {
-          toast.fromError(
-            new Error(persisted.error ?? "Failed to persist result"),
-            t("imageTools.saveFailed"),
-          );
-          return;
-        }
-        await desktopFiles.saveGeneratedMedia(
-          persisted.media.id,
-          suggestedName,
-        );
-        toast.success(t("imageTools.savedToMedia"));
-      } else {
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = suggestedName;
-        a.click();
-        setTimeout(() => URL.revokeObjectURL(a.href), 0);
-        toast.success(t("imageTools.savedToMedia"));
-      }
+      const dataUrl = await blobToDataUrl(blob);
+      const result = await desktopMedia.saveMediaAs({ source: dataUrl, suggestedName });
+      if (result.status === "failed") throw new Error(result.error);
+      if (result.status === "saved") toast.success(t("imageTools.savedToMedia"));
     } catch (err) {
       toast.fromError(err, t("imageTools.saveFailed"));
     }

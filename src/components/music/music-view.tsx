@@ -21,6 +21,7 @@ import { getAudioExtension } from "../../utils/image";
 import { ModelSelect } from "../ModelSelect";
 import type { ModelInfo } from "../../types/venice";
 import { Trans, useTranslation } from "react-i18next";
+import { desktopMedia } from "../../services/desktopBridge";
 
 // Model capabilities
 interface MusicModelConfig {
@@ -238,6 +239,18 @@ export function MusicView() {
     lastRequest,
   } = useMusic();
   const isProcessing = status === "queued" || status === "processing";
+
+  const handleSaveAudio = async () => {
+    if (!audioUrl) return;
+    const result = await desktopMedia.saveMediaAs({
+      source: audioUrl,
+      mediaId: resultMediaId ?? undefined,
+      mimeType: mimeType ?? undefined,
+      suggestedName: `venice-music${getAudioExtension(mimeType, audioUrl)}`,
+    });
+    if (result.status === "saved") toast.success(tRuntime("mediaSave.success"));
+    if (result.status === "failed") toast.error(tRuntime("mediaSave.failed"), result.error);
+  };
   const savedQueueIdsRef = useRef<Set<string>>(new Set());
   const queueAlreadySaved = useMediaStore((state) =>
     Boolean(
@@ -568,11 +581,9 @@ export function MusicView() {
                   </button>
                 );
               })()}
-              <a
-                href={audioUrl}
-                download={`venice-music${getAudioExtension(mimeType, audioUrl)}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={() => void handleSaveAudio()}
                 className="text-[14px] text-text-muted hover:text-text-muted transition-colors flex items-center gap-1.5"
               >
                 <svg
@@ -588,7 +599,7 @@ export function MusicView() {
                   <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
                 </svg>
                 <Trans i18nKey="common:surface.componentsMusicMusicView.text.download" />
-              </a>
+              </button>
             </div>
           </div>
           <audio

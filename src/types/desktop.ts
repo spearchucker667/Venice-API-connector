@@ -189,8 +189,6 @@ export interface VeniceForgeFiles {
    *  @returns A promise resolving with the file contents and filename.
    */
   readLocalFile(): Promise<{ ok: boolean; canceled?: boolean; content?: string; filename?: string; error?: string }>;
-  saveRoutedImage(base64Data: string, filename: string, subfolder: string): Promise<{ ok: boolean; filePath?: string; error?: string }>;
-  exportMedia(input: { base64Data: string; filename: string; subfolder?: string; dryRun?: boolean }): Promise<{ ok: boolean; filePath?: string; canceled?: boolean; error?: string }>;
   importMedia(input: { filePath: string }): Promise<{
     ok: boolean; canceled?: boolean; dataUrl?: string; filePath?: string;
     filename?: string; bytes?: number; contentType?: string; error?: string;

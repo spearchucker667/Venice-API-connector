@@ -456,6 +456,27 @@ describe('MediaStudioView (GalleryView)', () => {
     delete (window as typeof window & { veniceForge?: unknown }).veniceForge
   })
 
+  it.each(['edit', 'upscale', 'background-remove', 'generate'] as const)(
+    'routes %s image records through the same generated-media Save As channel',
+    async (operation) => {
+      const saveGeneratedMedia = vi.fn().mockResolvedValue({ ok: true, canceled: false, filename: 'result.png', bytes: 68 })
+      Object.defineProperty(window, 'veniceForge', {
+        configurable: true,
+        value: { isDesktop: true, files: { saveGeneratedMedia } },
+      })
+      vi.mocked(StorageService.getItemsPageWithMeta).mockResolvedValue({
+        items: [{ ...sampleRecord, operation, generatedMediaId: 'generated-1' }], decryptFailures: 0, total: 1, offset: 0, limit: 60, hasMore: false,
+      })
+      const view = render(<GalleryView />)
+      fireEvent.click(await screen.findByRole('button', { name: /open image: copper city at dusk/i }))
+      fireEvent.click(screen.getByRole('button', { name: 'Save As…' }))
+      await waitFor(() => expect(saveGeneratedMedia).toHaveBeenCalledTimes(1))
+      expect(saveGeneratedMedia).toHaveBeenCalledWith(expect.objectContaining({ mediaId: 'generated-1' }))
+      view.unmount()
+      delete (window as typeof window & { veniceForge?: unknown }).veniceForge
+    },
+  )
+
   it('uses the legacy byte Save As route and treats native cancellation silently', async () => {
     const saveMediaDataUrl = vi.fn().mockResolvedValue({ ok: false, canceled: true })
     const success = vi.spyOn(toast, 'success')

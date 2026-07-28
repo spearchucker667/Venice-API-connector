@@ -20,17 +20,9 @@ import {
   type CustomProtocolAccessInput,
 } from '../utils/customProtocolAccess'
 import { logError, logInfo, logWarn } from './logger'
+import { mediaBytesMatchMime, mediaExtensionForMime, normalizeMediaMime } from './mediaFormat'
 
 export const GENERATED_MEDIA_SCHEME = 'venice-media'
-const ALLOWED_MIME = new Map([
-  ['video/mp4', 'mp4'],
-  ['audio/mpeg', 'mp3'],
-  ['audio/wav', 'wav'],
-  ['audio/flac', 'flac'],
-  ['image/png', 'png'],
-  ['image/jpeg', 'jpg'],
-  ['image/webp', 'webp'],
-])
 
 export interface GeneratedMediaTempFile {
   path: string
@@ -201,7 +193,7 @@ async function readGeneratedMediaMetadata(id: string): Promise<GeneratedMediaMet
       typeof value.extension !== 'string' ||
       !Number.isSafeInteger(value.byteCount) ||
       (value.byteCount ?? 0) <= 0 ||
-      ALLOWED_MIME.get(value.mimeType) !== value.extension
+      mediaExtensionForMime(value.mimeType) !== value.extension
     ) return null
     return value as GeneratedMediaMetadata
   } catch {
@@ -247,8 +239,8 @@ export async function commitGeneratedMediaTempFile(input: {
   byteCount: number
   sha256: string
 }): Promise<DurableGeneratedMedia> {
-  const normalizedMime = input.mimeType.split(';')[0].trim().toLowerCase()
-  const extension = ALLOWED_MIME.get(normalizedMime)
+  const normalizedMime = normalizeMediaMime(input.mimeType)
+  const extension = mediaExtensionForMime(normalizedMime)
   if (!extension) throw new Error('Generated media has an unsupported content type.')
   if (!Number.isSafeInteger(input.byteCount) || input.byteCount <= 0) throw new Error('Generated media response was empty.')
   if (!/^[a-f0-9]{64}$/.test(input.sha256)) throw new Error('Generated media digest was invalid.')
@@ -305,24 +297,11 @@ export async function commitGeneratedMediaTempFile(input: {
 }
 
 export async function persistGeneratedMedia(bytes: Buffer, mimeType: string): Promise<DurableGeneratedMedia> {
-  const normalizedMime = mimeType.split(';')[0].trim().toLowerCase()
-  const extension = ALLOWED_MIME.get(normalizedMime)
+  const normalizedMime = normalizeMediaMime(mimeType)
+  const extension = mediaExtensionForMime(normalizedMime)
   if (!extension) throw new Error('Generated media has an unsupported content type.')
   if (bytes.length === 0) throw new Error('Generated media response was empty.')
-  const signatureOk = normalizedMime === 'video/mp4'
-    ? bytes.length >= 12 && bytes.subarray(4, 8).toString('ascii') === 'ftyp'
-    : normalizedMime === 'audio/wav'
-      ? bytes.length >= 12 && bytes.subarray(0, 4).toString('ascii') === 'RIFF' && bytes.subarray(8, 12).toString('ascii') === 'WAVE'
-      : normalizedMime === 'audio/flac'
-        ? bytes.length >= 4 && bytes.subarray(0, 4).toString('ascii') === 'fLaC'
-        : normalizedMime === 'image/png'
-          ? bytes.length >= 8 && bytes.subarray(0, 8).toString('hex') === '89504e470d0a1a0a'
-          : normalizedMime === 'image/jpeg'
-            ? bytes.length >= 2 && bytes.subarray(0, 2).toString('hex') === 'ffd8'
-            : normalizedMime === 'image/webp'
-              ? bytes.length >= 12 && bytes.subarray(0, 4).toString('ascii') === 'RIFF' && bytes.subarray(8, 12).toString('ascii') === 'WEBP'
-              : bytes.length >= 3 && (bytes.subarray(0, 3).toString('ascii') === 'ID3' || (bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0))
-  if (!signatureOk) throw new Error('Generated media bytes did not match the declared content type.')
+  if (!mediaBytesMatchMime(bytes, normalizedMime)) throw new Error('Generated media bytes did not match the declared content type.')
   const sha256 = crypto.createHash('sha256').update(bytes).digest('hex')
   const existing = await verifyGeneratedMediaIntegrity(sha256)
   if (existing.ok) {

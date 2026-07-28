@@ -329,7 +329,6 @@ export function ImageView() {
   const downloadImage = async (b64: string, index?: number) => {
     const ext = getExtensionFromDataUrl(b64);
     const filename = `venice-image${index !== undefined ? `-${index + 1}` : ""}.${ext}`;
-    const routedFolder = routeAsset(prompt);
     try {
       if (isElectron()) {
         const pending = pendingImageSaves[b64];
@@ -345,26 +344,12 @@ export function ImageView() {
             return;
           }
         }
-        const result = await desktopMedia.saveRoutedImage(
-          b64,
-          filename,
-          routedFolder,
-        );
-        if (result.ok) {
-          toast.success(
-            `Image saved to Pictures/Venice Forge/${routedFolder}/${filename}`,
-          );
-        } else {
-          const fallback = await downloadImageUtil(toImageSrc(b64), filename);
-          if (fallback.confirmed) {
-            toast.success(t("imageStudioRuntime.imageDownloaded"));
-          } else {
-            toast.error(
-              t("imageStudioRuntime.imageSaveFailed"),
-              t("imageStudioRuntime.imageDownloadFailedDetail"),
-            );
-          }
-        }
+        const result = await desktopMedia.saveMediaAs({
+          source: toImageSrc(b64),
+          suggestedName: filename,
+        });
+        if (result.status === "saved") toast.success(t("imageStudioRuntime.imageDownloaded"));
+        if (result.status === "failed") throw new Error(result.error);
       } else {
         const fallback = await downloadImageUtil(toImageSrc(b64), filename);
         if (fallback.confirmed) {

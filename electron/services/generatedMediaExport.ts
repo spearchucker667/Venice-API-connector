@@ -4,6 +4,7 @@ import crypto from 'crypto'
 import fs from 'fs/promises'
 import path from 'path'
 import { resolveGeneratedMedia, verifyGeneratedMediaIntegrity } from './generatedMediaStore'
+import { MEDIA_EXTENSION_BY_MIME, mediaBytesMatchMime, normalizeMediaMime } from './mediaFormat'
 
 export interface BulkExportItem {
   itemId: string
@@ -20,22 +21,19 @@ export interface BulkExportResult {
   failed: Array<{ itemId: string; error: string }>
 }
 
-const EXTENSION_BY_MIME: Record<string, string> = {
-  'video/mp4': 'mp4',
-  'audio/mpeg': 'mp3',
-  'audio/wav': 'wav',
-  'audio/flac': 'flac',
-  'image/png': 'png',
-  'image/jpeg': 'jpg',
-  'image/jpg': 'jpg',
-  'image/webp': 'webp',
-  'image/gif': 'gif',
-  'image/avif': 'avif',
-}
-
 function sanitizeSuggestedName(value: unknown, extension: string): string {
   const stem = typeof value === 'string' ? path.parse(path.basename(value)).name : 'venice-forge-media'
-  const sanitized = stem.replace(/[^a-zA-Z0-9_.-]/g, '_').replace(/^\.+/, '').slice(0, 120) || 'venice-forge-media'
+  let sanitized = stem
+    .normalize('NFC')
+    .split('')
+    .map((character) => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127 ? '_' : character)
+    .join('')
+    .replace(/[<>:"/\\|?*]/g, '_')
+    .replace(/^\.+/, '')
+    .replace(/[. ]+$/g, '')
+    .slice(0, 120)
+  if (/^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i.test(sanitized)) sanitized = `_${sanitized}`
+  sanitized ||= 'venice-forge-media'
   return `${sanitized}.${extension}`
 }
 
@@ -43,7 +41,7 @@ async function chooseGeneratedMediaDestination(input: {
   mimeType: string
   suggestedName?: string
 }): Promise<{ canceled: true } | { canceled: false; destination: string }> {
-  const extension = EXTENSION_BY_MIME[input.mimeType]
+  const extension = MEDIA_EXTENSION_BY_MIME[input.mimeType]
   if (!extension) throw new Error('Generated media type cannot be exported.')
   const suggestedName = sanitizeSuggestedName(input.suggestedName, extension)
   const filterLabel = input.mimeType.startsWith('image/')
@@ -103,7 +101,10 @@ export async function saveGeneratedMediaBytesAs(input: {
   suggestedName?: string
 }): Promise<{ ok: boolean; canceled: boolean; filename?: string; bytes?: number }> {
   if (input.bytes.length === 0) throw new Error('Generated media recovery data was empty.')
-  const choice = await chooseGeneratedMediaDestination(input)
+  const mimeType = normalizeMediaMime(input.mimeType)
+  if (!MEDIA_EXTENSION_BY_MIME[mimeType]) throw new Error('Generated media type cannot be exported.')
+  if (!mediaBytesMatchMime(input.bytes, mimeType)) throw new Error('Generated media bytes did not match the declared MIME type.')
+  const choice = await chooseGeneratedMediaDestination({ ...input, mimeType })
   if (choice.canceled) return { ok: true, canceled: true }
   const byteCount = await replaceFileAtomically(choice.destination, (temporary) => fs.writeFile(temporary, input.bytes, { mode: 0o600 }))
   return { ok: true, canceled: false, filename: path.basename(choice.destination), bytes: byteCount }
@@ -174,6 +175,7 @@ export async function exportMediaBatchAs(input: {
   if (count === 0) return { ok: true, canceled: false, succeeded: [], failed: [] }
   if (count > 500) return { ok: false, canceled: false, succeeded: [], failed: [{ itemId: '', error: 'Batch export limited to 500 items.' }] }
 
+  // verify-no-native-dialogs: allow — user-initiated bulk media export directory picker
   const choice = await dialog.showOpenDialog(input.ownerWindow, {
     title: 'Choose media export location',
     properties: ['openDirectory', 'createDirectory'],
@@ -216,7 +218,7 @@ export async function exportMediaBatchAs(input: {
         continue
       }
 
-      const ext = EXTENSION_BY_MIME[mimeType] || 'bin'
+      const ext = MEDIA_EXTENSION_BY_MIME[mimeType] || 'bin'
       const rawName = item.suggestedName || item.itemId
       const safeStem = sanitizeFilenameForExport(rawName)
       const candidateName = `${safeStem}.${ext}`
