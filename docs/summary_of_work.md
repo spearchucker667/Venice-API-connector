@@ -14,6 +14,8 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 **Remaining verification boundary:** the package is ad-hoc/unsigned. No Developer ID identity or notarization profile exists on this Mac, so signed/notarized, hardened-runtime, App Sandbox/security-scoped-bookmark, Intel macOS, Windows, paid-provider, and private backup/migration-fixture acceptance remain under `VF-VERIFY-005`. Full audit: `docs/reports/MEDIA_SAVE_PIPELINE_AUDIT_2026-07-28.md`.
 
+**Hosted-CI remediation:** after GitHub Actions service was restored, PR #82 exposed and fixed Windows-only durability and symlink-containment defects, clean-checkout documentation drift, and a coverage gap in the new media-format policy. Direct `mediaFormat` tests now exercise MIME normalization, every supported extension, valid image/audio/video signatures, malformed/empty inputs, and unsupported types without changing the repository coverage thresholds. The focused test contains 48 passing cases; the exact pushed commit still requires a fresh protected-CI run before merge.
+
 ### Prior Session Summary (Media Save As, Bulk Image Export, Context Menu Remediation — `VF-MEDIA-EXPORT-FIXES-001`)
 
 **Date:** 2026-07-27 (Media Save As, Bulk Image Export, Context Menu Remediation — `VF-MEDIA-EXPORT-FIXES-001`)
