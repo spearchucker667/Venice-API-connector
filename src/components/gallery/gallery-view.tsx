@@ -61,7 +61,6 @@ import { askDecision, askText } from "../ui/modal-requests";
 import { Lock, Unlock } from "lucide-react";
 import { MasterPasswordDialog } from "../settings/MasterPasswordDialog";
 import {
-  desktopFiles,
   desktopMasterPassword,
   desktopMedia,
   isElectron,
@@ -676,34 +675,14 @@ export function MediaStudioView() {
     }
     try {
       const filename = buildMediaFilename(item);
-      if (isElectron() && item.generatedMediaId) {
-        const saved = await desktopFiles.saveGeneratedMedia(item.generatedMediaId, filename);
-        if (!saved) return "cancelled";
-      } else if (src) {
-        const response = await fetch(src);
-        const blob = await response.blob();
-        if (!blob || blob.size === 0) throw new Error(tRuntime("mediaSave.noBytes"));
-        if (isElectron()) {
-          const dataUrl = await new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = () => reject(reader.error ?? new Error("FileReader failed"));
-            reader.readAsDataURL(blob);
-          });
-          const result = await desktopMedia.saveMediaDataUrl({ dataUrl, suggestedName: filename });
-          if (result.canceled) return "cancelled";
-          if (!result.ok) throw new Error(result.error || tRuntime("mediaSave.failed"));
-        } else {
-          const blobUrl = URL.createObjectURL(blob);
-          const anchor = document.createElement("a");
-          anchor.href = blobUrl;
-          anchor.download = filename;
-          document.body.appendChild(anchor);
-          anchor.click();
-          anchor.remove();
-          setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
-        }
-      } else throw new Error(tRuntime("mediaSave.failed"));
+      const result = await desktopMedia.saveMediaAs({
+        source: src ?? undefined,
+        mediaId: item.generatedMediaId,
+        mimeType: item.mimeType,
+        suggestedName: filename,
+      });
+      if (result.status === "cancelled") return "cancelled";
+      if (result.status === "failed") throw new Error(result.error || tRuntime("mediaSave.failed"));
       toast.success(tRuntime("mediaSave.success"));
       return "saved";
     } catch (error) {

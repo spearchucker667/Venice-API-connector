@@ -65,7 +65,6 @@ vi.mock("electron", () => ({
 }));
 
 import {
-  exportMedia,
   importMediaFromPath,
   readMediaMeta,
   generateMediaThumb,
@@ -148,38 +147,6 @@ function crc32(buf: Buffer): number {
   return (c ^ 0xffffffff) >>> 0;
 }
 
-describe("mediaService.sanitizeFilename", () => {
-  it("replaces path separators and dots-prefix", () => {
-    expect(__test.sanitizeFilename("../etc/passwd")).toBe("_etc_passwd");
-    expect(__test.sanitizeFilename("..")).toBe("");
-    expect(__test.sanitizeFilename(".hidden")).toBe("hidden");
-    expect(__test.sanitizeFilename("file with space.png")).toBe("file_with_space.png");
-  });
-
-  it("caps length to 200", () => {
-    const long = "a".repeat(500) + ".png";
-    const out = __test.sanitizeFilename(long);
-    expect(out.length).toBeLessThanOrEqual(200);
-  });
-
-  it("strips leading dots", () => {
-    expect(__test.sanitizeFilename("...secret.png")).toBe("secret.png");
-  });
-});
-
-describe("mediaService.sanitizeSubfolder", () => {
-  it("strips non-alphanumerics and dots", () => {
-    expect(__test.sanitizeSubfolder("hello world")).toBe("helloworld");
-    expect(__test.sanitizeSubfolder("../etc")).toBe("etc");
-    expect(__test.sanitizeSubfolder("..")).toBe("");
-  });
-
-  it("caps length to 60", () => {
-    const out = __test.sanitizeSubfolder("a".repeat(200));
-    expect(out.length).toBeLessThanOrEqual(60);
-  });
-});
-
 describe("mediaService.isWithin", () => {
   it("returns true for an exact child", () => {
     const parent = path.resolve(TEMP_ROOT, "isWithinParent");
@@ -205,105 +172,6 @@ describe("mediaService.isWithin", () => {
     } else {
       expect(__test.isWithin(parent, child)).toBe(false);
     }
-  });
-});
-
-describe("exportMedia", () => {
-  beforeEach(async () => {
-    await removeFixturesIn(
-      path.join(TMP_PICTURES, "Venice Forge", "Media Studio"),
-      ["My_Image.png", "preview.png", "stripped.png"],
-    );
-  });
-  afterEach(async () => {
-    await removeFixturesIn(
-      path.join(TMP_PICTURES, "Venice Forge", "Media Studio"),
-      ["My_Image.png", "preview.png", "stripped.png"],
-    );
-  });
-
-  it("writes a sanitized file under Pictures/Venice Forge/Media Studio", async () => {
-    const result = await exportMedia({
-      base64Data: tinyPngBuffer().toString("base64"),
-      filename: "My Image.png",
-    });
-    expect(result.ok, `exportMedia failed: ${result.error ?? "<no error>"}`).toBe(true);
-    expect(result.filePath).toBeDefined();
-    const written = await fs.readFile(result.filePath!);
-    expect(written.equals(tinyPngBuffer())).toBe(true);
-    // The file lives in the Media Studio subfolder.
-    expect(result.filePath).toMatch(/Venice Forge[\\/]Media Studio[\\/]My_Image\.png$/);
-  });
-
-  it("returns the resolved path without writing when dryRun is true", async () => {
-    const result = await exportMedia({
-      base64Data: tinyPngBuffer().toString("base64"),
-      filename: "preview.png",
-      dryRun: true,
-    });
-    expect(result.ok, `exportMedia dryRun failed: ${result.error ?? "<no error>"}`).toBe(true);
-    expect(result.filePath).toMatch(/Media Studio[\\/]preview\.png$/);
-    // File should NOT exist on disk
-    await expect(fs.access(result.filePath!)).rejects.toThrow();
-  });
-
-  it("rejects filenames with no usable characters", async () => {
-    const result = await exportMedia({ base64Data: tinyPngBuffer().toString("base64"), filename: "." });
-    expect(result.ok, `exportMedia unexpectedly succeeded: ${result.error ?? "<no error>"}`).toBe(false);
-    expect(result.error).toMatch(/no usable characters/);
-  });
-
-  it("rejects missing or non-string base64Data", async () => {
-    const r1 = await exportMedia({ filename: "x.png" } as unknown as { base64Data: string; filename: string });
-    expect(r1.ok, `exportMedia unexpectedly succeeded: ${r1.error ?? "<no error>"}`).toBe(false);
-    const r2 = await exportMedia({ base64Data: 123 as unknown as string, filename: "x.png" });
-    expect(r2.ok, `exportMedia unexpectedly succeeded: ${r2.error ?? "<no error>"}`).toBe(false);
-  });
-
-  it("strips data URL prefix before decoding", async () => {
-    const result = await exportMedia({
-      base64Data: `data:image/png;base64,${tinyPngBuffer().toString("base64")}`,
-      filename: "stripped.png",
-    });
-    expect(result.ok, `exportMedia failed: ${result.error ?? "<no error>"}`).toBe(true);
-    const written = await fs.readFile(result.filePath!);
-    expect(written.equals(tinyPngBuffer())).toBe(true);
-  });
-
-  it("rejects arbitrary bytes renamed to an image extension", async () => {
-    const result = await exportMedia({
-      base64Data: Buffer.from("not really a png").toString("base64"),
-      filename: "spoof.png",
-    });
-    expect(result).toMatchObject({ ok: false, error: "Decoded payload is not a supported image." });
-  });
-
-  it("rejects mismatched data URL MIME and filename extension", async () => {
-    const mimeMismatch = await exportMedia({
-      base64Data: `data:image/jpeg;base64,${tinyPngBuffer().toString("base64")}`,
-      filename: "image.jpg",
-    });
-    expect(mimeMismatch).toMatchObject({
-      ok: false,
-      error: "Image data URL MIME type does not match decoded bytes.",
-    });
-
-    const extensionMismatch = await exportMedia({
-      base64Data: `data:image/png;base64,${tinyPngBuffer().toString("base64")}`,
-      filename: "image.webp",
-    });
-    expect(extensionMismatch).toMatchObject({
-      ok: false,
-      error: "Filename extension does not match decoded image type.",
-    });
-  });
-
-  it("rejects unsupported media data URLs in the image export path", async () => {
-    const result = await exportMedia({
-      base64Data: `data:video/mp4;base64,${tinyPngBuffer().toString("base64")}`,
-      filename: "video.mp4",
-    });
-    expect(result).toMatchObject({ ok: false, error: "Image data URL MIME type is not supported." });
   });
 });
 

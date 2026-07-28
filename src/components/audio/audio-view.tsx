@@ -22,8 +22,16 @@ import { redactErrorMessage } from "../../shared/redaction";
 import { DEFAULT_TTS_MODEL } from "../../constants/venice";
 import { DEFAULT_TTS_VOICE, TTS_FALLBACK_VOICES } from "../../constants/tts";
 import { Trans, useTranslation } from "react-i18next";
+import { desktopMedia } from "../../services/desktopBridge";
 
 const FORMATS = ["mp3", "opus", "aac", "flac", "wav"] as const;
+const MIME_BY_FORMAT: Record<string, string> = {
+  mp3: "audio/mpeg",
+  opus: "audio/opus",
+  aac: "audio/aac",
+  flac: "audio/flac",
+  wav: "audio/wav",
+};
 
 export function AudioView() {
   const { t: tRuntime } = useTranslation("common");
@@ -52,6 +60,17 @@ export function AudioView() {
 
   const tts = useTTS();
   const transcription = useTranscription();
+
+  const handleSaveAudio = async () => {
+    if (!audioUrl) return;
+    const result = await desktopMedia.saveMediaAs({
+      source: audioUrl,
+      mimeType: MIME_BY_FORMAT[format],
+      suggestedName: `venice-speech.${format}`,
+    });
+    if (result.status === "saved") toast.success(tRuntime("mediaSave.success"));
+    if (result.status === "failed") toast.error(tRuntime("mediaSave.failed"), result.error);
+  };
 
   useEffect(() => {
     if (!audioUrl) setPlaybackError(null);
@@ -287,9 +306,9 @@ export function AudioView() {
               <Label>
                 <Trans i18nKey="common:surface.componentsAudioAudioView.text.output" />
               </Label>
-              <a
-                href={audioUrl}
-                download={`venice-speech.${format}`}
+              <button
+                type="button"
+                onClick={() => void handleSaveAudio()}
                 className="text-[14px] text-text-muted hover:text-text-muted transition-colors flex items-center gap-1.5"
               >
                 <svg
@@ -305,7 +324,7 @@ export function AudioView() {
                   <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
                 </svg>
                 <Trans i18nKey="common:surface.componentsAudioAudioView.text.download" />
-              </a>
+              </button>
             </div>
             <audio
               controls

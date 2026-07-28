@@ -293,13 +293,6 @@ const veniceForge = {
     readLocalFile(): Promise<{ ok: boolean; canceled?: boolean; content?: string; filename?: string; error?: string }> {
       return ipcRenderer.invoke("app:readLocalFile");
     },
-    saveRoutedImage(base64Data: string, filename: string, subfolder: string): Promise<{ ok: boolean; filePath?: string; error?: string }> {
-      return ipcRenderer.invoke("app:saveRoutedImage", base64Data, filename, subfolder);
-    },
-    /** Media Studio: export a base64 image to Pictures/Venice Forge/Media Studio. */
-    exportMedia(input: { base64Data: string; filename: string; subfolder?: string; dryRun?: boolean }): Promise<{ ok: boolean; filePath?: string; canceled?: boolean; error?: string }> {
-      return ipcRenderer.invoke("app:media:export", input);
-    },
     /** Media Studio: read a file from an allowlisted directory and return it as a data URL. */
     importMedia(input: { filePath: string }): Promise<{
       ok: boolean; canceled?: boolean; dataUrl?: string; filePath?: string;

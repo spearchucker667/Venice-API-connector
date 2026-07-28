@@ -611,19 +611,6 @@ export const desktopInspector = {
 
 /** Handles JSON file export and import, falling back to browser downloads in web mode. */
 export const desktopFiles = {
-  async saveGeneratedMedia(
-    mediaId: string,
-    suggestedName?: string,
-  ): Promise<boolean> {
-    if (!isElectron()) return false;
-    const result = await window.veniceForge!.files.saveGeneratedMedia({
-      mediaId,
-      suggestedName,
-    });
-    if (!result.ok)
-      throw new Error(result.error || "Generated media could not be saved.");
-    return !result.canceled;
-  },
   /**
    * Exports data as a JSON file via native dialog or browser download.
    * @param data The data to serialize and save.
@@ -983,55 +970,60 @@ export const desktopMedia = {
     return window.veniceForge!.files.saveGeneratedImageRecovery({ recoveryId, suggestedName });
   },
 
-  /**
-   * Exports a base64-encoded image to disk. In Electron, this writes under
-   * `<Pictures>/Venice Forge/Media Studio/<subfolder>/<filename.png>`
-   * via the main process. In web mode, this falls back to a browser
-   * download with the given default filename.
-   */
-  async exportMedia(input: {
-    base64Data: string;
-    filename: string;
-    subfolder?: string;
-  }): Promise<{ ok: boolean; filePath?: string; error?: string }> {
-    if (!isElectron()) {
-      try {
-        const blob = await (async () => {
-          const raw = input.base64Data.replace(
-            /^data:image\/[a-zA-Z0-9.+-]+;base64,/,
-            "",
-          );
-          const bytes = Uint8Array.from(atob(raw), (c) => c.charCodeAt(0));
-          return new Blob([bytes], { type: "image/png" });
-        })();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = input.filename || "venice-forge-export.png";
-        a.click();
-        setTimeout(() => URL.revokeObjectURL(url), 60_000);
-        return { ok: true };
-      } catch (err) {
-        return {
-          ok: false,
-          error: err instanceof Error ? err.message : String(err),
-        };
-      }
-    }
-    return window.veniceForge!.files.exportMedia(input);
-  },
-
-  /** Opens a native save dialog and writes the decoded data URL bytes.
-   *  Desktop-only. For web mode returns an error — caller should fall back
-   *  to browser download. */
-  async saveMediaDataUrl(input: {
-    dataUrl: string;
+  /** Canonical renderer-facing Save As entry point. The renderer resolves a
+   * supported source to bytes, while Electron owns validation, the native
+   * dialog, and the atomic filesystem write. */
+  async saveMediaAs(input: {
+    source?: string;
+    mediaId?: string;
+    mimeType?: string;
     suggestedName?: string;
-  }): Promise<{ ok: boolean; canceled: boolean; filename?: string; bytes?: number; error?: string }> {
-    if (!isElectron()) {
-      return { ok: false, canceled: false, error: "Save As dialog is only available in desktop mode." };
+  }): Promise<{ status: "saved" | "cancelled" | "failed"; filename?: string; bytes?: number; error?: string }> {
+    try {
+      if (isElectron() && input.mediaId) {
+        const result = await window.veniceForge!.files.saveGeneratedMedia({
+          mediaId: input.mediaId,
+          suggestedName: input.suggestedName,
+        });
+        if (result.canceled) return { status: "cancelled" };
+        if (!result.ok) return { status: "failed", error: result.error ?? "Media could not be saved." };
+        return { status: "saved", filename: result.filename, bytes: result.bytes };
+      }
+      if (!input.source) return { status: "failed", error: "No media source is available." };
+
+      const response = await fetch(input.source);
+      if (response.ok === false) return { status: "failed", error: `Media source returned ${response.status}.` };
+      let blob = await response.blob();
+      if (blob.size === 0) return { status: "failed", error: "Media source was empty." };
+      const normalizedMime = (input.mimeType || blob.type).split(";", 1)[0].trim().toLowerCase();
+      if (normalizedMime && blob.type !== normalizedMime) blob = new Blob([blob], { type: normalizedMime });
+
+      if (isElectron()) {
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onerror = () => reject(new Error("Media bytes could not be read."));
+          reader.onload = () => resolve(String(reader.result));
+          reader.readAsDataURL(blob);
+        });
+        const result = await window.veniceForge!.files.saveMediaDataUrl({
+          dataUrl,
+          suggestedName: input.suggestedName,
+        });
+        if (result.canceled) return { status: "cancelled" };
+        if (!result.ok) return { status: "failed", error: result.error ?? "Media could not be saved." };
+        return { status: "saved", filename: result.filename, bytes: result.bytes };
+      }
+
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = input.suggestedName || "venice-forge-media";
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+      return { status: "saved", filename: anchor.download, bytes: blob.size };
+    } catch (error) {
+      return { status: "failed", error: error instanceof Error ? error.message : String(error) };
     }
-    return window.veniceForge!.files.saveMediaDataUrl(input);
   },
 
   /** Opens a native directory chooser and exports all items. Desktop-only. */
@@ -1119,31 +1111,6 @@ export const desktopMedia = {
     return window.veniceForge!.files.generateMediaThumb(input);
   },
 
-  /** Saves a base64-encoded image to a sanitized subfolder under
-   *  <Pictures>/Venice Forge/. Desktop-only; web mode falls back to
-   *  a browser download. */
-  async saveRoutedImage(
-    base64Data: string,
-    filename: string,
-    subfolder: string,
-  ): Promise<{
-    ok: boolean;
-    filePath?: string;
-    error?: string;
-  }> {
-    if (!isElectron()) {
-      const a = document.createElement("a");
-      a.href = base64Data;
-      a.download = filename;
-      a.click();
-      return { ok: true };
-    }
-    return window.veniceForge!.files.saveRoutedImage(
-      base64Data,
-      filename,
-      subfolder,
-    );
-  },
 };
 
 /** Character avatar image cache bridge.

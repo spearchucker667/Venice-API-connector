@@ -53,17 +53,17 @@ function main() {
   mustContain("electron/services/characterImageCache.ts", CHARACTER_CACHE_TYPES, "character cache allowed types");
   mustNotContain("electron/services/characterImageCache.ts", ["image/gif"], "non-canonical types");
 
-  // 4. Electron IPC routed image save boundary
-  mustContain("electron/ipc/handlers/fileHandlers.ts", [
-    "ROUTED_IMAGE_EXTENSIONS_BY_MIME",
-    "validateRoutedImageData",
-    "sniffRoutedImageContentType",
-    "decodeStrictRoutedBase64",
-  ], "saveRoutedImage validation boundary");
+  // 4. Canonical native media Save As validation boundary
+  mustContain("electron/services/generatedMediaExport.ts", [
+    "mediaBytesMatchMime",
+    "saveGeneratedMediaBytesAs",
+    "saveGeneratedMediaAs",
+    "saveDataUrlAs",
+  ], "canonical media Save As validation boundary");
   mustNotContain("electron/ipc/handlers/fileHandlers.ts", [
-    "\".gif\", \".mp4\", \".webm\"",
-    "Buffer.from(rawData, \"base64\")",
-  ], "unsafe routed image policy");
+    "app:saveRoutedImage",
+    "app:media:export\"",
+  ], "obsolete fixed-folder media writers");
 
   // 5. Component Accept Lists
   mustContain("src/components/image/image-tools.tsx", [`accept="${ACCEPT_LIST}"`], "image-tools accept list");

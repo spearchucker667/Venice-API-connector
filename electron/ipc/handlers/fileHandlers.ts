@@ -1,13 +1,12 @@
 /** @fileoverview File-system and local-file IPC handlers (save/load dialogs,
  *  media import/export, character image cache, etc.). */
 
-import { app, BrowserWindow, dialog, shell } from "electron";
+import { BrowserWindow, dialog, shell } from "electron";
 import fs from "fs/promises";
 import path from "path";
 import { VENICE_MAX_BODY_BYTES } from "../../../src/shared/limits";
 import { redactErrorMessage } from "../../../src/shared/redaction";
 import {
-  exportMedia,
   generateMediaThumb,
   importMediaFromPath,
   readMediaMeta,
@@ -82,33 +81,6 @@ function sniffRoutedImageContentType(buffer: Buffer): string | null {
   ) return "image/webp";
   return null;
 }
-
-function validateRoutedImageData(base64Data: string, ext: string): { ok: true; buffer: Buffer } | { ok: false; error: string } {
-  const parsed = parseRoutedImageDataUrl(base64Data);
-  if (!parsed) return { ok: false, error: "Image data URL MIME type is not supported." };
-  const buffer = decodeStrictRoutedBase64(parsed.rawBase64);
-  if (!buffer) return { ok: false, error: "Image data is not valid base64." };
-  const contentType = sniffRoutedImageContentType(buffer);
-  if (!contentType) return { ok: false, error: "Decoded payload is not a supported image." };
-  if (parsed.mime && parsed.mime !== contentType) {
-    return { ok: false, error: "Image data URL MIME type does not match decoded bytes." };
-  }
-  if (!ROUTED_IMAGE_EXTENSIONS_BY_MIME[contentType]?.includes(ext)) {
-    return { ok: false, error: "Filename extension does not match decoded image type." };
-  }
-  return { ok: true, buffer };
-}
-
-/** Safe image extensions for the saveRoutedImage IPC handler.
- *  Executable, script, archive, document, and video extensions are rejected.
- */
-const SAVE_ROUTED_IMAGE_ALLOWED_EXTS = new Set([
-  ".png", ".jpg", ".jpeg", ".webp",
-]);
-const SAVE_ROUTED_IMAGE_BLOCKED_EXTS = new Set([
-  ".exe", ".bat", ".cmd", ".ps1", ".sh", ".js", ".mjs", ".cjs",
-  ".app", ".dmg", ".zip", ".7z", ".pdf", ".html", ".htm",
-]);
 
 export function registerFileHandlers(): void {
   registerIpcChannel("app:media:persist-generated-image", async (event, input: unknown) => {
@@ -314,54 +286,6 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:saveRoutedImage", async (_event, base64Data: unknown, filename: unknown, subfolder: unknown) => {
-    try {
-      if (typeof base64Data !== "string") throw new Error("Image data must be a string.");
-      if (typeof filename !== "string") throw new Error("Filename must be a string.");
-      if (typeof subfolder !== "string") throw new Error("Subfolder must be a string.");
-
-      const dataSize = base64Data.length;
-      if (dataSize > 50 * 1024 * 1024 * 1.37) {
-        throw new Error("Image data is too large.");
-      }
-
-      const baseDir = path.join(app.getPath("pictures"), "Venice Forge");
-      const resolvedBase = path.resolve(baseDir);
-
-      const cleanSub = subfolder.replace(/[^a-zA-Z0-9_-]/g, "");
-      if (!cleanSub || cleanSub === ".." || cleanSub === ".") {
-        throw new Error("Invalid subfolder name.");
-      }
-      const cleanFilename = path.basename(filename).replace(/[^a-zA-Z0-9_.-]/g, "_");
-
-      const ext = path.extname(cleanFilename).toLowerCase();
-      if (SAVE_ROUTED_IMAGE_BLOCKED_EXTS.has(ext)) {
-        throw new Error(`Extension "${ext}" is not allowed for security reasons.`);
-      }
-      if (!SAVE_ROUTED_IMAGE_ALLOWED_EXTS.has(ext)) {
-        throw new Error(`Extension "${ext}" is not in the allowed list. Use: ${[...SAVE_ROUTED_IMAGE_ALLOWED_EXTS].join(", ")}.`);
-      }
-
-      const targetDir = path.join(resolvedBase, cleanSub);
-      const targetPath = path.join(targetDir, cleanFilename);
-
-      const relative = path.relative(resolvedBase, targetPath);
-      if (relative.startsWith("..") || path.isAbsolute(relative)) {
-        throw new Error("Path traversal detected.");
-      }
-
-      const validated = validateRoutedImageData(base64Data, ext);
-      if (!validated.ok) throw new Error(validated.error);
-
-      await fs.mkdir(targetDir, { recursive: true });
-      await fs.writeFile(targetPath, validated.buffer);
-
-      return { ok: true, filePath: targetPath };
-    } catch (err) {
-      return { ok: false, error: redactErrorMessage(err) };
-    }
-  });
-
   registerIpcChannel("app:loadYamlFile", async () => {
     try {
       // verify-no-native-dialogs: allow — intentional open dialog for theme import
@@ -451,28 +375,6 @@ export function registerFileHandlers(): void {
       } finally {
         await fh?.close().catch(() => undefined);
       }
-    } catch (err) {
-      return { ok: false, error: redactErrorMessage(err) };
-    }
-  });
-
-  // Media Studio: export a base64-encoded image to disk. The destination
-  // directory is hard-locked to <Pictures>/Venice Forge/<subfolder>/, with
-  // both the subfolder slug and filename sanitized and traversal-checked.
-  registerIpcChannel("app:media:export", async (_event, input: unknown) => {
-    try {
-      if (!input || typeof input !== "object") {
-        return { ok: false, error: "Export payload must be an object." };
-      }
-      const record = input as Record<string, unknown>;
-      const result = await exportMedia({
-        base64Data: typeof record.base64Data === "string" ? record.base64Data : "",
-        filename: typeof record.filename === "string" ? record.filename : "",
-        subfolder: typeof record.subfolder === "string" ? record.subfolder : undefined,
-        dryRun: record.dryRun === true,
-      });
-      if (!result.ok) return { ok: false, error: redactErrorMessage(result.error) };
-      return { ok: true, filePath: result.filePath, canceled: result.canceled };
     } catch (err) {
       return { ok: false, error: redactErrorMessage(err) };
     }

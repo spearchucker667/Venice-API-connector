@@ -118,8 +118,12 @@ async function openSecureWatchedFile(filePath: string): Promise<Awaited<ReturnTy
   const requestedParent = await fs.realpath(path.dirname(filePath));
   if (!allowedParents.includes(requestedParent)) throw new Error("Sync packet path escapes the watched directories.");
 
+  // O_NOFOLLOW is not enforced consistently on Windows. Check the directory
+  // entry before and after opening so a reparse-point packet is never read.
+  await assertNotSymlinkIfPresent(filePath);
   const handle = await fs.open(filePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW);
   try {
+    await assertNotSymlinkIfPresent(filePath);
     const handleStat = await handle.stat();
     if (!handleStat.isFile()) throw new Error("Sync packet must be a regular file.");
     const resolvedFile = await fs.realpath(filePath);

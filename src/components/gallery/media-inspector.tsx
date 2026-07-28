@@ -23,6 +23,7 @@ import { cn } from "../../lib/utils";
 import { GhostButton, Label, TextArea, Badge } from "../ui/shared";
 import {
   mediaCapabilities,
+  mediaItemSource,
   normalizedTags,
   splitTags,
 } from "../../utils/mediaItem";
@@ -46,7 +47,8 @@ import { toast } from "../../stores/toast-store";
 import { copyText } from "../../stores/media-send-to";
 import { useSettingsStore } from "../../stores/settings-store";
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
-import { desktopFiles, desktopMedia, isElectron } from "../../services/desktopBridge";
+import { desktopMedia, isElectron } from "../../services/desktopBridge";
+import { buildMediaFilename } from "../../stores/media-export-bundle";
 import { Trans, useTranslation } from "react-i18next";
 
 interface MediaInspectorProps {
@@ -218,48 +220,18 @@ export function MediaInspector({
 
   const handleInspectorDownload = useCallback(async () => {
     try {
-      if (item.generatedMediaId) {
-        const saved = await desktopFiles.saveGeneratedMedia(
-          item.generatedMediaId,
-          item.mediaType === "video"
-            ? "venice-video.mp4"
-            : item.mediaType === "audio"
-              ? "venice-audio"
-              : "venice-image",
-        );
-        if (saved)
-          toast.success(
-            tRuntime(
-              "runtimeGenerated.components.gallery.mediaInspector.notification.mediaSaved",
-            ),
-          );
-      } else {
-        const src = typeof item.image === "string" ? item.image : null;
-        if (!src) return;
-        const response = await fetch(src);
-        const blob = await response.blob();
-        if (!blob || blob.size === 0) return;
-        const dataUrl = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = () =>
-            reject(reader.error ?? new Error("FileReader failed"));
-          reader.readAsDataURL(blob);
-        });
-        const ext = item.mimeType?.split("/")[1] || "png";
-        const stem = item.id.slice(0, 8);
-        const result = await desktopMedia.exportMedia({
-          base64Data: dataUrl,
-          filename: `venice-media-${stem}.${ext}`,
-          subfolder: "Export",
-        });
-        if (result.ok)
-          toast.success(
-            tRuntime(
-              "runtimeGenerated.components.gallery.mediaInspector.notification.mediaSaved",
-            ),
-          );
-      }
+      const result = await desktopMedia.saveMediaAs({
+        source: mediaItemSource(item) ?? undefined,
+        mediaId: item.generatedMediaId,
+        mimeType: item.mimeType,
+        suggestedName: buildMediaFilename(item),
+      });
+      if (result.status === "failed") throw new Error(result.error);
+      if (result.status === "saved") toast.success(
+        tRuntime(
+          "runtimeGenerated.components.gallery.mediaInspector.notification.mediaSaved",
+        ),
+      );
     } catch (error) {
       toast.fromError(
         error,
@@ -769,7 +741,7 @@ export function MediaInspector({
               <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.edit" />
             </button>
           )}
-          {(item.generatedMediaId || (typeof item.image === "string" && item.image.startsWith("venice-media://"))) && isElectron() && (
+          {(item.generatedMediaId || mediaItemSource(item)) && isElectron() && (
             <button
               type="button"
               onClick={() => void handleInspectorDownload()}
