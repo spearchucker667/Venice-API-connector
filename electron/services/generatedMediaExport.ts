@@ -69,7 +69,7 @@ async function replaceFileAtomically(destination: string, writeTemporary: (tempo
   let displacedExisting = false
   try {
     await writeTemporary(temporary)
-    const handle = await fs.open(temporary, 'r')
+    const handle = await fs.open(temporary, 'r+')
     try { await handle.sync() } finally { await handle.close() }
     try {
       await fs.rename(temporary, destination)

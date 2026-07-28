@@ -137,7 +137,8 @@ function pendingJournalPath(sha256: string): string {
 }
 
 async function syncFile(filePath: string): Promise<void> {
-  const handle = await open(filePath, 'r')
+  // Windows requires a writable handle for FlushFileBuffers/fsync.
+  const handle = await open(filePath, 'r+')
   try { await handle.sync() } finally { await handle.close() }
 }
 
