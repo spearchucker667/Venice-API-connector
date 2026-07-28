@@ -3,13 +3,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const root = path.join(os.tmpdir(), 'vf-generated-media-test')
 vi.mock('electron', () => ({ 
   app: { getPath: () => root },
   net: {
     fetch: async (url: string, init: any) => {
-      const filePath = new URL(url).pathname;
+      const filePath = fileURLToPath(url);
       const stat = await fs.stat(filePath);
       const totalSize = stat.size;
       const rangeHeader = init?.headers?.Range || init?.headers?.range;
