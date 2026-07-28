@@ -2148,6 +2148,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 
 ## Session History
 
+- **2026-07-28 — Windows sync-packet symlink enforcement:** Windows CI proved `O_NOFOLLOW` alone did not reject a watched packet symlink; the encrypted packet was decrypted and delivered because its target remained within an approved directory. `openSecureWatchedFile` now invokes the existing `lstat` guard before and immediately after opening, while retaining `O_NOFOLLOW` on platforms that enforce it. The opened handle is closed by the existing failure path and no symlinked packet bytes reach parsing or renderer delivery.
+
 - **2026-07-28 — Windows media URL and watcher-test portability:** after fsync compatibility was corrected, Windows CI exposed a test-only `file://` conversion that used `URL.pathname` and produced an invalid `D:\\C:\\...` path. The generated-media range-response mock now uses Node `fileURLToPath`. The symlinked-packet integration test retains every assertion but receives a 60-second per-test budget for Windows crypto/watcher runner variance instead of the default 30 seconds.
 
 - **2026-07-28 — Windows fsync compatibility correction:** the restored Windows-sensitive workflow exposed `EPERM` from `FileHandle.sync()` when atomic-write code reopened a completed temporary file with read-only mode (`"r"`). Windows `FlushFileBuffers` requires a writable handle. Generated-media export, generated-media journal/storage sync, and pending-approval persistence now reopen those temporary files with `"r+"`; fsync and atomic rename remain mandatory. The corresponding macOS/local tests continue to pass, and Windows CI supplies the platform acceptance evidence.
