@@ -126,8 +126,6 @@ This is the canonical source-of-truth navigation map for all documentation in th
 ## 7. Roadmap / Current Work
 
 - [ROADMAP.md](ROADMAP.md) — Canonical current-work-only task ledger; closed work and historical validation stay in the session ledger and historical reports.
-- [audits/TODO/CHATGPT_5_6_REPOSITORY_AUDIT_2026-07-26.md](audits/TODO/CHATGPT_5_6_REPOSITORY_AUDIT_2026-07-26.md) — Current audit evidence reconciled through the canonical roadmap and session ledger.
-- [audits/TODO/CHATGPT_5_6_REPOSITORY_AUDIT_HANDOFF_2026-07-26.md](audits/TODO/CHATGPT_5_6_REPOSITORY_AUDIT_HANDOFF_2026-07-26.md) — Active implementation handoff for hardcoded-string migration, native review, CI ratcheting, packaged QA, and validation.
 - [summary_of_work.md](summary_of_work.md) — Active session ledger (recent sessions only).
 - July 17 03:10 deep-scan audit evidence was processed; remediated live status remains in `ROADMAP.md` and `summary_of_work.md`.
 

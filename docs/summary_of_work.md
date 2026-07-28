@@ -2148,6 +2148,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 
 ## Session History
 
+- **2026-07-28 — PR #82 clean-checkout Markdown-link correction:** GitHub Actions resumed after the account billing lock was cleared and exposed two `docs/DOCS_INDEX.md` links to ignored machine-local audit files. Local validation had resolved those files from the working copy, but clean CI correctly reported both targets absent. Removed the non-portable index entries; canonical current status remains in `docs/ROADMAP.md` and this ledger. `npm run verify:markdown-links` passes against 246 tracked Markdown files after the correction.
+
 - **2026-07-28 — VF-VERIFY-005 canonical media Save As remediation:** consolidated Gallery, Image Studio, Image Tools, Audio, Music, and Video behind `desktopMedia.saveMediaAs`; removed `app:saveRoutedImage`, `app:media:export`, their preload/types/service implementations, and Electron renderer anchor downloads. Added shared main-process MIME/extension/signature policy for image/video and MP3/WAV/FLAC/Ogg/Opus/AAC/M4A; preserved original bytes through atomic write; added Unicode/length/reserved-name normalization and broad regression coverage. The remediated arm64 app/DMG/ZIP and packaged smoke pass. Distribution is ad-hoc/unsigned because this Mac has no Developer ID identity or notarization profile; signed/notarized and cross-platform acceptance remains explicitly blocked. Audit: `docs/reports/MEDIA_SAVE_PIPELINE_AUDIT_2026-07-28.md`.
 
 
