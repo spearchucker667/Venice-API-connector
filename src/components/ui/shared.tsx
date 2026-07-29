@@ -70,6 +70,8 @@ export function PrimaryButton({
   children,
   ariaLabel,
   size = "md",
+  className,
+  fullWidth = true,
 }: {
   onClick: () => void;
   disabled?: boolean;
@@ -77,6 +79,14 @@ export function PrimaryButton({
   children: React.ReactNode;
   ariaLabel?: string;
   size?: "sm" | "md" | "lg";
+  className?: string;
+  /**
+   * Defaults to `true` to preserve the historical full-width behaviour for
+   * standalone call-to-action buttons (e.g. form submits, modal footers).
+   * Set to `false` when the button is placed inside a flex row alongside
+   * other content so it sizes to its label instead of stretching the row.
+   */
+  fullWidth?: boolean;
 }) {
   const sizing =
     size === "sm"
@@ -95,11 +105,13 @@ export function PrimaryButton({
       aria-label={ariaLabel}
       aria-busy={loading || undefined}
       className={cn(
-        "w-full rounded-lg font-medium transition-all duration-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring focus-visible:outline-offset-2",
+        "rounded-lg font-medium transition-all duration-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring focus-visible:outline-offset-2",
+        fullWidth && "w-full",
         sizing,
         !disabled && !loading
           ? "bg-button-primary-bg text-button-primary-fg hover:bg-accent-hover active:scale-[0.99] shadow-sm"
           : "bg-surface-muted text-disabled-fg cursor-not-allowed",
+        className,
       )}
     >
       {loading ? (

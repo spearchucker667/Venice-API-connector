@@ -2,8 +2,13 @@
 
 import '@testing-library/jest-dom/vitest'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { TextArea, PillGroup } from './shared'
+import { TextArea, PillGroup, PrimaryButton } from './shared'
+
+vi.mock('../../services/uiSoundController', () => ({
+  uiSoundController: { play: vi.fn() },
+}))
 
 describe('TextArea — accessible name', () => {
   it('does not derive aria-label from placeholder', () => {
@@ -25,6 +30,64 @@ describe('TextArea — accessible name', () => {
       </>,
     )
     expect(screen.getByRole('textbox', { name: 'Description' })).toBeInTheDocument()
+  })
+})
+
+describe('PrimaryButton — layout and accessibility', () => {
+  it('applies w-full by default for standalone CTAs', () => {
+    render(<PrimaryButton onClick={vi.fn()}>Save</PrimaryButton>)
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveClass('w-full')
+  })
+
+  it('omits w-full when fullWidth={false} so it can sit in a flex row', () => {
+    render(
+      <PrimaryButton fullWidth={false} onClick={vi.fn()}>
+        + Document
+      </PrimaryButton>,
+    )
+    const button = screen.getByRole('button', { name: '+ Document' })
+    expect(button).not.toHaveClass('w-full')
+    expect(button).toHaveClass('rounded-lg')
+  })
+
+  it('merges className after the base classes for layout overrides', () => {
+    render(
+      <PrimaryButton
+        fullWidth={false}
+        className="shrink-0 whitespace-nowrap"
+        onClick={vi.fn()}
+      >
+        New
+      </PrimaryButton>,
+    )
+    const button = screen.getByRole('button', { name: 'New' })
+    expect(button).toHaveClass('shrink-0')
+    expect(button).toHaveClass('whitespace-nowrap')
+    // base styling still present
+    expect(button).toHaveClass('rounded-lg')
+  })
+
+  it('invokes onClick and plays the primary sound when activated', async () => {
+    const user = userEvent.setup()
+    const onClick = vi.fn()
+    const { uiSoundController } = await import(
+      '../../services/uiSoundController'
+    )
+    render(<PrimaryButton onClick={onClick}>Go</PrimaryButton>)
+    await user.click(screen.getByRole('button', { name: 'Go' }))
+    expect(onClick).toHaveBeenCalledTimes(1)
+    expect(uiSoundController.play).toHaveBeenCalledWith('primaryClick')
+  })
+
+  it('is disabled when loading and exposes aria-busy', () => {
+    render(
+      <PrimaryButton loading onClick={vi.fn()}>
+        Save
+      </PrimaryButton>,
+    )
+    const button = screen.getByRole('button', { name: /working/i })
+    expect(button).toBeDisabled()
+    expect(button).toHaveAttribute('aria-busy', 'true')
   })
 })
 

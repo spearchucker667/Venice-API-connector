@@ -634,15 +634,20 @@ export function DocumentAgentView() {
 
       {/* Main Workspace Body */}
       {activeEnvironment === "managed" ? (
-        <div className="flex-1 grid gap-4 grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)] min-h-0 overflow-hidden">
+        <div className="flex-1 grid gap-4 grid-cols-1 xl:grid-cols-[300px_minmax(0,1fr)] min-h-0 overflow-hidden">
           {/* Left Panel: Managed Documents List */}
           <Card className="p-4 space-y-3 flex flex-col min-h-0">
-            <div className="flex items-center justify-between">
-              <h2 className="text-[14px] font-semibold text-foreground">
+            <div className="flex items-center gap-3">
+              <h2 className="min-w-0 flex-1 text-[14px] font-semibold text-foreground">
                 <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.heading.documents" />
                 {filteredDocs.length})
               </h2>
-              <PrimaryButton onClick={() => setShowNewDocModal(true)}>
+              <PrimaryButton
+                size="sm"
+                fullWidth={false}
+                className="shrink-0 whitespace-nowrap"
+                onClick={() => setShowNewDocModal(true)}
+              >
                 <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.document" />
               </PrimaryButton>
             </div>

@@ -4,21 +4,24 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
-**Date:** 2026-07-28 (VF-VERIFY-005 canonical media Save As audit and remediation)
+**Date:** 2026-07-29 (VF-DOC-HEADER-LAYOUT-001 — Documents header button clipping + premature two-column grid)
 
-**Scope:** audited every media write surface, consolidated single-item image/audio/video export behind one secure renderer-to-main contract, expanded format/integrity/filename regression coverage, and built the remediated arm64 package.
+**Work order:** user-reported visual defect on the Documents panel: the `+ Document` `PrimaryButton` was rendering at ~⅔ panel width, the `Documents (N)` heading was wrapping, and the button visually crowded or clipped against the card boundary. The clip risk compounded with translated strings or narrower windows.
 
-**Verified behavior:** `desktopMedia.saveMediaAs` is now the single renderer owner for Gallery, Image Studio, Image Tools, Audio, Music, and Video saves. Generated IDs and legacy data/blob/HTTP/custom-protocol sources converge on `generatedMediaExport.ts`, which validates signatures, opens the native dialog, and atomically writes original bytes. Obsolete fixed-folder IPCs and renderer Electron anchor downloads were removed. Tests cover generated and legacy routes, image transformation result types, supported audio containers, cancellation, overwrite, Unicode/long/reserved filenames, empty/unsupported/mismatched data, exact EXIF bytes, and an 8 MiB payload. The remediated arm64 app/DMG/ZIP built and packaged smoke passed.
+**Root cause:** `PrimaryButton` in `src/components/ui/shared.tsx` unconditionally applied `w-full`. Inside the header's `flex items-center justify-between` row, the button stretched to the panel width and flexbox shrank the heading unpredictably. A secondary defect was the `lg:grid-cols-[300px_minmax(0,1fr)]` breakpoint, computed against the entire Electron viewport rather than the content area remaining after the navigation sidebar — so the two-column split could engage while the Documents surface itself had insufficient usable width.
 
-**Dependency audit under Node 22.13.1 / npm 10.9.2:** `npm audit --omit=dev --json` reports zero production vulnerabilities. The full audit reports 16 high advisories, all reachable only through the direct dev dependency `electron-builder@26.15.7` and its packaging graph (`@electron/asar`, `app-builder-lib`, `dmg-builder`, `electron-winstaller`, `glob`, `minimatch`, `brace-expansion`, and related helpers). The common advisory is `brace-expansion` denial of service from unbounded expansion. npm proposes only the semver-major downgrade `electron-builder@25.1.8`; no supported non-breaking update clears the graph. Dependency metadata was therefore left unchanged rather than applying an unsafe forced downgrade. This is accepted build-tool exposure, not renderer/main-process runtime exposure; packaging inputs must remain trusted until upstream resolves the chain.
+**Implementation:**
+- `src/components/ui/shared.tsx` (`PrimaryButton`): added `className?: string` and `fullWidth?: boolean` (default `true` to preserve the historical standalone-CTA contract). The unconditional `w-full` is now applied only when `fullWidth` is `true`; the merged `className` is appended last so layout overrides (e.g. `shrink-0 whitespace-nowrap`) win. Documented the dual-mode intent inline for future callers.
+- `src/components/documents/DocumentAgentView.tsx` (Documents header, lines 637–653): the new-document button now uses `size="sm" fullWidth={false} className="shrink-0 whitespace-nowrap"`, the heading carries `min-w-0 flex-1` so the row stays balanced when localised, and the header row uses `flex items-center gap-3` so the button gets breathing room from the heading. The grid breakpoint is raised to `xl:grid-cols-[300px_minmax(0,1fr)]` so the split only engages when the viewport can actually fit both columns.
+- `src/components/ui/shared.test.tsx`: new `PrimaryButton — layout and accessibility` block (5 cases) locks the new contract — default `w-full` for standalone CTAs, `fullWidth={false}` omits `w-full`, `className` is merged after the base classes, primary-sound playback still fires on activation, and `loading` keeps the button disabled with `aria-busy="true"`. The `uiSoundController` mock is hoisted via `vi.mock('../../services/uiSoundController', () => ({ uiSoundController: { play: vi.fn() } }))` so the new assertions can introspect `uiSoundController.play`.
 
-**Remaining verification boundary:** the package is ad-hoc/unsigned. No Developer ID identity or notarization profile exists on this Mac, so signed/notarized, hardened-runtime, App Sandbox/security-scoped-bookmark, Intel macOS, Windows, paid-provider, and private backup/migration-fixture acceptance remain under `VF-VERIFY-005`. Full audit: `docs/reports/MEDIA_SAVE_PIPELINE_AUDIT_2026-07-28.md`.
+**No new i18n strings introduced:** the existing `heading.documents` (catalog value already ends with `"("`) and `text.document` keys are reused; the heading still concatenates `{filteredDocs.length})` after the `Trans`. `verify:i18n-hardcoded-regressions` reports 0 candidate additions against the exact zero baseline.
 
-**Hosted-CI remediation:** after GitHub Actions service was restored, PR #82 exposed and fixed Windows-only durability and symlink-containment defects, clean-checkout documentation drift, and a coverage gap in the new media-format policy. Direct `mediaFormat` tests now exercise MIME normalization, every supported extension, valid image/audio/video signatures, malformed/empty inputs, and unsupported types without changing the repository coverage thresholds. The focused test contains 48 passing cases; the exact pushed commit still requires a fresh protected-CI run before merge.
+**Validation under Node 22.13.1 / npm 10.9.2:** zero-warning ESLint (`--max-warnings=0`); both `tsconfig.json` and `tsconfig.electron.json` projects clean; `npm run test:ui` (layout + chat + media-gallery + media-image + research + settings = 85 + 70 + 30 + 19 + 18 + 11 = 222 cases); `npm run test:unit` (stores 130 + scripts 184 + types 102 + shared/services/hooks/lib/utils/theme + server 60); `npm run test:electron` 880 passed across 87 files in 58.18 s; `npm run verify:contracts` 103/103; `npm run verify:safety-guard` PASS; `npm run verify:i18n` 12 locales / 12 namespaces; `npm run verify:i18n-hardcoded-regressions` 0 regressions; `npm run verify:agent-docs` PASS. The new `PrimaryButton` test block is part of the 11-case `shared.test.tsx` run.
 
-**Branch integration:** GitHub Actions resumed after the account payment issue was resolved. PR #82 merged to protected `main` as `ef61fe07` after all required checks passed on `40d02bfb`, including 4,877 coverage tests at the unchanged 68% function threshold and both packaged Electron smoke jobs. PR #51 was updated by merging current `main` without rewriting history, locally passed its focused RP test, lint, typecheck, and aggregate contracts, then merged as `b6766509` after all required hosted checks passed. The remaining Unicode-copy regression branch was updated from that exact `main`; its final protected-CI result is intentionally not claimed in this entry until the run completes.
+**Canonical roadmap row:** `VF-DOC-HEADER-LAYOUT-001` (closed, with full implementation report above). Files changed: `src/components/ui/shared.tsx`, `src/components/documents/DocumentAgentView.tsx`, `src/components/ui/shared.test.tsx`, `docs/ROADMAP.md`, `docs/summary_of_work.md`. No secrets, raw payloads, or private machine paths were introduced. Headed visual QA on a real Documents panel and a translated locale remains external user-level verification.
 
-### Prior Session Summary (Media Save As, Bulk Image Export, Context Menu Remediation — `VF-MEDIA-EXPORT-FIXES-001`)
+### Prior Session Summary (VF-VERIFY-005 canonical media Save As audit and remediation)
 
 **Date:** 2026-07-27 (Media Save As, Bulk Image Export, Context Menu Remediation — `VF-MEDIA-EXPORT-FIXES-001`)
 
@@ -1455,6 +1458,26 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 
 ## Validation Matrix
 
+### July 29 — VF-DOC-HEADER-LAYOUT-001 Documents header layout fix
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| `npx vitest run src/components/ui/shared.test.tsx` | PASS | 11/11 (3 TextArea + 5 new PrimaryButton + 3 PillGroup). The new cases pin default `w-full`, `fullWidth={false}` omits it, `className` merge order, primary-sound playback, and `loading`/`aria-busy`. |
+| `npx vitest run src/components/ui/shared.test.tsx src/components/documents` | PASS | 16/16 across 3 files in 3.75 s. |
+| `npm run test:ui` | PASS | 222 cases across layout (85) + chat + media-gallery (70) + media-image (30) + research (19) + settings (18) + `shared.test.tsx` (11). |
+| `npm run test:unit` | PASS | Stores 130 + scripts 184 + types 102 + shared/services/hooks/lib/utils/theme + server 60; no regressions from the `PrimaryButton` API surface. |
+| `npm run test:server` | PASS | 60/60 (`server.test.ts`). |
+| `npm run test:electron` | PASS | 880/880 across 87 files in 58.18 s. |
+| `npm run lint:eslint` | PASS | Zero warnings under Node 22.13.1 (`--max-warnings=0`). |
+| `npm run typecheck` | PASS | `tsconfig.json` + `tsconfig.electron.json` clean. |
+| `npm run verify:i18n` | PASS | 12 locales × 12 namespaces; sentinel + missing-marker aware. Pre-existing `__MISSING__:` placeholders in non-en-US catalogs are unchanged (the new header reuses the existing `heading.documents` and `text.document` keys). |
+| `npm run verify:i18n-hardcoded-regressions` | PASS | 0 regressions / 0 decreases vs the exact zero baseline. |
+| `npm run verify:contracts` | PASS | 103/103 contract checks. |
+| `npm run verify:safety-guard` | PASS | Renderer, IPC, proxy, research, and raw-log guards clean. |
+| `npm run verify:agent-docs` | PASS | AGENTS.md parity check. |
+| Visual reproduction of the reported defect (Electron + locale variants) | NOT RUN | The user-supplied diagnosis was reproduced statically against the checked-out source; the fix targets the exact `w-full` + `lg:`-breakpoint pair they called out. Headed on-device visual confirmation is external user-level verification. |
+
+
 ### July 28 — VF-VERIFY-005 canonical media Save As remediation
 
 | Command / evidence | Result | Notes |
@@ -2151,6 +2174,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-07-29 — Documents header button clipping + premature two-column grid (`VF-DOC-HEADER-LAYOUT-001`):** root-caused the Documents panel rendering bug to `PrimaryButton`'s unconditional `w-full` (stretched inside the header's flex row, forcing the heading to wrap and crowding the card boundary) and to the `lg:` grid breakpoint (computed against the full Electron viewport, not the sidebar-narrowed content area). Made `PrimaryButton` accept `className?: string` and `fullWidth?: boolean` (default `true` for backwards compatibility), rewrote the Documents header to use `size="sm" fullWidth={false} className="shrink-0 whitespace-nowrap"` for the `+ Document` button, gave the heading `min-w-0 flex-1`, and raised the grid breakpoint to `xl:grid-cols-[300px_minmax(0,1fr)]`. Added 5 new `PrimaryButton — layout and accessibility` cases in `src/components/ui/shared.test.tsx` covering default `w-full`, `fullWidth={false}`, `className` merge order, primary-sound playback, and loading-disabled `aria-busy`. Validation: zero-warning ESLint, both TS projects clean, `test:ui` 222 cases, full `test:unit` shard, `test:electron` 880/880, `verify:contracts` 103/103, `verify:i18n` 12/12, `verify:i18n-hardcoded-regressions` 0 regressions, `verify:agent-docs` PASS, `verify:safety-guard` PASS. No new i18n strings; the existing `heading.documents` (ends with `"("`) and `text.document` keys are reused. Files: `src/components/ui/shared.tsx`, `src/components/documents/DocumentAgentView.tsx`, `src/components/ui/shared.test.tsx`, `docs/ROADMAP.md`, `docs/summary_of_work.md`. Roadmap row closed.
 
 - **2026-07-28 — Windows sync-packet symlink enforcement:** Windows CI proved `O_NOFOLLOW` alone did not reject a watched packet symlink; the encrypted packet was decrypted and delivered because its target remained within an approved directory. `openSecureWatchedFile` now invokes the existing `lstat` guard before and immediately after opening, while retaining `O_NOFOLLOW` on platforms that enforce it. The opened handle is closed by the existing failure path and no symlinked packet bytes reach parsing or renderer delivery.
 
