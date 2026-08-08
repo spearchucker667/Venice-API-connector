@@ -27,7 +27,7 @@ import { ProfilePanel } from "./ProfilePanel";
 import { BackupSyncPanel } from "./BackupSyncPanel";
 import { AudioSpeechPanel } from "./AudioSpeechPanel";
 import type { PendingConfirm } from "./types";
-import { IMAGE_EDIT_MODEL_IDS } from "../../constants/venice";
+import { modelSupportsEdit } from "../../constants/venice";
 
 export function SettingsView() {
   const { t } = useTranslation(['settings', 'common']);
@@ -104,7 +104,7 @@ export function SettingsView() {
   const { data: imageModels } = useModels("image");
   // Exclude image-edit models from the text-to-image selector.
   // Edit models appear only in the Image Tools panel's own model picker.
-  const textToImageModels = imageModels?.filter((m) => !IMAGE_EDIT_MODEL_IDS.has(m.id));
+  const textToImageModels = imageModels?.filter((m) => !modelSupportsEdit(m));
 
   const currentChatModel = selectedModels["chat"] || textModels?.[0]?.id || "";
   const currentImageModel = selectedModels["image"] || textToImageModels?.[0]?.id || "";

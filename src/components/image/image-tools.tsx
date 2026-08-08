@@ -26,7 +26,7 @@ import { cn, generateId } from "../../lib/utils";
 import { toast } from "../../stores/toast-store";
 import {
   DEFAULT_IMAGE_EDIT_MODEL,
-  IMAGE_EDIT_MODEL_IDS,
+  modelSupportsEdit,
 } from "../../constants/venice";
 import { normalizeError } from "../../services/veniceClient/errors";
 import { useMediaStore } from "../../stores/media-store";
@@ -75,7 +75,7 @@ export function ImageTools() {
     const candidates = imageModels ?? [];
     const seen = new Set<string>();
     const filtered = candidates
-      .filter((model) => IMAGE_EDIT_MODEL_IDS.has(model.id))
+      .filter((model) => modelSupportsEdit(model))
       .filter((model) => {
         if (seen.has(model.id)) return false;
         seen.add(model.id);

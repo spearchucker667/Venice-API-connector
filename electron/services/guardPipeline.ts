@@ -146,13 +146,12 @@ function withFamilySafeProviderOverride(rawRequest: unknown, endpoint: string): 
   // provider safe-mode route, and Family Safe Mode (localFamilySafeModeEnabled=true)
   // should NOT force it on without the user explicitly opting in.
   const veniceApiSafeMode = getRuntimeVeniceApiSafeMode();
-  if (!veniceApiSafeMode) return rawRequest;
   if (!isRecord(rawRequest)) return rawRequest;
   const body = rawRequest.body;
   if (!isRecord(body)) return rawRequest;
   return {
     ...rawRequest,
-    body: applyVeniceApiSafeMode(endpoint, body, true),
+    body: applyVeniceApiSafeMode(endpoint, body, veniceApiSafeMode),
   };
 }
 

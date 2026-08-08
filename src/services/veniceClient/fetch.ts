@@ -687,6 +687,8 @@ export async function veniceBlob(path: string, body: object, init: { signal?: Ab
   try {
   if (!isElectron()) {
     enforceLegacyWebGuard(path, "POST", body);
+    const veniceApiSafeMode = useSettingsStore.getState().veniceApiSafeMode;
+    const effectiveBody = applyVeniceApiSafeMode(path, body as Record<string, unknown>, veniceApiSafeMode);
     const url = `${PROXY_BASE_PATH}${path.replace("/api/v1", "")}`;
     const fetchResponse = await fetch(url, {
       method: "POST",
@@ -694,7 +696,7 @@ export async function veniceBlob(path: string, body: object, init: { signal?: Ab
         "Content-Type": "application/json",
         "X-Venice-Forge-Family-Safe-Mode": String(useSettingsStore.getState().localFamilySafeModeEnabled),
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(effectiveBody),
       signal: init.signal,
     });
     if (!fetchResponse.ok) {

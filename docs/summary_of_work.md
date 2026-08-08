@@ -4,6 +4,28 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-08-08 (Image Edit Model Discovery and NSFW Blur Remediation)
+
+**Work order:** 
+1. Correct the Image Edit model selector to expose the complete live Venice edit/inpaint model catalog instead of hardcoded models.
+2. Ensure Adult/NSFW image edits are not returned blurred when Venice API Safe Mode is disabled (pass `safe_mode: false` explicitly).
+
+**Root causes:**
+1. `src/components/image/image-tools.tsx` and `SettingsView.tsx` filtered image edit models using the hardcoded `IMAGE_EDIT_MODEL_IDS` set from `constants/venice.ts`, ignoring new live catalog capabilities.
+2. In `electron/services/guardPipeline.ts` (Desktop) and `src/services/veniceClient/fetch.ts` (Web), the API payload builder exited early if the local `veniceApiSafeMode` setting was false. As a result, it did not explicitly inject `safe_mode: false` into the `/image/edit` request body, allowing the Venice API to default to blurring.
+
+**Implementation:**
+- `src/components/image/image-tools.tsx` & `src/components/settings/SettingsView.tsx`: Changed filtering logic to use `modelSupportsEdit(model)` instead of `IMAGE_EDIT_MODEL_IDS.has(model.id)`. 
+- `electron/services/guardPipeline.ts`: Removed the early return `if (!veniceApiSafeMode) return rawRequest;` in `withFamilySafeProviderOverride`, passing the boolean value down to `applyVeniceApiSafeMode` to explicitly append `safe_mode: false` to the request payload for supported endpoints.
+- `src/services/veniceClient/fetch.ts`: Applied the exact same `applyVeniceApiSafeMode` transformation in the `veniceBlob` web codepath, ensuring that `safe_mode: false` is appropriately injected for Web instances of the app.
+
+**Validation:**
+Ran typecheck and tested changes with `npm run typecheck && npx vitest run src/components/image/image-tools.test.tsx && npx vitest run src/config/image-model-capabilities.test.ts`. All 56 tests passed across the 2 suites with 0 typecheck warnings.
+
+**Canonical roadmap row:** N/A - directly addressing reported regressions. Files changed: `src/components/image/image-tools.tsx`, `src/components/settings/SettingsView.tsx`, `electron/services/guardPipeline.ts`, `src/services/veniceClient/fetch.ts`, `docs/summary_of_work.md`. No secrets, raw payloads, or private machine paths were introduced.
+
+### Prior Session Summary (VF-DOC-HEADER-LAYOUT-001 — Documents header button clipping + premature two-column grid)
+
 **Date:** 2026-07-29 (VF-DOC-HEADER-LAYOUT-001 — Documents header button clipping + premature two-column grid)
 
 **Work order:** user-reported visual defect on the Documents panel: the `+ Document` `PrimaryButton` was rendering at ~⅔ panel width, the `Documents (N)` heading was wrapping, and the button visually crowded or clipped against the card boundary. The clip risk compounded with translated strings or narrower windows.
