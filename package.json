@@ -18,8 +18,12 @@
   },
   "overrides": {
     "esbuild": "^0.28.1",
-    "js-yaml": "^4.3.0",
-    "shell-quote": "^1.9.0"
+    "fast-uri": "^3.1.5",
+    "js-yaml": "^4.3.1",
+    "nanoid": "^3.3.18",
+    "postcss": "^8.5.26",
+    "shell-quote": "^1.9.0",
+    "undici": "^7.29.0"
   },
   "engines": {
     "node": ">=22.13.0 <23.0.0",
@@ -192,7 +196,7 @@
     "lucide-react": "^1.26.0",
     "mammoth": "^1.12.0",
     "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "^6.1.200",
+    "pdfjs-dist": "^6.2.108",
     "react-i18next": "^17.0.11",
     "react-markdown": "^10.1.0",
     "rehype-katex": "^7.0.1",
