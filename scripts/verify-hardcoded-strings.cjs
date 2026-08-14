@@ -522,7 +522,7 @@ function writeReports(report, artifactsDir = ARTIFACTS_DIR) {
     markdown += "## Candidates by File\n\n";
     markdown += "| File | Line | Node | Text |\n| --- | ---: | --- | --- |\n";
     for (const finding of report.findings.slice(0, 200)) {
-      const safeText = finding.text.replace(/\|/g, "\\|");
+      const safeText = finding.text.replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
       markdown += `| \`${finding.file}\` | ${finding.line} | ${finding.nodeKind} | ${safeText} |\n`;
     }
     if (report.findings.length > 200) {

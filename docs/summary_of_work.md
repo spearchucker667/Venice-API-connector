@@ -17,6 +17,7 @@ This is the active handoff and validation ledger. The canonical current-work led
 8. Diagnosed failing CI workflows and consolidated/closed open PRs (#87, #88, #92, #93, #94, #95, #96, #97).
 9. Remediated dependency security vulnerabilities (`js-yaml` CVE-2026-59870, `pdfjs-dist` GHSA-hq66-cqwq-w95j, `undici`, `postcss`, `fast-uri`, `nanoid`) through `package.json` version bumps and overrides, achieving 0 vulnerabilities across the entire tree.
 10. Updated GitHub CodeQL Action (`init` and `analyze`) to `v4.37.6` (`5595ccaf912efad79be6eef63a5619ff05969be3`).
+11. Remediated CodeQL code-scanning alerts #197 and #198 in `scripts/extract-i18n-keys.cjs` and `scripts/verify-hardcoded-strings.cjs` by escaping backslashes prior to markdown table pipe escaping.
 
 **Root causes & corrections:**
 1. Upstream OpenAPI schema discrepancies: `EditImageRequest` uses canonical `model` (not `modelId`), `UpscaleImageRequest` and background removal omit `model`, and dimension sizing mode must be strictly mutually exclusive (`width`/`height` vs `aspect_ratio`).
@@ -24,6 +25,7 @@ This is the active handoff and validation ledger. The canonical current-work led
 3. Task persistence previously updated `updatedAt` on every sanitize pass and persisted raw signed download URLs in `tasks.json`. Corrected to preserve timestamps and retain signed URLs only in ephemeral memory custody.
 4. CI failure root cause: CI release gate runs `npm audit --omit=dev --audit-level=moderate`, which failed due to `js-yaml` (4.3.0) and `pdfjs-dist` (6.1.200). Upgraded `js-yaml` override to `4.3.1` and `pdfjs-dist` to `6.2.108` and added overrides for dev vulnerabilities, bringing npm audit to 0 vulnerabilities.
 5. CodeQL workflow failure on Dependabot PRs was caused by mismatched single-action bumps between `init` and `analyze`. Synchronized both to `v4.37.6`.
+6. CodeQL code scanning alerts #197 and #198 flagged incomplete string sanitization (`js/incomplete-sanitization`) where `replace(/\|/g, "\\|")` did not escape backslashes before pipe escaping. Corrected to `.replace(/\\/g, "\\\\").replace(/\|/g, "\\|")`.
 
 **Implementation:**
 - Synchronized and mirrored official `veniceai/api-docs` commit `db3b9f4f40fe71abff2011bcaa9c23ad797c94f3` (Schema Version `20260814.153445`).

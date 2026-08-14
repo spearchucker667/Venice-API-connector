@@ -483,7 +483,8 @@ function runAudit() {
     md += `\n## Missing Canonical Keys (${missingKeys.length})\n\n`;
     md += `| File:Line | Namespace | Key | Default Value |\n| --- | --- | --- | --- |\n`;
     for (const m of missingKeys) {
-      md += `| \`${m.file}:${m.line}\` | \`${m.ns}\` | \`${m.key}\` | ${m.defaultValue ? `"${m.defaultValue.replace(/\|/g, '\\|')}"` : '_None_'} |\n`;
+      const safeDefault = m.defaultValue ? `"${m.defaultValue.replace(/\\/g, '\\\\').replace(/\|/g, '\\|')}"` : '_None_';
+      md += `| \`${m.file}:${m.line}\` | \`${m.ns}\` | \`${m.key}\` | ${safeDefault} |\n`;
     }
   } else {
     md += `\n## Missing Canonical Keys\n\nAll keys used in source code exist in canonical \`en-US\` catalogs.\n`;
