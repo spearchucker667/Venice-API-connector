@@ -544,6 +544,16 @@ export const desktopBackgroundTask = {
       return Promise.resolve({ ok: false, error: "Not in Electron" });
     return window.veniceForge!.backgroundTask.clear(taskId);
   },
+  submitPaidQueue(input: {
+    operation: 'video' | 'audio';
+    wirePayload: Record<string, unknown>;
+    logicalRequestHash?: string;
+  }): Promise<{ ok: boolean; task?: BackgroundTask; error?: string; challenge?: unknown }> {
+    if (!isElectron()) {
+      return Promise.resolve({ ok: false, error: "Paid queue submission via desktop bridge is only in Electron" });
+    }
+    return window.veniceForge!.backgroundTask.submitPaidQueue(input);
+  },
   onUpdate(
     callback: (envelope: BackgroundTaskIpcEnvelope) => void,
   ): () => void {

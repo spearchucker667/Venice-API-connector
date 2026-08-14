@@ -28,6 +28,11 @@ import { buildAudioRetrieveRequest } from '../../src/services/media-request-adap
 import { normalizeAudioRetrieveResponse } from '../../src/services/audio-retrieve-normalizer';
 import { persistGeneratedMedia } from './generatedMediaStore';
 import { retrieveVideoQueueResult, VideoRetrieveError } from './videoRetrieveService';
+import {
+  normalizeVideoQueueResponse,
+  normalizeAudioQueueResponse,
+  normalizeSeedanceConsentChallenge,
+} from '../../src/shared/venice-media-contract';
 
 const TASKS_DIR = path.join(app.getPath("userData"), "background-tasks");
 const TASKS_FILE = path.join(TASKS_DIR, "tasks.json");
@@ -37,6 +42,9 @@ const MAX_ATTEMPTS = 200;
 const MAX_VIDEO_GENERATION_MS = 300000; // 5 minutes
 const MAX_NON_VIDEO_GENERATION_MS = 120000; // 2 minutes
 const DURABLE_RESULT_URL_RE = /^venice-media:\/\/[a-f0-9]{64}$/;
+
+/** Ephemeral in-memory store for sensitive signed URLs (never persisted to tasks.json) */
+const ephemeralSecrets = new Map<string, { queueDownloadUrl?: string }>();
 
 export interface BackgroundTaskManagerState {
   tasks: Record<string, BackgroundTask>;
@@ -167,6 +175,10 @@ export async function initBackgroundTaskManager(): Promise<void> {
   initializationPromise = (async () => {
     await loadBackgroundTasks();
     for (const task of Object.values(state.tasks)) {
+      if (task.status === 'pending_finalize') {
+        task.status = 'queued';
+        task.updatedAt = Date.now();
+      }
       if (!isTerminalStatus(task.status)) {
         if (isProviderPolledBackgroundTaskType(task.type)) {
           startPolling(task.id);
@@ -423,11 +435,13 @@ async function runPoll(taskId: string): Promise<void> {
   try {
     if (task.type === "video") {
       await applyUpdate(taskId, { status: 'processing', stage: 'generating' });
+      const ephemeral = ephemeralSecrets.get(taskId);
+      const queueDownloadUrl = ephemeral?.queueDownloadUrl || (typeof task.metadata?.queueDownloadUrl === 'string' ? task.metadata.queueDownloadUrl : undefined);
       const normalized = await retrieveVideoQueueResult({
         queueId: task.queueId,
         model: taskModel,
         profileId: task.profileId,
-        queueDownloadUrl: typeof task.metadata?.queueDownloadUrl === 'string' ? task.metadata.queueDownloadUrl : undefined,
+        queueDownloadUrl,
         onStage: async (stage) => { await applyUpdate(taskId, { stage, progress: undefined }); },
       });
 
@@ -580,6 +594,103 @@ export async function __resetBackgroundTaskManagerForTests(): Promise<void> {
   listeners.clear();
 }
 
+export interface PaidQueueSubmissionInput {
+  operation: 'video' | 'audio';
+  profileId: string;
+  wirePayload: Record<string, unknown>;
+  logicalRequestHash?: string;
+}
+
+export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput): Promise<{
+  ok: boolean;
+  task?: BackgroundTask;
+  error?: string;
+  challenge?: unknown;
+}> {
+  await initBackgroundTaskManager();
+  const taskId = `${input.operation}-${crypto.randomUUID()}`;
+  const endpoint = input.operation === 'video' ? '/video/queue' : '/audio/queue';
+
+  const response = await performVeniceRequest({
+    endpoint,
+    method: 'POST',
+    body: input.wirePayload,
+    profileId: input.profileId,
+  });
+
+  if (response.status === 409) {
+    const challenge = normalizeSeedanceConsentChallenge(409, response.body);
+    if (challenge) {
+      return { ok: false, challenge, error: challenge.error.message };
+    }
+  }
+
+  if (response.status < 200 || response.status >= 300) {
+    const errBody = response.body as Record<string, unknown> | undefined;
+    const msg = typeof errBody?.error === 'string'
+      ? errBody.error
+      : (typeof (errBody?.error as { message?: unknown })?.message === 'string'
+        ? String((errBody?.error as { message: unknown }).message)
+        : `Queue request failed (${response.status})`);
+    return { ok: false, error: msg };
+  }
+
+  let queueId = '';
+  let model = String(input.wirePayload.model || '');
+  let downloadUrl: string | undefined;
+
+  if (input.operation === 'video') {
+    const norm = normalizeVideoQueueResponse(response.body);
+    queueId = norm.queueId;
+    model = norm.model || model;
+    downloadUrl = norm.downloadUrl;
+  } else {
+    const norm = normalizeAudioQueueResponse(response.body);
+    queueId = norm.queueId;
+    model = norm.model || model;
+  }
+
+  if (downloadUrl) {
+    ephemeralSecrets.set(taskId, { queueDownloadUrl: downloadUrl });
+  }
+
+  let downloadHost: string | undefined;
+  if (downloadUrl) {
+    try {
+      downloadHost = new URL(downloadUrl).host;
+    } catch {
+      // ignore
+    }
+  }
+
+  const task = createBackgroundTask({
+    id: taskId,
+    type: input.operation === 'video' ? 'video' : 'music',
+    queueId,
+    profileId: input.profileId,
+    modelId: model,
+    metadata: {
+      model,
+      ...(input.logicalRequestHash ? { requestFingerprint: input.logicalRequestHash } : {}),
+      ...(downloadUrl ? { queueDownloadUrlPresent: true, ...(downloadHost ? { downloadHost } : {}) } : {}),
+      ...(input.wirePayload.duration ? { requestedDuration: String(input.wirePayload.duration) } : {}),
+      ...(input.wirePayload.resolution ? { requestedResolution: String(input.wirePayload.resolution) } : {}),
+      ...(input.wirePayload.aspect_ratio ? { requestedAspectRatio: String(input.wirePayload.aspect_ratio) } : {}),
+    },
+  });
+
+  state.tasks[task.id] = task;
+  await flushPersist();
+  emit(task.id, task, task.profileId);
+  startPolling(task.id);
+
+  return { ok: true, task };
+}
+
 export function __getBackgroundTaskManagerStateForTests(): BackgroundTaskManagerState {
   return state;
+}
+
+export function __getEphemeralSecretsForTests(): Map<string, { queueDownloadUrl?: string }> {
+  return ephemeralSecrets;
 }

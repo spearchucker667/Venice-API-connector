@@ -22,10 +22,20 @@ const REQUIRED_SWAGGER_LOCATIONS = [
   ["components", "schemas", "ChatCompletionRequest", "properties", "venice_parameters", "properties", "enable_web_scraping"],
   ["components", "schemas", "ChatCompletionRequest", "properties", "venice_parameters", "properties", "enable_x_search"],
   ["components", "schemas", "ChatCompletionRequest", "properties", "venice_parameters", "properties", "include_venice_system_prompt"],
-  ["components", "schemas", "EditImageRequest", "properties", "modelId"],
+  ["components", "schemas", "EditImageRequest", "properties", "model"],
+  ["components", "schemas", "GenerateImageRequest", "properties", "model"],
+  ["components", "schemas", "UpscaleImageRequest", "properties", "scale"],
   ["paths", "/characters", "get"],
   ["paths", "/characters/{slug}", "get"],
   ["paths", "/characters", "get", "responses", "200", "content", "application/json", "schema", "properties", "data", "items", "properties", "webEnabled"],
+  ["paths", "/video/quote", "post"],
+  ["paths", "/video/queue", "post"],
+  ["paths", "/video/retrieve", "post"],
+  ["paths", "/audio/quote", "post"],
+  ["paths", "/audio/queue", "post"],
+  ["paths", "/audio/retrieve", "post"],
+  ["paths", "/models/traits", "get"],
+  ["paths", "/models/compatibility_mapping", "get"],
 ];
 
 function isRecord(value) {

@@ -17,6 +17,8 @@ describe("validation", () => {
     it("contains exactly the expected endpoints", () => {
       expect(ALLOWED_VENICE_ENDPOINTS).toEqual([
         "/models",
+        "/models/traits",
+        "/models/compatibility_mapping",
         "/image/styles",
         "/chat/completions",
         "/image/generate",
@@ -28,13 +30,17 @@ describe("validation", () => {
         "/video/retrieve",
         "/video/quote",
         "/video/complete",
+        "/video/transcriptions",
         "/image/edit",
         "/image/multi-edit",
         "/image/background-remove",
         "/embeddings",
         "/audio/queue",
         "/audio/retrieve",
+        "/audio/quote",
+        "/audio/complete",
         "/audio/speech",
+        "/audio/voices",
         "/audio/transcriptions",
       ]);
     });
@@ -56,7 +62,12 @@ describe("validation", () => {
     });
 
     it("allows POST for all non-GET-only endpoints", () => {
-      const getOnlyEndpoints = new Set(["/models", "/image/styles"]);
+      const getOnlyEndpoints = new Set([
+        "/models",
+        "/models/traits",
+        "/models/compatibility_mapping",
+        "/image/styles",
+      ]);
       const postEndpoints = Object.entries(VENICE_ENDPOINT_METHODS).filter(
         ([ep, methods]) => !getOnlyEndpoints.has(ep) && methods.includes("POST")
       );

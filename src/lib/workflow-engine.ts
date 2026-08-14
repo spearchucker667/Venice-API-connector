@@ -12,7 +12,13 @@ import { validateWorkflow } from './workflow-validator'
 import { venice, veniceBlob } from './venice-client'
 import type { ChatCompletionResponse, ImageGenerateResponse, MusicQueueResponse, VideoQueueResponse } from '../types/venice'
 import { veniceFetch } from '../services/veniceClient/fetch'
-import { buildAudioRetrieveRequest } from '../services/media-request-adapter'
+import {
+  buildCanonicalImageGeneratePayload,
+  buildCanonicalAudioSpeechPayload,
+  buildCanonicalAudioQueuePayload,
+  buildCanonicalAudioRetrievePayload,
+  buildCanonicalVideoQueuePayload,
+} from '../shared/venice-media-contract'
 import { normalizeAudioRetrieveResponse } from '../services/audio-retrieve-normalizer'
 import { awaitWorkflowVideoTask } from '../services/workflow-background-task'
 import { toUserFacingVideoError } from '../services/task-errors'
@@ -106,21 +112,20 @@ async function executeNode(
 
     case 'imageGen': {
       const prompt = resolvePrompt(data.prompt, input)
-      const body: Record<string, unknown> = {
+      const wirePayload = buildCanonicalImageGeneratePayload({
         model: data.model || DEFAULT_IMAGE_MODEL,
         prompt,
-        negative_prompt: data.negativePrompt || undefined,
+        negativePrompt: data.negativePrompt || undefined,
         steps: data.steps ?? 20,
-        style_preset: data.style || undefined,
-        width: data.width ?? 1024,
-        height: data.height ?? 1024,
-        hide_watermark: data.hideWatermark ?? true,
-        format: 'png',
-      }
-      if (data.aspectRatio) body.aspect_ratio = data.aspectRatio
+        stylePreset: data.style || undefined,
+        aspectRatio: data.aspectRatio || undefined,
+        width: data.aspectRatio ? undefined : (data.width ?? 1024),
+        height: data.aspectRatio ? undefined : (data.height ?? 1024),
+        hideWatermark: data.hideWatermark ?? true,
+      })
       const resp = await venice<ImageGenerateResponse>('/image/generate', {
         method: 'POST',
-        body: JSON.stringify(body),
+        body: JSON.stringify(wirePayload),
         signal,
       })
       const img = resp.images[0]
@@ -134,13 +139,14 @@ async function executeNode(
 
     case 'tts': {
       const text = resolvePrompt(data.prompt, input)
-      const blob = await veniceBlob('/audio/speech', {
+      const wirePayload = buildCanonicalAudioSpeechPayload({
         model: data.model || DEFAULT_TTS_MODEL,
         input: text,
         voice: data.voice || 'af_sky',
         speed: data.speed ?? 1,
-        response_format: data.responseFormat || 'mp3',
-      }, { signal })
+        responseFormat: (data.responseFormat as 'mp3' | 'opus' | 'aac' | 'flac' | 'wav' | 'pcm') || 'mp3',
+      })
+      const blob = await veniceBlob('/audio/speech', wirePayload, { signal })
       const url = URL.createObjectURL(blob)
       // The blob URL's lifetime is owned by the component that renders the
       // `[audio:...]` output (see the Playground workflow renderer). The engine MUST NOT register
@@ -153,24 +159,28 @@ async function executeNode(
 
     case 'music': {
       const prompt = resolvePrompt(data.prompt, input)
-      const body: Record<string, unknown> = {
+      const wirePayload = buildCanonicalAudioQueuePayload({
         model: data.model || DEFAULT_MUSIC_MODEL,
         prompt,
-        duration_seconds: data.duration ?? 30,
-        force_instrumental: data.instrumental ?? false,
-      }
-      if (data.lyrics) body.lyrics_prompt = data.lyrics
+        durationSeconds: data.duration ?? 30,
+        forceInstrumental: data.instrumental ?? false,
+        lyricsPrompt: data.lyrics || undefined,
+      })
       const queueResp = await venice<MusicQueueResponse>('/audio/queue', {
         method: 'POST',
-        body: JSON.stringify(body),
+        body: JSON.stringify(wirePayload),
         signal,
       })
       for (let attempt = 0; attempt < POLL_MAX_ATTEMPTS; attempt++) {
         if (signal?.aborted) throw new DOMException('Aborted', 'AbortError')
         await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS))
+        const retrievePayload = buildCanonicalAudioRetrievePayload({
+          model: queueResp.model || String(wirePayload.model),
+          queueId: queueResp.queue_id,
+        })
         const response = await veniceFetch<unknown>('/audio/retrieve', {
           method: 'POST',
-          body: buildAudioRetrieveRequest(queueResp.model || String(body.model), queueResp.queue_id),
+          body: retrievePayload,
           signal,
           retry: false,
         })
@@ -183,18 +193,18 @@ async function executeNode(
 
     case 'video': {
       const prompt = resolvePrompt(data.prompt, input)
-      const body: Record<string, unknown> = {
+      const wirePayload = buildCanonicalVideoQueuePayload({
         model: data.model || DEFAULT_VIDEO_MODEL,
         prompt,
-        aspect_ratio: data.videoAspectRatio || '16:9',
-      }
-      if (data.videoDuration) body.duration = data.videoDuration
-      if (data.videoResolution) body.resolution = data.videoResolution
+        aspectRatio: data.videoAspectRatio || '16:9',
+        duration: data.videoDuration || undefined,
+        resolution: data.videoResolution || undefined,
+      })
       let queueResp: VideoQueueResponse
       try {
         queueResp = await venice<VideoQueueResponse>('/video/queue', {
           method: 'POST',
-          body: JSON.stringify(body),
+          body: JSON.stringify(wirePayload),
           signal,
         })
       } catch (err) {
@@ -203,10 +213,10 @@ async function executeNode(
       }
       const videoId = queueResp.queue_id || queueResp.id || ''
       if (!videoId) throw new WorkflowExecutionError('Video generation did not return a queue ID.')
-      const { image_url: _imageUrl, end_image_url: _endImageUrl, audio_url: _audioUrl, video_url: _videoUrl, reference_image_urls: _referenceImages, scene_image_urls: _sceneImages, ...requestSummary } = body
+      const { image_url: _imageUrl, end_image_url: _endImageUrl, audio_url: _audioUrl, video_url: _videoUrl, reference_image_urls: _referenceImages, scene_image_urls: _sceneImages, ...requestSummary } = wirePayload
       const url = await awaitWorkflowVideoTask({
         queueId: videoId,
-        model: queueResp.model || String(body.model),
+        model: queueResp.model || String(wirePayload.model),
         request: requestSummary,
         ...(queueResp.download_url ? { queueDownloadUrl: queueResp.download_url } : {}),
         signal,
@@ -222,17 +232,18 @@ export interface ExecuteOptions {
    *  against concurrent runs.  This is an engine-level invariant, not a
    *  UI-only check. */
   isRunning?: boolean
-  onUpdate: (nodeId: string, result: Partial<NodeResult>) => void
+  onUpdate?: (nodeId: string, result: Partial<NodeResult>) => void
 }
 
 export async function executeWorkflow(
   nodes: Node<VeniceNodeData>[],
   edges: Edge[],
-  arg: ExecuteOptions | ((nodeId: string, result: Partial<NodeResult>) => void),
+  arg?: ExecuteOptions | ((nodeId: string, result: Partial<NodeResult>) => void),
 ): Promise<void> {
   // Backwards-compatible: accept either an options bag or a bare onUpdate function.
-  const opts: ExecuteOptions = typeof arg === 'function' ? { onUpdate: arg } : arg
-  const { signal, isRunning, onUpdate } = opts
+  const opts: ExecuteOptions = typeof arg === 'function' ? { onUpdate: arg } : (arg ?? {})
+  const { signal, isRunning } = opts
+  const onUpdate = opts.onUpdate ?? (() => {})
 
   if (isRunning) {
     throw new WorkflowExecutionError('Workflow is already running.')

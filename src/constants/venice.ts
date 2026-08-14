@@ -1,5 +1,7 @@
 /** @fileoverview Application constants for fallback models, tabs, diagnostics headers, and database configuration. */
 
+import { isImageEditModel } from "../shared/venice-media-contract";
+
 /** Default models used when the Venice API model list is unavailable. */
 export const FALLBACK_MODELS = {
   text: [
@@ -350,17 +352,12 @@ export function modelSupportsUpscale(model: { id?: string; name?: string; type?:
 export const EDIT_CAPABLE_PATTERNS = [
   /inpaint/i,
   /background[-_]?remove/i,
-  /edit/i,
-  /\bsdxl\b/i,
-  /\bflux\b/i,
-  /fluently/i,
-  /lustify/i,
-  /pony/i,
-  /banana/i,
+  /[-_]edit\b/i,
 ];
 
 /** Returns true if the model id or traits suggest `/image/edit` or `/image/background-remove` support. */
 export function modelSupportsEdit(model: { id?: string; name?: string; type?: string; model_type?: string; modelType?: string; traits?: unknown; capabilities?: unknown; features?: unknown }): boolean {
+  if (isImageEditModel(model as Parameters<typeof isImageEditModel>[0])) return true;
   const haystack = [
     model.id,
     model.name,
@@ -372,7 +369,6 @@ export function modelSupportsEdit(model: { id?: string; name?: string; type?: st
     JSON.stringify(model.features || {}),
   ].join(" ").toLowerCase();
   if (EDIT_CAPABLE_PATTERNS.some((p) => p.test(haystack))) return true;
-  if (/\.image\.|^image[_-]/.test(haystack)) return true;
   return false;
 }
 

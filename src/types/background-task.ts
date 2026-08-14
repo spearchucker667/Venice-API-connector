@@ -1,6 +1,6 @@
 import { redactSecrets } from '../shared/redaction'
 
-export type BackgroundTaskStatus = 'idle' | 'queued' | 'processing' | 'completed' | 'failed' | 'aborted' | 'timeout'
+export type BackgroundTaskStatus = 'idle' | 'queued' | 'processing' | 'completed' | 'failed' | 'aborted' | 'timeout' | 'pending_finalize'
 
 export type BackgroundTaskType = 'video' | 'music' | 'image' | 'research' | 'document'
 export type VideoTaskStage = 'queued' | 'generating' | 'retrieving' | 'saving' | 'completed'
@@ -82,13 +82,14 @@ export interface BackgroundTaskIpcEnvelope {
   taskId?: string
 }
 
-const VALID_STATUSES: BackgroundTaskStatus[] = ['idle', 'queued', 'processing', 'completed', 'failed', 'aborted', 'timeout']
+const VALID_STATUSES: BackgroundTaskStatus[] = ['idle', 'queued', 'processing', 'completed', 'failed', 'aborted', 'timeout', 'pending_finalize']
 const VALID_TYPES: BackgroundTaskType[] = ['video', 'music', 'image', 'research', 'document']
 const VALID_VIDEO_STAGES: VideoTaskStage[] = ['queued', 'generating', 'retrieving', 'saving', 'completed']
 const VALID_ID_RE = /^[a-zA-Z0-9_.-]{1,128}$/
 const PERSISTED_METADATA_STRING_LIMITS = {
   model: 256,
-  queueDownloadUrl: 4096,
+  downloadHost: 256,
+  secretRef: 128,
   mimeType: 64,
   source: 128,
   projectId: 128,
@@ -111,6 +112,7 @@ function sanitizePersistedMetadata(metadata: Record<string, unknown> | undefined
     if (typeof value === 'string' && value.length > 0) persisted[key] = value.slice(0, maxLength)
   }
   if (redacted.cancellationUnsupported === true) persisted.cancellationUnsupported = true
+  if (redacted.queueDownloadUrlPresent === true) persisted.queueDownloadUrlPresent = true
   return Object.keys(persisted).length > 0 ? persisted : undefined
 }
 
@@ -166,7 +168,7 @@ export function sanitizeBackgroundTask(task: BackgroundTask): BackgroundTask {
     metadata: sanitizePersistedMetadata(redacted.metadata),
     progress: task.progress === undefined ? undefined : Math.max(0, Math.min(1, task.progress)),
     createdAt: task.createdAt,
-    updatedAt: Date.now(),
+    updatedAt: task.updatedAt,
   }
 }
 

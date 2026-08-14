@@ -399,6 +399,11 @@ export interface VeniceForgeBackgroundTask {
   cancel(taskId: string): Promise<{ ok: boolean; task?: BackgroundTask | null; error?: string }>;
   retry(taskId: string): Promise<{ ok: boolean; task?: BackgroundTask | null; error?: string }>;
   clear(taskId: string): Promise<{ ok: boolean; error?: string }>;
+  submitPaidQueue(input: {
+    operation: 'video' | 'audio';
+    wirePayload: Record<string, unknown>;
+    logicalRequestHash?: string;
+  }): Promise<{ ok: boolean; task?: BackgroundTask; error?: string; challenge?: unknown }>;
   onUpdate(callback: (envelope: BackgroundTaskIpcEnvelope) => void): () => void;
 }
 

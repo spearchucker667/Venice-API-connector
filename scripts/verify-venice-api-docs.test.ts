@@ -55,7 +55,9 @@ describe("VERIFY-106 parsed Venice API reference provenance", () => {
               },
             },
           },
-          EditImageRequest: { properties: { modelId: {} } },
+          EditImageRequest: { properties: { model: {} } },
+          GenerateImageRequest: { properties: { model: {} } },
+          UpscaleImageRequest: { properties: { scale: {} } },
         },
       },
       paths: {
@@ -77,6 +79,14 @@ describe("VERIFY-106 parsed Venice API reference provenance", () => {
           },
         },
         "/characters/{slug}": { get: {} },
+        "/video/quote": { post: {} },
+        "/video/queue": { post: {} },
+        "/video/retrieve": { post: {} },
+        "/audio/quote": { post: {} },
+        "/audio/queue": { post: {} },
+        "/audio/retrieve": { post: {} },
+        "/models/traits": { get: {} },
+        "/models/compatibility_mapping": { get: {} },
       },
     };
   }
@@ -138,7 +148,7 @@ describe("VERIFY-106 parsed Venice API reference provenance", () => {
     const failures = verifyVeniceApiDocs(rootDir, { today: "2026-07-14" });
     expect(failures.filter((failure) => failure.includes("cannot be in the future"))).toHaveLength(2);
     expect(failures).toContain(
-      "Swagger document lacks required parsed location: components.schemas.EditImageRequest.properties.modelId.",
+      "Swagger document lacks required parsed location: components.schemas.EditImageRequest.properties.model.",
     );
   });
 

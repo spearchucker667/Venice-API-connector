@@ -759,6 +759,9 @@ const veniceForge = {
     clear(taskId: string): Promise<{ ok: boolean; error?: string }> {
       return ipcRenderer.invoke("backgroundTask:clear", taskId);
     },
+    submitPaidQueue(input: { operation: 'video' | 'audio'; wirePayload: Record<string, unknown>; logicalRequestHash?: string }): Promise<{ ok: boolean; task?: BackgroundTask; error?: string; challenge?: unknown }> {
+      return ipcRenderer.invoke("backgroundTask:submitPaidQueue", input);
+    },
     onUpdate(callback: (envelope: BackgroundTaskIpcEnvelope) => void) {
       const listener = (_event: Electron.IpcRendererEvent, envelope: BackgroundTaskIpcEnvelope) => callback(envelope);
       ipcRenderer.on("backgroundTask:update", listener);

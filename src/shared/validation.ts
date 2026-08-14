@@ -4,6 +4,8 @@
 /** Venice API endpoints permitted by the IPC and proxy validators. */
 export const ALLOWED_VENICE_ENDPOINTS = [
   "/models",
+  "/models/traits",
+  "/models/compatibility_mapping",
   "/image/styles",
   "/chat/completions",
   "/image/generate",
@@ -15,13 +17,17 @@ export const ALLOWED_VENICE_ENDPOINTS = [
   "/video/retrieve",
   "/video/quote",
   "/video/complete",
+  "/video/transcriptions",
   "/image/edit",
   "/image/multi-edit",
   "/image/background-remove",
   "/embeddings",
   "/audio/queue",
   "/audio/retrieve",
+  "/audio/quote",
+  "/audio/complete",
   "/audio/speech",
+  "/audio/voices",
   "/audio/transcriptions",
 ] as const;
 
@@ -37,6 +43,8 @@ export type VeniceIpcMethod = (typeof ALLOWED_VENICE_METHODS)[number];
 /** Allowed HTTP methods for each permitted Venice endpoint. */
 export const VENICE_ENDPOINT_METHODS: Record<VeniceIpcEndpoint, readonly VeniceIpcMethod[]> = {
   "/models": ["GET"],
+  "/models/traits": ["GET"],
+  "/models/compatibility_mapping": ["GET"],
   "/image/styles": ["GET"],
   "/chat/completions": ["POST"],
   "/image/generate": ["POST"],
@@ -48,13 +56,17 @@ export const VENICE_ENDPOINT_METHODS: Record<VeniceIpcEndpoint, readonly VeniceI
   "/video/retrieve": ["POST"],
   "/video/quote": ["POST"],
   "/video/complete": ["POST"],
+  "/video/transcriptions": ["POST"],
   "/image/edit": ["POST"],
   "/image/multi-edit": ["POST"],
   "/image/background-remove": ["POST"],
   "/embeddings": ["POST"],
   "/audio/queue": ["POST"],
   "/audio/retrieve": ["POST"],
+  "/audio/quote": ["POST"],
+  "/audio/complete": ["POST"],
   "/audio/speech": ["POST"],
+  "/audio/voices": ["POST"],
   "/audio/transcriptions": ["POST"],
 };
 

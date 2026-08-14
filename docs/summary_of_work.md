@@ -4,27 +4,47 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
-**Date:** 2026-08-08 (Image Edit Model Discovery and NSFW Blur Remediation)
+**Date:** 2026-08-14 (Venice API Contract Consolidation, Upstream Documentation Synchronization, Media Reliability, Paid Queue Safety, and Capability-Driven Refactor)
 
-**Work order:** 
-1. Correct the Image Edit model selector to expose the complete live Venice edit/inpaint model catalog instead of hardcoded models.
-2. Ensure Adult/NSFW image edits are not returned blurred when Venice API Safe Mode is disabled (pass `safe_mode: false` explicitly).
+**Work order:**
+1. Establish official `veniceai/api-docs` as authoritative upstream source corpus, create local mirror (`docs/reference/venice-api-upstream/`), synchronization script (`scripts/sync-venice-api-docs.cjs`), and provenance manifest (`docs/reference/VENICE_API_SOURCE_MANIFEST.md`).
+2. Update local OpenAPI specification snapshot (`docs/reference/Venice_swagger_api.yaml`) and LLM guide (`docs/reference/Venice_api_LLM_info.md`) to upstream `20260814.153445`.
+3. Create canonical Venice Media Contract module (`src/shared/venice-media-contract/`) covering operations, strongly-typed wire payloads, deterministic JSON serialization, SHA-256 payload hashing, payload builders with dimension mode mutual exclusivity, response normalizers, error classifications, and Seedance consent challenge parsing.
+4. Correct capability-driven model detection in `src/constants/venice.ts` and `src/shared/venice-media-contract/capabilities.ts`, eliminating over-broad heuristics.
+5. Upgrade Electron main-process background task manager with `submitPaidQueueTaskInMain()`, `pending_finalize` state for crash recovery, and in-memory `ephemeralSecrets` custody ensuring raw signed provider URLs are never persisted in `tasks.json`.
+6. Refactor `workflow-engine.ts` media generation/queue execution to use canonical contract builders.
+7. Install `scripts/verify-venice-contract-drift.cjs` and wire `"verify:venice-contract-drift"` into `package.json` and `verify:contracts:static`.
 
-**Root causes:**
-1. `src/components/image/image-tools.tsx` and `SettingsView.tsx` filtered image edit models using the hardcoded `IMAGE_EDIT_MODEL_IDS` set from `constants/venice.ts`, ignoring new live catalog capabilities.
-2. In `electron/services/guardPipeline.ts` (Desktop) and `src/services/veniceClient/fetch.ts` (Web), the API payload builder exited early if the local `veniceApiSafeMode` setting was false. As a result, it did not explicitly inject `safe_mode: false` into the `/image/edit` request body, allowing the Venice API to default to blurring.
+**Root causes & corrections:**
+1. Upstream OpenAPI schema discrepancies: `EditImageRequest` uses canonical `model` (not `modelId`), `UpscaleImageRequest` and background removal omit `model`, and dimension sizing mode must be strictly mutually exclusive (`width`/`height` vs `aspect_ratio`).
+2. Inpaint capability heuristics previously used broad regexes (`\bflux\b`, `\bsdxl\b`) that falsely matched text-to-image models. Replaced with capability-driven resolution checking `traits`, `type: inpaint`, and explicit model trait metadata.
+3. Task persistence previously updated `updatedAt` on every sanitize pass and persisted raw signed download URLs in `tasks.json`. Corrected to preserve timestamps and retain signed URLs only in ephemeral memory custody.
 
 **Implementation:**
-- `src/components/image/image-tools.tsx` & `src/components/settings/SettingsView.tsx`: Changed filtering logic to use `modelSupportsEdit(model)` instead of `IMAGE_EDIT_MODEL_IDS.has(model.id)`. 
-- `electron/services/guardPipeline.ts`: Removed the early return `if (!veniceApiSafeMode) return rawRequest;` in `withFamilySafeProviderOverride`, passing the boolean value down to `applyVeniceApiSafeMode` to explicitly append `safe_mode: false` to the request payload for supported endpoints.
-- `src/services/veniceClient/fetch.ts`: Applied the exact same `applyVeniceApiSafeMode` transformation in the `veniceBlob` web codepath, ensuring that `safe_mode: false` is appropriately injected for Web instances of the app.
+- Synchronized and mirrored official `veniceai/api-docs` commit `db3b9f4f40fe71abff2011bcaa9c23ad797c94f3` (Schema Version `20260814.153445`).
+- Created `src/shared/venice-media-contract/`: `operations.ts`, `types.ts`, `canonicalize.ts`, `payload-hash.ts`, `payload-builders.ts`, `response-normalizers.ts`, `capabilities.ts`, `errors.ts`, `index.ts`.
+- Updated `src/shared/validation.ts` and `src/shared/veniceSafeMode.ts` with new media and traits endpoints.
+- Updated `electron/services/backgroundTaskManager.ts` and registered `backgroundTask:submitPaidQueue` IPC handler.
+- Added comprehensive Vitest suites for payload builders, canonical serialization, capability detection, Seedance consent, response normalization, paid queue execution, and workflow engine media contracts.
+- Added `scripts/verify-venice-contract-drift.cjs` and wired it into `verify:contracts:static`.
 
 **Validation:**
-Ran typecheck and tested changes with `npm run typecheck && npx vitest run src/components/image/image-tools.test.tsx && npx vitest run src/config/image-model-capabilities.test.ts`. All 56 tests passed across the 2 suites with 0 typecheck warnings.
+- `npm run verify:venice-api-docs`: PASS
+- `npm run verify:venice-contract-drift`: PASS
+- `npm run verify:contracts:static`: PASS
+- `npm run verify:contracts`: 103 PASS (static, feature, and release verifiers)
+- `npm run lint:eslint`: 0 warnings (`--max-warnings=0`)
+- `npm run typecheck`: 0 errors (both `tsconfig.json` and `tsconfig.electron.json`)
+- `npm run test:unit`: 16 + 12 + 16 + 24 + 6 test files PASS (100%)
+- `npm run test:electron`: 88 test files, 883 tests PASS (100%)
+- `npm run test:server`: 60 tests PASS (100%)
+- `npm run build`: Vite web + esbuild server + Electron main/preload build successful.
 
-**Canonical roadmap row:** N/A - directly addressing reported regressions. Files changed: `src/components/image/image-tools.tsx`, `src/components/settings/SettingsView.tsx`, `electron/services/guardPipeline.ts`, `src/services/veniceClient/fetch.ts`, `docs/summary_of_work.md`. No secrets, raw payloads, or private machine paths were introduced.
+**Canonical roadmap row:** `VF-VENICE-API-CONTRACT-CONSOLIDATION-2026-08-14` (closed). No secrets, raw payloads, or private machine paths introduced.
 
-### Prior Session Summary (VF-DOC-HEADER-LAYOUT-001 — Documents header button clipping + premature two-column grid)
+### Prior Session Summary (Image Edit Model Discovery and NSFW Blur Remediation)
+
+**Date:** 2026-08-08 (Image Edit Model Discovery and NSFW Blur Remediation)
 
 **Date:** 2026-07-29 (VF-DOC-HEADER-LAYOUT-001 — Documents header button clipping + premature two-column grid)
 

@@ -124,4 +124,10 @@ export const VENICE_API_SAFE_MODE_MATRIX: ReadonlyArray<{
   { endpoint: "/augment/scrape", supportsSafeMode: true, fieldLocation: "top-level" },
   { endpoint: "/augment/text-parser", supportsSafeMode: true, fieldLocation: "top-level" },
   { endpoint: "/models", supportsSafeMode: false, fieldLocation: "not-supported" },
+  { endpoint: "/models/traits", supportsSafeMode: false, fieldLocation: "not-supported" },
+  { endpoint: "/models/compatibility_mapping", supportsSafeMode: false, fieldLocation: "not-supported" },
+  { endpoint: "/audio/quote", supportsSafeMode: false, fieldLocation: "not-supported" },
+  { endpoint: "/audio/complete", supportsSafeMode: false, fieldLocation: "not-supported" },
+  { endpoint: "/audio/voices", supportsSafeMode: false, fieldLocation: "not-supported" },
+  { endpoint: "/video/transcriptions", supportsSafeMode: false, fieldLocation: "not-supported" },
 ];

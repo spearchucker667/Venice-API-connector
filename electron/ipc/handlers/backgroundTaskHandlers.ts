@@ -12,6 +12,7 @@ import {
   cancelBackgroundTaskInMain,
   retryBackgroundTaskInMain,
   clearBackgroundTaskInMain,
+  submitPaidQueueTaskInMain,
   getBackgroundTask,
   listBackgroundTasks,
   subscribeToBackgroundTasks,
@@ -189,6 +190,31 @@ export function registerBackgroundTaskHandlers(): void {
       if (!isTaskOwnedBySender(event.sender, taskId)) return taskNotFound();
       await clearBackgroundTaskInMain(taskId);
       return { ok: true };
+    } catch (err: unknown) {
+      return { ok: false, error: redactErrorMessage(err) };
+    }
+  });
+
+  ipcMain.handle("backgroundTask:submitPaidQueue", async (event, input: unknown) => {
+    try {
+      await initBackgroundTaskManager();
+      if (!input || typeof input !== "object") {
+        return { ok: false, error: "Invalid submission input." };
+      }
+      const raw = input as { operation?: unknown; wirePayload?: unknown; logicalRequestHash?: unknown };
+      if (raw.operation !== "video" && raw.operation !== "audio") {
+        return { ok: false, error: "Invalid operation (must be 'video' or 'audio')." };
+      }
+      if (!raw.wirePayload || typeof raw.wirePayload !== "object") {
+        return { ok: false, error: "Invalid wire payload." };
+      }
+      const profileId = getProfileSessionId(event.sender);
+      return await submitPaidQueueTaskInMain({
+        operation: raw.operation,
+        profileId,
+        wirePayload: raw.wirePayload as Record<string, unknown>,
+        logicalRequestHash: typeof raw.logicalRequestHash === 'string' ? raw.logicalRequestHash : undefined,
+      });
     } catch (err: unknown) {
       return { ok: false, error: redactErrorMessage(err) };
     }

@@ -11,6 +11,7 @@ import { Trans, useTranslation } from "react-i18next";
 const STATUS_BADGE: Record<BackgroundTaskStatus, string> = {
   idle: "bg-surface-muted text-text-muted border-border",
   queued: "bg-surface-muted text-text-muted border-border",
+  pending_finalize: "bg-surface-muted text-text-muted border-border",
   processing: "bg-info/15 text-info border-info/30",
   completed: "bg-success/15 text-success border-success/30",
   failed: "bg-danger/15 text-danger border-danger/30",
@@ -152,7 +153,7 @@ export function TaskCenterDrawer() {
                               ? "cancelled"
                               : task.status === "timeout"
                                 ? "failed"
-                                : task.status === "idle"
+                                : task.status === "idle" || task.status === "pending_finalize"
                                   ? "queued"
                                   : task.status
                         }

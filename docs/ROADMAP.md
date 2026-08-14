@@ -4,6 +4,16 @@ This is the canonical ledger for current unfinished work only. Closed execution 
 
 ## Current Work
 
+`VF-VENICE-API-CONTRACT-CONSOLIDATION-2026-08-14 — Venice API Contract Consolidation, Upstream Documentation Synchronization, Media Reliability, Paid Queue Safety, and Capability-Driven Refactor (closed 2026-08-14).` Closed by the comprehensive API and media architecture remediation:
+- Synchronized authoritative upstream documentation from `veniceai/api-docs` (commit `db3b9f4f40fe71abff2011bcaa9c23ad797c94f3`, Schema Version `20260814.153445`) with tracked sync script `scripts/sync-venice-api-docs.cjs` and provenance manifest `docs/reference/VENICE_API_SOURCE_MANIFEST.md`.
+- Updated local OpenAPI specification snapshot `docs/reference/Venice_swagger_api.yaml` and `docs/reference/Venice_api_LLM_info.md`.
+- Created canonical shared Venice Media Contract layer `src/shared/venice-media-contract/` (`operations.ts`, `types.ts`, `canonicalize.ts`, `payload-hash.ts`, `payload-builders.ts`, `response-normalizers.ts`, `capabilities.ts`, `errors.ts`, `index.ts`).
+- Enforced strict mutually-exclusive dimension sizing modes (`width`/`height` vs `aspect_ratio`), canonical parameter names (`model` for edit, `modelId` for multi-edit, no model for upscale/background-remove), and parameter clamping.
+- Remediated capability-driven inpaint/edit model resolution, eliminating over-broad heuristics like `\bflux\b` and `\bsdxl\b` from `EDIT_CAPABLE_PATTERNS`.
+- Upgraded Electron main background task manager with `submitPaidQueueTaskInMain()`, `pending_finalize` state for crash recovery, and in-memory `ephemeralSecrets` custody ensuring signed provider URLs are never written to `tasks.json`.
+- Installed contract drift verifier `scripts/verify-venice-contract-drift.cjs` and wired it into `package.json` and `verify:contracts:static`.
+- Full validation green: zero-warning ESLint, clean TypeScript (both tsconfigs), 36 new media contract tests, full unit/electron/server test suites passing (100%), 103-pass contract verification, and successful production builds.
+
 The locally actionable findings `VF-SCAN-20260722-001..014` from `docs/audits/Records/Venice_Forge_Extensive_Scan_2026-07-22.md` were corrected and regression-tested on 2026-07-22. Their immutable snapshot status fields remain historical; the dated remediation addendum and `docs/summary_of_work.md` carry the live disposition. The Document Agent file in `docs/audits/Records/Function_calling_todo.md` is an implementation and acceptance specification, not a checkbox-derived status ledger; unfinished product scope is represented only by `VF-DOCUMENT-AGENT-001` below.
 
 The 2026-07-23 Image Inspector local regression tranche is closed: image ingestion is main-owned and bounded, model output is schema-validated, provider-authored failures are preserved, diagnostics are idempotently redacted, and the UI describes query-only results as text-based potential sources rather than reverse-image matches. Paid live-provider image acceptance remains external evidence under `VF-VERIFY-005`.
