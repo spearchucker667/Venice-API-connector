@@ -282,10 +282,10 @@ describe("MediaInspector — gallery actions", () => {
     expect(remix.disabled).toBe(true);
   });
 
-  it("renders Upscale / Edit when the model capabilities include them", () => {
+  it("renders Upscale / Edit when the asset is an image with valid source", () => {
     render(
       <MediaInspector
-        item={{ ...baseItem, model: "esrgan-edit" }}
+        item={baseItem}
         parentItem={null}
         childrenItems={[]}
         missingChildIds={[]}
@@ -300,12 +300,34 @@ describe("MediaInspector — gallery actions", () => {
         onOpenImageTools={vi.fn()}
       />,
     );
-    // The capabilities classifier may mark some models as upscale/edit;
-    // the assertion is that, when applicable, the buttons render.
     const upscale = screen.queryByTestId("inspector-upscale");
     const edit = screen.queryByTestId("inspector-edit");
     expect(upscale).toBeInTheDocument();
     expect(edit).toBeInTheDocument();
+  });
+
+  it("does not render Upscale / Edit for non-image assets", () => {
+    render(
+      <MediaInspector
+        item={{ ...baseItem, mediaType: "video", image: "data:video/mp4;base64,123" }}
+        parentItem={null}
+        childrenItems={[]}
+        missingChildIds={[]}
+        onPatch={vi.fn()}
+        onDelete={vi.fn()}
+        onOpenChild={vi.fn()}
+        onOpenParent={vi.fn()}
+        onClose={vi.fn()}
+        onUseSettings={vi.fn()}
+        onRegenerate={vi.fn()}
+        onUpscale={vi.fn()}
+        onOpenImageTools={vi.fn()}
+      />,
+    );
+    const upscale = screen.queryByTestId("inspector-upscale");
+    const edit = screen.queryByTestId("inspector-edit");
+    expect(upscale).not.toBeInTheDocument();
+    expect(edit).not.toBeInTheDocument();
   });
 });
 

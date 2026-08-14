@@ -39,8 +39,8 @@ describe("backupCrypto", () => {
   it("rejects tampered ciphertext and authentication tags", async () => {
     const encrypted = await encryptPayload("secret", "password");
     const [ciphertext, tag] = encrypted.ciphertext.split(":");
-    const tamperedCiphertext = `${ciphertext.slice(0, -2)}AA:${tag}`;
-    const tamperedTag = `${ciphertext}:${tag.slice(0, -2)}AA`;
+    const tamperedCiphertext = `${ciphertext.slice(0, -1)}${ciphertext.slice(-1) === "A" ? "B" : "A"}:${tag}`;
+    const tamperedTag = `${ciphertext}:${tag.slice(0, -1)}${tag.slice(-1) === "A" ? "B" : "A"}`;
     await expect(decryptPayload(tamperedCiphertext, encrypted.salt, encrypted.iv, "password")).rejects.toThrow();
     await expect(decryptPayload(tamperedTag, encrypted.salt, encrypted.iv, "password")).rejects.toThrow();
   });

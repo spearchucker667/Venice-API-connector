@@ -73,15 +73,21 @@ describe("VERIFY-018 safe_mode endpoint matrix", () => {
       "/audio/transcriptions",
       "/audio/queue",
       "/audio/retrieve",
+      "/audio/quote",
+      "/audio/complete",
+      "/audio/voices",
       "/embeddings",
       "/video/queue",
       "/video/retrieve",
       "/video/quote",
       "/video/complete",
+      "/video/transcriptions",
       "/augment/search",
       "/augment/scrape",
       "/augment/text-parser",
       "/models",
+      "/models/traits",
+      "/models/compatibility_mapping",
     ];
     for (const e of required) {
       expect(matrixEndpoints.has(e), `matrix missing ${e}`).toBe(true);

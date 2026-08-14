@@ -22,6 +22,7 @@ import {
 import { cn } from "../../lib/utils";
 import { GhostButton, Label, TextArea, Badge } from "../ui/shared";
 import {
+  mediaActionCapabilities,
   mediaCapabilities,
   mediaItemSource,
   normalizedTags,
@@ -136,6 +137,10 @@ export function MediaInspector({
         liveCapabilities: liveVisionSupports,
       }),
     [item.model, liveVisionSupports],
+  );
+  const actionCapabilities = useMemo(
+    () => mediaActionCapabilities(item),
+    [item],
   );
   const hasAnyCapability =
     capabilities.upscale ||
@@ -713,7 +718,7 @@ export function MediaInspector({
               <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.sameSeed" />
             </button>
           )}
-          {onUpscale && capabilities.upscale && (
+          {onUpscale && actionCapabilities.canUpscale && (
             <button
               type="button"
               onClick={handleUpscaleClick}
@@ -727,7 +732,7 @@ export function MediaInspector({
               <Trans i18nKey="common:surface.componentsGalleryMediaInspector.action.upscale" />
             </button>
           )}
-          {onOpenImageTools && capabilities.edit && (
+          {onOpenImageTools && actionCapabilities.canEdit && (
             <button
               type="button"
               onClick={handleEditClick}

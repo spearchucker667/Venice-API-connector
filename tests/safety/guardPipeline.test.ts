@@ -477,11 +477,7 @@ describe("VERIFY-015 guard pipeline — Provider Safe Mode (P1 #2 audit)", () =>
       expect(mockedPerformVeniceRequest).toHaveBeenCalledTimes(1);
       const forwarded = mockedPerformVeniceRequest.mock.calls[0]?.[0] as { body?: unknown };
       const body = (forwarded?.body ?? {}) as Record<string, unknown>;
-      if (expectAdded) {
-        expect(body.safe_mode).toBe(veniceEnabled);
-      } else {
-        expect(body.safe_mode).toBeUndefined();
-      }
+      expect(body.safe_mode).toBe(veniceEnabled);
     });
   }
 

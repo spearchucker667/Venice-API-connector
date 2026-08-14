@@ -45,6 +45,40 @@ export function mediaCapabilities(item: MediaItemWithLiveCapabilities): MediaCap
 }
 
 /**
+ * Action capabilities for a MediaItem determining which studio handoffs /
+ * tools (Image Tools Edit, Upscale, Video Studio, etc.) are available for
+ * this asset. An asset must be an image with a resolvable source to be
+ * sent to Image Tools for editing or upscaling.
+ */
+export interface MediaActionCapabilities {
+  canEdit: boolean;
+  canUpscale: boolean;
+  canSendToImageTools: boolean;
+  canSendToVideo: boolean;
+}
+
+/** Returns the set of UI / workflow actions available for `item`. */
+export function mediaActionCapabilities(item: MediaItem | null | undefined): MediaActionCapabilities {
+  if (!item) {
+    return {
+      canEdit: false,
+      canUpscale: false,
+      canSendToImageTools: false,
+      canSendToVideo: false,
+    };
+  }
+  const isImage = item.mediaType === "image";
+  const hasSource = Boolean(mediaItemSource(item));
+
+  return {
+    canEdit: isImage && hasSource,
+    canUpscale: isImage && hasSource,
+    canSendToImageTools: isImage && hasSource,
+    canSendToVideo: isImage && hasSource,
+  };
+}
+
+/**
  * Canonical validator for the `venice-media://<sha256>` durable scheme.
  * The host must be exactly 64 lowercase hexadecimal characters.
  * Only this scheme (not `file://` or arbitrary custom protocols) is accepted.

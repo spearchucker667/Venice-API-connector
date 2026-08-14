@@ -18,6 +18,9 @@ This is the active handoff and validation ledger. The canonical current-work led
 9. Remediated dependency security vulnerabilities (`js-yaml` CVE-2026-59870, `pdfjs-dist` GHSA-hq66-cqwq-w95j, `undici`, `postcss`, `fast-uri`, `nanoid`) through `package.json` version bumps and overrides, achieving 0 vulnerabilities across the entire tree.
 10. Updated GitHub CodeQL Action (`init` and `analyze`) to `v4.37.6` (`5595ccaf912efad79be6eef63a5619ff05969be3`).
 11. Remediated CodeQL code-scanning alerts #197 and #198 in `scripts/extract-i18n-keys.cjs` and `scripts/verify-hardcoded-strings.cjs` by escaping backslashes prior to markdown table pipe escaping.
+12. Separated source-model capabilities (`mediaCapabilities`) from asset-action capabilities (`mediaActionCapabilities`) in `src/utils/mediaItem.ts`, resolving the Media Studio Edit & Upscale handoff regression in `MediaInspector`.
+13. Updated `src/stores/media-send-to.ts` to defensively reject non-image media in `sendToImageTools()` and strictly limit `availableDestinations()` to image assets for `image-tools`.
+14. Hardened `electron/services/backupCrypto.test.ts` to use deterministic tampering offsets without random character collisions.
 
 **Root causes & corrections:**
 1. Upstream OpenAPI schema discrepancies: `EditImageRequest` uses canonical `model` (not `modelId`), `UpscaleImageRequest` and background removal omit `model`, and dimension sizing mode must be strictly mutually exclusive (`width`/`height` vs `aspect_ratio`).
@@ -26,6 +29,8 @@ This is the active handoff and validation ledger. The canonical current-work led
 4. CI failure root cause: CI release gate runs `npm audit --omit=dev --audit-level=moderate`, which failed due to `js-yaml` (4.3.0) and `pdfjs-dist` (6.1.200). Upgraded `js-yaml` override to `4.3.1` and `pdfjs-dist` to `6.2.108` and added overrides for dev vulnerabilities, bringing npm audit to 0 vulnerabilities.
 5. CodeQL workflow failure on Dependabot PRs was caused by mismatched single-action bumps between `init` and `analyze`. Synchronized both to `v4.37.6`.
 6. CodeQL code scanning alerts #197 and #198 flagged incomplete string sanitization (`js/incomplete-sanitization`) where `replace(/\|/g, "\\|")` did not escape backslashes before pipe escaping. Corrected to `.replace(/\\/g, "\\\\").replace(/\|/g, "\\|")`.
+7. Media Studio Edit/Upscale capability regression: `MediaInspector` previously gated Edit and Upscale buttons using `capabilities.edit` and `capabilities.upscale` (reflecting the originating generation model rather than whether the current asset is an image eligible for Image Tools). Separated `mediaActionCapabilities` from `mediaCapabilities` so images with valid sources expose Edit and Upscale handoffs regardless of source model, while maintaining `mediaCapabilities` for metadata badge rendering.
+8. Non-image media routing gap: `availableDestinations()` checked `item.mediaType !== "video"`, allowing audio items into `image-tools`. Corrected to `item.mediaType === "image"` and added defensive rejection in `sendToImageTools()`.
 
 **Implementation:**
 - Synchronized and mirrored official `veniceai/api-docs` commit `db3b9f4f40fe71abff2011bcaa9c23ad797c94f3` (Schema Version `20260814.153445`).
@@ -36,6 +41,8 @@ This is the active handoff and validation ledger. The canonical current-work led
 - Added `scripts/verify-venice-contract-drift.cjs` and wired it into `verify:contracts:static`.
 - Updated `.github/workflows/codeql.yml` to use `github/codeql-action` `v4.37.6`.
 - Consolidated and closed PRs #87, #88, #92, #93, #94, #95, #96, #97 and pruned remote branches.
+- Created `mediaActionCapabilities` in `src/utils/mediaItem.ts` and updated `src/components/gallery/media-inspector.tsx`.
+- Updated `src/stores/media-send-to.ts` and added negative test coverage for audio/video in `src/stores/media-send-to.test.ts` and `src/utils/mediaItem.test.ts`.
 
 **Validation:**
 - `npm audit --omit=dev --audit-level=moderate`: 0 vulnerabilities
@@ -45,11 +52,16 @@ This is the active handoff and validation ledger. The canonical current-work led
 - `npm run verify:venice-contract-drift`: PASS
 - `npm run verify:contracts:static`: PASS
 - `npm run verify:contracts`: 103 PASS (static, feature, and release verifiers)
+- `npm run verify:media-studio-power-tools`: PASS
+- `npm run verify:image-policy`: PASS
 - `npm run lint:eslint`: 0 warnings (`--max-warnings=0`)
 - `npm run typecheck`: 0 errors (both `tsconfig.json` and `tsconfig.electron.json`)
-- `npm run test:unit`: 16 + 12 + 16 + 24 + 6 test files PASS (100%)
+- `npm run test:unit`: 100% PASS
+- `npm run test:contracts`: 100% PASS
+- `npm run test:server`: 100% PASS
 - `npm run test:electron`: 88 test files, 883 tests PASS (100%)
-- `npm run test:server`: 60 tests PASS (100%)
+- `npm run test:ci`: 100% PASS across all segmented suites
+- `npm run build`: Vite web + esbuild server + Electron main/preload build successful.
 - `npm run build`: Vite web + esbuild server + Electron main/preload build successful.
 
 **Canonical roadmap row:** `VF-VENICE-API-CONTRACT-CONSOLIDATION-2026-08-14` (closed). No secrets, raw payloads, or private machine paths introduced.

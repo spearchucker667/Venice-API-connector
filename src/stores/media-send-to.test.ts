@@ -241,6 +241,16 @@ describe("media-send-to (VERIFY-044)", () => {
       }
     })
 
+    it("rejects when item is not an image (e.g. video or audio)", () => {
+      const videoRes = sendToImageTools(makeItem({ mediaType: "video" }), "edit")
+      expect(videoRes.ok).toBe(false)
+      expect(videoRes.reason).toMatch(/not an image/i)
+
+      const audioRes = sendToImageTools(makeItem({ mediaType: "audio" }), "edit")
+      expect(audioRes.ok).toBe(false)
+      expect(audioRes.reason).toMatch(/not an image/i)
+    })
+
     it("can be invoked with the upscale tool", () => {
       const r = sendToImageTools(makeItem(), "upscale")
       expect(r.ok).toBe(true)
@@ -335,6 +345,11 @@ describe("media-send-to (VERIFY-044)", () => {
 
     it("excludes image-tools for video items", () => {
       const out = availableDestinations(makeItem({ mediaType: "video" }))
+      expect(out).not.toContain("image-tools")
+    })
+
+    it("excludes image-tools for audio items", () => {
+      const out = availableDestinations(makeItem({ mediaType: "audio" }))
       expect(out).not.toContain("image-tools")
     })
 

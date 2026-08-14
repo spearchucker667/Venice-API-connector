@@ -251,10 +251,6 @@ describe('MediaStudioView (GalleryView)', () => {
   })
 
   it('queues the selected media item for image-tools upscale', async () => {
-    vi.mocked(StorageService.getItemsPageWithMeta).mockResolvedValue({
-      items: [{ ...sampleRecord, model: 'esrgan-upscaler' }],
-      decryptFailures: 0, total: 1, offset: 0, limit: 60, hasMore: false,
-    })
     render(<GalleryView />)
     await screen.findByText('Copper city at dusk')
     fireEvent.doubleClick(screen.getByRole('button', { name: /open image: copper city at dusk/i }))

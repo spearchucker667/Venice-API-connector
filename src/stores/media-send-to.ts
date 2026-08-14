@@ -162,12 +162,15 @@ export function sendToImageStudio(item: MediaItem): SendToResult {
  *  the image-tools surface receives the parent image + filename. */
 export function sendToImageTools(item: MediaItem, tool: "edit" | "upscale" = "edit"): SendToResult {
   if (!item) return { destination: "image-tools", ok: false, reason: "No item" };
+  if (item.mediaType !== "image") {
+    return { destination: "image-tools", ok: false, reason: "Item is not an image" };
+  }
   const id = useImageWorkspaceStore.getState().enqueueTools({
     tool,
     parentId: item.id,
     image: item.image,
     prompt: item.prompt ?? "",
-    filename: `${item.id}.${item.mediaType === "video" ? "mp4" : item.mediaType === "audio" ? "mp3" : "png"}`,
+    filename: `${item.id}.png`,
   });
   setActiveTabSafe("image");
   return { destination: "image-tools", ok: true, artifactId: id };
@@ -210,7 +213,7 @@ export function availableDestinations(item: MediaItem | null | undefined): SendD
   if (!item) return [];
   const out: SendDestination[] = ["image", "chat", "video"];
   // Image Tools edit is only available for image items.
-  if (item.mediaType !== "video") out.push("image-tools");
+  if (item.mediaType === "image") out.push("image-tools");
   return out;
 }
 

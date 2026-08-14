@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import {
   mediaCapabilities,
+  mediaActionCapabilities,
   mediaItemSource,
   isVideoItem,
   isAudioItem,
@@ -89,6 +90,113 @@ describe("mediaItem utils", () => {
         edit: false,
         video: false,
         vision: true,
+      });
+    });
+  });
+
+  describe("mediaActionCapabilities", () => {
+    it("returns all false for null or undefined", () => {
+      expect(mediaActionCapabilities(null)).toEqual({
+        canEdit: false,
+        canUpscale: false,
+        canSendToImageTools: false,
+        canSendToVideo: false,
+      });
+      expect(mediaActionCapabilities(undefined)).toEqual({
+        canEdit: false,
+        canUpscale: false,
+        canSendToImageTools: false,
+        canSendToVideo: false,
+      });
+    });
+
+    it("returns true for images with valid displayable source regardless of generation model", () => {
+      const item: MediaItem = {
+        id: "img-1",
+        model: "flux-dev",
+        mediaType: "image",
+        operation: "generate",
+        parentId: null,
+        childrenIds: [],
+        image: "data:image/png;base64,abc",
+        prompt: "test",
+        note: "",
+        timestamp: 1,
+        tags: [],
+        favorite: false,
+      };
+      expect(mediaActionCapabilities(item)).toEqual({
+        canEdit: true,
+        canUpscale: true,
+        canSendToImageTools: true,
+        canSendToVideo: true,
+      });
+    });
+
+    it("returns false for images without a valid displayable source", () => {
+      const item: MediaItem = {
+        id: "img-1",
+        model: "flux-dev",
+        mediaType: "image",
+        operation: "generate",
+        parentId: null,
+        childrenIds: [],
+        image: "",
+        prompt: "test",
+        note: "",
+        timestamp: 1,
+        tags: [],
+        favorite: false,
+      };
+      expect(mediaActionCapabilities(item)).toEqual({
+        canEdit: false,
+        canUpscale: false,
+        canSendToImageTools: false,
+        canSendToVideo: false,
+      });
+    });
+
+    it("returns false for video and audio items", () => {
+      const videoItem: MediaItem = {
+        id: "vid-1",
+        model: "cogvideox-5b",
+        mediaType: "video",
+        operation: "video-generate",
+        parentId: null,
+        childrenIds: [],
+        image: "data:video/mp4;base64,123",
+        prompt: "test",
+        note: "",
+        timestamp: 1,
+        tags: [],
+        favorite: false,
+      };
+      expect(mediaActionCapabilities(videoItem)).toEqual({
+        canEdit: false,
+        canUpscale: false,
+        canSendToImageTools: false,
+        canSendToVideo: false,
+      });
+
+      const audioItem: MediaItem = {
+        id: "aud-1",
+        model: "tts-1",
+        mediaType: "audio",
+        operation: "generate",
+        parentId: null,
+        childrenIds: [],
+        image: "data:audio/mp3;base64,123",
+        prompt: "test",
+        note: "",
+        timestamp: 1,
+        tags: [],
+        favorite: false,
+      };
+      expect(mediaActionCapabilities(audioItem)).toEqual({
+        canEdit: false,
+        canUpscale: false,
+        canSendToImageTools: false,
+        canSendToVideo: false,
       });
     });
   });
