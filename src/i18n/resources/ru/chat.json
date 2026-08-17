@@ -54,6 +54,7 @@
     "xSearch": "X поиск",
     "searchInStream": "Искать в потоке",
     "documentTools": "Инструменты для документов",
+    "documentToolsUnavailableTitle": "__MISSING__:controls.documentToolsUnavailableTitle",
     "newChatShortcut": "Новый чат (⌘N)",
     "systemPromptPlaceholder": "Необязательный. Оставьте пустым, чтобы избежать добавления системного сообщения, созданного приложением.",
     "temperature": "Температура",

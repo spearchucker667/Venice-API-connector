@@ -3973,7 +3973,7 @@
           "videoModelId": "Identifiant du modèle vidéo.",
           "videoPrompt": "Invite vidéo.",
           "aspectRatio": "Rapport hauteur/largeur.",
-          "clipDurationEmptyMeansModelDefault": "Durée du clip. Vide signifie le modèle par défaut.",
+          "clipDuration": "Durée du clip. Vide signifie le modèle par défaut.",
           "resolutionEmptyMeansModelDefault": "Résolution. Vide signifie le modèle par défaut."
         }
       }

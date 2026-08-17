@@ -3973,7 +3973,7 @@
           "videoModelId": "वीडियो मॉडल आईडी.",
           "videoPrompt": "वीडियो संकेत.",
           "aspectRatio": "आस्पेक्ट अनुपात।",
-          "clipDurationEmptyMeansModelDefault": "क्लिप अवधि. खाली का मतलब मॉडल डिफ़ॉल्ट है।",
+          "clipDuration": "क्लिप अवधि. खाली का मतलब मॉडल डिफ़ॉल्ट है।",
           "resolutionEmptyMeansModelDefault": "संकल्प। खाली का मतलब मॉडल डिफ़ॉल्ट है।"
         }
       }

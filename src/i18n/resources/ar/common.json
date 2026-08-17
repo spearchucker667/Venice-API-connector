@@ -3973,7 +3973,7 @@
           "videoModelId": "معرف نموذج الفيديو",
           "videoPrompt": "موجه الفيديو.",
           "aspectRatio": "نسبة الارتفاع.",
-          "clipDurationEmptyMeansModelDefault": "مدة المقطع. فارغ يعني النموذج الافتراضي.",
+          "clipDuration": "مدة المقطع. فارغ يعني النموذج الافتراضي.",
           "resolutionEmptyMeansModelDefault": "دقة. فارغ يعني النموذج الافتراضي."
         }
       }

@@ -28,7 +28,7 @@ describe("veniceResearchProvider", () => {
       "/augment/search",
       expect.objectContaining({
         method: "POST",
-        body: expect.objectContaining({ query: "test", provider: "brave" }),
+        body: expect.objectContaining({ query: "test", search_provider: "brave" }),
       })
     );
 
@@ -47,7 +47,7 @@ describe("veniceResearchProvider", () => {
     });
   });
 
-  it("passes custom provider option through options", async () => {
+  it("passes custom provider option through options as search_provider", async () => {
     vi.mocked(veniceFetch).mockResolvedValueOnce({ data: { results: [] } } as any);
     await veniceResearchProvider.search!({
       query: "x",
@@ -56,9 +56,32 @@ describe("veniceResearchProvider", () => {
     expect(veniceFetch).toHaveBeenCalledWith(
       "/augment/search",
       expect.objectContaining({
-        body: expect.objectContaining({ provider: "google" }),
+        body: expect.objectContaining({ search_provider: "google" }),
       })
     );
+    expect(vi.mocked(veniceFetch).mock.calls[0][1]?.body).not.toHaveProperty("provider");
+  });
+
+  it("serializes maxResults as the documented limit field (clamped 1..20)", async () => {
+    vi.mocked(veniceFetch).mockResolvedValueOnce({ data: { results: [] } } as any);
+    await veniceResearchProvider.search!({
+      query: "x",
+      maxResults: 25,
+    });
+    const body = vi.mocked(veniceFetch).mock.calls[0][1]?.body as Record<string, unknown>;
+    expect(body).toMatchObject({ query: "x", limit: 20 });
+    expect(body).not.toHaveProperty("maxResults");
+  });
+
+  it("omits search_provider for unsupported provider values", async () => {
+    vi.mocked(veniceFetch).mockResolvedValueOnce({ data: { results: [] } } as any);
+    await veniceResearchProvider.search!({
+      query: "x",
+      options: { provider: "auto" as any },
+    });
+    const body = vi.mocked(veniceFetch).mock.calls[0][1]?.body as Record<string, unknown>;
+    expect(body).toMatchObject({ query: "x" });
+    expect(body).not.toHaveProperty("search_provider");
   });
 
   it("wraps /augment/scrape and normalizes response", async () => {

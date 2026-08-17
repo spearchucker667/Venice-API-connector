@@ -5,6 +5,7 @@ import type { Node, Edge } from '@xyflow/react'
 import type { VeniceNodeData } from '../stores/workflow-store'
 import { DEFAULT_TTS_MODEL, DEFAULT_VIDEO_MODEL } from '../constants/venice'
 import { awaitWorkflowVideoTask } from '../services/workflow-background-task'
+import { validateWorkflow } from './workflow-validator'
 
 vi.mock('./venice-client', () => ({
   venice: vi.fn(),
@@ -162,7 +163,7 @@ describe('workflow-engine', () => {
 
     const nodes: Node<VeniceNodeData>[] = [
         { id: 'n1', type: 'venice', position: { x: 0, y: 0 }, data: { label: 'In', nodeType: 'textInput', inputText: 'prompt', model: '', prompt: '' } },
-        { id: 'n2', type: 'venice', position: { x: 0, y: 0 }, data: { label: 'Video', nodeType: 'video', model: DEFAULT_VIDEO_MODEL, prompt: '', videoAspectRatio: '16:9' } }
+        { id: 'n2', type: 'venice', position: { x: 0, y: 0 }, data: { label: 'Video', nodeType: 'video', model: DEFAULT_VIDEO_MODEL, prompt: '', videoAspectRatio: '16:9', videoDuration: '5s' } }
       ]
     const edges: Edge[] = [{ id: 'e1', source: 'n1', target: 'n2' }]
 
@@ -180,7 +181,7 @@ describe('workflow-engine', () => {
   it('routes workflow video completion through the durable background task path', async () => {
     vi.mocked(venice).mockResolvedValueOnce({ queue_id: 'v1', model: 'video-model', download_url: 'https://signed.example/video.mp4' })
     const nodes: Node<VeniceNodeData>[] = [
-      { id: 'n1', type: 'venice', position: { x: 0, y: 0 }, data: { label: 'Video', nodeType: 'video', model: 'video-model', prompt: 'ocean', videoAspectRatio: '16:9' } },
+      { id: 'n1', type: 'venice', position: { x: 0, y: 0 }, data: { label: 'Video', nodeType: 'video', model: 'video-model', prompt: 'ocean', videoAspectRatio: '16:9', videoDuration: '5s' } },
     ]
     const updates: Record<string, unknown>[] = []
 
@@ -190,9 +191,25 @@ describe('workflow-engine', () => {
       queueId: 'v1',
       model: 'video-model',
       queueDownloadUrl: 'https://signed.example/video.mp4',
-      request: expect.objectContaining({ prompt: 'ocean', aspect_ratio: '16:9' }),
+      request: expect.objectContaining({ prompt: 'ocean', aspect_ratio: '16:9', duration: '5s' }),
     }))
     expect(updates).toContainEqual(expect.objectContaining({ status: 'done', output: '[video:venice-media://workflow-video]' }))
+  })
+
+  it('blocks a video node without a duration before dispatch (missing or empty)', async () => {
+    const nodes: Node<VeniceNodeData>[] = [
+      { id: 'n1', type: 'venice', position: { x: 0, y: 0 }, data: { label: 'Video', nodeType: 'video', model: 'video-model', prompt: 'ocean', videoAspectRatio: '16:9' } },
+    ]
+
+    // Validation rejects the workflow before any network call: videoDuration
+    // is required by the schema with no "model default" empty option.
+    const validation = validateWorkflow({ nodes, edges: [] })
+    expect(validation.ok).toBe(false)
+    expect(validation.errors.some((e) => e.message.includes('videoDuration'))).toBe(true)
+
+    await expect(executeWorkflow(nodes, [], () => undefined)).rejects.toThrow(WorkflowExecutionError)
+    expect(venice).not.toHaveBeenCalled()
+    expect(awaitWorkflowVideoTask).not.toHaveBeenCalled()
   })
 
   it('keeps TTS blob URLs alive after workflow completion', async () => {

@@ -15,6 +15,26 @@ vi.mock("../../stores/toast-store", () => ({
   toast: { success: vi.fn(), error: vi.fn(), warn: vi.fn() },
 }));
 
+// P1-004/P3-001: reference support is now driven by runtime `/models`
+// metadata and fails closed when absent. The fiction ID
+// `venice-character-reference-v1` was removed from the static registry;
+// these tests simulate a live catalog entry that advertises style references.
+vi.mock("../../services/modelService", () => ({
+  getModelById: (id: string) =>
+    id === "test-style-ref-model"
+      ? {
+          id,
+          model_spec: {
+            supportsStyleReferences: true,
+            constraints: {
+              maxStyleReferences: 2,
+              supportsStyleReferenceStrength: true,
+            },
+          },
+        }
+      : undefined,
+}));
+
 vi.mock("../../stores/image-workspace-store", () => ({
   useImageWorkspaceStore: {
     getState: vi.fn(() => ({
@@ -339,7 +359,7 @@ describe("SceneComposerView", () => {
   it("renders the reference preview panel when a character is detected", async () => {
     const store = useSceneComposerStore.getState();
     await store.ensureLoaded();
-    const scene = await store.createScene({ title: "Ref Test", defaultModel: "venice-character-reference-v1" });
+    const scene = await store.createScene({ title: "Ref Test", defaultModel: "test-style-ref-model" });
     await store.addSceneVersion(scene.id, {
       components: [{ kind: "subject", content: "Picnic Bot in a garden" }],
       sourceType: "manual",
@@ -407,7 +427,7 @@ describe("SceneComposerView", () => {
   it("lets the user remove and restore a detected reference", async () => {
     const store = useSceneComposerStore.getState();
     await store.ensureLoaded();
-    const scene = await store.createScene({ title: "Ref Test", defaultModel: "venice-character-reference-v1" });
+    const scene = await store.createScene({ title: "Ref Test", defaultModel: "test-style-ref-model" });
     await store.addSceneVersion(scene.id, {
       components: [{ kind: "subject", content: "Picnic Bot in a garden" }],
       sourceType: "manual",

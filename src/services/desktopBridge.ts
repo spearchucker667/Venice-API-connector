@@ -30,6 +30,7 @@ import type {
   BackgroundTaskIpcEnvelope,
 } from "../types/background-task";
 import { veniceFetch } from "./veniceClient";
+import type { VeniceStreamDelta } from "../shared/veniceStreamDelta";
 import {
   buildInspectorTelemetryPatch,
   maskInspectorHeaders,
@@ -125,16 +126,7 @@ export const desktopVenice = {
    */
   async streamChat(
     input: VeniceForgeRequest,
-    onDelta: (chunk: {
-      content: string;
-      reasoning: string;
-      providerRequestId?: string;
-      usage?: {
-        prompt_tokens: number;
-        completion_tokens: number;
-        total_tokens: number;
-      };
-    }) => void,
+    onDelta: (chunk: VeniceStreamDelta) => void,
     signal?: AbortSignal,
   ): Promise<VeniceForgeResponse> {
     if (!isElectron())

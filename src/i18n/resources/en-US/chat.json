@@ -54,6 +54,7 @@
     "xSearch": "X search",
     "searchInStream": "Search in stream",
     "documentTools": "Document Tools",
+    "documentToolsUnavailableTitle": "The active model does not support function calling, so tools cannot be sent with this chat.",
     "newChatShortcut": "New Chat (⌘N)",
     "systemPromptPlaceholder": "Optional. Leave empty to avoid adding an app-authored system message.",
     "temperature": "Temperature",

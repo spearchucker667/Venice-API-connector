@@ -85,7 +85,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [`../src/shared/chatMediaReferenceContracts.ts`](../src/shared/chatMediaReferenceContracts.ts) — Canonical Phase 6 parity contract for `ChatMediaReference`, mirrored between renderer and main; same id regex, unions, and runtime predicates.
 - [`../src/shared/promptLimits.ts`](../src/shared/promptLimits.ts) — Phase 4 user-system-prompt Unicode code-point budgets and dynamic-limit helper.
 - [reference/VENICE_API_SOURCE_MANIFEST.md](reference/VENICE_API_SOURCE_MANIFEST.md) — Authoritative upstream Venice API documentation mirror provenance, manifest, and synchronization contract.
-- [reference/Venice_swagger_api.yaml](reference/Venice_swagger_api.yaml) — Authoritative local OpenAPI snapshot (`20260814.153445`) for Venice API requests/responses.
+- [reference/Venice_swagger_api.yaml](reference/Venice_swagger_api.yaml) — Authoritative local OpenAPI snapshot (`20260814.194349`) for Venice API requests/responses.
 - [reference/Venice_api_LLM_info.md](reference/Venice_api_LLM_info.md) — Venice-provided LLM integration reference.
 - [reference/VENICE_API_SYSTEM_PROMPT.md](reference/VENICE_API_SYSTEM_PROMPT.md) — Core system prompt for AI agents integrating with the Venice API.
 - [reference/seedance-2-0-api-guide.md](reference/seedance-2-0-api-guide.md) — Seedance video API reference.
@@ -129,6 +129,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 
 - [ROADMAP.md](ROADMAP.md) — Canonical current-work-only task ledger; closed work and historical validation stay in the session ledger and historical reports.
 - [summary_of_work.md](summary_of_work.md) — Active session ledger (recent sessions only).
+- [audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md](audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md) — Current exhaustive repository audit verdict, evidence map, findings, validation, and ordered remediation plan; machine-readable metadata is adjacent in `FINDINGS.json`.
 - July 17 03:10 deep-scan audit evidence was processed; remediated live status remains in `ROADMAP.md` and `summary_of_work.md`.
 
 ---

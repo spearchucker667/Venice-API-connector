@@ -3973,7 +3973,7 @@
           "videoModelId": "Videomodell-id.",
           "videoPrompt": "Videoprompt.",
           "aspectRatio": "Bildförhållande.",
-          "clipDurationEmptyMeansModelDefault": "Klippets längd. Tom betyder standardmodell.",
+          "clipDuration": "Klippets längd. Tom betyder standardmodell.",
           "resolutionEmptyMeansModelDefault": "Upplösning. Tom betyder standardmodell."
         }
       }

@@ -19,6 +19,7 @@ import {
 } from "../../research/agent/socialDiscovery";
 import { useAuthStore } from "../../stores/auth-store";
 import type { DiagnosticsEntry } from "../../types/venice";
+import { buildVeniceSearchPayload } from "../../shared/veniceSearchWire";
 
 import { SearchTab } from "./SearchTab";
 import { ScrapeTab } from "./ScrapeTab";
@@ -154,7 +155,10 @@ export function SearchScrapeView() {
         Record<string, unknown>
       >("/augment/search", {
         method: "POST",
-        body: { query: query.trim(), provider },
+        // `search_provider` is the documented wire field; the builder
+        // omits unsupported values (e.g. "jina") so Venice's default
+        // provider applies instead of an undocumented field.
+        body: buildVeniceSearchPayload(query, { provider }),
         signal,
         validator: isValidSearchResponse,
       });

@@ -3973,7 +3973,7 @@
           "videoModelId": "视频型号 ID。",
           "videoPrompt": "视频提示。",
           "aspectRatio": "纵横比。",
-          "clipDurationEmptyMeansModelDefault": "剪辑持续时间。空表示模型默认。",
+          "clipDuration": "剪辑持续时间。空表示模型默认。",
           "resolutionEmptyMeansModelDefault": "解决。空表示模型默认。"
         }
       }

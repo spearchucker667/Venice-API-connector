@@ -163,6 +163,37 @@ function verifyCapabilityHeuristics() {
   );
 }
 
+// P3-001: runtime model metadata typing must track the refreshed Swagger.
+// `ModelResponse.discount_to_user` and the style-reference capability fields
+// (`model_spec.supportsStyleReferences`, `constraints.maxStyleReferences`,
+// `constraints.supportsStyleReferenceStrength`) are optional, additive, and
+// fail closed when absent. This drift check keeps the TypeScript surface and
+// the capability gate honest without hard-coding model IDs.
+function verifyModelMetadataContract() {
+  const TYPES_PATH = path.join(REPO_ROOT, "src", "types", "venice.ts");
+  const CAPABILITIES_PATH = path.join(REPO_ROOT, "src", "shared", "modelCapabilities.ts");
+  const swagger = fs.readFileSync(SWAGGER_PATH, "utf8");
+  const types = fs.readFileSync(TYPES_PATH, "utf8");
+
+  for (const field of [
+    "discount_to_user:",
+    "supportsStyleReferences:",
+    "maxStyleReferences:",
+    "supportsStyleReferenceStrength:",
+  ]) {
+    assert(swagger.includes(field), `Swagger declares ${field.replace(":", "")}`);
+  }
+  assert(types.includes("discount_to_user?: number"), "VeniceModel declares optional discount_to_user (P3-001)");
+  assert(types.includes("supportsStyleReferences?: boolean"), "VeniceModel.model_spec declares optional supportsStyleReferences");
+  assert(types.includes("maxStyleReferences?: number"), "ImageConstraints declares optional maxStyleReferences");
+  assert(types.includes("supportsStyleReferenceStrength?: boolean"), "ImageConstraints declares optional supportsStyleReferenceStrength");
+  assert(
+    fs.existsSync(CAPABILITIES_PATH) &&
+      /supportsFunctionCalling/ .test(fs.readFileSync(CAPABILITIES_PATH, "utf8")),
+    "shared modelCapabilities gate references supportsFunctionCalling (P1-005)",
+  );
+}
+
 function main() {
   console.log("--- Starting Venice Forge Contract Drift Verification ---");
   verifySwagger();
@@ -171,6 +202,7 @@ function main() {
   verifyPayloadBuilders();
   verifyBackgroundTaskHygiene();
   verifyCapabilityHeuristics();
+  verifyModelMetadataContract();
 
   if (failureCount > 0) {
     console.error(`\n[DRIFT-SUMMARY] FAILED with ${failureCount} drift assertion(s).`);

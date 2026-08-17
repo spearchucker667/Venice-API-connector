@@ -17,6 +17,14 @@ vi.mock("../services/veniceClient", () => ({
   veniceFetch: vi.fn(),
 }));
 
+// P1-005: tool injection is gated on explicit runtime model metadata. Mock
+// the runtime lookup so the suite can exercise supported / unsupported /
+// missing-metadata models deterministically.
+const mockGetModelById = vi.fn();
+vi.mock("../services/modelService", () => ({
+  getModelById: (...args: unknown[]) => mockGetModelById(...args),
+}));
+
 const mockedVeniceStreamChat = vi.mocked(veniceStreamChat);
 
 function resetStores() {
@@ -41,12 +49,77 @@ describe("chat-stream-manager", () => {
     vi.useFakeTimers();
     resetStores();
     vi.clearAllMocks();
+    mockGetModelById.mockReturnValue(undefined);
   });
 
   afterEach(() => {
     stopStream();
     resetStores();
     vi.useRealTimers();
+  });
+
+  // P1-005: tools are only sent when runtime metadata explicitly advertises
+  // supportsFunctionCalling; the document/workspace flags alone must never
+  // push tools to an unsupported model, and missing metadata fails closed.
+  it("sends document and media tools only for models that support function calling", async () => {
+    const convId = useChatStore.getState().createConversation("capable-model");
+    useChatStore.getState().addMessage(convId, { role: "user", content: "Hello" });
+    useChatStore.getState().setVeniceParams({
+      enable_document_tools: true,
+      include_venice_system_prompt: true,
+      enable_web_search: "off",
+    });
+    mockGetModelById.mockReturnValue({
+      id: "capable-model",
+      capabilities: { supportsFunctionCalling: true },
+    });
+    mockedVeniceStreamChat.mockResolvedValueOnce(undefined);
+
+    await startStream(convId, "capable-model");
+
+    const body = mockedVeniceStreamChat.mock.calls[0][0] as Record<string, unknown>;
+    const tools = body.tools as Array<{ function?: { name?: string } }>;
+    expect(Array.isArray(tools)).toBe(true);
+    const names = tools.map((t) => t.function?.name ?? "");
+    expect(names.some((n) => n.startsWith("document_"))).toBe(true);
+    expect(names.some((n) => n.startsWith("media_"))).toBe(true);
+  });
+
+  it("omits tools when the model does not support function calling, even with document tools enabled", async () => {
+    const convId = useChatStore.getState().createConversation("no-tools-model");
+    useChatStore.getState().addMessage(convId, { role: "user", content: "Hello" });
+    useChatStore.getState().setVeniceParams({
+      enable_document_tools: true,
+      include_venice_system_prompt: true,
+      enable_web_search: "off",
+    });
+    mockGetModelById.mockReturnValue({
+      id: "no-tools-model",
+      capabilities: { supportsFunctionCalling: false },
+    });
+    mockedVeniceStreamChat.mockResolvedValueOnce(undefined);
+
+    await startStream(convId, "no-tools-model");
+
+    const body = mockedVeniceStreamChat.mock.calls[0][0] as Record<string, unknown>;
+    expect(body.tools).toBeUndefined();
+  });
+
+  it("omits tools when runtime metadata is missing (fail closed)", async () => {
+    const convId = useChatStore.getState().createConversation("unknown-model");
+    useChatStore.getState().addMessage(convId, { role: "user", content: "Hello" });
+    useChatStore.getState().setVeniceParams({
+      enable_document_tools: true,
+      include_venice_system_prompt: true,
+      enable_web_search: "off",
+    });
+    mockGetModelById.mockReturnValue(undefined);
+    mockedVeniceStreamChat.mockResolvedValueOnce(undefined);
+
+    await startStream(convId, "unknown-model");
+
+    const body = mockedVeniceStreamChat.mock.calls[0][0] as Record<string, unknown>;
+    expect(body.tools).toBeUndefined();
   });
 
   it("builds the request body from the current conversation and model", async () => {
@@ -124,6 +197,59 @@ describe("chat-stream-manager", () => {
     expect(last?.role).toBe("assistant");
     expect(last?.content).toBe(" world!");
     expect(last?.reasoning_content).toBe("thinking");
+  });
+
+  // P1-006: appended tool-result messages (with generated-media and
+  // managed-document metadata) must survive the transport chain and be
+  // persisted with the conversation. The transport chain is exercised
+  // end-to-end at the manager level: the chunk the (now shared) preload
+  // bridge forwards is exactly the chunk buffered here.
+  it("persists appended tool-result messages with media and document metadata into the conversation", async () => {
+    const convId = useChatStore.getState().createConversation("llama-3.3-70b");
+    useChatStore.getState().addMessage(convId, { role: "user", content: "Generate an image" });
+    useChatStore.getState().addMessage(convId, { role: "assistant", content: "Done!" });
+
+    mockedVeniceStreamChat.mockImplementationOnce((_payload, opts) => {
+      opts.onDelta?.({
+        content: "",
+        reasoning: "",
+        appendedMessages: [
+          {
+            role: "tool",
+            tool_call_id: "call_media_1",
+            name: "generate_image",
+            content: '{"ok":true}',
+            metadata: {
+              generatedMedia: [
+                {
+                  id: "media-1",
+                  mediaId: "media-1",
+                  mediaType: "image",
+                  operation: "generate",
+                  mimeType: "image/png",
+                },
+              ],
+              managedDocuments: [{ id: "doc-1", name: "proposal.md", mimeType: "text/markdown" }],
+            },
+          },
+        ],
+      });
+      return Promise.resolve(undefined);
+    });
+
+    await startStream(convId, "llama-3.3-70b");
+
+    const conv = useChatStore.getState().conversations.find((c) => c.id === convId)!;
+    const toolMsg = conv.messages.find((m) => m.role === "tool");
+    expect(toolMsg).toBeDefined();
+    expect(toolMsg!.tool_call_id).toBe("call_media_1");
+    const toolMsgAny = toolMsg as unknown as { name?: string };
+    expect(toolMsgAny.name).toBe("generate_image");
+    expect((toolMsg!.metadata as Record<string, unknown>).generatedMedia).toHaveLength(1);
+    expect((toolMsg!.metadata as Record<string, unknown>).managedDocuments).toHaveLength(1);
+    expect((toolMsg!.metadata as Record<string, unknown>).generatedMedia).toEqual([
+      expect.objectContaining({ mediaId: "media-1", mediaType: "image", operation: "generate" }),
+    ]);
   });
 
   it("batches 1,000 raw deltas into one conversation mutation and preserves final output", async () => {

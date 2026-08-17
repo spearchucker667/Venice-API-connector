@@ -41,6 +41,7 @@ function makeDeps(overrides: Partial<CharacterSceneGenerationDependencies> = {})
     getEffectiveRendererLocalFamilySafeModeEnabled: () => true,
     getEffectiveRendererVeniceApiSafeMode: () => true,
     buildImagePayload: vi.fn().mockReturnValue({ model: 'image-model', prompt: 'compiled prompt', width: 1024, height: 1024 }),
+    getRuntimeModelSpec: vi.fn(() => undefined),
     getImageModelCapabilities: vi.fn().mockReturnValue({
       supportsVariants: true,
       supportsNegativePrompt: true,
@@ -149,21 +150,18 @@ describe('generateCharacterScene', () => {
   // VERIFY-084 — scene references flow through to the payload for supported models.
   const validPng = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
 
-  it('passes detected character references to buildImagePayload when model supports references', async () => {
+  // P1-004/P3-001: reference support must come from runtime `/models`
+  // metadata (`model_spec.supportsStyleReferences` + constraints).
+  it('passes detected character references to buildImagePayload when runtime metadata supports style references', async () => {
     const buildImagePayloadSpy = vi.fn().mockReturnValue({ model: 'image-model', prompt: 'custom prompt', width: 1024, height: 1024 });
     const deps = makeDeps({
       buildImagePayload: buildImagePayloadSpy,
-      getImageModelCapabilities: vi.fn().mockReturnValue({
-        supportsVariants: true,
-        supportsNegativePrompt: true,
-        supportsSeed: true,
-        supportsStyle: true,
-        supportsSteps: true,
-        supportsCfgScale: true,
-        supportsHideWatermark: true,
-        supportsReturnBinary: false,
-        supportsReferences: true,
-        referenceLimit: 2,
+      getRuntimeModelSpec: () => ({
+        supportsStyleReferences: true,
+        constraints: {
+          maxStyleReferences: 2,
+          supportsStyleReferenceStrength: true,
+        },
       }),
       getSceneReferenceSource: () => ({
         cards: [
@@ -190,6 +188,8 @@ describe('generateCharacterScene', () => {
       expect.objectContaining({
         prompt: 'Picnic Bot in a meadow',
         supportsReferences: true,
+        maxStyleReferences: 2,
+        supportsStyleReferenceStrength: true,
         references: expect.arrayContaining([
           expect.objectContaining({ entityId: 'picnic-bot', mimeType: 'image/png', data: validPng }),
         ]),
@@ -199,22 +199,41 @@ describe('generateCharacterScene', () => {
     );
   });
 
-  it('drops references when the model does not support them', async () => {
+  it('drops references when runtime metadata is absent (fail closed)', async () => {
     const buildImagePayloadSpy = vi.fn().mockReturnValue({ model: 'image-model', prompt: 'custom prompt', width: 1024, height: 1024 });
     const deps = makeDeps({
       buildImagePayload: buildImagePayloadSpy,
-      getImageModelCapabilities: vi.fn().mockReturnValue({
-        supportsVariants: true,
-        supportsNegativePrompt: true,
-        supportsSeed: true,
-        supportsStyle: true,
-        supportsSteps: true,
-        supportsCfgScale: true,
-        supportsHideWatermark: true,
-        supportsReturnBinary: false,
-        supportsReferences: false,
-        referenceLimit: 0,
+      getRuntimeModelSpec: () => undefined,
+      getSceneReferenceSource: () => ({
+        cards: [
+          {
+            schema: 'CharacterCardV1',
+            id: 'picnic-bot',
+            name: 'Picnic Bot',
+            description: '',
+            systemPrompt: '',
+            tags: [],
+            adult: false,
+            exampleDialogues: [],
+            createdAt: 1,
+            updatedAt: 1,
+            avatar: { mimeType: 'image/png', data: validPng, byteLength: 100 },
+          },
+        ],
+        personas: [],
       }),
+    });
+    await generateCharacterScene({ conversation: makeConversation(), source: 'on_demand', promptOverride: 'Picnic Bot in a meadow' }, deps);
+    const draft = buildImagePayloadSpy.mock.calls[0]![1] as { supportsReferences: boolean; references?: unknown[] };
+    expect(draft.supportsReferences).toBe(false);
+    expect(draft.references?.length ?? 0).toBe(0);
+  });
+
+  it('drops references when runtime metadata explicitly disables style references', async () => {
+    const buildImagePayloadSpy = vi.fn().mockReturnValue({ model: 'image-model', prompt: 'custom prompt', width: 1024, height: 1024 });
+    const deps = makeDeps({
+      buildImagePayload: buildImagePayloadSpy,
+      getRuntimeModelSpec: () => ({ supportsStyleReferences: false }),
       getSceneReferenceSource: () => ({
         cards: [
           {

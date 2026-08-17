@@ -82,8 +82,12 @@ describe("buildImagePayload — model-aware sanitization (VERIFY-043)", () => {
     expect(off).not.toHaveProperty("variants");
   });
 
-  // VERIFY-082 — reference images are emitted only for supported models.
-  it("emits reference_image_urls when supportsReferences is true", () => {
+  // VERIFY-082 — style references are emitted only for supported models.
+  // P1-004: the wire shape is the documented
+  // `style_references: [{ image, strength }]` array (GenerateImageRequest,
+  // Swagger 20260814.194349); `reference_image_urls` is not a generate
+  // property and must never be emitted.
+  it("emits style_references with image and default strength when supported", () => {
     const payload = buildImagePayload("flux-dev", {
       prompt: "Alice in a garden",
       supportsReferences: true,
@@ -91,12 +95,45 @@ describe("buildImagePayload — model-aware sanitization (VERIFY-043)", () => {
         { entityId: "alice", mimeType: "image/png", contentHash: "abc", data: "iVBORw0KGgo=" },
       ],
     });
-    expect(payload).toHaveProperty("reference_image_urls");
-    expect(Array.isArray(payload.reference_image_urls)).toBe(true);
-    expect((payload.reference_image_urls as string[])[0]).toMatch(/^data:image\/png;base64,/);
+    expect(payload).toHaveProperty("style_references");
+    expect(payload).not.toHaveProperty("reference_image_urls");
+    const refs = payload.style_references as Array<{ image: string; strength?: number }>;
+    expect(refs).toHaveLength(1);
+    expect(refs[0]!.image).toMatch(/^data:image\/png;base64,/);
+    expect(refs[0]!.strength).toBe(0.5);
   });
 
-  it("drops reference_image_urls when supportsReferences is false", () => {
+  it("clamps strength to 0.1–1 and honors explicit strengths", () => {
+    const payload = buildImagePayload("flux-dev", {
+      prompt: "Alice in a garden",
+      supportsReferences: true,
+      references: [
+        { entityId: "a", mimeType: "image/png", contentHash: "a", data: "aGVsbG8=", strength: 2.5 },
+        { entityId: "b", mimeType: "image/png", contentHash: "b", data: "d29ybGQ=", strength: 0.05 },
+        { entityId: "c", mimeType: "image/png", contentHash: "c", data: "Y2Nj", strength: 0.7 },
+      ],
+      maxStyleReferences: 2,
+    });
+    const refs = payload.style_references as Array<{ image: string; strength?: number }>;
+    expect(refs).toHaveLength(2);
+    expect(refs[0]!.strength).toBe(1);
+    expect(refs[1]!.strength).toBe(0.1);
+  });
+
+  it("omits strength when the model does not honor it", () => {
+    const payload = buildImagePayload("flux-dev", {
+      prompt: "Alice in a garden",
+      supportsReferences: true,
+      supportsStyleReferenceStrength: false,
+      references: [
+        { entityId: "alice", mimeType: "image/png", contentHash: "abc", data: "iVBORw0KGgo=" },
+      ],
+    });
+    const refs = payload.style_references as Array<{ image: string; strength?: number }>;
+    expect(refs[0]!.strength).toBeUndefined();
+  });
+
+  it("drops style_references when supportsReferences is false", () => {
     const payload = buildImagePayload("flux-dev", {
       prompt: "Alice in a garden",
       supportsReferences: false,
@@ -104,15 +141,15 @@ describe("buildImagePayload — model-aware sanitization (VERIFY-043)", () => {
         { entityId: "alice", mimeType: "image/png", contentHash: "abc", data: "iVBORw0KGgo=" },
       ],
     });
-    expect(payload).not.toHaveProperty("reference_image_urls");
+    expect(payload).not.toHaveProperty("style_references");
   });
 
-  it("drops reference_image_urls when references array is empty", () => {
+  it("drops style_references when references array is empty", () => {
     const payload = buildImagePayload("flux-dev", {
       prompt: "Alice in a garden",
       supportsReferences: true,
       references: [],
     });
-    expect(payload).not.toHaveProperty("reference_image_urls");
+    expect(payload).not.toHaveProperty("style_references");
   });
 });

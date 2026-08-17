@@ -2,9 +2,9 @@
 
 > **Upstream Repository:** `https://github.com/veniceai/api-docs`  
 > **Upstream Branch:** `main`  
-> **Upstream Commit SHA:** `db3b9f4f40fe71abff2011bcaa9c23ad797c94f3`  
-> **Retrieval Date:** `2026-08-14`  
-> **Schema Version (`info.version`):** `20260814.153445`  
+> **Upstream Commit SHA:** `6e69346b13695bd53ba33a1d34e7b28841e10f98`  
+> **Retrieval Date:** `2026-08-15`  
+> **Schema Version (`info.version`):** `20260814.194349`  
 > **Local Reference Path (Ignored):** `docs/reference/venice-api-upstream/`  
 > **Tracked Canonical Snapshot:** `docs/reference/Venice_swagger_api.yaml`  
 
@@ -12,7 +12,7 @@
 
 ## 1. Upstream Precedence and Source Authority
 
-1. **Tier 1 — Wire Contract:** `docs/reference/venice-api-upstream/swagger.yaml` (OpenAPI 3.0.0, version `20260814.153445`). Defines endpoint paths, methods, request/response schemas, parameter enums, and content types.
+1. **Tier 1 — Wire Contract:** `docs/reference/venice-api-upstream/swagger.yaml` (OpenAPI 3.0.0, version `20260814.194349`). Defines endpoint paths, methods, request/response schemas, parameter enums, and content types.
 2. **Tier 2 — Endpoint Documentation:** `docs/reference/venice-api-upstream/api-reference/**`. Defines endpoint-specific operational semantics.
 3. **Tier 3 — Media Guides:** `docs/reference/venice-api-upstream/guides/media/**`. Multi-step operational workflows (image generation, editing, upscaling, Seedance 2.0, Seedance face consent, video generation, TTS, STT, music, voice cloning).
 4. **Tier 4 — Runtime Model Metadata:** Live `/models`, `/models/traits`, and `/models/compatibility_mapping` APIs. Authoritative for active models, dynamic constraints, pricing, and capabilities.

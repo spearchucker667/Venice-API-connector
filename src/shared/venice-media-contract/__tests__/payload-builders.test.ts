@@ -137,26 +137,46 @@ describe('Canonical Payload Builders', () => {
   });
 
   describe('Video Payloads', () => {
-    it('builds video quote payload', () => {
+    it('builds video quote payload with only declared QuoteVideoRequest fields', () => {
       const quote = buildCanonicalVideoQuotePayload({
         model: 'seedance-v1',
         duration: '5s',
         resolution: '720p',
+        upscaleFactor: 2,
+        audio: true,
+        videoUrl: 'https://example.com/source.mp4',
+        referenceVideoTotalDuration: 12.5,
       });
 
       expect(quote).toEqual({
         model: 'seedance-v1',
         duration: '5s',
         resolution: '720p',
+        upscale_factor: 2,
+        audio: true,
+        video_url: 'https://example.com/source.mp4',
+        reference_video_total_duration: 12.5,
       });
+      // QuoteVideoRequest does not declare prompt or audio_prompt.
+      expect((quote as unknown as Record<string, unknown>).prompt).toBeUndefined();
+      expect((quote as unknown as Record<string, unknown>).audio_prompt).toBeUndefined();
     });
 
-    it('builds video queue payload with Seedance consent if confirmed', () => {
+    it('throws when video quote duration is missing or empty', () => {
+      expect(() => buildCanonicalVideoQuotePayload({ model: 'seedance-v1' } as never)).toThrow(/duration/);
+      expect(() => buildCanonicalVideoQuotePayload({ model: 'seedance-v1', duration: '' })).toThrow(/duration/);
+    });
+
+    it('builds video queue payload with only declared QueueVideoRequest fields', () => {
       const queue = buildCanonicalVideoQueuePayload({
         model: 'seedance-v1',
         prompt: 'a cinematic portrait video',
         duration: '5s',
+        resolution: '720p',
+        upscaleFactor: 4,
+        audio: false,
         imageUrl: 'https://example.com/face.png',
+        referenceAudioUrls: ['https://example.com/bgm.wav'],
         consents: {
           seedance: {
             confirmed_terms_and_privacy: true,
@@ -166,14 +186,34 @@ describe('Canonical Payload Builders', () => {
         },
       });
 
-      expect(queue.model).toBe('seedance-v1');
-      expect(queue.prompt).toBe('a cinematic portrait video');
-      expect(queue.image_url).toBe('https://example.com/face.png');
-      expect(queue.consents?.seedance).toEqual({
-        confirmed_terms_and_privacy: true,
-        confirmed_legal_right: true,
-        confirmed_screening_acknowledged: true,
+      expect(queue).toEqual({
+        model: 'seedance-v1',
+        prompt: 'a cinematic portrait video',
+        duration: '5s',
+        resolution: '720p',
+        upscale_factor: 4,
+        audio: false,
+        image_url: 'https://example.com/face.png',
+        reference_audio_urls: ['https://example.com/bgm.wav'],
+        consents: {
+          seedance: {
+            confirmed_terms_and_privacy: true,
+            confirmed_legal_right: true,
+            confirmed_screening_acknowledged: true,
+          },
+        },
       });
+      // QueueVideoRequest does not declare audio_prompt, seed, cfg_scale,
+      // motion_score, or fps — they must never reach the wire.
+      const wire = queue as unknown as Record<string, unknown>;
+      for (const foreign of ['audio_prompt', 'seed', 'cfg_scale', 'motion_score', 'fps']) {
+        expect(wire[foreign]).toBeUndefined();
+      }
+    });
+
+    it('requires video queue duration (missing or empty validates locally)', () => {
+      expect(() => buildCanonicalVideoQueuePayload({ model: 'seedance-v1', prompt: 'p' } as never)).toThrow(/duration/);
+      expect(() => buildCanonicalVideoQueuePayload({ model: 'seedance-v1', prompt: 'p', duration: '  ' })).toThrow(/duration/);
     });
 
     it('builds video retrieve payload', () => {
@@ -220,6 +260,16 @@ describe('Canonical Payload Builders', () => {
         queue_id: 'aud-q-999',
         delete_media_on_completion: false,
       });
+    });
+
+    it('maps logical language to the documented language_code wire field', () => {
+      const queue = buildCanonicalAudioQueuePayload({
+        model: 'stable-audio',
+        prompt: 'une chanson française',
+        language: 'fr',
+      });
+      expect(queue.language_code).toBe('fr');
+      expect((queue as unknown as Record<string, unknown>).language).toBeUndefined();
     });
 
     it('builds audio speech (TTS) payload', () => {

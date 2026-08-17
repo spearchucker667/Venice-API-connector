@@ -54,6 +54,7 @@
     "xSearch": "X 검색",
     "searchInStream": "스트림에서 검색",
     "documentTools": "문서 도구",
+    "documentToolsUnavailableTitle": "__MISSING__:controls.documentToolsUnavailableTitle",
     "newChatShortcut": "새 채팅(⌘N)",
     "systemPromptPlaceholder": "선택 과목. 앱 작성 시스템 메시지를 추가하지 않으려면 비워 두세요.",
     "temperature": "온도",

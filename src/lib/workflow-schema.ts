@@ -34,7 +34,8 @@ export interface NodeSchema {
 
 const WEB_SEARCH_VALUES = ["off", "on", "auto"] as const;
 const VIDEO_ASPECT_VALUES = ["16:9", "9:16", "1:1", "4:3", "3:4"] as const;
-const VIDEO_DURATION_VALUES = ["", "5s", "10s"] as const;
+// QueueVideoRequest requires `duration` (no "model default" empty option).
+const VIDEO_DURATION_VALUES = ["5s", "10s"] as const;
 const VIDEO_RESOLUTION_VALUES = ["", "720p", "1080p"] as const;
 const TTS_FORMAT_VALUES = ["mp3", "opus", "aac", "flac", "wav"] as const;
 
@@ -498,11 +499,12 @@ export const NODE_SCHEMAS: Record<VeniceNodeType, NodeSchema> = {
         type: "enum",
         get description() {
           return translateRuntime(
-            "runtimeGenerated.lib.workflowSchema.metadata.clipDurationEmptyMeansModelDefault",
-            "Clip duration. Empty means model default.",
+            "runtimeGenerated.lib.workflowSchema.metadata.clipDuration",
+            "Clip duration. Required by the Venice video queue contract.",
           );
         },
-        default: "",
+        required: true,
+        default: "5s",
         enumValues: VIDEO_DURATION_VALUES,
       },
       {

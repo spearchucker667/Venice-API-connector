@@ -12,6 +12,13 @@ import { validateVeniceIpcRequest } from "../ipc/validation";
 import { VENICE_API_HOST, VENICE_API_BASE_PATH, VENICE_API_TIMEOUT_MS } from "../../src/shared/apiConfig";
 import { resolveProviderRoute, type ProviderRouteSelection } from "./providerAdapters";
 import { getProviderSettings } from "./providerSettingsStore";
+import {
+  SseDecoder,
+  applyStreamSseEvent,
+  extractStreamDelta as sharedExtractStreamDelta,
+  type SseEvent,
+  type StreamDelta as SharedStreamDelta,
+} from "../../src/shared/sseStreamDecoder";
 
 /** Maximum non-streaming Venice response body size we will buffer in memory. */
 const MAX_VENICE_RESPONSE_BYTES = 25 * 1024 * 1024;
@@ -154,180 +161,13 @@ function parseBody(buffer: Buffer, contentType: string): unknown {
   return { dataBase64: buffer.toString("base64") };
 }
 
-/** Extracts the text and reasoning delta from a server-sent event data payload.
- *  @param data The raw SSE data line.
- *  @returns The extracted content and reasoning delta, if any.
- */
-/** Result of extracting a delta from an SSE data payload. */
-export interface StreamDelta {
-  content: string;
-  reasoning: string;
-  /** True when the data was a JSON object with a recognizable delta shape. */
-  parsed: boolean;
-  /** True when JSON.parse failed and the raw data was returned as content. */
-  malformed: boolean;
-  /** Raw data when malformed (useful for diagnostics; never forwarded to renderer). */
-  rawData?: string;
-  /** The upstream provider's unique request ID, typically present on the first chunk. */
-  providerRequestId?: string;
-  tool_calls?: Array<{ index: number; id?: string; type?: 'function'; function?: { name?: string; arguments?: string } }>;
-  finish_reason?: string | null;
-  usage?: Record<string, unknown>;
-}
+/** The electron main process re-exports the shared OpenAI-compatible delta
+ *  contract so `providerAdapters` and existing tests keep their stable API.
+ *  The canonical implementation lives in
+ *  `src/shared/sseStreamDecoder.ts` (shared with the Web transport). */
+export type StreamDelta = SharedStreamDelta;
 
-/** Result of parsing an SSE buffer. */
-export interface SseParseResult {
-  buffer: string;
-  text: string;
-  malformedFrameCount: number;
-  malformedSamples: string[];
-}
-
-/**
- * Extracts the text and reasoning delta from a server-sent event data payload.
- *
- *  - Returns `{ parsed: true, malformed: false, ... }` on a recognizable
- *    JSON object that carries a real delta.
- *  - Returns `{ parsed: true, malformed: true, rawData }` for a JSON
- *    object that is an *error frame* (e.g. `{"error": "rate_limited"}` or
- *    OpenAI-style `{"type":"error","error":{...}}`). These have no
- *    recognisable delta and must be surfaced, not silently dropped.
- *  - Returns `{ parsed: false, malformed: true, rawData }` on a JSON
- *    parse error so the caller can log/diagnose the frame.
- *  - The renderer never sees `rawData` (it may contain provider error
- *    text or partial API keys); it is only retained for the in-process
- *    bridge diagnostics path.
- */
-export function extractStreamDelta(data: string): StreamDelta {
-  if (!data) return { content: "", reasoning: "", parsed: false, malformed: false };
-  if (data === "[DONE]") return { content: "", reasoning: "", parsed: true, malformed: false };
-  try {
-    const json = JSON.parse(data);
-    if (json && typeof json === "object") {
-      // Provider error frame: OpenAI-style `{ type: "error", error: { ... } }`
-      // or simpler `{ error: "..." }` shapes. No recognisable delta
-      // payload — surface to the diagnostic path so we don't silently
-      // hide rate-limit / quota / upstream-error signals from the user.
-      const isErrorFrame =
-        (typeof json.type === "string" && json.type.toLowerCase() === "error") ||
-        json.error !== undefined;
-      const content = json?.choices?.[0]?.delta?.content ??
-                      json?.choices?.[0]?.message?.content ??
-                      json?.choices?.[0]?.text ??
-                      "";
-      const reasoning = json?.choices?.[0]?.delta?.reasoning_content ??
-                        json?.choices?.[0]?.message?.reasoning_content ??
-                        "";
-      const providerRequestId = json?.id;
-      const tool_calls = json?.choices?.[0]?.delta?.tool_calls;
-      const finish_reason = json?.choices?.[0]?.finish_reason;
-      const usage = json?.usage;
-      if (isErrorFrame && !content && !reasoning) {
-        return { content: "", reasoning: "", providerRequestId, parsed: true, malformed: true, rawData: data };
-      }
-      return { content, reasoning, providerRequestId, tool_calls, finish_reason, usage, parsed: true, malformed: false };
-    }
-    return { content: "", reasoning: "", parsed: true, malformed: false };
-  } catch {
-    return { content: "", reasoning: "", parsed: false, malformed: true, rawData: data };
-  }
-}
-
-/**
- * Parses SSE-formatted lines and invokes a callback for each text delta.
- *
- *  - Skips comment lines (lines starting with ":").
- *  - Recognizes `event:`, `id:`, `retry:` lines but does not surface them.
- *  - Joins multiple consecutive `data:` lines in the same event with
- *    newlines (SSE spec).
- *  - Recognizes `[DONE]` as a stream terminator.
- *  - Counts malformed JSON frames and provider error frames in the
- *    returned `malformedFrameCount` so the caller can decide whether to
- *    log / surface a warning.
- *  - Dispatches any pending partial event at end-of-buffer so the next
- *    call receives a clean accumulator.
- *  - The function is *pure*: malformed frames do not throw, and the
- *    callback is only invoked for deltas that carry real content.
- *
- *  @param buffer The accumulated SSE buffer.
- *  @param onDelta Callback invoked for each valid delta. Receives
- *                 `{ content, reasoning }` only — the `parsed` /
- *                 `malformed` flags are intentionally not surfaced to
- *                 keep the streaming API stable for existing callers.
- *  @param onMalformed Optional callback invoked once per malformed
- *                     frame with the raw data, for diagnostics.
- *  @returns The remaining unparsed buffer, concatenated text, and
- *           malformed-frame diagnostics.
- */
-export function parseSseLines(
-  buffer: string,
-  onDelta: (chunk: { content: string; reasoning: string; providerRequestId?: string; usage?: Record<string, unknown>; tool_calls?: Array<{ index: number; id?: string; type?: 'function'; function?: { name?: string; arguments?: string } }>; finish_reason?: string | null }) => void,
-  onMalformed?: (rawData: string) => void,
-  customExtractStreamDelta?: (data: string) => StreamDelta,
-): SseParseResult {
-  const lines = buffer.split(/\r?\n/);
-  const tail = lines.pop() ?? "";
-  let text = "";
-  let malformedFrameCount = 0;
-  const malformedSamples: string[] = [];
-  // SSE events are separated by blank lines; we accumulate data: lines
-  // until we see a blank line (or end-of-buffer), then dispatch the
-  // concatenated payload.
-  let dataLines: string[] = [];
-  const dispatch = () => {
-    if (dataLines.length === 0) return;
-    const data = dataLines.join("\n");
-    dataLines = [];
-    const extractFn = customExtractStreamDelta || extractStreamDelta;
-    const delta = extractFn(data);
-    if (delta.malformed) {
-      malformedFrameCount++;
-      if (malformedSamples.length < 5) {
-        malformedSamples.push(delta.rawData?.slice(0, 200) ?? "");
-      }
-      try {
-        onMalformed?.(delta.rawData ?? "");
-      } catch {
-        // diagnostics callback threw — never let it kill the stream.
-      }
-      return;
-    }
-    if (delta.content || delta.reasoning || delta.providerRequestId || delta.tool_calls || delta.finish_reason !== undefined || delta.usage) {
-      text += delta.content;
-      // Preserve the existing onDelta contract: only `{ content, reasoning, providerRequestId, tool_calls, finish_reason, usage }`.
-      onDelta({ content: delta.content, reasoning: delta.reasoning, providerRequestId: delta.providerRequestId, tool_calls: delta.tool_calls, finish_reason: delta.finish_reason, usage: delta.usage });
-    }
-  };
-  for (const line of lines) {
-    if (line === "") {
-      // Blank line = event boundary. Dispatch any accumulated data.
-      dispatch();
-      continue;
-    }
-    if (line.startsWith(":")) {
-      // Comment line; ignore per SSE spec.
-      continue;
-    }
-    if (line.startsWith("data:")) {
-      dataLines.push(line.replace(/^data:\s*/, ""));
-      continue;
-    }
-    // event:, id:, retry: — recognized but not surfaced for chat-completions.
-    // We still need to reset the data accumulator on a new event type to
-    // avoid joining across event boundaries.
-    if (line.startsWith("event:") || line.startsWith("id:") || line.startsWith("retry:")) {
-      dataLines = [];
-      continue;
-    }
-    // Unknown line shape — ignore per SSE spec.
-  }
-  // If the input ended without a blank-line boundary, dispatch the
-  // partial event now so its content is not silently held in the
-  // accumulator and lost across calls. The remaining tail is the last
-  // incomplete line (no \n at the end of buffer).
-  dispatch();
-  return { buffer: tail, text, malformedFrameCount, malformedSamples };
-}
+export const extractStreamDelta: typeof sharedExtractStreamDelta = sharedExtractStreamDelta;
 
 /** Aborts an active Venice request by its signal ID.
  *  @param signalId The unique identifier for the active request.
@@ -532,8 +372,36 @@ async function performSingleVeniceRequest(
         let totalBytes = 0;
         const responseHeaders = sanitizeHeaders(res.headers);
         const contentType = String(res.headers["content-type"] || "");
-        let sseBuffer = "";
+        // Shared incremental SSE decoder: blank-line framing, multiline
+        // data: joining, streaming UTF-8, typed decode errors, EOF flush.
+        // The same decoder drives the Web transport so both emit identical
+        // events/errors for identical byte streams.
+        let sseDecoder: SseDecoder | undefined;
         let streamText = "";
+
+        const onDelta = options.onDelta;
+        const consumeSseEvents = (events: SseEvent[]) => {
+          if (!onDelta) return;
+          for (const event of events) {
+            const outcome = applyStreamSseEvent(event, {
+              onDelta,
+              ...(route?.extractStreamDelta
+                ? { extractFn: route.extractStreamDelta }
+                : {}),
+            });
+            streamText += outcome.text;
+            if (outcome.malformed) {
+              // SECURITY: redact any leaked secret-like values before
+              // logging; the raw frame never reaches the renderer.
+              const redacted = redactErrorMessage(
+                outcome.errorMessage || outcome.rawData || "unknown frame",
+              );
+              logError("Malformed SSE frame from Venice upstream", {
+                raw: redacted,
+              });
+            }
+          }
+        };
 
         res.on("data", (chunk: Buffer) => {
           totalBytes += chunk.length;
@@ -542,32 +410,37 @@ async function performSingleVeniceRequest(
             return;
           }
 
-          if (options.onDelta && contentType.includes("event-stream") && res.statusCode && res.statusCode < 400) {
-            sseBuffer += chunk.toString("utf-8");
-            const parsed = parseSseLines(
-              sseBuffer,
-              options.onDelta,
-              (raw) => {
-                // SECURITY: redact any leaked secret-like values before logging.
-                const redacted = redactErrorMessage(raw);
-                logError("Malformed SSE frame from Venice upstream", { raw: redacted });
-              },
-              route?.extractStreamDelta
-            );
-            sseBuffer = parsed.buffer;
-            streamText += parsed.text;
+          if (contentType.includes("event-stream") && res.statusCode && res.statusCode < 400) {
+            if (!sseDecoder) sseDecoder = new SseDecoder();
+            let events: SseEvent[];
+            try {
+              events = sseDecoder.push(chunk);
+            } catch (err) {
+              const message = err instanceof Error ? err.message : String(err);
+              logError("SseDecodeError from Venice upstream", {
+                raw: redactErrorMessage(message),
+              });
+              req.destroy(new Error("Venice returned invalid stream data."));
+              return;
+            }
+            consumeSseEvents(events);
           } else {
             chunks.push(chunk);
           }
         });
 
         res.on("end", () => {
-          if (options.onDelta && sseBuffer) {
-            const parsed = parseSseLines(`${sseBuffer}\n`, options.onDelta, (raw) => {
-              const redacted = redactErrorMessage(raw);
-              logError("Malformed SSE frame from Venice upstream (tail)", { raw: redacted });
-            }, route?.extractStreamDelta);
-            streamText += parsed.text;
+          if (sseDecoder) {
+            let events: SseEvent[] = [];
+            try {
+              events = sseDecoder.flush();
+            } catch (err) {
+              const message = err instanceof Error ? err.message : String(err);
+              logError("SseDecodeError from Venice upstream (tail)", {
+                raw: redactErrorMessage(message),
+              });
+            }
+            consumeSseEvents(events);
           }
           const buffer = Buffer.concat(chunks);
           let body =

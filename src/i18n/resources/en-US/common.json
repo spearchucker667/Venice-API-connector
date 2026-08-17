@@ -3991,7 +3991,7 @@
           "videoModelId": "Video model id.",
           "videoPrompt": "Video prompt.",
           "aspectRatio": "Aspect ratio.",
-          "clipDurationEmptyMeansModelDefault": "Clip duration. Empty means model default.",
+          "clipDuration": "Clip duration. Required by the Venice video queue contract.",
           "resolutionEmptyMeansModelDefault": "Resolution. Empty means model default."
         }
       }

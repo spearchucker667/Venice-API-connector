@@ -3973,7 +3973,7 @@
           "videoModelId": "ビデオモデルID。",
           "videoPrompt": "ビデオプロンプト。",
           "aspectRatio": "アスペクト比。",
-          "clipDurationEmptyMeansModelDefault": "クリップの長さ。空はモデルのデフォルトを意味します。",
+          "clipDuration": "クリップの長さ。空はモデルのデフォルトを意味します。",
           "resolutionEmptyMeansModelDefault": "解決。空はモデルのデフォルトを意味します。"
         }
       }

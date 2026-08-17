@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { performGuardedVeniceRequest, type GuardedVeniceResult } from "../../services/guardPipeline";
 import { publishInspectorRequest, publishInspectorCompletion } from "../../services/inspectorTelemetry";
 import { sanitizeErrorText } from "../../../src/shared/redaction";
@@ -13,6 +11,7 @@ import {
   type ChatMediaReferenceContract,
 } from "../../../src/shared/chatMediaReferenceContracts";
 import { isChatDocumentRef, type ChatDocumentRef } from "../../../src/types/chatDocument";
+import type { VeniceStreamAppendedMessage } from "../../../src/shared/veniceStreamDelta";
 
 interface SseChunk {
   content?: string;
@@ -29,7 +28,7 @@ interface SseChunk {
     };
   }>;
   finish_reason?: string | null;
-  appendedMessages?: Array<{ role: string; content?: string; tool_call_id?: string; name?: string; tool_calls?: Array<{ id: string; type: string; function: { name: string; arguments: string } }>; metadata?: any }>;
+  appendedMessages?: VeniceStreamAppendedMessage[];
 }
 
 /**
@@ -129,13 +128,11 @@ interface TurnResult {
   hasToolCalls: boolean;
 }
 
-type AppMessageRole = "tool";
-type ToolResultMessage = {
-  role: AppMessageRole;
+type ToolResultMessage = VeniceStreamAppendedMessage & {
+  role: "tool";
   tool_call_id: string;
   name: string;
   content: string;
-  metadata?: Record<string, unknown>;
 };
 
 async function streamAndExecuteTurn(
@@ -285,12 +282,9 @@ async function streamAndExecuteTurn(
     }
 
     if (appendedMessages.length > 0) {
-      // Cast: `SseChunk.appendedMessages` accepts either tool result
-      // messages (this streamAndExecuteTurn path) or other providers
-      // (assistant tool_calls). The agent loop only emits tool result
-      // messages here, so the narrower `ToolResultMessage[]` is valid.
-      const chunk = { appendedMessages } as unknown as SseChunk;
-      onDelta(chunk);
+      // The agent loop only emits tool result messages here; the shared
+      // `SseChunk.appendedMessages` contract accepts them directly.
+      onDelta({ appendedMessages });
     }
   }
 

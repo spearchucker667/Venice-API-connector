@@ -10,6 +10,16 @@ export interface ImageConstraints {
   defaultResolution?: string
   steps?: { default: number; max: number }
   widthHeightDivisor?: number
+  /** Maximum number of `style_references` accepted by POST /image/generate.
+   *  Only present for models that support style references (Swagger
+   *  `model_spec.constraints.maxStyleReferences`). Absent means unknown;
+   *  treat as 1 when the model advertises `supportsStyleReferences: true`. */
+  maxStyleReferences?: number
+  /** Whether per-reference `strength` is honored. When false,
+   *  `style_references` strength is ignored (Swagger
+   *  `model_spec.constraints.supportsStyleReferenceStrength`). Absent means
+   *  the model accepts strength. */
+  supportsStyleReferenceStrength?: boolean
 }
 
 export interface VideoConstraints {
@@ -55,6 +65,12 @@ export interface VeniceModel {
   object: string
   created: number
   owned_by: string
+  /** Fractional reseller discount (Swagger `ModelResponse.discount_to_user`,
+   *  e.g. 0.2 = 20% off). Omitted by the provider for every caller without a
+   *  reseller agreement and for models no agreement covers — an absent field
+   *  means no discount. Prices in model_spec.pricing are the undiscounted
+   *  base rate. Added in upstream Swagger `20260814.194349` (P3-001). */
+  discount_to_user?: number
   model_spec?: {
     availableContextTokens?: number
     maxCompletionTokens?: number
@@ -79,6 +95,10 @@ export interface VeniceModel {
     max_duration?: number
     default_duration?: number
     prompt_character_limit?: number
+    /** Whether this image model accepts `style_references` on POST
+     *  /image/generate (Swagger `model_spec.supportsStyleReferences`, only
+     *  present for image models). Absent means unsupported — fail closed. */
+    supportsStyleReferences?: boolean
   }
 }
 
@@ -130,7 +150,6 @@ export interface VeniceParameters {
   enable_web_citations?: boolean
   include_search_results_in_stream?: boolean
   return_search_results_as_documents?: boolean
-  prompt_cache_key?: string
 }
 
 export interface ChatCompletionRequest {
@@ -142,6 +161,8 @@ export interface ChatCompletionRequest {
   top_p?: number
   frequency_penalty?: number
   presence_penalty?: number
+  /** Top-level per Swagger ChatCompletionRequest; NOT a venice_parameters member. */
+  prompt_cache_key?: string
   venice_parameters?: VeniceParameters
   safe_mode?: boolean
 }
@@ -370,6 +391,9 @@ export interface ModelInfo {
   id: string;
   name?: string;
   model_spec?: VeniceModel['model_spec'];
+  /** Fractional reseller discount from `VeniceModel.discount_to_user`;
+   *  absent means no discount (P3-001). */
+  discount_to_user?: number;
   type?: string;
   traits?: unknown;
   isFallback?: boolean;

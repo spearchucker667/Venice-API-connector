@@ -54,6 +54,7 @@
     "xSearch": "X-Suche",
     "searchInStream": "Im Stream suchen",
     "documentTools": "Dokumentwerkzeuge",
+    "documentToolsUnavailableTitle": "__MISSING__:controls.documentToolsUnavailableTitle",
     "newChatShortcut": "Neuer Chat (⌘N)",
     "systemPromptPlaceholder": "Optional. Leer lassen, um das Hinzufügen einer von der App erstellten Systemmeldung zu vermeiden.",
     "temperature": "Temperatur",

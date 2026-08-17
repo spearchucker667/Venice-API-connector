@@ -8,7 +8,8 @@
  *  1. `src/config/image-model-capabilities.ts` declares `supportsReferences`
  *     and `referenceLimit` on `ImageModelCapabilities` and exports them.
  *  2. `src/utils/payloadBuilders.ts` accepts `references` on `ImageDraftLike`
- *     and emits `reference_image_urls` only when `supportsReferences` is true.
+ *     and emits the documented `style_references: [{ image, strength }]`
+ *     array only when `supportsReferences` is true (P1-004).
  *  3. `src/services/sceneReferencePlanner.ts` exports `buildSceneReferencePlan`
  *     and `SceneReferencePlan` references carry `data`, `mimeType`, and
  *     `contentHash`.
@@ -16,7 +17,8 @@
  *     `buildSceneReferenceEntities` and builds entities from character cards
  *     and personas.
  *  5. `src/services/characterSceneGenerationService.ts` wires the reference
- *     plan into the image draft passed to `buildImagePayload`.
+ *     plan into the image draft passed to `buildImagePayload`, with support
+ *     gated on runtime `/models` metadata (P1-004/P3-001).
  *  6. `src/components/scenes/SceneComposerView.tsx` renders the reference
  *     preview panel (`SceneReferencePanel`) and exposes
  *     `data-testid="scene-reference-panel"`.
@@ -78,12 +80,21 @@ mustContain(CAPS_FILE, "image-model-capabilities reference flags", [
   "export function getImageModelCapabilities",
 ]);
 
-// 2. Payload builder contract.
+// 2. Payload builder contract. P1-004: the image-generate wire shape is the
+// documented `style_references: [{ image, strength }]` array;
+// `reference_image_urls` is NOT a GenerateImageRequest property and must
+// never be emitted by the image builder (it remains a video-queue field).
+const payloadText = read(PAYLOAD_FILE);
 mustContain(PAYLOAD_FILE, "payloadBuilders reference support", [
   "references?:",
-  "reference_image_urls",
+  "style_references",
   "supportsReferences",
+  "supportsStyleReferenceStrength",
+  "maxStyleReferences",
 ]);
+if (payloadText.includes("reference_image_urls")) {
+  check("payloadBuilders never emits reference_image_urls on image generate", false, "found reference_image_urls in image payload builder (P1-004)");
+}
 
 // 3. Planner contract.
 mustContain(PLANNER_FILE, "sceneReferencePlanner exports", [
@@ -102,14 +113,22 @@ mustContain(RESOLVER_FILE, "sceneReferenceResolver exports", [
   "UserPersonaV1",
 ]);
 
-// 5. Service integration.
+// 5. Service integration. P1-004/P3-001: reference support is resolved from
+// runtime `/models` metadata (`resolveStyleReferenceCapabilities`) and fails
+// closed when metadata is absent;
+const serviceText = read(SERVICE_FILE);
 mustContain(SERVICE_FILE, "characterSceneGenerationService reference wiring", [
   "buildSceneReferencePlan",
   "buildSceneReferenceEntities",
   "getSceneReferenceSource",
   "references: referencePlan.references",
-  "supportsReferences: caps.supportsReferences === true",
+  "resolveStyleReferenceCapabilities",
+  "getRuntimeModelSpec",
+  "supportsStyleReferenceStrength: styleRefCaps.supportsStrength",
 ]);
+if (serviceText.includes("supportsReferences: caps.supportsReferences === true")) {
+  check("service gates references on runtime metadata", false, "static-capability reference gating remains (P1-004)");
+}
 
 // 6. UI preview panel.
 mustContain(VIEW_FILE, "SceneComposerView reference panel", [

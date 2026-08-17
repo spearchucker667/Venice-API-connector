@@ -70,8 +70,31 @@ describe("buildChatPayload", () => {
       strip_thinking_response: true,
       disable_thinking: true,
       character_slug: "alan-watts",
-      prompt_cache_key: "character-cache",
     });
+    // Swagger ChatCompletionRequest declares prompt_cache_key at the TOP
+    // level; it must never be nested inside venice_parameters.
+    expect(payload.prompt_cache_key).toBe("character-cache");
+    expect((payload.venice_parameters as Record<string, unknown>).prompt_cache_key).toBeUndefined();
+  });
+
+  it("trims and truncates prompt_cache_key at the top level", () => {
+    const payload = buildChatPayload(
+      "venice-uncensored",
+      [{ role: "user", content: "hello" }],
+      {},
+      { promptCacheKey: "  " + "k".repeat(300) + "  " },
+    );
+    expect(payload.prompt_cache_key).toBe("k".repeat(256));
+    expect((payload.venice_parameters as Record<string, unknown>).prompt_cache_key).toBeUndefined();
+  });
+
+  it("omits prompt_cache_key entirely when not supplied", () => {
+    const payload = buildChatPayload(
+      "venice-uncensored",
+      [{ role: "user", content: "hello" }],
+      {},
+    );
+    expect(payload).not.toHaveProperty("prompt_cache_key");
   });
 });
 

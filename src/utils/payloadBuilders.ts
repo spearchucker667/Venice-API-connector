@@ -151,9 +151,11 @@ export function buildChatPayload(
   if (options.stream) payload.stream = true;
   const slug = options.characterSlug?.trim();
   if (slug) (payload.venice_parameters as Record<string, unknown>).character_slug = slug;
+  // Swagger declares prompt_cache_key at the TOP level of
+  // ChatCompletionRequest — never inside venice_parameters.
   const promptCacheKey = options.promptCacheKey?.trim();
   if (promptCacheKey) {
-    (payload.venice_parameters as Record<string, unknown>).prompt_cache_key = promptCacheKey.slice(0, 256);
+    payload.prompt_cache_key = promptCacheKey.slice(0, 256);
   }
   if (options.reasoningEffort) payload.reasoning = { effort: options.reasoningEffort };
   return applyVeniceApiSafeMode("/chat/completions", payload, settings.safeMode);
@@ -252,16 +254,26 @@ export interface ImageDraftLike {
   supportsHideWatermark?: boolean;
   supportsReturnBinary?: boolean;
   supportsReferences?: boolean;
-  /** Optional reference images for models that support character/style
-   *  consistency. Each entry carries the base64 image payload and a
-   *  stable content hash for identity. The builder emits
-   *  `reference_image_urls` only when `supportsReferences` is true. */
+  /** Optional style reference images for models that support character/style
+   *  consistency. Each entry carries the base64 image payload and a stable
+   *  content hash for identity. The builder emits the documented
+   *  `style_references: [{ image, strength }]` array only when
+   *  `supportsReferences` is true (P1-004). */
   references?: Array<{
     entityId: string;
     mimeType: string;
     contentHash: string;
     data: string;
+    /** Optional per-reference strength (0.1–1). Defaults to 0.5. */
+    strength?: number;
   }>;
+  /** Maximum number of references to serialize; mirrors
+   *  `model_spec.constraints.maxStyleReferences`. Absent means serialize all
+   *  provided references. */
+  maxStyleReferences?: number;
+  /** Whether per-reference `strength` is honored. When false, `strength` is
+   *  omitted from each `style_references` item (the provider ignores it). */
+  supportsStyleReferenceStrength?: boolean;
 }
 
 /** Clamp a number to an inclusive integer range. */
@@ -437,12 +449,27 @@ export function buildImagePayload(
     if ("seed" in serialized) payload.seed = serialized.seed;
   }
 
-  // Reference images: only emit when the model explicitly supports them.
+  // Style references: only emit when the model explicitly supports them.
   // Unsupported models must remain text-only to avoid foreign-field 400s.
+  // Wire shape is the documented `style_references: [{ image, strength }]`
+  // array (GenerateImageRequest, Swagger 20260814.194349); `strength` is
+  // clamped to 0.1–1 (default 0.5) and omitted when the model does not
+  // honor per-reference strength.
   if (draft.supportsReferences && Array.isArray(draft.references) && draft.references.length > 0) {
-    payload.reference_image_urls = draft.references.map((ref) =>
-      toReferenceDataUrl(ref.data, ref.mimeType)
-    );
+    const limit = Math.max(1, draft.maxStyleReferences ?? draft.references.length);
+    payload.style_references = draft.references.slice(0, limit).map((ref) => {
+      const item: { image: string; strength?: number } = {
+        image: toReferenceDataUrl(ref.data, ref.mimeType),
+      };
+      if (draft.supportsStyleReferenceStrength !== false) {
+        const strength =
+          typeof ref.strength === "number" && Number.isFinite(ref.strength)
+            ? ref.strength
+            : 0.5;
+        item.strength = Math.min(1, Math.max(0.1, strength));
+      }
+      return item;
+    });
   }
 
   return applyVeniceApiSafeMode("/image/generate", payload, normalized.safeMode);

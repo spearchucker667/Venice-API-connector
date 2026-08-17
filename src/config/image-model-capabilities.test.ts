@@ -10,6 +10,7 @@ import {
   getUnsupportedRecipeFields,
   isDimensionSupported,
   normalizeDimensionsForModel,
+  resolveStyleReferenceCapabilities,
   SEEDREAM_EDIT_IDS,
   SEEDREAM_TEXT_TO_IMAGE_IDS,
 } from "./image-model-capabilities";
@@ -459,5 +460,66 @@ describe("Seedream models do not interfere with existing models", () => {
     expect(caps.dimensionMode).toBe("widthHeight");
     // Note: operation is undefined for unknown models (not 'image-edit')
     expect(caps.operation).not.toBe("image-edit");
+  });
+
+  // P1-004/P3-001: the invented production ID was removed from the static
+  // registry — no static entry may advertise reference support anymore.
+  it("removed the invented venice-character-reference-v1 production entry", () => {
+    const caps = getImageModelCapabilities("venice-character-reference-v1");
+    expect(caps.dimensionMode).toBe("widthHeight");
+    expect(caps.supportsReferences).not.toBe(true);
+  });
+});
+
+describe("resolveStyleReferenceCapabilities", () => {
+  it("honors explicit runtime metadata (supportsStyleReferences + constraints)", () => {
+    const caps = resolveStyleReferenceCapabilities("any-model", {
+      supportsStyleReferences: true,
+      constraints: {
+        maxStyleReferences: 3,
+        supportsStyleReferenceStrength: true,
+      } as ImageConstraints,
+    });
+    expect(caps).toEqual({ supported: true, maxReferences: 3, supportsStrength: true });
+  });
+
+  it("fails closed when runtime metadata is absent, even for unknown models", () => {
+    const caps = resolveStyleReferenceCapabilities("unknown-model-xyz", null);
+    expect(caps).toEqual({ supported: false, maxReferences: 0, supportsStrength: false });
+  });
+
+  it("uses a conservative limit of 1 when supported but maxStyleReferences is absent", () => {
+    const caps = resolveStyleReferenceCapabilities("any-model", {
+      supportsStyleReferences: true,
+    });
+    expect(caps).toEqual({ supported: true, maxReferences: 1, supportsStrength: true });
+  });
+
+  it("treats absent supportsStyleReferenceStrength as strength accepted", () => {
+    const caps = resolveStyleReferenceCapabilities("style-model", {
+      supportsStyleReferences: true,
+      constraints: { maxStyleReferences: 2 } as ImageConstraints,
+    });
+    expect(caps.supportsStrength).toBe(true);
+    const noStrength = resolveStyleReferenceCapabilities("style-model", {
+      supportsStyleReferences: true,
+      constraints: { maxStyleReferences: 2, supportsStyleReferenceStrength: false } as ImageConstraints,
+    });
+    expect(noStrength.supportsStrength).toBe(false);
+  });
+
+  it("fails closed when runtime metadata explicitly disables style references", () => {
+    const caps = resolveStyleReferenceCapabilities("any-model", {
+      supportsStyleReferences: false,
+    });
+    expect(caps).toEqual({ supported: false, maxReferences: 0, supportsStrength: false });
+  });
+
+  it("static registry no longer advertises style reference support (no invented allowlist)", () => {
+    // Every static entry either declares supportsReferences: false or omits it.
+    for (const id of ["flux-dev", "nano-banana-v1", "seedream-v5-pro", "unknown-model"]) {
+      const caps = resolveStyleReferenceCapabilities(id, null);
+      expect(caps.supported).toBe(false);
+    }
   });
 });

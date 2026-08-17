@@ -27,9 +27,29 @@ describe("VERIFY-018 safe_mode endpoint matrix", () => {
     expect(out.safe_mode).toBe(false);
   });
 
+  it("adds safe_mode for /image/edit and /image/multi-edit", () => {
+    const edit = applyVeniceApiSafeMode("/image/edit", { model: "m", prompt: "p" }, true);
+    expect(edit.safe_mode).toBe(true);
+    const multi = applyVeniceApiSafeMode("/image/multi-edit", { model: "m" }, false);
+    expect(multi.safe_mode).toBe(false);
+  });
+
   it("omits safe_mode for /image/upscale (no extractable prompt fields)", () => {
     const out = applyVeniceApiSafeMode("/image/upscale", { model: "m" }, true);
     expect(out.safe_mode).toBeUndefined();
+  });
+
+  it("omits safe_mode for endpoints whose request schemas do not declare it", () => {
+    // Strict schemas (CreateSpeechRequestSchema, CreateTranscriptionRequestSchema,
+    // CreateEmbeddingRequestSchema) set additionalProperties: false — an
+    // undocumented safe_mode field would be rejected with a 400.
+    expect(applyVeniceApiSafeMode("/audio/speech", { model: "m", input: "x" }, true).safe_mode).toBeUndefined();
+    expect(applyVeniceApiSafeMode("/audio/transcriptions", { model: "m" }, true).safe_mode).toBeUndefined();
+    expect(applyVeniceApiSafeMode("/embeddings", { model: "m", input: "x" }, true).safe_mode).toBeUndefined();
+    // Augment requests do not declare safe_mode either.
+    expect(applyVeniceApiSafeMode("/augment/search", { query: "q" }, true).safe_mode).toBeUndefined();
+    expect(applyVeniceApiSafeMode("/augment/scrape", { url: "https://a.b" }, true).safe_mode).toBeUndefined();
+    expect(applyVeniceApiSafeMode("/augment/text-parser", {}, true).safe_mode).toBeUndefined();
   });
 
   it("omits safe_mode for /audio/queue and /audio/retrieve (returned-content only)", () => {
@@ -103,8 +123,10 @@ describe("VERIFY-018 safe_mode endpoint matrix", () => {
 
   it("endpointSupportsSafeMode accepts /api/v1/* prefix from thin-client callers", () => {
     expect(endpointSupportsSafeMode("/api/v1/image/generate")).toBe(true);
-    expect(endpointSupportsSafeMode("/api/v1/embeddings")).toBe(true);
-    expect(endpointSupportsSafeMode("/api/v1/audio/transcriptions")).toBe(true);
+    expect(endpointSupportsSafeMode("/api/v1/image/edit")).toBe(true);
+    expect(endpointSupportsSafeMode("/api/v1/image/multi-edit")).toBe(true);
+    expect(endpointSupportsSafeMode("/api/v1/embeddings")).toBe(false);
+    expect(endpointSupportsSafeMode("/api/v1/audio/transcriptions")).toBe(false);
     expect(endpointSupportsSafeMode("/api/v1/chat/completions")).toBe(false);
     expect(endpointSupportsSafeMode("/api/v1/models")).toBe(false);
   });

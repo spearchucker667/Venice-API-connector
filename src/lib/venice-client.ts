@@ -43,6 +43,6 @@ export async function veniceStreamChat(
   void path; // preserved for API compat; canonical endpoint is /chat/completions
   return canonicalVeniceStreamChat(body, {
     signal: init.signal,
-    onDelta,
+    onDelta: (chunk) => onDelta({ content: chunk.content ?? "", reasoning: chunk.reasoning }),
   });
 }

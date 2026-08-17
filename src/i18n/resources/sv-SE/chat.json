@@ -54,6 +54,7 @@
     "xSearch": "X sökning",
     "searchInStream": "Sök i stream",
     "documentTools": "Dokumentverktyg",
+    "documentToolsUnavailableTitle": "__MISSING__:controls.documentToolsUnavailableTitle",
     "newChatShortcut": "Ny chatt (⌘N)",
     "systemPromptPlaceholder": "Frivillig. Lämna tomt för att undvika att lägga till ett app-författat systemmeddelande.",
     "temperature": "Temperatur",

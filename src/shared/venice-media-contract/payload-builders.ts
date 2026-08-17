@@ -236,13 +236,11 @@ export function buildCanonicalVideoQuotePayload(
   req: VideoQuoteLogicalRequest,
 ): VideoQuoteWirePayload {
   const model = cleanRequiredString(req.model, 'model');
-  const payload: VideoQuoteWirePayload = { model };
+  // QuoteVideoRequest requires duration; an absent/empty value would create
+  // an invalid quote body, so fail locally before any provider request.
+  const duration = cleanRequiredString(req.duration, 'duration');
 
-  const prompt = cleanString(req.prompt);
-  if (prompt) payload.prompt = prompt;
-
-  const duration = cleanString(req.duration);
-  if (duration) payload.duration = duration;
+  const payload: VideoQuoteWirePayload = { model, duration };
 
   const resolution = cleanString(req.resolution);
   if (resolution) payload.resolution = resolution;
@@ -250,8 +248,18 @@ export function buildCanonicalVideoQuotePayload(
   const aspectRatio = cleanString(req.aspectRatio);
   if (aspectRatio) payload.aspect_ratio = aspectRatio;
 
-  const audioPrompt = cleanString(req.audioPrompt);
-  if (audioPrompt) payload.audio_prompt = audioPrompt;
+  if (req.upscaleFactor === 1 || req.upscaleFactor === 2 || req.upscaleFactor === 4) {
+    payload.upscale_factor = req.upscaleFactor;
+  }
+
+  if (req.audio !== undefined) payload.audio = !!req.audio;
+
+  const videoUrl = cleanString(req.videoUrl);
+  if (videoUrl) payload.video_url = videoUrl;
+
+  if (typeof req.referenceVideoTotalDuration === 'number' && Number.isFinite(req.referenceVideoTotalDuration) && req.referenceVideoTotalDuration > 0) {
+    payload.reference_video_total_duration = req.referenceVideoTotalDuration;
+  }
 
   return payload;
 }
@@ -261,23 +269,30 @@ export function buildCanonicalVideoQueuePayload(
 ): VideoQueueWirePayload {
   const model = cleanRequiredString(req.model, 'model');
   const prompt = cleanRequiredString(req.prompt, 'prompt');
+  // QueueVideoRequest requires model + prompt + duration. Fail locally
+  // instead of dispatching a body the provider must reject.
+  const duration = cleanRequiredString(req.duration, 'duration');
 
   const payload: VideoQueueWirePayload = {
     model,
     prompt,
+    duration,
   };
 
   const negative = cleanString(req.negativePrompt);
   if (negative) payload.negative_prompt = negative;
-
-  const duration = cleanString(req.duration);
-  if (duration) payload.duration = duration;
 
   const resolution = cleanString(req.resolution);
   if (resolution) payload.resolution = resolution;
 
   const aspectRatio = cleanString(req.aspectRatio);
   if (aspectRatio) payload.aspect_ratio = aspectRatio;
+
+  if (req.upscaleFactor === 1 || req.upscaleFactor === 2 || req.upscaleFactor === 4) {
+    payload.upscale_factor = req.upscaleFactor;
+  }
+
+  if (req.audio !== undefined) payload.audio = !!req.audio;
 
   const imageUrl = cleanString(req.imageUrl);
   if (imageUrl) payload.image_url = imageUrl;
@@ -299,27 +314,12 @@ export function buildCanonicalVideoQueuePayload(
     payload.reference_video_urls = req.referenceVideoUrls.map((u) => u.trim()).filter((u) => u.length > 0);
   }
 
+  if (Array.isArray(req.referenceAudioUrls) && req.referenceAudioUrls.length > 0) {
+    payload.reference_audio_urls = req.referenceAudioUrls.map((u) => u.trim()).filter((u) => u.length > 0);
+  }
+
   if (Array.isArray(req.sceneImageUrls) && req.sceneImageUrls.length > 0) {
     payload.scene_image_urls = req.sceneImageUrls.map((u) => u.trim()).filter((u) => u.length > 0);
-  }
-
-  const audioPrompt = cleanString(req.audioPrompt);
-  if (audioPrompt) payload.audio_prompt = audioPrompt;
-
-  if (typeof req.seed === 'number' && Number.isFinite(req.seed)) {
-    payload.seed = req.seed;
-  }
-
-  if (typeof req.cfgScale === 'number' && Number.isFinite(req.cfgScale)) {
-    payload.cfg_scale = req.cfgScale;
-  }
-
-  if (typeof req.motionScore === 'number' && Number.isFinite(req.motionScore)) {
-    payload.motion_score = req.motionScore;
-  }
-
-  if (typeof req.fps === 'number' && Number.isFinite(req.fps)) {
-    payload.fps = req.fps;
   }
 
   if (req.consents?.seedance) {
@@ -396,8 +396,10 @@ export function buildCanonicalAudioQueuePayload(
   const voice = cleanString(req.voice);
   if (voice) payload.voice = voice;
 
+  // QueueAudioRequest declares language_code (ISO 639-1); the logical
+  // `language` input maps to it — never to an undocumented `language` wire key.
   const language = cleanString(req.language);
-  if (language) payload.language = language;
+  if (language) payload.language_code = language;
 
   if (typeof req.speed === 'number' && Number.isFinite(req.speed)) {
     payload.speed = clampFloat(req.speed, 0.25, 4.0, 1.0);

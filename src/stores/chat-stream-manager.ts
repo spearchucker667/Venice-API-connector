@@ -14,9 +14,11 @@ import { applyVeniceApiSafeMode } from "../shared/veniceSafeMode";
 import type { AssistantToolCall, ChatMessage, VeniceParameters } from "../types/venice";
 import type { Conversation } from "../types/conversation";
 import { createCanonicalToolDefinitions, type ProviderToolSchema } from "../agent/registry/tool-registry";
+import type { VeniceStreamDelta } from "../shared/veniceStreamDelta";
 import { useDocumentAgentStore } from "./document-agent-store";
 import * as logger from "../shared/logger";
 import { getModelById } from "../services/modelService";
+import { supportsFunctionCalling } from "../shared/modelCapabilities";
 
 /** Safe, non-disclosing error text appended to assistant messages when a
  *  chat stream fails. Never include raw exception text, paths, or secrets. */
@@ -27,14 +29,10 @@ export interface StreamState {
   convId: string | null;
 }
 
-interface StreamChunk {
-  content: string;
-  reasoning: string;
-  providerRequestId?: string;
-  usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number };
-  tool_calls?: Array<{ index: number; id?: string; type?: string; function?: { name?: string; arguments?: string } }>;
-  appendedMessages?: Array<{ role: string; content?: string; tool_call_id?: string; name?: string; tool_calls?: Array<{ id: string; type: string; function: { name: string; arguments: string } }> }>;
-}
+// Shared transport envelope (P1-006): the same serializable delta shape the
+// Electron agent loop emits (including `appendedMessages` with tool-result
+// media/document metadata) is consumed by both transports.
+type StreamChunk = VeniceStreamDelta;
 
 const MAX_STREAM_RETRIES = 2;
 const RETRYABLE_STATUSES = [408, 429, 500, 502, 503, 504];
@@ -112,34 +110,40 @@ function buildStreamBody(convId: string, model: string): Record<string, unknown>
     venice_parameters: veniceParamsForRequest,
   };
 
-  if (veniceParamsForRequest.enable_document_tools) {
-    const definitions = createCanonicalToolDefinitions();
-    // Only pass document tools, exclude workspace tools which need a specific grant.
-    const tools = definitions.filter(d => d.internalName.startsWith('document.')).map(t => t.schema);
-    if (tools.length > 0) {
-      baseBody.tools = baseBody.tools ? [...(baseBody.tools as ProviderToolSchema[]), ...tools] : tools;
+  // P1-005: tool injection is gated on explicit runtime metadata only.
+  // A model that does not advertise `supportsFunctionCalling` (or whose
+  // metadata is missing) never receives `tools`, even when the user enabled
+  // document/media/workspace tool registries.
+  if (supportsFunctionCalling(modelInfo)) {
+    if (veniceParamsForRequest.enable_document_tools) {
+      const definitions = createCanonicalToolDefinitions();
+      // Only pass document tools, exclude workspace tools which need a specific grant.
+      const tools = definitions.filter(d => d.internalName.startsWith('document.')).map(t => t.schema);
+      if (tools.length > 0) {
+        baseBody.tools = baseBody.tools ? [...(baseBody.tools as ProviderToolSchema[]), ...tools] : tools;
+      }
     }
-  }
 
-  // Phase 5: Expose media generation tools via structured tool-calling loop
-  const allDefinitions = createCanonicalToolDefinitions();
-  const mediaTools = allDefinitions.filter(d => d.internalName.startsWith('media.')).map(t => t.schema);
-  if (mediaTools.length > 0) {
-    baseBody.tools = baseBody.tools ? [...(baseBody.tools as ProviderToolSchema[]), ...mediaTools] : mediaTools;
-  }
+    // Phase 5: Expose media generation tools via structured tool-calling loop
+    const allDefinitions = createCanonicalToolDefinitions();
+    const mediaTools = allDefinitions.filter(d => d.internalName.startsWith('media.')).map(t => t.schema);
+    if (mediaTools.length > 0) {
+      baseBody.tools = baseBody.tools ? [...(baseBody.tools as ProviderToolSchema[]), ...mediaTools] : mediaTools;
+    }
 
-  // Include workspace tools when the Document Agent has an active workspace grant.
-  // The grant is set by DocumentAgentView when the user explicitly opens a workspace;
-  // it is null for ordinary chat and document-only sessions.
-  const docAgentState = useDocumentAgentStore.getState();
-  if (docAgentState.workspaceGrant) {
-    const workspaceTools = allDefinitions
-      .filter(d => d.internalName.startsWith('workspace.'))
-      .map(t => t.schema);
-    if (workspaceTools.length > 0) {
-      baseBody.tools = baseBody.tools
-        ? [...(baseBody.tools as ProviderToolSchema[]), ...workspaceTools]
-        : workspaceTools;
+    // Include workspace tools when the Document Agent has an active workspace grant.
+    // The grant is set by DocumentAgentView when the user explicitly opens a workspace;
+    // it is null for ordinary chat and document-only sessions.
+    const docAgentState = useDocumentAgentStore.getState();
+    if (docAgentState.workspaceGrant) {
+      const workspaceTools = allDefinitions
+        .filter(d => d.internalName.startsWith('workspace.'))
+        .map(t => t.schema);
+      if (workspaceTools.length > 0) {
+        baseBody.tools = baseBody.tools
+          ? [...(baseBody.tools as ProviderToolSchema[]), ...workspaceTools]
+          : workspaceTools;
+      }
     }
   }
 

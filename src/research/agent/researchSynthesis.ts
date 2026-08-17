@@ -140,8 +140,8 @@ export async function synthesizeResearch(input: SynthesisInput): Promise<string>
       signal,
       dispatch,
       onDelta: (chunk) => {
-        full += chunk.content;
-        onDelta(chunk);
+        full += chunk.content ?? "";
+        onDelta({ content: chunk.content ?? "", reasoning: chunk.reasoning ?? "" });
       },
     });
     return full;

@@ -193,11 +193,21 @@ async function executeNode(
 
     case 'video': {
       const prompt = resolvePrompt(data.prompt, input)
+      // QueueVideoRequest requires `duration`; fail locally instead of
+      // dispatching a body the provider must reject. The workflow schema
+      // already requires a non-empty duration, so this is a fail-closed
+      // boundary for malformed or legacy node state.
+      const duration = typeof data.videoDuration === 'string' && data.videoDuration.trim()
+        ? data.videoDuration.trim()
+        : ''
+      if (!duration) {
+        throw new WorkflowExecutionError('Video generation requires a clip duration. Set the duration in the Video Gen node.')
+      }
       const wirePayload = buildCanonicalVideoQueuePayload({
         model: data.model || DEFAULT_VIDEO_MODEL,
         prompt,
         aspectRatio: data.videoAspectRatio || '16:9',
-        duration: data.videoDuration || undefined,
+        duration,
         resolution: data.videoResolution || undefined,
       })
       let queueResp: VideoQueueResponse

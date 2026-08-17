@@ -3973,7 +3973,7 @@
           "videoModelId": "ID do modelo de vídeo.",
           "videoPrompt": "Solicitação de vídeo.",
           "aspectRatio": "Proporção de aspecto.",
-          "clipDurationEmptyMeansModelDefault": "Duração do clipe. Vazio significa modelo padrão.",
+          "clipDuration": "Duração do clipe. Vazio significa modelo padrão.",
           "resolutionEmptyMeansModelDefault": "Resolução. Vazio significa modelo padrão."
         }
       }

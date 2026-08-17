@@ -1,6 +1,6 @@
 /**
  * @fileoverview Typed interfaces and schemas for canonical Venice media operations.
- * Sourced directly from veniceai/api-docs swagger.yaml (Schema Version 20260814.153445).
+ * Sourced directly from veniceai/api-docs swagger.yaml (Schema Version 20260814.194349).
  */
 
 // ============================================================================
@@ -116,32 +116,36 @@ export interface ImageBackgroundRemoveLogicalRequest {
 
 export interface VideoQuoteLogicalRequest {
   model: string;
-  prompt?: string;
-  duration?: string;
+  /** Required by QuoteVideoRequest; e.g. "5s", "10s". */
+  duration: string;
   resolution?: string;
   aspectRatio?: string;
-  audioPrompt?: string;
+  upscaleFactor?: 1 | 2 | 4;
+  audio?: boolean;
+  /** For upscale models, the video to upscale (required for auto-detect pricing). */
+  videoUrl?: string;
+  /** For R2V models: aggregate duration in seconds of all reference videos. */
+  referenceVideoTotalDuration?: number;
 }
 
 export interface VideoQueueLogicalRequest {
   model: string;
   prompt: string;
   negativePrompt?: string;
-  duration?: string; // e.g. "5s", "10s"
+  /** Required by QueueVideoRequest; e.g. "5s", "10s". */
+  duration: string;
   resolution?: string; // "720p", "1080p"
   aspectRatio?: string; // "16:9", "9:16"
+  upscaleFactor?: 1 | 2 | 4;
+  audio?: boolean;
   imageUrl?: string;
   endImageUrl?: string;
   audioUrl?: string;
   videoUrl?: string;
   referenceImageUrls?: string[];
   referenceVideoUrls?: string[];
+  referenceAudioUrls?: string[];
   sceneImageUrls?: string[];
-  audioPrompt?: string;
-  seed?: number;
-  cfgScale?: number;
-  motionScore?: number;
-  fps?: number;
   consents?: {
     seedance?: SeedanceConsentObject;
   };
@@ -250,32 +254,32 @@ export interface BackgroundRemoveWirePayload {
 
 export interface VideoQuoteWirePayload {
   model: string;
-  prompt?: string;
-  duration?: string;
+  duration: string;
   resolution?: string;
   aspect_ratio?: string;
-  audio_prompt?: string;
+  upscale_factor?: 1 | 2 | 4;
+  audio?: boolean;
+  video_url?: string;
+  reference_video_total_duration?: number;
 }
 
 export interface VideoQueueWirePayload {
   model: string;
   prompt: string;
   negative_prompt?: string;
-  duration?: string;
+  duration: string;
   resolution?: string;
   aspect_ratio?: string;
+  upscale_factor?: 1 | 2 | 4;
+  audio?: boolean;
   image_url?: string;
   end_image_url?: string;
   audio_url?: string;
   video_url?: string;
   reference_image_urls?: string[];
   reference_video_urls?: string[];
+  reference_audio_urls?: string[];
   scene_image_urls?: string[];
-  audio_prompt?: string;
-  seed?: number;
-  cfg_scale?: number;
-  motion_score?: number;
-  fps?: number;
   consents?: {
     seedance?: {
       confirmed_terms_and_privacy: boolean;
@@ -304,7 +308,8 @@ export interface AudioQueueWirePayload {
   lyrics_prompt?: string;
   loop?: boolean;
   voice?: string;
-  language?: string;
+  /** ISO 639-1 language code per QueueAudioRequest.language_code. */
+  language_code?: string;
   speed?: number;
 }
 

@@ -7,6 +7,11 @@ import type { ConversationRecordV1, SearchResult, PulledMemoryContext } from "..
 import type { CharacterCardV1, UserPersonaV1, LorebookV1, RpChatV1, RpAssetV1, ScenarioV1 } from "../src/types/rp";
 import type { MutationOrigin } from "../src/types/sync";
 import type { BackgroundTask, BackgroundTaskCreateInput, BackgroundTaskIpcEnvelope } from "../src/types/background-task";
+import {
+  sanitizeStreamDeltaEnvelope,
+  toRendererStreamDelta,
+  type VeniceStreamDelta,
+} from "../src/shared/veniceStreamDelta";
 
 /** Represents a Venice API request sent from the renderer to the main process. */
 type VeniceRequest = {
@@ -38,13 +43,18 @@ const veniceForge = {
      *  @param onDelta Callback invoked for each streamed text delta.
      *  @returns A promise that settles when the stream ends or errors.
      */
-    streamChat(input: VeniceRequest, onDelta: (chunk: { content: string; reasoning: string; providerRequestId?: string; usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number }; tool_calls?: Array<{ index: number; id?: string; type?: 'function'; function?: { name?: string; arguments?: string } }>; finish_reason?: string | null }) => void) {
+    streamChat(input: VeniceRequest, onDelta: (chunk: VeniceStreamDelta) => void) {
       const signalId = input.signalId || globalThis.crypto.randomUUID();
-      const listener = (_event: Electron.IpcRendererEvent, payload: { signalId: string; delta: string; reasoning?: string; providerRequestId?: string; usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number }; tool_calls?: Array<{ index: number; id?: string; type?: 'function'; function?: { name?: string; arguments?: string } }>; finish_reason?: string | null }) => {
-        if (payload.signalId === signalId && typeof payload.delta === "string") {
-          onDelta({ content: payload.delta, reasoning: payload.reasoning || "", providerRequestId: payload.providerRequestId, usage: payload.usage, tool_calls: payload.tool_calls, finish_reason: payload.finish_reason });
+      const listener = (_event: Electron.IpcRendererEvent, payload: unknown) => {
+        // Validate at the preload boundary and forward every property
+        // explicitly (P1-006): appended tool-result messages with
+        // generated-media/document metadata must reach the renderer.
+        const envelope = sanitizeStreamDeltaEnvelope(payload);
+        if (envelope && envelope.signalId === signalId) {
+          onDelta(toRendererStreamDelta(envelope));
         }
       };
+      ipcRenderer.on("venice:streamDelta", listener);
       ipcRenderer.on("venice:streamDelta", listener);
       const pending = ipcRenderer.invoke("venice:streamChat", { ...input, signalId });
       // If the renderer is killed before the stream ends, notify main to abort

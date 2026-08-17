@@ -159,3 +159,4 @@ artifacts/i18n/logs/
 artifacts/i18n-baseline-20260726/extract.txt
 artifacts/i18n-baseline-20260726/tooling-tests.txt
 artifacts/i18n-baseline-20260726/verify-summary.txt
+/.freebuff

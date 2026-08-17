@@ -3973,7 +3973,7 @@
           "videoModelId": "동영상 모델 ID",
           "videoPrompt": "비디오 프롬프트.",
           "aspectRatio": "종횡비.",
-          "clipDurationEmptyMeansModelDefault": "클립 지속 시간. 비어 있음은 모델 기본값을 의미합니다.",
+          "clipDuration": "클립 지속 시간. 비어 있음은 모델 기본값을 의미합니다.",
           "resolutionEmptyMeansModelDefault": "해결. 비어 있음은 모델 기본값을 의미합니다."
         }
       }

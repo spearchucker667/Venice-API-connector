@@ -3973,7 +3973,7 @@
           "videoModelId": "Videomodell-ID.",
           "videoPrompt": "Video-Eingabeaufforderung.",
           "aspectRatio": "Seitenverhältnis.",
-          "clipDurationEmptyMeansModelDefault": "Clipdauer. Leer bedeutet Modellstandard.",
+          "clipDuration": "Clipdauer. Leer bedeutet Modellstandard.",
           "resolutionEmptyMeansModelDefault": "Auflösung. Leer bedeutet Modellstandard."
         }
       }

@@ -25,7 +25,7 @@
  *     text model and MUST NOT appear in the image registry.
  */
 
-import type { ImageConstraints } from "../types/venice";
+import type { ImageConstraints, VeniceModel } from "../types/venice";
 
 export type ImageDimensionMode =
   "widthHeight" | "aspectRatio" | "aspectResolution" | "fixed" | "unknown";
@@ -97,6 +97,11 @@ export interface ImageModelCapabilities {
    * request. Omitted or zero means no references are accepted.
    */
   referenceLimit?: number;
+  /** Whether per-reference `strength` is honored on `style_references`.
+   *  Mirrors `model_spec.constraints.supportsStyleReferenceStrength`.
+   *  Absent means the model accepts strength (omitted strength defaults to
+   *  0.5 per the Swagger). */
+  supportsStyleReferenceStrength?: boolean;
   /** Map from canonical model ID patterns — used for models not yet in the catalog. */
   patternMatch?: RegExp;
 }
@@ -274,20 +279,6 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
     supportsReferences: false,
     referenceLimit: 0,
     patternMatch: /^nano(?!.*edit)/i,
-  },
-  {
-    modelId: "venice-character-reference-v1",
-    // i18n-allow-next-line: provider-defined model display name
-    label: "Venice Character Reference (Beta)",
-    operation: "text-to-image",
-    dimensionMode: "widthHeight",
-    widthHeightOptions: SD_WIDTH_HEIGHT_PAIRS,
-    defaultDimensions: { width: 1024, height: 1024 },
-    supportsNegativePrompt: true,
-    supportsSeed: true,
-    supportsVariants: true,
-    supportsReferences: true,
-    referenceLimit: 2,
   },
 
   // ── Seedream text-to-image models ─────────────────────────────────────────
@@ -501,6 +492,69 @@ export const SEEDREAM_EDIT_IDS: ReadonlySet<string> = new Set([
 
 /** Returns the known capabilities for a given model ID.
  *  Falls back to widthHeight mode with all common pairs for unknown models. */
+/** Runtime-first style-reference capability resolution (P1-004/P3-001).
+ *  Authoritative source is runtime `/models` metadata:
+ *  `model_spec.supportsStyleReferences` (presence gates the feature),
+ *  `model_spec.constraints.maxStyleReferences` (count limit, absent while
+ *  supported ⇒ conservative 1), and
+ *  `model_spec.constraints.supportsStyleReferenceStrength` (absent ⇒
+ *  strength accepted). When runtime metadata is absent (offline/fallback
+ *  catalogs), the static registry is consulted as a conservative fallback;
+ *  unknown models fail closed. Never hard-code production model IDs here. */
+export interface StyleReferenceCapabilities {
+  supported: boolean;
+  maxReferences: number;
+  supportsStrength: boolean;
+}
+
+export function resolveStyleReferenceCapabilities(
+  modelId: string,
+  runtimeModelSpec?: VeniceModel["model_spec"] | null,
+): StyleReferenceCapabilities {
+  if (
+    runtimeModelSpec &&
+    typeof runtimeModelSpec.supportsStyleReferences === "boolean"
+  ) {
+    const constraints = isImageConstraints(runtimeModelSpec.constraints)
+      ? (runtimeModelSpec.constraints as ImageConstraints)
+      : undefined;
+    const supported = runtimeModelSpec.supportsStyleReferences;
+    const maxStyleReferences = constraints?.maxStyleReferences;
+    return {
+      supported,
+      maxReferences: supported ? Math.max(0, maxStyleReferences ?? 1) : 0,
+      supportsStrength:
+        supported && constraints?.supportsStyleReferenceStrength !== false,
+    };
+  }
+  const staticCaps = getImageModelCapabilities(modelId);
+  const staticSupported = staticCaps.supportsReferences === true;
+  return {
+    supported: staticSupported,
+    maxReferences: staticSupported
+      ? Math.max(1, staticCaps.referenceLimit ?? 1)
+      : 0,
+    supportsStrength:
+      staticSupported && staticCaps.supportsStyleReferenceStrength !== false,
+  };
+}
+
+/** True when a model_spec.constraints object is image-shaped (as opposed to
+ *  text/video constraints). Image constraints declare at least one of the
+ *  image-specific keys. */
+function isImageConstraints(
+  value: unknown,
+): value is ImageConstraints {
+  if (typeof value !== "object" || value === null) return false;
+  return (
+    "promptCharacterLimit" in value ||
+    "maxStyleReferences" in value ||
+    "supportsStyleReferenceStrength" in value ||
+    "aspectRatios" in value ||
+    "resolutions" in value
+  );
+}
+
 export function getImageModelCapabilities(
   modelId: string,
 ): ImageModelCapabilities {

@@ -10,7 +10,13 @@ import {
   getEffectiveRendererVeniceApiSafeMode,
 } from '../safetyHydration';
 import { buildImagePayload, type ImageDraftLike } from '../utils/payloadBuilders';
-import { getImageModelCapabilities, type ImageModelCapabilities } from '../config/image-model-capabilities';
+import {
+  getImageModelCapabilities,
+  resolveStyleReferenceCapabilities,
+  type ImageModelCapabilities,
+} from '../config/image-model-capabilities';
+import { getModelById } from './modelService';
+import type { VeniceModel } from '../types/venice';
 import { veniceFetch } from './veniceClient';
 import { useMediaStore } from '../stores/media-store';
 import { useCharacterCardStore } from '../stores/character-card-store';
@@ -49,6 +55,9 @@ export interface CharacterSceneGenerationDependencies {
   getEffectiveRendererVeniceApiSafeMode: () => boolean;
   buildImagePayload: typeof buildImagePayload;
   getImageModelCapabilities: typeof getImageModelCapabilities;
+  /** Runtime `/models` metadata lookup used to resolve style-reference
+   *  capabilities (P3-001). Tests may stub this to simulate live catalogs. */
+  getRuntimeModelSpec: (modelId: string) => VeniceModel['model_spec'] | undefined;
   veniceFetch: typeof veniceFetch;
   upsertMedia: (item: MediaItem, options?: { attachActiveProject?: boolean; source?: 'generated' }) => Promise<MediaItem>;
   processBase64Image: typeof processBase64Image;
@@ -66,6 +75,7 @@ const defaultDeps: CharacterSceneGenerationDependencies = {
   getEffectiveRendererVeniceApiSafeMode,
   buildImagePayload,
   getImageModelCapabilities,
+  getRuntimeModelSpec: (modelId) => getModelById(modelId)?.model_spec,
   veniceFetch,
   upsertMedia: (item, options) => useMediaStore.getState().upsert(item, options),
   processBase64Image,
@@ -128,14 +138,23 @@ export async function generateCharacterScene(
 
     const model = options.model || character.modelId || useSettingsStore.getState().selectedModels.image || 'flux-dev';
     const caps = deps.getImageModelCapabilities(model) as ImageModelCapabilities;
+    // P1-004/P3-001: reference support comes from runtime `/models` metadata
+    // (`model_spec.supportsStyleReferences` + `constraints.maxStyleReferences`),
+    // fail closed when metadata is absent or unsupported. The static registry
+    // is only a conservative fallback for offline/fallback catalogs and no
+    // longer contains invented production IDs.
+    const styleRefCaps = resolveStyleReferenceCapabilities(
+      model,
+      deps.getRuntimeModelSpec(model),
+    );
 
     const referenceSource = deps.getSceneReferenceSource();
     const referenceEntities = deps.buildSceneReferenceEntities(referenceSource);
     const referencePlan: SceneReferencePlan = deps.buildSceneReferencePlan({
       sceneDescription: prompt,
       entities: referenceEntities,
-      modelSupportsReferences: caps.supportsReferences === true,
-      referenceLimit: caps.referenceLimit ?? 0,
+      modelSupportsReferences: styleRefCaps.supported,
+      referenceLimit: styleRefCaps.maxReferences,
     });
 
     const draft: ImageDraftLike = {
@@ -156,7 +175,9 @@ export async function generateCharacterScene(
       supportsCfgScale: caps.supportsCfgScale !== false,
       supportsHideWatermark: caps.supportsHideWatermark !== false,
       supportsReturnBinary: caps.supportsReturnBinary !== false,
-      supportsReferences: caps.supportsReferences === true,
+      supportsReferences: styleRefCaps.supported,
+      maxStyleReferences: styleRefCaps.maxReferences,
+      supportsStyleReferenceStrength: styleRefCaps.supportsStrength,
       references: referencePlan.references,
     };
 

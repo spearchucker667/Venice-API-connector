@@ -54,6 +54,7 @@
     "xSearch": "X搜索",
     "searchInStream": "在流中搜索",
     "documentTools": "文档工具",
+    "documentToolsUnavailableTitle": "__MISSING__:controls.documentToolsUnavailableTitle",
     "newChatShortcut": "新聊天 (⌘N)",
     "systemPromptPlaceholder": "选修的。留空以避免添加应用程序编写的系统消息。",
     "temperature": "温度",

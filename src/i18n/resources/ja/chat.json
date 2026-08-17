@@ -54,6 +54,7 @@
     "xSearch": "X検索",
     "searchInStream": "ストリーム内を検索",
     "documentTools": "ドキュメントツール",
+    "documentToolsUnavailableTitle": "__MISSING__:controls.documentToolsUnavailableTitle",
     "newChatShortcut": "新しいチャット (⌘N)",
     "systemPromptPlaceholder": "オプション。アプリ作成のシステム メッセージの追加を避けるには、空のままにします。",
     "temperature": "温度",

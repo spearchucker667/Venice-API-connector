@@ -3973,7 +3973,7 @@
           "videoModelId": "Identificación del modelo de vídeo.",
           "videoPrompt": "Aviso de vídeo.",
           "aspectRatio": "Relación de aspecto.",
-          "clipDurationEmptyMeansModelDefault": "Duración del clip. Vacío significa modelo predeterminado.",
+          "clipDuration": "Duración del clip. Vacío significa modelo predeterminado.",
           "resolutionEmptyMeansModelDefault": "Resolución. Vacío significa modelo predeterminado."
         }
       }

@@ -26,7 +26,8 @@ import { usePromptLibraryStore } from "../../stores/prompt-library-store";
 import { toast } from "../../stores/toast-store";
 import { copyText } from "../../stores/media-send-to";
 import { compileSceneToRecipe } from "../../services/sceneCompiler";
-import { getImageModelCapabilities } from "../../config/image-model-capabilities";
+import { resolveStyleReferenceCapabilities } from "../../config/image-model-capabilities";
+import { getModelById } from "../../services/modelService";
 import { buildSceneReferencePlan } from "../../services/sceneReferencePlanner";
 import { buildSceneReferenceEntities } from "../../services/sceneReferenceResolver";
 import { useCharacterCardStore } from "../../stores/character-card-store";
@@ -477,7 +478,12 @@ function SceneReferencePanel({
   modelId: string;
 }) {
   const { t: tRuntime } = useTranslation("common");
-  const caps = useMemo(() => getImageModelCapabilities(modelId), [modelId]);
+  // P1-004/P3-001: reference support is driven by runtime `/models` metadata
+  // and fails closed when metadata is absent or unsupported.
+  const refCaps = useMemo(
+    () => resolveStyleReferenceCapabilities(modelId, getModelById(modelId)?.model_spec),
+    [modelId],
+  );
   const cards = useCharacterCardStore((s) => s.cards);
   const personas = usePersonaStore((s) => s.personas);
   const [removedIds, setRemovedIds] = useState<string[]>([]);
@@ -487,11 +493,11 @@ function SceneReferencePanel({
     return buildSceneReferencePlan({
       sceneDescription,
       entities,
-      modelSupportsReferences: caps.supportsReferences === true,
-      referenceLimit: caps.referenceLimit ?? 0,
+      modelSupportsReferences: refCaps.supported,
+      referenceLimit: refCaps.maxReferences,
       removedEntityIds: removedIds,
     });
-  }, [sceneDescription, cards, personas, caps, removedIds]);
+  }, [sceneDescription, cards, personas, refCaps, removedIds]);
 
   if (plan.detectedEntities.length === 0 && plan.omitted.length === 0) {
     return null;
@@ -507,8 +513,8 @@ function SceneReferencePanel({
           {tRuntime("runtimeSlashLabels.characterPersonaReferences")}
         </h3>
         <span className="text-[12px] text-text-muted ml-auto">
-          {caps.supportsReferences
-            ? `${plan.references.length}/${caps.referenceLimit ?? 0} used`
+          {refCaps.supported
+            ? `${plan.references.length}/${refCaps.maxReferences} used`
             : tRuntime(
                 "runtimeGenerated.components.scenes.scenecomposerview.text.modelDoesNotSupportReferences",
               )}

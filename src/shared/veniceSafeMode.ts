@@ -14,34 +14,34 @@
  *  not support it, so unsupported endpoints never receive an unknown
  *  payload field.
  *
- *  Source: https://docs.venice.ai plus a live authenticated contract probe
- *  (2026-07-13).
- *  Note: /chat/completions does NOT support top-level safe_mode.
- *        safe_mode fields are sent via venice_parameters instead.
+ *  Source: https://docs.venice.ai plus the tracked OpenAPI snapshot
+ *  (docs/reference/Venice_swagger_api.yaml, Schema Version 20260814.194349).
+ *  Only the four image request schemas declare `safe_mode`
+ *  (GenerateImageRequest, EditImageRequest, MultiEditImageRequest,
+ *  MultiEditImageMultipartRequest). Every other request schema omits it
+ *  and several set `additionalProperties: false`, so injecting the field
+ *  anywhere else risks a 400 before feature logic runs.
  *  - /image/generate, /image/edit, /image/multi-edit: top-level safe_mode
  *  - /image/upscale: does NOT support safe_mode (no extractable prompt fields)
- *  - /audio/speech, /audio/transcriptions: top-level safe_mode
- *  - /embeddings: top-level safe_mode
+ *  - /audio/speech, /audio/transcriptions, /embeddings: do NOT declare safe_mode
  *  - /video/queue: does NOT support safe_mode; the live API rejects it as an
  *    unknown key before queueing or billing
- *  - /augment/{search,scrape,text-parser}: top-level safe_mode
+ *  - /augment/{search,scrape,text-parser}: do NOT declare safe_mode
  *  - /audio/queue, /audio/retrieve: returned-content only, no safe_mode field
  *  - /video/{retrieve,quote,complete}: returned-content only, no safe_mode field
  *  - /chat/completions: does NOT support top-level safe_mode
  *  - /models: read-only, no safe_mode field
  */
 
-/** Endpoints that accept a top-level `safe_mode: boolean` field. */
+/** Endpoints that accept a top-level `safe_mode: boolean` field.
+ *  Derived from the tracked OpenAPI snapshot: only the four image request
+ *  schemas (GenerateImageRequest, EditImageRequest, MultiEditImageRequest,
+ *  MultiEditImageMultipartRequest) declare `safe_mode`. Do not add an
+ *  endpoint here unless its current request schema declares the field. */
 const ENDPOINTS_WITH_SAFE_MODE: ReadonlySet<string> = new Set([
   "/image/generate",
   "/image/edit",
   "/image/multi-edit",
-  "/audio/speech",
-  "/audio/transcriptions",
-  "/embeddings",
-  "/augment/search",
-  "/augment/scrape",
-  "/augment/text-parser",
 ]);
 
 /**
@@ -111,18 +111,18 @@ export const VENICE_API_SAFE_MODE_MATRIX: ReadonlyArray<{
   { endpoint: "/image/edit", supportsSafeMode: true, fieldLocation: "top-level" },
   { endpoint: "/image/multi-edit", supportsSafeMode: true, fieldLocation: "top-level" },
   { endpoint: "/image/upscale", supportsSafeMode: false, fieldLocation: "not-supported" },
-  { endpoint: "/audio/speech", supportsSafeMode: true, fieldLocation: "top-level" },
-  { endpoint: "/audio/transcriptions", supportsSafeMode: true, fieldLocation: "top-level" },
+  { endpoint: "/audio/speech", supportsSafeMode: false, fieldLocation: "not-supported" },
+  { endpoint: "/audio/transcriptions", supportsSafeMode: false, fieldLocation: "not-supported" },
   { endpoint: "/audio/queue", supportsSafeMode: false, fieldLocation: "not-supported" },
   { endpoint: "/audio/retrieve", supportsSafeMode: false, fieldLocation: "not-supported" },
-  { endpoint: "/embeddings", supportsSafeMode: true, fieldLocation: "top-level" },
+  { endpoint: "/embeddings", supportsSafeMode: false, fieldLocation: "not-supported" },
   { endpoint: "/video/queue", supportsSafeMode: false, fieldLocation: "not-supported" },
   { endpoint: "/video/retrieve", supportsSafeMode: false, fieldLocation: "not-supported" },
   { endpoint: "/video/quote", supportsSafeMode: false, fieldLocation: "not-supported" },
   { endpoint: "/video/complete", supportsSafeMode: false, fieldLocation: "not-supported" },
-  { endpoint: "/augment/search", supportsSafeMode: true, fieldLocation: "top-level" },
-  { endpoint: "/augment/scrape", supportsSafeMode: true, fieldLocation: "top-level" },
-  { endpoint: "/augment/text-parser", supportsSafeMode: true, fieldLocation: "top-level" },
+  { endpoint: "/augment/search", supportsSafeMode: false, fieldLocation: "not-supported" },
+  { endpoint: "/augment/scrape", supportsSafeMode: false, fieldLocation: "not-supported" },
+  { endpoint: "/augment/text-parser", supportsSafeMode: false, fieldLocation: "not-supported" },
   { endpoint: "/models", supportsSafeMode: false, fieldLocation: "not-supported" },
   { endpoint: "/models/traits", supportsSafeMode: false, fieldLocation: "not-supported" },
   { endpoint: "/models/compatibility_mapping", supportsSafeMode: false, fieldLocation: "not-supported" },

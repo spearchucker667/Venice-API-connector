@@ -14,6 +14,8 @@ import {
   USER_SYSTEM_PROMPT_LIMITS,
 } from "../../shared/promptLimits";
 import { Trans, useTranslation } from "react-i18next";
+import { supportsFunctionCalling } from "../../shared/modelCapabilities";
+import { getModelById } from "../../services/modelService";
 
 export function VeniceParams() {
   const { t } = useTranslation("chat");
@@ -77,6 +79,15 @@ export function VeniceParams() {
     : null;
   const hasMessages = (activeConv?.messages?.length ?? 0) > 0;
 
+  // P1-005 truthful state: the canonical request builder only sends tools
+  // for models that explicitly advertise `supportsFunctionCalling`. Mirror
+  // the same runtime metadata here so the Document Tools pill is disabled
+  // (not silently ignored) when the active model cannot call tools.
+  const chatModel = activeConv?.metadata?.character && activeConv.model
+    ? activeConv.model
+    : useSettingsStore.getState().selectedModels.chat;
+  const toolsSupported = supportsFunctionCalling(getModelById(chatModel ?? ""));
+
   const isAutoRead = activeConv?.metadata?.autoReadEnabled ?? globalAutoRead;
 
   const toggleAutoRead = () => {
@@ -139,6 +150,8 @@ export function VeniceParams() {
         <Pill
           label={t("controls.documentTools")}
           active={veniceParams.enable_document_tools === true}
+          disabled={!toolsSupported}
+          title={toolsSupported ? undefined : t("controls.documentToolsUnavailableTitle")}
           onClick={() =>
             setVeniceParams({
               enable_document_tools: !veniceParams.enable_document_tools,
@@ -372,19 +385,28 @@ function Pill({
   label,
   active,
   onClick,
+  disabled,
+  title,
 }: {
   label: string;
   active: boolean;
   onClick: () => void;
+  disabled?: boolean;
+  title?: string;
 }) {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
+      title={title}
+      aria-disabled={disabled === true}
       className={cn(
         "text-[13px] font-medium px-2 py-[2px] rounded-full transition-colors duration-100",
         active
           ? "bg-text-primary text-bg"
-          : "bg-surface-elevated/40 text-text-muted/40 hover:text-text-muted/60 hover:bg-surface-elevated/50",
+          : disabled
+            ? "bg-surface-elevated/40 text-text-muted/25 cursor-not-allowed"
+            : "bg-surface-elevated/40 text-text-muted/40 hover:text-text-muted/60 hover:bg-surface-elevated/50",
       )}
     >
       {label}

@@ -1,7 +1,15 @@
 /** @fileoverview Streaming chat completion helper for the Venice API. */
 
 import { PROXY_BASE_PATH } from "../../shared/apiConfig";
+import { redactSecrets } from "../../shared/redaction";
+import {
+  SseDecodeError,
+  SseDecoder,
+  applyStreamSseEvent,
+  type SseEvent,
+} from "../../shared/sseStreamDecoder";
 import { desktopVenice, isElectron } from "../desktopBridge";
+import type { VeniceStreamDelta } from "../../shared/veniceStreamDelta";
 import type { AppDispatch } from "../../types/app";
 import { maybeRunLocalFamilyGuard, SafetyGuardBlockedError } from "../../shared/safety";
 import {
@@ -25,7 +33,8 @@ export async function veniceStreamChat(
     signal,
     dispatch,
     onDelta,
-  }: { signal?: AbortSignal; dispatch?: AppDispatch;    onDelta: (chunk: { content: string; reasoning: string; providerRequestId?: string; usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number }; tool_calls?: Array<{ index: number; id?: string; type?: 'function'; function?: { name?: string; arguments?: string } }>; finish_reason?: string | null }) => void }
+  }:  { signal?: AbortSignal; dispatch?: AppDispatch;    onDelta: (chunk: VeniceStreamDelta) => void }
+
 ) {
   const startedAtTime = Date.now();
   const requestHeaders = { "Content-Type": "application/json" };
@@ -231,8 +240,38 @@ export async function veniceStreamChat(
         throw new Error("Streaming is unavailable in this browser sandbox.");
 
       reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
+      // Shared incremental SSE decoder: blank-line framing, multiline data
+      // joining, streaming UTF-8, typed decode errors, explicit [DONE], and
+      // EOF flush. The same decoder drives the Electron main process so both
+      // transports emit identical events/errors for identical byte streams.
+      const sseDecoder = new SseDecoder();
+      let streamFinished = false;
+      let malformedFrameCount = 0;
+
+      /** Applies decoded events; returns true when the [DONE] terminator was
+       *  seen. Malformed/error frames are promoted (redacted warn), never
+       *  silently dropped. */
+      const consumeSseEvents = (events: SseEvent[]): boolean => {
+        for (const event of events) {
+          const outcome = applyStreamSseEvent(event, {
+            onDelta: (chunk) => {
+              // The shared decoder types `usage` loosely (Record<string,
+              // unknown>); the public delta callback narrows it to the
+              // documented OpenAI usage shape.
+              wrappedOnDelta(chunk as Parameters<typeof onDelta>[0]);
+            },
+          });
+          if (outcome.done) return true;
+          if (outcome.malformed) {
+            malformedFrameCount++;
+            const detail = redactSecrets(
+              outcome.errorMessage || outcome.rawData || "unknown frame",
+            );
+            console.warn("Malformed SSE frame from Venice upstream", { raw: detail });
+          }
+        }
+        return false;
+      };
 
       while (true) {
         if (deadlineExpired) throw timeoutError;
@@ -253,56 +292,42 @@ export async function veniceStreamChat(
           break;
         }
 
-        buffer += decoder.decode(result.value, { stream: true });
-        const lines = buffer.split(/\r?\n/);
-        buffer = lines.pop() || "";
-
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed.startsWith("data:")) continue;
-          const data = trimmed.replace(/^data:\s*/, "");
-          if (data === "[DONE]") {
-            useInspectorStore.getState().updateLog(
-              logId,
-              buildInspectorTelemetryPatch({
-                status: 200,
-                durationMs: Date.now() - startedAtTime,
-                previewDurationMs,
-                guardOutcome,
-                responseBody: {
-                  choices: [
-                    {
-                      message: {
-                        role: "assistant",
-                        content: accumulatedContent,
-                        reasoning_content: accumulatedReasoning,
-                      },
-                    },
-                  ],
-                },
-              }),
+        let events: SseEvent[];
+        try {
+          events = sseDecoder.push(result.value);
+        } catch (err: unknown) {
+          if (err instanceof SseDecodeError) {
+            throw new Error(
+              "Venice stream contained data that could not be decoded.",
             );
-            return;
           }
-
-          try {
-            const json = JSON.parse(data);
-            const content =
-              json?.choices?.[0]?.delta?.content ||
-              json?.choices?.[0]?.message?.content ||
-              json?.choices?.[0]?.text ||
-              "";
-            const reasoning =
-              json?.choices?.[0]?.delta?.reasoning_content ||
-              json?.choices?.[0]?.message?.reasoning_content ||
-              "";
-            const providerRequestId = json?.id;
-            const usage = json?.usage;
-            const tool_calls = json?.choices?.[0]?.delta?.tool_calls;
-            const finish_reason = json?.choices?.[0]?.finish_reason;
-            if (content || reasoning || providerRequestId || usage || tool_calls || finish_reason !== undefined) wrappedOnDelta({ content, reasoning, providerRequestId, usage, tool_calls, finish_reason });
-          } catch { /* malformed SSE JSON chunk — skip */ }
+          throw err;
         }
+        if (consumeSseEvents(events)) {
+          streamFinished = true;
+          break;
+        }
+      }
+
+      // EOF: dispatch the trailing unterminated event per the SSE contract.
+      if (!streamFinished) {
+        let tail: SseEvent[] = [];
+        try {
+          tail = sseDecoder.flush();
+        } catch (err: unknown) {
+          if (err instanceof SseDecodeError) {
+            throw new Error(
+              "Venice stream ended with a truncated data sequence.",
+            );
+          }
+          throw err;
+        }
+        if (consumeSseEvents(tail)) streamFinished = true;
+      }
+      if (malformedFrameCount > 0) {
+        console.warn(
+          `Venice stream completed with ${malformedFrameCount} malformed SSE frame(s).`,
+        );
       }
 
       useInspectorStore.getState().updateLog(

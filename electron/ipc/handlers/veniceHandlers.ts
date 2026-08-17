@@ -11,6 +11,7 @@ import { redactErrorMessage } from "../../../src/shared/redaction";
 import { SafetyGuardBlockedError } from "../../../src/shared/safety";
 import { registerIpcChannel, safeSendToRenderer } from "./common";
 import { runChatAgentLoop } from "../../agent/runtime/chat-agent-runner";
+import type { VeniceStreamDeltaEnvelope } from "../../../src/shared/veniceStreamDelta";
 
 function safetyBlockedResponse(err: SafetyGuardBlockedError) {
   return {
@@ -83,16 +84,20 @@ export function registerVeniceHandlers(): void {
       if (guardResult?.status === 451) return guardResult;
       
       const result = await runChatAgentLoop(request, (chunk) => {
-        safeSendToRenderer(event.sender, "venice:streamDelta", {
-          signalId: request.signalId,
-          delta: chunk.content,
+        // One shared, serializable envelope (P1-006): every agent-appended
+        // message (tool results with generated-media/document metadata) is
+        // forwarded explicitly; never reconstruct a subset of fields here.
+        const envelope: VeniceStreamDeltaEnvelope = {
+          signalId: request.signalId!,
+          delta: chunk.content ?? "",
           reasoning: chunk.reasoning,
           providerRequestId: chunk.providerRequestId,
-          usage: chunk.usage,
+          usage: chunk.usage as VeniceStreamDeltaEnvelope["usage"],
           tool_calls: chunk.tool_calls,
           appendedMessages: chunk.appendedMessages,
           finish_reason: chunk.finish_reason,
-        });
+        };
+        safeSendToRenderer(event.sender, "venice:streamDelta", envelope);
       });
       if (result.kind === "blocked") return result.block;
       return result.response;

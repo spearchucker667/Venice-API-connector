@@ -7,6 +7,7 @@
  */
 
 import { veniceFetch } from "../../services/veniceClient";
+import { buildVeniceSearchPayload } from "../../shared/veniceSearchWire";
 import type {
   ResearchProvider,
   SearchInput,
@@ -86,15 +87,13 @@ export const veniceResearchProvider: ResearchProvider = {
 
   async search(input: SearchInput): Promise<SearchResult[]> {
     const { query, maxResults, timeoutMs, signal, options } = input;
+    // `search_provider` / `limit` are the documented WebSearchRequest wire
+    // fields; the builder owns the logical-to-wire translation.
     const provider = options?.provider ?? "brave";
 
     const { data } = await veniceFetch("/augment/search", {
       method: "POST",
-      body: {
-        query,
-        provider,
-        maxResults,
-      },
+      body: buildVeniceSearchPayload(query, { provider, limit: maxResults }),
       signal: timeoutMs
         ? createTimeoutSignal(timeoutMs, signal).signal
         : signal,

@@ -27,4 +27,16 @@ describe('workflow-schema', () => {
     expect(isIdealMatch('audio', 'video')).toBe(false)
     expect(isIdealMatch('none', 'text')).toBe(false)
   })
+
+  it('video duration is required with no empty "model default" option', () => {
+    const video = getNodeSchema('video')
+    const durationParam = video.params.find((p) => p.name === 'videoDuration')
+    expect(durationParam).toBeDefined()
+    expect(durationParam?.required).toBe(true)
+    expect(durationParam?.default).toBe('5s')
+    const values = durationParam?.enumValues ?? []
+    expect(values.length).toBeGreaterThan(0)
+    expect(values.every((v) => typeof v === 'string' && v.trim().length > 0)).toBe(true)
+    expect(values).not.toContain('')
+  })
 })
