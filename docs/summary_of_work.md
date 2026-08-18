@@ -1568,6 +1568,18 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 
 ## Validation Matrix
 
+### August 17/18 — CI Markdown Link & Audit Artifact Tracking Remediation
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| `npm run verify:markdown-links` | PASS | Checked 265 files including `docs/audits/venice-forge-exhaustive-audit-2026-08-15/`; all OK. |
+| `npm run verify:contracts` | PASS | 103/103 checks passed. |
+| `npm run typecheck` | PASS | 0 errors. |
+| `npm run lint:eslint` | PASS | 0 warnings. |
+| `npm run test:ci` | PASS | 5,005 tests passed across 464 files in 10 suites (including Electron smoke/integration). |
+| `npm run build` | PASS | Clean production build. |
+| `git status` | N/A | `.gitignore` modified; `docs/audits/venice-forge-exhaustive-audit-2026-08-15/` correctly staged as untracked. |
+
 ### August 17 — Exhaustive Audit WP-04 (agent IPC durability) + WP-05 (capability-driven tools/references)
 
 | Command / evidence | Result | Notes |
@@ -2327,6 +2339,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-08-17 / 2026-08-18 — CI Markdown Link & Audit Artifact Tracking Remediation:** Diagnosed and resolved a CI failure pattern where GitHub Actions aborted before executing steps on recent commits, while local validation (`npm run verify:markdown-links`) passed. Root-caused the discrepancy to ignored audit artifacts in `.gitignore` (`/docs/audits/*` and `/*-audit-*/`) that caused a clean CI checkout to lack the `docs/audits/venice-forge-exhaustive-audit-2026-08-15/` bundle referenced in `docs/DOCS_INDEX.md`. Added explicit unignore rules to `.gitignore` to track `*.md` and `*.json` files within the audit directory. Verified all 265 markdown links pass, CI tests (`npm run test:ci` across 10 suites) pass 100%, and production build succeeds. No other behavior changed.
 
 - **2026-08-17 — Exhaustive Audit WP-04 + WP-05 remediation (agent IPC durability; capability-driven tools/image references):** closed P1-006, P1-004, P1-005, and P3-001 from `15-REMEDIATION-PLAN.md`. **WP-04 (P1-006):** new shared contract `src/shared/veniceStreamDelta.ts` — `VeniceStreamDelta` / `VeniceStreamDeltaEnvelope` with `sanitizeStreamDeltaEnvelope` (structure/size/count validation at the preload boundary) and `toRendererStreamDelta` (explicit per-field forwarding). The Electron agent loop (`electron/agent/runtime/chat-agent-runner.ts`) emits tool-result appended messages (with `generatedMedia`/`managedDocuments` metadata) through the shared type (`VeniceStreamAppendedMessage`), `electron/ipc/handlers/veniceHandlers.ts` builds one explicit typed envelope, `electron/preload.ts` validates + forwards every property (previously dropped `appendedMessages`), `src/services/desktopBridge.ts` + `src/services/veniceClient/stream.ts` use `VeniceStreamDelta` callbacks, and `chat-stream-manager.ts` persists appended messages into the conversation (Media Studio upsert via chat-store). Tests: envelope conformance suite (10, incl. no-tool regression + media/document metadata survival + malformed-batch skipping), CSM end-to-end persistence test, 100 agent/handler tests green. **WP-05:** removed invented `venice-character-reference-v1` from `src/config/image-model-capabilities.ts`; `buildImagePayload` emits documented `style_references: [{image, strength}]` (clamped/bounded, strength omitted when unsupported) and never `reference_image_urls` on image generate; new `resolveStyleReferenceCapabilities(modelId, runtimeModelSpec)` gates references on runtime `/models` metadata in `characterSceneGenerationService.ts` and `SceneComposerView.tsx` (fail closed when unsupported/absent; conservative max 1 when limit absent); chat `tools` (document/media/workspace) injected only when runtime `supportsFunctionCalling` via new `src/shared/modelCapabilities.ts`; `venice-params.tsx` Document Tools pill truthfully disabled with `controls.documentToolsUnavailableTitle` (sentinel `__MISSING__` in non-en catalogs); P3-001 type surface (`discount_to_user`, `supportsStyleReferences`, `maxStyleReferences`, `supportsStyleReferenceStrength`) + provenance fixture test `src/types/venice.test.ts` + new drift verifier section + rewritten `verify-scene-references.cjs` assertions. Validation: typecheck clean, lint 0 warnings, full `npm test` 5,000 passed / 1 skipped / 0 failed (456 files), build PASS, verify:i18n 12/12, verify:i18n-hardcoded-regressions 0 regressions, verify:contracts 103 PASS, verify:venice-contract-drift PASS, verify:venice-api-docs PASS, verify:markdown-links 247 OK, verify:safety-guard PASS. Headed/paid acceptance remains external (`VF-VERIFY-005`). Nothing committed or pushed.
 
