@@ -50,10 +50,6 @@
 > [!IMPORTANT]
 > **Venice Forge is an unofficial third-party project.** It is not affiliated with, endorsed by, sponsored by, or maintained by Venice.ai (Venice.ai, Inc.). Venice brand assets, names, and trademark marks are the property of Venice.ai, Inc.
 
-> [!WARNING]
-> The `main` branch is active development. Normal users should install a tagged release from [GitHub Releases](https://github.com/spearchucker667/Venice_Forge/releases).
-> Document Agent provides limited function calling for app-managed documents and explicit, single-directory workspace grants. It cannot access shell, Git, network, keychain, databases, sibling directories, or OS controls. See the [Document Agent guide](docs/features/DOCUMENT_AGENT.md).
-
 ---
 
 ## Languages
