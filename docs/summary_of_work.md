@@ -4,6 +4,19 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-08-17 (Chat Streaming Duplication Remediation)
+
+**Completed result:** Fixed an issue where the `onDelta` callback in the Electron renderer was being invoked twice per chunk, causing "doubled letters/words" in streamed chat output (e.g., "BasedBased on on the the").
+- **WP-01 — streaming duplication:** Removed an erroneously duplicated `ipcRenderer.on("venice:streamDelta", listener)` call in `electron/preload.ts` that caused the renderer to process the same IPC event twice. 
+
+**Executed evidence:** Node `v22.23.2` / npm `10.9.8` on `main`; `npm run test:electron` PASS.
+
+**Remaining:** None for this specific issue.
+
+**Prior session (2026-08-17, Exhaustive Audit WP-04 + WP-05 Remediation):** Exhaustive Audit WP-04 + WP-05 Remediation — Agent IPC Durability & Capability-Driven Tools/References. See below for details.
+
+### Prior Session Summary (Exhaustive Audit WP-04 + WP-05 Remediation)
+
 **Date:** 2026-08-17 (Exhaustive Audit WP-04 + WP-05 Remediation — Agent IPC Durability & Capability-Driven Tools/References)
 
 **Completed result:** Executed work packages WP-04 (P1-006) and WP-05 (P1-004/P1-005/P3-001) from `docs/audits/venice-forge-exhaustive-audit-2026-08-15/15-REMEDIATION-PLAN.md`. **WP-04 — agent IPC message durability:** one shared serializable delta contract `src/shared/veniceStreamDelta.ts` (`VeniceStreamDelta` / `VeniceStreamDeltaEnvelope` + `sanitizeStreamDeltaEnvelope` boundary validator + `toRendererStreamDelta` explicit forwarder) now types every layer of the main→handler→preload→bridge→store chain. The Electron agent loop emits appended tool-result messages (with `generatedMedia`/`managedDocuments` metadata) through the shared type; `electron/ipc/handlers/veniceHandlers.ts` builds one explicit envelope; `electron/preload.ts` validates at the boundary and forwards **every** property — `appendedMessages` is no longer dropped (the audited defect); `src/services/desktopBridge.ts` and `src/services/veniceClient/stream.ts` type the callback as `VeniceStreamDelta`; `chat-stream-manager.ts` persists the appended messages into the conversation with Media Studio upsert. **WP-05 — capability-driven tools and image references:** the invented production entry `venice-character-reference-v1` was removed from `src/config/image-model-capabilities.ts` (no static entry advertises reference support anymore). `buildImagePayload` now serializes the documented `style_references: [{ image, strength }]` array (strength clamped 0.1–1, default 0.5, omitted when the model doesn't honor strength) and never emits `reference_image_urls` on `/image/generate`. Reference support is resolved from runtime `/models` metadata via `resolveStyleReferenceCapabilities` (`supportsStyleReferences`, `constraints.maxStyleReferences`, `constraints.supportsStyleReferenceStrength`) in both `characterSceneGenerationService.ts` and `SceneComposerView.tsx`, failing closed when metadata is absent or unsupported. Chat `tools` injection in `buildStreamBody` is gated on runtime `supportsFunctionCalling` through the shared gate `src/shared/modelCapabilities.ts`; the Document Tools pill in `venice-params.tsx` is truthfully disabled (with an explanatory title) when the active model cannot call tools. Types add `VeniceModel.discount_to_user`, `model_spec.supportsStyleReferences`, `ImageConstraints.maxStyleReferences`/`supportsStyleReferenceStrength` (P3-001).

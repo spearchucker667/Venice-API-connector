@@ -55,7 +55,6 @@ const veniceForge = {
         }
       };
       ipcRenderer.on("venice:streamDelta", listener);
-      ipcRenderer.on("venice:streamDelta", listener);
       const pending = ipcRenderer.invoke("venice:streamChat", { ...input, signalId });
       // If the renderer is killed before the stream ends, notify main to abort
       // so the activeRequests Map does not leak. We listen to BOTH
