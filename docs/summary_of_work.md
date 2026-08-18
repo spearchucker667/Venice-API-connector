@@ -4,6 +4,21 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-08-17 / 2026-08-18 (CI Markdown Link & Audit Artifact Tracking Remediation)
+
+**Completed result:** Diagnosed and remediated the GitHub Actions CI failure pattern across `contracts`, `unit-and-integration-tests`, `coverage`, `macos-sensitive-tests`, and `windows-sensitive-tests`.
+- **CI Root Cause:** `.gitignore` rules `/docs/audits/*` and `/*-audit-*/` ignored `docs/audits/venice-forge-exhaustive-audit-2026-08-15/`, so `docs/DOCS_INDEX.md` line 132's link to `audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md` broke on clean CI checkouts while passing locally on dirty copies with untracked files.
+- **Correction:** Added explicit unignore rules in `.gitignore` for `docs/audits/venice-forge-exhaustive-audit-2026-08-15/` (`*.md` and `*.json`), ensuring all 18 markdown documents and `FINDINGS.json` are tracked in Git while ignoring transient logs and OS artifacts.
+- **Verification:** `verify:markdown-links` now checks all 265 Markdown files (100% OK), `verify:contracts` 103/103 PASS, `test:ci` 100% PASS, `lint:eslint` 0 warnings, `typecheck` 0 errors, `npm run build` PASS.
+
+**Executed evidence:** Node `v22.13.1` / npm `10.9.2` on `main`; `npm run test:ci` PASS, `npm run verify:contracts` PASS, `npm run build` PASS.
+
+**Remaining:** None for this CI tracking issue.
+
+**Prior session (2026-08-17, Chat Streaming Duplication Remediation):** Fixed duplicated `onDelta` callback in Electron renderer; see below for details.
+
+### Prior Session Summary (Chat Streaming Duplication Remediation)
+
 **Date:** 2026-08-17 (Chat Streaming Duplication Remediation)
 
 **Completed result:** Fixed an issue where the `onDelta` callback in the Electron renderer was being invoked twice per chunk, causing "doubled letters/words" in streamed chat output (e.g., "BasedBased on on the the").
@@ -12,8 +27,6 @@ This is the active handoff and validation ledger. The canonical current-work led
 **Executed evidence:** Node `v22.23.2` / npm `10.9.8` on `main`; `npm run test:electron` PASS.
 
 **Remaining:** None for this specific issue.
-
-**Prior session (2026-08-17, Exhaustive Audit WP-04 + WP-05 Remediation):** Exhaustive Audit WP-04 + WP-05 Remediation — Agent IPC Durability & Capability-Driven Tools/References. See below for details.
 
 ### Prior Session Summary (Exhaustive Audit WP-04 + WP-05 Remediation)
 

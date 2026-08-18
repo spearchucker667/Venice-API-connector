@@ -91,6 +91,10 @@
 /docs/audits/VENICE_FORGE_SCAN_EVIDENCE_2026-07-14/*
 !/docs/audits/VENICE_FORGE_SCAN_EVIDENCE_2026-07-14/*.md
 !/docs/audits/VENICE_FORGE_SCAN_EVIDENCE_2026-07-14/*.json
+# Venice Forge exhaustive audit — 2026-08-15.
+!/docs/audits/venice-forge-exhaustive-audit-2026-08-15/
+!/docs/audits/venice-forge-exhaustive-audit-2026-08-15/*.md
+!/docs/audits/venice-forge-exhaustive-audit-2026-08-15/*.json
 # Approved visual regression snapshots.
 !/docs/audits/visual-snapshots/
 /docs/audits/visual-snapshots/*
