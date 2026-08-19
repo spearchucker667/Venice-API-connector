@@ -10,23 +10,18 @@ export type GeneratedMediaSafetyResult =
 /**
  * Normalizes a base64 string or data URI into raw bytes for magic-byte
  * checking, and extracts the MIME type.
- *
- * Real bounds checking: we don't attempt to decode gigabytes.
  */
-function normalizeAndIdentifyMime(candidate: string): { mime: string | null; valid: boolean } {
-  // Strip data URI prefix if present
+export function normalizeAndIdentifyMime(candidate: string): { mime: string | null; valid: boolean } {
   let b64 = candidate;
   const match = candidate.match(/^data:([^;]+);base64,(.+)$/);
   if (match) {
     b64 = match[2];
   }
 
-  // Reject obviously non-base64 or oversized payloads
   if (!b64 || typeof b64 !== "string") {
     return { mime: null, valid: false };
   }
 
-  // To check magic bytes, grab the first 32 chars of base64
   const prefix = b64.slice(0, 32);
   let buffer: Buffer;
   try {
@@ -39,7 +34,6 @@ function normalizeAndIdentifyMime(candidate: string): { mime: string | null; val
     return { mime: null, valid: false };
   }
 
-  // Extremely basic magic-byte matching
   if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
     return { mime: "image/jpeg", valid: true };
   }
@@ -55,7 +49,11 @@ function normalizeAndIdentifyMime(candidate: string): { mime: string | null; val
     return { mime: "image/gif", valid: true };
   }
 
-  // If we couldn't identify it as a known image format, mark invalid to fail closed
+  // Audio/Video logic could go here
+  if (buffer[0] === 0x49 && buffer[1] === 0x44 && buffer[2] === 0x33) {
+    return { mime: "audio/mpeg", valid: true }; // MP3
+  }
+
   return { mime: "application/octet-stream", valid: false };
 }
 
@@ -65,10 +63,23 @@ function normalizeAndIdentifyMime(candidate: string): { mime: string | null; val
  */
 export function screenGeneratedMedia(
   candidateData: string,
+  mimeType: string,
   localFamilySafeModeEnabled: boolean
 ): GeneratedMediaSafetyResult {
   if (!localFamilySafeModeEnabled) {
     return { allowed: true, skipped: true, reason: "local-family-safe-mode-disabled" };
+  }
+
+  // Even if it's an HTTP URL (provider URL), we would theoretically need to download and screen it.
+  // We'll treat HTTP URLs as opaque for the inline base64 screener and fail them closed
+  // if they represent generated media that we cannot verify.
+  if (candidateData.startsWith("http://") || candidateData.startsWith("https://")) {
+    return {
+      allowed: false,
+      reasonCode: "CLASSIFIER_UNAVAILABLE",
+      category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+      userMessage: "Semantic image screening is required in Family Safe Mode but no classifier is available for remote URLs.",
+    };
   }
 
   const { valid } = normalizeAndIdentifyMime(candidateData);
@@ -82,8 +93,6 @@ export function screenGeneratedMedia(
   }
 
   // TODO: Integrate actual ML classifier (e.g. TFJS) for semantic image screening.
-  // We do not currently have a local semantic image classifier.
-  // To comply with the safety invariant, we must fail closed.
   return {
     allowed: false,
     reasonCode: "CLASSIFIER_UNAVAILABLE",

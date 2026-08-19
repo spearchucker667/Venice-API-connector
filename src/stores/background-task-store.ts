@@ -17,7 +17,7 @@ import { persistCompletedTaskMedia } from '../services/taskMediaCatalog'
 
 const POLL_INTERVAL_MS = 3000
 const MAX_ATTEMPTS = 200
-const MAX_GENERATION_MS = 300000 // 5 minutes for video models
+const MAX_GENERATION_MS = 120000 // 2 minutes for video models
 
 function revokeObjectUrl(url: string | undefined): void {
   if (!url?.startsWith('blob:')) return
@@ -179,12 +179,15 @@ export const useBackgroundTaskStore = create<BackgroundTaskState>((set, get) => 
     if (!task) return
     if (isProviderPolledBackgroundTaskType(task.type)) {
       get().updateTask(taskId, {
-        error: 'Provider cancellation is unavailable; generation is still running.',
+        status: 'aborted',
+        error: 'Cancel requested (provider generation may still run)',
         metadata: { ...task.metadata, cancellationUnsupported: true },
       })
       if (isElectron()) {
         get().ensureDesktopSubscription()
         void desktopBackgroundTask.cancel(taskId)
+      } else {
+        get().stopPolling(taskId)
       }
       return
     }

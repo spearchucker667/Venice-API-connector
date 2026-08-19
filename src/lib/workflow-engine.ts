@@ -1,3 +1,4 @@
+import { isElectron } from '../services/desktopBridge';
 import {
   DEFAULT_IMAGE_MODEL,
   DEFAULT_MUSIC_MODEL,
@@ -211,19 +212,42 @@ async function executeNode(
         duration,
         resolution: data.videoResolution || undefined,
       })
-      let queueResp: VideoQueueResponse
+      let videoId = ''
+      let queueResp: VideoQueueResponse | undefined
       try {
-        queueResp = await venice<VideoQueueResponse>('/video/queue', {
-          method: 'POST',
-          body: JSON.stringify(wirePayload),
-          signal,
-        })
+        if (isElectron()) {
+          const { desktopBackgroundTask } = await import('../services/desktopBridge')
+          const submitRes = await desktopBackgroundTask.submitPaidQueue({
+            operation: 'video',
+            wirePayload: wirePayload as unknown as Record<string, unknown>,
+            logicalRequestHash: `${runId}-${node.id}`,
+          })
+          if (!submitRes.ok) {
+            throw new WorkflowExecutionError(submitRes.error || 'Video generation failed.')
+          }
+          if (!submitRes.task?.queueId) {
+            throw new WorkflowExecutionError('Video generation did not return a queue ID.')
+          }
+          videoId = submitRes.task.queueId
+          queueResp = {
+            id: videoId,
+            queue_id: videoId,
+            model: submitRes.task.modelId || String(wirePayload.model),
+          }
+        } else {
+          queueResp = await venice<VideoQueueResponse>('/video/queue', {
+            method: 'POST',
+            body: JSON.stringify(wirePayload),
+            signal,
+          })
+          videoId = queueResp.queue_id || queueResp.id || ''
+          if (!videoId) throw new WorkflowExecutionError('Video generation did not return a queue ID.')
+        }
       } catch (err) {
         if (err instanceof WorkflowExecutionError) throw err
         throw new WorkflowExecutionError(toUserFacingVideoError(err, 'Video generation failed.'))
       }
-      const videoId = queueResp.queue_id || queueResp.id || ''
-      if (!videoId) throw new WorkflowExecutionError('Video generation did not return a queue ID.')
+      
       const { image_url: _imageUrl, end_image_url: _endImageUrl, audio_url: _audioUrl, video_url: _videoUrl, reference_image_urls: _referenceImages, scene_image_urls: _sceneImages, ...requestSummary } = wirePayload
       const url = await awaitWorkflowVideoTask({
         queueId: videoId,

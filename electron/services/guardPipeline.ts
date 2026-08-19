@@ -184,11 +184,22 @@ function screenUpstreamResponse(endpoint: string, method: string, response: Veni
     // Iterate over known media fields
     for (const key of ["dataBase64", "image", "images", "dataUrl", "audio", "video"]) {
       const val = b[key];
+      if (val === undefined || val === null) continue;
       const items = Array.isArray(val) ? val : [val];
       for (const item of items) {
+        let base64String = "";
         if (typeof item === "string" && item.length > 0) {
-          // We'll pass the base64 content to the semantic media screener
-          const mediaScreen = screenGeneratedMedia(item, "application/octet-stream", true);
+          base64String = item;
+        } else if (typeof item === "object" && item !== null) {
+          // Handle b64_json objects
+          if ("b64_json" in item && typeof (item as any).b64_json === "string") {
+            base64String = (item as any).b64_json;
+          }
+        }
+        
+        if (base64String) {
+          // Pass the base64 content to the semantic media screener
+          const mediaScreen = screenGeneratedMedia(base64String, "application/octet-stream", true);
           if (!mediaScreen.allowed) {
             return {
               ok: false,

@@ -50,7 +50,15 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run test:coverage
+      - run: npm run test:coverage:server
+      - run: npm run test:coverage:electron
+      - run: npm run test:coverage:ingestion
+      - run: npm run test:coverage:ui:layout
+      - run: npm run test:coverage:ui:chat
+      - run: npm run test:coverage:ui:media
+      - run: npm run test:coverage:ui:research
+      - run: npm run test:coverage:ui:settings
+      - run: npm run test:coverage:unit
 
   contracts:
     runs-on: ubuntu-22.04

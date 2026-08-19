@@ -4,6 +4,32 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-08-19 (Venice Forge Live Audit Remediation - P0 and P1 Blockers)
+
+**Completed result:** Addressed P0 and P1 blockers identified in the Venice Forge Live Audit.
+- **P0-001 (Master Password Bypass):** Fixed `!isMasterPasswordSet()` check for `safety:setFamilySafeMode`. Enforced minimum 4-character length on `masterPassword:set` and `masterPassword:change`.
+- **P0-002 (Semantic Generated-Media Screening is a Mock):** Replaced mock screener with fail-closed semantic screening architecture in `src/shared/safety/mediaScreener.ts` and `server.ts`. The proxy interceptor is now conditionally applied only to media endpoints to preserve SSE chat streaming.
+- **P1-001 (Workflow Idempotency Downstream of Queue):** Moved workflow idempotency before the `/video/queue` call by introducing `logicalRequestHash` deduplication in `submitPaidQueueTaskInMain`.
+- **P1-002 (Character Context Prompt-Injection Boundary):** Moved untrusted character context (`<context_file>`) out of the high-authority system block in `buildRpPrompt`. These are now appended as `user` messages right before the chat history to securely provide reference materials.
+- **P1-003 (`sourceMediaId` Bypasses Required Image Check):** Added validation in `CharacterEditor.tsx` to verify that the provided `sourceMediaId` actually exists in the local `mediaItems` store before satisfying the required "Image" field.
+- **P1-004 (Web Background-Task Cancellation/Timeout Divergence):** Aligned web-mode video cancellation with Electron main: set the status to 'aborted' with a user-facing error message, stopped polling natively, and reduced `MAX_GENERATION_MS` from 300000 to 120000 to match main's timeout.
+- **P1-005 (Repository Hygiene / Scratch Files):** Removed untracked scratch artifacts (`scratch-*.js`) and updated `.gitignore`.
+
+**Verification:**
+- Validated fixes using `npm run typecheck`, `npm run test:ci`, and `npm run verify:safety-guard`. All passed locally.
+
+**Remaining:** None for the targeted P0, P1, and P2 findings.
+
+### P2 Fixes:
+- **P2-001 (WP-06 roadmap state is stale):** Updated `docs/ROADMAP.md` to correctly mark WP-06 as closed.
+- **P2-002 (Workflow remediation documentation overclaims correctness):** Corrected the work ledger (summary_of_work.md) regarding workflow idempotency downstream of the queue.
+- **P2-003 (Safety tests encode obsolete commentary/dead metadata):** Removed dead `expectAdded` metadata from `tests/safety/guardPipeline.test.ts` and updated comments to reflect the actual local/provider invariant.
+- **P2-004 (Main-process safety regression tests are under-targeted):** Addressed previously in P0-001 by adding missing-master, missing-password, wrong-password, and generic patch rejection tests to `electron/ipc/configHandlers.test.ts` and `handlers.test.ts`.
+- **P2-005 (Character editor still has a stale 1 GiB comment):** Updated `src/components/rp-studio/CharacterEditor.tsx` to state that avatar support is bounded by `MAX_AVATAR_BYTES`.
+- **P2-006 (Coverage remains monolithic in CI):** Split `npm run test:coverage` in `.github/workflows/ci.yml` into segmented suites to avoid monolithic memory regressions.
+
+### Prior Session Summary (CI Markdown Link & Audit Artifact Tracking Remediation)
+
 **Date:** 2026-08-17 / 2026-08-18 (CI Markdown Link & Audit Artifact Tracking Remediation)
 
 **Completed result:** Diagnosed and remediated the GitHub Actions CI failure pattern across `contracts`, `unit-and-integration-tests`, `coverage`, `macos-sensitive-tests`, and `windows-sensitive-tests`.

@@ -609,6 +609,17 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
   challenge?: unknown;
 }> {
   await initBackgroundTaskManager();
+
+  if (input.logicalRequestHash) {
+    const existing = Object.values(state.tasks).find(
+      t => t.requestFingerprint === input.logicalRequestHash &&
+           !['failed', 'aborted', 'timeout'].includes(t.status)
+    );
+    if (existing) {
+      return { ok: true, task: existing };
+    }
+  }
+
   const taskId = `${input.operation}-${crypto.randomUUID()}`;
   const endpoint = input.operation === 'video' ? '/video/queue' : '/audio/queue';
 
@@ -670,6 +681,7 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
     queueId,
     profileId: input.profileId,
     modelId: model,
+    requestFingerprint: input.logicalRequestHash,
     metadata: {
       model,
       ...(input.logicalRequestHash ? { requestFingerprint: input.logicalRequestHash } : {}),

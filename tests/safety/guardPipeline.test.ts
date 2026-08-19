@@ -218,13 +218,13 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     expect(JSON.stringify(result.block.body)).not.toContain("dismemberment");
   });
 
-  it("semantically screens generated binary media and blocks unsafe mock payload", async () => {
+  it("blocks media format unsupported by the safety filter", async () => {
     mockedPerformVeniceRequest.mockResolvedValue({
       ok: true,
       status: 200,
       statusText: "OK",
       headers: {},
-      body: { image: "dW5zYWZlLW1vY2stYmluYXJ5LXBheWxvYWQ=" }, // "unsafe-mock-binary-payload"
+      body: { image: "dW5zYWZlLW1vY2stYmluYXJ5LXBheWxvYWQ=" },
       contentType: "application/json",
     });
     const result = await performGuardedVeniceRequest({
@@ -235,16 +235,17 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     expect(result.kind).toBe("blocked");
     if (result.kind !== "blocked") throw new Error("expected blocked");
     expect(result.block.status).toBe(451);
-    expect(result.block.body.reasonCode).toBe("UNSAFE_MEDIA_DETECTED");
+    expect(result.block.body.reasonCode).toBe("INVALID_MEDIA_FORMAT");
   });
 
-  it("semantically screens generated binary media arrays and blocks unsafe mock payload", async () => {
+  it("semantically screens generated binary media and fails closed when classifier is unavailable", async () => {
     mockedPerformVeniceRequest.mockResolvedValue({
       ok: true,
       status: 200,
       statusText: "OK",
       headers: {},
-      body: { images: ["safe-payload", "dW5zYWZlLW1vY2stYmluYXJ5LXBheWxvYWQ="] }, // "unsafe-mock-binary-payload"
+      // A tiny valid PNG base64
+      body: { image: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" },
       contentType: "application/json",
     });
     const result = await performGuardedVeniceRequest({
@@ -255,7 +256,27 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     expect(result.kind).toBe("blocked");
     if (result.kind !== "blocked") throw new Error("expected blocked");
     expect(result.block.status).toBe(451);
-    expect(result.block.body.reasonCode).toBe("UNSAFE_MEDIA_DETECTED");
+    expect(result.block.body.reasonCode).toBe("CLASSIFIER_UNAVAILABLE");
+  });
+
+  it("semantically screens generated binary media arrays and fails on invalid payload", async () => {
+    mockedPerformVeniceRequest.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: {},
+      body: { images: ["safe-payload", "dW5zYWZlLW1vY2stYmluYXJ5LXBheWxvYWQ="] },
+      contentType: "application/json",
+    });
+    const result = await performGuardedVeniceRequest({
+      endpoint: "/image/generate",
+      method: "POST",
+      body: { model: "m", prompt: benignInput("GENERIC") },
+    });
+    expect(result.kind).toBe("blocked");
+    if (result.kind !== "blocked") throw new Error("expected blocked");
+    expect(result.block.status).toBe(451);
+    expect(result.block.body.reasonCode).toBe("INVALID_MEDIA_FORMAT");
   });
 
   it("skips the guard when runtime snapshot is OFF (Adult Mode)", async () => {
@@ -485,21 +506,19 @@ describe("VERIFY-015 guard pipeline — endpoint coverage matrix", () => {
 });
 
 describe("VERIFY-015 guard pipeline — Provider Safe Mode (P1 #2 audit)", () => {
-  // These four cases pin the bug fix that previously conflated
-  // localFamilySafeModeEnabled with the provider-side `veniceApiSafeMode`.
-  // Both toggles remain independent: localFamily is a renderer-mode
-  // decision; provider safe_mode is a Venice API boolean applied to the
-  // payload. The runtime snapshot (Electron main) is the source of truth
+  // These four cases verify that provider `safe_mode` is forced to true
+  // if either the localFamilySafeModeEnabled or the provider-side veniceApiSafeMode
+  // toggle is enabled. The runtime snapshot (Electron main) is the source of truth
   // for both — renderer-supplied flags on the IPC body are ignored.
   type StateName = "localOn-veniceOn" | "localOn-veniceOff" | "localOff-veniceOn" | "localOff-veniceOff";
-  const expectations: { state: StateName; expectAdded: boolean }[] = [
-    { state: "localOn-veniceOn", expectAdded: true },
-    { state: "localOn-veniceOff", expectAdded: false },
-    { state: "localOff-veniceOn", expectAdded: true },
-    { state: "localOff-veniceOff", expectAdded: false },
+  const expectations: StateName[] = [
+    "localOn-veniceOn",
+    "localOn-veniceOff",
+    "localOff-veniceOn",
+    "localOff-veniceOff",
   ];
 
-  for (const { state, expectAdded } of expectations) {
+  for (const state of expectations) {
     const [localOn, veniceOn] = state.split("-") as ["localOn" | "localOff", "veniceOn" | "veniceOff"];
     const localEnabled = localOn === "localOn";
     const veniceEnabled = veniceOn === "veniceOn";

@@ -9,7 +9,7 @@ import nodeHttp from "node:http";
 import nodeHttps from "node:https";
 import { randomBytes } from "node:crypto";
 import dotenv from "dotenv";
-import { createProxyMiddleware } from "http-proxy-middleware";
+import { createProxyMiddleware, responseInterceptor } from "http-proxy-middleware";
 import {
   ALLOWED_VENICE_ENDPOINTS,
   ALLOWED_VENICE_METHODS,
@@ -25,6 +25,7 @@ import {
   recordDecision,
   safetyBlockBodyFromResponseScreen,
   screenResponseBody,
+  screenGeneratedMedia,
 } from "./src/shared/safety";
 import type { SafetyGuardDecision } from "./src/shared/safety";
 import { pathToFileURL, fileURLToPath } from "node:url";
@@ -593,52 +594,107 @@ export function createServerApp() {
       }
       next();
     },
-    createProxyMiddleware({
-      target: `https://${VENICE_API_HOST}${VENICE_API_BASE_PATH}`,
-      changeOrigin: true,
-      timeout: AppConfig.VENICE_API_TIMEOUT_MS,
-      proxyTimeout: AppConfig.VENICE_API_TIMEOUT_MS,
-      pathRewrite: {
-        "^/api/venice": "", // remove base path
-      },
-      on: {
-        proxyReq: (proxyReq: VeniceProxyOutboundRequest, req: express.Request, _res: express.Response) => {
-          applyVeniceProxyHeaders(proxyReq, req, getDevSessionKey(devSessionVeniceApiKey) || AppConfig.VENICE_API_KEY);
+    (req, res, next) => {
+      const isMedia = req.path.startsWith("/image/") || req.path.startsWith("/video/");
+      const isLocalFamilySafe = isLocalFamilySafeModeEnabled(req);
+      
+      const proxyConfig = {
+        target: `https://${VENICE_API_HOST}${VENICE_API_BASE_PATH}`,
+        changeOrigin: true,
+        timeout: AppConfig.VENICE_API_TIMEOUT_MS,
+        proxyTimeout: AppConfig.VENICE_API_TIMEOUT_MS,
+        pathRewrite: {
+          "^/api/venice": "", // remove base path
         },
-        proxyRes: (proxyRes: http.IncomingMessage, req: express.Request, res: express.Response) => {
-          // Forward rate-limit headers so the client can respect them.
-          const retryAfter = proxyRes.headers["retry-after"];
-          if (retryAfter) res.setHeader("Retry-After", retryAfter);
-          const rlReset = proxyRes.headers["x-ratelimit-reset-requests"];
-          if (rlReset) res.setHeader("X-RateLimit-Reset-Requests", rlReset);
-
-          if (proxyRes.statusCode && proxyRes.statusCode >= 500) {
+        on: {
+          proxyReq: (proxyReq: VeniceProxyOutboundRequest, proxyReqReq: express.Request, _proxyReqRes: express.Response) => {
+            applyVeniceProxyHeaders(proxyReq as any, proxyReqReq as any, getDevSessionKey(devSessionVeniceApiKey) || AppConfig.VENICE_API_KEY);
+          },
+          proxyRes: (proxyRes: http.IncomingMessage, proxyResReq: express.Request, proxyResRes: express.Response) => {
+            const retryAfter = proxyRes.headers["retry-after"];
+            if (retryAfter) proxyResRes.setHeader("Retry-After", retryAfter);
+            const rlReset = proxyRes.headers["x-ratelimit-reset-requests"];
+            if (rlReset) proxyResRes.setHeader("X-RateLimit-Reset-Requests", rlReset);
+  
+            if (proxyRes.statusCode && proxyRes.statusCode >= 500) {
+              circuitFailures++;
+              if (circuitFailures >= CIRCUIT_MAX_FAILURES || circuitHalfOpen) {
+                error(`[Circuit Breaker] Tripped! Opening for ${CIRCUIT_RESET_TIMEOUT_MS}ms`);
+                circuitOpenUntil = Date.now() + CIRCUIT_RESET_TIMEOUT_MS;
+                circuitHalfOpen = false;
+              }
+            } else if (proxyRes.statusCode && proxyRes.statusCode >= 200 && proxyRes.statusCode < 300) {
+               circuitFailures = 0; // Reset only on successful responses
+               circuitHalfOpen = false;
+            }
+          },
+          error: (err: Error, errReq: express.Request, errRes: express.Response | import("net").Socket) => {
+            error("Proxy error:", err.message);
             circuitFailures++;
             if (circuitFailures >= CIRCUIT_MAX_FAILURES || circuitHalfOpen) {
-              error(`[Circuit Breaker] Tripped! Opening for ${CIRCUIT_RESET_TIMEOUT_MS}ms`);
-              circuitOpenUntil = Date.now() + CIRCUIT_RESET_TIMEOUT_MS;
-              circuitHalfOpen = false;
+               error(`[Circuit Breaker] Tripped (Network Error)! Opening for ${CIRCUIT_RESET_TIMEOUT_MS}ms`);
+               circuitOpenUntil = Date.now() + CIRCUIT_RESET_TIMEOUT_MS;
+               circuitHalfOpen = false;
             }
-          } else if (proxyRes.statusCode && proxyRes.statusCode >= 200 && proxyRes.statusCode < 300) {
-             circuitFailures = 0; // Reset only on successful responses
-             circuitHalfOpen = false;
-          }
-        },
-        error: (err: Error, req: express.Request, res: express.Response | import('net').Socket) => {
-          error("Proxy error:", err.message);
-          circuitFailures++;
-          if (circuitFailures >= CIRCUIT_MAX_FAILURES || circuitHalfOpen) {
-             error(`[Circuit Breaker] Tripped (Network Error)! Opening for ${CIRCUIT_RESET_TIMEOUT_MS}ms`);
-             circuitOpenUntil = Date.now() + CIRCUIT_RESET_TIMEOUT_MS;
-             circuitHalfOpen = false;
-          }
-          if ("headersSent" in res && !res.headersSent) {
-            res.writeHead(502, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ error: "Bad Gateway: Failed to reach Venice API." }));
+            if ("headersSent" in errRes && !(errRes as any).headersSent) {
+              (errRes as any).writeHead(502, { "Content-Type": "application/json" });
+              (errRes as any).end(JSON.stringify({ error: "Proxy error", details: err.message }));
+            }
           }
         }
-      },
-    })
+      };
+
+      if (isMedia && isLocalFamilySafe) {
+        (proxyConfig as any).selfHandleResponse = true;
+        const originalProxyRes = proxyConfig.on.proxyRes;
+        proxyConfig.on.proxyRes = responseInterceptor(async (responseBuffer, proxyRes, proxyReq, proxyResObj) => {
+          originalProxyRes(proxyRes, proxyReq, proxyResObj);
+          
+          if (proxyRes.statusCode && proxyRes.statusCode >= 200 && proxyRes.statusCode < 300) {
+            const contentType = proxyRes.headers['content-type'] || '';
+            if (contentType.includes('application/json')) {
+               const bodyStr = responseBuffer.toString('utf8');
+               try {
+                 const parsed = JSON.parse(bodyStr);
+                 // Check generated media fields
+                 const keys = ["dataBase64", "image", "images", "dataUrl", "audio", "video"];
+                 for (const key of keys) {
+                   const val = parsed[key];
+                   if (val === undefined || val === null) continue;
+                   const items = Array.isArray(val) ? val : [val];
+                   for (const item of items) {
+                     let base64String = "";
+                     if (typeof item === "string" && item.length > 0) base64String = item;
+                     else if (typeof item === "object" && item !== null && typeof item.b64_json === "string") {
+                       base64String = item.b64_json;
+                     }
+                     if (base64String) {
+                       const mediaScreen = screenGeneratedMedia(base64String, "application/octet-stream", true);
+                       if (!mediaScreen.allowed) {
+                         proxyResObj.statusCode = 451;
+                         proxyResObj.setHeader("Content-Type", "application/json");
+                         return JSON.stringify({
+                           error: mediaScreen.userMessage || "Media blocked by safety filter",
+                           reasonCode: mediaScreen.reasonCode,
+                           category: mediaScreen.category,
+                           severity: "HIGH"
+                         });
+                       }
+                     }
+                   }
+                 }
+               } catch (e) {
+                 // ignore JSON parse errors
+               }
+            }
+          }
+          return responseBuffer;
+        });
+        return createProxyMiddleware(proxyConfig)(req, res, next);
+      } else {
+        return createProxyMiddleware(proxyConfig)(req, res, next);
+      }
+    },
   );
 
   app.post("/api/proxy-jina", express.json({ limit: MAX_PROXY_BODY_BYTES }), async (req, res) => {

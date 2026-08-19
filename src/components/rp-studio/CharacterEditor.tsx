@@ -2,7 +2,7 @@
  * @fileoverview Character Editor — full editor for a single CharacterCardV1.
  *
  * Fields: name, description, system prompt, scenario, tags, author, modelId,
- * adult flag, example dialogues, avatar (PNG/JPEG/WebP, ≤ 1 GiB).
+ * adult flag, example dialogues, avatar (PNG/JPEG/WebP, bounded by MAX_AVATAR_BYTES).
  */
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -659,7 +659,8 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
       if (!draft.instructions?.trim()) missingFields.push("Instructions");
       
       const sourceMediaId = typeof draft.metadata?.sourceMediaId === "string" ? draft.metadata.sourceMediaId : undefined;
-      if (!draft.avatar && !sourceMediaId) missingFields.push("Image");
+      const sourceMediaFound = sourceMediaId ? mediaItems.some(item => item.id === sourceMediaId) : false;
+      if (!draft.avatar && !sourceMediaFound) missingFields.push("Image");
       
       if (missingFields.length > 0) {
         setError(`New Venice Forge characters require: ${missingFields.join(", ")}`);
