@@ -109,8 +109,8 @@ The most recent local audit lives at `docs/audits/Records/Venice_Forge-audit-evi
   - `VF-SCAN-20260717-031029-006` (shutdown log race): closed — `electron/services/appShutdownCoordinator.ts` runs durable cleanup in parallel and sequences `flushLogs()` as the final ordered phase; stderr fallback for late diagnostic emissions.
   - `VF-SCAN-20260717-031029-007` (roadmap overstatement): closed — this file.
 - **P3 bounded debt — still open.**
-  - `VF-SCAN-20260717-031029-008` (verify-provider-adapters portability): tracked only; `vi.mock('electron')` relocation to `tests/setup.ts` deferred to a separate work order.
-  - `VF-SCAN-20260717-031029-009` (`enhancePrompt` extraction): tracked only; `@deprecated` no-op fallthrough at `src/shared/safety/promptPayloadExtractor.ts` deferred to a separate work order.
+  - `VF-SCAN-20260717-031029-008` (verify-provider-adapters portability): closed — `vi.mock('electron')` relocated to `tests/setup.ts`.
+  - `VF-SCAN-20260717-031029-009` (`enhancePrompt` extraction): closed — legacy field fallback removed from `promptPayloadExtractor` as the outbound upscale payload dropped it.
   - `VF-SCAN-20260717-031029-010..012` (documentation trackers): tracked only via `docs/summary_of_work.md` Open TODO Ledger; no code change required.
 
 ## Audit Input
