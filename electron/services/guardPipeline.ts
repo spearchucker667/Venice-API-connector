@@ -18,6 +18,7 @@ import {
   SafetyGuardBlockedError,
   safetyBlockBodyFromResponseScreen,
   screenResponseBody,
+  screenGeneratedMedia,
 } from "../../src/shared/safety";
 import type { SafetyGuardInput } from "../../src/shared/safety";
 import { performVeniceRequest } from "./veniceClient";
@@ -140,18 +141,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function withFamilySafeProviderOverride(rawRequest: unknown, endpoint: string): unknown {
-  // Provider-side `safe_mode` must come from the dedicated runtime
-  // toggle — not piggyback on localFamilySafeModeEnabled. Adult Mode
-  // (localFamilySafeModeEnabled=false) should NOT silently disable the
-  // provider safe-mode route, and Family Safe Mode (localFamilySafeModeEnabled=true)
-  // should NOT force it on without the user explicitly opting in.
+  const localFamilySafeModeEnabled = getRuntimeLocalFamilySafeModeEnabled();
   const veniceApiSafeMode = getRuntimeVeniceApiSafeMode();
+  const effectiveSafeMode = localFamilySafeModeEnabled || veniceApiSafeMode;
+  
   if (!isRecord(rawRequest)) return rawRequest;
   const body = rawRequest.body;
   if (!isRecord(body)) return rawRequest;
   return {
     ...rawRequest,
-    body: applyVeniceApiSafeMode(endpoint, body, veniceApiSafeMode),
+    body: applyVeniceApiSafeMode(endpoint, body, effectiveSafeMode),
   };
 }
 
@@ -178,6 +177,38 @@ function stringifyResponseForScreening(body: unknown): string | null {
 
 function screenUpstreamResponse(endpoint: string, method: string, response: VeniceIpcResponse): GuardedBlock | null {
   if (!getRuntimeLocalFamilySafeModeEnabled()) return null;
+
+  // 1. Screen binary media fields semantically if present.
+  if (isRecord(response.body)) {
+    const b = response.body;
+    // Iterate over known media fields
+    for (const key of ["dataBase64", "image", "images", "dataUrl", "audio", "video"]) {
+      const val = b[key];
+      const items = Array.isArray(val) ? val : [val];
+      for (const item of items) {
+        if (typeof item === "string" && item.length > 0) {
+          // We'll pass the base64 content to the semantic media screener
+          const mediaScreen = screenGeneratedMedia(item, "application/octet-stream", true);
+          if (!mediaScreen.allowed) {
+            return {
+              ok: false,
+              status: 451,
+              statusText: "Blocked by Family Safe Mode",
+              headers: {} as Record<string, never>,
+              body: { 
+                error: mediaScreen.userMessage || "Media blocked by safety filter", 
+                reasonCode: mediaScreen.reasonCode, 
+                category: mediaScreen.category 
+              },
+              contentType: "application/json",
+            };
+          }
+        }
+      }
+    }
+  }
+
+  // 2. Screen the textual/JSON structure (with binary data replaced by [binary-media] to save tokens).
   const bodyTextOrNull = stringifyResponseForScreening(response.body);
   if (bodyTextOrNull === null) {
     return {

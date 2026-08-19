@@ -218,6 +218,46 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     expect(JSON.stringify(result.block.body)).not.toContain("dismemberment");
   });
 
+  it("semantically screens generated binary media and blocks unsafe mock payload", async () => {
+    mockedPerformVeniceRequest.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: {},
+      body: { image: "dW5zYWZlLW1vY2stYmluYXJ5LXBheWxvYWQ=" }, // "unsafe-mock-binary-payload"
+      contentType: "application/json",
+    });
+    const result = await performGuardedVeniceRequest({
+      endpoint: "/image/generate",
+      method: "POST",
+      body: { model: "m", prompt: benignInput("GENERIC") },
+    });
+    expect(result.kind).toBe("blocked");
+    if (result.kind !== "blocked") throw new Error("expected blocked");
+    expect(result.block.status).toBe(451);
+    expect(result.block.body.reasonCode).toBe("UNSAFE_MEDIA_DETECTED");
+  });
+
+  it("semantically screens generated binary media arrays and blocks unsafe mock payload", async () => {
+    mockedPerformVeniceRequest.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: {},
+      body: { images: ["safe-payload", "dW5zYWZlLW1vY2stYmluYXJ5LXBheWxvYWQ="] }, // "unsafe-mock-binary-payload"
+      contentType: "application/json",
+    });
+    const result = await performGuardedVeniceRequest({
+      endpoint: "/image/generate",
+      method: "POST",
+      body: { model: "m", prompt: benignInput("GENERIC") },
+    });
+    expect(result.kind).toBe("blocked");
+    if (result.kind !== "blocked") throw new Error("expected blocked");
+    expect(result.block.status).toBe(451);
+    expect(result.block.body.reasonCode).toBe("UNSAFE_MEDIA_DETECTED");
+  });
+
   it("skips the guard when runtime snapshot is OFF (Adult Mode)", async () => {
     setRuntimeLocalFamilySafeModeEnabled(false);
     const upstream = { ok: true, status: 200, statusText: "OK", headers: {}, body: {}, contentType: "application/json" };
@@ -477,7 +517,7 @@ describe("VERIFY-015 guard pipeline — Provider Safe Mode (P1 #2 audit)", () =>
       expect(mockedPerformVeniceRequest).toHaveBeenCalledTimes(1);
       const forwarded = mockedPerformVeniceRequest.mock.calls[0]?.[0] as { body?: unknown };
       const body = (forwarded?.body ?? {}) as Record<string, unknown>;
-      expect(body.safe_mode).toBe(veniceEnabled);
+      expect(body.safe_mode).toBe(localEnabled || veniceEnabled);
     });
   }
 

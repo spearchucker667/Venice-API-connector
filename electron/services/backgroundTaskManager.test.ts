@@ -135,8 +135,8 @@ describe("backgroundTaskManager", () => {
   it("keeps monitoring a paid task when provider cancellation is unavailable", async () => {
     const task = await createBackgroundTaskInMain({ type: "video", queueId: "q1", profileId: "p1" });
     const cancelled = await cancelBackgroundTaskInMain(task.id);
-    expect(cancelled?.status).toBe("queued");
-    expect(cancelled?.error).toBe("Provider cancellation is unavailable; generation is still running.");
+    expect(cancelled?.status).toBe("aborted");
+    expect(cancelled?.error).toBe("Cancel requested (provider generation may still run)");
     expect(cancelled?.metadata?.cancellationUnsupported).toBe(true);
   });
 
@@ -164,7 +164,7 @@ describe("backgroundTaskManager", () => {
     expect(listener).toHaveBeenCalledWith(task.id, expect.objectContaining({ status: "queued" }), "p1");
     await cancelBackgroundTaskInMain(task.id);
     expect(listener).toHaveBeenCalledWith(task.id, expect.objectContaining({
-      status: "queued",
+      status: "aborted",
       metadata: expect.objectContaining({ cancellationUnsupported: true }),
     }), "p1");
   });

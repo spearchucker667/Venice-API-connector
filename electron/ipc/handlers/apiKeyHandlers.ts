@@ -200,10 +200,37 @@ export function registerApiKeyHandlers(): void {
 
   registerIpcChannel("masterPassword:set", (_event, password: unknown) => {
     try {
+      if (isMasterPasswordSet()) {
+        return { ok: false, error: "Master password is already set." };
+      }
       if (typeof password !== "string" || password.length === 0) {
         throw new Error("Master password must be a non-empty string.");
       }
       setMasterPassword(password);
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: redactErrorMessage(err) };
+    }
+  });
+
+  registerIpcChannel("masterPassword:change", (_event, payload: unknown) => {
+    try {
+      if (!payload || typeof payload !== "object") throw new Error("Invalid payload.");
+      const { currentPassword, newPassword } = payload as { currentPassword?: string, newPassword?: string };
+      if (typeof currentPassword !== "string" || typeof newPassword !== "string" || newPassword.length === 0) {
+        throw new Error("Both current and new passwords must be provided.");
+      }
+      if (!isMasterPasswordSet()) {
+        return { ok: false, error: "Master password is not set." };
+      }
+      const { verified, lockedOutSeconds } = verifyMasterPassword(currentPassword);
+      if (!verified) {
+        if (lockedOutSeconds > 0) {
+          return { ok: false, error: `Too many attempts. Try again in ${lockedOutSeconds}s.`, lockedOutSeconds };
+        }
+        return { ok: false, error: "Incorrect master password." };
+      }
+      setMasterPassword(newPassword);
       return { ok: true };
     } catch (err) {
       return { ok: false, error: redactErrorMessage(err) };
@@ -222,8 +249,21 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("masterPassword:clear", () => {
+  registerIpcChannel("masterPassword:clear", (_event, payload: unknown) => {
     try {
+      if (!isMasterPasswordSet()) return { ok: true }; // Already clear
+      if (!payload || typeof payload !== "object") throw new Error("Invalid payload.");
+      const { currentPassword } = payload as { currentPassword?: string };
+      if (typeof currentPassword !== "string") {
+        return { ok: false, error: "Current password is required to clear master password." };
+      }
+      const { verified, lockedOutSeconds } = verifyMasterPassword(currentPassword);
+      if (!verified) {
+        if (lockedOutSeconds > 0) {
+          return { ok: false, error: `Too many attempts. Try again in ${lockedOutSeconds}s.`, lockedOutSeconds };
+        }
+        return { ok: false, error: "Incorrect master password." };
+      }
       clearMasterPassword();
       return { ok: true };
     } catch (err) {

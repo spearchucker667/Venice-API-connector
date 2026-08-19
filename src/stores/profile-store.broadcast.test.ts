@@ -19,6 +19,9 @@ vi.mock('../services/profilePurge', () => ({
 
 vi.mock('../services/desktopBridge', () => ({
   isElectron: vi.fn(() => true),
+  desktopMasterPassword: {
+    isSet: vi.fn(() => Promise.resolve(false)),
+  },
   desktopProfilePassword: {
     activate: vi.fn(() => Promise.resolve({ ok: true, verified: true, profileId: 'default' })),
     verify: vi.fn(),

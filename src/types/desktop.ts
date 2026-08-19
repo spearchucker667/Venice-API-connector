@@ -454,7 +454,12 @@ export interface VeniceForgeMasterPassword {
   isSet(): Promise<boolean>;
   set(password: string): Promise<{ ok: boolean; error?: string }>;
   verify(password: string): Promise<{ ok: boolean; verified: boolean; lockedOutSeconds?: number; error?: string }>;
-  clear(): Promise<{ ok: boolean; error?: string }>;
+  change(payload: { currentPassword?: string; newPassword?: string }): Promise<{ ok: boolean; error?: string }>;
+  clear(payload: { currentPassword?: string }): Promise<{ ok: boolean; error?: string }>;
+}
+
+export interface VeniceForgeSafety {
+  setFamilySafeMode(payload: { enabled: boolean; masterPassword?: string }): Promise<{ ok: boolean; config?: unknown; error?: string; lockedOutSeconds?: number }>;
 }
 
 export interface VeniceForgeProfilePassword {
@@ -533,6 +538,7 @@ export interface VeniceForgeImageInspector {
 export interface VeniceForge {
   credentials: VeniceForgeCredentials;
   masterPassword: VeniceForgeMasterPassword;
+  safety: VeniceForgeSafety;
   profilePassword: VeniceForgeProfilePassword;
   profilePurge: VeniceForgeProfilePurge;
   readonly isDesktop: true;

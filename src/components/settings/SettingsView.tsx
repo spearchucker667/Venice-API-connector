@@ -112,6 +112,7 @@ export function SettingsView() {
   async function updateSafetySetting(
     key: "local_family_safe_mode_enabled" | "venice_api_safe_mode",
     enabled: boolean,
+    masterPassword?: string
   ) {
     // Optimistic update + rollback: apply to the renderer store first so
     // the toggle feels instant, then persist to the YAML. If persistence
@@ -123,7 +124,13 @@ export function SettingsView() {
     if (key === "local_family_safe_mode_enabled") setLocalFamilySafeModeEnabled(enabled);
     else setVeniceApiSafeMode(enabled);
     if (isElectron()) {
-      const result = await desktopConfig.writeSanitized({ safety: { [key]: enabled } });
+      let result;
+      if (key === "local_family_safe_mode_enabled") {
+        const { desktopSafety } = await import('../../services/desktopBridge');
+        result = await desktopSafety.setFamilySafeMode(enabled, masterPassword);
+      } else {
+        result = await desktopConfig.writeSanitized({ safety: { [key]: enabled } });
+      }
       if (!result.ok) {
         if (key === "local_family_safe_mode_enabled") setLocalFamilySafeModeEnabled(previousFamily);
         else setVeniceApiSafeMode(previousVenice);

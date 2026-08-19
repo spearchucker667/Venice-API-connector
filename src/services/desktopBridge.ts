@@ -2318,10 +2318,21 @@ export const desktopMasterPassword = {
       return { ok: false, verified: false, error: "Not available in web" };
     return window.veniceForge!.masterPassword.verify(password);
   },
-  async clear(): Promise<{ ok: boolean; error?: string }> {
+  async change(currentPassword: string, newPassword: string): Promise<{ ok: boolean; error?: string }> {
     if (!isElectron()) return { ok: false, error: "Not available in web" };
-    return window.veniceForge!.masterPassword.clear();
+    return window.veniceForge!.masterPassword.change({ currentPassword, newPassword });
   },
+  async clear(currentPassword: string): Promise<{ ok: boolean; error?: string }> {
+    if (!isElectron()) return { ok: false, error: "Not available in web" };
+    return window.veniceForge!.masterPassword.clear({ currentPassword });
+  },
+};
+
+export const desktopSafety = {
+  async setFamilySafeMode(enabled: boolean, masterPassword?: string): Promise<{ ok: boolean; config?: unknown; error?: string; lockedOutSeconds?: number }> {
+    if (!isElectron()) return { ok: false, error: "Not available in web" };
+    return window.veniceForge!.safety.setFamilySafeMode({ enabled, masterPassword });
+  }
 };
 
 export const desktopProfilePassword = {

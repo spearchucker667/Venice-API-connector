@@ -14,6 +14,7 @@ import {
   resetSecureStoreKeys,
   writeSanitizedConfig,
 } from "../services/configService";
+import { verifyMasterPassword, isMasterPasswordSet } from "../services/secureStore";
 
 export function redactConfigPaths(paths: Record<string, unknown>): Record<string, unknown> {
   const redacted: Record<string, unknown> = { configDirLabel: "user config directory" };
@@ -77,9 +78,48 @@ export function registerConfigIpcHandlers() {
 
   handleIpc("config:writeSanitized", async (_event, patch: unknown) => {
     try {
+      if (typeof patch === "object" && patch !== null) {
+        const p = patch as Record<string, unknown>;
+        if (typeof p.safety === "object" && p.safety !== null) {
+          if ("local_family_safe_mode_enabled" in p.safety) {
+            return { ok: false, redactedFields: [], error: "Family Safe Mode cannot be modified via generic config write." };
+          }
+        }
+      }
       return await writeSanitizedConfig(patch);
     } catch (err) {
       return { ok: false, redactedFields: [], error: redactErrorMessage(err) };
+    }
+  });
+
+  handleIpc("safety:setFamilySafeMode", async (_event, payload: unknown) => {
+    try {
+      if (!payload || typeof payload !== "object") {
+        throw new Error("Invalid payload.");
+      }
+      const { enabled, masterPassword } = payload as { enabled?: boolean; masterPassword?: string };
+      if (typeof enabled !== "boolean") {
+        throw new Error("Enabled state must be boolean.");
+      }
+      if (isMasterPasswordSet()) {
+        if (typeof masterPassword !== "string") {
+          return { ok: false, error: "Master password required to change Family Safe Mode." };
+        }
+        const { verified, lockedOutSeconds } = verifyMasterPassword(masterPassword);
+        if (!verified) {
+          if (lockedOutSeconds > 0) {
+            return { ok: false, error: `Too many attempts. Try again in ${lockedOutSeconds}s.`, lockedOutSeconds };
+          }
+          return { ok: false, error: "Incorrect master password." };
+        }
+      }
+      const result = await writeSanitizedConfig({ safety: { local_family_safe_mode_enabled: enabled } });
+      if (!result.ok) {
+        return result;
+      }
+      return { ok: true, config: getSanitizedConfig() };
+    } catch (err) {
+      return { ok: false, error: redactErrorMessage(err) };
     }
   });
 

@@ -107,9 +107,18 @@ const veniceForge = {
     verify(password: string): Promise<{ ok: boolean; verified: boolean; lockedOutSeconds?: number; error?: string }> {
       return ipcRenderer.invoke("masterPassword:verify", password);
     },
-    clear(): Promise<{ ok: boolean; error?: string }> {
-      return ipcRenderer.invoke("masterPassword:clear");
+    change(payload: { currentPassword?: string; newPassword?: string }): Promise<{ ok: boolean; error?: string }> {
+      return ipcRenderer.invoke("masterPassword:change", payload);
     },
+    clear(payload: { currentPassword?: string }): Promise<{ ok: boolean; error?: string }> {
+      return ipcRenderer.invoke("masterPassword:clear", payload);
+    },
+  },
+
+  safety: {
+    setFamilySafeMode(payload: { enabled: boolean; masterPassword?: string }): Promise<{ ok: boolean; config?: unknown; error?: string; lockedOutSeconds?: number }> {
+      return ipcRenderer.invoke("safety:setFamilySafeMode", payload);
+    }
   },
 
   profilePassword: {

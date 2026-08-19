@@ -10,6 +10,7 @@ export interface SafetyPanelProps {
   onUpdateSafetySetting: (
     key: "local_family_safe_mode_enabled" | "venice_api_safe_mode",
     enabled: boolean,
+    masterPassword?: string
   ) => Promise<void> | void;
 }
 
@@ -185,10 +186,10 @@ export function SafetyPanel({
           isOpen={showPasswordDialog}
           mode={masterPasswordSet ? "verify" : "setup"}
           onClose={() => setShowPasswordDialog(false)}
-          onSuccess={() => {
+          onSuccess={(password) => {
             setShowPasswordDialog(false);
             if (pendingAction) {
-              onUpdateSafetySetting(pendingAction.key, pendingAction.enabled);
+              onUpdateSafetySetting(pendingAction.key, pendingAction.enabled, password);
               setPendingAction(null);
             }
           }}

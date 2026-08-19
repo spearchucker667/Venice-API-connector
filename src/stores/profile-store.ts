@@ -194,5 +194,12 @@ if (typeof window !== 'undefined') {
       setActiveProfileId(DEFAULT_PROFILE_ID)
       window.location.reload()
     })
+    
+    // Hydrate authoritative master password state from main
+    import('../services/desktopBridge').then(({ desktopMasterPassword }) => {
+      desktopMasterPassword.isSet().then((isSet) => {
+        useProfileStore.setState({ masterPasswordSet: isSet })
+      })
+    })
   }
 }

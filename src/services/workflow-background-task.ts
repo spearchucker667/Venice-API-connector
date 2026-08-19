@@ -7,6 +7,8 @@ interface WorkflowVideoTaskInput {
   model: string
   request: Record<string, unknown>
   queueDownloadUrl?: string
+  runId?: string
+  nodeId?: string
   signal?: AbortSignal
 }
 
@@ -18,7 +20,7 @@ const TERMINAL_STATUSES = new Set(['completed', 'failed', 'aborted', 'timeout'])
  * is deliberately excluded from task metadata by the caller.
  */
 export function awaitWorkflowVideoTask(input: WorkflowVideoTaskInput): Promise<string> {
-  const taskId = `workflow-video-${crypto.randomUUID()}`
+  const taskId = input.runId && input.nodeId ? `workflow-video-${input.runId}-${input.nodeId}` : `workflow-video-${crypto.randomUUID()}`
   return new Promise<string>((resolve, reject) => {
     let settled = false
     const finish = (callback: () => void) => {

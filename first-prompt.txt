@@ -1,0 +1,1139 @@
+<USER_REQUEST>
+I found a CI-level failure pattern rather than an ordinary test failure.
+The current main head is commit 44604e540c750d81e6ac4affd56420ed53f50054, pushed August 17, 2026. The CI workflow is configured to run on every push to main, and CodeQL is also configured for pushes to main.
+The most recent workflow run I could retrieve directly from GitHub Actions is CI run #599, run ID 30202881931, for commit 771d1d8c.... That run failed essentially immediately. GitHub reports all six independent jobs as failed:
+lint-and-typecheck
+unit-and-integration-tests
+coverage
+contracts
+windows-sensitive-tests (22)
+macos-sensitive-tests
+The dependent build, electron-smoke-windows, and electron-smoke-macos jobs were then skipped.
+That pattern is the important part: this was not caused by one broken Vitest test, TypeScript error, or build failure. All six jobs, across Ubuntu, Windows, and macOS, failed before GitHub recorded any workflow steps. The Actions API returns an empty steps array for those jobs, and the historical job log object is no longer retrievable through the connector. That means execution died at or before runner/job initialization.
+The workflow itself is structurally reasonable. It uses ubuntu-22.04, windows-2022, and macos-14; Node is intentionally pinned to 22; the build dependency graph is valid; and the smoke jobs correctly depend on build.
+The strongest suspect is therefore the Actions execution environment/configuration, specifically the action-version transition that existed in that failing revision. CI was already using:
+actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+in every job.
+Those SHAs are legitimate current releases—checkout v7.0.1 and setup-node v7.0.0 exist. [GitHub](https://github.com/actions/checkout/releases?after=v2.0.0&utm_source=chatgpt.com) However, current setup-node documentation states that recent action versions run on newer Node action runtimes and require sufficiently recent GitHub runner infrastructure; the documentation specifically calls out runner v2.327.1+ beginning with the Node 24-based generation. [GitHub](https://github.com/actions/setup-node/blob/main/README.md?plain=1&utm_source=chatgpt.com)
+For GitHub-hosted runners that normally should not be a long-term problem, so I would not yet patch the codebase around that assumption.
+There is a second, more significant issue: the public Actions history I could inspect stops at CI #599 / CodeQL #299 on July 26, despite the repository having current August commits and both workflows still containing push: branches: [main]. [GitHub](https://github.com/spearchucker667/Venice_Forge/actions) The current head commit also has no legacy combined-status entries. This strongly suggests one of the following repository-level conditions now exists:
+GitHub Actions was disabled or restricted for the repository after July 26.
+Actions execution is blocked by an account/repository Actions policy or usage condition.
+The newer pushes are creating checks that the public cached Actions page is not exposing; this needs confirmation from the authenticated Actions UI/API.
+Less likely, a workflow-level GitHub parsing/initialization failure is preventing normal execution.
+There are some things I can rule out from the repository itself. The current ci.yml does not have a bad needs: graph or a branch-trigger mistake. The current CodeQL workflow has appropriate contents: read and security-events: write permissions and uses the normal init → analyze architecture. The action SHAs shown in CI correspond to real releases. [GitHub](https://github.com/actions/checkout/releases?after=v2.0.0&utm_source=chatgpt.com)
+So I would treat this as two separate problems:
+P0 — determine why Actions are not presently producing normal runs. In your local checkout, run:
+cd /Users/super_user/Projects/Venice_Forge gh auth status echo '=== CURRENT HEAD ===' git rev-parse HEAD git log -1 --oneline echo echo '=== RECENT ACTION RUNS ===' gh run list \ --repo spearchucker667/Venice_Forge \ --limit 30 echo echo '=== RECENT CI RUNS ===' gh run list \ --repo spearchucker667/Venice_Forge \ --workflow ci.yml \ --limit 15 echo echo '=== RECENT CODEQL RUNS ===' gh run list \ --repo spearchucker667/Venice_Forge \ --workflow codeql.yml \ --limit 15
+If your current August commits do not appear there, inspect repository Actions configuration. In GitHub: Settings → Actions → General. Verify Actions are enabled and that allowed-action restrictions are not rejecting actions/* or github/codeql-action.
+You can also test the API directly:
+gh api \ repos/spearchucker667/Venice_Forge/actions/permissions gh api \ repos/spearchucker667/Venice_Forge/actions/runs \ --paginate \ --jq '.workflow_runs[:20][] | [.id,.name,.run_number,.head_sha,.status,.conclusion,.created_at] | @tsv'
+P1 — inspect the first failing pre-step error. For the newest failing run:
+RUN_ID="$( gh run list \ --repo spearchucker667/Venice_Forge \ --workflow ci.yml \ --limit 1 \ --json databaseId \ --jq '.[0].databaseId' )" echo "RUN_ID=$RUN_ID" gh run view "$RUN_ID" \ --repo spearchucker667/Venice_Forge \ --verbose gh run view "$RUN_ID" \ --repo spearchucker667/Venice_Forge \ --log-failed
+If it again shows jobs with zero steps, query the jobs directly:
+gh api \ "repos/spearchucker667/Venice_Forge/actions/runs/$RUN_ID/jobs" \ --jq '.jobs[] | { id, name, status, conclusion, started_at, completed_at, runner_name, runner_group_name, labels, steps }'
+That will distinguish runner-allocation/policy failure from an action bootstrap failure.
+One CI architecture issue is worth fixing independently. ci.yml currently repeats the same checkout/setup/npm installation across six parallel jobs, and both platform-sensitive jobs subsequently perform almost the complete build pipeline again. That is not causing the immediate failures, but it substantially increases Actions usage and failure surface. I would leave that optimization until execution itself is restored.
+I would not start changing TypeScript, Vitest tests, Electron code, or package.json yet. The evidence does not currently point to application code. The first observable failure is above that layer.
+Also, the skipped smoke jobs are expected downstream behavior, not independent bugs: both depend on build, while build depends on the core lint/test/contracts jobs. When those upstream jobs fail, GitHub skips the dependents.
+The old uploaded remediation document also describes CI as having separate Windows/macOS sensitive jobs and smoke jobs, consistent with the current workflow architecture. Venice Forge Issue Fix.txtTXT
+If you paste the output of the four gh commands above, I can reduce this from an infrastructure-level diagnosis to the exact failing Actions condition.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-17T19:52:02-07:00.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Gemini 3.7 Flash (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+<USER_REQUEST>
+fixissues
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-17T19:54:38-07:00.
+</ADDITIONAL_METADATA>
+<USER_REQUEST>
+resume
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-18T11:13:11-07:00.
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Gemini 3.7 Flash (High) to Gemini 3.1 Pro (High). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>
+<USER_REQUEST>
+# Venice Forge Live Repository Audit — 2026-08-18
+
+I audited live `main` at commit `49827d510b0c520d0002eb6e95f78e3f4e430f7d`, whose latest change updates `docs/summary_of_work.md`. The current package is `3.0.0-beta.2`.  
+
+I used the uploaded remediation work order as the expected behavior contract, especially its non-negotiable Family Safe Mode, profile/master-password, media, Traffic Inspector, and browser requirements. 
+
+One important scope note: this was a **live source audit through GitHub**, not a local checkout execution. The repository's latest work ledger records `test:ci` at 5,005 passing tests across 464 files, `verify:contracts` at 103/103, clean lint/typecheck, and a successful production build, but I could not independently retrieve the current Actions run state through the connector. 
+
+## Executive verdict
+
+The repo has advanced considerably. Most of the old Electron, ingestion, CI segmentation, image tooling, profile storage, media persistence, and Traffic Inspector work has landed.
+
+It is **not release-ready against the supplied remediation contract**.
+
+I found three P0-class blockers:
+
+1. **Family Safe Mode can be bypassed at the main-process configuration boundary.** The master-password requirement is currently enforced primarily by renderer UI, while `config:writeSanitized` accepts a safety patch in main without master-password authorization.   
+2. **Family Safe Mode does not authoritatively force Venice provider `safe_mode:true`.** Main deliberately treats the provider toggle as independent even when Family Safe Mode is ON. The existing regression test passes because provider Safe Mode defaults to true; it does not exercise `family=true/provider=false`.   
+3. **Generated binary media is not semantically screened before display/persistence.** Current response screening replaces binary image/audio/video fields with `[binary-media]` before running a text classifier. That cannot detect an unsafe generated image. This directly leaves the response/display layer from the work order incomplete.  
+
+Several P1 issues also remain: post-delta automatic stream replay, character context-file prompt injection, video cancellation semantics, character required-field enforcement, Research Browser removal versus the requested browser feature, and workflow output idempotency.
+
+---
+
+# 1. P0 findings
+
+## P0-001 — Family Safe Mode password lock is renderer-mediated and bypassable at the main configuration boundary
+
+This is the highest-confidence new finding.
+
+The normal Settings flow looks correct at first glance. `SafetyPanel` opens `MasterPasswordDialog` before changing Family Safe Mode. The dialog either creates or verifies the password, and only on success does Settings call `onUpdateSafetySetting()`.  
+
+But the authoritative write is then:
+
+```ts
+desktopConfig.writeSanitized({
+  safety: {
+    local_family_safe_mode_enabled: enabled
+  }
+})
+```
+
+`config:writeSanitized` in Electron main accepts the patch and calls `writeSanitizedConfig(patch)` with no master-password proof, capability token, or verification check. Its only wrapper is IPC rate limiting.  
+
+That violates the work-order requirement that the renderer not be trusted for safety state and that a master password control Family Safe Mode changes. 
+
+There is a second weakness in the same boundary. `masterPassword:set` simply calls `setMasterPassword(password)`; it does not reject an overwrite when a verifier already exists. `masterPassword:clear` deletes the master credential without requiring the current password. 
+
+Meanwhile, `SafetyPanel` decides whether to run setup or verification from `useProfileStore().masterPasswordSet`, which is renderer-persisted metadata rather than an authoritative main-process `isMasterPasswordSet()` query.  
+
+### Concrete failure path
+
+A stale/reset/tampered renderer state can report:
+
+```text
+masterPasswordSet = false
+```
+
+The dialog enters `setup` mode and invokes:
+
+```text
+masterPassword:set
+```
+
+Main currently allows replacement of the existing verifier.
+
+More directly, any renderer path able to invoke the exposed configuration bridge can submit the Family Safe Mode setting through `config:writeSanitized` without going through `MasterPasswordDialog` at all.
+
+### Threat
+
+Compromised renderer state, an unsafe future component, imported/corrupted state, or direct access to the exposed typed bridge can disable Family Safe Mode without proving knowledge of the master password.
+
+### Affected surface
+
+```text
+src/components/settings/SafetyPanel.tsx
+src/components/settings/MasterPasswordDialog.tsx
+src/components/settings/SettingsView.tsx
+src/stores/profile-store.ts
+electron/ipc/configHandlers.ts
+electron/ipc/handlers/apiKeyHandlers.ts
+electron/services/secureStore.ts
+```
+
+### Required correction
+
+Move the **entire authorization transaction into main**.
+
+I recommend replacing the generic safety setting path with a typed operation such as:
+
+```text
+safety:setFamilySafeMode
+```
+
+Input:
+
+```ts
+{
+  enabled: boolean
+  masterPassword: string
+}
+```
+
+Main must:
+
+1. determine whether a master verifier exists;
+2. validate password + lockout;
+3. refuse the change on failure;
+4. update YAML/runtime snapshot itself;
+5. return the resulting authoritative safety snapshot;
+6. never return/store the password.
+
+Additionally:
+
+- `config:writeSanitized` must reject patches containing `safety.local_family_safe_mode_enabled`.
+- `masterPassword:set` must fail if a master password already exists.
+- Add `masterPassword:change` requiring the existing password.
+- `masterPassword:clear` must require current-password verification or an explicit destructive recovery procedure.
+- Hydrate `masterPasswordSet` from `masterPassword:isSet`; renderer persistence must not be authoritative.
+
+### Validation
+
+```bash
+npx vitest run \
+  electron/ipc/configHandlers.test.ts \
+  electron/ipc/handlers/apiKeyHandlers.test.ts \
+  src/components/settings/SafetyPanel.test.tsx \
+  src/components/settings/MasterPasswordDialog.test.tsx \
+  --no-file-parallelism
+
+npm run verify:safety-guard
+npm run verify:contracts:static
+```
+
+Required negative tests:
+
+```text
+generic config write + family=false              => rejected
+existing master + masterPassword:set(new)         => rejected
+masterPassword:clear without current password     => rejected
+incorrect password + safety toggle                => rejected
+locked-out password + safety toggle               => rejected
+correct password + safety toggle                  => accepted
+```
+
+Risk if ignored: the master-password protection is a UI convention rather than an authoritative security boundary.
+
+---
+
+## P0-002 — Family Safe Mode does not force provider `safe_mode:true`
+
+The work order is explicit:
+
+> Family Safe Mode ON must override provider `safe_mode` to `true`. 
+
+The onboarding UI makes the same promise:
+
+> “Family Safe Mode also forces provider safe_mode where supported.” 
+
+Main currently does something else.
+
+`withFamilySafeProviderOverride()` contains this explicit design comment:
+
+```text
+Family Safe Mode ... should NOT force it on without
+the user explicitly opting in.
+```
+
+It reads only:
+
+```ts
+getRuntimeVeniceApiSafeMode()
+```
+
+and applies that value to the outbound body. 
+
+So this state is possible at the authoritative dispatch boundary:
+
+```text
+Family Safe Mode = true
+Venice API Safe Mode = false
+```
+
+Result:
+
+```text
+safe_mode = false
+```
+
+for an endpoint supporting provider Safe Mode.
+
+The Settings UI prevents a normal click from producing that combination, but the main-process invariant is absent. Renderer/UI prevention is insufficient because the entire safety design correctly claims main is authoritative. 
+
+### Why the current test misses it
+
+The regression test named:
+
+```text
+forces provider safe_mode true for supported endpoints when Family Safe Mode is ON
+```
+
+sets Family Safe Mode ON but never explicitly sets provider Safe Mode OFF. `runtimeSafetySettings.ts` initializes the provider flag to `true`, so the test passes without proving the required override.  
+
+This is a false-positive contract test.
+
+### Correct invariant
+
+For provider-supported endpoints:
+
+```ts
+effectiveSafeMode =
+  getRuntimeLocalFamilySafeModeEnabled()
+    ? true
+    : getRuntimeVeniceApiSafeMode()
+```
+
+Or equivalently:
+
+```ts
+effectiveSafeMode =
+  getRuntimeLocalFamilySafeModeEnabled() ||
+  getRuntimeVeniceApiSafeMode()
+```
+
+Do this in the authoritative main/server dispatch layer, not just the renderer.
+
+### Required test matrix
+
+```text
+Family ON  + Provider ON  => safe_mode true
+Family ON  + Provider OFF => safe_mode true
+Family OFF + Provider ON  => safe_mode true
+Family OFF + Provider OFF => safe_mode false
+unsupported endpoint      => no invented safe_mode field
+```
+
+Also validate imported YAML/config state:
+
+```text
+local_family_safe_mode_enabled: true
+venice_api_safe_mode: false
+```
+
+must resolve outbound supported requests to:
+
+```json
+{"safe_mode": true}
+```
+
+### Validation
+
+```bash
+npx vitest run tests/safety/guardPipeline.test.ts --no-file-parallelism
+npm run verify:safety-guard
+npm run verify:image-policy
+npm run verify:network-boundaries
+```
+
+Risk if ignored: the exact provider-side defense required to reduce unsafe image output can silently be disabled while the UI reports Family Safe Mode as ON.
+
+---
+
+## P0-003 — Generated binary image/media response screening is not implemented semantically
+
+Main does run an upstream response screen. That part is good.
+
+But before screening, `stringifyResponseForScreening()` deliberately replaces these keys:
+
+```text
+dataBase64
+image
+images
+dataUrl
+audio
+video
+```
+
+with:
+
+```text
+[binary-media]
+```
+
+Then the rule engine screens only the remaining text/JSON representation. 
+
+Therefore:
+
+```text
+provider returns unsafe generated PNG
+        ↓
+actual pixels are replaced with "[binary-media]"
+        ↓
+text classifier sees no visual content
+        ↓
+response can pass
+```
+
+`SECURITY.md` accurately admits this limitation: the local system does not inspect every binary/media payload semantically. 
+
+That is defensible documentation, but it does **not** satisfy the supplied remediation contract, which requires response/display screening for the Family Safe Mode image bypass and says not to ship until it is fixed. 
+
+### Required architecture
+
+When Family Safe Mode is ON:
+
+```text
+request guard
+→ forced provider safe_mode
+→ provider dispatch
+→ media decoding/validation
+→ safety classification
+→ persistence
+→ display
+```
+
+Unsafe media must fail before both:
+
+```text
+generated media persistence
+renderer display
+```
+
+This does not require live explicit-image tests. Use mocked classifier results and fixture-safe image buffers.
+
+### Minimum contract
+
+```ts
+type GeneratedMediaSafetyResult =
+  | { allowed: true }
+  | {
+      allowed: false
+      reasonCode: string
+      category: string
+    }
+```
+
+The renderer must receive only the block result, never the rejected media.
+
+### Validation
+
+Add tests proving:
+
+```text
+safe synthetic image classifier result    => persisted/displayed
+unsafe mocked classifier result            => not persisted
+unsafe mocked classifier result            => no renderer media URL
+classifier failure in Family Safe Mode     => fail closed
+Family Safe Mode OFF                       => documented Adult Mode path
+```
+
+Then:
+
+```bash
+npm run verify:safety-guard
+npm run verify:image-policy
+npm run test:electron
+npm run test:ui:media
+```
+
+Residual risk: semantic classifiers are imperfect, but the requested response/display safety layer would finally exist rather than being structurally incapable of inspecting pixels.
+
+---
+
+# 2. P1 findings
+
+## P1-001 — Streaming still retries after observable partial output
+
+This is the major open item from the August 15 exhaustive audit.
+
+The current roadmap explicitly leaves WP-06 unresolved. 
+
+`chat-stream-manager.ts` has automatic retries for retryable network/status failures. It buffers/flushes deltas to the conversation, but no durable state prevents another provider request after user-visible content/tool/appended-message output has already occurred. 
+
+So a sequence can be:
+
+```text
+provider attempt #1
+→ visible partial output
+→ 5xx / network interruption
+→ automatic retry
+→ provider attempt #2
+```
+
+That can produce duplicate continuation, divergent text, duplicate tool effects, and multiple billable generations from one user action.
+
+### Required fix
+
+Introduce something equivalent to:
+
+```ts
+let observableOutputSeen = false
+```
+
+Set it before exposing any:
+
+```text
+content delta
+reasoning delta
+tool call
+appended message
+generated media
+managed document
+```
+
+On retryable failure:
+
+```ts
+if (observableOutputSeen) {
+  persistPartialResult()
+  exposeExplicitRetryAction()
+  return
+}
+```
+
+Only zero-output transport failures may auto-retry.
+
+### Validation
+
+```bash
+npx vitest run src/stores/chat-stream-manager.test.ts --no-file-parallelism
+```
+
+Required tests:
+
+```text
+failure before first delta → may retry
+failure after content delta → provider called exactly once
+failure after reasoning delta → provider called exactly once
+failure after tool call → provider called exactly once
+failure after appended message → provider called exactly once
+partial output preserved
+explicit user Retry creates a new request
+```
+
+---
+
+## P1-002 — Character context files are elevated into system context as executable-looking instructions
+
+Character file validation itself is substantially implemented. The editor limits context files to PDF/TXT/MD and 5 MiB and extracts PDF text. 
+
+The problem is downstream prompt construction.
+
+`buildCharactersBlock()` places creator instructions and general context-file text directly into the character block:
+
+```text
+[Creator instructions]
+<content>
+
+[Sourced Context Files]
+[Sourced File: filename]
+<raw content>
+```
+
+That character block is assembled into privileged RP prompt context. There is no robust inert-data encoding or delimiter escaping visible at this boundary. 
+
+An uploaded `.txt`, `.md`, or extracted PDF containing imperative model instructions can therefore compete with legitimate system instructions.
+
+Rejecting JSON/CSV does not solve prompt injection; Markdown, TXT, and PDF are equally capable of containing hostile instructions.
+
+This directly conflicts with the work-order requirement:
+
+> “Treat context file contents as data, never instructions.” 
+
+### Recommended correction
+
+For general reference files:
+
+- do not merge raw content into creator/system instructions;
+- encode it as an explicitly bounded reference-data block;
+- escape filenames and delimiters;
+- identify it as untrusted/user-supplied;
+- preferably place reference material at a lower message authority than the character system prompt.
+
+For “apply file to System Prompt/Instructions” behavior:
+
+- require explicit preview/application;
+- clearly state that this promotes file text into model instructions;
+- do not silently promote a newly imported file.
+
+### Regression fixture
+
+Use a neutral adversarial fixture such as:
+
+```text
+REFERENCE DATA
+Instruction-shaped text intended to test whether the enclosing
+reference-data boundary can be escaped.
+```
+
+Verify the compiled structure cannot close its enclosing representation or become a new system message.
+
+### Validation
+
+```bash
+npx vitest run \
+  src/services/rp/promptBuilderService.test.ts \
+  src/components/rp-studio/CharacterEditor.test.tsx \
+  --no-file-parallelism
+
+npm run test:character-cards
+npm run verify:character-card-security
+```
+
+---
+
+## P1-003 — Character “required fields” requirement is intentionally not enforced
+
+The current character schema contains essentially all requested capabilities: context files, instructions, web search, Brave/Google URL scraping provider, model, thoughts toggle, temperature, Top P, first message, avatar, system prompt, etc. 
+
+But `CharacterEditor` deliberately preserves Character Card V2 interoperability and does not reject empty authoring fields at save time. That conflicts with the work-order requirement that a newly created Venice Forge character require the designated fields. 
+
+### Correct reconciliation
+
+Do not break imported ST/Card V2 compatibility.
+
+Instead distinguish:
+
+```text
+import compatibility validation
+```
+
+from:
+
+```text
+Venice Forge new-character authoring validation
+```
+
+Imported cards may retain schema-permitted empties.
+
+New locally authored characters should require, at minimum, whatever the product contract defines as mandatory:
+
+```text
+Name
+Description
+Instructions
+Image or explicit auto-generation state
+```
+
+System Prompt and Intro Statement remain optional per the work order.
+
+### Validation
+
+```bash
+npm run test:character-cards
+```
+
+Add tests for:
+
+```text
+new character + empty name          => cannot save
+new character + empty description   => cannot save
+new character + empty instructions  => cannot save
+imported compatible sparse card     => can import/edit
+```
+
+---
+
+## P1-004 — Video timeout/cancellation contract still differs materially from requested behavior
+
+The work order requires:
+
+```text
+default timeout: 120 seconds
+user cancellation => aborted
+stop polling after cancel/timeout
+```
+
+Current `use-video.ts` uses a 300-second queue timeout. 
+
+The main background task manager also uses a 300-second video-generation timeout. More importantly, `cancelBackgroundTaskInMain()` explicitly does **not** terminate polling for provider-polled video/music tasks. It updates the task with:
+
+```text
+Provider cancellation is unavailable; generation is still running.
+```
+
+and leaves generation monitoring active. 
+
+The retrieval implementation itself is substantially hardened: bounded JSON, streamed MP4 persistence, explicit retryability, and Traffic Inspector events are present. 
+
+So the issue is no longer “video is entirely broken.” It is a contract mismatch around cancellation and timeout semantics.
+
+### Required design decision
+
+If Venice has no cancellation endpoint, distinguish:
+
+```text
+Cancel provider job
+```
+
+from:
+
+```text
+Stop monitoring locally
+```
+
+Do not claim provider cancellation when it cannot be done.
+
+But the user's explicit “Cancel” action should at minimum:
+
+```text
+stop local polling
+mark local task aborted/cancelled
+record cancellation in Traffic Inspector
+avoid continued background retries
+tell user the remote provider may still finish/bill
+```
+
+If the product intentionally wants background continuation, rename the action away from “Cancel.”
+
+### Validation
+
+```bash
+npx vitest run \
+  src/hooks/use-video.test.ts \
+  electron/services/backgroundTaskManager.test.ts \
+  electron/services/videoRetrieveService.test.ts \
+  --no-file-parallelism
+```
+
+---
+
+## P1-005 — Research Browser was removed rather than repaired
+
+The requested browser module is not active.
+
+The current archive says:
+
+```text
+Status: inactive and unsupported as of 2026-07-18.
+Nothing here is imported, typechecked, tested, bundled, or packaged.
+```
+
+The remaining Research workspace intentionally operates without an embedded browser. 
+
+This is internally consistent and secure. It is not, however, fulfillment of the remediation work order asking for:
+
+- browser menu freeze fix,
+- URL loading,
+- embedded browsing,
+- local browser home/splash page. 
+
+### Classification
+
+If embedded Browser is no longer a product requirement:
+
+```text
+CLOSED BY SCOPE DECISION
+```
+
+and the old work order should be amended.
+
+If Browser is still intended:
+
+```text
+P1 feature regression / missing feature
+```
+
+Reactivate only through the archive's stated process: new threat model, navigation containment tests, and explicit build/CI restoration. 
+
+Do not quietly import the archived WebContentsView implementation back into production.
+
+---
+
+## P1-006 — Workflow output idempotency requirement is not demonstrated
+
+The workflow planner notices duplicate `outputKey` values but deliberately says:
+
+```text
+Duplicate output key ... uses the last step value;
+all actions will still run.
+```
+
+It then keeps every generated action. 
+
+That does not provide the work-order requirement:
+
+```text
+exactly one image emitted per workflow run unless batch output explicitly requested
+```
+
+Nor does the planner expose an idempotency key combining:
+
+```text
+workflowRunId
+outputNodeId
+generationDispatchId
+```
+
+### Recommendation
+
+At the execution boundary, add an idempotency set:
+
+```text
+(workflowRunId, outputNodeId)
+```
+
+and reject/reuse a second generation dispatch for the same non-batch output node.
+
+Do not infer idempotency merely from `outputKey`; that is output naming, not execution identity.
+
+### Validation
+
+```bash
+npm run test:workflow:core
+npm run test:workflow:ui
+npm run verify:workflow-templates
+```
+
+Required regression:
+
+```text
+one workflow run + one image output node
+=> exactly one image generation adapter invocation
+=> exactly one final media record
+```
+
+---
+
+# 3. P2 findings
+
+## P2-001 — Image model “cost per image” is only partially implemented
+
+Image Studio does display pricing metadata, but the current presentation uses token-style values such as:
+
+```text
+$X / 1M in
+$Y / 1M out
+```
+
+from model pricing metadata. That is not necessarily a meaningful **estimated cost per generated image**, which was the requested feature.
+
+The prompt-limit/enhancer implementation itself is much stronger now: a shared 1,500-character constant, enhancer instruction, code-level clamp, sentence/phrase-aware truncation, and model-specific minimum limit are present.  
+
+### Action
+
+If Venice exposes a per-generation/unit price, display that.
+
+Otherwise show:
+
+```text
+Estimated cost: unavailable
+```
+
+rather than repurposing token pricing as image cost.
+
+---
+
+## P2-002 — SECURITY.md Action-pinning table is stale
+
+The security document records specific pinned GitHub Action SHAs and version comments. 
+
+Current workflows have moved forward from some of those documented values. The workflows remain SHA-pinned, which is good; the problem is the documentation table no longer being authoritative. 
+
+### Action
+
+Either:
+
+1. update the table whenever Dependabot changes workflow pins; or
+2. preferably stop duplicating exact SHAs in prose and add a verifier that reads workflows.
+
+Validation:
+
+```bash
+npm run verify:markdown-links
+npm run verify:ci-contract
+```
+
+---
+
+## P2-003 — Coverage remains a monolithic Vitest command
+
+Normal CI tests are now heavily segmented, which fixes the earlier test-runner containment problem. `test:ci` runs server, Electron, ingestion, unit shards, UI shards, and contract tests. 
+
+However:
+
+```json
+"test:coverage":
+  "vitest run ... --coverage --no-file-parallelism"
+```
+
+is still a single large process, despite several segmented `test:coverage:*` scripts also existing. 
+
+This is no longer in the main `npm run ci` chain, so I would not classify it as a release blocker. But the separate coverage workflow remains more opaque than necessary.
+
+Use the existing segmented coverage scripts and merge V8 reports instead.
+
+---
+
+## P2-004 — Character avatar-size documentation has drifted
+
+The authoritative RP type defines:
+
+```ts
+MAX_AVATAR_BYTES = 5 * 1024 * 1024
+```
+
+and describes that as 5 MiB. 
+
+Some character editor commentary from prior work still refers to a much larger historical limit. This should be normalized so future agents do not “fix” the code back toward a stale comment.
+
+---
+
+# 4. Confirmed improvements / closed items
+
+Several older defects are now genuinely closed at source level.
+
+| Prior requirement | Current assessment |
+|---|---|
+| Default Venice AI avatar | **PASS** |
+| Per-conversation character avatar cache key | **PASS** |
+| Image prompt 1,500-character ceiling | **PASS** |
+| Prompt enhancer overflow | **PASS** |
+| Upscale/background drag-and-drop | **PASS** |
+| Image request telemetry | **PASS** |
+| Video retrieval telemetry | **PASS** |
+| Unsafe privacy JSON absent | **PASS** |
+| `venice-forge.log` absent/ignored | **PASS** |
+| Traffic Inspector rename | **PASS UI; compatibility key remains internally** |
+| Profile password verifier/lockout | **Strongly implemented** |
+| Profile switching isolation | **Substantially implemented** |
+| Onboarding | **PASS, except one safety claim conflicts with implementation** |
+| Music playback/error handling | **Implemented; live headed QA still external** |
+| Research Browser | **Intentionally inactive, not fixed** |
+| CI unit/UI segmentation | **PASS** |
+| Contract verifier grouping | **PASS** |
+
+### Chat avatar
+
+The assistant default is exactly:
+
+```text
+assets/branding/venice-seal-red-fill.svg
+```
+
+and `MessageBubble` uses a selected `CharacterAvatar` when character metadata/cache key are available.  
+
+`ChatView` provides:
+
+```ts
+assistantCharacterCacheKey={`message-${conversation.id}`}
+```
+
+so the character avatar cache is explicitly conversation-scoped rather than globally reused.  
+
+### Image drag/drop
+
+`image-tools.tsx` handles drag-over/drop, prevents default navigation behavior, and accepts supported PNG/JPEG/WebP inputs through shared validation. 
+
+### Traffic Inspector
+
+The centralized Venice fetch transport records a pending request before dispatch and updates outcomes after success/failure, while request body sanitization avoids retaining raw high-risk fields. Main-process video/audio polling also emits inspector telemetry.    
+
+The two purge targets are absent from live `main`, and `.gitignore` explicitly excludes both agent privacy summaries and runtime logs. 
+
+### Profiles
+
+Profile switching is main-session gated for password-protected profiles and performs a renderer reload after changing active profile, which is a sensible way to clear volatile UI/store state between namespaces. 
+
+The secure-store design uses verifier-based passwords rather than recoverable plaintext and includes lockout behavior. The remaining problem is authorization around changing/resetting the master verifier and changing Family Safe Mode, not the password hashing/storage primitive itself. 
+
+### Music
+
+Music is now queue/background-task based and exposes durable result URLs, MIME information, normalized errors, elapsed time, cancellation state, and media IDs. 
+
+The UI renders an actual `<audio controls>` element and handles unsupported-codec/decode/playback failures, native Save As, and Media Studio insertion. 
+
+This is a significant implementation improvement. Real paid-provider/audio-device playback remains an external acceptance test.
+
+---
+
+# 5. Work-order coverage matrix
+
+| Module | Status | Main observation |
+|---|---:|---|
+| Chat avatar | **PASS** | Correct Venice fallback + conversation-scoped character cache |
+| Image layout/template | **Likely PASS** | Prompt/UI containment work present |
+| Family Safe Mode | **FAIL / P0** | Main password boundary bypass + provider safe-mode invariant + binary screening gap |
+| Image 1,500-char limit | **PASS** | Input and enhancer enforce limit |
+| Image drag/drop | **PASS** | PNG/JPEG/WebP + drop prevention |
+| Upscale reliability | **Implemented, external QA needed** | Shared validated transport |
+| Image cost/model | **PARTIAL** | Token pricing ≠ clearly per-image estimate |
+| Traffic Inspector image | **PASS architecture** | Centralized Venice transport records requests |
+| Traffic Inspector video | **PASS architecture** | Queue/retrieve lifecycle telemetry |
+| Purge privacy JSON | **PASS** | File absent + ignore rule |
+| Last Error stale state | **Likely PASS** | Store clears logs; pane derives selection from current logs |
+| Workflow duplicate output | **PARTIAL / P1** | No demonstrated per-run output-node idempotency |
+| Character fields/settings | **PARTIAL** | Schema/features present; required authoring validation absent |
+| Character context files | **FAIL security / P1** | Raw file text can enter privileged prompt block |
+| Character Create Me | **Substantially present** | Generation/edit plumbing exists |
+| Browser menu/URL/home | **NOT ACTIVE** | Entire embedded browser intentionally archived |
+| Video timeout | **FAIL requirement** | 300s versus requested 120s |
+| Video cancel | **FAIL requirement** | Provider-polled task continues |
+| Video cost/model | **Not conclusively verified** | Needs explicit pricing acceptance |
+| Music playback | **Implemented** | Audio element + durable result/error handling |
+| Profiles | **Strong partial** | Namespace/session design good; master safety authorization flawed |
+| Password storage | **Strong** | Main verifier + secure storage |
+| Master Safe Mode password | **FAIL / P0** | Not authoritative at config write/reset boundary |
+| Traffic Inspector rename | **PASS UI** | Internal legacy compatibility state remains |
+| Onboarding | **PASS/partial** | Complete UX, but safe-mode promise currently false |
+| Safe Mode PG-13 request guard | **Mostly implemented** | Image nudity/gore rule categories exist |
+| Safe Mode response/display guard | **FAIL for binary media** | Text/JSON only after binary redaction |
+
+The current safety classifier has been expanded beyond its historical child-exploitation core to include image-specific explicit-nudity, visible-genital, erotic-framing, and graphic-gore signals, despite the older file naming. 
+
+---
+
+# 6. Current audit-roadmap status
+
+The repo's own August 15 remediation work is not complete.
+
+The current roadmap keeps:
+
+```text
+WP-06 — post-delta retry safety
+WP-07 — external/signed/paid-provider acceptance
+```
+
+open. 
+
+The latest commit's summary reports the recent WP-02 through WP-05 remediation and 5,005-test `test:ci` pass, but it does not claim WP-06 or WP-07 complete. 
+
+So the repo's own status and this independent source inspection agree on the major streaming/external-validation gap.
+
+This audit adds the Family Safe Mode authoritative-boundary issues above, which should take priority over WP-06.
+
+---
+
+# 7. Recommended GitHub issues
+
+### P0
+
+1. `[P0][Safety] Enforce master-password authorization for Family Safe Mode changes in Electron main`
+2. `[P0][Safety] Prevent unauthenticated master-password overwrite and clear`
+3. `[P0][Safety] Force Venice safe_mode=true whenever Family Safe Mode is enabled`
+4. `[P0][Safety] Add generated binary-media response/display screening before persistence`
+
+### P1
+
+5. `[P1][Chat] Disable automatic provider retry after any observable stream delta`
+6. `[P1][Characters] Treat uploaded character context as untrusted reference data, not privileged instructions`
+7. `[P1][Characters] Enforce Venice Forge required fields for newly authored characters`
+8. `[P1][Video] Align timeout/cancellation semantics with explicit 120s/local-abort contract`
+9. `[P1][Workflow] Add per-run output-node generation idempotency`
+10. `[P1][Research] Decide whether embedded Research Browser is permanently retired or restore through a new threat model`
+
+### P2
+
+11. `[P2][Image] Display actual per-generation image pricing or label pricing unavailable`
+12. `[P2][Docs] Synchronize SECURITY.md GitHub Action pin documentation`
+13. `[P2][CI] Use segmented coverage scripts instead of monolithic test:coverage`
+14. `[P2][Docs] Remove stale character avatar-size comments`
+
+---
+
+# 8. Recommended first 10 actions
+
+1. **Close the direct Family Safe Mode IPC bypass.**
+   - Modify `electron/ipc/configHandlers.ts`.
+   - Generic config writes must not change Family Safe Mode.
+   - Add a dedicated authenticated main-process safety-toggle handler.
+
+2. **Harden master-password lifecycle.**
+   - `set` only if unset.
+   - `change` requires current password.
+   - `clear` requires current password.
+   - Source “is set” state from main.
+
+3. **Fix provider-safe-mode invariant.**
+   - Change `withFamilySafeProviderOverride()`.
+   - Add all four Family/provider-state combinations.
+
+4. **Add binary media safety gate.**
+   - Execute after media validation and before persistence/display.
+   - Fail closed while Family Safe Mode is ON.
+
+5. **Fix WP-06 stream retry.**
+   - No automatic retry after any observable output.
+
+6. **Demote character file data out of privileged instructions.**
+   - Add structured inert-reference encoding.
+   - Remove implicit targeted promotion.
+
+7. **Correct video Cancel semantics.**
+   - Stop local polling immediately.
+   - Record local abort even if the provider cannot cancel.
+
+8. **Add workflow generation idempotency.**
+   - Key by run + output node.
+
+9. **Resolve Browser scope explicitly.**
+   - Either remove Browser from current requirements or create a reviewed reactivation work order.
+
+10. **Only then run the full release gates.**
+
+---
+
+# 9. Required final validation after remediation
+
+```bash
+npm ci
+
+npm run lint:eslint
+npm run typecheck
+
+npx vitest run \
+  tests/safety/guardPipeline.test.ts \
+  tests/safety/enforcementBoundaries.test.ts \
+  electron/ipc/configHandlers.test.ts \
+  electron/ipc/handlers/apiKeyHandlers.test.ts \
+  --no-file-parallelism
+
+npm run verify:safety-guard
+npm run verify:image-policy
+npm run verify:network-boundaries
+
+npx vitest run \
+  src/stores/chat-stream-manager.test.ts \
+  --no-file-parallelism
+
+npm run test:character-cards
+
+npx vitest run \
+  electron/services/backgroundTaskManager.test.ts \
+  electron/services/videoRetrieveService.test.ts \
+  --no-file-parallelism
+
+npm run test:workflow:core
+npm run test:workflow:ui
+npm run verify:workflow-templates
+
+npm run test:ci
+npm run verify:contracts
+npm audit --omit=dev --audit-level=moderate
+npm audit --audit-level=critical
+npm run build
+npm run verify:dist
+```
+
+Then platform/package acceptance:
+
+```bash
+npm run dist:mac
+npm run verify:dist:mac
+
+npm run dist:win
+npm run verify:dist:win
+```
+
+For Family Safe Mode, use mocks and safe fixtures only; there is no reason to send explicit material to a live generation endpoint to prove these boundaries.
+
+## Release gate
+
+I would currently set the project status to:
+
+```text
+3.0.0-beta.2
+BUILD/TEST BASELINE: healthy according to tracked validation evidence
+SECURITY/SAFETY RELEASE GATE: BLOCKED
+PRIMARY BLOCKERS:
+  P0-001 master-password / config-write authorization
+  P0-002 Family Safe Mode provider safe_mode invariant
+  P0-003 generated binary response/display screening
+SECONDARY:
+  WP-06 post-delta retry
+  character-context privilege boundary
+  video cancellation contract
+  workflow output idempotency
+EXTERNAL:
+  WP-07 signed/paid/headed acceptance
+```
+
+The most important discovery in this pass is that the current Family Safe Mode problem is no longer primarily about the regex classifier. The classifier has substantial coverage. The weak point is now **authority**: who is allowed to change the state, whether main enforces the password, whether main forces the provider safety flag, and whether returned pixels are ever actually inspected. Those should be fixed before spending more time on UI polish or additional feature expansion.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-08-18T17:00:16-07:00.
+</ADDITIONAL_METADATA>

@@ -32,6 +32,7 @@ const fixtures = vi.hoisted(() => {
     exampleDialogues: [],
     // Minimal avatar so "Image (avatar) is required." validation passes.
     avatar: { dataUri: "data:image/png;base64,iVBORw0KGgo=", mimeType: "image/png" as const },
+    sourceFormat: "card-v2-json",
     createdAt: 1_700_000_000_000,
     updatedAt: 1_700_000_000_000,
   };
@@ -689,3 +690,71 @@ describe("CharacterEditor — Instruction file loading & sourced context files",
   });
 });
 
+
+describe("CharacterEditor — Authoring Validation (P1-003)", () => {
+  it("rejects new character with empty name", async () => {
+    const blankCard = { ...fixtures.sampleCard, id: "blank_1", name: "", description: "", instructions: "", avatar: undefined, sourceFormat: "venice-forge" };
+    (useCharacterCardStore.getState() as any).setCards([blankCard]);
+    const { container } = render(<CharacterEditor cardId="blank_1" onClose={() => {}} />);
+    
+    // Fill description and instructions and avatar but leave name blank
+    const desc = screen.getByLabelText(/Description/i);
+    fireEvent.change(desc, { target: { value: "A description" } });
+    const inst = screen.getByLabelText(/System Prompt/i);
+    fireEvent.change(inst, { target: { value: "Some instructions" } });
+    const txt = new File(["x"], "avatar.png", { type: "image/png" });
+    const avatarInput = container.querySelector("input[accept^='image']") as HTMLInputElement;
+    fireEvent.change(avatarInput, { target: { files: [txt] } });
+    
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() => {
+      expect(screen.getByText(/New Venice Forge characters require: Name/i)).toBeInTheDocument();
+    });
+  });
+
+  it("rejects new character with empty description", async () => {
+    const blankCard = { ...fixtures.sampleCard, id: "blank_1", name: "", description: "", instructions: "", avatar: undefined, sourceFormat: "venice-forge" };
+    (useCharacterCardStore.getState() as any).setCards([blankCard]);
+    const { container } = render(<CharacterEditor cardId="blank_1" onClose={() => {}} />);
+    
+    const name = screen.getByLabelText(/Name/i);
+    fireEvent.change(name, { target: { value: "A name" } });
+    
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() => {
+      expect(screen.getByText(/New Venice Forge characters require: Description/i)).toBeInTheDocument();
+    });
+  });
+  
+  it("rejects new character with empty instructions", async () => {
+    const blankCard = { ...fixtures.sampleCard, id: "blank_1", name: "", description: "", instructions: "", avatar: undefined, sourceFormat: "venice-forge" };
+    (useCharacterCardStore.getState() as any).setCards([blankCard]);
+    const { container } = render(<CharacterEditor cardId="blank_1" onClose={() => {}} />);
+    
+    const name = screen.getByLabelText(/Name/i);
+    fireEvent.change(name, { target: { value: "A name" } });
+    const desc = screen.getByLabelText(/Description/i);
+    fireEvent.change(desc, { target: { value: "A description" } });
+    
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() => {
+      expect(screen.getByText(/New Venice Forge characters require: Instructions/i)).toBeInTheDocument();
+    });
+  });
+
+  it("allows imported compatible sparse card to save", async () => {
+    (useCharacterCardStore.getState() as any).setCards([fixtures.sampleCard]);
+    const { container } = render(<CharacterEditor cardId="card_test_001" onClose={() => {}} />);
+    
+    // Clear the name (this card has sourceFormat: card-v2-json)
+    const name = screen.getByLabelText(/Name/i);
+    fireEvent.change(name, { target: { value: "" } });
+    
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    
+    // It should not show the validation error for new characters
+    await waitFor(() => {
+      expect(screen.queryByText(/New Venice Forge characters require/i)).not.toBeInTheDocument();
+    });
+  });
+});

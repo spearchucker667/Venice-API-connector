@@ -652,6 +652,21 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
     // Character Card V2 permits required string fields to be empty. Authoring
     // recommendations are surfaced in the validation panel, not used to reject
     // an otherwise interoperable imported card.
+    if (!draft.sourceFormat || draft.sourceFormat === "venice-forge") {
+      const missingFields = [];
+      if (!draft.name?.trim()) missingFields.push("Name");
+      if (!draft.description?.trim()) missingFields.push("Description");
+      if (!draft.instructions?.trim()) missingFields.push("Instructions");
+      
+      const sourceMediaId = typeof draft.metadata?.sourceMediaId === "string" ? draft.metadata.sourceMediaId : undefined;
+      if (!draft.avatar && !sourceMediaId) missingFields.push("Image");
+      
+      if (missingFields.length > 0) {
+        setError(`New Venice Forge characters require: ${missingFields.join(", ")}`);
+        return;
+      }
+    }
+
     if (tokenBudget?.overLimit) {
       setError(
         `Character exceeds the supported context budget by ${Math.abs(tokenBudget.remainingInputTokens).toLocaleString()} estimated tokens.`,

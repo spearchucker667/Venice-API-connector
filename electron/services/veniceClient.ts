@@ -255,6 +255,11 @@ export async function performVeniceRequest(
         return response; // Success, or a client error (e.g. 400 Bad Request, 401 Auth) that shouldn't be retried
       }
 
+      if (hasStartedStreaming) {
+        logError(`Provider ${providerId} failed with ${response.status} after stream started, cannot fallback.`);
+        return response;
+      }
+
       // If we got here, it's a retryable error.
       logError(`Provider ${providerId} failed with ${response.status}, attempting fallback if available.`);
     } catch (err) {

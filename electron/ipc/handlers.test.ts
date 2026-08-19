@@ -322,17 +322,22 @@ describe("registerIpcHandlers", () => {
   });
 
   it("registers master password IPC handlers without returning verifier material", async () => {
-    vi.mocked(isMasterPasswordSet).mockReturnValueOnce(true);
-    vi.mocked(verifyMasterPassword).mockReturnValueOnce({ verified: true, lockedOutSeconds: 0 });
+    vi.mocked(isMasterPasswordSet)
+      .mockReturnValueOnce(true) // for isSet
+      .mockReturnValueOnce(false) // for set
+      .mockReturnValue(true); // for clear
+    vi.mocked(verifyMasterPassword).mockReturnValue({ verified: true, lockedOutSeconds: 0 });
 
     expect(await capturedHandlers.get("masterPassword:isSet")!(null)).toBe(true);
     expect(await capturedHandlers.get("masterPassword:set")!(null, "secret")).toEqual({ ok: true });
     expect(await capturedHandlers.get("masterPassword:verify")!(null, "secret")).toEqual({ ok: true, verified: true, lockedOutSeconds: 0 });
-    expect(await capturedHandlers.get("masterPassword:clear")!(null)).toEqual({ ok: true });
+    const clearRes = await capturedHandlers.get("masterPassword:clear")!(null, { currentPassword: "secret" });
+    console.log("CLEAR RES", clearRes);
+    expect(clearRes).toEqual({ ok: true });
 
-    expect(setMasterPassword).toHaveBeenCalledWith("secret");
-    expect(verifyMasterPassword).toHaveBeenCalledWith("secret");
-    expect(clearMasterPassword).toHaveBeenCalled();
+    expect(vi.mocked(setMasterPassword)).toHaveBeenCalledWith("secret");
+    expect(vi.mocked(verifyMasterPassword)).toHaveBeenCalledWith("secret");
+    expect(vi.mocked(clearMasterPassword)).toHaveBeenCalled();
   });
 
   describe("generic credential bridge denylist", () => {

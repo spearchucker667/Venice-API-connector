@@ -39,7 +39,7 @@ const TASKS_FILE = path.join(TASKS_DIR, "tasks.json");
 
 const POLL_INTERVAL_MS = 3000;
 const MAX_ATTEMPTS = 200;
-const MAX_VIDEO_GENERATION_MS = 300000; // 5 minutes
+const MAX_VIDEO_GENERATION_MS = 120000; // 2 minutes (120s)
 const MAX_NON_VIDEO_GENERATION_MS = 120000; // 2 minutes
 const DURABLE_RESULT_URL_RE = /^venice-media:\/\/[a-f0-9]{64}$/;
 
@@ -343,13 +343,14 @@ export async function updateBackgroundTaskInMain(
 export async function cancelBackgroundTaskInMain(taskId: string): Promise<BackgroundTask | null> {
   await initBackgroundTaskManager();
   const task = state.tasks[taskId];
+  stopPolling(taskId);
   if (task && isProviderPolledBackgroundTaskType(task.type)) {
     return applyUpdate(taskId, {
-      error: "Provider cancellation is unavailable; generation is still running.",
+      status: "aborted",
+      error: "Cancel requested (provider generation may still run)",
       metadata: { cancellationUnsupported: true },
     });
   }
-  stopPolling(taskId);
   return applyUpdate(taskId, { status: "aborted", error: "Cancel requested" });
 }
 

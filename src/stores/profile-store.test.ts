@@ -4,6 +4,9 @@ import { useProfileStore } from "./profile-store";
 
 vi.mock("../services/desktopBridge", () => ({
   isElectron: vi.fn(() => false),
+  desktopMasterPassword: {
+    isSet: vi.fn(() => Promise.resolve(false)),
+  },
   desktopProfilePassword: {
     activate: vi.fn(),
     set: vi.fn(),

@@ -82,6 +82,7 @@ function resolvePrompt(template: string, input: string): string {
 }
 
 async function executeNode(
+  runId: string | undefined,
   node: Node<VeniceNodeData>,
   input: string,
   signal?: AbortSignal,
@@ -228,6 +229,8 @@ async function executeNode(
         queueId: videoId,
         model: queueResp.model || String(wirePayload.model),
         request: requestSummary,
+        runId: runId,
+        nodeId: node.id,
         ...(queueResp.download_url ? { queueDownloadUrl: queueResp.download_url } : {}),
         signal,
       })
@@ -242,6 +245,7 @@ export interface ExecuteOptions {
    *  against concurrent runs.  This is an engine-level invariant, not a
    *  UI-only check. */
   isRunning?: boolean
+  runId?: string
   onUpdate?: (nodeId: string, result: Partial<NodeResult>) => void
 }
 
@@ -259,7 +263,7 @@ export async function executeWorkflow(
     throw new WorkflowExecutionError('Workflow is already running.')
   }
 
-  const _runId = crypto.randomUUID()
+  const _runId = opts.runId || crypto.randomUUID()
   const validation = validateWorkflow({ nodes, edges })
   if (!validation.ok) {
     const first = validation.errors[0]
@@ -292,7 +296,7 @@ export async function executeWorkflow(
         onUpdate(nodeId, { status: 'running', output: undefined, error: undefined })
         try {
           const input = getInputs(nodeId, edges, outputs)
-          const output = await executeNode(node, input, levelCtrl.signal)
+          const output = await executeNode(_runId, node, input, levelCtrl.signal)
           outputs.set(nodeId, output)
           const kind = NODE_SCHEMAS[node.data.nodeType]?.output as IOKind | undefined
           const outputKind = kind && kind !== 'none' ? (kind as NodeResult['outputKind']) : undefined

@@ -7,7 +7,7 @@ import { AccessibleDialog } from '../ui/AccessibleDialog'
 interface MasterPasswordDialogProps {
   isOpen: boolean
   onClose: () => void
-  onSuccess: () => void
+  onSuccess: (password: string) => void
   mode: 'setup' | 'verify'
 }
 
@@ -45,9 +45,9 @@ export function MasterPasswordDialog({ isOpen, onClose, onSuccess, mode }: Maste
         const res = await desktopMasterPassword.set(password)
         if (res.ok) {
           setMasterPasswordSet(true)
+          onSuccess(password)
           setPassword('')
           setConfirm('')
-          onSuccess()
         } else {
           setError(res.error || t('settings:masterPassword.errors.saveFailed', 'Failed to securely save password'))
         }
@@ -61,9 +61,9 @@ export function MasterPasswordDialog({ isOpen, onClose, onSuccess, mode }: Maste
     try {
       const res = await desktopMasterPassword.verify(password)
       if (res.ok && res.verified) {
+        onSuccess(password)
         setPassword('')
         setConfirm('')
-        onSuccess()
       } else {
         const lockoutMsg = res.lockedOutSeconds && res.lockedOutSeconds > 0
           ? t('settings:masterPassword.errors.lockedOut', { defaultValue: ' Locked out. Try again in {{seconds}}s.', seconds: res.lockedOutSeconds })

@@ -270,6 +270,7 @@ export async function startStream(
 
   try {
     let attempts = 0;
+    let hasReceivedOutput = false;
     
     while (attempts <= MAX_STREAM_RETRIES) {
       try {
@@ -277,6 +278,7 @@ export async function startStream(
         await veniceStreamChat(body, {
           signal: controller.signal,
           onDelta: (chunk: StreamChunk) => {
+            hasReceivedOutput = true;
             bufferStreamDelta(convId, chunk);
           },
         });
@@ -289,7 +291,7 @@ export async function startStream(
         }
         
         const retryable = isRetryableError(err);
-        if (retryable && attempts < MAX_STREAM_RETRIES) {
+        if (retryable && attempts < MAX_STREAM_RETRIES && !hasReceivedOutput) {
           attempts++;
           logger.warn(`Stream dropped (attempt ${attempts}/${MAX_STREAM_RETRIES}). Retrying from checkpoint...`, err);
           // Exponential backoff before retry (1s, 2s)
