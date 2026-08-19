@@ -608,6 +608,7 @@ export function createServerApp() {
         },
         on: {
           proxyReq: (proxyReq: VeniceProxyOutboundRequest, proxyReqReq: express.Request, _proxyReqRes: express.Response) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             applyVeniceProxyHeaders(proxyReq as any, proxyReqReq as any, getDevSessionKey(devSessionVeniceApiKey) || AppConfig.VENICE_API_KEY);
           },
           proxyRes: (proxyRes: http.IncomingMessage, proxyResReq: express.Request, proxyResRes: express.Response) => {
@@ -636,8 +637,11 @@ export function createServerApp() {
                circuitOpenUntil = Date.now() + CIRCUIT_RESET_TIMEOUT_MS;
                circuitHalfOpen = false;
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if ("headersSent" in errRes && !(errRes as any).headersSent) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (errRes as any).writeHead(502, { "Content-Type": "application/json" });
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (errRes as any).end(JSON.stringify({ error: "Proxy error", details: err.message }));
             }
           }
@@ -645,6 +649,7 @@ export function createServerApp() {
       };
 
       if (isMedia && isLocalFamilySafe) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (proxyConfig as any).selfHandleResponse = true;
         const originalProxyRes = proxyConfig.on.proxyRes;
         proxyConfig.on.proxyRes = responseInterceptor(async (responseBuffer, proxyRes, proxyReq, proxyResObj) => {
@@ -683,7 +688,7 @@ export function createServerApp() {
                      }
                    }
                  }
-               } catch (e) {
+               } catch {
                  // ignore JSON parse errors
                }
             }

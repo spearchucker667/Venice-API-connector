@@ -715,7 +715,7 @@ describe("CharacterEditor — Authoring Validation (P1-003)", () => {
   it("rejects new character with empty description", async () => {
     const blankCard = { ...fixtures.sampleCard, id: "blank_1", name: "", description: "", instructions: "", avatar: undefined, sourceFormat: "venice-forge" };
     (useCharacterCardStore.getState() as any).setCards([blankCard]);
-    const { container } = render(<CharacterEditor cardId="blank_1" onClose={() => {}} />);
+    render(<CharacterEditor cardId="blank_1" onClose={() => {}} />);
     
     const name = screen.getByLabelText(/Name/i);
     fireEvent.change(name, { target: { value: "A name" } });
@@ -729,7 +729,7 @@ describe("CharacterEditor — Authoring Validation (P1-003)", () => {
   it("rejects new character with empty instructions", async () => {
     const blankCard = { ...fixtures.sampleCard, id: "blank_1", name: "", description: "", instructions: "", avatar: undefined, sourceFormat: "venice-forge" };
     (useCharacterCardStore.getState() as any).setCards([blankCard]);
-    const { container } = render(<CharacterEditor cardId="blank_1" onClose={() => {}} />);
+    render(<CharacterEditor cardId="blank_1" onClose={() => {}} />);
     
     const name = screen.getByLabelText(/Name/i);
     fireEvent.change(name, { target: { value: "A name" } });
@@ -744,7 +744,7 @@ describe("CharacterEditor — Authoring Validation (P1-003)", () => {
 
   it("allows imported compatible sparse card to save", async () => {
     (useCharacterCardStore.getState() as any).setCards([fixtures.sampleCard]);
-    const { container } = render(<CharacterEditor cardId="card_test_001" onClose={() => {}} />);
+    render(<CharacterEditor cardId="card_test_001" onClose={() => {}} />);
     
     // Clear the name (this card has sourceFormat: card-v2-json)
     const name = screen.getByLabelText(/Name/i);

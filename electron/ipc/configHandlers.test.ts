@@ -50,13 +50,13 @@ describe("configHandlers", () => {
 });
 
 describe("safety:setFamilySafeMode", () => {
-  let handlers: Record<string, Function> = {};
+  let handlers: Record<string, () => void> = {};
 
   beforeEach(() => {
     vi.clearAllMocks();
     resetIpcRateLimitForTests();
     handlers = {};
-    (ipcMain.handle as any).mockImplementation((channel: string, handler: Function) => {
+    (ipcMain.handle as any).mockImplementation((channel: string, handler: () => void) => {
       handlers[channel] = handler;
     });
     registerConfigIpcHandlers();
@@ -102,13 +102,13 @@ describe("safety:setFamilySafeMode", () => {
 });
 
 describe("config:writeSanitized generic patch rejection", () => {
-  let handlers: Record<string, Function> = {};
+  let handlers: Record<string, () => void> = {};
 
   beforeEach(() => {
     vi.clearAllMocks();
     resetIpcRateLimitForTests();
     handlers = {};
-    (ipcMain.handle as any).mockImplementation((channel: string, handler: Function) => {
+    (ipcMain.handle as any).mockImplementation((channel: string, handler: () => void) => {
       handlers[channel] = handler;
     });
     registerConfigIpcHandlers();

@@ -332,7 +332,7 @@ describe("registerIpcHandlers", () => {
     expect(await capturedHandlers.get("masterPassword:set")!(null, "secret")).toEqual({ ok: true });
     expect(await capturedHandlers.get("masterPassword:verify")!(null, "secret")).toEqual({ ok: true, verified: true, lockedOutSeconds: 0 });
     const clearRes = await capturedHandlers.get("masterPassword:clear")!(null, { currentPassword: "secret" });
-    console.log("CLEAR RES", clearRes);
+    console.warn("CLEAR RES", clearRes);
     expect(clearRes).toEqual({ ok: true });
 
     expect(vi.mocked(setMasterPassword)).toHaveBeenCalledWith("secret");

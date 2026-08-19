@@ -192,8 +192,8 @@ function screenUpstreamResponse(endpoint: string, method: string, response: Veni
           base64String = item;
         } else if (typeof item === "object" && item !== null) {
           // Handle b64_json objects
-          if ("b64_json" in item && typeof (item as any).b64_json === "string") {
-            base64String = (item as any).b64_json;
+          if ("b64_json" in item && typeof (item as { b64_json: string }).b64_json === "string") {
+            base64String = (item as { b64_json: string }).b64_json;
           }
         }
         
