@@ -4,7 +4,31 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
-**Date:** 2026-08-19 (Venice Forge Live Audit Remediation - P0 and P1 Blockers)
+**Date:** 2026-08-19 (Venice Forge Live Audit Reconciliation)
+
+**Completed result:** Reconciled the provided live-audit findings against the current `main` checkout (`4c580d63`). The audited commit `b96a2afd` is several commits behind `main`; all P0, P1, and P2 findings from that audit have already been remediated in subsequent commits.
+
+- **P0-001 (Family Safe Mode no-master bypass):** Already fixed. `electron/ipc/configHandlers.ts` `safety:setFamilySafeMode` returns `MASTER_PASSWORD_REQUIRED` when `!isMasterPasswordSet()`.
+- **P0-002 (Semantic generated-media screening stub):** Already fixed. `src/shared/safety/mediaScreener.ts` now performs MIME/magic-byte validation and fails closed with `CLASSIFIER_UNAVAILABLE` under Family Safe Mode; the previous fixture-only mock allowing all other content is gone.
+- **P1-001 (Workflow idempotency downstream of queue):** Already fixed. `submitPaidQueueTaskInMain` now deduplicates by `logicalRequestHash` before `/video/queue` dispatch.
+- **P1-002 (Character context prompt-injection boundary):** Already fixed. Untrusted `<context_file>` reference material is appended as `user` messages rather than concatenated into the high-authority system prompt.
+- **P1-003 (`sourceMediaId` bypasses required Image):** Already fixed. `CharacterEditor.tsx` resolves `sourceMediaId` against the `mediaItems` store and validates the materialized image before satisfying the required Image field.
+- **P1-004 (Web background-task cancellation/timeout divergence):** Already fixed. Web-mode timeout reduced to 120s and cancellation now sets `aborted` with a user-facing error and stops polling.
+- **P1-005 (Repository hygiene / scratch files):** Already fixed. The transcript and one-off patch scripts referenced in the audit are not present in current `main`; only `patch_runner.js` remains as a tracked helper.
+- **Lint regression:** Removed an unused `vi` import from `scripts/verify-provider-adapters.test.ts` introduced when the `vi.mock('electron')` stub was relocated to `tests/setup.ts`.
+
+**Verification:**
+- `npm run lint:eslint` — PASS (0 warnings).
+- `npm run typecheck` — PASS (both `tsconfig.json` and `tsconfig.electron.json`).
+- `npm run verify:safety-guard` — PASS.
+- `npm run verify:contracts` — PASS (static, feature, and release verifiers all green).
+- `npm run build` — PASS (Vite web + esbuild server + Electron main/preload).
+
+**Remaining:** None. Current `main` is clean relative to the provided audit.
+
+### Prior Session Summary (Venice Forge Live Audit Remediation - P0 and P1 Blockers)
+
+**Date:** 2026-08-19
 
 **Completed result:** Addressed P0 and P1 blockers identified in the Venice Forge Live Audit.
 - **P0-001 (Master Password Bypass):** Fixed `!isMasterPasswordSet()` check for `safety:setFamilySafeMode`. Enforced minimum 4-character length on `masterPassword:set` and `masterPassword:change`.
