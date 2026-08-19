@@ -203,8 +203,8 @@ export function registerApiKeyHandlers(): void {
       if (isMasterPasswordSet()) {
         return { ok: false, error: "Master password is already set." };
       }
-      if (typeof password !== "string" || password.length === 0) {
-        throw new Error("Master password must be a non-empty string.");
+      if (typeof password !== "string" || password.length < 4) {
+        return { ok: false, error: "Password too short (min 4 characters)" };
       }
       setMasterPassword(password);
       return { ok: true };
@@ -217,8 +217,8 @@ export function registerApiKeyHandlers(): void {
     try {
       if (!payload || typeof payload !== "object") throw new Error("Invalid payload.");
       const { currentPassword, newPassword } = payload as { currentPassword?: string, newPassword?: string };
-      if (typeof currentPassword !== "string" || typeof newPassword !== "string" || newPassword.length === 0) {
-        throw new Error("Both current and new passwords must be provided.");
+      if (typeof currentPassword !== "string" || typeof newPassword !== "string" || newPassword.length < 4) {
+        return { ok: false, error: "Both current and new passwords must be provided. New password min 4 characters." };
       }
       if (!isMasterPasswordSet()) {
         return { ok: false, error: "Master password is not set." };

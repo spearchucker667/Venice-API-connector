@@ -340,6 +340,18 @@ describe("registerIpcHandlers", () => {
     expect(vi.mocked(clearMasterPassword)).toHaveBeenCalled();
   });
 
+  it("enforces minimum master password length", async () => {
+    vi.mocked(isMasterPasswordSet).mockReturnValue(false);
+    
+    // Short set
+    expect(await capturedHandlers.get("masterPassword:set")!(null, "123")).toEqual({ ok: false, error: "Password too short (min 4 characters)" });
+    
+    // Short change
+    vi.mocked(isMasterPasswordSet).mockReturnValue(true);
+    expect(await capturedHandlers.get("masterPassword:change")!(null, { currentPassword: "old", newPassword: "123" }))
+      .toEqual({ ok: false, error: "Both current and new passwords must be provided. New password min 4 characters." });
+  });
+
   describe("generic credential bridge denylist", () => {
     it.each([
       "password",
