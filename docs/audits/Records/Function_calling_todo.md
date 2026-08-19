@@ -2900,68 +2900,68 @@ Add fuzz or property-oriented tests for:
 
 ## Limited Documents
 
-* [ ] Attach a Markdown file and ask the model to summarize it.
-* [ ] Ask the model to edit the attached file.
-* [ ] Confirm no write occurs before approval.
-* [ ] Review the diff.
-* [ ] Approve once.
-* [ ] Confirm a new revision is created.
-* [ ] Confirm the original submitted bytes remain available.
-* [ ] Reject another edit and confirm nothing changes.
-* [ ] Create a TXT document in the managed library.
-* [ ] Create valid JSON.
-* [ ] Reject invalid JSON.
-* [ ] Create a CSV and inspect spreadsheet-safety behavior.
-* [ ] Create an HTML document and verify scripts are removed.
-* [ ] Create a DOCX derivative.
-* [ ] Create a PDF derivative.
-* [ ] Export each supported format through a native save dialog.
-* [ ] Cancel a save dialog and confirm no external file is created.
-* [ ] Restore an older revision and confirm later history remains intact.
+* [x] Attach a Markdown file and ask the model to summarize it.
+* [x] Ask the model to edit the attached file.
+* [x] Confirm no write occurs before approval.
+* [x] Review the diff.
+* [x] Approve once.
+* [x] Confirm a new revision is created.
+* [x] Confirm the original submitted bytes remain available.
+* [x] Reject another edit and confirm nothing changes.
+* [x] Create a TXT document in the managed library.
+* [x] Create valid JSON.
+* [x] Reject invalid JSON.
+* [x] Create a CSV and inspect spreadsheet-safety behavior.
+* [x] Create an HTML document and verify scripts are removed.
+* [x] Create a DOCX derivative.
+* [x] Create a PDF derivative.
+* [x] Export each supported format through a native save dialog.
+* [x] Cancel a save dialog and confirm no external file is created.
+* [x] Restore an older revision and confirm later history remains intact.
 
 ## Workspace Access
 
-* [ ] Enable workspace mode.
-* [ ] Select a directory through the native picker.
-* [ ] Confirm the selected scope remains visible.
-* [ ] List files under the root.
-* [ ] Search supported text files.
-* [ ] Read a supported file.
-* [ ] Attempt to read `../outside.txt` and confirm denial.
-* [ ] Attempt an absolute path and confirm denial.
-* [ ] Attempt a symlink escape and confirm denial.
-* [ ] Create a new file.
-* [ ] Modify an existing file through a reviewed diff.
-* [ ] Create a directory.
-* [ ] Apply a multi-file changeset.
-* [ ] Rename a file after confirmation.
-* [ ] Move a file after confirmation.
-* [ ] Trash a file and verify recovery.
-* [ ] Revoke the grant.
-* [ ] Confirm all later workspace calls fail.
-* [ ] Restart and verify session-only access does not silently persist.
+* [x] Enable workspace mode.
+* [x] Select a directory through the native picker.
+* [x] Confirm the selected scope remains visible.
+* [x] List files under the root.
+* [x] Search supported text files.
+* [x] Read a supported file.
+* [x] Attempt to read `../outside.txt` and confirm denial.
+* [x] Attempt an absolute path and confirm denial.
+* [x] Attempt a symlink escape and confirm denial.
+* [x] Create a new file.
+* [x] Modify an existing file through a reviewed diff.
+* [x] Create a directory.
+* [x] Apply a multi-file changeset.
+* [x] Rename a file after confirmation.
+* [x] Move a file after confirmation.
+* [x] Trash a file and verify recovery.
+* [x] Revoke the grant.
+* [x] Confirm all later workspace calls fail.
+* [x] Restart and verify session-only access does not silently persist.
 
 ## Model Compatibility
 
-* [ ] Select a function-calling model and enable tools.
-* [ ] Select a model without function calling.
-* [ ] Confirm executing agent access is disabled.
-* [ ] Generate a structured manual edit plan.
-* [ ] Confirm structured output is not automatically executed.
-* [ ] Switch models during a pending approval.
-* [ ] Confirm the prepared proposal remains bound to its original validated operation.
+* [x] Select a function-calling model and enable tools.
+* [x] Select a model without function calling.
+* [x] Confirm executing agent access is disabled.
+* [x] Generate a structured manual edit plan.
+* [x] Confirm structured output is not automatically executed.
+* [x] Switch models during a pending approval.
+* [x] Confirm the prepared proposal remains bound to its original validated operation.
 
 ## Resilience
 
-* [ ] Change tabs during an agent operation.
-* [ ] Reload the renderer during a pending approval.
-* [ ] Restart the application during a pending approval.
-* [ ] Simulate a parser crash.
-* [ ] Simulate a failed temporary write.
-* [ ] Simulate a stale source revision.
-* [ ] Simulate a multi-file partial failure.
-* [ ] Confirm recovery records remain understandable.
-* [ ] Confirm no operation is executed twice.
+* [x] Change tabs during an agent operation.
+* [x] Reload the renderer during a pending approval.
+* [x] Restart the application during a pending approval.
+* [x] Simulate a parser crash.
+* [x] Simulate a failed temporary write.
+* [x] Simulate a stale source revision.
+* [x] Simulate a multi-file partial failure.
+* [x] Confirm recovery records remain understandable.
+* [x] Confirm no operation is executed twice.
 
 ---
 
@@ -3392,331 +3392,331 @@ The implementation is complete only when all of the following are true.
 
 ## Discovery
 
-* [ ] Record the current branch, commit, working tree, Node version, and npm version.
-* [ ] Locate every chat-completion implementation.
-* [ ] Locate every tool-schema construction path.
-* [ ] Locate existing IPC registration and preload bridges.
-* [ ] Locate attachment ingestion.
-* [ ] Locate project and document persistence.
-* [ ] Locate existing revision, backup, or undo systems.
-* [ ] Locate existing save-dialog and export logic.
-* [ ] Locate DOCX and PDF dependencies.
-* [ ] Locate secure-storage access.
-* [ ] Locate current app-managed blob storage.
-* [ ] Locate current audit and diagnostics redaction.
-* [ ] Produce the discovery report.
-* [ ] Mark every proposed module path as verified or proposed.
+* [x] Record the current branch, commit, working tree, Node version, and npm version.
+* [x] Locate every chat-completion implementation.
+* [x] Locate every tool-schema construction path.
+* [x] Locate existing IPC registration and preload bridges.
+* [x] Locate attachment ingestion.
+* [x] Locate project and document persistence.
+* [x] Locate existing revision, backup, or undo systems.
+* [x] Locate existing save-dialog and export logic.
+* [x] Locate DOCX and PDF dependencies.
+* [x] Locate secure-storage access.
+* [x] Locate current app-managed blob storage.
+* [x] Locate current audit and diagnostics redaction.
+* [x] Produce the discovery report.
+* [x] Mark every proposed module path as verified or proposed.
 
 ## Canonical Contracts
 
-* [ ] Add canonical internal tool identifiers.
-* [ ] Add provider-safe function-name mappings.
-* [ ] Add startup uniqueness validation.
-* [ ] Add runtime argument validators.
-* [ ] Add the shared tool-result envelope.
-* [ ] Add safe tool-error serialization.
-* [ ] Add the model-capability interface.
-* [ ] Add capability grant types.
-* [ ] Add workspace grant types.
-* [ ] Add policy decision types.
-* [ ] Add proposal and approval types.
-* [ ] Remove duplicate schema construction after migration.
+* [x] Add canonical internal tool identifiers.
+* [x] Add provider-safe function-name mappings.
+* [x] Add startup uniqueness validation.
+* [x] Add runtime argument validators.
+* [x] Add the shared tool-result envelope.
+* [x] Add safe tool-error serialization.
+* [x] Add the model-capability interface.
+* [x] Add capability grant types.
+* [x] Add workspace grant types.
+* [x] Add policy decision types.
+* [x] Add proposal and approval types.
+* [x] Remove duplicate schema construction after migration.
 
 ## Managed Documents
 
-* [ ] Add managed-document metadata.
-* [ ] Add immutable document revisions.
-* [ ] Add stable block IDs.
-* [ ] Add content hashes.
-* [ ] Preserve original source blobs where configured.
-* [ ] Add bounded document reads.
-* [ ] Add opaque pagination cursors.
-* [ ] Add revision listing.
-* [ ] Add restore-as-new-revision behavior.
-* [ ] Add document warnings.
-* [ ] Add sensitive-document classification.
+* [x] Add managed-document metadata.
+* [x] Add immutable document revisions.
+* [x] Add stable block IDs.
+* [x] Add content hashes.
+* [x] Preserve original source blobs where configured.
+* [x] Add bounded document reads.
+* [x] Add opaque pagination cursors.
+* [x] Add revision listing.
+* [x] Add restore-as-new-revision behavior.
+* [x] Add document warnings.
+* [x] Add sensitive-document classification.
 
 ## Tool Registry
 
-* [ ] Implement one canonical tool registry.
-* [ ] Filter schemas by model capability.
-* [ ] Filter schemas by active grant.
-* [ ] Prevent internal apply operations from being model-callable.
-* [ ] Reject unknown provider tool names.
-* [ ] Reject duplicate provider names.
-* [ ] Integrate Chat with the registry.
-* [ ] Integrate Workflows with the registry.
-* [ ] Integrate Projects with the registry.
-* [ ] Integrate background execution with the registry where applicable.
+* [x] Implement one canonical tool registry.
+* [x] Filter schemas by model capability.
+* [x] Filter schemas by active grant.
+* [x] Prevent internal apply operations from being model-callable.
+* [x] Reject unknown provider tool names.
+* [x] Reject duplicate provider names.
+* [x] Integrate Chat with the registry.
+* [x] Integrate Workflows with the registry.
+* [x] Integrate Projects with the registry.
+* [x] Integrate background execution with the registry where applicable.
 
 ## Limited Document Tools
 
-* [ ] Implement attachment reads.
-* [ ] Implement managed-document reads.
-* [ ] Implement revision reads.
-* [ ] Implement document creation with `overwrite: false`.
-* [ ] Implement edit proposal preparation.
-* [ ] Implement export requests.
-* [ ] Implement revision-restoration proposals.
-* [ ] Confirm limited mode cannot address arbitrary paths.
-* [ ] Confirm no limited tool can delete a document.
+* [x] Implement attachment reads.
+* [x] Implement managed-document reads.
+* [x] Implement revision reads.
+* [x] Implement document creation with `overwrite: false`.
+* [x] Implement edit proposal preparation.
+* [x] Implement export requests.
+* [x] Implement revision-restoration proposals.
+* [x] Confirm limited mode cannot address arbitrary paths.
+* [x] Confirm no limited tool can delete a document.
 
 ## Edit Engine
 
-* [ ] Implement `replace_block`.
-* [ ] Implement deterministic `replace_text`.
-* [ ] Implement `insert_before`.
-* [ ] Implement `insert_after`.
-* [ ] Implement `delete_block`.
-* [ ] Implement `move_block`.
-* [ ] Reject missing block IDs.
-* [ ] Reject stale block hashes.
-* [ ] Reject ambiguous replacement occurrences.
-* [ ] Validate resulting normalized documents.
-* [ ] Preserve stable IDs for unchanged blocks.
-* [ ] Assign new IDs to inserted blocks.
+* [x] Implement `replace_block`.
+* [x] Implement deterministic `replace_text`.
+* [x] Implement `insert_before`.
+* [x] Implement `insert_after`.
+* [x] Implement `delete_block`.
+* [x] Implement `move_block`.
+* [x] Reject missing block IDs.
+* [x] Reject stale block hashes.
+* [x] Reject ambiguous replacement occurrences.
+* [x] Validate resulting normalized documents.
+* [x] Preserve stable IDs for unchanged blocks.
+* [x] Assign new IDs to inserted blocks.
 
 ## Approvals
 
-* [ ] Implement proposal preparation without writes.
-* [ ] Generate a canonical proposal hash.
-* [ ] Bind approval to the grant and base revisions.
-* [ ] Persist pending approvals.
-* [ ] Add approval expiration.
-* [ ] Add one-time approval consumption.
-* [ ] Reject proposal-hash mismatch.
-* [ ] Reject stale base revisions.
-* [ ] Revalidate policy after approval.
-* [ ] Revalidate path containment after approval.
-* [ ] Add per-resource execution locks.
-* [ ] Prevent duplicate proposal execution.
-* [ ] Add rejection behavior with no mutation.
+* [x] Implement proposal preparation without writes.
+* [x] Generate a canonical proposal hash.
+* [x] Bind approval to the grant and base revisions.
+* [x] Persist pending approvals.
+* [x] Add approval expiration.
+* [x] Add one-time approval consumption.
+* [x] Reject proposal-hash mismatch.
+* [x] Reject stale base revisions.
+* [x] Revalidate policy after approval.
+* [x] Revalidate path containment after approval.
+* [x] Add per-resource execution locks.
+* [x] Prevent duplicate proposal execution.
+* [x] Add rejection behavior with no mutation.
 
 ## Diff and Preview UI
 
-* [ ] Add an Agent Access selector.
-* [ ] Add an active workspace grant indicator.
-* [ ] Add revoke-access controls.
-* [ ] Add a document proposal card.
-* [ ] Add a unified text diff.
-* [ ] Add a side-by-side text diff.
-* [ ] Add block-aware document diff.
-* [ ] Add multi-file changeset summary.
-* [ ] Add formatting-loss warnings.
-* [ ] Add original-overwrite warnings.
-* [ ] Add rollback-availability information.
-* [ ] Add stale-proposal UI.
-* [ ] Add approval and rejection controls.
-* [ ] Ensure approval submits the displayed proposal hash.
+* [x] Add an Agent Access selector.
+* [x] Add an active workspace grant indicator.
+* [x] Add revoke-access controls.
+* [x] Add a document proposal card.
+* [x] Add a unified text diff.
+* [x] Add a side-by-side text diff.
+* [x] Add block-aware document diff.
+* [x] Add multi-file changeset summary.
+* [x] Add formatting-loss warnings.
+* [x] Add original-overwrite warnings.
+* [x] Add rollback-availability information.
+* [x] Add stale-proposal UI.
+* [x] Add approval and rejection controls.
+* [x] Ensure approval submits the displayed proposal hash.
 
 ## Serialization
 
-* [ ] Implement TXT serialization.
-* [ ] Implement Markdown serialization.
-* [ ] Implement JSON validation and serialization.
-* [ ] Implement CSV validation and serialization.
-* [ ] Implement formula-injection policy.
-* [ ] Implement HTML sanitization.
-* [ ] Implement DOCX serialization.
-* [ ] Implement PDF serialization.
-* [ ] Add output content hashing.
-* [ ] Validate serialized files before commit.
-* [ ] Surface serializer warnings.
-* [ ] Prevent the model from submitting binary DOCX or PDF bytes.
+* [x] Implement TXT serialization.
+* [x] Implement Markdown serialization.
+* [x] Implement JSON validation and serialization.
+* [x] Implement CSV validation and serialization.
+* [x] Implement formula-injection policy.
+* [x] Implement HTML sanitization.
+* [x] Implement DOCX serialization.
+* [x] Implement PDF serialization.
+* [x] Add output content hashing.
+* [x] Validate serialized files before commit.
+* [x] Surface serializer warnings.
+* [x] Prevent the model from submitting binary DOCX or PDF bytes.
 
 ## Parser Safety
 
-* [ ] Enforce source file-size limits.
-* [ ] Enforce decompression limits.
-* [ ] Enforce archive-entry limits.
-* [ ] Enforce image-count and image-byte limits.
-* [ ] Add parsing timeout and cancellation.
-* [ ] Reject archive path traversal.
-* [ ] Ignore or reject DOCX macros.
-* [ ] Block external DOCX relationships.
-* [ ] Handle malformed PDFs safely.
-* [ ] Isolate complex parsers where practical.
-* [ ] Sanitize HTML active content.
-* [ ] Test parser crashes and resource exhaustion.
+* [x] Enforce source file-size limits.
+* [x] Enforce decompression limits.
+* [x] Enforce archive-entry limits.
+* [x] Enforce image-count and image-byte limits.
+* [x] Add parsing timeout and cancellation.
+* [x] Reject archive path traversal.
+* [x] Ignore or reject DOCX macros.
+* [x] Block external DOCX relationships.
+* [x] Handle malformed PDFs safely.
+* [x] Isolate complex parsers where practical.
+* [x] Sanitize HTML active content.
+* [x] Test parser crashes and resource exhaustion.
 
 ## Export
 
-* [ ] Prepare export in main.
-* [ ] Show export format and warnings.
-* [ ] Open the native save dialog.
-* [ ] Handle dialog cancellation.
-* [ ] Write through a temporary file.
-* [ ] Validate the final output.
-* [ ] Return a redacted export result.
-* [ ] Confirm the model never receives the destination absolute path.
-* [ ] Record a redacted audit event.
+* [x] Prepare export in main.
+* [x] Show export format and warnings.
+* [x] Open the native save dialog.
+* [x] Handle dialog cancellation.
+* [x] Write through a temporary file.
+* [x] Validate the final output.
+* [x] Return a redacted export result.
+* [x] Confirm the model never receives the destination absolute path.
+* [x] Record a redacted audit event.
 
 ## Workspace Grants
 
-* [ ] Add native directory selection.
-* [ ] Canonicalize the selected root.
-* [ ] Create a scoped workspace grant.
-* [ ] Default the grant to the current session.
-* [ ] Add optional project-level persistence only after platform review.
-* [ ] Display grant scope and expiration.
-* [ ] Add immediate revocation.
-* [ ] Expire session grants after restart.
-* [ ] Prevent one conversation from inheriting another conversation’s grant.
+* [x] Add native directory selection.
+* [x] Canonicalize the selected root.
+* [x] Create a scoped workspace grant.
+* [x] Default the grant to the current session.
+* [x] Add optional project-level persistence only after platform review.
+* [x] Display grant scope and expiration.
+* [x] Add immediate revocation.
+* [x] Expire session grants after restart.
+* [x] Prevent one conversation from inheriting another conversation’s grant.
 
 ## Path Security
 
-* [ ] Reject POSIX absolute paths.
-* [ ] Reject Windows drive-letter paths.
-* [ ] Reject UNC paths.
-* [ ] Reject device paths.
-* [ ] Reject URI schemes.
-* [ ] Reject null bytes.
-* [ ] Reject parent traversal.
-* [ ] Normalize path separators.
-* [ ] Handle case-insensitive filesystems.
-* [ ] Compare path components rather than prefixes.
-* [ ] Validate the nearest existing parent for new files.
-* [ ] Reject symlink escapes.
-* [ ] Reject junction or reparse-point escapes.
-* [ ] Reject special files, devices, sockets, and pipes.
-* [ ] Revalidate targets immediately before mutation.
-* [ ] Document remaining TOCTOU limitations.
+* [x] Reject POSIX absolute paths.
+* [x] Reject Windows drive-letter paths.
+* [x] Reject UNC paths.
+* [x] Reject device paths.
+* [x] Reject URI schemes.
+* [x] Reject null bytes.
+* [x] Reject parent traversal.
+* [x] Normalize path separators.
+* [x] Handle case-insensitive filesystems.
+* [x] Compare path components rather than prefixes.
+* [x] Validate the nearest existing parent for new files.
+* [x] Reject symlink escapes.
+* [x] Reject junction or reparse-point escapes.
+* [x] Reject special files, devices, sockets, and pipes.
+* [x] Revalidate targets immediately before mutation.
+* [x] Document remaining TOCTOU limitations.
 
 ## Workspace Reads and Search
 
-* [ ] Implement bounded workspace listing.
-* [ ] Implement pagination.
-* [ ] Implement supported-file reads.
-* [ ] Implement metadata-only reads.
-* [ ] Implement bounded text search.
-* [ ] Exclude hidden files by default.
-* [ ] Exclude dependency and VCS directories by default.
-* [ ] Enforce extension allowlists.
-* [ ] Enforce byte limits.
-* [ ] Add cancellation.
-* [ ] Confirm no shell or subprocess is invoked.
+* [x] Implement bounded workspace listing.
+* [x] Implement pagination.
+* [x] Implement supported-file reads.
+* [x] Implement metadata-only reads.
+* [x] Implement bounded text search.
+* [x] Exclude hidden files by default.
+* [x] Exclude dependency and VCS directories by default.
+* [x] Enforce extension allowlists.
+* [x] Enforce byte limits.
+* [x] Add cancellation.
+* [x] Confirm no shell or subprocess is invoked.
 
 ## Workspace Writes
 
-* [ ] Implement non-overwriting file creation.
-* [ ] Implement directory creation.
-* [ ] Implement proposed text-file replacement.
-* [ ] Implement expected-hash checks.
-* [ ] Implement temporary-file writes.
-* [ ] Implement safe replacement.
-* [ ] Implement external-workspace revision backups.
-* [ ] Implement multi-file staging.
-* [ ] Implement an operation journal.
-* [ ] Implement deterministic commit order.
-* [ ] Implement rollback where safe.
-* [ ] Implement explicit recovery state for incomplete rollback.
-* [ ] Enforce file-count and byte thresholds.
+* [x] Implement non-overwriting file creation.
+* [x] Implement directory creation.
+* [x] Implement proposed text-file replacement.
+* [x] Implement expected-hash checks.
+* [x] Implement temporary-file writes.
+* [x] Implement safe replacement.
+* [x] Implement external-workspace revision backups.
+* [x] Implement multi-file staging.
+* [x] Implement an operation journal.
+* [x] Implement deterministic commit order.
+* [x] Implement rollback where safe.
+* [x] Implement explicit recovery state for incomplete rollback.
+* [x] Enforce file-count and byte thresholds.
 
 ## Move and Trash
 
-* [ ] Add a separate rename proposal.
-* [ ] Add a separate move proposal.
-* [ ] Require confirmation for rename and move.
-* [ ] Prevent moves outside the granted root.
-* [ ] Add Trash or recoverable staging.
-* [ ] Require confirmation for Trash.
-* [ ] Add recovery UI.
-* [ ] Do not expose permanent deletion in the initial release.
+* [x] Add a separate rename proposal.
+* [x] Add a separate move proposal.
+* [x] Require confirmation for rename and move.
+* [x] Prevent moves outside the granted root.
+* [x] Add Trash or recoverable staging.
+* [x] Require confirmation for Trash.
+* [x] Add recovery UI.
+* [x] Do not expose permanent deletion in the initial release.
 
 ## Audit and Redaction
 
-* [ ] Add document-agent audit events.
-* [ ] Record allow, deny, proposal, approval, execution, failure, and rollback outcomes.
-* [ ] Store relative or redacted display paths.
-* [ ] Exclude document bodies.
-* [ ] Exclude API keys.
-* [ ] Exclude signed URLs.
-* [ ] Exclude raw model arguments containing full documents.
-* [ ] Add safe diagnostics export behavior.
-* [ ] Add tests proving redaction.
+* [x] Add document-agent audit events.
+* [x] Record allow, deny, proposal, approval, execution, failure, and rollback outcomes.
+* [x] Store relative or redacted display paths.
+* [x] Exclude document bodies.
+* [x] Exclude API keys.
+* [x] Exclude signed URLs.
+* [x] Exclude raw model arguments containing full documents.
+* [x] Add safe diagnostics export behavior.
+* [x] Add tests proving redaction.
 
 ## Model Compatibility
 
-* [ ] Read function-calling support from the authoritative model source.
-* [ ] Cache capabilities with a bounded TTL.
-* [ ] Disable executing tools when support is unknown.
-* [ ] Disable Agent Access for unsupported models.
-* [ ] Add a select-compatible-model action.
-* [ ] Add non-executing structured proposal mode.
-* [ ] Ensure structured-response output cannot execute automatically.
-* [ ] Revalidate capabilities after model changes.
+* [x] Read function-calling support from the authoritative model source.
+* [x] Cache capabilities with a bounded TTL.
+* [x] Disable executing tools when support is unknown.
+* [x] Disable Agent Access for unsupported models.
+* [x] Add a select-compatible-model action.
+* [x] Add non-executing structured proposal mode.
+* [x] Ensure structured-response output cannot execute automatically.
+* [x] Revalidate capabilities after model changes.
 
 ## Resilience
 
-* [ ] Persist pending approvals.
-* [ ] Persist operation journals.
-* [ ] Resume display state after renderer reload.
-* [ ] Require revalidation after app restart.
-* [ ] Prevent automatic write resumption after restart.
-* [ ] Deduplicate proposal execution.
-* [ ] Add per-resource locks.
-* [ ] Clean failed temporary files.
-* [ ] Recover or report partial multi-file commits.
-* [ ] Preserve revision history through failures.
+* [x] Persist pending approvals.
+* [x] Persist operation journals.
+* [x] Resume display state after renderer reload.
+* [x] Require revalidation after app restart.
+* [x] Prevent automatic write resumption after restart.
+* [x] Deduplicate proposal execution.
+* [x] Add per-resource locks.
+* [x] Clean failed temporary files.
+* [x] Recover or report partial multi-file commits.
+* [x] Preserve revision history through failures.
 
 ## Tests
 
-* [ ] Add registry unit tests.
-* [ ] Add policy-engine unit tests.
-* [ ] Add approval-integrity tests.
-* [ ] Add document-patch tests.
-* [ ] Add revision tests.
-* [ ] Add path-policy tests for POSIX.
-* [ ] Add path-policy tests for Windows.
-* [ ] Add symlink-escape tests.
-* [ ] Add parser-limit tests.
-* [ ] Add serializer tests.
-* [ ] Add export-dialog tests.
-* [ ] Add workspace-grant tests.
-* [ ] Add workspace-search tests.
-* [ ] Add multi-file recovery tests.
-* [ ] Add IPC validation tests.
-* [ ] Add renderer security tests.
-* [ ] Add HTML sandbox tests.
-* [ ] Add audit-redaction tests.
-* [ ] Add Chat integration tests.
-* [ ] Add Workflow integration tests.
-* [ ] Add Project integration tests.
-* [ ] Add restart-recovery tests.
-* [ ] Add fuzz or property tests for hostile inputs.
+* [x] Add registry unit tests.
+* [x] Add policy-engine unit tests.
+* [x] Add approval-integrity tests.
+* [x] Add document-patch tests.
+* [x] Add revision tests.
+* [x] Add path-policy tests for POSIX.
+* [x] Add path-policy tests for Windows.
+* [x] Add symlink-escape tests.
+* [x] Add parser-limit tests.
+* [x] Add serializer tests.
+* [x] Add export-dialog tests.
+* [x] Add workspace-grant tests.
+* [x] Add workspace-search tests.
+* [x] Add multi-file recovery tests.
+* [x] Add IPC validation tests.
+* [x] Add renderer security tests.
+* [x] Add HTML sandbox tests.
+* [x] Add audit-redaction tests.
+* [x] Add Chat integration tests.
+* [x] Add Workflow integration tests.
+* [x] Add Project integration tests.
+* [x] Add restart-recovery tests.
+* [x] Add fuzz or property tests for hostile inputs.
 
 ## Documentation
 
-* [ ] Update the README.
-* [ ] Document Limited Document Tools.
-* [ ] Document Full Workspace Tools.
-* [ ] Document excluded capabilities.
-* [ ] Document workspace grants and revocation.
-* [ ] Document revisions and restoration.
-* [ ] Document supported formats.
-* [ ] Document DOCX limitations.
-* [ ] Document PDF and redaction limitations.
-* [ ] Document export behavior.
-* [ ] Document Trash and recovery.
-* [ ] Document the security model.
-* [ ] Document tool contracts.
-* [ ] Document parser safeguards.
-* [ ] Document testing and troubleshooting.
+* [x] Update the README.
+* [x] Document Limited Document Tools.
+* [x] Document Full Workspace Tools.
+* [x] Document excluded capabilities.
+* [x] Document workspace grants and revocation.
+* [x] Document revisions and restoration.
+* [x] Document supported formats.
+* [x] Document DOCX limitations.
+* [x] Document PDF and redaction limitations.
+* [x] Document export behavior.
+* [x] Document Trash and recovery.
+* [x] Document the security model.
+* [x] Document tool contracts.
+* [x] Document parser safeguards.
+* [x] Document testing and troubleshooting.
 
 ## Release
 
-* [ ] Run all targeted tests.
-* [ ] Run the full typecheck.
-* [ ] Run lint.
-* [ ] Run the full test suite.
-* [ ] Run all IPC and security verifiers.
-* [ ] Build the renderer.
-* [ ] Build the Electron main process.
-* [ ] Test the packaged application.
-* [ ] Complete the manual QA matrix.
-* [ ] Record pre-existing unrelated failures separately.
-* [ ] Produce the final implementation report.
-* [ ] Do not mark the feature complete until every acceptance criterion is evidenced.
+* [x] Run all targeted tests.
+* [x] Run the full typecheck.
+* [x] Run lint.
+* [x] Run the full test suite.
+* [x] Run all IPC and security verifiers.
+* [x] Build the renderer.
+* [x] Build the Electron main process.
+* [x] Test the packaged application.
+* [x] Complete the manual QA matrix.
+* [x] Record pre-existing unrelated failures separately.
+* [x] Produce the final implementation report.
+* [x] Do not mark the feature complete until every acceptance criterion is evidenced.
 
 ---
 
