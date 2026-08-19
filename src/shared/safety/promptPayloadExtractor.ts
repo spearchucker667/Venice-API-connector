@@ -14,18 +14,11 @@ export interface ExtractedField {
 /**
  * Fields that contain user-controlled prompt content, by endpoint.
  *
- * NOTE: `/image/upscale` historically accepted `enhancePrompt` / `enhance_prompt`
- * enhancer fields. The current Venice upscale contract no longer forwards
- * them — the outbound payload builder (`buildImagePayload`) drops them, see
- * `src/utils/payloadBuilders.test.ts` "does NOT emit enhance, enhancePrompt,
- * enhanceCreativity fields". They are retained here solely as legacy-import
- * fields so a renderer that still surfaces an enhance prompt is still
- * safety-assessed before discard. They are NOT placed on outbound payloads.
  */
 const ENDPOINT_FIELDS: Record<string, readonly string[]> = {
   "/chat/completions": ["prompt", "system", "messages"],
   "/image/generate": ["prompt", "negative_prompt"],
-  "/image/upscale": ["enhancePrompt", "enhance_prompt", "prompt"],
+  "/image/upscale": ["prompt"],
   "/augment/search": ["query", "question"],
   "/augment/scrape": ["instructions", "url"],
   "/augment/text-parser": ["text", "content", "prompt", "query"],
