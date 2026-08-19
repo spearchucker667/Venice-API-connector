@@ -70,6 +70,13 @@ const BAD_PATTERNS = [
   /(^|\/)docs\/AGENTS\//,
   /(^|\/)kimi-export-session_.*\.md$/,
   /(^|\/).*_ledger\.py$/,
+  /^first-prompt.*\.txt$/i,
+  /^extract\.py$/i,
+  /^fix_.*\.py$/i,
+  /^get_p.*\.py$/i,
+  /^get_rest\.py$/i,
+  /^patch_.*\.py$/i,
+  /^update_summary\.py$/i,
 ];
 
 const ARCHIVE_MODE_IGNORED_GENERATED_DIRS = new Set([
@@ -203,6 +210,13 @@ function checkCleanScript(root, violations) {
     { pattern: "--exclude=*session*.json", label: "*session*.json" },
     { pattern: "--exclude=*session*.md", label: "*session*.md" },
     { pattern: "--exclude=chat-history/", label: "chat-history/" },
+    { pattern: "--exclude=first-prompt*.txt", label: "first-prompt*.txt" },
+    { pattern: "--exclude=extract.py", label: "extract.py" },
+    { pattern: "--exclude=fix_*.py", label: "fix_*.py" },
+    { pattern: "--exclude=get_p*.py", label: "get_p*.py" },
+    { pattern: "--exclude=get_rest.py", label: "get_rest.py" },
+    { pattern: "--exclude=patch_*.py", label: "patch_*.py" },
+    { pattern: "--exclude=update_summary.py", label: "update_summary.py" },
   ];
   for (const r of required) {
     if (!script.includes(r.pattern)) {

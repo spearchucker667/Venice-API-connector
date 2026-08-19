@@ -101,18 +101,22 @@ export function registerConfigIpcHandlers() {
       if (typeof enabled !== "boolean") {
         throw new Error("Enabled state must be boolean.");
       }
-      if (isMasterPasswordSet()) {
-        if (typeof masterPassword !== "string") {
-          return { ok: false, error: "Master password required to change Family Safe Mode." };
-        }
-        const { verified, lockedOutSeconds } = verifyMasterPassword(masterPassword);
-        if (!verified) {
-          if (lockedOutSeconds > 0) {
-            return { ok: false, error: `Too many attempts. Try again in ${lockedOutSeconds}s.`, lockedOutSeconds };
-          }
-          return { ok: false, error: "Incorrect master password." };
-        }
+      
+      if (!isMasterPasswordSet()) {
+        return { ok: false, error: "MASTER_PASSWORD_REQUIRED" };
       }
+      
+      if (typeof masterPassword !== "string") {
+        return { ok: false, error: "Master password required to change Family Safe Mode." };
+      }
+      const { verified, lockedOutSeconds } = verifyMasterPassword(masterPassword);
+      if (!verified) {
+        if (lockedOutSeconds > 0) {
+          return { ok: false, error: `Too many attempts. Try again in ${lockedOutSeconds}s.`, lockedOutSeconds };
+        }
+        return { ok: false, error: "Incorrect master password." };
+      }
+      
       const result = await writeSanitizedConfig({ safety: { local_family_safe_mode_enabled: enabled } });
       if (!result.ok) {
         return result;

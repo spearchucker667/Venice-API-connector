@@ -77,6 +77,15 @@ const rootReportPatterns = [
   /^VALIDATION_REPORT.*\.md$/i,
   /^audit_report\.ya?ml$/i,
   /^audit-validation-report-.*\.md$/i,
+  /^first-prompt.*\.txt$/i,
+  /^extract\.py$/i,
+  /^fix_.*\.py$/i,
+  /^get_p.*\.py$/i,
+  /^get_rest\.py$/i,
+  /^patch_.*\.py$/i,
+  /^update_summary\.py$/i,
+  /^.*work.*done.*\.md$/i,
+  /^.*session.*\.json$/i,
 ];
 for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
   if (entry.isFile() && rootReportPatterns.some((pattern) => pattern.test(entry.name))) {
@@ -108,6 +117,13 @@ for (const full of walk(root)) {
     const id = match[0];
     if (!verifyIds.has(id)) verifyIds.set(id, new Set());
     verifyIds.get(id).add(rel);
+  }
+  
+  // Hygiene: check for absolute local paths or agent directories in source code
+  if (!rel.startsWith("scripts/verify-repo-handoff-hygiene.cjs") && !rel.startsWith("scripts/verify-archive-clean.cjs")) {
+    if (content.includes("/.gemini/antigravity/brain/") || content.includes("\\.gemini\\antigravity\\brain\\")) {
+      fail(`File contains forbidden AI-agent workspace paths: ${rel}`);
+    }
   }
 }
 

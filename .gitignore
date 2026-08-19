@@ -68,6 +68,14 @@
 /hashes.txt
 /duplicate_hashes.txt
 /duplicates.txt
+# Agent transcripts and root patch scripts
+/first-prompt*.txt
+/extract.py
+/fix_*.py
+/get_p*.py
+/get_rest.py
+/patch_*.py
+/update_summary.py
 # =============================================================================
 # Audit artifacts
 #
