@@ -28,6 +28,16 @@ This is the active handoff and validation ledger. The canonical current-work led
 - **P2-005 (Character editor still has a stale 1 GiB comment):** Updated `src/components/rp-studio/CharacterEditor.tsx` to state that avatar support is bounded by `MAX_AVATAR_BYTES`.
 - **P2-006 (Coverage remains monolithic in CI):** Split `npm run test:coverage` in `.github/workflows/ci.yml` into segmented suites to avoid monolithic memory regressions.
 
+
+
+### Residual Cleanup & Validation (Session Continuation)
+**Completed result:** Addressed the residual linting and type-checking regressions introduced by the rapid remediation pass, and corrected the test assertions in `src/stores/background-task-store.test.ts` to correctly match the new web-mode abort semantics (P1-004). 
+**Verification:**
+- Executed the full High-signal validation sequence requested in the audit.
+- `npm run lint:eslint` and `npm run typecheck` pass.
+- Safety authority, streaming, character boundaries, hygiene checks (`npm run verify:repo-handoff-hygiene`, `verify:archive-clean`), and release gates (`npm run test:ci`) all passed.
+
+**Remaining:** The repository is clean and unblocked for a release candidate.
 ### Prior Session Summary (CI Markdown Link & Audit Artifact Tracking Remediation)
 
 **Date:** 2026-08-17 / 2026-08-18 (CI Markdown Link & Audit Artifact Tracking Remediation)
