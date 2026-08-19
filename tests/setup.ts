@@ -1,5 +1,23 @@
 import { beforeEach, vi } from "vitest";
 import "fake-indexeddb/auto";
+
+// Globally stub Electron so contract verifiers and tests can run without an installed Electron runtime
+// while still importing canonical adapters that transitively import Electron.
+vi.mock('electron', () => ({
+  app: {
+    getPath: vi.fn(() => '/tmp/venice-forge-test-userdata'),
+    getName: vi.fn(() => 'Venice Forge'),
+    isPackaged: false,
+    getVersion: vi.fn(() => '0.0.0-test'),
+  },
+  safeStorage: {
+    isEncryptionAvailable: vi.fn(() => false),
+    encryptString: vi.fn((value: string) => Buffer.from(value, 'utf8')),
+    decryptString: vi.fn((buffer: Buffer) => buffer.toString('utf8')),
+  },
+}))
+
+
 import { changeLanguage } from "../src/i18n";
 
 beforeEach(() => {
