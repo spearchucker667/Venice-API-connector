@@ -155,36 +155,4 @@ export function screenResponseBody(
   return { allowed: true, skipped: false };
 }
 
-export type GeneratedMediaSafetyResult =
-  | { allowed: true; skipped?: boolean; reason?: string }
-  | {
-      allowed: false;
-      reasonCode: string;
-      category: string;
-      userMessage?: string;
-    };
-
-/**
- * Architectural hook for semantically screening generated binary media
- * before persistence and display.
- */
-export function screenGeneratedMedia(
-  base64Data: string,
-  mimeType: string,
-  localFamilySafeModeEnabled: boolean
-): GeneratedMediaSafetyResult {
-  if (!localFamilySafeModeEnabled) {
-    return { allowed: true, skipped: true, reason: "local-family-safe-mode-disabled" };
-  }
-  // TODO: Integrate actual ML classifier (e.g. TFJS) for semantic image screening.
-  // For now, this is a mock implementation that blocks specific test fixture bytes.
-  if (base64Data === "dW5zYWZlLW1vY2stYmluYXJ5LXBheWxvYWQ=") { // "unsafe-mock-binary-payload"
-    return {
-      allowed: false,
-      reasonCode: "UNSAFE_MEDIA_DETECTED",
-      category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-      userMessage: "The generated media was flagged by the local safety filter.",
-    };
-  }
-  return { allowed: true };
-}
+export * from "./mediaScreener";
