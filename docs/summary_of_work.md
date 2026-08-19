@@ -30,6 +30,19 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 
 
+
+
+### P3 Bounded Debt Remediation (Session Continuation)
+**Completed result:** Remediated the final two P3 technical debt findings from the July 17 audit:
+- **VF-SCAN-20260717-031029-008:** Relocated the `vi.mock('electron')` global stub from `scripts/verify-provider-adapters.test.ts` to `tests/setup.ts` to cleanly decouple contract verifiers from an installed Electron runtime across the whole test matrix.
+- **VF-SCAN-20260717-031029-009:** Removed the legacy `enhancePrompt` and `enhance_prompt` payload extraction aliases from `src/shared/safety/promptPayloadExtractor.ts`. The main `/image/upscale` payload builder already dropped them, and the extractor now correctly relies only on the canonical `prompt` field.
+
+**Verification:**
+- Executed `npm run lint:eslint` and `npm run typecheck` cleanly.
+- `vitest run scripts/verify-provider-adapters.test.ts` passes.
+- `vitest run src/shared/safety/promptPayloadExtractor.test.ts` passes.
+- Updated `docs/ROADMAP.md` tracking status.
+
 ### Residual Cleanup & Validation (Session Continuation)
 **Completed result:** Addressed the residual linting and type-checking regressions introduced by the rapid remediation pass, and corrected the test assertions in `src/stores/background-task-store.test.ts` to correctly match the new web-mode abort semantics (P1-004). 
 **Verification:**
