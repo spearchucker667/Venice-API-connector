@@ -120,11 +120,11 @@ describe('background task polling', () => {
     useBackgroundTaskStore.getState().cancelTask('video-five')
 
     expect(useBackgroundTaskStore.getState().tasks['video-five']).toMatchObject({
-      status: 'processing',
-      error: 'Provider cancellation is unavailable; generation is still running.',
+      status: 'aborted',
+      error: 'Cancel requested (provider generation may still run)',
       metadata: { cancellationUnsupported: true },
     })
-    expect(useBackgroundTaskStore.getState().activePolls['video-five']).toBeDefined()
+    expect(useBackgroundTaskStore.getState().activePolls['video-five']).toBeUndefined()
   })
 
   it('persists browser audio before completing with a compact object URL', async () => {
