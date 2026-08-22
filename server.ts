@@ -25,7 +25,7 @@ import {
   recordDecision,
   safetyBlockBodyFromResponseScreen,
   screenResponseBody,
-  screenGeneratedMedia,
+  identifyAndValidateGeneratedMedia,
 } from "./src/shared/safety";
 import type { SafetyGuardDecision } from "./src/shared/safety";
 import { pathToFileURL, fileURLToPath } from "node:url";
@@ -674,7 +674,7 @@ export function createServerApp() {
                        base64String = item.b64_json;
                      }
                      if (base64String) {
-                       const mediaScreen = screenGeneratedMedia(base64String, "application/octet-stream", true);
+                       const mediaScreen = identifyAndValidateGeneratedMedia(base64String, "application/octet-stream", true);
                        if (!mediaScreen.allowed) {
                          proxyResObj.statusCode = 451;
                          proxyResObj.setHeader("Content-Type", "application/json");

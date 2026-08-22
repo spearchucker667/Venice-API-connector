@@ -18,7 +18,7 @@ import {
   SafetyGuardBlockedError,
   safetyBlockBodyFromResponseScreen,
   screenResponseBody,
-  screenGeneratedMedia,
+  identifyAndValidateGeneratedMedia,
 } from "../../src/shared/safety";
 import type { SafetyGuardInput } from "../../src/shared/safety";
 import { performVeniceRequest } from "./veniceClient";
@@ -199,7 +199,7 @@ function screenUpstreamResponse(endpoint: string, method: string, response: Veni
         
         if (base64String) {
           // Pass the base64 content to the semantic media screener
-          const mediaScreen = screenGeneratedMedia(base64String, "application/octet-stream", true);
+          const mediaScreen = identifyAndValidateGeneratedMedia(base64String, "application/octet-stream", true);
           if (!mediaScreen.allowed) {
             return {
               ok: false,

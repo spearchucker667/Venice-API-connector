@@ -32,6 +32,6 @@ export {
   runLocalFamilyGuard,
   safetyBlockBodyFromResponseScreen,
   screenResponseBody,
-  screenGeneratedMedia,
+  identifyAndValidateGeneratedMedia,
 } from "./localFamilySafeGuard";
 export type { LocalGuardDecision, ResponseBodyScreenResult, SafetyBlockBody, GeneratedMediaSafetyResult } from "./localFamilySafeGuard";

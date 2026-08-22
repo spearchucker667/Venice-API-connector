@@ -22,6 +22,9 @@ import {
 import { sanitizeErrorText } from "../../src/shared/redaction";
 import { MUSIC_SAFE_ERROR_MESSAGES, toUserFacingMusicError, toUserFacingVideoError } from "../../src/services/task-errors";
 import { performVeniceRequest } from "./veniceClient";
+import { performGuardedVeniceRequest } from "./guardPipeline";
+import { computePayloadHash } from "../../src/shared/venice-media-contract/payload-hash";
+import { identifyAndValidateGeneratedMedia } from "../../src/shared/safety/mediaScreener";
 import { logError } from "./logger";
 import { publishInspectorRequest, publishInspectorCompletion } from "./inspectorTelemetry";
 import { buildAudioRetrieveRequest } from '../../src/services/media-request-adapter';
@@ -602,6 +605,13 @@ export interface PaidQueueSubmissionInput {
   logicalRequestHash?: string;
 }
 
+const inFlightPaidSubmissions = new Map<string, Promise<{
+  ok: boolean;
+  task?: BackgroundTask;
+  error?: string;
+  challenge?: unknown;
+}>>();
+
 export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput): Promise<{
   ok: boolean;
   task?: BackgroundTask;
@@ -610,94 +620,135 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
 }> {
   await initBackgroundTaskManager();
 
+  let mutexKey = "";
+  let payloadHash = "";
   if (input.logicalRequestHash) {
+    if (input.logicalRequestHash.length > 256) {
+      return { ok: false, error: "logicalRequestHash exceeds 256 characters." };
+    }
+    payloadHash = computePayloadHash(input.wirePayload);
+    // Compound idempotency key (profile, operation, logic, payloadHash)
+    mutexKey = `${input.profileId}:${input.operation}:${input.logicalRequestHash}:${payloadHash}`;
+
+    // Check existing tasks for idempotency conflict or reuse
     const existing = Object.values(state.tasks).find(
-      t => t.requestFingerprint === input.logicalRequestHash &&
+      t => t.metadata?.requestFingerprint === input.logicalRequestHash &&
+           t.type === (input.operation === 'video' ? 'video' : 'music') &&
+           t.profileId === input.profileId &&
            !['failed', 'aborted', 'timeout'].includes(t.status)
     );
     if (existing) {
+      if (existing.metadata?.payloadHash && existing.metadata.payloadHash !== payloadHash) {
+        return { ok: false, error: "IDEMPOTENCY_CONFLICT: same logical key used with different payload." };
+      }
       return { ok: true, task: existing };
     }
-  }
 
-  const taskId = `${input.operation}-${crypto.randomUUID()}`;
-  const endpoint = input.operation === 'video' ? '/video/queue' : '/audio/queue';
-
-  const response = await performVeniceRequest({
-    endpoint,
-    method: 'POST',
-    body: input.wirePayload,
-    profileId: input.profileId,
-  });
-
-  if (response.status === 409) {
-    const challenge = normalizeSeedanceConsentChallenge(409, response.body);
-    if (challenge) {
-      return { ok: false, challenge, error: challenge.error.message };
+    // Check in-flight mutex
+    if (inFlightPaidSubmissions.has(mutexKey)) {
+      return await inFlightPaidSubmissions.get(mutexKey)!;
     }
   }
 
-  if (response.status < 200 || response.status >= 300) {
-    const errBody = response.body as Record<string, unknown> | undefined;
-    const msg = typeof errBody?.error === 'string'
-      ? errBody.error
-      : (typeof (errBody?.error as { message?: unknown })?.message === 'string'
-        ? String((errBody?.error as { message: unknown }).message)
-        : `Queue request failed (${response.status})`);
-    return { ok: false, error: msg };
-  }
+  const performSubmission = async () => {
+    const taskId = `${input.operation}-${crypto.randomUUID()}`;
+    const endpoint = input.operation === 'video' ? '/video/queue' : '/audio/queue';
 
-  let queueId = '';
-  let model = String(input.wirePayload.model || '');
-  let downloadUrl: string | undefined;
+    const guardedResult = await performGuardedVeniceRequest({
+      endpoint,
+      method: 'POST',
+      body: input.wirePayload,
+      profileId: input.profileId,
+    });
 
-  if (input.operation === 'video') {
-    const norm = normalizeVideoQueueResponse(response.body);
-    queueId = norm.queueId;
-    model = norm.model || model;
-    downloadUrl = norm.downloadUrl;
-  } else {
-    const norm = normalizeAudioQueueResponse(response.body);
-    queueId = norm.queueId;
-    model = norm.model || model;
-  }
+    if (guardedResult.kind === 'blocked') {
+      return { ok: false, error: 'Blocked by Family Safe Mode' };
+    }
 
-  if (downloadUrl) {
-    ephemeralSecrets.set(taskId, { queueDownloadUrl: downloadUrl });
-  }
+    const response = guardedResult.response;
 
-  let downloadHost: string | undefined;
-  if (downloadUrl) {
+    if (response.status === 409) {
+      const challenge = normalizeSeedanceConsentChallenge(409, response.body);
+      if (challenge) {
+        return { ok: false, challenge, error: challenge.error.message };
+      }
+    }
+
+    if (response.status < 200 || response.status >= 300) {
+      const errBody = response.body as Record<string, unknown> | undefined;
+      const msg = typeof errBody?.error === 'string'
+        ? errBody.error
+        : (typeof (errBody?.error as { message?: unknown })?.message === 'string'
+          ? String((errBody?.error as { message: unknown }).message)
+          : `Queue request failed (${response.status})`);
+      return { ok: false, error: msg };
+    }
+
+    let queueId = '';
+    let model = String(input.wirePayload.model || '');
+    let downloadUrl: string | undefined;
+
+    if (input.operation === 'video') {
+      const norm = normalizeVideoQueueResponse(response.body);
+      queueId = norm.queueId;
+      model = norm.model || model;
+      downloadUrl = norm.downloadUrl;
+    } else {
+      const norm = normalizeAudioQueueResponse(response.body);
+      queueId = norm.queueId;
+      model = norm.model || model;
+    }
+
+    if (downloadUrl) {
+      ephemeralSecrets.set(taskId, { queueDownloadUrl: downloadUrl });
+    }
+
+    let downloadHost: string | undefined;
+    if (downloadUrl) {
+      try {
+        downloadHost = new URL(downloadUrl).host;
+      } catch {
+        // ignore
+      }
+    }
+
+    const task = createBackgroundTask({
+      id: taskId,
+      type: input.operation === 'video' ? 'video' : 'music',
+      queueId,
+      profileId: input.profileId,
+      modelId: model,
+      requestFingerprint: input.logicalRequestHash,
+      metadata: {
+        model,
+        ...(input.logicalRequestHash ? { requestFingerprint: input.logicalRequestHash, payloadHash } : {}),
+        ...(downloadUrl ? { queueDownloadUrlPresent: true, ...(downloadHost ? { downloadHost } : {}) } : {}),
+        ...(input.wirePayload.duration ? { requestedDuration: String(input.wirePayload.duration) } : {}),
+        ...(input.wirePayload.resolution ? { requestedResolution: String(input.wirePayload.resolution) } : {}),
+        ...(input.wirePayload.aspect_ratio ? { requestedAspectRatio: String(input.wirePayload.aspect_ratio) } : {}),
+      },
+    });
+
+    state.tasks[task.id] = task;
+    await flushPersist();
+    emit(task.id, task, task.profileId);
+    startPolling(task.id);
+
+    return { ok: true, task };
+  };
+
+  if (mutexKey) {
+    const promise = performSubmission();
+    inFlightPaidSubmissions.set(mutexKey, promise);
     try {
-      downloadHost = new URL(downloadUrl).host;
-    } catch {
-      // ignore
+      const result = await promise;
+      return result;
+    } finally {
+      inFlightPaidSubmissions.delete(mutexKey);
     }
+  } else {
+    return performSubmission();
   }
-
-  const task = createBackgroundTask({
-    id: taskId,
-    type: input.operation === 'video' ? 'video' : 'music',
-    queueId,
-    profileId: input.profileId,
-    modelId: model,
-    requestFingerprint: input.logicalRequestHash,
-    metadata: {
-      model,
-      ...(input.logicalRequestHash ? { requestFingerprint: input.logicalRequestHash } : {}),
-      ...(downloadUrl ? { queueDownloadUrlPresent: true, ...(downloadHost ? { downloadHost } : {}) } : {}),
-      ...(input.wirePayload.duration ? { requestedDuration: String(input.wirePayload.duration) } : {}),
-      ...(input.wirePayload.resolution ? { requestedResolution: String(input.wirePayload.resolution) } : {}),
-      ...(input.wirePayload.aspect_ratio ? { requestedAspectRatio: String(input.wirePayload.aspect_ratio) } : {}),
-    },
-  });
-
-  state.tasks[task.id] = task;
-  await flushPersist();
-  emit(task.id, task, task.profileId);
-  startPolling(task.id);
-
-  return { ok: true, task };
 }
 
 export function __getBackgroundTaskManagerStateForTests(): BackgroundTaskManagerState {
