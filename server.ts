@@ -616,6 +616,23 @@ export function createServerApp() {
             if (retryAfter) proxyResRes.setHeader("Retry-After", retryAfter);
             const rlReset = proxyRes.headers["x-ratelimit-reset-requests"];
             if (rlReset) proxyResRes.setHeader("X-RateLimit-Reset-Requests", rlReset);
+
+            // VF-WEB-001: Reject oversized upstream responses before buffering.
+            // The 256 MiB check in responseInterceptor runs AFTER the body is
+            // already in memory.  This content-length gate catches declared
+            // sizes early and destroys the upstream connection.
+            if (isMedia && isLocalFamilySafe) {
+              const MAX_BYTES = 256 * 1024 * 1024;
+              const contentLength = proxyRes.headers['content-length'];
+              if (contentLength) {
+                const declared = Number(contentLength);
+                if (Number.isFinite(declared) && declared > MAX_BYTES) {
+                  proxyRes.destroy();
+                  proxyResRes.status(413).json({ error: 'Upstream response too large to screen under Family Safe Mode.' });
+                  return;
+                }
+              }
+            }
   
             if (proxyRes.statusCode && proxyRes.statusCode >= 500) {
               circuitFailures++;
@@ -626,6 +643,12 @@ export function createServerApp() {
               }
             } else if (proxyRes.statusCode && proxyRes.statusCode >= 200 && proxyRes.statusCode < 300) {
                circuitFailures = 0; // Reset only on successful responses
+               circuitHalfOpen = false;
+            } else if (proxyRes.statusCode) {
+               // 1xx, 3xx, 4xx — the upstream is reachable and responded.
+               // A completed HTTP response proves network connectivity, so
+               // transition half-open → closed.  (Previously 4xx left the
+               // circuit stuck half-open indefinitely.)
                circuitHalfOpen = false;
             }
           },
@@ -664,7 +687,7 @@ export function createServerApp() {
           }
 
           if (proxyRes.statusCode && proxyRes.statusCode >= 200 && proxyRes.statusCode < 300) {
-            const contentType = proxyRes.headers['content-type'] || '';
+            const contentType = String(proxyRes.headers['content-type'] || '');
             if (contentType.includes('application/json')) {
                const bodyStr = responseBuffer.toString('utf8');
                try {
@@ -711,6 +734,21 @@ export function createServerApp() {
                     severity: "HIGH"
                   });
                }
+            } else if (contentType.startsWith('video/') || contentType.startsWith('audio/') || contentType.startsWith('image/')) {
+              // P0-FIX: screen raw binary media responses under Family Safe Mode.
+              // Previously this path fell through unchanged, bypassing FSM for
+              // endpoints that return raw video/mp4, audio/*, or image/*.
+              const mediaScreen = identifyAndValidateGeneratedMedia(responseBuffer, contentType, true);
+              if (!mediaScreen.allowed) {
+                proxyResObj.statusCode = 451;
+                proxyResObj.setHeader("Content-Type", "application/json");
+                return JSON.stringify({
+                  error: mediaScreen.userMessage || "Media blocked by safety filter",
+                  reasonCode: mediaScreen.reasonCode,
+                  category: mediaScreen.category,
+                  severity: "HIGH"
+                });
+              }
             }
           }
           return responseBuffer;

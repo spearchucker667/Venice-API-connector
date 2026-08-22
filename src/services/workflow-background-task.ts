@@ -10,17 +10,29 @@ interface WorkflowVideoTaskInput {
   runId?: string
   nodeId?: string
   signal?: AbortSignal
+  /** When provided on Electron, the task was already created + journaled
+   *  by `submitPaidQueue` and this function merely monitors it instead of
+   *  creating a duplicate task + poller for the same provider queue.
+   *  On web this stays undefined — the legacy `registerQueueTask` path
+   *  is used. */
+  existingTaskId?: string
 }
 
 const TERMINAL_STATUSES = new Set(['completed', 'failed', 'aborted', 'timeout'])
 
 /**
- * Registers workflow video jobs with the same durable task owner used by Video
- * Studio, then waits for the compact persisted result URL. Raw reference media
- * is deliberately excluded from task metadata by the caller.
+ * On Electron the workflow routes video queuing through `submitPaidQueue`,
+ * which already creates a durable main-process task and starts main-owned
+ * polling.  This function monitors that existing task rather than
+ * registering a duplicate.
+ *
+ * On the web path there is no main process, so a local renderer task is
+ * still registered for polling.
  */
 export function awaitWorkflowVideoTask(input: WorkflowVideoTaskInput): Promise<string> {
-  const taskId = input.runId && input.nodeId ? `workflow-video-${input.runId}-${input.nodeId}` : `workflow-video-${crypto.randomUUID()}`
+  const taskId = input.existingTaskId
+    ? input.existingTaskId
+    : (input.runId && input.nodeId ? `workflow-video-${input.runId}-${input.nodeId}` : `workflow-video-${crypto.randomUUID()}`)
   return new Promise<string>((resolve, reject) => {
     let settled = false
     const finish = (callback: () => void) => {
@@ -45,12 +57,15 @@ export function awaitWorkflowVideoTask(input: WorkflowVideoTaskInput): Promise<s
     const unsubscribe = useBackgroundTaskStore.subscribe(inspect)
     input.signal?.addEventListener('abort', onAbort, { once: true })
 
-    useBackgroundTaskStore.getState().registerQueueTask(taskId, 'video', input.queueId, {
-      model: input.model,
-      request: input.request,
-      source: 'workflow',
-      ...(input.queueDownloadUrl ? { queueDownloadUrl: input.queueDownloadUrl } : {}),
-    })
+    if (!input.existingTaskId) {
+      // Web path: no main process — register a local renderer task.
+      useBackgroundTaskStore.getState().registerQueueTask(taskId, 'video', input.queueId, {
+        model: input.model,
+        request: input.request,
+        source: 'workflow',
+        ...(input.queueDownloadUrl ? { queueDownloadUrl: input.queueDownloadUrl } : {}),
+      })
+    }
     inspect()
   })
 }

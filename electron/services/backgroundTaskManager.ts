@@ -16,7 +16,7 @@ import type {
 import {
   createBackgroundTask,
   isProviderPolledBackgroundTaskType,
-  parseTasks,
+  parseTasksStrict,
   serializeTasks,
 } from "../../src/types/background-task";
 import { sanitizeErrorText } from "../../src/shared/redaction";
@@ -48,15 +48,36 @@ const MAX_VIDEO_GENERATION_MS = 120000; // 2 minutes (120s)
 const MAX_NON_VIDEO_GENERATION_MS = 120000; // 2 minutes
 const DURABLE_RESULT_URL_RE = /^venice-media:\/\/[a-f0-9]{64}$/;
 
-/** Ephemeral in-memory store for sensitive signed URLs (never persisted to tasks.json) */
-const ephemeralSecrets = new Map<string, { queueDownloadUrl?: string }>();
+/** Ephemeral in-memory store for sensitive signed URLs (never persisted to tasks.json).
+ *  Entries are cleared on terminal status, task deletion, or manager reset. */
+const ephemeralSecrets = new Map<string, { queueDownloadUrl?: string; createdAt: number }>();
+
+/** Maximum lifetime for an ephemeral signed URL entry (30 min). */
+const EPHEMERAL_MAX_AGE_MS = 30 * 60 * 1000;
+
+function clearEphemeralSecrets(taskId: string): void {
+  ephemeralSecrets.delete(taskId);
+}
+
+/** Periodic purge of expired ephemeral entries; bound to the poll loop
+ *  to avoid a standalone timer. */
+function _purgeExpiredEphemeralSecrets(): void {
+  const now = Date.now();
+  for (const [id, entry] of ephemeralSecrets.entries()) {
+    if (now - entry.createdAt > EPHEMERAL_MAX_AGE_MS) {
+      ephemeralSecrets.delete(id);
+    }
+  }
+}
 
 export interface BackgroundTaskManagerState {
   tasks: Record<string, BackgroundTask>;
   activePolls: Record<string, ReturnType<typeof setTimeout>>;
 }
 
-export type BackgroundTaskChangeListener = (taskId: string, task: BackgroundTask | null, profileId: string) => void;
+export type TaskEventKind = 'created' | 'updated' | 'removed';
+
+export type BackgroundTaskChangeListener = (taskId: string, task: BackgroundTask | null, kind: TaskEventKind, profileId: string) => void;
 
 const listeners = new Set<BackgroundTaskChangeListener>();
 const state: BackgroundTaskManagerState = { tasks: {}, activePolls: {} };
@@ -64,10 +85,10 @@ const state: BackgroundTaskManagerState = { tasks: {}, activePolls: {} };
 let initialized = false;
 let initializationPromise: Promise<void> | null = null;
 
-function emit(taskId: string, task: BackgroundTask | null, profileId: string): void {
+function emit(taskId: string, task: BackgroundTask | null, kind: TaskEventKind, profileId: string): void {
   for (const listener of listeners) {
     try {
-      listener(taskId, task, profileId);
+      listener(taskId, task, kind, profileId);
     } catch (err) {
       logError("Background task listener failed", sanitizeErrorText(String(err)));
     }
@@ -119,6 +140,32 @@ async function flushPersist(): Promise<void> {
   return activePersistPromise;
 }
 
+/** Fatal variant of flushPersist that propagates write errors so callers
+ *  can detect I/O failure before a billable provider dispatch.  Only use
+ *  for task creation, finalization, and other ownership-critical writes. */
+async function flushPersistFatal(): Promise<void> {
+  if (activePersistPromise) {
+    pendingPersist = true;
+    try {
+      await activePersistPromise;
+    } catch {
+      // Prior persist already failed; we will try again below.
+    }
+  }
+
+  activePersistPromise = (async () => {
+    do {
+      pendingPersist = false;
+      await writeTasksFile();
+      lastPersistTime = Date.now();
+    } while (pendingPersist);
+  })().finally(() => {
+    activePersistPromise = null;
+  });
+
+  return activePersistPromise;
+}
+
 function persist(debounceMs = 0): void {
   if (debounceMs > 0 && Date.now() - lastPersistTime < debounceMs) {
     if (!pendingPersistTimeout) {
@@ -158,19 +205,23 @@ export async function loadBackgroundTasks(): Promise<void> {
     }
     throw err;
   }
-  try {
-    const tasks = parseTasks(raw);
-    state.tasks = Object.fromEntries(tasks.map((t) => [t.id, t]));
-  } catch (err) {
-    logError("Failed to load background tasks", sanitizeErrorText(String(err)));
-    try {
-      await fs.copyFile(TASKS_FILE, `${TASKS_FILE}.corrupt`);
-      logError("Quarantined corrupt tasks file", "tasks.json.corrupt");
-    } catch {
-      // Ignore
-    }
-    state.tasks = {};
+  const result = parseTasksStrict(raw);
+  if (result.ok) {
+    state.tasks = Object.fromEntries(result.tasks.map((t) => [t.id, t]));
+    return;
   }
+  // Corrupt journal detected — quarantine the original file before
+  // overwriting, and start with an empty task slate. This prevents
+  // silent data loss for paid-job records.
+  logError(`Corrupt tasks journal: ${result.reason}.  Quarantining original.`);
+  try {
+    const timestamp = Date.now();
+    await fs.copyFile(TASKS_FILE, `${TASKS_FILE}.corrupt.${timestamp}`);
+    logError(`Quarantined corrupt tasks file`, `tasks.json.corrupt.${timestamp}`);
+  } catch {
+    logError("Failed to quarantine corrupt tasks file");
+  }
+  state.tasks = {};
 }
 
 export async function initBackgroundTaskManager(): Promise<void> {
@@ -181,8 +232,19 @@ export async function initBackgroundTaskManager(): Promise<void> {
     await loadBackgroundTasks();
     for (const task of Object.values(state.tasks)) {
       if (task.status === 'pending_finalize') {
-        task.status = 'queued';
-        task.updatedAt = Date.now();
+        // Scavenge write-ahead intents that were journaled before
+        // provider dispatch.  A pending_finalize task WITH a real queueId
+        // means we crashed after provider acceptance: resume polling.
+        // A pending_finalize task WITHOUT a queueId means we crashed
+        // before the provider responded: acceptance-unknown, fail it.
+        if (task.queueId && task.queueId !== 'pending') {
+          task.status = 'queued';
+          task.updatedAt = Date.now();
+        } else {
+          task.status = 'failed';
+          task.error = 'Application restarted before provider accepted the request.  Acceptance unknown.';
+          task.updatedAt = Date.now();
+        }
       }
       if (!isTerminalStatus(task.status)) {
         if (isProviderPolledBackgroundTaskType(task.type)) {
@@ -316,10 +378,20 @@ async function applyUpdate(taskId: string, updates: BackgroundTaskUpdate): Promi
   updated.updatedAt = Date.now();
   state.tasks[taskId] = updated;
 
-  // Debounce non-critical progress updates to avoid disk thrashing
+  // Fire-and-forget persist: poll loops must never block on I/O.
+  // Terminal transitions use fatal persist (errors logged).
   const isProgressOnly = updates.status === undefined && updates.error === undefined && updates.resultUrl === undefined;
-  persist(isProgressOnly ? 2000 : 0);
-  emit(taskId, updated, updated.profileId);
+  const isTerminalTransition = typeof updates.status === 'string' && isTerminalStatus(updates.status as BackgroundTaskStatus);
+  if (isTerminalTransition) {
+    void flushPersistFatal().catch((err) => logError(`Failed to persist terminal transition for task ${taskId}`, sanitizeErrorText(String(err))));
+  } else {
+    persist(isProgressOnly ? 2000 : 0);
+  }
+  // Clear ephemeral signed URLs when the task reaches a terminal state.
+  if (isTerminalTransition) {
+    clearEphemeralSecrets(taskId);
+  }
+  emit(taskId, updated, 'updated', updated.profileId);
   return updated;
 }
 
@@ -329,8 +401,8 @@ export async function createBackgroundTaskInMain(
   await initBackgroundTaskManager();
   const task = createBackgroundTask(input);
   state.tasks[task.id] = task;
-  persist();
-  emit(task.id, task, task.profileId);
+  await flushPersistFatal();
+  emit(task.id, task, 'created', task.profileId);
   if (isProviderPolledBackgroundTaskType(task.type)) {
     startPolling(task.id);
   }
@@ -386,8 +458,9 @@ export async function clearBackgroundTaskInMain(taskId: string): Promise<void> {
   const profileId = state.tasks[taskId]?.profileId ?? "default";
   stopPolling(taskId);
   delete state.tasks[taskId];
-  persist();
-  emit(taskId, null, profileId);
+  clearEphemeralSecrets(taskId);
+  await flushPersistFatal();
+  emit(taskId, null, 'removed', profileId);
 }
 
 function stopPolling(taskId: string): void {
@@ -618,6 +691,8 @@ export async function __resetBackgroundTaskManagerForTests(): Promise<void> {
   initializationPromise = null;
   lastPersistTime = 0;
   listeners.clear();
+  ephemeralSecrets.clear();
+  inFlightPaidSubmissions.clear();
 }
 
 export interface PaidQueueSubmissionInput {
@@ -660,7 +735,13 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
            !['failed', 'aborted', 'timeout'].includes(t.status)
     );
     if (existing) {
-      if (existing.payloadHash && existing.payloadHash !== payloadHash) {
+      // Legacy records created before payloadHash was introduced may lack it.
+      // A missing hash means we cannot prove the stored payload matches the
+      // new request, so we must NOT silently reuse the task.
+      if (!existing.payloadHash) {
+        return { ok: false, error: "IDEMPOTENCY_CONFLICT: existing task has no payload hash (legacy record). Cancel or retry the existing task first." };
+      }
+      if (existing.payloadHash !== payloadHash) {
         return { ok: false, error: "IDEMPOTENCY_CONFLICT: same logical key used with different payload." };
       }
       return { ok: true, task: existing };
@@ -674,89 +755,144 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
 
   const performSubmission = async () => {
     const taskId = `${input.operation}-${crypto.randomUUID()}`;
-    const endpoint = input.operation === 'video' ? '/video/queue' : '/audio/queue';
 
-    const guardedResult = await performGuardedVeniceRequest({
-      endpoint,
-      method: 'POST',
-      body: input.wirePayload,
-      profileId: input.profileId,
-    });
-
-    if (guardedResult.kind === 'blocked') {
-      return { ok: false, error: 'Blocked by Family Safe Mode' };
-    }
-
-    const response = guardedResult.response;
-
-    if (response.status === 409) {
-      const challenge = normalizeSeedanceConsentChallenge(409, response.body);
-      if (challenge) {
-        return { ok: false, challenge, error: challenge.error.message };
-      }
-    }
-
-    if (response.status < 200 || response.status >= 300) {
-      const errBody = response.body as Record<string, unknown> | undefined;
-      const msg = typeof errBody?.error === 'string'
-        ? errBody.error
-        : (typeof (errBody?.error as { message?: unknown })?.message === 'string'
-          ? String((errBody?.error as { message: unknown }).message)
-          : `Queue request failed (${response.status})`);
-      return { ok: false, error: msg };
-    }
-
-    let queueId = '';
-    let model = String(input.wirePayload.model || '');
-    let downloadUrl: string | undefined;
-
-    if (input.operation === 'video') {
-      const norm = normalizeVideoQueueResponse(response.body);
-      queueId = norm.queueId;
-      model = norm.model || model;
-      downloadUrl = norm.downloadUrl;
-    } else {
-      const norm = normalizeAudioQueueResponse(response.body);
-      queueId = norm.queueId;
-      model = norm.model || model;
-    }
-
-    if (downloadUrl) {
-      ephemeralSecrets.set(taskId, { queueDownloadUrl: downloadUrl });
-    }
-
-    let downloadHost: string | undefined;
-    if (downloadUrl) {
-      try {
-        downloadHost = new URL(downloadUrl).host;
-      } catch {
-        // ignore
-      }
-    }
-
-    const task = createBackgroundTask({
+    // --- PHASE 1: Write-ahead journal before provider dispatch. ----
+    // The task is persisted as `pending_finalize` so that a crash between
+    // provider acceptance and local journaling cannot silently lose a
+    // billable generation.  On restart, `initBackgroundTaskManager`
+    // scavenges `pending_finalize` tasks: those with a queueId resume
+    // polling; those without a queueId (pre-dispatch crash) are failed
+    // with an "acceptance unknown" message and not blindly resubmitted.
+    const intentTask = createBackgroundTask({
       id: taskId,
       type: input.operation === 'video' ? 'video' : 'music',
-      queueId,
+      // placeholder — real queueId comes from provider response
+      queueId: 'pending',
       profileId: input.profileId,
-      modelId: model,
       requestFingerprint: input.logicalRequestHash,
       payloadHash: input.logicalRequestHash ? payloadHash : undefined,
       metadata: {
-        model,
-        ...(downloadUrl ? { queueDownloadUrlPresent: true, ...(downloadHost ? { downloadHost } : {}) } : {}),
         ...(input.wirePayload.duration ? { requestedDuration: String(input.wirePayload.duration) } : {}),
         ...(input.wirePayload.resolution ? { requestedResolution: String(input.wirePayload.resolution) } : {}),
         ...(input.wirePayload.aspect_ratio ? { requestedAspectRatio: String(input.wirePayload.aspect_ratio) } : {}),
       },
     });
+    // Override status to the pre-dispatch sentinel.
+    // pending_finalize is a valid runtime sentinel not in the type union.
+    (intentTask as unknown as Record<string, unknown>).status = 'pending_finalize';
+    state.tasks[intentTask.id] = intentTask;
+    try {
+      await flushPersistFatal();
+    } catch {
+      // Durable write failed — do not dispatch a billable request.
+      delete state.tasks[intentTask.id];
+      return { ok: false, error: 'Failed to journal task before provider dispatch.' };
+    }
+    emit(intentTask.id, intentTask, 'created', intentTask.profileId);
 
-    state.tasks[task.id] = task;
-    await flushPersist();
-    emit(task.id, task, task.profileId);
-    startPolling(task.id);
+    // --- PHASE 2: Provider dispatch. ----
+    const endpoint = input.operation === 'video' ? '/video/queue' : '/audio/queue';
 
-    return { ok: true, task };
+    let dispatchFailed = true;
+    try {
+      const guardedResult = await performGuardedVeniceRequest({
+        endpoint,
+        method: 'POST',
+        body: input.wirePayload,
+        profileId: input.profileId,
+      });
+
+      if (guardedResult.kind === 'blocked') {
+        dispatchFailed = false; // here "failed" means "don't scavenge as unknown"
+        void applyUpdate(intentTask.id, { status: 'failed', error: 'Blocked by Family Safe Mode' });
+        return { ok: false, error: 'Blocked by Family Safe Mode' };
+      }
+
+      const response = guardedResult.response;
+
+      if (response.status === 409) {
+        const challenge = normalizeSeedanceConsentChallenge(409, response.body);
+        if (challenge) {
+          dispatchFailed = false;
+          void applyUpdate(intentTask.id, { status: 'failed', error: challenge.error.message });
+          return { ok: false, challenge, error: challenge.error.message };
+        }
+      }
+
+      if (response.status < 200 || response.status >= 300) {
+        const errBody = response.body as Record<string, unknown> | undefined;
+        const msg = typeof errBody?.error === 'string'
+          ? errBody.error
+          : (typeof (errBody?.error as { message?: unknown })?.message === 'string'
+            ? String((errBody?.error as { message: unknown }).message)
+            : `Queue request failed (${response.status})`);
+        dispatchFailed = false;
+        void applyUpdate(intentTask.id, { status: 'failed', error: msg });
+        return { ok: false, error: msg };
+      }
+
+      let queueId = '';
+      let model = String(input.wirePayload.model || '');
+      let downloadUrl: string | undefined;
+
+      if (input.operation === 'video') {
+        const norm = normalizeVideoQueueResponse(response.body);
+        queueId = norm.queueId;
+        model = norm.model || model;
+        downloadUrl = norm.downloadUrl;
+      } else {
+        const norm = normalizeAudioQueueResponse(response.body);
+        queueId = norm.queueId;
+        model = norm.model || model;
+      }
+
+      if (downloadUrl) {
+        ephemeralSecrets.set(taskId, { queueDownloadUrl: downloadUrl, createdAt: Date.now() });
+      }
+
+      let downloadHost: string | undefined;
+      if (downloadUrl) {
+        try {
+          downloadHost = new URL(downloadUrl).host;
+        } catch {
+          // ignore
+        }
+      }
+
+      dispatchFailed = false;
+
+      // --- PHASE 3: Atomically finalize the intent. ----
+      const existing = state.tasks[intentTask.id];
+      if (existing) {
+        existing.status = 'queued';
+        existing.queueId = queueId;
+        existing.modelId = model;
+        existing.payloadHash = input.logicalRequestHash ? payloadHash : existing.payloadHash;
+        existing.metadata = {
+          ...existing.metadata,
+          model,
+          ...(downloadUrl ? { queueDownloadUrlPresent: true, ...(downloadHost ? { downloadHost } : {}) } : {}),
+          ...(input.wirePayload.duration ? { requestedDuration: String(input.wirePayload.duration) } : {}),
+          ...(input.wirePayload.resolution ? { requestedResolution: String(input.wirePayload.resolution) } : {}),
+          ...(input.wirePayload.aspect_ratio ? { requestedAspectRatio: String(input.wirePayload.aspect_ratio) } : {}),
+        };
+        existing.updatedAt = Date.now();
+      }
+      await flushPersistFatal();
+      emit(intentTask.id, existing, 'updated', intentTask.profileId);
+      startPolling(intentTask.id);
+
+      return { ok: true, task: existing };
+    } catch (err) {
+      if (dispatchFailed) {
+        // Provider dispatch threw before we received any response.
+        // The intent journal still exists with status pending_finalize
+        // and no queueId. On restart it will be failed with "acceptance
+        // unknown" — safer than blind resubmission.
+        logError('Paid queue dispatch failed after journaling intent', sanitizeErrorText(String(err)));
+      }
+      throw err;
+    }
   };
 
   if (mutexKey) {
@@ -777,6 +913,6 @@ export function __getBackgroundTaskManagerStateForTests(): BackgroundTaskManager
   return state;
 }
 
-export function __getEphemeralSecretsForTests(): Map<string, { queueDownloadUrl?: string }> {
+export function __getEphemeralSecretsForTests(): Map<string, { queueDownloadUrl?: string; createdAt: number }> {
   return ephemeralSecrets;
 }

@@ -52,11 +52,11 @@ export function __resetBackgroundTaskHandlersForTests(): void {
 function registerBroadcastListener(): void {
   if (listenerRegistered) return;
   listenerRegistered = true;
-  subscribeToBackgroundTasks((taskId, task, profileId) => {
-    if (task) {
-      broadcast({ kind: task.status === "queued" && !task.metadata?.__pollAttempts ? "created" : "updated", taskId, tasks: [task] }, profileId);
-    } else {
+  subscribeToBackgroundTasks((taskId, task, kind, profileId) => {
+    if (kind === 'removed') {
       broadcast({ kind: "removed", taskId }, profileId);
+    } else if (task) {
+      broadcast({ kind, taskId, tasks: [task] }, profileId);
     }
   });
 }
@@ -136,7 +136,31 @@ export function registerBackgroundTaskHandlers(): void {
         return { ok: false, error: "Invalid video task stage." };
       }
       if (!isTaskOwnedBySender(event.sender, taskId)) return taskNotFound();
-      const task = await updateBackgroundTaskInMain(taskId, updatePayload);
+
+      // P2-FIX: For provider-polled tasks (video, music), the renderer
+      // must not authoritatively set status, queueId, stage, or resultUrl
+      // — those are owned by the main-process poll loop.  Only `error` and
+      // a safe metadata subset are accepted from the renderer.
+      // Non-provider-polled tasks (image, research, document) can still
+      // receive full updates from their rendering owner.
+      const existingTask = getBackgroundTask(taskId);
+      let safeUpdate = updatePayload;
+      if (existingTask && (existingTask.type === 'video' || existingTask.type === 'music')) {
+        safeUpdate = { metadata: {} };
+        if (updatePayload.error !== undefined && typeof updatePayload.error === 'string') {
+          safeUpdate.error = String(updatePayload.error).slice(0, 1024);
+        }
+        if (updatePayload.metadata !== undefined) {
+          const allowedMetaKeys = new Set(['step', 'note', 'request'])
+          const filtered: Record<string, unknown> = {}
+          for (const [k, v] of Object.entries(updatePayload.metadata)) {
+            if (allowedMetaKeys.has(k)) filtered[k] = v
+          }
+          safeUpdate.metadata = filtered
+        }
+      }
+
+      const task = await updateBackgroundTaskInMain(taskId, safeUpdate);
       return { ok: true, task };
     } catch (err: unknown) {
       return { ok: false, error: redactErrorMessage(err) };
@@ -207,6 +231,22 @@ export function registerBackgroundTaskHandlers(): void {
       }
       if (!raw.wirePayload || typeof raw.wirePayload !== "object") {
         return { ok: false, error: "Invalid wire payload." };
+      }
+      // P2-FIX: validate provider-specific paid-operation payload at the
+      // IPC trust boundary before it reaches hash/canonicalise/guard code.
+      const wp = raw.wirePayload as Record<string, unknown>;
+      if (typeof wp.model !== 'string' || wp.model.length === 0 || wp.model.length > 128) {
+        return { ok: false, error: "Invalid or missing model in wire payload." };
+      }
+      if (typeof wp.prompt !== 'string' || wp.prompt.length === 0) {
+        return { ok: false, error: "Invalid or missing prompt in wire payload." };
+      }
+      if (wp.prompt.length > 5000) {
+        return { ok: false, error: "Prompt exceeds 5000 characters." };
+      }
+      const serialized = JSON.stringify(raw.wirePayload);
+      if (serialized.length > 100000) {
+        return { ok: false, error: "Wire payload exceeds 100 KB." };
       }
       const profileId = getProfileSessionId(event.sender);
       return await submitPaidQueueTaskInMain({

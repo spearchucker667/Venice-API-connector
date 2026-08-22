@@ -48,9 +48,23 @@ export function useVideo() {
       // registering the task locally.
       if (isElectron()) {
         const { desktopBackgroundTask } = await import('../services/desktopBridge')
+        // Build a stable logical request fingerprint before crossing IPC.
+        // This allows the main process to deduplicate across retries and
+        // restarts via the journaled requestFingerprint + payloadHash fields.
+        // Model + prompt + dimensions uniquely identify a video generation
+        // request; identical params produce the same fingerprint.
+        const fingerprint = JSON.stringify({
+          model: req.model,
+          prompt: String(req.prompt || '').slice(0, 200),
+          duration: req.duration ?? '',
+          resolution: req.resolution ?? '',
+          aspect_ratio: req.aspect_ratio ?? '',
+        })
+        const logicalRequestHash = `video-${btoa(fingerprint).slice(0, 200)}`
         const submitRes = await desktopBackgroundTask.submitPaidQueue({
           operation: 'video',
           wirePayload: req as unknown as Record<string, unknown>,
+          logicalRequestHash,
         })
         if (!submitRes.ok) {
           throw new Error(submitRes.error || 'Video queue submission failed.')

@@ -169,6 +169,7 @@ async function executeNode(
         lyricsPrompt: data.lyrics || undefined,
       })
       let queueResp: MusicQueueResponse
+      let existingMusicTaskId: string | undefined
       if (isElectron()) {
         // On Electron: use the main-process paid-queue primitive — atomically
         // journals before dispatching, closing the crash window.
@@ -184,6 +185,7 @@ async function executeNode(
         if (!submitRes.task?.queueId) {
           throw new WorkflowExecutionError('Music generation did not return a queue ID.')
         }
+        existingMusicTaskId = submitRes.task.id
         queueResp = {
           id: submitRes.task.queueId,
           queue_id: submitRes.task.queueId,
@@ -197,6 +199,43 @@ async function executeNode(
           signal,
         })
       }
+
+      if (existingMusicTaskId) {
+        // VF-PQ-003-music: On Electron the task was already created and
+        // polled by the main process.  Await its completion instead of
+        // running a duplicate renderer-side poll loop.
+        const { useBackgroundTaskStore } = await import('../stores/background-task-store')
+        const result = await new Promise<string>((resolve, reject) => {
+          let settled = false
+          const finish = (cb: () => void) => {
+            if (settled) return
+            settled = true
+            unsubscribe()
+            signal?.removeEventListener('abort', onAbort)
+            cb()
+          }
+          const inspect = () => {
+            const task = useBackgroundTaskStore.getState().tasks[existingMusicTaskId]
+            if (!task || ['completed', 'failed', 'aborted', 'timeout'].includes(task.status)) {
+              if (task?.status === 'completed' && task.resultUrl) {
+                finish(() => resolve(task.resultUrl!))
+              } else {
+                const err = task?.error || 'Music generation failed.'
+                finish(() => reject(new WorkflowExecutionError(err)))
+              }
+            }
+          }
+          const onAbort = () => finish(() => reject(new DOMException('Aborted', 'AbortError')))
+          const unsubscribe = useBackgroundTaskStore.subscribe(inspect)
+          signal?.addEventListener('abort', onAbort, { once: true })
+          inspect()
+        })
+        // Main-owned tasks store the result as a venice-media:// URL.
+        // The renderer can reference it directly.
+        return result
+      }
+
+      // Web path: renderer-owned poll loop.
       for (let attempt = 0; attempt < POLL_MAX_ATTEMPTS; attempt++) {
         if (signal?.aborted) throw new DOMException('Aborted', 'AbortError')
         await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS))
@@ -238,6 +277,7 @@ async function executeNode(
       })
       let videoId = ''
       let queueResp: VideoQueueResponse | undefined
+      let existingTaskId: string | undefined
       try {
         if (isElectron()) {
           const { desktopBackgroundTask } = await import('../services/desktopBridge')
@@ -253,6 +293,7 @@ async function executeNode(
             throw new WorkflowExecutionError('Video generation did not return a queue ID.')
           }
           videoId = submitRes.task.queueId
+          existingTaskId = submitRes.task.id
           queueResp = {
             id: videoId,
             queue_id: videoId,
@@ -281,6 +322,9 @@ async function executeNode(
         nodeId: node.id,
         ...(queueResp.download_url ? { queueDownloadUrl: queueResp.download_url } : {}),
         signal,
+        // On Electron, submitPaidQueue already created & journaled the task.
+        // Pass its ID so we monitor it instead of creating a duplicate poller.
+        ...(existingTaskId ? { existingTaskId } : {}),
       })
       return `[video:${url}]`
     }

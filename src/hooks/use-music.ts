@@ -45,9 +45,20 @@ export function useMusic() {
       // the task before dispatching to the provider, closing the crash window.
       if (isElectron()) {
         const { desktopBackgroundTask } = await import('../services/desktopBridge')
+        // Build a stable logical request fingerprint before crossing IPC
+        // for main-process deduplication across retries and restarts.
+        const fingerprint = JSON.stringify({
+          model: req.model,
+          prompt: String(req.prompt || '').slice(0, 200),
+          duration_seconds: req.duration_seconds ?? '',
+          force_instrumental: req.force_instrumental ?? false,
+          lyrics_prompt: String(req.lyrics_prompt || '').slice(0, 200),
+        })
+        const logicalRequestHash = `audio-${btoa(fingerprint).slice(0, 200)}`
         const submitRes = await desktopBackgroundTask.submitPaidQueue({
           operation: 'audio',
           wirePayload: req as unknown as Record<string, unknown>,
+          logicalRequestHash,
         })
         if (!submitRes.ok) {
           throw new Error(submitRes.error || 'Music queue submission failed.')

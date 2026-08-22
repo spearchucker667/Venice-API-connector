@@ -166,12 +166,12 @@ describe("backgroundTaskManager", () => {
     const listener = vi.fn();
     subscribeToBackgroundTasks(listener);
     const task = await createBackgroundTaskInMain({ type: "video", queueId: "q1", profileId: "p1" });
-    expect(listener).toHaveBeenCalledWith(task.id, expect.objectContaining({ status: "queued" }), "p1");
+    expect(listener).toHaveBeenCalledWith(task.id, expect.objectContaining({ status: "queued" }), 'created', "p1");
     await cancelBackgroundTaskInMain(task.id);
     expect(listener).toHaveBeenCalledWith(task.id, expect.objectContaining({
       status: "aborted",
       metadata: expect.objectContaining({ cancellationUnsupported: true }),
-    }), "p1");
+    }), 'updated', "p1");
   });
 
   it("recovers persisted tasks on init and resumes polling async tasks", async () => {

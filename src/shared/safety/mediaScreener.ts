@@ -138,8 +138,16 @@ export function normalizeAndIdentifyMime(
 const FAMILY_SAFE_MODE_MEDIA_BLOCKED =
   "Media generation is not available while Family Safe Mode is enabled.";
 
+/**
+ * Semantic image classifier — intentionally fail-closed.
+ *
+ * This is a placeholder awaiting integration of a real ML classifier
+ * (e.g. TensorFlow.js with a PG-13 model).  Until that integration ships,
+ * Family Safe Mode blocks all generated images.  Structural validation
+ * (magic bytes, MIME, minimum size) runs unconditionally in
+ * `identifyAndValidateGeneratedMedia`.
+ */
 export function classifyGeneratedImage(_buffer: Buffer, _mimeType: string): GeneratedMediaSafetyResult {
-  // TODO: Integrate actual ML classifier (e.g. TFJS) for semantic image screening.
   return {
     allowed: false,
     reasonCode: "CLASSIFIER_UNAVAILABLE",
@@ -148,8 +156,12 @@ export function classifyGeneratedImage(_buffer: Buffer, _mimeType: string): Gene
   };
 }
 
+/**
+ * Semantic audio classifier — intentionally fail-closed.
+ *
+ * Placeholder awaiting ML integration.  See classifyGeneratedImage.
+ */
 export function classifyGeneratedAudio(_buffer: Buffer, _mimeType: string): GeneratedMediaSafetyResult {
-  // TODO: Integrate actual ML classifier for semantic audio screening.
   return {
     allowed: false,
     reasonCode: "CLASSIFIER_UNAVAILABLE",
@@ -158,8 +170,13 @@ export function classifyGeneratedAudio(_buffer: Buffer, _mimeType: string): Gene
   };
 }
 
+/**
+ * Semantic video classifier — intentionally fail-closed.
+ *
+ * Placeholder awaiting ML integration.  Callers should pass only the first
+ * ~64 KB of header/frame data, never the full video.  See classifyGeneratedImage.
+ */
 export function classifyGeneratedVideo(_buffer: Buffer, _mimeType: string): GeneratedMediaSafetyResult {
-  // TODO: Integrate actual ML classifier for semantic video screening.
   return {
     allowed: false,
     reasonCode: "CLASSIFIER_UNAVAILABLE",
@@ -177,12 +194,11 @@ export function identifyAndValidateGeneratedMedia(
   declaredMimeType: string,
   localFamilySafeModeEnabled: boolean = true
 ): GeneratedMediaSafetyResult {
-  if (!localFamilySafeModeEnabled) {
-    return { allowed: true, skipped: true, reason: "local-family-safe-mode-disabled" };
-  }
-
   // Treat HTTP URLs as opaque. We cannot inline-screen remote URLs without downloading.
   if (typeof candidateData === "string" && (candidateData.startsWith("http://") || candidateData.startsWith("https://"))) {
+    if (!localFamilySafeModeEnabled) {
+      return { allowed: true, skipped: true, reason: "remote-url-not-screened" };
+    }
     return {
       allowed: false,
       reasonCode: "CLASSIFIER_UNAVAILABLE",
@@ -191,6 +207,7 @@ export function identifyAndValidateGeneratedMedia(
     };
   }
 
+  // --- PHASE 1: Structural integrity validation (ALWAYS runs). ----
   const { valid, mime, buffer } = normalizeAndIdentifyMime(candidateData, declaredMimeType);
   if (!valid) {
     return {
@@ -202,19 +219,26 @@ export function identifyAndValidateGeneratedMedia(
   }
 
   const effectiveMime = mime || declaredMimeType;
+  if (!effectiveMime.startsWith("image/") && !effectiveMime.startsWith("audio/") && !effectiveMime.startsWith("video/")) {
+    return {
+      allowed: false,
+      reasonCode: "UNSUPPORTED_MEDIA",
+      category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+      userMessage: "The generated media format is unsupported by the safety filter.",
+    };
+  }
+
+  // --- PHASE 2: Semantic classification (ONLY under Family Safe Mode). ----
+  if (!localFamilySafeModeEnabled) {
+    // Structural validation passed, FSM off — allow.
+    return { allowed: true, skipped: true, reason: "local-family-safe-mode-disabled" };
+  }
 
   if (effectiveMime.startsWith("image/")) {
     return classifyGeneratedImage(buffer, effectiveMime);
   } else if (effectiveMime.startsWith("audio/")) {
     return classifyGeneratedAudio(buffer, effectiveMime);
-  } else if (effectiveMime.startsWith("video/")) {
+  } else {
     return classifyGeneratedVideo(buffer, effectiveMime);
   }
-
-  return {
-    allowed: false,
-    reasonCode: "UNSUPPORTED_MEDIA",
-    category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-    userMessage: "The generated media format is unsupported by the safety filter.",
-  };
 }

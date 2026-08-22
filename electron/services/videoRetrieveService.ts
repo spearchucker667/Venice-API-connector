@@ -2,7 +2,6 @@
 import { app } from 'electron'
 import https from 'https'
 import type { IncomingMessage } from 'http'
-import { readFile } from 'fs/promises'
 import { VENICE_API_BASE_PATH, VENICE_API_HOST, VENICE_API_TIMEOUT_MS } from '../../src/shared/apiConfig'
 import { normalizeVideoRetrieveResult } from '../../src/services/video-retrieve-normalizer'
 import { buildVideoRetrieveRequest } from '../../src/services/media-request-adapter'
@@ -42,8 +41,9 @@ function classifyMediaFailure(error: unknown): VideoRetrieveError {
   return new VideoRetrieveError(retryable ? 'Video media transfer was interrupted.' : 'Video media could not be persisted.', retryable)
 }
 
-/** Read a persisted generated-video asset back from the content-addressed store
- *  and screen its bytes through Family Safe Mode before the result is returned.
+/** Screen video bytes through Family Safe Mode before the result is returned.
+ *  Reads only the header (first 64 KB) for magic-byte validation + classifier
+ *  sampling, rather than buffering the entire video in RAM.
  *  Returns `null` when screening passes or FSM is disabled; otherwise a terminal
  *  `VideoRetrieveError` describing the block. */
 async function screenPersistedVideoMedia(media: DurableGeneratedMedia): Promise<VideoRetrieveError | null> {
@@ -55,9 +55,23 @@ async function screenPersistedVideoMedia(media: DurableGeneratedMedia): Promise<
     return new VideoRetrieveError('Persisted video could not be located for safety screening.', false)
   }
 
+  // P2-FIX: Read only the video header (64 KB) for magic-byte validation
+  // and classifier sampling, instead of the entire file.  The classifier
+  // operates on initial frames/headers — never the full video bytes.
+  const SCREEN_SAMPLE_BYTES = 64 * 1024
   let buffer: Buffer
   try {
-    buffer = await readFile(resolved.path)
+    const { open } = await import('fs/promises')
+    const handle = await open(resolved.path, 'r')
+    try {
+      const stat = await handle.stat()
+      const readSize = Math.min(stat.size, SCREEN_SAMPLE_BYTES)
+      const buf = Buffer.alloc(readSize)
+      const { bytesRead } = await handle.read(buf, 0, readSize, 0)
+      buffer = buf.subarray(0, bytesRead)
+    } finally {
+      await handle.close()
+    }
   } catch {
     return new VideoRetrieveError('Persisted video could not be read for safety screening.', false)
   }
@@ -232,12 +246,21 @@ async function runVideoQueueResult(input: {
         }
         if (contentType === 'video/mp4') {
           void input.onStage?.('retrieving')
-          void persistGeneratedMp4Stream(response, { onSaving: () => input.onStage?.('saving') }).then(
-            async (media) => {
-              const fsmErr = await screenPersistedVideoMedia(media)
-              if (fsmErr) return reject(fsmErr)
-              resolve({ kind: 'completed', media })
-            },
+          // VF-FSM-002: pass a pre-commit screener so blocked bytes never
+          // reach the durable store.  The fallback `screenPersistedVideoMedia`
+          // post-commit path is kept for code paths that bypass the stream
+          // (e.g. completed JSON with a download URL).
+          const screenSample = getRuntimeLocalFamilySafeModeEnabled()
+            ? (sample: Buffer, mimeType: string) => {
+                const result = identifyAndValidateGeneratedMedia(sample, mimeType, true)
+                return { allowed: result.allowed, userMessage: !result.allowed ? result.userMessage : undefined }
+              }
+            : undefined
+          void persistGeneratedMp4Stream(response, {
+            onSaving: () => input.onStage?.('saving'),
+            screenSample,
+          }).then(
+            (media) => resolve({ kind: 'completed', media }),
             (error) => reject(classifyMediaFailure(error)),
           )
           return

@@ -4,6 +4,70 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-08-22 (Audit Remediation — Deferred Items: FSM Screen-Before-Persist, Single-Owner Music, Magic-Byte Separation)
+
+**Completed result:** Closed the remaining deferred items from the paid-queue follow-up audit, plus two P2 hardening items.
+
+**Changes made:**
+
+- **VF-FSM-002/P2 — Screen-before-durable-commit + video-in-RAM fix (`electron/services/generatedMediaStream.ts`, `electron/services/videoRetrieveService.ts`):** `persistGeneratedMp4Stream` now accepts an optional `screenSample` callback. When provided, the first ~64 KB of the stream are accumulated and screened through FSM **before** `commitGeneratedMediaTempFile` renames the temp file into the durable store. If screening blocks, the temp file is deleted. `screenPersistedVideoMedia` was refactored to use `open()`/`read()` with a 64 KB cap instead of `readFile()` — no longer buffers the entire video in RAM.
+- **P2 — Magic-byte/FSM classification separation (`src/shared/safety/mediaScreener.ts`):** `identifyAndValidateGeneratedMedia` now **always** runs structural integrity validation (magic bytes, MIME, minimum size), even when Family Safe Mode is disabled. Semantic classification only runs under FSM. HTTP URLs under FSM-off now pass through (skipped) rather than being needlessly blocked. Classifier placeholder comments replaced with honest documentation.
+- **VF-WEB-001 — Bounded response transport (`server.ts`):** Added `content-length` pre-check in the `proxyRes` event handler. Declared sizes exceeding 256 MiB are rejected **before** the response body is buffered, destroying the upstream connection. This complements the existing post-buffer check.
+- **VF-PQ-003-music — Workflow music single-owner polling (`src/lib/workflow-engine.ts`):** On Electron, after `submitPaidQueue` returns a main-owned task, the workflow now awaits the task's completion through the background task store (`subscribe` + `getState`) instead of running a duplicate renderer-side `/audio/retrieve` poll loop. The web path still uses the legacy renderer poll loop.
+- **P2 — Renderer task mutation authority narrowed (`electron/ipc/handlers/backgroundTaskHandlers.ts`):** The `backgroundTask:update` IPC handler now restricts updates for provider-polled tasks (`video`, `music`). The renderer may only set `error` and a whitelist of metadata keys; status, queueId, stage, resultUrl are authoritative from the main poll loop. Non-provider-polled tasks (`image`, `research`, `document`) retain full update ability.
+- **Focused test updates (`electron/ipc/handlers/backgroundTaskHandlers.test.ts`):** Added a test for the restricted update path on provider-polled tasks.
+
+**Remaining deferred:**
+- VF-FSM-003: Real PG-13 semantic classifiers (awaiting ML model integration; classifiers remain fail-closed stubs with updated comments).
+
+**Validation:**
+- `npm run typecheck` — PASS (renderer + Electron).
+- `npm run lint:eslint` — PASS (0 warnings).
+- 81 focused tests across 8 suites — ALL PASS.
+
+## Prior Session Summary
+
+**Date:** 2026-08-22 (Audit Remediation — Paid Queue Durability, FSM Bypass, and Task Journal Hardening)
+
+**Completed result:** Remediated 15 findings from the follow-up audit of the paid-queue and media-safety remediation pass (commit `b4d1bc647`). The prior "closure" claim was too strong — multiple material defects remained in current `main`. This session addresses the highest-severity items.
+
+**Changes made:**
+
+- **P0 — Web FSM raw-media bypass (`server.ts`):** Extended the `responseInterceptor` to screen raw binary media responses (`video/*`, `audio/*`, `image/*`) under Family Safe Mode, not just JSON. Previously, raw MP4 and binary audio results fell through unchanged.
+- **P1 — True write-ahead paid-queue journaling (`electron/services/backgroundTaskManager.ts`):** `submitPaidQueueTaskInMain` now persists a `pending_finalize` intent task BEFORE dispatching to Venice. On restart, intents with a real queueId resume polling; intents without (pre-dispatch crash) fail with "acceptance unknown." Introduced `flushPersistFatal()` for critical persistence paths.
+- **P1 — Video/Music Studio idempotency keys (`src/hooks/use-video.ts`, `src/hooks/use-music.ts`):** Both hooks now generate a content-based `logicalRequestHash` before crossing IPC, enabling main-process deduplication across retries and restarts.
+- **P1 — Single-owner workflow polling (`src/lib/workflow-engine.ts`, `src/services/workflow-background-task.ts`):** `awaitWorkflowVideoTask` now accepts an `existingTaskId` parameter. On Electron, the workflow passes `submitPaidQueue`'s task ID instead of registering a duplicate task + poller for the same provider queue.
+- **P1 — Corrupt journal quarantine (`src/types/background-task.ts`, `electron/services/backgroundTaskManager.ts`):** Added `parseTasksStrict()` returning `{ ok, tasks }` vs `{ ok: false, reason }`. `loadBackgroundTasks` uses it to detect malformed JSON, quaran\u00actines the original file with a timestamp, and starts with an empty slate rather than silently returning `[]`.
+- **P1 — Legacy idempotency safety (`electron/services/backgroundTaskManager.ts`):** Tasks without `payloadHash` (pre-version-migration records) are no longer silently reused. A missing hash produces `IDEMPOTENCY_CONFLICT`, treating it as "cannot prove equivalence."
+- **P1 — Ephemeral signed URL lifecycle (`electron/services/backgroundTaskManager.ts`):** Added `clearEphemeralSecrets()` on terminal status transitions, task deletion, and test reset. Entries carry `createdAt` timestamps for future TTL-based purge.
+- **P2 — Circuit breaker half-open repair (`server.ts`):** 4xx responses now transition half-open → closed (a completed HTTP response proves network reachability). Previously 4xx left the circuit stuck half-open indefinitely.
+- **P2 — Paid-queue IPC deep validation (`electron/ipc/handlers/backgroundTaskHandlers.ts`):** Added model/prompt/payload-size validation at the `backgroundTask:submitPaidQueue` IPC boundary before the payload reaches hash/canonicalise/guard code.
+- **P2 — Explicit task event kinds (`electron/services/backgroundTaskManager.ts`, `electron/ipc/handlers/backgroundTaskHandlers.ts`):** The manager now emits explicit `'created'` / `'updated'` / `'removed'` event kinds. The broadcast listener uses the authoritative kind from the manager instead of reconstructing it from mutable task state.
+- **P2 — Fatal persistence for task ownership transitions (`electron/services/backgroundTaskManager.ts`):** `createBackgroundTaskInMain`, `clearBackgroundTaskInMain`, and the write-ahead journal phase use `flushPersistFatal()` to propagate I/O errors. `applyUpdate` uses fatal persist for terminal transitions (fire-and-forget) and best-effort persist for progress updates.
+
+**Remaining / deferred:**
+
+| ID | Finding | Status |
+|---|---|---|
+| VF-FSM-002 | Screen-before-durable-commit (video quarantine temp) | Deferred — per-audit, partial fix exists; full streaming quarantine requires architectural refactor |
+| VF-FSM-003 | Real PG-13 semantic classifiers | Deferred — placeholder fail-closed stubs remain |
+| VF-WEB-001 | Truly bounded media response transport (streaming byte limit) | Deferred — post-buffer check remains; streaming enforcement needs deeper proxy refactor |
+| VF-PQ-003 (music) | Workflow music duplicate queue ownership | Deferred — music workflow still runs renderer-side polling loop after main-process submission |
+| P2 | Video safety re-reads entire video into RAM for FSM | Deferred — `screenPersistedVideoMedia` still uses `readFile` |
+| P2 | Magic-byte integrity separated from FSM classification | Deferred — `identifyAndValidateGeneratedMedia` still skips validation when FSM is off |
+| P2 | Renderer task mutation authority narrowed | Deferred — `backgroundTask:update` still accepts generic updates |
+| P2 | Background task `created`/`updated` inference | Fixed (see explicit event kinds above) |
+
+**Validation:**
+- `npm run typecheck` — PASS (renderer + Electron).
+- `npm run lint:eslint` — PASS (0 warnings on changed files).
+- `vitest run electron/services/backgroundTaskManager.test.ts` — 21/21 PASS.
+- `vitest run electron/services/backgroundTaskManager.restart-idempotency.test.ts` — PASS.
+- `vitest run electron/ipc/handlers/backgroundTaskHandlers.test.ts` — PASS.
+- `vitest run src/stores/background-task-store.test.ts` — 8/8 PASS.
+
+## Prior Session Summary
+
 **Date:** 2026-08-22 (Repository Cleanup — Branch/PR Consolidation & GitHub Doc Drift)
 
 **Completed result:** Consolidated all open branches and pull requests into `main` and refreshed stale `.github/` documentation references. The repository now has only the `main` branch locally and on the remote.

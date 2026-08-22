@@ -184,21 +184,35 @@ export function serializeTasks(tasks: BackgroundTask[]): string {
   return JSON.stringify(envelope, null, 2)
 }
 
+export type ParseTasksResult =
+  | { ok: true; tasks: BackgroundTask[] }
+  | { ok: false; reason: 'malformed-json' | 'invalid-envelope-version' | 'invalid-tasks-array' }
+
 export function parseTasks(raw: string): BackgroundTask[] {
+  const result = parseTasksStrict(raw)
+  return result.ok ? result.tasks : []
+}
+
+/** Parses persisted task journal, signalling corruption so callers can
+ *  quarantine the original file instead of silently replacing it. */
+export function parseTasksStrict(raw: string): ParseTasksResult {
   let parsed: unknown
   try {
     parsed = JSON.parse(raw)
   } catch {
-    return []
+    return { ok: false, reason: 'malformed-json' }
   }
-  if (!parsed || typeof parsed !== 'object') return []
+  if (!parsed || typeof parsed !== 'object') return { ok: false, reason: 'malformed-json' }
   const envelope = parsed as Record<string, unknown>
-  if (envelope.version !== 1) return []
+  if (envelope.version !== 1) return { ok: false, reason: 'invalid-envelope-version' }
   const tasks = envelope.tasks
-  if (!Array.isArray(tasks)) return []
-  return tasks
-    .filter(isValidBackgroundTask)
-    .map((task) => ({ ...task, metadata: sanitizePersistedMetadata(task.metadata) }))
+  if (!Array.isArray(tasks)) return { ok: false, reason: 'invalid-tasks-array' }
+  return {
+    ok: true,
+    tasks: tasks
+      .filter(isValidBackgroundTask)
+      .map((task) => ({ ...task, metadata: sanitizePersistedMetadata(task.metadata) })),
+  }
 }
 
 export function createBackgroundTask(input: BackgroundTaskCreateInput): BackgroundTask {
