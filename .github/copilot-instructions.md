@@ -8,7 +8,7 @@
 - Local path: `/Users/super_user/Projects/Venice_Forge`
 - GitHub: `spearchucker667/Venice_Forge`
 - Application: Venice Forge Electron desktop app
-- Stack: Electron 42, React 19, TypeScript strict, Zustand, Vitest
+- Stack: Electron 43, React 19, TypeScript strict, Zustand, Vitest
 - Node: `>=22.13.0 <23.0.0`
 
 Do not use historical repository names such as
@@ -34,7 +34,7 @@ test -d electron
 
 Venice Forge is a **dual-platform (Windows + macOS) Electron desktop app** (also runnable as a Vite/Express web app) for the [Venice API](https://venice.ai). It provides chat, image generation, media workflows, research, characters, RP Studio, prompts, scenes, workflows, projects, and local creative asset management — all privacy-focused with no telemetry.
 
-Stack: React 19 + TypeScript strict + Tailwind CSS v4 (Premium Dark Glass Theme) + Vite 6 (renderer), Electron 42 (desktop), Express 4 (web proxy), Vitest 4 (tests), tsc (Electron main build), esbuild (Express server bundle).
+Stack: React 19 + TypeScript strict + Tailwind CSS v4 (Premium Dark Glass Theme) + Vite 8 (renderer), Electron 43 (desktop), Express 4 (web proxy), Vitest 4 (tests), tsc (Electron main build), esbuild (Express server bundle).
 
 ---
 

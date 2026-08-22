@@ -4,7 +4,34 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
-**Date:** 2026-08-22 (Audit Remediation — Paid Queue & Media Safety Regressions, commit `48c9d76`)
+**Date:** 2026-08-22 (Repository Cleanup — Branch/PR Consolidation & GitHub Doc Drift)
+
+**Completed result:** Consolidated all open branches and pull requests into `main` and refreshed stale `.github/` documentation references. The repository now has only the `main` branch locally and on the remote.
+
+**Changes made:**
+
+- **Pull request cleanup:** Inspected PR #100 (`build(deps): bump the npm-dependencies group with 21 updates`). Its CI checks failed (`contracts`, `coverage`, `lint-and-typecheck`, `unit-and-integration-tests`, `macos-sensitive-tests`, `windows-sensitive-tests`), so it was closed with an explanatory comment rather than merged.
+- **Remote branch cleanup:** Deleted the remaining remote Dependabot branches:
+  - `dependabot/github_actions/github/codeql-action/analyze-4.37.7`
+  - `dependabot/github_actions/github/codeql-action/init-4.37.7`
+  - `dependabot/npm_and_yarn/npm-dependencies-6221d75d07`
+- **Local repository state:** Confirmed only `main` exists locally; ran `git fetch --prune` so all remote-tracking refs now point only to `origin/main`.
+- **Git credential helper:** Restored a working local Git credential setup with `gh auth setup-git` after the previous `credential.helper=copilot` configuration prevented `git fetch` from authenticating.
+- **GitHub documentation drift fixed:**
+  - `.github/copilot-instructions.md`: Updated stack references from `Electron 42` to `Electron 43` and from `Vite 6 (renderer)` to `Vite 8 (renderer)` to match `package.json`.
+  - `.github/ISSUE_TEMPLATE/bug_report.md`: Updated the App Version example from `1.0.3` to `3.0.0-beta.2` to match the current project version.
+
+**Validation:**
+- `git branch -a` — only `main` and `origin/main` remain.
+- `gh api /repos/spearchucker667/Venice_Forge/branches` — only `main` remains on the remote.
+- PR #100 status — closed with comment.
+
+**Remaining / deferred:**
+- None.
+
+### Prior Session Summary (Audit Remediation — Paid Queue & Media Safety Regressions, commit `48c9d76`)
+
+**Date:** 2026-08-22
 
 **Completed result:** Remediated the 15 findings from the live `main` audit of paid-queue and media-safety regressions. All confirmed defects were fixed, verified, or explicitly deferred; false-positive/low-priority items were documented.
 
@@ -2450,6 +2477,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-08-22 — Repository Cleanup: Branch/PR Consolidation & GitHub Doc Drift:** Closed PR #100 (Dependabot npm-dependencies group bump) after its CI checks failed across `contracts`, `coverage`, `lint-and-typecheck`, `unit-and-integration-tests`, `macos-sensitive-tests`, and `windows-sensitive-tests`; left an explanatory comment. Deleted the three remaining remote Dependabot branches (`dependabot/github_actions/github/codeql-action/analyze-4.37.7`, `dependabot/github_actions/github/codeql-action/init-4.37.7`, `dependabot/npm_and_yarn/npm-dependencies-6221d75d07`) and pruned local remote-tracking refs so only `main`/`origin/main` remain. Restored a working Git credential helper with `gh auth setup-git`. Updated `.github/copilot-instructions.md` (`Electron 42` → `Electron 43`, `Vite 6` → `Vite 8`) and `.github/ISSUE_TEMPLATE/bug_report.md` (App Version example `1.0.3` → `3.0.0-beta.2`) to match current `package.json` and project version.
 
 - **2026-08-22 — Audit Remediation: Paid Queue & Media Safety Regressions (commit `48c9d76`):** Closed the 15 confirmed findings from the live `main` audit and the additional residual issues discovered during validation. **Paid-queue idempotency:** promoted `payloadHash` to a top-level persisted field in `BackgroundTask`/`BackgroundTaskCreateInput` and corrected `submitPaidQueueTaskInMain` to deduplicate against `t.requestFingerprint` + `t.payloadHash` after restart. **FSM screening gaps:** wired persisted video bytes in `videoRetrieveService.ts` and completed music bytes in `backgroundTaskManager.ts` through `identifyAndValidateGeneratedMedia`; updated `guardPipeline.ts` to screen `.url` image items; patched `server.ts` to include `/audio/` in media intercepting, return 451 on JSON-parse failures under FSM, and fail-closed URL-bearing image items. **Studio routing:** left the existing Electron `desktopBridge.submitPaidQueue` + web `veniceFetch` paths in `use-video.ts`, `use-music.ts`, and `workflow-engine.ts` intact and lowered `QUEUE_TIMEOUT_MS` to 120000. **Hashing/canonicalization:** switched `payload-hash.ts` to Node `crypto.createHash('sha256')` for correct UTF-8 handling and removed string trimming in `canonicalize.ts`; removed `payload-hash` from the `venice-media-contract` barrel export so the Node-only module no longer enters the renderer bundle. **Magic bytes:** added Opus, AAC ADTS, PCM, and MP3-without-ID3 detection plus per-format byte floors in `mediaScreener.ts`, keeping placeholder classifiers fail-closed with the unified message `"Media generation is not available while Family Safe Mode is enabled."`. **Renderer cleanup:** added blob URL revocation in `src/components/playground/preview-node.tsx` for workflow TTS output and added `src/components/playground/preview-node.test.tsx`. **README:** restored the `main` instability warning. **Test hygiene:** fixed test isolation in `scripts/i18n-tooling.test.ts` (explicit empty `nativeReviewStatus` to avoid loading the real project's approved status) and added the missing `desktopMasterPassword` mock export in `src/components/settings/ProfilePanel.test.tsx`. Added regression tests for restart idempotency, Unicode SHA-256, whitespace fidelity, magic-byte detection, and blob URL cleanup. Validation: lint/typecheck/safety-guard/contracts/markdown-links/build all pass; full `npm test` 5038 passed / 1 skipped / 0 failed across 460 files.
 
