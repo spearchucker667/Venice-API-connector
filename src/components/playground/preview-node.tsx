@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react'
 import type { VeniceNodeData } from '../../stores/workflow-store'
 import { NODE_SCHEMAS } from '../../lib/workflow-schema'
@@ -62,6 +62,19 @@ function PreviewNodeComponent({ id, data }: NodeProps<PreviewNode>) {
     if (output.startsWith('[video:')) return output.slice(7, -1)
     return output
   })()
+
+  // Revoke transient blob: URLs created by the workflow engine (e.g., TTS
+  // output) when the output is replaced or the node is unmounted. Non-blob
+  // sources (data:, https://, venice-media://) must not be passed to
+  // revokeObjectURL.
+  useEffect(() => {
+    const blobUrl = strippedOutput?.startsWith('blob:') ? strippedOutput : null
+    return () => {
+      if (blobUrl) {
+        URL.revokeObjectURL(blobUrl)
+      }
+    }
+  }, [strippedOutput])
 
   return (
     <div className={cn('rounded-xl border-2 bg-surface-elevated shadow-xl min-w-[240px] max-w-[280px]', border, statusRing)}>

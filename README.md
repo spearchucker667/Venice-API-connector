@@ -50,6 +50,9 @@
 > [!IMPORTANT]
 > **Venice Forge is an unofficial third-party project.** It is not affiliated with, endorsed by, sponsored by, or maintained by Venice.ai (Venice.ai, Inc.). Venice brand assets, names, and trademark marks are the property of Venice.ai, Inc.
 
+> [!WARNING]
+> `main` is under active development and may be unstable. It can contain incomplete features, schema migrations, experimental UI, and breaking changes between commits. For production use, install a tagged [GitHub Release](https://github.com/spearchucker667/Venice_Forge/releases).
+
 ---
 
 ## Languages

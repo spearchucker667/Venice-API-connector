@@ -194,6 +194,10 @@ function screenUpstreamResponse(endpoint: string, method: string, response: Veni
           // Handle b64_json objects
           if ("b64_json" in item && typeof (item as { b64_json: string }).b64_json === "string") {
             base64String = (item as { b64_json: string }).b64_json;
+          } else if ("url" in item && typeof (item as { url: string }).url === "string" && (item as { url: string }).url.length > 0) {
+            // URL-bearing image items (e.g. {url: "https://..."}).
+            // identifyAndValidateGeneratedMedia returns CLASSIFIER_UNAVAILABLE for https:// URLs — fail closed.
+            base64String = (item as { url: string }).url;
           }
         }
         

@@ -51,6 +51,11 @@ vi.mock('./videoRetrieveService', () => ({
   retrieveVideoQueueResult: vi.fn(),
 }));
 
+vi.mock('./runtimeSafetySettings', () => ({
+  getRuntimeLocalFamilySafeModeEnabled: vi.fn(() => false),
+  getRuntimeVeniceApiSafeMode: vi.fn(() => false),
+}));
+
 import { performVeniceRequest as performVeniceRequestMock } from "./veniceClient";
 import { retrieveVideoQueueResult, VideoRetrieveError } from './videoRetrieveService';
 import {

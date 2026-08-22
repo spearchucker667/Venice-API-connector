@@ -2,14 +2,17 @@
 import { app } from 'electron'
 import https from 'https'
 import type { IncomingMessage } from 'http'
+import { readFile } from 'fs/promises'
 import { VENICE_API_BASE_PATH, VENICE_API_HOST, VENICE_API_TIMEOUT_MS } from '../../src/shared/apiConfig'
 import { normalizeVideoRetrieveResult } from '../../src/services/video-retrieve-normalizer'
 import { buildVideoRetrieveRequest } from '../../src/services/media-request-adapter'
 import type { DurableGeneratedMedia } from './generatedMediaStore'
-import { persistGeneratedMedia } from './generatedMediaStore'
+import { persistGeneratedMedia, resolveGeneratedMedia } from './generatedMediaStore'
 import { persistGeneratedMp4Stream } from './generatedMediaStream'
 import { downloadGeneratedVideo } from './generatedVideoDownload'
 import { getApiKey } from './secureStore'
+import { identifyAndValidateGeneratedMedia } from '../../src/shared/safety/mediaScreener'
+import { getRuntimeLocalFamilySafeModeEnabled } from './runtimeSafetySettings'
 import {
   publishInspectorRequest,
   publishInspectorCompletion,
@@ -37,6 +40,36 @@ function classifyMediaFailure(error: unknown): VideoRetrieveError {
     : ''
   const retryable = ['ECONNABORTED', 'ECONNRESET', 'EPIPE', 'ETIMEDOUT'].includes(code)
   return new VideoRetrieveError(retryable ? 'Video media transfer was interrupted.' : 'Video media could not be persisted.', retryable)
+}
+
+/** Read a persisted generated-video asset back from the content-addressed store
+ *  and screen its bytes through Family Safe Mode before the result is returned.
+ *  Returns `null` when screening passes or FSM is disabled; otherwise a terminal
+ *  `VideoRetrieveError` describing the block. */
+async function screenPersistedVideoMedia(media: DurableGeneratedMedia): Promise<VideoRetrieveError | null> {
+  const fsm = getRuntimeLocalFamilySafeModeEnabled()
+  if (!fsm) return null
+
+  const resolved = await resolveGeneratedMedia(media.id)
+  if (!resolved) {
+    return new VideoRetrieveError('Persisted video could not be located for safety screening.', false)
+  }
+
+  let buffer: Buffer
+  try {
+    buffer = await readFile(resolved.path)
+  } catch {
+    return new VideoRetrieveError('Persisted video could not be read for safety screening.', false)
+  }
+
+  const screen = identifyAndValidateGeneratedMedia(buffer, media.mimeType, fsm)
+  if (!screen.allowed) {
+    return new VideoRetrieveError(
+      screen.userMessage || 'Video generation is not available while Family Safe Mode is enabled.',
+      false,
+    )
+  }
+  return null
 }
 
 function readBoundedJson(response: IncomingMessage): Promise<unknown> {
@@ -200,7 +233,11 @@ async function runVideoQueueResult(input: {
         if (contentType === 'video/mp4') {
           void input.onStage?.('retrieving')
           void persistGeneratedMp4Stream(response, { onSaving: () => input.onStage?.('saving') }).then(
-            (media) => resolve({ kind: 'completed', media }),
+            async (media) => {
+              const fsmErr = await screenPersistedVideoMedia(media)
+              if (fsmErr) return reject(fsmErr)
+              resolve({ kind: 'completed', media })
+            },
             (error) => reject(classifyMediaFailure(error)),
           )
           return
@@ -216,16 +253,35 @@ async function runVideoQueueResult(input: {
           const normalized = normalizeVideoRetrieveResult(payload, headers, input.queueDownloadUrl)
           if (normalized.kind === 'processing') return resolve({ kind: 'processing', progressRatio: normalized.progressRatio })
           if (normalized.kind === 'failed') return resolve({ kind: 'failed', error: normalized.error, retryable: false })
+
+          /** Screen an in-memory buffer through FSM before it is persisted. */
+          const screenVideoBuffer = (buffer: Buffer, mimeType: string): VideoRetrieveError | null => {
+            const fsm = getRuntimeLocalFamilySafeModeEnabled()
+            if (!fsm) return null
+            const screen = identifyAndValidateGeneratedMedia(buffer, mimeType, fsm)
+            if (!screen.allowed) {
+              return new VideoRetrieveError(
+                screen.userMessage || 'Video generation is not available while Family Safe Mode is enabled.',
+                false
+              )
+            }
+            return null
+          }
+
           if (normalized.kind === 'download') {
             await input.onStage?.('retrieving')
             const media = await downloadGeneratedVideo(normalized.downloadUrl, { onSaving: () => input.onStage?.('saving') })
               .catch((error: unknown) => { throw classifyMediaFailure(error) })
+            const fsmErr = await screenPersistedVideoMedia(media)
+            if (fsmErr) throw fsmErr
             return resolve({ kind: 'completed', media })
           }
           if (normalized.kind === 'completed' && normalized.mediaUrl.startsWith('https://')) {
             await input.onStage?.('retrieving')
             const media = await downloadGeneratedVideo(normalized.mediaUrl, { onSaving: () => input.onStage?.('saving') })
               .catch((error: unknown) => { throw classifyMediaFailure(error) })
+            const fsmErr = await screenPersistedVideoMedia(media)
+            if (fsmErr) throw fsmErr
             return resolve({ kind: 'completed', media })
           }
           if (normalized.kind === 'completed' && normalized.mediaUrl.startsWith('data:')) {
@@ -233,6 +289,8 @@ async function runVideoQueueResult(input: {
             const commaIndex = normalized.mediaUrl.indexOf(',')
             const base64Data = commaIndex >= 0 ? normalized.mediaUrl.slice(commaIndex + 1) : ''
             const buffer = Buffer.from(base64Data, 'base64')
+            const fsmErr = screenVideoBuffer(buffer, normalized.mimeType)
+            if (fsmErr) throw fsmErr
             await input.onStage?.('saving')
             const media = await persistGeneratedMedia(buffer, normalized.mimeType)
               .catch((error: unknown) => { throw classifyMediaFailure(error) })

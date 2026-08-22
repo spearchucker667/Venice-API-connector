@@ -595,7 +595,7 @@ export function createServerApp() {
       next();
     },
     (req, res, next) => {
-      const isMedia = req.path.startsWith("/image/") || req.path.startsWith("/video/");
+      const isMedia = req.path.startsWith("/image/") || req.path.startsWith("/video/") || req.path.startsWith("/audio/");
       const isLocalFamilySafe = isLocalFamilySafeModeEnabled(req);
       
       const proxyConfig = {
@@ -654,7 +654,15 @@ export function createServerApp() {
         const originalProxyRes = proxyConfig.on.proxyRes;
         proxyConfig.on.proxyRes = responseInterceptor(async (responseBuffer, proxyRes, proxyReq, proxyResObj) => {
           originalProxyRes(proxyRes, proxyReq, proxyResObj);
-          
+
+          // Bounded response: reject buffers that exceed 256 MiB to avoid OOM.
+          const MAX_FSM_RESPONSE_BYTES = 256 * 1024 * 1024;
+          if (responseBuffer.length > MAX_FSM_RESPONSE_BYTES) {
+            proxyResObj.statusCode = 502;
+            proxyResObj.setHeader("Content-Type", "application/json");
+            return JSON.stringify({ error: "Response too large to screen under Family Safe Mode." });
+          }
+
           if (proxyRes.statusCode && proxyRes.statusCode >= 200 && proxyRes.statusCode < 300) {
             const contentType = proxyRes.headers['content-type'] || '';
             if (contentType.includes('application/json')) {
@@ -672,6 +680,10 @@ export function createServerApp() {
                      if (typeof item === "string" && item.length > 0) base64String = item;
                      else if (typeof item === "object" && item !== null && typeof item.b64_json === "string") {
                        base64String = item.b64_json;
+                     } else if (typeof item === "object" && item !== null && typeof item.url === "string" && item.url.length > 0) {
+                       // Remote URL-bearing items cannot be downloaded and screened inline.
+                       // Fail closed: pass the URL string to the screener which returns CLASSIFIER_UNAVAILABLE for https:// URLs.
+                       base64String = item.url;
                      }
                      if (base64String) {
                        const mediaScreen = identifyAndValidateGeneratedMedia(base64String, "application/octet-stream", true);
@@ -689,7 +701,15 @@ export function createServerApp() {
                    }
                  }
                } catch {
-                 // ignore JSON parse errors
+                  // Malformed JSON under Family Safe Mode: fail closed.
+                  proxyResObj.statusCode = 451;
+                  proxyResObj.setHeader("Content-Type", "application/json");
+                  return JSON.stringify({
+                    error: "Media response could not be screened. Blocked under Family Safe Mode.",
+                    reasonCode: "CLASSIFIER_UNAVAILABLE",
+                    category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                    severity: "HIGH"
+                  });
                }
             }
           }

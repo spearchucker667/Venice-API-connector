@@ -168,11 +168,35 @@ async function executeNode(
         forceInstrumental: data.instrumental ?? false,
         lyricsPrompt: data.lyrics || undefined,
       })
-      const queueResp = await venice<MusicQueueResponse>('/audio/queue', {
-        method: 'POST',
-        body: JSON.stringify(wirePayload),
-        signal,
-      })
+      let queueResp: MusicQueueResponse
+      if (isElectron()) {
+        // On Electron: use the main-process paid-queue primitive — atomically
+        // journals before dispatching, closing the crash window.
+        const { desktopBackgroundTask } = await import('../services/desktopBridge')
+        const submitRes = await desktopBackgroundTask.submitPaidQueue({
+          operation: 'audio',
+          wirePayload: wirePayload as unknown as Record<string, unknown>,
+          logicalRequestHash: `${runId}-${node.id}`,
+        })
+        if (!submitRes.ok) {
+          throw new WorkflowExecutionError(submitRes.error || 'Music generation failed.')
+        }
+        if (!submitRes.task?.queueId) {
+          throw new WorkflowExecutionError('Music generation did not return a queue ID.')
+        }
+        queueResp = {
+          id: submitRes.task.queueId,
+          queue_id: submitRes.task.queueId,
+          model: submitRes.task.modelId || String(wirePayload.model),
+          status: 'queued',
+        }
+      } else {
+        queueResp = await venice<MusicQueueResponse>('/audio/queue', {
+          method: 'POST',
+          body: JSON.stringify(wirePayload),
+          signal,
+        })
+      }
       for (let attempt = 0; attempt < POLL_MAX_ATTEMPTS; attempt++) {
         if (signal?.aborted) throw new DOMException('Aborted', 'AbortError')
         await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS))

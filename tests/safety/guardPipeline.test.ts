@@ -235,7 +235,7 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     expect(result.kind).toBe("blocked");
     if (result.kind !== "blocked") throw new Error("expected blocked");
     expect(result.block.status).toBe(451);
-    expect(result.block.body.reasonCode).toBe("INVALID_MEDIA_FORMAT");
+    expect(result.block.body.reasonCode).toBe("INVALID_MEDIA");
   });
 
   it("semantically screens generated binary media and fails closed when classifier is unavailable", async () => {
@@ -276,7 +276,7 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     expect(result.kind).toBe("blocked");
     if (result.kind !== "blocked") throw new Error("expected blocked");
     expect(result.block.status).toBe(451);
-    expect(result.block.body.reasonCode).toBe("INVALID_MEDIA_FORMAT");
+    expect(result.block.body.reasonCode).toBe("INVALID_MEDIA");
   });
 
   it("skips the guard when runtime snapshot is OFF (Adult Mode)", async () => {

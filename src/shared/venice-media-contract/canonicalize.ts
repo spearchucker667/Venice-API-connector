@@ -8,7 +8,7 @@ export function canonicalizeValue(value: unknown): unknown {
     return null;
   }
   if (typeof value === 'string') {
-    return value.trim();
+    return value;
   }
   if (typeof value === 'number' || typeof value === 'boolean') {
     return value;

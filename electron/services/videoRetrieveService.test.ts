@@ -17,6 +17,9 @@ vi.mock('./secureStore', () => ({ getApiKey: mocks.getApiKey }))
 vi.mock('./generatedMediaStream', () => ({ persistGeneratedMp4Stream: mocks.persistStream }))
 vi.mock('./generatedVideoDownload', () => ({ downloadGeneratedVideo: mocks.download }))
 vi.mock('./generatedMediaStore', () => ({ persistGeneratedMedia: mocks.persistMedia }))
+vi.mock('./runtimeSafetySettings', () => ({
+  getRuntimeLocalFamilySafeModeEnabled: vi.fn(() => false),
+}))
 
 import { retrieveVideoQueueResult } from './videoRetrieveService'
 

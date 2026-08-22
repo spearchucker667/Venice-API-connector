@@ -25,6 +25,8 @@ import { performVeniceRequest } from "./veniceClient";
 import { performGuardedVeniceRequest } from "./guardPipeline";
 import { computePayloadHash } from "../../src/shared/venice-media-contract/payload-hash";
 import { identifyAndValidateGeneratedMedia } from "../../src/shared/safety/mediaScreener";
+import { getRuntimeLocalFamilySafeModeEnabled } from "./runtimeSafetySettings";
+
 import { logError } from "./logger";
 import { publishInspectorRequest, publishInspectorCompletion } from "./inspectorTelemetry";
 import { buildAudioRetrieveRequest } from '../../src/services/media-request-adapter';
@@ -513,7 +515,27 @@ async function runPoll(taskId: string): Promise<void> {
 
       const normalized = normalizeAudioRetrieveResponse(response.body, response.headers);
       if (normalized.kind === 'completed') {
-        const media = await persistGeneratedMedia(Buffer.from(normalized.dataBase64, 'base64'), normalized.mimeType);
+        const audioBuffer = Buffer.from(normalized.dataBase64, 'base64');
+        // Screen completed audio bytes through FSM before persistence.
+        const fsm = getRuntimeLocalFamilySafeModeEnabled();
+        const screen = identifyAndValidateGeneratedMedia(audioBuffer, normalized.mimeType, fsm);
+        if (!screen.allowed) {
+          const fsmError = screen.userMessage || 'Audio generation is not available while Family Safe Mode is enabled.';
+          await applyUpdate(taskId, { status: 'failed', error: fsmError, pollAttempts: currentPolls, consecutiveFailures: 0 });
+          stopPolling(taskId);
+          publishInspectorCompletion({
+            source: "main-background",
+            transport: "venice",
+            endpoint: "/audio/retrieve",
+            method: "POST",
+            summaries: { taskId, model: taskModel || undefined },
+            eventId: musicTelemetryId,
+            status: 451,
+            error: fsmError,
+          });
+          return;
+        }
+        const media = await persistGeneratedMedia(audioBuffer, normalized.mimeType);
         await applyUpdate(taskId, { status: 'completed', progress: 1, resultUrl: media.url, resultMediaId: media.id, pollAttempts: currentPolls, consecutiveFailures: 0 });
         stopPolling(taskId);
         publishInspectorCompletion({
@@ -632,13 +654,13 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
 
     // Check existing tasks for idempotency conflict or reuse
     const existing = Object.values(state.tasks).find(
-      t => t.metadata?.requestFingerprint === input.logicalRequestHash &&
+      t => t.requestFingerprint === input.logicalRequestHash &&
            t.type === (input.operation === 'video' ? 'video' : 'music') &&
            t.profileId === input.profileId &&
            !['failed', 'aborted', 'timeout'].includes(t.status)
     );
     if (existing) {
-      if (existing.metadata?.payloadHash && existing.metadata.payloadHash !== payloadHash) {
+      if (existing.payloadHash && existing.payloadHash !== payloadHash) {
         return { ok: false, error: "IDEMPOTENCY_CONFLICT: same logical key used with different payload." };
       }
       return { ok: true, task: existing };
@@ -719,9 +741,9 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
       profileId: input.profileId,
       modelId: model,
       requestFingerprint: input.logicalRequestHash,
+      payloadHash: input.logicalRequestHash ? payloadHash : undefined,
       metadata: {
         model,
-        ...(input.logicalRequestHash ? { requestFingerprint: input.logicalRequestHash, payloadHash } : {}),
         ...(downloadUrl ? { queueDownloadUrlPresent: true, ...(downloadHost ? { downloadHost } : {}) } : {}),
         ...(input.wirePayload.duration ? { requestedDuration: String(input.wirePayload.duration) } : {}),
         ...(input.wirePayload.resolution ? { requestedResolution: String(input.wirePayload.resolution) } : {}),

@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useCallback, useEffect, useState } from 'react'
+import { isElectron } from '../services/desktopBridge'
 import { veniceFetch } from '../services/veniceClient/fetch'
 import type { MusicQueueRequest, MusicQueueResponse } from '../types/venice'
 import { useBackgroundTaskStore } from '../stores/background-task-store'
@@ -40,15 +41,39 @@ export function useMusic() {
 
   const queueMutation = useMutation({
     mutationFn: async (req: MusicQueueRequest) => {
+      // On Electron: use the main-process paid-queue primitive — atomically journals
+      // the task before dispatching to the provider, closing the crash window.
+      if (isElectron()) {
+        const { desktopBackgroundTask } = await import('../services/desktopBridge')
+        const submitRes = await desktopBackgroundTask.submitPaidQueue({
+          operation: 'audio',
+          wirePayload: req as unknown as Record<string, unknown>,
+        })
+        if (!submitRes.ok) {
+          throw new Error(submitRes.error || 'Music queue submission failed.')
+        }
+        if (!submitRes.task) {
+          throw new Error('Music queue submission did not return a task.')
+        }
+        return { task: submitRes.task, isElectronPath: true as const }
+      }
+
+      // Web path: direct fetch (no main-process IPC available)
       const result = await veniceFetch<MusicQueueResponse>('/audio/queue', {
         method: 'POST',
         body: req,
         timeoutMs: QUEUE_TIMEOUT_MS,
         retry: false,
       })
-      return { data: result.data, req }
+      return { data: result.data, req, isElectronPath: false as const }
     },
-    onSuccess: ({ data, req }) => {
+    onSuccess: (result) => {
+      if (result.isElectronPath) {
+        setLocalTaskId(result.task.id)
+        setQueueSchemaError(null)
+        return
+      }
+      const { data, req } = result
       const qid = (data.queue_id || data.id || '').trim()
       if (!qid) {
         setQueueSchemaError('Music queue response did not include a queue ID.')

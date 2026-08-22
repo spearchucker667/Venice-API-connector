@@ -34,6 +34,8 @@ export interface BackgroundTask {
   modelId?: string
   sourceTab?: string
   requestFingerprint?: string
+  /** SHA-256 hex of the canonical wire payload; persisted for cross-restart idempotency conflict detection. */
+  payloadHash?: string
   attemptStartedAt?: number
   attemptNumber?: number
   pollAttempts?: number
@@ -55,6 +57,8 @@ export interface BackgroundTaskCreateInput {
   modelId?: string
   sourceTab?: string
   requestFingerprint?: string
+  /** SHA-256 hex of the canonical wire payload; persisted for cross-restart idempotency conflict detection. */
+  payloadHash?: string
 }
 
 export interface BackgroundTaskUpdate {
@@ -133,6 +137,8 @@ function isValidProgress(value: unknown): value is number | undefined {
   return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1
 }
 
+const PAYLOAD_HASH_RE = /^[a-f0-9]{64}$/
+
 export function isValidBackgroundTask(value: unknown): value is BackgroundTask {
   if (!value || typeof value !== 'object') return false
   const task = value as Record<string, unknown>
@@ -153,6 +159,7 @@ export function isValidBackgroundTask(value: unknown): value is BackgroundTask {
     (task.modelId === undefined || typeof task.modelId === 'string') &&
     (task.sourceTab === undefined || typeof task.sourceTab === 'string') &&
     (task.requestFingerprint === undefined || typeof task.requestFingerprint === 'string') &&
+    (task.payloadHash === undefined || (typeof task.payloadHash === 'string' && PAYLOAD_HASH_RE.test(task.payloadHash))) &&
     (task.attemptStartedAt === undefined || (typeof task.attemptStartedAt === 'number' && Number.isFinite(task.attemptStartedAt))) &&
     (task.attemptNumber === undefined || (typeof task.attemptNumber === 'number' && Number.isFinite(task.attemptNumber))) &&
     (task.pollAttempts === undefined || (typeof task.pollAttempts === 'number' && Number.isFinite(task.pollAttempts))) &&
@@ -208,6 +215,7 @@ export function createBackgroundTask(input: BackgroundTaskCreateInput): Backgrou
     modelId: input.modelId,
     sourceTab: input.sourceTab,
     requestFingerprint: input.requestFingerprint,
+    payloadHash: input.payloadHash,
     attemptStartedAt: now,
     attemptNumber: 1,
     pollAttempts: 0,

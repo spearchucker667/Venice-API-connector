@@ -258,6 +258,7 @@ describe("verify-i18n sentinel + missing-marker rejection", () => {
       docsDir: path.join(root, "docs", "i18n"),
       docsRequired: [],
       skipSourceInventory: true,
+      nativeReviewStatus: { locales: {} },
     });
     expect(result.ok).toBe(false);
     expect(result.errors.some((e) => /sentinel/i.test(e) && /es/.test(e))).toBe(true);
@@ -326,6 +327,7 @@ describe("verify-i18n sentinel + missing-marker rejection", () => {
       docsDir: path.join(root, "docs", "i18n"),
       docsRequired: [],
       skipSourceInventory: true,
+      nativeReviewStatus: { locales: {} },
     });
     expect(result.ok).toBe(true);
     expect(result.coverageResults.es.translated).toBe(2);
@@ -368,6 +370,7 @@ describe("verify-i18n sentinel + missing-marker rejection", () => {
       docsDir: path.join(root, "docs", "i18n"),
       docsRequired: [],
       skipSourceInventory: true,
+      nativeReviewStatus: { locales: {} },
       identicalValueAllowlist: { es: ["JSON (.json)"] },
     });
     expect(result.ok).toBe(true);

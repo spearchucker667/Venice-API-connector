@@ -16,6 +16,9 @@ vi.mock("../../services/desktopBridge", () => ({
     clear: vi.fn(),
     isSet: vi.fn(),
   },
+  desktopMasterPassword: {
+    isSet: vi.fn(() => Promise.resolve(false)),
+  },
 }));
 
 vi.mock("../ui/modal-requests", () => ({

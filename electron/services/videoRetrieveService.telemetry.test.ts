@@ -29,6 +29,9 @@ vi.mock("./generatedVideoDownload", () => ({
 vi.mock("./generatedMediaStore", () => ({
   persistGeneratedMedia: mocks.persistMedia,
 }));
+vi.mock("./runtimeSafetySettings", () => ({
+  getRuntimeLocalFamilySafeModeEnabled: vi.fn(() => false),
+}));
 vi.mock("./inspectorTelemetry", () => ({
   publishInspectorRequest: (...args: unknown[]) => mocks.publishInspectorRequest(...args),
   publishInspectorCompletion: (...args: unknown[]) => mocks.publishInspectorCompletion(...args),

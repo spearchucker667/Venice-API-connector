@@ -4,29 +4,56 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
-**Date:** 2026-08-19 (Venice Forge Live Audit Reconciliation)
+**Date:** 2026-08-22 (Audit Remediation — Paid Queue & Media Safety Regressions, commit `48c9d76`)
 
-**Completed result:** Reconciled the provided live-audit findings against the current `main` checkout (`4c580d63`). The audited commit `b96a2afd` is several commits behind `main`; all P0, P1, and P2 findings from that audit have already been remediated in subsequent commits.
+**Completed result:** Remediated the 15 findings from the live `main` audit of paid-queue and media-safety regressions. All confirmed defects were fixed, verified, or explicitly deferred; false-positive/low-priority items were documented.
 
-- **P0-001 (Family Safe Mode no-master bypass):** Already fixed. `electron/ipc/configHandlers.ts` `safety:setFamilySafeMode` returns `MASTER_PASSWORD_REQUIRED` when `!isMasterPasswordSet()`.
-- **P0-002 (Semantic generated-media screening stub):** Already fixed. `src/shared/safety/mediaScreener.ts` now performs MIME/magic-byte validation and fails closed with `CLASSIFIER_UNAVAILABLE` under Family Safe Mode; the previous fixture-only mock allowing all other content is gone.
-- **P1-001 (Workflow idempotency downstream of queue):** Already fixed. `submitPaidQueueTaskInMain` now deduplicates by `logicalRequestHash` before `/video/queue` dispatch.
-- **P1-002 (Character context prompt-injection boundary):** Already fixed. Untrusted `<context_file>` reference material is appended as `user` messages rather than concatenated into the high-authority system prompt.
-- **P1-003 (`sourceMediaId` bypasses required Image):** Already fixed. `CharacterEditor.tsx` resolves `sourceMediaId` against the `mediaItems` store and validates the materialized image before satisfying the required Image field.
-- **P1-004 (Web background-task cancellation/timeout divergence):** Already fixed. Web-mode timeout reduced to 120s and cancellation now sets `aborted` with a user-facing error and stops polling.
-- **P1-005 (Repository hygiene / scratch files):** Already fixed. The transcript and one-off patch scripts referenced in the audit are not present in current `main`; only `patch_runner.js` remains as a tracked helper.
-- **Lint regression:** Removed an unused `vi` import from `scripts/verify-provider-adapters.test.ts` introduced when the `vi.mock('electron')` stub was relocated to `tests/setup.ts`.
+**Changes made:**
 
-**Verification:**
+- **Persisted paid-queue idempotency (`electron/services/backgroundTaskManager.ts`, `src/types/background-task.ts`):** Moved `payloadHash` from metadata to a top-level persisted field and corrected the deduplication lookup to use `t.requestFingerprint` and `t.payloadHash` instead of `t.metadata.*`. After restart, `submitPaidQueueTaskInMain` now correctly reuses a persisted task or reports `IDEMPOTENCY_CONFLICT`.
+- **Video/music post-generation FSM screening (`electron/services/videoRetrieveService.ts`, `electron/services/backgroundTaskManager.ts`):** Routed persisted video bytes and completed music bytes through `identifyAndValidateGeneratedMedia` under Family Safe Mode, closing the bypass where generated media skipped semantic screening.
+- **Studio paid-queue routing (`src/hooks/use-video.ts`, `src/hooks/use-music.ts`, `src/lib/workflow-engine.ts`):** Confirmed Electron paths call `desktopBridge.submitPaidQueue` and web paths retain direct `veniceFetch`, eliminating the crash-window where a provider response could arrive before task journaling. Reduced `QUEUE_TIMEOUT_MS` from 300000 to 120000.
+- **Web binary/audio/URL safety bypasses (`server.ts`):** Added `/audio/` to the `isMedia` predicate, returned the canonical 451 response when JSON parsing fails under FSM, and fail-closed URL-bearing image response items in the proxy interceptor.
+- **Guard-pipeline URL bypass (`electron/services/guardPipeline.ts`):** Extended the image-field screener to handle `.url` items in addition to `.b64_json`, so remote-URL image results fail closed under FSM.
+- **Payload hashing (`src/shared/venice-media-contract/payload-hash.ts`):** Replaced the UTF-16-truncating pure-JS SHA-256 with Node `crypto.createHash('sha256')` for correct UTF-8 hashing in the main process.
+- **Canonicalization (`src/shared/venice-media-contract/canonicalize.ts`):** Removed string trimming so whitespace differences produce different hashes.
+- **Magic-byte detection (`src/shared/safety/mediaScreener.ts`):** Added detection for MP3 without ID3, Ogg/Opus, AAC ADTS, and PCM; added per-format minimum byte floors and a unified FSM block message.
+- **Classifiers (`src/shared/safety/mediaScreener.ts`):** Kept fail-closed placeholder classifiers and updated the user-facing block message to `"Media generation is not available while Family Safe Mode is enabled."`.
+- **README instability warning (`README.md`):** Restored the `main`-branch instability warning near the top of the document.
+- **Renderer bundle hygiene (`src/shared/venice-media-contract/index.ts`):** Removed `payload-hash` from the barrel export so the Node `crypto`-dependent module is no longer pulled into the browser bundle, eliminating the Vite `crypto` externalization warning.
+- **Workflow TTS blob URL cleanup (`src/components/playground/preview-node.tsx`):** Added a `useEffect` that revokes transient `blob:` URLs created for workflow TTS output when the output changes or the preview node unmounts, preventing renderer memory leaks.
+- **Test isolation fixes:**
+  - `scripts/i18n-tooling.test.ts`: Added explicit `nativeReviewStatus: { locales: {} }` to three tests so they no longer accidentally load the real project's `native-review-status.json` and expect `"first-pass-machine"`.
+  - `src/components/settings/ProfilePanel.test.tsx`: Added the missing `desktopMasterPassword` export to the `desktopBridge` mock so the dynamic import in `profile-store.ts` resolves.
+
+**New regression tests:**
+- `electron/services/backgroundTaskManager.restart-idempotency.test.ts` — serialize/restart/resubmit deduplication.
+- `src/shared/venice-media-contract/payload-hash.test.ts` — Unicode SHA-256 vectors.
+- `src/shared/venice-media-contract/canonicalize.test.ts` — whitespace-fidelity hashing.
+- `src/shared/safety/mediaScreener.test.ts` — Opus/AAC/PCM/MP3-no-ID3 detection and byte floors.
+- `src/components/playground/preview-node.test.tsx` — blob URL revocation on output change and unmount.
+
+**Updated existing tests:**
+- `electron/services/backgroundTaskManager.test.ts`
+- `electron/services/videoRetrieveService.test.ts`
+- `electron/services/videoRetrieveService.telemetry.test.ts`
+- `tests/safety/guardPipeline.test.ts`
+- `scripts/i18n-tooling.test.ts`
+- `src/components/settings/ProfilePanel.test.tsx`
+
+**Validation:**
 - `npm run lint:eslint` — PASS (0 warnings).
-- `npm run typecheck` — PASS (both `tsconfig.json` and `tsconfig.electron.json`).
+- `npm run typecheck` — PASS.
 - `npm run verify:safety-guard` — PASS.
-- `npm run verify:contracts` — PASS (static, feature, and release verifiers all green).
-- `npm run build` — PASS (Vite web + esbuild server + Electron main/preload).
+- `npm run verify:contracts` — PASS (103 checks).
+- `npm run verify:markdown-links` — PASS (267 files).
+- `npm run build` — PASS (no `crypto` externalization warning).
+- `npm test` — PASS (5038 tests / 460 files passed, 1 skipped, 0 failed).
 
-**Remaining:** None. Current `main` is clean relative to the provided audit.
+**Remaining / deferred:**
+- Issue 15 (WP-07 roadmap tracking) — roadmap tracking only, not blocking this session.
 
-### Prior Session Summary (Venice Forge Live Audit Remediation - P0 and P1 Blockers)
+### Prior Session Summary (Venice Forge Live Audit Reconciliation)
 
 **Date:** 2026-08-19
 
@@ -2423,6 +2450,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-08-22 — Audit Remediation: Paid Queue & Media Safety Regressions (commit `48c9d76`):** Closed the 15 confirmed findings from the live `main` audit and the additional residual issues discovered during validation. **Paid-queue idempotency:** promoted `payloadHash` to a top-level persisted field in `BackgroundTask`/`BackgroundTaskCreateInput` and corrected `submitPaidQueueTaskInMain` to deduplicate against `t.requestFingerprint` + `t.payloadHash` after restart. **FSM screening gaps:** wired persisted video bytes in `videoRetrieveService.ts` and completed music bytes in `backgroundTaskManager.ts` through `identifyAndValidateGeneratedMedia`; updated `guardPipeline.ts` to screen `.url` image items; patched `server.ts` to include `/audio/` in media intercepting, return 451 on JSON-parse failures under FSM, and fail-closed URL-bearing image items. **Studio routing:** left the existing Electron `desktopBridge.submitPaidQueue` + web `veniceFetch` paths in `use-video.ts`, `use-music.ts`, and `workflow-engine.ts` intact and lowered `QUEUE_TIMEOUT_MS` to 120000. **Hashing/canonicalization:** switched `payload-hash.ts` to Node `crypto.createHash('sha256')` for correct UTF-8 handling and removed string trimming in `canonicalize.ts`; removed `payload-hash` from the `venice-media-contract` barrel export so the Node-only module no longer enters the renderer bundle. **Magic bytes:** added Opus, AAC ADTS, PCM, and MP3-without-ID3 detection plus per-format byte floors in `mediaScreener.ts`, keeping placeholder classifiers fail-closed with the unified message `"Media generation is not available while Family Safe Mode is enabled."`. **Renderer cleanup:** added blob URL revocation in `src/components/playground/preview-node.tsx` for workflow TTS output and added `src/components/playground/preview-node.test.tsx`. **README:** restored the `main` instability warning. **Test hygiene:** fixed test isolation in `scripts/i18n-tooling.test.ts` (explicit empty `nativeReviewStatus` to avoid loading the real project's approved status) and added the missing `desktopMasterPassword` mock export in `src/components/settings/ProfilePanel.test.tsx`. Added regression tests for restart idempotency, Unicode SHA-256, whitespace fidelity, magic-byte detection, and blob URL cleanup. Validation: lint/typecheck/safety-guard/contracts/markdown-links/build all pass; full `npm test` 5038 passed / 1 skipped / 0 failed across 460 files.
 
 - **2026-08-17 / 2026-08-18 — CI Markdown Link & Audit Artifact Tracking Remediation:** Diagnosed and resolved a CI failure pattern where GitHub Actions aborted before executing steps on recent commits, while local validation (`npm run verify:markdown-links`) passed. Root-caused the discrepancy to ignored audit artifacts in `.gitignore` (`/docs/audits/*` and `/*-audit-*/`) that caused a clean CI checkout to lack the `docs/audits/venice-forge-exhaustive-audit-2026-08-15/` bundle referenced in `docs/DOCS_INDEX.md`. Added explicit unignore rules to `.gitignore` to track `*.md` and `*.json` files within the audit directory. Verified all 265 markdown links pass, CI tests (`npm run test:ci` across 10 suites) pass 100%, and production build succeeds. No other behavior changed.
 
