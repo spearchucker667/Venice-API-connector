@@ -184,6 +184,8 @@ This is the canonical source-of-truth navigation map for all documentation in th
 
 - [reports/historical/README.md](reports/historical/README.md) — Guideline for audit history and historical report rules.
 - [reports/historical/CANONICAL_REPORT_INDEX.md](reports/historical/CANONICAL_REPORT_INDEX.md) — Navigator for past validation audits.
+- [reports/historical/FINAL_ACCEPTANCE_REPORT.md](reports/historical/FINAL_ACCEPTANCE_REPORT.md) — 2026-08-23 Final acceptance and release readiness report.
+- [reports/historical/DEFERRED_WORK_DECISION_RECORD.md](reports/historical/DEFERRED_WORK_DECISION_RECORD.md) — 2026-08-23 Engineering decisions for deferred roadmap items.
 - [archives/README.md](archives/README.md) — Archive policy and non-authoritative historical-material boundary.
 
 ### Retired / Deleted During Hygiene

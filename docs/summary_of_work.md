@@ -6,6 +6,18 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
+**Scope:** Final Acceptance Hardening, Deferred Work Review, and Release Readiness
+
+- Verified that all previously completed remediation remains correct.
+- Converted externally blocked roadmap items into properly tracked engineering decisions (VF-FSM-003, VF-IMAGE-SEARCH-001, VF-VERIFY-005) via `DEFERRED_WORK_DECISION_RECORD.md`.
+- Hardened release readiness and verified graceful handling of unsigned builds via `electron-builder.config.cjs` and GitHub Actions.
+- Produced `FINAL_ACCEPTANCE_REPORT.md` concluding that all implementable defects are resolved, security boundaries are intact, and the repository is Release Ready.
+- Confirmed that CI workflows and validation scripts all pass successfully on the current `main`.
+- Validated skipped tests are conditionally skipped based on valid environmental limitations (e.g. `RUN_ELECTRON_SMOKE` for binary testing).
+
+## Prior Session Summary
+
+**Date:** 2026-08-23
 **Scope:** Restore deterministic CI test isolation and harden release-workflow credential handling
 
 - Reproduced the current hosted CI failures on commit `3d8c1470`: Ubuntu, macOS, Windows, and contract jobs all failed after `vitest.config.ts` stopped loading the canonical test harness. The missing `globals: true` caused Electron suites to fail at import time (`afterEach is not defined`); the missing `tests/setup.ts` disabled Testing Library cleanup, fake IndexedDB, locale reset, and Electron mocks, causing cross-test DOM/state contamination.
