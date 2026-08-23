@@ -1,0 +1,31 @@
+import { completeThemeTokens, type Theme } from '../themeTypes';
+
+export const BUILTIN_TERMINAL_FOREST: Theme = {
+  id: 'terminal-forest',
+  name: 'Terminal Forest',
+  mode: 'dark',
+  tokens: completeThemeTokens('dark', {
+    background: '#09120c',
+    surface: '#112217',
+    surfaceElevated: '#1a3323',
+    border: '#264a33',
+    textPrimary: '#d8e8de',
+    textSecondary: '#8ba696',
+    textMuted: '#5e7a69',
+    accent: '#47d177',
+    accentHover: '#5bed8f',
+    accentForeground: '#000000',
+    success: '#1b5e20',
+    warning: '#9e4a00',
+    danger: '#b71c1c',
+    info: '#5cad79',
+    focusRing: '#47d177',
+    overlay: 'rgba(0,0,0,0.7)',
+    glow: 'rgba(71, 209, 119, 0.25)',
+    surfaceMuted: '#0d1a11',
+    borderStrong: '#366646',
+    dangerForeground: '#ffffff',
+    warningForeground: '#ffffff',
+    successForeground: '#ffffff',
+  }),
+};

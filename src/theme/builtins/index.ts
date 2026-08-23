@@ -1,3 +1,8 @@
+import { BUILTIN_OBSIDIAN_EMBER } from './obsidianEmber';
+import { BUILTIN_MIDNIGHT_COBALT } from './midnightCobalt';
+import { BUILTIN_TERMINAL_FOREST } from './terminalForest';
+import { BUILTIN_PORCELAIN_SKY } from './porcelainSky';
+import { BUILTIN_SANDSTONE } from './sandstone';
 import { BUILTIN_OBSIDIAN_BLOOM } from './obsidianBloom';
 import { BUILTIN_HARBOR_FOG } from './harborFog';
 import { BUILTIN_CIRCUIT_MINT } from './circuitMint';
@@ -39,6 +44,11 @@ import { BUILTIN_DUAL_PERSONA } from './dualPersona';
 import { BUILTIN_POLAROID_BOARD } from './polaroidBoard';
 
 export {
+  BUILTIN_OBSIDIAN_EMBER,
+  BUILTIN_MIDNIGHT_COBALT,
+  BUILTIN_TERMINAL_FOREST,
+  BUILTIN_PORCELAIN_SKY,
+  BUILTIN_SANDSTONE,
   BUILTIN_OBSIDIAN_BLOOM,
   BUILTIN_HARBOR_FOG,
   BUILTIN_CIRCUIT_MINT,
@@ -81,6 +91,11 @@ export {
 };
 
 export const BUILTIN_THEMES = [
+  BUILTIN_OBSIDIAN_EMBER,
+  BUILTIN_MIDNIGHT_COBALT,
+  BUILTIN_TERMINAL_FOREST,
+  BUILTIN_PORCELAIN_SKY,
+  BUILTIN_SANDSTONE,
   BUILTIN_OBSIDIAN_BLOOM,
   BUILTIN_HARBOR_FOG,
   BUILTIN_CIRCUIT_MINT,

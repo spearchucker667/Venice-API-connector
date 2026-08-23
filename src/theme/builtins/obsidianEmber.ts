@@ -1,0 +1,31 @@
+import { completeThemeTokens, type Theme } from '../themeTypes';
+
+export const BUILTIN_OBSIDIAN_EMBER: Theme = {
+  id: 'obsidian-ember',
+  name: 'Obsidian Ember',
+  mode: 'dark',
+  tokens: completeThemeTokens('dark', {
+    background: '#121212',
+    surface: '#1c1c1c',
+    surfaceElevated: '#262626',
+    border: '#333333',
+    textPrimary: '#eae4d9',
+    textSecondary: '#a09a90',
+    textMuted: '#706b64',
+    accent: '#b83a10',
+    accentHover: '#f0642f',
+    accentForeground: '#ffffff',
+    success: '#1b5e20',
+    warning: '#9e4a00',
+    danger: '#b71c1c',
+    info: '#8c8375',
+    focusRing: '#d95321',
+    overlay: 'rgba(0,0,0,0.7)',
+    glow: 'rgba(217, 83, 33, 0.25)',
+    surfaceMuted: '#161616',
+    borderStrong: '#4c4c4c',
+    dangerForeground: '#ffffff',
+    warningForeground: '#ffffff',
+    successForeground: '#ffffff',
+  }),
+};

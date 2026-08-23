@@ -137,6 +137,6 @@ describe("built-in theme collection", () => {
 
   it("exports the expected number of built-in themes", () => {
     // This guard ensures the count stays in sync with the handoff-specified inventory.
-    expect(BUILTIN_THEMES.length).toBe(39);
+    expect(BUILTIN_THEMES.length).toBe(44);
   });
 });

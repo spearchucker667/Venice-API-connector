@@ -1,0 +1,31 @@
+import { completeThemeTokens, type Theme } from '../themeTypes';
+
+export const BUILTIN_MIDNIGHT_COBALT: Theme = {
+  id: 'midnight-cobalt',
+  name: 'Midnight Cobalt',
+  mode: 'dark',
+  tokens: completeThemeTokens('dark', {
+    background: '#070b14',
+    surface: '#0f1626',
+    surfaceElevated: '#17223b',
+    border: '#2a3b5c',
+    textPrimary: '#e6f0ff',
+    textSecondary: '#94a7c7',
+    textMuted: '#687b9c',
+    accent: '#1e5cd9',
+    accentHover: '#2a6df0',
+    accentForeground: '#ffffff',
+    success: '#1b5e20',
+    warning: '#9e4a00',
+    danger: '#b71c1c',
+    info: '#4c8bf5',
+    focusRing: '#1e5cd9',
+    overlay: 'rgba(0,0,0,0.65)',
+    glow: 'rgba(30, 92, 217, 0.3)',
+    surfaceMuted: '#0b101c',
+    borderStrong: '#3d527a',
+    dangerForeground: '#ffffff',
+    warningForeground: '#ffffff',
+    successForeground: '#ffffff',
+  }),
+};

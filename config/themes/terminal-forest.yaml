@@ -1,0 +1,20 @@
+name: Terminal Forest
+mode: dark
+tokens:
+  background: "#000000"
+  surface: "#111111"
+  surfaceElevated: "#222222"
+  border: "#333333"
+  textPrimary: "#ffffff"
+  textSecondary: "#aaaaaa"
+  textMuted: "#777777"
+  accent: "#ff0000"
+  accentHover: "#cc0000"
+  accentForeground: "#ffffff"
+  success: "#00ff00"
+  warning: "#ffff00"
+  danger: "#ff0000"
+  info: "#0000ff"
+  focusRing: "#ff0000"
+  overlay: "rgba(0,0,0,0.5)"
+  glow: "rgba(255,0,0,0.5)"

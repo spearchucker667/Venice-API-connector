@@ -2,7 +2,18 @@
 
 This is the active handoff and validation ledger. The canonical current-work ledger is `docs/ROADMAP.md`; historical reports belong under `docs/reports/historical/`.
 
+
 ## Latest Session Summary
+
+**Date:** 2026-08-23
+**Scope:** Venice Forge — Five Custom Themes Implementation (VF-UI-003)
+
+- **Phase 1-4 (Token Contract & Registration):** Defined 5 new custom themes (`obsidian-ember`, `midnight-cobalt`, `terminal-forest`, `porcelain-sky`, `sandstone`) matching the established canonical format in `src/theme/builtins/` and extended `src/theme/builtins/index.ts`.
+- **Phase 5-7 (Integration & Persistence):** Added 5 corresponding YAML files in `config/themes/` ensuring they are properly registered by `themeService.ts` for the Settings UI to pick up natively. They utilize the existing `selectedThemeId` and `appearanceMode` Zustand persistence and don't introduce new duplicate persistence vectors.
+- **Phase 8-10 (Hardcoded Colors & Contrast):** Audited the UI for hardcoded colors breaking custom themes. Confirmed the app natively uses CSS variable tokens and uses `THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR` sparingly for absolute intent (like overlay backgrounds).
+- **Accessibility & Contrast Verification:** Strengthened contrast of `danger`, `warning`, `success`, and `accent` semantic token values across the new themes, ensuring all 5 pass the rigorous `src/theme/contrast.test.ts` WCAG AA validations. Updated the i18n hardcoded baseline.
+
+## Prior Session Summary
 
 **Date:** 2026-08-22
 **Scope:** Remediation of CI build failures (Markdown, Coverage, Distribution)

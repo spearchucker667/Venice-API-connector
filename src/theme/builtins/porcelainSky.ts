@@ -1,0 +1,31 @@
+import { completeThemeTokens, type Theme } from '../themeTypes';
+
+export const BUILTIN_PORCELAIN_SKY: Theme = {
+  id: 'porcelain-sky',
+  name: 'Porcelain Sky',
+  mode: 'light',
+  tokens: completeThemeTokens('light', {
+    background: '#f8fafc',
+    surface: '#eff4f9',
+    surfaceElevated: '#ffffff',
+    border: '#cbd5e1',
+    textPrimary: '#1e293b',
+    textSecondary: '#475569',
+    textMuted: '#64748b',
+    accent: '#2563eb',
+    accentHover: '#1d4ed8',
+    accentForeground: '#ffffff',
+    success: '#1b5e20',
+    warning: '#9e4a00',
+    danger: '#b71c1c',
+    info: '#3b82f6',
+    focusRing: '#3b82f6',
+    overlay: 'rgba(255,255,255,0.7)',
+    glow: 'rgba(37, 99, 235, 0.2)',
+    surfaceMuted: '#e2e8f0',
+    borderStrong: '#94a3b8',
+    warningForeground: '#ffffff',
+    successForeground: '#ffffff',
+    dangerForeground: '#ffffff',
+  }),
+};

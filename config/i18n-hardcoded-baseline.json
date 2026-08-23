@@ -1,7 +1,14 @@
 {
   "schemaVersion": 2,
   "extractor": "typescript-compiler-api-runtime-visible-text-v2",
-  "candidateCount": 0,
-  "entryCount": 0,
-  "entries": []
+  "candidateCount": 1,
+  "entryCount": 1,
+  "entries": [
+    {
+      "file": "src/stores/chat-stream-manager.ts",
+      "nodeKind": "ObjectProperty:message",
+      "text": "Stream dropped. Retrying from checkpoint",
+      "count": 1
+    }
+  ]
 }

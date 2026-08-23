@@ -1,0 +1,31 @@
+import { completeThemeTokens, type Theme } from '../themeTypes';
+
+export const BUILTIN_SANDSTONE: Theme = {
+  id: 'sandstone',
+  name: 'Sandstone',
+  mode: 'light',
+  tokens: completeThemeTokens('light', {
+    background: '#fcfaf8',
+    surface: '#f3ece4',
+    surfaceElevated: '#faf7f2',
+    border: '#d6cec4',
+    textPrimary: '#3d3935',
+    textSecondary: '#66605a',
+    textMuted: '#8a837c',
+    accent: '#b85c3b',
+    accentHover: '#9c4b2e',
+    accentForeground: '#ffffff',
+    success: '#1b5e20',
+    warning: '#9e4a00',
+    danger: '#b71c1c',
+    info: '#826e5d',
+    focusRing: '#b85c3b',
+    overlay: 'rgba(252,250,248,0.75)',
+    glow: 'rgba(184, 92, 59, 0.2)',
+    surfaceMuted: '#e6ded5',
+    borderStrong: '#b5aca1',
+    warningForeground: '#ffffff',
+    successForeground: '#ffffff',
+    dangerForeground: '#ffffff',
+  }),
+};
