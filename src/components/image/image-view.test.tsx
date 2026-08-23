@@ -93,6 +93,7 @@ import { ImageView } from "./image-view";
 import { useImageWorkspaceStore } from "../../stores/image-workspace-store";
 import * as imageCapabilities from "../../config/image-model-capabilities";
 import { i18n } from "../../i18n";
+import { useToastStore } from "../../stores/toast-store";
 
 describe("ImageView model-aware payloads", () => {
   beforeEach(() => {
@@ -108,6 +109,7 @@ describe("ImageView model-aware payloads", () => {
       modelUsed: "internal-text-enhancer",
       truncated: false,
     });
+    useToastStore.setState({ toasts: [] });
     useImageWorkspaceStore.getState().reset();
     useSettingsStore.setState((state) => ({
       ...state,
@@ -444,6 +446,32 @@ describe("ImageView model-aware payloads", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Use enhanced prompt" }));
     expect(textarea).toHaveValue("Enhanced copper city");
+  });
+
+  it("surfaces enhancer fallback instead of presenting the unchanged prompt as success", async () => {
+    enhancePromptMock.mockResolvedValueOnce({
+      prompt: "A copper city at dusk",
+      modelUsed: "internal-text-enhancer",
+      truncated: false,
+      fallbackReason: "provider-error",
+    });
+    render(<ImageView />);
+    const textarea = screen.getByPlaceholderText(/serene mountain landscape/i);
+    fireEvent.change(textarea, { target: { value: "A copper city at dusk" } });
+    fireEvent.click(screen.getByRole("button", { name: "Enhance prompt" }));
+
+    await waitFor(() => {
+      expect(useToastStore.getState().toasts).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            variant: "error",
+            title: "Prompt enhancement failed",
+          }),
+        ]),
+      );
+    });
+    expect(screen.queryByText("Enhanced prompt preview")).not.toBeInTheDocument();
+    expect(textarea).toHaveValue("A copper city at dusk");
   });
 });
 

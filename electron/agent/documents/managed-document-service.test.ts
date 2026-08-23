@@ -54,4 +54,16 @@ describe("managed document service", () => {
     expect(restored.createdBy).toBe("restore");
     expect(await service.listRevisions("default", created.document.id)).toHaveLength(3);
   });
+
+  it("deletes one managed document and all of its revisions without affecting siblings", async () => {
+    const first = await service.create("default", { projectId: "project_1", relativePath: "first.md", format: "md", blocks: [{ id: "p_1", type: "paragraph", text: "First" }] });
+    await service.applyEdits("default", { documentId: first.document.id, baseRevisionId: first.revision.id, summary: "Second revision", operations: [{ operation: "replace_block", blockId: "p_1", expectedBlockHash: blockHash(first.revision.blocks[0]), block: { id: "p_1", type: "paragraph", text: "Updated" } }] });
+    const sibling = await service.create("default", { projectId: "project_1", relativePath: "sibling.md", format: "md", blocks: [{ id: "p_2", type: "paragraph", text: "Sibling" }] });
+
+    await expect(service.delete("default", first.document.id)).resolves.toBe(true);
+    await expect(service.read("default", first.document.id)).rejects.toThrow("Managed document not found");
+    await expect(service.listRevisions("default", first.document.id)).resolves.toEqual([]);
+    await expect(service.read("default", sibling.document.id)).resolves.toMatchObject({ documentId: sibling.document.id });
+    await expect(service.delete("default", first.document.id)).resolves.toBe(false);
+  });
 });

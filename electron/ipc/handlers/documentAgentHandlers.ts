@@ -178,6 +178,25 @@ export function registerDocumentAgentHandlers(): void {
     catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
+  registerIpcChannel("documentAgent:documents:delete", async (event, input: unknown) => {
+    try {
+      const value = record(input);
+      const documentId = stringField(value, "documentId", 128);
+      const deleted = await documents.delete(getProfileSessionId(event.sender), documentId);
+      if (deleted) {
+        await audit.record({
+          sessionId: rendererSession(event.sender.id),
+          toolName: "document.delete",
+          outcome: "execution",
+          resourceIds: [documentId],
+        });
+      }
+      return { ok: true, deleted };
+    } catch (error) {
+      return { ok: false, deleted: false, error: redactErrorMessage(error) };
+    }
+  });
+
   registerIpcChannel("documentAgent:documents:proposeEdits", async (event, input: unknown) => {
     try {
       const value = record(input);

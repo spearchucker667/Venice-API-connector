@@ -246,7 +246,8 @@ export const useResearchStore = create<ResearchState>((set, get) => ({
   },
 
   deleteSession: async (sessionId) => {
-    await StorageService.deleteItem('researchSessions', sessionId);
+    const deleted = await StorageService.deleteItem('researchSessions', sessionId);
+    if (!deleted) throw new Error('Research session could not be deleted.');
     set(state => ({
       sessions: state.sessions.filter(s => s.id !== sessionId),
       activeSessionId: state.activeSessionId === sessionId ? null : state.activeSessionId

@@ -127,7 +127,10 @@
     "openGeneratedImage": "Открыть сгенерированное изображение {{number}}",
     "generatedNumber": "Сгенерировано {{number}}",
     "saveBeforeCard": "Прежде чем создавать карточку, сохраните изображение в Media Studio.",
-    "characterCreatorLaunched": "Запущен редактор персонажей с искусственным интеллектом"
+    "characterCreatorLaunched": "Запущен редактор персонажей с искусственным интеллектом",
+    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
+    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
+    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

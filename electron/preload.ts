@@ -803,6 +803,9 @@ const veniceForge = {
       listRevisions(documentId: string) {
         return ipcRenderer.invoke("documentAgent:documents:revisions", documentId);
       },
+      delete(input: Parameters<import("../src/types/desktop").VeniceForgeDocumentAgent["documents"]["delete"]>[0]) {
+        return ipcRenderer.invoke("documentAgent:documents:delete", input);
+      },
       proposeEdits(input: Parameters<import("../src/types/desktop").VeniceForgeDocumentAgent["documents"]["proposeEdits"]>[0]) {
         return ipcRenderer.invoke("documentAgent:documents:proposeEdits", input);
       },

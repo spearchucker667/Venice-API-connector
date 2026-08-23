@@ -127,7 +127,10 @@
     "openGeneratedImage": "فتح الصورة التي تم إنشاؤها {{number}}",
     "generatedNumber": "تم إنشاؤها {{number}}",
     "saveBeforeCard": "احفظ الصورة في Media Studio قبل إنشاء البطاقة.",
-    "characterCreatorLaunched": "تم إطلاق برنامج AI Character Creator"
+    "characterCreatorLaunched": "تم إطلاق برنامج AI Character Creator",
+    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
+    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
+    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

@@ -127,7 +127,10 @@
     "openGeneratedImage": "उत्पन्न छवि खोलें {{number}}",
     "generatedNumber": "उत्पन्न {{number}}",
     "saveBeforeCard": "कार्ड बनाने से पहले छवि को मीडिया स्टूडियो में सहेजें।",
-    "characterCreatorLaunched": "एआई कैरेक्टर क्रिएटर लॉन्च किया गया"
+    "characterCreatorLaunched": "एआई कैरेक्टर क्रिएटर लॉन्च किया गया",
+    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
+    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
+    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

@@ -2610,7 +2610,9 @@
             "managedDocumentCreated": "Document géré créé",
             "workingGroupValue1Created": "Création du groupe de travail \"{{value1}}\"",
             "approvedEditAppliedAsANewRevision": "Modification approuvée appliquée en tant que nouvelle révision",
-            "proposalRejectedWithoutChanges": "Proposition rejetée sans modifications"
+            "proposalRejectedWithoutChanges": "Proposition rejetée sans modifications",
+            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
+            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
           },
           "attribute": {
             "searchDocuments": "Rechercher des documents…",
@@ -2621,6 +2623,12 @@
           },
           "text": {
             "fileContentInspector": "Inspecteur de contenu de fichier"
+          },
+          "metadata": {
+            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+          },
+          "description": {
+            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
           }
         }
       },
@@ -3240,7 +3248,9 @@
             "fileSAddedToResearchSources": "Fichier(s) ajouté(s) aux sources de recherche",
             "fileUploadFailed": "Échec du téléchargement du fichier",
             "summarySavedToPromptLibrary": "Résumé enregistré dans la bibliothèque d'invites",
-            "researchWorkflowCreated": "Flux de travail de recherche créé"
+            "researchWorkflowCreated": "Flux de travail de recherche créé",
+            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
+            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
           },
           "attribute": {
             "researchSessions": "Séances de recherche",

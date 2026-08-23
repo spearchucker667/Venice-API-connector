@@ -127,7 +127,10 @@
     "openGeneratedImage": "Öppna genererad bild {{number}}",
     "generatedNumber": "Genererad {{number}}",
     "saveBeforeCard": "Spara bilden i Media Studio innan du skapar ett kort.",
-    "characterCreatorLaunched": "AI Character Creator lanseras"
+    "characterCreatorLaunched": "AI Character Creator lanseras",
+    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
+    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
+    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

@@ -127,7 +127,10 @@
     "openGeneratedImage": "Abrir imagen generada {{number}}",
     "generatedNumber": "Generado {{number}}",
     "saveBeforeCard": "Guarde la imagen en Media Studio antes de crear una tarjeta.",
-    "characterCreatorLaunched": "Lanzamiento del creador de personajes con IA"
+    "characterCreatorLaunched": "Lanzamiento del creador de personajes con IA",
+    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
+    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
+    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

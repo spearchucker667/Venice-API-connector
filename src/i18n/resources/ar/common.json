@@ -2610,7 +2610,9 @@
             "managedDocumentCreated": "تم إنشاء المستند المُدار",
             "workingGroupValue1Created": "تم إنشاء مجموعة العمل &quot; {{value1}} &quot;",
             "approvedEditAppliedAsANewRevision": "تم تطبيق التعديل المعتمد كمراجعة جديدة",
-            "proposalRejectedWithoutChanges": "تم رفض الاقتراح دون تغييرات"
+            "proposalRejectedWithoutChanges": "تم رفض الاقتراح دون تغييرات",
+            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
+            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
           },
           "attribute": {
             "searchDocuments": "بحث في المستندات...",
@@ -2621,6 +2623,12 @@
           },
           "text": {
             "fileContentInspector": "مفتش محتوى الملف"
+          },
+          "metadata": {
+            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+          },
+          "description": {
+            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
           }
         }
       },
@@ -3240,7 +3248,9 @@
             "fileSAddedToResearchSources": "الملف (الملفات) المضافة إلى مصادر البحث",
             "fileUploadFailed": "فشل تحميل الملف",
             "summarySavedToPromptLibrary": "تم حفظ الملخص في المكتبة السريعة",
-            "researchWorkflowCreated": "تم إنشاء سير عمل البحث"
+            "researchWorkflowCreated": "تم إنشاء سير عمل البحث",
+            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
+            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
           },
           "attribute": {
             "researchSessions": "جلسات بحثية",

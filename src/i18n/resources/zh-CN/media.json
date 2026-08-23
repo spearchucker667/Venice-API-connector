@@ -127,7 +127,10 @@
     "openGeneratedImage": "打开生成的图像 {{number}}",
     "generatedNumber": "生成{{number}}",
     "saveBeforeCard": "创建卡片之前将图像保存到 Media Studio。",
-    "characterCreatorLaunched": "AI角色创建器推出"
+    "characterCreatorLaunched": "AI角色创建器推出",
+    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
+    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
+    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

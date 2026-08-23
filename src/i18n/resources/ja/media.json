@@ -127,7 +127,10 @@
     "openGeneratedImage": "生成されたイメージ {{number}} を開く",
     "generatedNumber": "{{number}} が生成されました",
     "saveBeforeCard": "カードを作成する前に、画像を Media Studio に保存します。",
-    "characterCreatorLaunched": "AIキャラクタークリエイター登場"
+    "characterCreatorLaunched": "AIキャラクタークリエイター登場",
+    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
+    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
+    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

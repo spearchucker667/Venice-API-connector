@@ -2610,7 +2610,9 @@
             "managedDocumentCreated": "प्रबंधित दस्तावेज़ बनाया गया",
             "workingGroupValue1Created": "कार्य समूह &quot; {{value1}} &quot; बनाया गया",
             "approvedEditAppliedAsANewRevision": "स्वीकृत संपादन नए संशोधन के रूप में लागू किया गया",
-            "proposalRejectedWithoutChanges": "बिना किसी बदलाव के प्रस्ताव खारिज कर दिया गया"
+            "proposalRejectedWithoutChanges": "बिना किसी बदलाव के प्रस्ताव खारिज कर दिया गया",
+            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
+            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
           },
           "attribute": {
             "searchDocuments": "दस्तावेज़ खोजें...",
@@ -2621,6 +2623,12 @@
           },
           "text": {
             "fileContentInspector": "फ़ाइल सामग्री निरीक्षक"
+          },
+          "metadata": {
+            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+          },
+          "description": {
+            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
           }
         }
       },
@@ -3240,7 +3248,9 @@
             "fileSAddedToResearchSources": "फ़ाइलें(फ़ाइलें) अनुसंधान स्रोतों में जोड़ी गईं",
             "fileUploadFailed": "फ़ाइल अपलोड विफल रहा",
             "summarySavedToPromptLibrary": "सारांश प्रॉम्प्ट लाइब्रेरी में सहेजा गया",
-            "researchWorkflowCreated": "अनुसंधान वर्कफ़्लो बनाया गया"
+            "researchWorkflowCreated": "अनुसंधान वर्कफ़्लो बनाया गया",
+            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
+            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
           },
           "attribute": {
             "researchSessions": "अनुसंधान सत्र",

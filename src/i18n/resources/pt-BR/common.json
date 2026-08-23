@@ -2610,7 +2610,9 @@
             "managedDocumentCreated": "Documento gerenciado criado",
             "workingGroupValue1Created": "Grupo de trabalho &quot; {{value1}} &quot; criado",
             "approvedEditAppliedAsANewRevision": "Edição aprovada aplicada como uma nova revisão",
-            "proposalRejectedWithoutChanges": "Proposta rejeitada sem alterações"
+            "proposalRejectedWithoutChanges": "Proposta rejeitada sem alterações",
+            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
+            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
           },
           "attribute": {
             "searchDocuments": "Pesquisar documentos…",
@@ -2621,6 +2623,12 @@
           },
           "text": {
             "fileContentInspector": "Inspetor de conteúdo de arquivo"
+          },
+          "metadata": {
+            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+          },
+          "description": {
+            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
           }
         }
       },
@@ -3240,7 +3248,9 @@
             "fileSAddedToResearchSources": "Arquivo(s) adicionado(s) às fontes de pesquisa",
             "fileUploadFailed": "Falha no upload do arquivo",
             "summarySavedToPromptLibrary": "Resumo salvo na biblioteca de prompts",
-            "researchWorkflowCreated": "Fluxo de trabalho de pesquisa criado"
+            "researchWorkflowCreated": "Fluxo de trabalho de pesquisa criado",
+            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
+            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
           },
           "attribute": {
             "researchSessions": "Sessões de pesquisa",

@@ -163,6 +163,20 @@ export class ManagedDocumentService {
     return index.documents.filter((document) => document.projectId === projectId).map((document) => structuredClone(document));
   }
 
+  async delete(profileId: string, documentId: string): Promise<boolean> {
+    return this.mutate(async () => {
+      assertId(documentId, "document id");
+      const index = await this.readIndex(profileId);
+      if (!index.documents.some((document) => document.id === documentId)) {
+        return false;
+      }
+      index.documents = index.documents.filter((document) => document.id !== documentId);
+      index.revisions = index.revisions.filter((revision) => revision.documentId !== documentId);
+      await this.writeIndex(profileId, index);
+      return true;
+    });
+  }
+
   async read(profileId: string, documentId: string, revisionId?: string | null, cursor?: string | null): Promise<DocumentReadResult> {
     assertId(documentId, "document id");
     const index = await this.readIndex(profileId);

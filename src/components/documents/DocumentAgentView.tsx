@@ -35,6 +35,7 @@ import {
   blocksToDocumentSource,
 } from "../../agent/documents/document-source";
 import { Trans, useTranslation } from "react-i18next";
+import { askDecision } from "../ui/modal-requests";
 
 interface ProposalView {
   pendingApproval: PendingApproval;
@@ -212,6 +213,7 @@ export function DocumentAgentView() {
   const [editText, setEditText] = useState("");
   const [proposal, setProposal] = useState<ProposalView | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [deletingDocumentId, setDeletingDocumentId] = useState<string | null>(null);
 
   const [workspaceFiles, setWorkspaceFiles] = useState<
     Array<{ relativePath: string; type: string }>
@@ -415,6 +417,61 @@ export function DocumentAgentView() {
       setError(
         err instanceof Error ? err.message : "Could not create working group",
       );
+    }
+  };
+
+  const handleDeleteDocument = async () => {
+    if (!selected) return;
+    const documentId = selected.documentId;
+    const confirmed = await askDecision({
+      title: tRuntime(
+        "runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument",
+      ),
+      detail: tRuntime(
+        "runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently",
+        { name: selected.displayName },
+      ),
+      actionLabel: tRuntime("actions.delete"),
+      cancelLabel: tRuntime("actions.cancel"),
+      danger: true,
+    });
+    if (!confirmed) return;
+    setDeletingDocumentId(documentId);
+    setError(null);
+    try {
+      const result = await bridge.documents.delete({ documentId });
+      if (!result.ok || !result.deleted) {
+        throw new Error(
+          result.error ||
+            tRuntime(
+              "runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed",
+            ),
+        );
+      }
+      setSelected(null);
+      setSelectedDocumentId(null);
+      setRevisions([]);
+      setProposal(null);
+      await refreshDocuments();
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
+        ),
+      );
+    } catch (deleteError) {
+      const message = deleteError instanceof Error
+        ? deleteError.message
+        : tRuntime(
+            "runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed",
+          );
+      setError(message);
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed",
+        ),
+      );
+    } finally {
+      setDeletingDocumentId(null);
     }
   };
 
@@ -752,6 +809,14 @@ export function DocumentAgentView() {
                       }}
                     >
                       <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.export" />
+                    </GhostButton>
+                    <GhostButton
+                      onClick={() => {
+                        void handleDeleteDocument();
+                      }}
+                      disabled={deletingDocumentId === selected.documentId}
+                    >
+                      {tRuntime("actions.delete")}
                     </GhostButton>
                   </div>
                 </div>

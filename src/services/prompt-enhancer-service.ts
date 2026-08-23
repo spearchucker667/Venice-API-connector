@@ -36,6 +36,7 @@ export interface EnhancePromptResult {
   prompt: string;
   modelUsed: string;
   truncated?: boolean;
+  fallbackReason?: "provider-error" | "invalid-output";
 }
 
 export type PromptEnhancerConfig = Pick<
@@ -316,14 +317,26 @@ export async function enhancePrompt(
     const valid = validateEnhancerOutput(
       response?.choices?.[0]?.message?.content ?? "",
     );
-    if (!valid) return { prompt: input.prompt, modelUsed: effective.model, truncated: false };
+    if (!valid) {
+      return {
+        prompt: input.prompt,
+        modelUsed: effective.model,
+        truncated: false,
+        fallbackReason: "invalid-output",
+      };
+    }
     const { prompt, truncated } = clampEnhancedPrompt(
       valid,
       effectiveEnhancerPromptLimit(input.targetModel),
     );
     return { prompt, modelUsed: effective.model, truncated };
   } catch {
-    return { prompt: input.prompt, modelUsed: effective.model, truncated: false };
+    return {
+      prompt: input.prompt,
+      modelUsed: effective.model,
+      truncated: false,
+      fallbackReason: "provider-error",
+    };
   }
 }
 

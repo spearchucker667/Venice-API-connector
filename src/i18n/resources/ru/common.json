@@ -2610,7 +2610,9 @@
             "managedDocumentCreated": "Управляемый документ создан.",
             "workingGroupValue1Created": "Рабочая группа &quot; {{value1}} &quot; создана.",
             "approvedEditAppliedAsANewRevision": "Утвержденное изменение применено как новая редакция.",
-            "proposalRejectedWithoutChanges": "Предложение отклонено без изменений"
+            "proposalRejectedWithoutChanges": "Предложение отклонено без изменений",
+            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
+            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
           },
           "attribute": {
             "searchDocuments": "Поиск документов…",
@@ -2621,6 +2623,12 @@
           },
           "text": {
             "fileContentInspector": "Инспектор содержимого файла"
+          },
+          "metadata": {
+            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+          },
+          "description": {
+            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
           }
         }
       },
@@ -3240,7 +3248,9 @@
             "fileSAddedToResearchSources": "Файл(ы) добавлен(ы) в источники исследования",
             "fileUploadFailed": "Загрузка файла не удалась",
             "summarySavedToPromptLibrary": "Резюме сохранено в библиотеке подсказок.",
-            "researchWorkflowCreated": "Создан рабочий процесс исследования"
+            "researchWorkflowCreated": "Создан рабочий процесс исследования",
+            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
+            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
           },
           "attribute": {
             "researchSessions": "Исследовательские сессии",

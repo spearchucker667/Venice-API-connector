@@ -477,6 +477,19 @@ export function ImageView() {
         },
         enhancerConfig,
       );
+      if (result.fallbackReason) {
+        setEnhancedPrompt(null);
+        setShowEnhanceReview(false);
+        toast.error(
+          t("imageStudioRuntime.enhancementFailed"),
+          t(
+            result.fallbackReason === "provider-error"
+              ? "imageStudioRuntime.enhancementProviderError"
+              : "imageStudioRuntime.enhancementInvalidOutput",
+          ),
+        );
+        return;
+      }
       setEnhancedPrompt(result.prompt);
       if (result.truncated) {
         toast.warn(
@@ -487,8 +500,11 @@ export function ImageView() {
         );
       }
       setShowEnhanceReview(true);
-    } catch {
-      // error handled silently — user keeps original prompt
+    } catch (error) {
+      toast.error(
+        t("imageStudioRuntime.enhancementFailed"),
+        redactErrorMessage(error),
+      );
     } finally {
       setEnhancing(false);
     }

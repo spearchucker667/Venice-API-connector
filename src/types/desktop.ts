@@ -413,6 +413,7 @@ export interface VeniceForgeDocumentAgent {
     list(projectId: string): Promise<{ ok: boolean; documents?: import("../agent/contracts/documents").ManagedDocument[]; error?: string }>;
     read(input: { documentId: string; revisionId?: string | null; cursor?: string | null }): Promise<{ ok: boolean; result?: import("../agent/contracts/documents").DocumentReadResult; error?: string }>;
     listRevisions(documentId: string): Promise<{ ok: boolean; revisions?: Array<Omit<import("../agent/contracts/documents").DocumentRevision, "blocks">>; error?: string }>;
+    delete(input: { documentId: string }): Promise<{ ok: boolean; deleted: boolean; error?: string }>;
     proposeEdits(input: { documentId: string; baseRevisionId: string; summary: string; operations: import("../agent/contracts/documents").DocumentEditOperation[] }): Promise<{ ok: boolean; pendingApproval?: import("../agent/contracts/proposals").PendingApproval; preview?: unknown; error?: string }>;
     proposeRestore(input: { documentId: string; currentRevisionId: string; restoreRevisionId: string; reason: string }): Promise<{ ok: boolean; pendingApproval?: import("../agent/contracts/proposals").PendingApproval; preview?: unknown; error?: string }>;
     export(input: { documentId: string; revisionId?: string | null; format: import("../agent/contracts/documents").DocumentFormat; suggestedFileName: string }): Promise<{ ok: boolean; canceled?: boolean; exported?: boolean; displayName?: string; sizeBytes?: number; error?: string }>;

@@ -192,13 +192,21 @@ describe("fallback and bounds", () => {
   ])("falls back to the original for invalid output: %s", async (content) => {
     mockedVenice.mockResolvedValueOnce({ choices: [{ message: { content } }] });
     await expect(enhancePrompt({ mode: "enhance", prompt: "original" }, config))
-      .resolves.toMatchObject({ prompt: "original", truncated: false });
+      .resolves.toMatchObject({
+        prompt: "original",
+        truncated: false,
+        fallbackReason: "invalid-output",
+      });
   });
 
   it("falls back to the original on provider failure", async () => {
     mockedVenice.mockRejectedValueOnce(new Error("offline"));
     await expect(enhancePrompt({ mode: "enhance", prompt: "original" }, config))
-      .resolves.toMatchObject({ prompt: "original", modelUsed: "internal-text-enhancer" });
+      .resolves.toMatchObject({
+        prompt: "original",
+        modelUsed: "internal-text-enhancer",
+        fallbackReason: "provider-error",
+      });
   });
 
   it("clamps valid output to the effective downstream limit", async () => {

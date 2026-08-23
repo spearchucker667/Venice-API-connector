@@ -10,6 +10,9 @@ import type { ResearchSession, ResearchSource } from '../../types/research';
 import fs from 'node:fs';
 import path from 'node:path';
 
+const askDecision = vi.hoisted(() => vi.fn());
+const toastError = vi.hoisted(() => vi.fn());
+
 // Mock the store
 vi.mock('../../stores/research-store', () => ({
   useResearchStore: vi.fn(),
@@ -24,7 +27,7 @@ vi.mock('../../stores/prompt-library-store', () => ({
   usePromptLibraryStore: () => ({ createPrompt: vi.fn() }),
 }));
 vi.mock('../../stores/toast-store', () => ({
-  toast: { success: vi.fn(), warn: vi.fn(), error: vi.fn() },
+  toast: { success: vi.fn(), warn: vi.fn(), error: toastError },
 }));
 vi.mock('../../stores/workflow-template-store', () => ({
   useWorkflowTemplateStore: () => ({ createWorkflow: vi.fn() }),
@@ -32,6 +35,10 @@ vi.mock('../../stores/workflow-template-store', () => ({
 
 vi.mock('../../services/ingestion/attachmentAssembler', () => ({
   processFileAttachment: vi.fn(),
+}));
+vi.mock('../ui/modal-requests', () => ({
+  askDecision,
+  askText: vi.fn(),
 }));
 
 import { processFileAttachment } from '../../services/ingestion/attachmentAssembler';
@@ -103,6 +110,30 @@ function researchState(overrides: Partial<ResearchState>): ResearchState {
 }
 
 describe('ResearchWorkspaceView', () => {
+  it('awaits confirmed session deletion and reports durable failures', async () => {
+    const session = sanitizeResearchSession({
+      id: 's1',
+      title: 'Delete Me',
+      sources: [],
+      findings: [],
+      scope: 'global',
+      tags: [],
+    });
+    const deleteSession = vi.fn().mockRejectedValue(new Error('delete failed'));
+    askDecision.mockResolvedValueOnce(true);
+    vi.mocked(useResearchStore).mockReturnValue(researchState({
+      sessions: [session],
+      activeSessionId: session.id,
+      deleteSession,
+    }));
+
+    render(<ResearchWorkspaceView />);
+    fireEvent.click(screen.getByRole('button', { name: 'Delete session' }));
+
+    await waitFor(() => expect(deleteSession).toHaveBeenCalledWith(session.id));
+    await waitFor(() => expect(toastError).toHaveBeenCalled());
+  });
+
   it('renders empty state when no session is active', () => {
     vi.mocked(useResearchStore).mockReturnValue(researchState({}));
 

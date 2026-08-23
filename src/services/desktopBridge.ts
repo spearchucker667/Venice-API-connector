@@ -2426,6 +2426,15 @@ export const desktopDocumentAgent = {
         ? window.veniceForge!.documentAgent.documents.listRevisions(documentId)
         : Promise.resolve(documentAgentUnavailable);
     },
+    delete(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["documents"]["delete"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.documents.delete(input)
+        : Promise.resolve(documentAgentUnavailable);
+    },
     proposeEdits(
       input: Parameters<
         import("../types/desktop").VeniceForgeDocumentAgent["documents"]["proposeEdits"]

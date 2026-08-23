@@ -16,6 +16,7 @@ const attachmentsPromoteError = vi.hoisted(() => vi.fn(async () => {
   throw new Error("Attachment exceeds the 1048576-byte import limit.");
 }));
 const getProfileSessionId = vi.hoisted(() => vi.fn(() => "profile_default"));
+const documentsDelete = vi.hoisted(() => vi.fn(async () => true));
 
 vi.mock("electron", () => ({
   ipcMain: { handle: vi.fn((channel: string, handler: (...args: unknown[]) => unknown) => handlers.set(channel, handler)) },
@@ -32,6 +33,7 @@ vi.mock("../../agent/documents/managed-document-service", () => ({
       document: { id: "doc_unused", metadata: {} },
       revision: { id: "rev_unused" },
     }));
+    delete = documentsDelete;
   },
 }));
 vi.mock("../../agent/documents/workspace-grant-service", () => ({
@@ -178,5 +180,27 @@ describe("documentAgent:attachments:promote channel", () => {
       bodyB64: Buffer.from("data", "utf8").toString("base64"),
     });
     expect(missing.ok).toBe(false);
+  });
+});
+
+describe("documentAgent:documents:delete channel", () => {
+  it("uses main-process profile authority, deletes the validated id, and audits execution", async () => {
+    resetMocks();
+    documentsDelete.mockReset().mockResolvedValue(true);
+    registerDocumentAgentHandlers();
+    const handler = handlers.get("documentAgent:documents:delete");
+    expect(handler).toBeTypeOf("function");
+    const event = { sender: { id: 51 } } as unknown as Electron.IpcMainInvokeEvent;
+
+    const envelope = await handler!(event, { documentId: "doc_1" });
+
+    expect(getProfileSessionId).toHaveBeenCalledWith(event.sender);
+    expect(documentsDelete).toHaveBeenCalledWith("profile_default", "doc_1");
+    expect(envelope).toEqual({ ok: true, deleted: true });
+    expect(auditRecord).toHaveBeenCalledWith(expect.objectContaining({
+      toolName: "document.delete",
+      outcome: "execution",
+      resourceIds: ["doc_1"],
+    }));
   });
 });

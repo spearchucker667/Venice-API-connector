@@ -2628,7 +2628,15 @@
             "managedDocumentCreated": "Managed document created",
             "workingGroupValue1Created": "Working Group \"{{value1}}\" created",
             "approvedEditAppliedAsANewRevision": "Approved edit applied as a new revision",
-            "proposalRejectedWithoutChanges": "Proposal rejected without changes"
+            "proposalRejectedWithoutChanges": "Proposal rejected without changes",
+            "documentDeleted": "Document deleted",
+            "documentDeleteFailed": "Document could not be deleted"
+          },
+          "metadata": {
+            "deleteDocument": "Delete document?"
+          },
+          "description": {
+            "deleteDocumentPermanently": "Permanently delete {{name}} and all of its revision history?"
           },
           "attribute": {
             "searchDocuments": "Search documents…",
@@ -3258,7 +3266,9 @@
             "fileSAddedToResearchSources": "File(s) added to research sources",
             "fileUploadFailed": "File upload failed",
             "summarySavedToPromptLibrary": "Summary saved to Prompt Library",
-            "researchWorkflowCreated": "Research workflow created"
+            "researchWorkflowCreated": "Research workflow created",
+            "sessionDeleted": "Research session deleted",
+            "sessionDeleteFailed": "Research session could not be deleted"
           },
           "attribute": {
             "researchSessions": "Research sessions",

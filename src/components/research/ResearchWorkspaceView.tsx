@@ -95,6 +95,7 @@ export const ResearchWorkspaceView: React.FC = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [isScraping, setIsScraping] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [deletingSessionId, setDeletingSessionId] = useState<string | null>(null);
   const [sessionSidebarCollapsed, setSessionSidebarCollapsed] = useState(false);
   const [findingTitle, setFindingTitle] = useState("");
   const [findingContent, setFindingContent] = useState("");
@@ -139,7 +140,25 @@ export const ResearchWorkspaceView: React.FC = () => {
       actionLabel: "Delete",
       danger: true,
     });
-    if (shouldDelete) void deleteSession(sessionId);
+    if (!shouldDelete) return;
+    setDeletingSessionId(sessionId);
+    try {
+      await deleteSession(sessionId);
+      toast.success(
+        tRuntime(
+          "runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
+        ),
+      );
+    } catch (error) {
+      toast.error(
+        tRuntime(
+          "runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed",
+        ),
+        redactErrorMessage(error),
+      );
+    } finally {
+      setDeletingSessionId(null);
+    }
   };
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -494,6 +513,7 @@ export const ResearchWorkspaceView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => void handleDeleteSession(activeSession.id)}
+                  disabled={deletingSessionId === activeSession.id}
                   className="p-2 hover:bg-danger/15 rounded text-text-secondary hover:text-danger transition-colors"
                   aria-label={tRuntime(
                     "runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSession",

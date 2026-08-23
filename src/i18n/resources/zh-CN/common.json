@@ -2610,7 +2610,9 @@
             "managedDocumentCreated": "已创建托管文档",
             "workingGroupValue1Created": "创建工作组“ {{value1}} ”",
             "approvedEditAppliedAsANewRevision": "已批准的编辑作为新修订应用",
-            "proposalRejectedWithoutChanges": "提案未经修改被拒绝"
+            "proposalRejectedWithoutChanges": "提案未经修改被拒绝",
+            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
+            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
           },
           "attribute": {
             "searchDocuments": "搜索文档...",
@@ -2621,6 +2623,12 @@
           },
           "text": {
             "fileContentInspector": "文件内容检查器"
+          },
+          "metadata": {
+            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+          },
+          "description": {
+            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
           }
         }
       },
@@ -3240,7 +3248,9 @@
             "fileSAddedToResearchSources": "添加到研究来源的文件",
             "fileUploadFailed": "文件上传失败",
             "summarySavedToPromptLibrary": "摘要保存到提示库",
-            "researchWorkflowCreated": "创建研究工作流程"
+            "researchWorkflowCreated": "创建研究工作流程",
+            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
+            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
           },
           "attribute": {
             "researchSessions": "研究会议",
