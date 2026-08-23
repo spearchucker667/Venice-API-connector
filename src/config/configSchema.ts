@@ -767,12 +767,12 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
     systemPrompt: clampString(
       enhancerRaw.systemPrompt,
       ENHANCER_PROMPT_MAX_LENGTH,
-      "",
+      "OFF",
     ),
     remixSystemPrompt: clampString(
       enhancerRaw.remixSystemPrompt,
       ENHANCER_PROMPT_MAX_LENGTH,
-      "",
+      "OFF",
     ),
   };
 
@@ -920,11 +920,11 @@ export function emptyConfig(): YamlConfig {
       upscale: "",
     },
     chat: {
-      system_prompt: "",
+      system_prompt: "OFF",
       temperature: 0.7,
       top_p: 1,
       max_tokens: 4096,
-      include_venice_system_prompt: true,
+      include_venice_system_prompt: false,
       enable_web_search: "off",
       enable_web_scraping: false,
       enable_web_citations: false,

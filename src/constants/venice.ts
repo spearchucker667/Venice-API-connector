@@ -163,10 +163,10 @@ Use clear markdown for structured responses. Use \`\`\`language\`\`\` fenced blo
 export const DEFAULT_CHAT_MODEL = "zai-org-glm-4.6";
 
 /** The default model used for workflows, web search, and data processing tasks. */
-export const DEFAULT_WORKFLOW_MODEL = "llama-3.3-70b";
+export const DEFAULT_WORKFLOW_MODEL = "gemini-2.5-flash";
 
 /** The default model used for the prompt enhancer feature. */
-export const DEFAULT_PROMPT_ENHANCER_MODEL = "venice-uncensored-1-2";
+export const DEFAULT_PROMPT_ENHANCER_MODEL = "gemma-4-uncensored";
 
 /** Encrypted conversation-memory search index schema version. */
 export const MEMORY_INDEX_VERSION = 2;

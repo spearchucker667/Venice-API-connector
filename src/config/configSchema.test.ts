@@ -113,7 +113,7 @@ describe("configSchema", () => {
       expect(result.config.safety.local_family_safe_mode_enabled).toBe(false);
       expect(result.config.safety.venice_api_safe_mode).toBe(false);
       expect(result.config.characters.include_adult_characters).toBe(true);
-      expect(result.config.chat.include_venice_system_prompt).toBe(true);
+      expect(result.config.chat.include_venice_system_prompt).toBe(false);
     });
   });
 
@@ -151,7 +151,7 @@ describe("configSchema", () => {
     it("applies safe defaults for the enhancer block", () => {
       const result = validateConfig({ version: 1 });
       expect(result.config.internal_prompt_enhancer.enabled).toBe(true);
-      expect(result.config.internal_prompt_enhancer.model).toBe("venice-uncensored-1-2");
+      expect(result.config.internal_prompt_enhancer.model).toBe("gemma-4-uncensored");
       expect(result.config.internal_prompt_enhancer.enhanceTemperature).toBe(0.2);
       expect(result.config.internal_prompt_enhancer.remixTemperature).toBe(0.4);
       expect(result.config.internal_prompt_enhancer.maxTokens).toBe(350);
@@ -171,10 +171,10 @@ describe("configSchema", () => {
       expect(result.config.internal_prompt_enhancer.maxTokens).toBeLessThanOrEqual(4000);
     });
 
-    it("keeps absent configured instructions empty because they are additive", () => {
+    it("keeps absent configured instructions as OFF because they are additive", () => {
       const result = validateConfig({ version: 1 });
-      expect(result.config.internal_prompt_enhancer.systemPrompt).toBe("");
-      expect(result.config.internal_prompt_enhancer.remixSystemPrompt).toBe("");
+      expect(result.config.internal_prompt_enhancer.systemPrompt).toBe("OFF");
+      expect(result.config.internal_prompt_enhancer.remixSystemPrompt).toBe("OFF");
     });
 
     it.each([

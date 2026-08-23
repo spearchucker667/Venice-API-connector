@@ -312,6 +312,9 @@ export async function enhancePrompt(
         messages,
         temperature: effective.temperature,
         max_tokens: effective.maxTokens,
+        venice_parameters: {
+          include_venice_system_prompt: false,
+        },
       },
     });
     const valid = validateEnhancerOutput(

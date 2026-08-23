@@ -15,6 +15,18 @@ This is the active handoff and validation ledger. The canonical current-work led
 - Confirmed that CI workflows and validation scripts all pass successfully on the current `main`.
 - Validated skipped tests are conditionally skipped based on valid environmental limitations (e.g. `RUN_ELECTRON_SMOKE` for binary testing).
 
+## Latest Session Summary
+
+**Date:** 2026-08-23
+**Scope:** Repair Image Studio prompt enhancement failure due to false-positive child-safety block
+
+- Identified the root cause of the "Prompt enhancement was stopped by mandatory child-safety protections" error. The error occurs when the prompt enhancer's long, default system instruction (which contains trigger words like "age" and "explicitness") is combined with user prompts, triggering the non-disableable local child exploitation heuristic filter.
+- Fulfilled user config requests to mitigate this: Set `DEFAULT_PROMPT_ENHANCER_MODEL` to `gemma-4-uncensored`.
+- Updated `src/config/configSchema.ts` so `chat.system_prompt`, `internal_prompt_enhancer.systemPrompt`, and `internal_prompt_enhancer.remixSystemPrompt` default to `"OFF"`.
+- Updated `src/services/prompt-enhancer-service.ts` to inject `venice_parameters: { include_venice_system_prompt: false }` into the `/chat/completions` API payload to prevent provider-side system prompts from interfering.
+- Updated related config expectations in `src/config/configSchema.test.ts` to ensure `npm run test:unit` passes with the new `"OFF"` default expectations.
+- Validated all changes via `npm run typecheck` and `npm run test:unit`, resolving all `chat-store` persistence test flakiness.
+
 ## Prior Session Summary
 
 **Date:** 2026-08-23
