@@ -130,7 +130,8 @@
     "characterCreatorLaunched": "AI Character Creator gestartet",
     "enhancementFailed": "Prompt-Verbesserung fehlgeschlagen",
     "enhancementProviderError": "Der interne Enhancer konnte die Venice-Anfrage nicht erreichen oder abschließen. Ihre ursprüngliche Eingabeaufforderung wurde beibehalten.",
-    "enhancementInvalidOutput": "Der interne Enhancer hat keine verwendbare Bildaufforderung zurückgegeben. Ihre ursprüngliche Eingabeaufforderung wurde beibehalten."
+    "enhancementInvalidOutput": "Der interne Enhancer hat keine verwendbare Bildaufforderung zurückgegeben. Ihre ursprüngliche Eingabeaufforderung wurde beibehalten.",
+    "enhancementSafetyBlocked": "Die Prompt-Verbesserung wurde durch die verpflichtenden Kinderschutzmaßnahmen gestoppt, die von den optionalen Safe-Mode-Einstellungen getrennt sind. Ihr ursprünglicher Prompt wurde beibehalten."
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

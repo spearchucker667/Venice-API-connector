@@ -109,16 +109,15 @@ describe('Research Workspace Store', () => {
     expect(StorageService.deleteItem).toHaveBeenCalledWith('researchSessions', session.id);
   });
 
-  it('retains a session and rejects when durable deletion is refused', async () => {
-    const session = await useResearchStore.getState().createSession({ title: 'Must Remain' });
+  it('removes a stale in-memory session when the durable record is already absent', async () => {
+    const session = await useResearchStore.getState().createSession({ title: 'Already Deleted' });
     vi.mocked(StorageService.deleteItem).mockResolvedValueOnce(false);
 
-    await expect(useResearchStore.getState().deleteSession(session.id)).rejects.toThrow(
-      'Research session could not be deleted',
-    );
-    expect(useResearchStore.getState().sessions).toContainEqual(
+    await expect(useResearchStore.getState().deleteSession(session.id)).resolves.toBeUndefined();
+    expect(useResearchStore.getState().sessions).not.toContainEqual(
       expect.objectContaining({ id: session.id }),
     );
+    expect(useResearchStore.getState().activeSessionId).toBeNull();
   });
 
   it('toggles favorite', async () => {

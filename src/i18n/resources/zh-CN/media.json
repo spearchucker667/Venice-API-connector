@@ -130,7 +130,8 @@
     "characterCreatorLaunched": "AI角色创建器推出",
     "enhancementFailed": "提示增强失败",
     "enhancementProviderError": "内部增强器无法到达或完成 Venice 请求。您的原始提示已保留。",
-    "enhancementInvalidOutput": "内部增强器未返回可用的图像提示。您的原始提示已保留。"
+    "enhancementInvalidOutput": "内部增强器未返回可用的图像提示。您的原始提示已保留。",
+    "enhancementSafetyBlocked": "提示词增强已被强制儿童安全保护措施阻止；这些保护与可选的安全模式设置相互独立。原始提示词已保留。"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

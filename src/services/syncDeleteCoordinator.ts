@@ -19,6 +19,8 @@ export interface DeleteSyncableRecordResult {
   ok: boolean;
   deleted: boolean;
   tombstone: Tombstone;
+  /** The local delete completed, but immediate sync emission must be retried from the durable tombstone. */
+  syncPending?: boolean;
   error?: string;
 }
 
@@ -68,13 +70,13 @@ export async function deleteSyncableRecord(
         if (!emitResult.ok) {
           const error = emitResult.error || "Failed to emit tombstone packet";
           console.error(`[syncDeleteCoordinator] Failed to emit tombstone for ${storeName}/${recordId}: ${error}`);
-          return { ok: false, deleted, tombstone, error };
+          return { ok: true, deleted, tombstone, syncPending: true, error };
         }
       }
     } catch (err) {
       const error = err instanceof Error ? err.message : "Failed to emit tombstone packet";
       console.error(`[syncDeleteCoordinator] Failed to emit tombstone for ${storeName}/${recordId}:`, err);
-      return { ok: false, deleted, tombstone, error };
+      return { ok: true, deleted, tombstone, syncPending: true, error };
     }
   }
 

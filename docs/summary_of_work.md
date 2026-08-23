@@ -6,6 +6,19 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
+**Scope:** User-log remediation for Image Studio safety-block reporting and idempotent Research deletion
+
+- Reconciled the supplied Traffic Inspector export and desktop log against current `main`. The export proves two Image Studio enhancer calls reached `/chat/completions` and were rejected with HTTP 451 by mandatory child-safety enforcement while the optional safety setting was reported off; the privacy-safe export omits raw prompts, so it cannot prove whether either detector decision was a false positive.
+- Preserved mandatory child-safety enforcement and corrected the misleading UI contract: prompt enhancement now classifies HTTP 451 separately from provider/network failures and explains that mandatory child-safety protections are independent of optional Safe Mode settings. The original prompt remains unchanged and no review panel is shown.
+- Root-caused the undeletable Research session state to a post-delete sync-emission failure: after the durable tombstone and local deletion succeeded, immediate packet emission could return failure, leaving the already-deleted session in renderer memory; retries then treated the missing row as an error forever.
+- Made durable sync deletion locally successful once its tombstone is persisted and the target delete completes, recording `syncPending` when immediate packet emission fails. Research deletion is now idempotent and removes stale renderer state when the profile-scoped durable row is already absent.
+- Added regressions for 451 classification, Image Studio safety-block messaging, failed immediate tombstone emission after successful local deletion, and stale Research-session cleanup. Added first-pass translations of the new message in all 11 non-English catalogs without changing native-review status.
+- Focused service/store tests pass 54/54; the new Image Studio UI assertion passes; `verify:i18n` passes with the 319 pre-existing review markers and no new marker; `verify:i18n-hardcoded-regressions` reports zero regressions.
+- Rendered web QA confirmed the Research workspace loads, a session can be created and selected, and the deletion control opens the expected confirmation dialog. The destructive confirmation was intentionally cancelled; post-confirmation removal is covered by the component/store regressions.
+
+## Prior Session Summary
+
+**Date:** 2026-08-23
 **Scope:** Final Acceptance, External Validation, and Closeout
 
 - Verified hosted GitHub CI for baseline commit `41a242fb`: CI (10/10 jobs) and CodeQL (2/2 jobs) all passed with no failures or flaky jobs.
@@ -1814,7 +1827,7 @@ The earlier P1 audit closure (P1 #1–#8 with `VERIFY-128..131`) remains the con
 
 ## Open TODO Ledger
 
-**Prompt enhancement and session deletion reports (closed locally 2026-08-23):** Image Studio now distinguishes provider/validation fallback from successful enhancement; Research deletion awaits confirmed durable removal; and Documents exposes a confirmation-gated, profile-authoritative managed-document delete path that atomically removes revisions. Focused service/store/IPC/renderer regressions and the full Vitest suite pass. Paid-provider and headed desktop interaction remain external acceptance evidence, not unfinished implementation.
+**Prompt enhancement and session deletion reports (closed locally; follow-up corrected 2026-08-23):** Image Studio distinguishes provider/validation fallback from successful enhancement and now reports mandatory HTTP 451 child-safety blocks separately from optional Safe Mode. Research deletion awaits durable mutation, treats an already-absent profile-scoped row idempotently, and no longer leaves a locally deleted record undeletable when immediate sync-packet emission fails; its persisted tombstone remains the retry source. Documents exposes a confirmation-gated, profile-authoritative managed-document delete path that atomically removes revisions. Paid-provider and headed desktop interaction remain external acceptance evidence, not unfinished implementation.
 
 **Hosted CI portability failures from runs `32622366262`, `32624408721`, and `32625327617` (closed 2026-08-23):** deterministic wrong-case Markdown classification, the Windows-inapplicable POSIX mode assertion, nonexistent Ubuntu package `libxvfb`, and missing Linux executable discovery are corrected with focused regressions. Final CI run `32626615743` passed the complete matrix, including all three packaged-launch jobs; CodeQL run `32626615860` passed both analyses. No roadmap item was created because no implementation or hosted-evidence work remains for this failure chain.
 
@@ -1959,6 +1972,24 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 **Dependency-audit status (refreshed 2026-08-23):** `npm audit --omit=dev --audit-level=moderate` and `npm audit --audit-level=critical` both report 0 vulnerabilities. The aggregate `npm run ci` gate is no longer blocked by dependency audit findings.
 
 ## Validation Matrix
+
+### August 23 — Image Studio safety-block and Research deletion follow-up
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| Supplied Traffic Inspector JSON review | CONFIRMED | Two `/chat/completions` requests returned HTTP 451 `safety-block`; request bodies are privacy-redacted, so detector correctness for the original prompts is unverified. |
+| `npx vitest run src/services/prompt-enhancer-service.test.ts src/stores/research-store.test.ts src/services/syncDeleteCoordinator.test.ts --no-file-parallelism` | PASS | 3 files; 54/54 tests. |
+| `npx vitest run src/components/image/image-view.test.tsx -t "explains that a safety-block fallback" --no-file-parallelism` | PASS | New rendered fallback assertion passed; 1 passed, 16 intentionally filtered. |
+| `npm run verify:i18n` | PASS with pre-existing warnings | 12 locales/12 namespaces; 319 pre-existing review markers, no marker introduced by this change. |
+| `npm run verify:i18n-hardcoded-regressions` | PASS | Zero regressions. |
+| `npm run lint:eslint` | PASS | No lint errors or warnings. |
+| `npm run typecheck` | PASS | Renderer and Electron TypeScript checks passed. |
+| `npm run verify:safety-guard` | PASS | Safety guard verification passed; mandatory enforcement was not weakened. |
+| `npm run verify:markdown-links` | PASS | 254 Markdown files checked. |
+| `npm run verify:research-workspace` | FAIL (pre-existing test isolation) | Static checks passed, then unchanged Command Palette and Research Workspace tests accumulated rendered DOM across cases under the lockfile-resolved Vitest 4.1.10: 31 failures reported duplicate accessible elements. Task-focused store/coordinator regressions pass independently. |
+| `npm run verify:contracts` | FAIL (same pre-existing test isolation) | Static contract gates passed through prompt-language verification. The feature phase stopped when `verify:document-ingestion` reported 47 unchanged rendered-component failures with the same cross-test DOM accumulation; no task-focused service/store regression failed. |
+| `npm run build` | PASS | Renderer, server, and Electron bundles completed; the known ineffective dynamic-import warning for `chatTtsController.ts` remains. |
+| In-app Browser QA at `http://localhost:5173/` | PARTIAL PASS | Page identity, nonblank app, Research navigation, session creation/selection, and delete-confirmation dialog verified. Confirmation cancelled; no relevant runtime error. |
 
 ### August 23 — Final Acceptance and Closeout
 
@@ -2852,6 +2883,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-08-23 — Image Studio safety-block and Research deletion follow-up:** Analyzed the user-supplied privacy-safe Traffic Inspector export and desktop log. Confirmed two enhancer POSTs were blocked locally with HTTP 451 while optional safety was displayed off, but did not infer a false positive from redacted request bodies. Added a distinct `safety-block` enhancer fallback and localized UI explanation separating mandatory child-safety enforcement from optional Safe Mode. Traced Research’s persistent undeletable state to local deletion succeeding before immediate sync emission failed; retained the durable tombstone as retry state, returned local success with `syncPending`, and made Research removal idempotent for an already-absent row. Added focused service/store/UI regressions and rendered Browser evidence through the confirmation dialog; the destructive confirmation was cancelled. Focused tests, lint, typecheck, i18n, safety, Markdown, and build pass. The Research verifier and aggregate contracts reach their static checks but stop in unchanged rendered-component suites because tests accumulate DOM across cases under the lockfile-resolved Vitest 4.1.10; task-focused regressions pass independently.
 
 - **2026-08-23 — Final Acceptance and Closeout:** Completed final acceptance for commit `41a242fb`. Verified hosted CI (10/10 jobs + CodeQL 2/2 all green). Removed stale `credential-copilot` Git helper from local `.git/config` (no repo change). Investigated and documented the harmless Vite `chatTtsController.ts` dual-import warning. Translated all 99 newly introduced `__MISSING__` i18n markers (9 strings × 11 locales) using established product vocabulary — pre-existing 319 markers unchanged. Headed Electron QA blocked by Freebuff terminal environment; hosted electron-smoke passes on all platforms. Live Venice enhancement blocked by credentials in Electron secure storage only; prior session performed authenticated registry check successfully. Re-executed full validation matrix: ESLint, typecheck, 5,157 tests, build, all verifiers, contracts (103/103), `npm run ci`. Updated handoff documentation. No new implementation defects found.
 

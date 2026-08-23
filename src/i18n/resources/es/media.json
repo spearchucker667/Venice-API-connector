@@ -130,7 +130,8 @@
     "characterCreatorLaunched": "Lanzamiento del creador de personajes con IA",
     "enhancementFailed": "Falló la mejora del mensaje",
     "enhancementProviderError": "El potenciador interno no pudo alcanzar o completar la solicitud de Venice. Se conservó su mensaje original.",
-    "enhancementInvalidOutput": "El potenciador interno no devolvió un mensaje de imagen utilizable. Se conservó su mensaje original."
+    "enhancementInvalidOutput": "El potenciador interno no devolvió un mensaje de imagen utilizable. Se conservó su mensaje original.",
+    "enhancementSafetyBlocked": "La mejora del prompt fue detenida por las protecciones obligatorias de seguridad infantil, que son independientes de la configuración opcional del modo seguro. Se conservó el prompt original."
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

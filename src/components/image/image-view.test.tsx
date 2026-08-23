@@ -473,6 +473,33 @@ describe("ImageView model-aware payloads", () => {
     expect(screen.queryByText("Enhanced prompt preview")).not.toBeInTheDocument();
     expect(textarea).toHaveValue("A copper city at dusk");
   });
+
+  it("explains that a safety-block fallback is independent of optional Safe Mode", async () => {
+    enhancePromptMock.mockResolvedValueOnce({
+      prompt: "A copper city at dusk",
+      modelUsed: "internal-text-enhancer",
+      truncated: false,
+      fallbackReason: "safety-block",
+    });
+    render(<ImageView />);
+    const textarea = screen.getByPlaceholderText(/serene mountain landscape/i);
+    fireEvent.change(textarea, { target: { value: "A copper city at dusk" } });
+    fireEvent.click(screen.getByRole("button", { name: "Enhance prompt" }));
+
+    await waitFor(() => {
+      expect(useToastStore.getState().toasts).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            variant: "error",
+            title: "Prompt enhancement failed",
+            description: expect.stringMatching(/mandatory child-safety protections.*separate from optional Safe Mode/i),
+          }),
+        ]),
+      );
+    });
+    expect(screen.queryByText("Enhanced prompt preview")).not.toBeInTheDocument();
+    expect(textarea).toHaveValue("A copper city at dusk");
+  });
 });
 
 describe("ImageView lightbox", () => {

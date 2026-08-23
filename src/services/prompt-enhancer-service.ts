@@ -36,7 +36,7 @@ export interface EnhancePromptResult {
   prompt: string;
   modelUsed: string;
   truncated?: boolean;
-  fallbackReason?: "provider-error" | "invalid-output";
+  fallbackReason?: "provider-error" | "invalid-output" | "safety-block";
 }
 
 export type PromptEnhancerConfig = Pick<
@@ -330,12 +330,15 @@ export async function enhancePrompt(
       effectiveEnhancerPromptLimit(input.targetModel),
     );
     return { prompt, modelUsed: effective.model, truncated };
-  } catch {
+  } catch (error) {
+    const status = error && typeof error === "object" && "status" in error
+      ? (error as { status?: unknown }).status
+      : undefined;
     return {
       prompt: input.prompt,
       modelUsed: effective.model,
       truncated: false,
-      fallbackReason: "provider-error",
+      fallbackReason: status === 451 ? "safety-block" : "provider-error",
     };
   }
 }

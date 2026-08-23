@@ -483,9 +483,11 @@ export function ImageView() {
         toast.error(
           t("imageStudioRuntime.enhancementFailed"),
           t(
-            result.fallbackReason === "provider-error"
-              ? "imageStudioRuntime.enhancementProviderError"
-              : "imageStudioRuntime.enhancementInvalidOutput",
+            result.fallbackReason === "safety-block"
+              ? "imageStudioRuntime.enhancementSafetyBlocked"
+              : result.fallbackReason === "provider-error"
+                ? "imageStudioRuntime.enhancementProviderError"
+                : "imageStudioRuntime.enhancementInvalidOutput",
           ),
         );
         return;

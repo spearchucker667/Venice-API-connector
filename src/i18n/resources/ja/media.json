@@ -130,7 +130,8 @@
     "characterCreatorLaunched": "AIキャラクタークリエイター登場",
     "enhancementFailed": "プロンプト強化に失敗しました",
     "enhancementProviderError": "内部エンハンサーがVeniceリクエストに到達または完了できませんでした。元のプロンプトは保持されました。",
-    "enhancementInvalidOutput": "内部エンハンサーは使用可能な画像プロンプトを1つも返しませんでした。元のプロンプトは保持されました。"
+    "enhancementInvalidOutput": "内部エンハンサーは使用可能な画像プロンプトを1つも返しませんでした。元のプロンプトは保持されました。",
+    "enhancementSafetyBlocked": "プロンプトの強化は、任意のセーフモード設定とは別の必須の児童安全保護によって停止されました。元のプロンプトは保持されました。"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

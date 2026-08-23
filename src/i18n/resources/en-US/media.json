@@ -101,6 +101,7 @@
     "enhancedPromptShortenedDetail": "Prompt enhancer output was trimmed to {{max}} characters.",
     "enhancementFailed": "Prompt enhancement failed",
     "enhancementProviderError": "The internal enhancer could not reach or complete the Venice request. Your original prompt was kept.",
+    "enhancementSafetyBlocked": "Prompt enhancement was stopped by mandatory child-safety protections, which are separate from optional Safe Mode settings. Your original prompt was kept.",
     "enhancementInvalidOutput": "The internal enhancer did not return one usable image prompt. Your original prompt was kept.",
     "savedPrompt": "Saved {{kind}} prompt to library",
     "promptKinds": {

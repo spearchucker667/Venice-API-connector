@@ -209,6 +209,16 @@ describe("fallback and bounds", () => {
       });
   });
 
+  it("distinguishes a mandatory safety block from a provider failure", async () => {
+    mockedVenice.mockRejectedValueOnce(Object.assign(new Error("blocked"), { status: 451 }));
+    await expect(enhancePrompt({ mode: "enhance", prompt: "original" }, config))
+      .resolves.toMatchObject({
+        prompt: "original",
+        modelUsed: "internal-text-enhancer",
+        fallbackReason: "safety-block",
+      });
+  });
+
   it("clamps valid output to the effective downstream limit", async () => {
     mockedVenice.mockResolvedValueOnce({
       choices: [{ message: { content: "a".repeat(1200) } }],

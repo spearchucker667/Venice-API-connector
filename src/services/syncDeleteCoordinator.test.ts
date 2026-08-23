@@ -67,6 +67,25 @@ describe("syncDeleteCoordinator", () => {
     expect(result).toMatchObject({ ok: false, deleted: false, error: "tombstone write failed" });
     expect(spyDelete).not.toHaveBeenCalled();
   });
+
+  it("keeps a completed local delete successful when immediate tombstone emission fails", async () => {
+    vi.spyOn(StorageService, "deleteItemRaw").mockResolvedValue(true);
+    vi.spyOn(TombstoneService, "saveTombstone").mockResolvedValue(undefined);
+    vi.mocked(desktopBridge.desktopSync.writePacket).mockResolvedValueOnce({
+      ok: false,
+      error: "sync folder unavailable",
+    });
+    vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const result = await deleteSyncableRecord("researchSessions", "research-1");
+
+    expect(result).toMatchObject({
+      ok: true,
+      deleted: true,
+      syncPending: true,
+      error: "sync folder unavailable",
+    });
+  });
 });
 
 describe("syncDeleteCoordinator resurrection guard", () => {

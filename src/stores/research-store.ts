@@ -246,8 +246,10 @@ export const useResearchStore = create<ResearchState>((set, get) => ({
   },
 
   deleteSession: async (sessionId) => {
-    const deleted = await StorageService.deleteItem('researchSessions', sessionId);
-    if (!deleted) throw new Error('Research session could not be deleted.');
+    // A false result means the profile-scoped durable row is already absent.
+    // Treat deletion as idempotent so a stale in-memory session cannot become
+    // undeletable after a prior local delete completed but sync emission failed.
+    await StorageService.deleteItem('researchSessions', sessionId);
     set(state => ({
       sessions: state.sessions.filter(s => s.id !== sessionId),
       activeSessionId: state.activeSessionId === sessionId ? null : state.activeSessionId
