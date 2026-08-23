@@ -11,6 +11,9 @@ This is the active handoff and validation ledger. The canonical current-work led
 - **Themes:** 
   - Deduplicated theme processing in `src/components/ThemeMaker.tsx` by grouping and overriding based on `theme.name` (label) rather than just `id`. This prevents duplicates when a built-in theme is cloned via YAML.
   - Refactored the theme selection `<button>` list into a modernized grid of cards, where each card displays live color swatches (`background`, `surface`, `accent`) using the resolved `Theme` tokens.
+- **Application Fonts:**
+  - Changed the default sans-serif font (`--font-sans`) to `MesloLGM Nerd Font` (with fallbacks to `system-ui`, `sans-serif`) in `src/styles/theme.css`.
+  - Changed the default monospace font (`--font-mono`) for codeblocks to `MesloLGS Nerd Font Mono` (with fallback to `monospace`).
 - **Media Studio:**
   - Implemented standard OS-style modifier key handling in `src/components/gallery/media-card.tsx` (`onClick` checks for `shiftKey`, `metaKey`, `ctrlKey`).
   - Added range selection logic in `src/components/gallery/gallery-view.tsx` using `selectRange` when `shiftKey` is held.

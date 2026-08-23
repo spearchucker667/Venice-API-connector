@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", "InterVariable", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "SF Mono", monospace;
+  --font-sans: "MesloLGM Nerd Font", system-ui, sans-serif;
+  --font-mono: "MesloLGS Nerd Font Mono", monospace;
 
   /* Theme Engine dynamic variables mapped to Tailwind colors */
   --color-bg: var(--bg);
