@@ -4,6 +4,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useChatStore } from './chat-store'
 import { useMediaStore } from './media-store'
 import { useToastStore } from './toast-store'
+import type {
+  ChatMediaReference,
+  CreateChatMediaReferenceInput,
+} from '../types/conversation'
 import {
   cloneChatMediaReference,
   coerceToChatMediaReferenceArray,
@@ -115,7 +119,7 @@ function seedConversationWithAssistantMessage() {
   }))
 }
 
-function makeRef(overrides: Record<string, unknown> = {}) {
+function makeRef(overrides: Partial<CreateChatMediaReferenceInput> = {}): ChatMediaReference {
   return createChatMediaReference({
     id: 'ref-1',
     mediaId: 'media-1',
@@ -123,7 +127,7 @@ function makeRef(overrides: Record<string, unknown> = {}) {
     operation: 'generate',
     displayUrl: 'venice-media://media-1',
     ...overrides,
-  } as never)
+  })
 }
 
 beforeEach(() => {

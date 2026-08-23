@@ -94,6 +94,7 @@ vi.mock("../security/researchBrowserNetworkPolicy", () => ({
     if (
       url.includes("blocked") ||
       url.startsWith("javascript:") ||
+      url.startsWith("vbscript:") ||
       url.startsWith("file:") ||
       url.startsWith("data:")
     ) {
@@ -107,6 +108,7 @@ vi.mock("../utils/urlSecurity", () => ({
   isAllowedResearchBrowserUrl: vi.fn((url: string) => {
     if (
       url.startsWith("javascript:") ||
+      url.startsWith("vbscript:") ||
       url.startsWith("file:") ||
       url.startsWith("data:") ||
       url.startsWith("chrome:") ||
@@ -119,7 +121,12 @@ vi.mock("../utils/urlSecurity", () => ({
     return true;
   }),
   isTrustedExternalUrl: vi.fn((url: string) => {
-    return url.startsWith("https://trusted.com");
+    try {
+      const parsed = new URL(url);
+      return parsed.origin === "https://trusted.com";
+    } catch {
+      return false;
+    }
   }),
 }));
 

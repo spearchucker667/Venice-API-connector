@@ -9,15 +9,14 @@ import path from "path";
 
 // Mock Electron + storage collaborators so the test only exercises the
 // encryption envelope + handler validation, not the filesystem layout.
-const userDataDir = path.join(os.tmpdir(), "venice-forge-chat-folder-backup-tests");
+let userDataDir = "";
 
 vi.mock("electron", () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const os = require("os");
-  const tempPath = path.join(os.tmpdir(), "venice-forge-chat-folder-backup-tests");
   return {
     app: {
-      getPath: vi.fn((name) => (name === "userData" ? tempPath : os.tmpdir())),
+      getPath: vi.fn((name) => (name === "userData" ? userDataDir : os.tmpdir())),
       getVersion: vi.fn(() => "0.0.0-test"),
     },
   };
@@ -68,8 +67,7 @@ function makeFolder(overrides: Partial<ChatFolder> = {}): ChatFolder {
 }
 
 beforeEach(async () => {
-  await fs.rm(userDataDir, { recursive: true, force: true });
-  await fs.mkdir(userDataDir, { recursive: true });
+  userDataDir = await fs.mkdtemp(path.join(os.tmpdir(), "vf-backup-test-"));
   mockedReadChatFolder.mockReset();
   mockedListConversations.mockReset();
   mockedSaveChatFolder.mockReset();
@@ -83,7 +81,9 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await fs.rm(userDataDir, { recursive: true, force: true });
+  if (userDataDir) {
+    await fs.rm(userDataDir, { recursive: true, force: true });
+  }
 });
 
 describe("exportBackup — Phase 2.6 envelope", () => {

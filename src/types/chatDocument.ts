@@ -10,7 +10,7 @@ export interface ChatDocumentRef {
 }
 
 export function isChatDocumentRef(value: unknown): value is ChatDocumentRef {
-  if (value === null || typeof value !== 'object') return false
+  if (!value || typeof value !== 'object') return false
   const candidate = value as Record<string, unknown>
   return (
     typeof candidate.documentId === 'string' &&

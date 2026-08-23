@@ -458,10 +458,7 @@ describe("computeSafeDiagnosticsSnapshot (VERIFY-045)", () => {
             {
               id: "m",
               role: "user",
-              content:
-                "My secret API key is " +
-                ["sk", "1234567890ABCDEF"].join("-") +
-                ". Please do not leak it.",
+              content: `My secret API key is ${["sk", "1234567890ABCDEF"].join("-")}. Please do not leak it.`,
               timestamp: 1,
             } as never,
           ],

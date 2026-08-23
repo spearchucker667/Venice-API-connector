@@ -11,7 +11,7 @@ export function serializableDocumentToBlocks(document: unknown, format: Document
   if (Array.isArray(document)) {
     return document.filter((b): b is DocumentBlock => Boolean(b && typeof b === 'object' && 'type' in b))
   }
-  if (document !== null && typeof document === 'object') {
+  if (typeof document === 'object') {
     const obj = document as Record<string, unknown>
     if (Array.isArray(obj.blocks)) {
       return obj.blocks.filter((b): b is DocumentBlock => Boolean(b && typeof b === 'object' && 'type' in b))

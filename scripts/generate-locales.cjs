@@ -748,7 +748,7 @@ function autoTranslateLeaf(str, locale) {
   }
 
   // If string contains only variables or numbers or single symbol
-  if (/^[\s0-9\-_./:@{}]+$/.test(str)) {
+  if (/^[\s0-9_./:@{}-]+$/.test(str)) {
     return str;
   }
 

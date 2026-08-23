@@ -11,49 +11,52 @@ vi.mock('electron', () => ({
   net: {
     fetch: async (url: string, init: any) => {
       const filePath = fileURLToPath(url);
-      const stat = await fs.stat(filePath);
-      const totalSize = stat.size;
-      const rangeHeader = init?.headers?.Range || init?.headers?.range;
+      const fileHandle = await fs.open(filePath, 'r');
+      try {
+        const stat = await fileHandle.stat();
+        const totalSize = stat.size;
+        const rangeHeader = init?.headers?.Range || init?.headers?.range;
 
-      if (rangeHeader) {
-        const parts = rangeHeader.replace(/bytes=/, "").split("-");
-        const start = parseInt(parts[0], 10);
-        const end = parts[1] ? parseInt(parts[1], 10) : totalSize - 1;
+        if (rangeHeader) {
+          const parts = rangeHeader.replace(/bytes=/, "").split("-");
+          const start = parseInt(parts[0], 10);
+          const end = parts[1] ? parseInt(parts[1], 10) : totalSize - 1;
 
-        if (start >= totalSize || end >= totalSize || start > end) {
-          return new Response(null, {
-            status: 416,
+          if (start >= totalSize || end >= totalSize || start > end) {
+            return new Response(null, {
+              status: 416,
+              headers: {
+                'Content-Range': `bytes */${totalSize}`,
+                'Accept-Ranges': 'bytes'
+              }
+            });
+          }
+          
+          const chunksize = (end - start) + 1;
+          const buffer = Buffer.alloc(chunksize);
+          await fileHandle.read(buffer, 0, chunksize, start);
+
+          return new Response(buffer, {
+            status: 206,
             headers: {
-              'Content-Range': `bytes */${totalSize}`,
-              'Accept-Ranges': 'bytes'
+              'Content-Range': `bytes ${start}-${end}/${totalSize}`,
+              'Accept-Ranges': 'bytes',
+              'Content-Length': chunksize.toString()
             }
           });
         }
-        
-        const chunksize = (end - start) + 1;
-        const fileHandle = await fs.open(filePath, 'r');
-        const buffer = Buffer.alloc(chunksize);
-        await fileHandle.read(buffer, 0, chunksize, start);
-        await fileHandle.close();
 
-        return new Response(buffer, {
-          status: 206,
+        const data = await fileHandle.readFile();
+        return new Response(data, {
+          status: 200,
           headers: {
-            'Content-Range': `bytes ${start}-${end}/${totalSize}`,
-            'Accept-Ranges': 'bytes',
-            'Content-Length': chunksize.toString()
+            'Content-Length': totalSize.toString(),
+            'Accept-Ranges': 'bytes'
           }
         });
+      } finally {
+        await fileHandle.close();
       }
-
-      const data = await fs.readFile(filePath);
-      return new Response(data, {
-        status: 200,
-        headers: {
-          'Content-Length': totalSize.toString(),
-          'Accept-Ranges': 'bytes'
-        }
-      });
     }
   }
 }))
@@ -71,7 +74,10 @@ import {
 
 describe('generatedMediaStore', () => {
   const blobRoot = path.join(root, 'media', 'blobs', 'sha256')
-  beforeEach(async () => { await fs.rm(root, { recursive: true, force: true }) })
+  beforeEach(async () => {
+    await fs.rm(root, { recursive: true, force: true });
+    await fs.mkdir(root, { recursive: true });
+  })
 
   it('atomically persists and resolves an MP4 by content hash', async () => {
     const bytes = Buffer.concat([Buffer.from([0, 0, 0, 20]), Buffer.from('ftypisom'), Buffer.from([0, 0, 0, 0])])

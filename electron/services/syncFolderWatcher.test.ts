@@ -96,7 +96,8 @@ vi.mock("../../src/shared/redaction", () => ({
 import os from "node:os";
 import path from "node:path";
 
-let tmpDir = "/tmp/sync-test";
+let tmpDir = "";
+let testUserData = "";
 
 async function writeRemotePacket(
   fileName: string,
@@ -125,20 +126,23 @@ describe("syncFolderWatcher", () => {
     vi.resetAllMocks();
     vi.mocked(ensureSyncIdentity).mockResolvedValue(testSyncIdentity);
     vi.mocked(getDeviceId).mockResolvedValue("device-1");
-    vi.mocked(app.getPath).mockReturnValue("/tmp/userData");
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "sync-test-"));
+    testUserData = path.join(tmpDir, "userData");
+    await fs.mkdir(testUserData, { recursive: true });
+    vi.mocked(app.getPath).mockReturnValue(testUserData);
     setSyncEmissionSuppressed(false);
     resetAppliedOperationsJournal();
     __clearInFlightOperationsForTests();
     stopSyncRetryQueue();
     clearPendingRetries();
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "sync-test-"));
-    await fs.rm("/tmp/userData/sync", { recursive: true, force: true });
     await fs.mkdir(tmpDir, { recursive: true });
   });
 
   afterEach(async () => {
     await stopSyncWatcher();
-    await fs.rm(tmpDir, { recursive: true, force: true });
+    if (tmpDir) {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
   });
 
   it("reports status as stopped when unconfigured", () => {
@@ -387,7 +391,7 @@ describe("syncFolderWatcher", () => {
     const ackResult = await acknowledgeOperation(validOpId, true);
     expect(ackResult).toEqual({ ok: true });
 
-    const journalPath = "/tmp/userData/sync/applied-operations.json";
+    const journalPath = path.join(testUserData, "sync", "applied-operations.json");
     const journalData = await fs.readFile(journalPath, "utf8");
     const journal = JSON.parse(journalData);
     expect(journal.operations.some((op: { operationId: string }) => op.operationId === validOpId)).toBe(true);
@@ -540,7 +544,7 @@ describe("syncFolderWatcher", () => {
     const ids = Array.from({ length: 50 }, (_, i) => `op-${i}`);
     await Promise.all(ids.map((id) => recordAppliedOperation(id, "conversations", "applied")));
 
-    const journalPath = "/tmp/userData/sync/applied-operations.json";
+    const journalPath = path.join(testUserData, "sync", "applied-operations.json");
     const journalData = await fs.readFile(journalPath, "utf8");
     const journal = JSON.parse(journalData);
 

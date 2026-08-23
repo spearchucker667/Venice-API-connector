@@ -155,6 +155,9 @@ function writeJsonTree(file, tree) {
 }
 
 function setAtPath(tree, dottedKey, value) {
+  if (/(?:^|\.)(?:__proto__|constructor|prototype)(?:\.|$)/.test(dottedKey)) {
+    throw new Error(`Forbidden key path: ${dottedKey}`);
+  }
   const parts = dottedKey.split('.');
   let cursor = tree;
   for (let i = 0; i < parts.length - 1; i += 1) {

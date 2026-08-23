@@ -58,6 +58,9 @@ const NAMESPACES = [
 ];
 
 function setNestedKey(obj, keyPath, value) {
+  if (/(?:^|\.)(?:__proto__|constructor|prototype)(?:\.|$)/.test(keyPath)) {
+    throw new Error(`Forbidden key path: ${keyPath}`);
+  }
   const parts = keyPath.split('.');
   let current = obj;
   for (let i = 0; i < parts.length - 1; i++) {

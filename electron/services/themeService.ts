@@ -34,7 +34,7 @@ export async function readThemeFile(filePath: string): Promise<{ themes: Record<
     // Legacy terminal-color templates are already represented by the renderer's
     // built-in theme registry. Only schema-versioned/`themes` mappings belong in
     // the merged YAML registry.
-    if (raw !== null && typeof raw === "object" && !Array.isArray(raw) && !("themes" in raw)) {
+    if (typeof raw === "object" && !Array.isArray(raw) && !("themes" in raw)) {
       return { themes: {}, warnings: [] };
     }
     return validateThemesFile(raw);

@@ -6,7 +6,21 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
-**Scope:** Hosted CI portability remediation — Markdown path casing and Windows theme permissions
+**Scope:** GitHub CodeQL Code Scanning Review, Remediation, and Alert Resolution (39/39 Alerts Resolved)
+
+- **Alert Triage & Remediation:** Reviewed and triaged all 39 open GitHub CodeQL code-scanning alerts on `spearchucker667/Venice_Forge`. Implemented comprehensive source fixes across production code, test fixtures, maintenance scripts, and inactive feature test mocks:
+  - **Incompatible Type Comparisons (#245, #225, #244, #224, #226):** Refactored `src/agent/documents/document-source.ts`, `electron/services/themeService.ts`, and `src/types/chatDocument.ts` to remove redundant null checks following truthiness guards and refine unknown object type predicates.
+  - **Property Access on Non-Object (#222, #223):** Removed unsafe `as never` casting in `src/stores/chat-media-reference.test.ts` and added explicit `Partial<CreateChatMediaReferenceInput>` parameter and return typing to `makeRef()`.
+  - **String Concatenation & Regex Hardening (#221, #220):** Converted test string concatenation in `src/services/diagnosticsService.test.ts` to a template literal, and fixed an accidental ASCII range in `scripts/generate-locales.cjs` regex character class (`[\s0-9_./:@{}-]`).
+  - **Prototype Pollution Guards (#195, #236):** Added upfront regex path validation (`/(?:^|\.)(?:__proto__|constructor|prototype)(?:\.|$)/`) in `scripts/populate-en-us-catalogs.cjs` and `scripts/translate-missing.cjs`.
+  - **Inactive Features Mock Hardening (#192, #193, #194):** Added `vbscript:` scheme blocking and origin-based URL verification in `inactive-features/research-browser/electron/services/researchBrowserServer.test.ts`.
+  - **Test Fixture & TOCTOU Hardening (#237–#242, #206, #205, #202, #201, #200, #184):** Switched test harnesses in `electron/services/themeService.test.ts`, `electron/services/generatedMediaStore.test.ts`, `electron/services/chatFolderBackupService.test.ts`, and `electron/services/syncFolderWatcher.test.ts` to use `fs.mkdtemp` for isolated directory allocation and eliminated TOCTOU `stat -> open` races in mock fetch handlers by opening file handles first.
+  - **Unused Variables (#229, #219, #218, #217, #216, #215, #214, #213, #212, #211, #189):** Verified all 11 unused variable/import alerts are clean in current HEAD.
+  - **Invariants & False Positives (#210, #203):** Documented and verified static security guarantees in `videoRetrieveService.ts` and `syncFolderWatcher.ts`.
+- **GitHub API Resolution:** Dismissed all 39 alerts via GitHub REST API with structured categories (`false positive`, `used in tests`, `won't fix`) and detailed explanations. Verified that 0 open alerts remain on GitHub.
+- **Validation:** 126/126 focused tests passed; ESLint passed with 0 warnings; TypeScript renderer & Electron typechecks passed with 0 errors; `verify:contracts` passed (103/103 checks); `verify:safety-guard` passed; and `verify:markdown-links` passed across 253 Markdown files.
+
+## Prior Session Summary (Hosted CI Portability)
 
 - **Hosted evidence:** Inspected failed CI run `32622366262` at commit `675d88b1`. `coverage` and `unit-and-integration-tests` both failed the same two `verify-markdown-links` cases on Ubuntu; `windows-sensitive-tests` failed the theme-file `0600` assertion. After publishing the first fix as `ee5797a7`, run `32624408721` proved all three original jobs green and exposed the previously skipped `electron-smoke-linux` job failing before packaging because APT could not locate `libxvfb`. Run `32625327617` at `d484cdcd` confirmed the APT correction, Linux package build, and artifact verification, then exposed the smoke resolver having no Linux executable branch. Its remaining jobs passed, as did CodeQL run `32625327614` for Actions and JavaScript/TypeScript.
 - **Markdown root cause and fix:** `verifyMarkdownLinks()` checked `fs.existsSync()` before consulting the canonical Git/fallback path index. Linux therefore classified wrong-case tracked paths as merely missing, while default macOS/Windows filesystems reached the intended case-mismatch diagnostic. Canonical-case comparison now runs first. A platform-independent regression forces the Linux-style nonexistence condition and proves that `existsSync()` is not consulted before case classification.

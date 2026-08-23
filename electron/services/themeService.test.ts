@@ -12,13 +12,13 @@
  *   - `startThemeWatcher` broadcasts `theme:updated` on .yaml/.yml changes.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import path from "node:path";
 import os from "node:os";
 import { promises as fs } from "node:fs";
 import { REQUIRED_THEME_TOKEN_KEYS } from "../../src/config/configSchema";
 
-const TEST_ROOT = path.join(os.tmpdir(), "vf-theme-service-test");
+let TEST_ROOT = "";
 
 const mocks = vi.hoisted(() => ({
   getPath: vi.fn((name: string) => path.join(TEST_ROOT, name)),
@@ -84,6 +84,7 @@ async function writeYaml(dir: string, fileName: string, content: unknown): Promi
 }
 
 beforeEach(async () => {
+  TEST_ROOT = await fs.mkdtemp(path.join(os.tmpdir(), "vf-theme-test-"));
   mocks.getPath.mockImplementation((name: string) => path.join(TEST_ROOT, name));
   mocks.getAppPath.mockImplementation(() => path.join(TEST_ROOT, "app"));
   mocks.isPackaged = false;
@@ -92,7 +93,12 @@ beforeEach(async () => {
   mocks.watchClose.mockClear();
   mocks.getAllWindows.mockClear();
   mocks.browserWindowSend.mockClear();
-  await fs.rm(TEST_ROOT, { recursive: true, force: true });
+});
+
+afterEach(async () => {
+  if (TEST_ROOT) {
+    await fs.rm(TEST_ROOT, { recursive: true, force: true });
+  }
 });
 
 describe("themeService paths", () => {
