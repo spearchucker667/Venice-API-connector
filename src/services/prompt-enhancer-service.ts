@@ -256,7 +256,7 @@ export function buildEnhancerUserMessage(
     "OUTPUT CONTRACT:",
     "- Return exactly one plain-text image prompt.",
     "- No analysis, explanations, markdown, JSON, labels, quotes, or alternatives.",
-    "- Preserve the original subject, identity, source, subject count, and every explicit constraint.",
+    "- Preserve the original subject, identity, source, subject count, and every stated constraint.",
     `- Absolute maximum: ${limit} characters. This is a ceiling, not a target.`,
   ].join("\n");
 }

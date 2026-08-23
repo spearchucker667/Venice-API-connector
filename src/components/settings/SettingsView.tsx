@@ -94,8 +94,6 @@ export function SettingsView() {
   const { clearLocalSettings, clearAllHistory, exportData } = useDataStorageActions({
     setSystemPrompt,
     setVeniceParams,
-    setLocalFamilySafeModeEnabled,
-    setVeniceApiSafeMode,
     setPendingConfirm,
   });
 

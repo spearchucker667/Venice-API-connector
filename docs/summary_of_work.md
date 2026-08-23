@@ -6,6 +6,30 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
+**Scope:** Repair Family Safe Mode toggle and prompt-enhancement false-positive safety block
+
+- Root-caused two safety-state defects:
+  1. The sidebar Family Safe Mode toggle was calling `desktopConfig.writeSanitized({ safety: { local_family_safe_mode_enabled: ... } })`, which `electron/ipc/configHandlers.ts` intentionally rejects. The dedicated `safety:setFamilySafeMode` IPC already exists and enforces master-password verification, but the renderer was not using it.
+  2. The prompt enhancer's mandatory protocol (`src/shared/imagePromptDefaults.ts`) and user-message output contract (`src/services/prompt-enhancer-service.ts`) contained the word "explicit", which the non-disableable child-exploitation guard treats as a sexualization signal. Combined with benign user prompts containing ambiguous youth terms (e.g. "anime girl"), this produced false-positive `SEXUALIZATION_HARD_YOUTH` blocks and the "Prompt enhancement was stopped by mandatory child-safety protections" message.
+
+- Switched the sidebar toggle to the canonical `desktopSafety.setFamilySafeMode(enabled, masterPassword)` IPC path, with a `MasterPasswordDialog` flow driven by `useProfileStore().masterPasswordSet`. On verification success the renderer applies an optimistic store update, persists via the dedicated IPC, reloads config, and reverts the store on failure so renderer and main-process state stay synchronized.
+
+- Removed the broken safety-state reset from `clearLocalSettings` (`src/hooks/use-data-storage-actions.ts`) and from the `SettingsView` call site; safety settings are config-backed and must not be altered by the generic data-storage clear action.
+
+- Reworded the mandatory enhance/remix protocol and the user-message output contract to remove the "explicit" trigger word ("every explicit constraint" → "every stated constraint", "explicitness level" → "specificity level", "explicit character" → "stated character"). Mandatory child-safety enforcement remains in place and CSAM genre labels are still blocked.
+
+- Replaced the diagnostic-only `tests/safety/prompt-enhancer-guard-repro.test.ts` with a real regression fixture (`tests/safety/prompt-enhancer-guard-regression.test.ts`) that asserts benign prompts are allowed and real CSAM genre labels are still blocked, and that locks the protocol wording contract.
+
+- Validation:
+  - `npm run typecheck` PASS
+  - `npm run lint:eslint` PASS (zero warnings)
+  - Focused safety/prompt-enhancer/sidebar/config-handler tests PASS (85/85)
+  - `npm test` PASS except for one pre-existing unrelated failure in `src/config/configSchema.test.ts` ("defaults safety filters off and adult characters on" expects `chat.include_venice_system_prompt` to default to `false`, but `configSchema.ts` defaults it to `true`). This failure is outside the safety-state scope and was present before these changes.
+  - `npm run build` PASS (web, server, Electron)
+
+## Latest Session Summary
+
+**Date:** 2026-08-23
 **Scope:** Final Acceptance Hardening, Deferred Work Review, and Release Readiness
 
 - Verified that all previously completed remediation remains correct.

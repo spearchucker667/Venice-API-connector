@@ -21,8 +21,10 @@ import { toast } from "../../stores/toast-store";
 import { VeniceLogo, VeniceWordmark } from "../ui/logo";
 import { askDecision, askText } from "../ui/modal-requests";
 import type { Conversation } from "../../types/conversation";
-import { desktopConfig, isElectron } from "../../services/desktopBridge";
+import { desktopSafety, isElectron } from "../../services/desktopBridge";
 import { reloadConfig } from "../../stores/config-store";
+import { MasterPasswordDialog } from "../settings/MasterPasswordDialog";
+import { useProfileStore } from "../../stores/profile-store";
 import {
   TAB_REGISTRY,
   TAB_GROUP_LABELS,
@@ -217,6 +219,9 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
   const [search, setSearch] = useState("");
   const [chatOptionsOpen, setChatOptionsOpen] = useState(false);
   const [historyExpanded, setHistoryExpanded] = useState(true);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [pendingFamilySafeMode, setPendingFamilySafeMode] = useState<boolean | null>(null);
+  const { masterPasswordSet } = useProfileStore();
   const chatOptionsRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -237,13 +242,10 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
     );
   };
 
-  const toggleFamilySafeMode = async () => {
-    const enabled = !localFamilySafeModeEnabled;
+  const applyFamilySafeModeToggle = async (enabled: boolean, masterPassword?: string) => {
     setLocalFamilySafeModeEnabled(enabled);
     if (isElectron()) {
-      const result = await desktopConfig.writeSanitized({
-        safety: { local_family_safe_mode_enabled: enabled },
-      });
+      const result = await desktopSafety.setFamilySafeMode(enabled, masterPassword);
       if (!result.ok) {
         setLocalFamilySafeModeEnabled(!enabled);
         toast.error(
@@ -269,6 +271,20 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
             "Adult Mode enabled — local family filter is skipped",
           ),
     );
+  };
+
+  const toggleFamilySafeMode = () => {
+    const enabled = !localFamilySafeModeEnabled;
+    if (isElectron()) {
+      // Family Safe Mode changes require master-password verification. The
+      // dedicated safety IPC enforces this; we collect the password before
+      // applying the optimistic UI update so a failed verification leaves
+      // renderer and main-process state in sync.
+      setPendingFamilySafeMode(enabled);
+      setShowPasswordDialog(true);
+      return;
+    }
+    void applyFamilySafeModeToggle(enabled);
   };
 
   const deferredSearch = useDeferredValue(search);
@@ -438,17 +454,18 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
   };
 
   return (
-    <aside
-      ref={sidebarRef}
-      aria-label={tRuntime(
-        "runtimeGenerated.components.layout.sidebar.attribute.primaryNavigation",
-      )}
-      className={cn(
-        "flex flex-col h-full min-h-0 mesh-surface mesh-sidebar soft-separator-x shell-region",
-        "relative fixed top-0 left-0 z-40 w-72 h-[100dvh] md:static md:h-full md:w-[var(--sidebar-width,256px)] md:shrink-0",
-        mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
-      )}
-    >
+    <>
+      <aside
+        ref={sidebarRef}
+        aria-label={tRuntime(
+          "runtimeGenerated.components.layout.sidebar.attribute.primaryNavigation",
+        )}
+        className={cn(
+          "flex flex-col h-full min-h-0 mesh-surface mesh-sidebar soft-separator-x shell-region",
+          "relative fixed top-0 left-0 z-40 w-72 h-[100dvh] md:static md:h-full md:w-[var(--sidebar-width,256px)] md:shrink-0",
+          mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
+        )}
+      >
       <div
         className={cn(
           "flex items-center gap-2.5 h-14 shrink-0 soft-separator-y",
@@ -1055,6 +1072,23 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
         />
       )}
     </aside>
+    {showPasswordDialog && pendingFamilySafeMode !== null && (
+      <MasterPasswordDialog
+        isOpen={showPasswordDialog}
+        mode={masterPasswordSet ? "verify" : "setup"}
+        onClose={() => {
+          setShowPasswordDialog(false);
+          setPendingFamilySafeMode(null);
+        }}
+        onSuccess={(password) => {
+          setShowPasswordDialog(false);
+          const enabled = pendingFamilySafeMode;
+          setPendingFamilySafeMode(null);
+          void applyFamilySafeModeToggle(enabled, password);
+        }}
+      />
+    )}
+  </>
   );
 }
 

@@ -42,7 +42,7 @@ vi.mock("../services/desktopBridge", async (importOriginal) => {
     ...actual,
     isElectron: () => false,
     desktopApp: { getVersion: async () => "test-version" },
-    desktopConfig: { writeSanitized: async () => ({ ok: true }) },
+
     desktopFiles: {
       exportJson: vi.fn().mockResolvedValue(true),
       importJsonString: vi.fn().mockResolvedValue(null), // simulates user cancelling the file picker
@@ -81,8 +81,6 @@ function buildSetters() {
   return {
     setSystemPrompt: vi.fn(),
     setVeniceParams: vi.fn(),
-    setLocalFamilySafeModeEnabled: vi.fn(),
-    setVeniceApiSafeMode: vi.fn(),
     setPendingConfirm: vi.fn(),
   };
 }
@@ -114,8 +112,6 @@ describe("useDataStorageActions", () => {
     // The setters are not called until the confirm handler fires.
     expect(setters.setSystemPrompt).not.toHaveBeenCalled();
     expect(setters.setVeniceParams).not.toHaveBeenCalled();
-    expect(setters.setLocalFamilySafeModeEnabled).not.toHaveBeenCalled();
-    expect(setters.setVeniceApiSafeMode).not.toHaveBeenCalled();
   });
 
   it("clearAllHistory delegates to setPendingConfirm", async () => {

@@ -6,9 +6,8 @@ import { translateRuntime } from "../i18n/runtimeTranslator";
  *  "Data & Storage operations" section of the settings panel:
  *
  *    - `clearLocalSettings` — wipes the local `settings` IDB store and
- *      resets the local safety / Venice param toggles to their
- *      defaults, persisting through `desktopConfig.writeSanitized` in
- *      Electron mode.
+ *      resets chat defaults (system prompt, Venice params). Safety
+ *      settings are config-backed and are not modified here.
  *    - `clearAllHistory` — wipes **all** `STORE_NAMES` IDB stores and
  *      resets `useChatStore` to the empty state.
  *    - `exportData` — assembles an `ExportPayload` (sanitized, redacted)
@@ -35,7 +34,6 @@ import { translateRuntime } from "../i18n/runtimeTranslator";
 import { useCallback } from "react";
 import { useChatStore } from "../stores/chat-store";
 import { toast } from "../stores/toast-store";
-import { isElectron, desktopConfig } from "../services/desktopBridge";
 import type { Memory } from "../services/memoryService";
 import type { ExportPayload } from "../services/exportImport";
 import StorageService from "../services/storageService";
@@ -53,8 +51,6 @@ export interface DataStorageActionsOptions {
     enable_web_search: "off" | "on" | "auto";
     enable_web_citations: boolean;
   }) => void;
-  setLocalFamilySafeModeEnabled: (value: boolean) => void;
-  setVeniceApiSafeMode: (value: boolean) => void;
   /** Caller's confirm/cancel wrapper; the hook never invokes a modal directly. */
   setPendingConfirm: (pending: {
     message: string;
@@ -89,13 +85,7 @@ export interface DataStorageActions {
 export function useDataStorageActions(
   options: DataStorageActionsOptions,
 ): DataStorageActions {
-  const {
-    setSystemPrompt,
-    setVeniceParams,
-    setLocalFamilySafeModeEnabled,
-    setVeniceApiSafeMode,
-    setPendingConfirm,
-  } = options;
+  const { setSystemPrompt, setVeniceParams, setPendingConfirm } = options;
 
   const clearLocalSettings = useCallback(async () => {
     setPendingConfirm({
@@ -113,16 +103,6 @@ export function useDataStorageActions(
           enable_web_search: "off",
           enable_web_citations: false,
         });
-        setLocalFamilySafeModeEnabled(true);
-        setVeniceApiSafeMode(true);
-        if (isElectron()) {
-          await desktopConfig.writeSanitized({
-            safety: {
-              local_family_safe_mode_enabled: true,
-              venice_api_safe_mode: true,
-            },
-          });
-        }
         toast.success(
           translateRuntime(
             "runtimeGenerated.hooks.useDataStorageActions.notification.localSettingsCleared",
@@ -131,13 +111,7 @@ export function useDataStorageActions(
         );
       },
     });
-  }, [
-    setPendingConfirm,
-    setSystemPrompt,
-    setVeniceParams,
-    setLocalFamilySafeModeEnabled,
-    setVeniceApiSafeMode,
-  ]);
+  }, [setPendingConfirm, setSystemPrompt, setVeniceParams]);
 
   const clearAllHistory = useCallback(async () => {
     setPendingConfirm({
