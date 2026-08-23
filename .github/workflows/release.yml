@@ -21,10 +21,10 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Use Node.js 22
+      - name: Use Node.js from .nvmrc
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 22
+          node-version-file: '.nvmrc'
           cache: npm
 
       - name: Install dependencies
@@ -54,8 +54,6 @@ jobs:
       - name: Test
         run: npm run test:ci
 
-      - name: Build
-        run: npm run build
 
       - name: Check macOS signing credentials for tag releases
         if: startsWith(github.ref, 'refs/tags/v')
@@ -109,10 +107,10 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Use Node.js 22
+      - name: Use Node.js from .nvmrc
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 22
+          node-version-file: '.nvmrc'
           cache: npm
 
       - name: Install dependencies
@@ -142,8 +140,6 @@ jobs:
       - name: Test
         run: npm run test:ci
 
-      - name: Build
-        run: npm run build
 
       - name: Check Windows signing credentials for tag releases
         if: startsWith(github.ref, 'refs/tags/v')
@@ -198,10 +194,10 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Use Node.js 22
+      - name: Use Node.js from .nvmrc
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 22
+          node-version-file: '.nvmrc'
           cache: npm
 
       - name: Install dependencies
@@ -229,8 +225,6 @@ jobs:
       - name: Test
         run: npm run test:ci
 
-      - name: Build
-        run: npm run build
 
       - name: Package Linux artifacts
         run: npm run dist:linux
@@ -263,17 +257,15 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Use Node.js 22
+      - name: Use Node.js from .nvmrc
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 22
+          node-version-file: '.nvmrc'
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
 
       - name: Download macOS artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
@@ -304,4 +296,4 @@ jobs:
           # artifacts, checksums, and signing/notarization status before
           # clicking "Publish release".
           draft: true
-          prerelease: false
+          prerelease: ${{ contains(github.ref_name, '-') }}

@@ -458,6 +458,8 @@ if (!gotLock) {
       });
     });
 
+    session.defaultSession.setPermissionRequestHandler((_webContents, _permission, callback) => callback(false));
+
     return bootstrap();
   }).catch((err) => {
     logError("Bootstrap failed", err);

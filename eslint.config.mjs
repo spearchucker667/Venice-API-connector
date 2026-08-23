@@ -6,7 +6,7 @@ import globals from "globals";
 export default tseslint.config(
   js.configs.recommended,
   {
-    files: ["src/**/*.{ts,tsx}", "electron/**/*.{ts,tsx}", "scripts/**/*.test.ts", "server.ts", "server.test.ts"],
+    files: ["src/**/*.{ts,tsx}", "electron/**/*.{ts,tsx}", "scripts/**/*.{ts,tsx}", "server.ts", "server.test.ts"],
     extends: [tseslint.configs.recommended],
     languageOptions: {
       parser: tseslint.parser,
@@ -56,6 +56,12 @@ export default tseslint.config(
         },
       ],
     },
+  },
+  {
+    files: ["scripts/**/*.{ts,tsx}"],
+    rules: {
+      "no-console": "off",
+    }
   },
   {
     files: ["scripts/**/*.cjs", "*.config.cjs"],

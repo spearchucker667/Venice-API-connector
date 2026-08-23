@@ -29,8 +29,6 @@ export default defineConfig({
   ...resolvedViteConfig,
   test: {
     environment: "jsdom",
-    globals: true,
-    setupFiles: ["./tests/setup.ts"],
     exclude: [...configDefaults.exclude, "inactive-features/**"],
     fileParallelism: false,
     pool: "forks",
@@ -54,13 +52,19 @@ export default defineConfig({
         functions: 68,
         lines: 73,
         statements: 70,
+        "scripts/**/*": {
+          branches: 41,
+          functions: 38,
+          lines: 57,
+          statements: 56
+        }
       },
       exclude: [
         "node_modules/",
         "dist/",
         "dist-electron/",
-        "release/",
-        "scripts/",
+        "release/", process.env.COVERAGE_SCRIPTS === "true" ? "" : "scripts/",
+        
         "**/*.test.ts",
         "**/*.test.tsx",
         "vite.config.ts",

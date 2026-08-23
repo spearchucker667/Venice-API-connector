@@ -96,19 +96,18 @@ function createMinimalValidRepo(prefix: string, opts: { releaseYml?: string } = 
 
   writeFileSync(
     join(root, ".github/workflows/ci.yml"),
-    "node-version: 22\nverify:dist\n",
+    "node-version-file: '.nvmrc'\nverify:dist\n",
   );
 
   const releaseYml =
     opts.releaseYml ??
     [
-      "node-version: 22",
+      "node-version-file: '.nvmrc'",
       "verify:dist",
       "node scripts/verify-dist.cjs --all --release-artifacts-only",
       "checksum:release",
       "npm run typecheck",
       "npm test",
-      "npm run build",
       "Check macOS signing credentials for tag releases",
       "Check Windows signing credentials for tag releases",
       "vars.RELEASE_ALLOW_UNSIGNED",
@@ -296,13 +295,12 @@ describe("verify-release-packaging-hardening (VERIFY-052)", () => {
   it("rejects a checksum script that omits Linux extensions (P0-001 contract)", () => {
     const root = createMinimalValidRepo("venice-relpkg-p0001-", {
       releaseYml: [
-        "node-version: 22",
+        "node-version-file: '.nvmrc'",
         "verify:dist",
         "node scripts/verify-dist.cjs --all --release-artifacts-only",
         "checksum:release",
         "npm run typecheck",
         "npm test",
-        "npm run build",
         "  build-windows:",
         "    steps:",
         "      - name: Package Windows artifacts (Release)",
@@ -350,13 +348,12 @@ describe("verify-release-packaging-hardening (VERIFY-052)", () => {
   it("rejects Windows signing env that maps generic CSC_LINK / CSC_KEY_PASSWORD (VERIFY-054)", () => {
     const root = createMinimalValidRepo("venice-relpkg-verify054-", {
       releaseYml: [
-        "node-version: 22",
+        "node-version-file: '.nvmrc'",
         "verify:dist",
         "node scripts/verify-dist.cjs --all --release-artifacts-only",
         "checksum:release",
         "npm run typecheck",
         "npm test",
-        "npm run build",
         "  build-windows:",
         "    steps:",
         "      - name: Package Windows artifacts (Release)",

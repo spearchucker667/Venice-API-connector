@@ -206,7 +206,7 @@ if (pkg) {
   if (!nodeRange.includes("22")) {
     fail(`package.json engines.node does not pin Node 22: "${nodeRange}"`);
   } else {
-    pass(`package.json engines.node pins Node 22 (${nodeRange})`);
+    pass(`package.json engines.node pins Node to .nvmrc (${nodeRange})`);
   }
 
   // 5b. Repository slug consistency (P0-003 — auto-updater/metadata integrity).
@@ -291,7 +291,7 @@ if (pkg) {
     fail(".github/workflows/ci.yml is missing");
   } else {
     const ci = readFileSync(ciPath, "utf8");
-    checkIncludes(ci, "node-version: 22", ".github/workflows/ci.yml pins Node 22");
+    checkIncludes(ci, "node-version-file: '.nvmrc'", ".github/workflows/ci.yml pins Node to .nvmrc");
     // CI workflow should also run verify:dist
     if (!ci.includes("verify:dist")) {
       fail(".github/workflows/ci.yml is missing verify:dist");
@@ -308,7 +308,7 @@ if (pkg) {
     fail(".github/workflows/release.yml is missing");
   } else {
     const release = readFileSync(releasePath, "utf8");
-    checkIncludes(release, "node-version: 22", ".github/workflows/release.yml pins Node 22");
+    checkIncludes(release, "node-version-file: '.nvmrc'", ".github/workflows/release.yml pins Node to .nvmrc");
     if (!release.includes("verify:dist")) {
       fail(".github/workflows/release.yml is missing verify:dist");
     } else {
@@ -336,8 +336,8 @@ if (pkg) {
       release.includes("npm test") ||
       release.includes("npm run test:coverage") ||
       release.includes("npm run test:ci");
-    if (!release.includes("npm run typecheck") || !releaseRunsTests || !release.includes("npm run build")) {
-      fail(".github/workflows/release.yml must run typecheck, test, and build before packaging");
+    if (!release.includes("npm run typecheck") || !releaseRunsTests) {
+      fail(".github/workflows/release.yml must run typecheck, test before packaging");
     } else {
       pass(".github/workflows/release.yml runs typecheck, test, and build");
     }

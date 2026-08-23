@@ -25,14 +25,11 @@ async function main(): Promise<void> {
   let errors = 0;
   let warnings = 0;
 
-  // eslint-disable-next-line no-console
   console.log(`[config:validate] Config: ${CONFIG_PATH}`);
-  // eslint-disable-next-line no-console
   console.log(`[config:validate] Themes: ${THEMES_PATH}`);
 
   const cfg = await readIfExists(CONFIG_PATH);
   if (cfg === null) {
-    // eslint-disable-next-line no-console
     console.log(`[config:validate] No config.local.yaml present; nothing to validate. Run \`npm run config:init\` first.`);
     process.exit(0);
   }
@@ -40,11 +37,9 @@ async function main(): Promise<void> {
   const cfgResult = validateConfig(cfg);
   for (const w of cfgResult.warnings) {
     if (w.severity === "error") errors++; else warnings++;
-    // eslint-disable-next-line no-console
     console.log(`  [${w.severity}] ${w.field}: ${w.message}`);
   }
   if (cfgResult.warnings.length === 0) {
-    // eslint-disable-next-line no-console
     console.log(`[config:validate] config.yaml: OK`);
   }
 
@@ -53,25 +48,20 @@ async function main(): Promise<void> {
     const themesResult = validateThemesFile(themes);
     for (const w of themesResult.warnings) {
       if (w.severity === "error") errors++; else warnings++;
-      // eslint-disable-next-line no-console
       console.log(`  [${w.severity}] ${w.field}: ${w.message}`);
     }
     if (themesResult.warnings.length === 0) {
-      // eslint-disable-next-line no-console
       console.log(`[config:validate] themes.yaml: OK (${Object.keys(themesResult.themes).length} entries)`);
     }
   } else {
-    // eslint-disable-next-line no-console
     console.log(`[config:validate] themes.local.yaml: not present (skipped)`);
   }
 
-  // eslint-disable-next-line no-console
   console.log(`[config:validate] Summary: ${errors} error(s), ${warnings} warning(s).`);
   if (errors > 0) process.exit(1);
 }
 
 main().catch((err: unknown) => {
-  // eslint-disable-next-line no-console
   console.error(`[config:validate] Failed: ${err instanceof Error ? err.message : String(err)}`);
   process.exit(2);
 });

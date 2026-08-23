@@ -21,7 +21,6 @@ async function main(): Promise<void> {
     try {
       const stat = await fs.stat(targetPath);
       if (stat.isFile()) {
-        // eslint-disable-next-line no-console
         console.log(`[config:init] Skipping ${filename} (already exists at ${targetPath})`);
         skipped++;
         continue;
@@ -30,17 +29,14 @@ async function main(): Promise<void> {
       // File doesn't exist — copy example.
     }
     if (!await pathExists(examplePath)) {
-      // eslint-disable-next-line no-console
       console.log(`[config:init] Example template not found for ${filename}; skipping.`);
       continue;
     }
     await fs.copyFile(examplePath, targetPath);
-    // eslint-disable-next-line no-console
     console.log(`[config:init] Created ${targetPath}`);
     created++;
   }
 
-  // eslint-disable-next-line no-console
   console.log(`[config:init] Done. ${created} created, ${skipped} already present.`);
 }
 
@@ -54,7 +50,6 @@ async function pathExists(p: string): Promise<boolean> {
 }
 
 main().catch((err: unknown) => {
-  // eslint-disable-next-line no-console
   console.error(`[config:init] Failed: ${err instanceof Error ? err.message : String(err)}`);
   process.exit(1);
 });

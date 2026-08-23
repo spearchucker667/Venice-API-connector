@@ -115,7 +115,7 @@ const config = {
 
   linux: {
     // Linux support is strictly EXPERIMENTAL and community-supported.
-    // Includes arm64 for Apple Silicon / ARM servers + deb/rpm for broader distro compatibility.
+    // Includes deb/rpm for broader distro compatibility.
     // AppImage remains for portable "just run" experience.
     target: [
       // Linux arm64 cross-compilation from an x64 runner requires qemu/binfmt
