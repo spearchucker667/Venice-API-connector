@@ -215,12 +215,12 @@ A `rg` search for API keys, secrets, tokens, and passwords across tracked files 
    - `docs/chat-model-selection.md` → `docs/user/chat-model-selection.md`
    - `docs/data-export-format.md` → `docs/architecture/data-export-format.md`
    - `docs/memory-isolation.md` → `docs/architecture/memory-isolation.md`
-   - `docs/rp-token-counting.md` → `docs/development/rp-token-counting.md`
+   - `docs/rp-token-counting.md` → `docs/DEVELOPMENT/rp-token-counting.md`
    - `docs/security-model.md` → `docs/security/security-model.md`
    - `docs/sync-threat-model.md` → `docs/security/sync-threat-model.md`
    - `docs/sync-troubleshooting.md` → `docs/user/sync-troubleshooting.md`
    - `docs/pastel-theme-pack-report.md` → `docs/design/pastel-theme-pack-report.md`
-   - `docs/BUG_HUNTING_AGENT_PROMPT.md` → `docs/development/BUG_HUNTING_AGENT_PROMPT.md`
+   - `docs/BUG_HUNTING_AGENT_PROMPT.md` → `docs/DEVELOPMENT/BUG_HUNTING_AGENT_PROMPT.md`
 5. `docs/Repo-management/` → `docs/audits/repo-management/`
 
 ### Consolidate

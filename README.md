@@ -269,7 +269,7 @@ npm run verify:i18n-hardcoded-regressions
 
 ## Repository Map
 
-For a complete breakdown of every file, see [FILE_TREE.md](docs/development/FILE_TREE.md). Below is the high-level outline:
+For a complete breakdown of every file, see [FILE_TREE.md](docs/DEVELOPMENT/FILE_TREE.md). Below is the high-level outline:
 
 ```text
 .
