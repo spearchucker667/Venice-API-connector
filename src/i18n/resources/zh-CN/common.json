@@ -3267,7 +3267,8 @@
             "removeSourceValue1": "删除源{{value1}}",
             "summarizeTheFinding": "总结发现",
             "addSupportingDetailsAndCitations": "添加支持细节和引文",
-            "removeFindingValue1": "删除查找结果{{value1}}"
+            "removeFindingValue1": "删除查找结果{{value1}}",
+            "deleteSessionValue1": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1 {{value1}}"
           },
           "text": {
             "processing": "加工...",

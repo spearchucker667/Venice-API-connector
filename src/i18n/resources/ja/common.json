@@ -3267,7 +3267,8 @@
             "removeSourceValue1": "ソース{{value1}}を削除します",
             "summarizeTheFinding": "調査結果を要約する",
             "addSupportingDetailsAndCitations": "裏付けとなる詳細と引用を追加する",
-            "removeFindingValue1": "検出結果{{value1}}を削除"
+            "removeFindingValue1": "検出結果{{value1}}を削除",
+            "deleteSessionValue1": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1 {{value1}}"
           },
           "text": {
             "processing": "処理...",

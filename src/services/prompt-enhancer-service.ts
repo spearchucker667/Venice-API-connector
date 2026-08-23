@@ -257,6 +257,7 @@ export function buildEnhancerUserMessage(
     "- Return exactly one plain-text image prompt.",
     "- No analysis, explanations, markdown, JSON, labels, quotes, or alternatives.",
     "- Preserve the original subject, identity, source, subject count, and every stated constraint.",
+    "- Do not include aspect ratios, image dimensions, resolutions, or canvas sizes in the prompt text.",
     `- Absolute maximum: ${limit} characters. This is a ceiling, not a target.`,
   ].join("\n");
 }

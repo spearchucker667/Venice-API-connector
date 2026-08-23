@@ -3267,7 +3267,8 @@
             "removeSourceValue1": "إزالة المصدر {{value1}}",
             "summarizeTheFinding": "لخص النتيجة",
             "addSupportingDetailsAndCitations": "أضف التفاصيل والاستشهادات الداعمة",
-            "removeFindingValue1": "إزالة النتيجة {{value1}}"
+            "removeFindingValue1": "إزالة النتيجة {{value1}}",
+            "deleteSessionValue1": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1 {{value1}}"
           },
           "text": {
             "processing": "يعالج...",

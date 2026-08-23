@@ -442,7 +442,7 @@ export const ResearchWorkspaceView: React.FC = () => {
                     <Trans i18nKey="common:surface.componentsResearchResearchworkspaceview.text.findings" />
                   </span>
                 </button>
-                <div className="p-2">
+                <div className="p-2 flex items-center gap-1">
                   <button
                     type="button"
                     onClick={() => toggleFavorite(s.id)}
@@ -461,6 +461,20 @@ export const ResearchWorkspaceView: React.FC = () => {
                   >
                     <span aria-hidden="true">
                       <StarIcon filled={s.favorite} />
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void handleDeleteSession(s.id)}
+                    disabled={deletingSessionId === s.id}
+                    className="text-text-muted hover:text-danger transition-colors disabled:opacity-50"
+                    aria-label={tRuntime(
+                      "runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1",
+                      { value1: s.title },
+                    )}
+                  >
+                    <span aria-hidden="true">
+                      <TrashIcon />
                     </span>
                   </button>
                 </div>

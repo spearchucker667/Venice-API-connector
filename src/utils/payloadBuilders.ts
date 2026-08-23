@@ -8,7 +8,7 @@ import { applyVeniceApiSafeMode } from "../shared/veniceSafeMode";
  *  - `variants`: 1–4 (server rejects > 4)
  *  - `cfg_scale`: 0 < x ≤ 20
  *  - Venice accepts larger prompts, but Venice Forge enforces a stricter
- *    app-level 1500-character ceiling before dispatch so enhanced prompts
+ *    app-level 7500-character ceiling before dispatch so enhanced prompts
  *    cannot exceed the UI policy.
  * Sending values outside these ranges produces 400s that surface to the
  * user as a generic "invalid params" — keeping the clamps here means a
@@ -18,7 +18,7 @@ export const VENICE_IMAGE_MAX_DIMENSION = 1280;
 export const VENICE_IMAGE_MIN_DIMENSION = 64;
 export const VENICE_IMAGE_DIMENSION_DIVISOR = 64;
 export const VENICE_IMAGE_MAX_VARIANTS = 4;
-export const IMAGE_PROMPT_MAX_CHARS = 1500;
+export const IMAGE_PROMPT_MAX_CHARS = 7500;
 export const VENICE_IMAGE_MAX_PROMPT_CHARS = IMAGE_PROMPT_MAX_CHARS;
 export const VENICE_SEED_MIN = -999999999;
 export const VENICE_SEED_MAX = 999999999;

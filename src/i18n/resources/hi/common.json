@@ -3267,7 +3267,8 @@
             "removeSourceValue1": "स्रोत हटाएं {{value1}}",
             "summarizeTheFinding": "निष्कर्ष को संक्षेप में प्रस्तुत करें",
             "addSupportingDetailsAndCitations": "सहायक विवरण और उद्धरण जोड़ें",
-            "removeFindingValue1": "खोज हटाएँ {{value1}}"
+            "removeFindingValue1": "खोज हटाएँ {{value1}}",
+            "deleteSessionValue1": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1 {{value1}}"
           },
           "text": {
             "processing": "प्रसंस्करण...",

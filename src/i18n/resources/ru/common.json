@@ -3267,7 +3267,8 @@
             "removeSourceValue1": "Удалить источник {{value1}}",
             "summarizeTheFinding": "Подведите итоги",
             "addSupportingDetailsAndCitations": "Добавьте подтверждающую информацию и цитаты.",
-            "removeFindingValue1": "Удалить поиск {{value1}}"
+            "removeFindingValue1": "Удалить поиск {{value1}}",
+            "deleteSessionValue1": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1 {{value1}}"
           },
           "text": {
             "processing": "Обработка...",

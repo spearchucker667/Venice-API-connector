@@ -38,7 +38,7 @@ describe("prompt enhancer model context", () => {
       } as VeniceModel,
       capabilities: getImageModelCapabilities("flux-dev"),
     });
-    expect(facts.promptCharacterLimit).toBe(1500);
-    expect(effectiveEnhancerPromptLimit(facts)).toBe(1500);
+    expect(facts.promptCharacterLimit).toBe(7500);
+    expect(effectiveEnhancerPromptLimit(facts)).toBe(7500);
   });
 });

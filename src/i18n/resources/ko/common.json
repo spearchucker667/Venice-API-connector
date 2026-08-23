@@ -3267,7 +3267,8 @@
             "removeSourceValue1": "소스 {{value1}} 삭제",
             "summarizeTheFinding": "결과 요약",
             "addSupportingDetailsAndCitations": "지원 세부정보 및 인용 추가",
-            "removeFindingValue1": "{{value1}} 발견 항목 삭제"
+            "removeFindingValue1": "{{value1}} 발견 항목 삭제",
+            "deleteSessionValue1": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1 {{value1}}"
           },
           "text": {
             "processing": "처리 중...",

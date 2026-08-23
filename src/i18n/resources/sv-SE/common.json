@@ -3267,7 +3267,8 @@
             "removeSourceValue1": "Ta bort källan {{value1}}",
             "summarizeTheFinding": "Sammanfatta fyndet",
             "addSupportingDetailsAndCitations": "Lägg till stöddetaljer och citat",
-            "removeFindingValue1": "Ta bort hitta {{value1}}"
+            "removeFindingValue1": "Ta bort hitta {{value1}}",
+            "deleteSessionValue1": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1 {{value1}}"
           },
           "text": {
             "processing": "Bearbetar...",

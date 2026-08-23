@@ -6,6 +6,23 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
+**Scope:** Image prompt enhancer aspect-ratio/dimension omission and character-ceiling bump; Research Workspace per-session deletion
+
+- Raised the image-prompt hard character ceiling from 5000 to 7500 in `src/utils/payloadBuilders.ts` and updated all related tests (`src/utils/payloadBuilders.test.ts`, `src/services/prompt-enhancer-context.test.ts`, `src/components/image/image-view.test.tsx`) to enforce the new limit.
+- Added mandatory instructions to the shared image enhance/remix protocol (`src/shared/imagePromptDefaults.ts`) and to the prompt enhancer service output contract (`src/services/prompt-enhancer-service.ts`) to never mention aspect ratios, dimensions, resolution, or canvas size in the enhanced prompt, fixing the recurring "1:1 aspect ratio" injection.
+- Added a per-session delete button to `src/components/research/ResearchWorkspaceView.tsx` wired to the existing `handleDeleteSession` flow, and added a regression test in `src/components/research/ResearchWorkspaceView.test.tsx`.
+- Added the English i18n key `runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1` in `src/i18n/resources/en-US/common.json` and synchronized all 11 non-English catalogs with `__MISSING__` placeholders that preserve the `{{value1}}` interpolation variable.
+- Validation:
+  - `npm run typecheck` PASS
+  - `npm run lint:eslint` PASS
+  - `npm run verify:i18n` PASS (12 locales, 12 namespaces; pre-existing missing-marker warnings remain)
+  - Focused tests PASS (`src/utils/payloadBuilders.test.ts`, `src/services/prompt-enhancer-context.test.ts`, `src/components/image/image-view.test.tsx`, `src/services/prompt-enhancer-service.test.ts`, `tests/safety/prompt-enhancer-guard-regression.test.ts`, `src/components/research/ResearchWorkspaceView.test.tsx`, `src/stores/research-store.test.ts`)
+  - `npm run build` PASS
+  - `npm test` 1 failed | 5176 passed | 1 skipped (5178 total). The single failure is the pre-existing unrelated `src/config/configSchema.test.ts:116` expectation that `chat.include_venice_system_prompt` defaults to `false`; `configSchema.ts` currently defaults it to `true`. This failure is outside the current scope and was present before these changes.
+
+## Latest Session Summary
+
+**Date:** 2026-08-23
 **Scope:** Repair Family Safe Mode toggle and prompt-enhancement false-positive safety block
 
 - Root-caused two safety-state defects:

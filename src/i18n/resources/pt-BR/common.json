@@ -3267,7 +3267,8 @@
             "removeSourceValue1": "Remover origem {{value1}}",
             "summarizeTheFinding": "Resuma a descoberta",
             "addSupportingDetailsAndCitations": "Adicione detalhes e citações de apoio",
-            "removeFindingValue1": "Remover descoberta {{value1}}"
+            "removeFindingValue1": "Remover descoberta {{value1}}",
+            "deleteSessionValue1": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1 {{value1}}"
           },
           "text": {
             "processing": "Processamento...",

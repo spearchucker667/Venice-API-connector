@@ -134,6 +134,29 @@ describe('ResearchWorkspaceView', () => {
     await waitFor(() => expect(toastError).toHaveBeenCalled());
   });
 
+  it('deletes a session from the session list after confirmation', async () => {
+    const session = sanitizeResearchSession({
+      id: 's2',
+      title: 'List Session',
+      sources: [],
+      findings: [],
+      scope: 'global',
+      tags: [],
+    });
+    const deleteSession = vi.fn().mockResolvedValue(undefined);
+    askDecision.mockResolvedValueOnce(true);
+    vi.mocked(useResearchStore).mockReturnValue(researchState({
+      sessions: [session],
+      activeSessionId: null,
+      deleteSession,
+    }));
+
+    render(<ResearchWorkspaceView />);
+    fireEvent.click(screen.getByRole('button', { name: /Delete session List Session/i }));
+
+    await waitFor(() => expect(deleteSession).toHaveBeenCalledWith(session.id));
+  });
+
   it('renders empty state when no session is active', () => {
     vi.mocked(useResearchStore).mockReturnValue(researchState({}));
 

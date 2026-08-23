@@ -399,29 +399,29 @@ describe("ImageView model-aware payloads", () => {
     expect(prompt).toHaveValue("Original prompt");
   });
 
-  it("hard-stops the image prompt at 1500 characters when typing over the limit", () => {
+  it("hard-stops the image prompt at 7500 characters when typing over the limit", () => {
     render(<ImageView />);
     fireEvent.change(
       screen.getByPlaceholderText(/serene mountain landscape/i),
       {
-        target: { value: "a".repeat(1501) },
+        target: { value: "a".repeat(7501) },
       },
     );
 
-    expect(screen.getByText("1500/1500")).toBeInTheDocument();
+    expect(screen.getByText("7500/7500")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Generate" })).not.toBeDisabled();
     expect(mutate).not.toHaveBeenCalled();
   });
 
-  it("hard-stops pasted input at 1500 characters", () => {
+  it("hard-stops pasted input at 7500 characters", () => {
     render(<ImageView />);
     const textarea = screen.getByPlaceholderText(/serene mountain landscape/i);
     fireEvent.paste(textarea, {
-      clipboardData: { getData: () => "a".repeat(2000) },
+      clipboardData: { getData: () => "a".repeat(8000) },
     });
-    fireEvent.change(textarea, { target: { value: "a".repeat(2000) } });
+    fireEvent.change(textarea, { target: { value: "a".repeat(8000) } });
 
-    expect(screen.getByText("1500/1500")).toBeInTheDocument();
+    expect(screen.getByText("7500/7500")).toBeInTheDocument();
   });
 
   it("passes selected downstream context and requires explicit preview acceptance", async () => {
