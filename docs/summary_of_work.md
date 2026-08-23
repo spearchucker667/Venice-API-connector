@@ -6,6 +6,18 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
+**Scope:** Semantic Image Prompt Enhancer design and compatibility decision
+
+- Reconciled the semantic-enhancer repair handoff against the live `main` call graph, prompt defaults, configuration normalization, runtime model catalog, image-capability registry, Image Studio, Media Inspector, and existing tests.
+- Approved the typed layered architecture recorded in `docs/superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md`: mandatory enhance/remix protocols, separate generic defaults, additive configured instructions, typed downstream context, and syntactic output validation.
+- Froze two distinct authority dimensions. Original prompt constraints own image semantics; mandatory protocol/output rules own enhancer execution. Configured text is strongly delimited untrusted preference data and cannot replace either contract.
+- Froze presence-aware configuration normalization from the legacy `temperature` field to `enhanceTemperature` and `remixTemperature`, with defaults `0.2` and `0.4`; the enhancer service will receive normalized fields and contain no legacy fallback logic.
+- Registered the approved active design in `docs/DOCS_INDEX.md` and added the implementation-pending work item to `docs/ROADMAP.md`.
+- Design-checkpoint validation: `npm run verify:markdown-links` PASS (254 Markdown files), `npm run verify:agent-docs` PASS, `npm run verify:roadmap-current` PASS, and `git diff --check` PASS. Implementation and behavioral validation remain pending.
+
+## Prior Session Summary
+
+**Date:** 2026-08-23
 **Scope:** Reconcile and complete the interrupted Kimi prompt, safety-default, pricing, and model-registry work
 
 - Reconciled the exported handoff against the live `main` worktree and the refreshed Venice API snapshot instead of accepting its partial completion claims. The upstream documentation snapshot is now pinned to commit `601b7bb19921f0e31bc805d51322085cd6fc4ac5`, dated 2026-08-22, schema version `20260821.193530`.
@@ -1787,6 +1799,8 @@ The earlier P1 audit closure (P1 #1–#8 with `VERIFY-128..131`) remains the con
 
 ## Open TODO Ledger
 
+**VF-SEMANTIC-PROMPT-ENHANCER-2026-08-23 (design approved; implementation pending):** implement the approved specification in `docs/superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md`. Required work includes mandatory enhance/remix protocols, additive untrusted custom instructions, dual semantic/execution authority, typed target-model/generation/reference context, presence-aware temperature migration during config normalization, high-confidence syntactic output-envelope validation, the Frieren/Re:Zero and adversarial-config regressions, documentation migration, focused component/service tests, canonical validation gates, and honest manual/live acceptance evidence.
+
 **Hosted CI portability failures from runs `32622366262`, `32624408721`, and `32625327617` (closed 2026-08-23):** deterministic wrong-case Markdown classification, the Windows-inapplicable POSIX mode assertion, nonexistent Ubuntu package `libxvfb`, and missing Linux executable discovery are corrected with focused regressions. Final CI run `32626615743` passed the complete matrix, including all three packaged-launch jobs; CodeQL run `32626615860` passed both analyses. No roadmap item was created because no implementation or hosted-evidence work remains for this failure chain.
 
 **Exhaustive Audit `VF-EXHAUSTIVE-AUDIT-20260815` (open; WP-01..05 closed 2026-08-17):** WPs executed so far: WP-01 strict request-schema corrections (P1-001, P1-008, P2-001, P2-002 — `safe_mode` matrix, `veniceSearchWire`, top-level `prompt_cache_key`, `language_code`); WP-02 video contract corrections (P1-003 — `duration` required on quote/queue; coercer fields removed; workflow schema fail-closed on missing `videoDuration`); WP-03 shared SSE conformance (P1-002 — one incremental decoder in `src/shared/sseStreamDecoder.ts` powering both transports); WP-04 agent IPC durability (P1-006 — shared `src/shared/veniceStreamDelta.ts` envelope, preload forwards `appendedMessages` with media/document metadata, boundary validation); WP-05 capability-driven tools/references (P1-004 — `style_references` wire shape, invented `venice-character-reference-v1` removed, runtime-metadata gating; P1-005 — `tools` only when `supportsFunctionCalling`; P3-001 — `discount_to_user` + style-ref type surface, drift verifier). Remaining: WP-06 (post-delta retry safety, P1-007 — never auto-replay a billable stream after observable output; require explicit retry and preserve the partial result), WP-07 (schema-backed CI/external acceptance). Tracking and evidence per work package are in `docs/ROADMAP.md` under the audit row.
@@ -1930,6 +1944,17 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 **Dependency-audit status (refreshed 2026-08-23):** `npm audit --omit=dev --audit-level=moderate` and `npm audit --audit-level=critical` both report 0 vulnerabilities. The aggregate `npm run ci` gate is no longer blocked by dependency audit findings.
 
 ## Validation Matrix
+
+### August 23 — Semantic Image Prompt Enhancer design checkpoint
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| Mandatory amendment self-review (`rg` against the approved specification) | PASS | Confirmed dual authority, serialized ordering, untrusted configured-text delimitation, presence-aware temperature normalization, strictly syntactic validation, deprecated compatibility exports, and the adversarial custom-instruction fixture are normative requirements. |
+| `npm run verify:markdown-links` | PASS | 254 Markdown files checked. |
+| `npm run verify:agent-docs` | PASS | Agent-document contract passed. |
+| `npm run verify:roadmap-current` | PASS | Current-work-only roadmap contract passed with the implementation-pending enhancer row. |
+| `git diff --check` | PASS | No whitespace errors. |
+| Implementation tests, typecheck, lint, build, aggregate CI, and manual/live acceptance | NOT RUN | This checkpoint freezes the approved design only; implementation remains pending. |
 
 ### August 23 — Kimi continuation: prompts, safety defaults, pricing, and model registry
 
@@ -2747,6 +2772,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-08-23 — Semantic Image Prompt Enhancer design approved and frozen:** Reconciled the repair handoff against the live prompt service, call sites, config parser, generated config, runtime model metadata, image capability registry, and current tests. Selected the typed layered architecture: mandatory non-overridable enhance/remix protocols; distinct generic defaults; strongly delimited additive configured instructions; dual semantic-image versus enhancer-execution authority; typed target-model, dimensions, style, and reference facts; no React/Zustand/model lookup inside service/context helpers; presence-aware normalization from legacy `temperature` to `enhanceTemperature`/`remixTemperature`; and high-confidence syntactic response-envelope validation. Incorporated all four approval amendments and the adversarial configuration fixture in `docs/superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md`. Registered the specification in `docs/DOCS_INDEX.md` and the pending implementation in `docs/ROADMAP.md`. Design validation passed Markdown links (254 files), agent docs, roadmap-current, and diff whitespace checks; no implementation or manual/live acceptance was run at this checkpoint.
 
 - **2026-08-23 — Interrupted Kimi continuation reconciled and completed:** Reviewed the export against current `main`, the canonical roadmap, the live diff, current Swagger, and a read-only authenticated registry response. Refreshed the API snapshot/provenance to schema `20260821.193530`; completed independent optional-local/provider safety defaults while making child-exploitation screening mandatory; consolidated user-intent-preserving image prompt defaults; replaced fabricated pricing labels with the observed schema families and explicit provenance; preferred explicit model types, removed invented capability flags, refreshed retired fallback IDs, and marked cached models accurately. Added and updated regression coverage across every changed boundary. Live registry discovery returned 336 models plus traits and compatibility mappings without printing the key or invoking paid inference. ESLint, both typechecks, the 5,133-test full Vitest suite, safety, Markdown, API drift, i18n regressions, contracts, build, distribution, dependency audits, and aggregate CI all passed; only the existing 319 allowed i18n missing-marker warnings remain.
 

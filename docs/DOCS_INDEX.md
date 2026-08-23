@@ -150,6 +150,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 ### Discovery & Planning
 
 - [discovery/DISCOVERY_DOCUMENT_AGENT.md](discovery/DISCOVERY_DOCUMENT_AGENT.md) — Repository reconciliation and Phase 0 architecture evidence.
+- [superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md](superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md) — Approved semantic grounding, trust-layer, model-context, configuration-migration, and validation design for Image Studio prompt enhancement/remix.
 
 ---
 
