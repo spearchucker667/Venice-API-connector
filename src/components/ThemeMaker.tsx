@@ -658,19 +658,37 @@ export function ThemeMaker() {
     ];
 
     const optionsMap = new Map<string, { id: string; label: string }>();
+    const labelToIdMap = new Map<string, string>();
 
     // Add built-ins first
-    builtInOptions.forEach((opt) => optionsMap.set(opt.id, opt));
+    builtInOptions.forEach((opt) => {
+      optionsMap.set(opt.id, opt);
+      labelToIdMap.set(opt.label, opt.id);
+    });
 
-    // Add yaml themes (overriding built-ins with the same ID, though they should be identical)
-    Object.entries(yamlThemes).forEach(([id, theme]) =>
-      optionsMap.set(id, { id, label: theme.name }),
-    );
+    // Add yaml themes (overriding built-ins with the same exact name)
+    Object.entries(yamlThemes).forEach(([id, theme]) => {
+      if (labelToIdMap.has(theme.name)) {
+        const existingId = labelToIdMap.get(theme.name)!;
+        if (existingId !== id) {
+          optionsMap.delete(existingId);
+        }
+      }
+      optionsMap.set(id, { id, label: theme.name });
+      labelToIdMap.set(theme.name, id);
+    });
 
     // Add custom user themes
-    Object.values(customThemesMap).forEach((theme) =>
-      optionsMap.set(theme.id, { id: theme.id, label: theme.name }),
-    );
+    Object.values(customThemesMap).forEach((theme) => {
+      if (labelToIdMap.has(theme.name)) {
+        const existingId = labelToIdMap.get(theme.name)!;
+        if (existingId !== theme.id) {
+          optionsMap.delete(existingId);
+        }
+      }
+      optionsMap.set(theme.id, { id: theme.id, label: theme.name });
+      labelToIdMap.set(theme.name, theme.id);
+    });
 
     const options = sortThemeOptions(Array.from(optionsMap.values()));
     if (!optionsMap.has("custom")) {
@@ -968,21 +986,46 @@ export function ThemeMaker() {
             </span>
           )}
         </div>
-        <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-1 border border-border rounded-lg bg-surface">
-          {themeOptions.map((opt) => (
-            <button
-              key={opt.id}
-              onClick={() => handleSelect(opt.id)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium border transition-colors ${
-                selector === opt.id
-                  ? "bg-accent text-accent-fg border-accent"
-                  : "bg-surface-elevated text-text-secondary border-border hover:bg-surface hover:text-text-primary"
-              }`}
-              aria-pressed={selector === opt.id}
-            >
-              {opt.label}
-            </button>
-          ))}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-64 overflow-y-auto p-2 border border-border rounded-lg bg-surface-elevated">
+          {themeOptions.map((opt) => {
+            const theme = allThemesMap[opt.id];
+            const isSelected = selector === opt.id;
+            return (
+              <button
+                key={opt.id}
+                onClick={() => handleSelect(opt.id)}
+                className={`relative group flex flex-col overflow-hidden rounded-xl border text-left transition-all hover:shadow-sm ${
+                  isSelected
+                    ? "border-accent ring-1 ring-accent bg-surface"
+                    : "border-border hover:border-accent/50 bg-surface"
+                }`}
+                aria-pressed={isSelected}
+              >
+                {theme ? (
+                  <div 
+                    className="h-12 w-full flex border-b border-border/50" 
+                    style={{ backgroundColor: theme.tokens.background }}
+                  >
+                    <div 
+                      className="w-1/2 h-full flex items-end justify-start p-1"
+                      style={{ backgroundColor: theme.tokens.surface }}
+                    >
+                      <div className="h-4 w-4 rounded-full shadow-sm" style={{ backgroundColor: theme.tokens.accent }} />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-12 w-full bg-surface-elevated flex items-center justify-center text-xs text-text-muted border-b border-border/50">
+                    Custom
+                  </div>
+                )}
+                <div className="px-2.5 py-2">
+                  <div className="text-xs font-medium truncate" style={{ color: theme?.tokens.textPrimary || 'inherit' }}>
+                    {opt.label}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 

@@ -390,15 +390,21 @@ export function MediaStudioView() {
     setInspectorId(item.id);
   }, []);
 
-  const handleSelect = useCallback((item: MediaItem, multi: boolean) => {
+  const handleSelect = useCallback((item: MediaItem, multi: boolean, shiftKey = false) => {
     const store = useMediaSelectionStore.getState();
+    if (shiftKey && store.lastSelectedMediaId) {
+      store.selectRange(store.lastSelectedMediaId, item.id, filteredIds);
+      setMultiSelectMode(true);
+      return;
+    }
     if (multi) {
       store.toggleMedia(item.id);
+      setMultiSelectMode(true);
     } else {
       store.selectMedia(item.id);
       setActiveId(item.id);
     }
-  }, []);
+  }, [filteredIds]);
 
   const handleOpenDetail = useCallback((item: MediaItem) => {
     setActiveId(item.id);

@@ -6,19 +6,21 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
-**Scope:** GitHub CodeQL Code Scanning Review, Remediation, and Alert Resolution (39/39 Alerts Resolved)
+**Scope:** Themes (Deduplication & UI Modernization) and Media Studio (Multi-select)
 
-- **Alert Triage & Remediation:** Reviewed and triaged all 39 open GitHub CodeQL code-scanning alerts on `spearchucker667/Venice_Forge`. Implemented comprehensive source fixes across production code, test fixtures, maintenance scripts, and inactive feature test mocks:
-  - **Incompatible Type Comparisons (#245, #225, #244, #224, #226):** Refactored `src/agent/documents/document-source.ts`, `electron/services/themeService.ts`, and `src/types/chatDocument.ts` to remove redundant null checks following truthiness guards and refine unknown object type predicates.
-  - **Property Access on Non-Object (#222, #223):** Removed unsafe `as never` casting in `src/stores/chat-media-reference.test.ts` and added explicit `Partial<CreateChatMediaReferenceInput>` parameter and return typing to `makeRef()`.
-  - **String Concatenation & Regex Hardening (#221, #220):** Converted test string concatenation in `src/services/diagnosticsService.test.ts` to a template literal, and fixed an accidental ASCII range in `scripts/generate-locales.cjs` regex character class (`[\s0-9_./:@{}-]`).
-  - **Prototype Pollution Guards (#195, #236):** Added upfront regex path validation (`/(?:^|\.)(?:__proto__|constructor|prototype)(?:\.|$)/`) in `scripts/populate-en-us-catalogs.cjs` and `scripts/translate-missing.cjs`.
-  - **Inactive Features Mock Hardening (#192, #193, #194):** Added `vbscript:` scheme blocking and origin-based URL verification in `inactive-features/research-browser/electron/services/researchBrowserServer.test.ts`.
-  - **Test Fixture & TOCTOU Hardening (#237–#242, #206, #205, #202, #201, #200, #184):** Switched test harnesses in `electron/services/themeService.test.ts`, `electron/services/generatedMediaStore.test.ts`, `electron/services/chatFolderBackupService.test.ts`, and `electron/services/syncFolderWatcher.test.ts` to use `fs.mkdtemp` for isolated directory allocation and eliminated TOCTOU `stat -> open` races in mock fetch handlers by opening file handles first.
-  - **Unused Variables (#229, #219, #218, #217, #216, #215, #214, #213, #212, #211, #189):** Verified all 11 unused variable/import alerts are clean in current HEAD.
-  - **Invariants & False Positives (#210, #203):** Documented and verified static security guarantees in `videoRetrieveService.ts` and `syncFolderWatcher.ts`.
-- **GitHub API Resolution:** Dismissed all 39 alerts via GitHub REST API with structured categories (`false positive`, `used in tests`, `won't fix`) and detailed explanations. Verified that 0 open alerts remain on GitHub.
-- **Validation:** 126/126 focused tests passed; ESLint passed with 0 warnings; TypeScript renderer & Electron typechecks passed with 0 errors; `verify:contracts` passed (103/103 checks); `verify:safety-guard` passed; and `verify:markdown-links` passed across 253 Markdown files.
+- **Themes:** 
+  - Deduplicated theme processing in `src/components/ThemeMaker.tsx` by grouping and overriding based on `theme.name` (label) rather than just `id`. This prevents duplicates when a built-in theme is cloned via YAML.
+  - Refactored the theme selection `<button>` list into a modernized grid of cards, where each card displays live color swatches (`background`, `surface`, `accent`) using the resolved `Theme` tokens.
+- **Media Studio:**
+  - Implemented standard OS-style modifier key handling in `src/components/gallery/media-card.tsx` (`onClick` checks for `shiftKey`, `metaKey`, `ctrlKey`).
+  - Added range selection logic in `src/components/gallery/gallery-view.tsx` using `selectRange` when `shiftKey` is held.
+  - Toggling items using modifier keys now automatically enables the UI's `multiSelectMode`, revealing the bulk-action toolbar.
+- **Validation:** `npm run typecheck` passed (after fixing `colors` vs `tokens` typings).
+
+## Prior Session Summary
+
+**Date:** 2026-08-23
+**Scope:** GitHub CodeQL Code Scanning Review, Remediation, and Alert Resolution (39/39 Alerts Resolved)
 
 ## Prior Session Summary (Hosted CI Portability)
 

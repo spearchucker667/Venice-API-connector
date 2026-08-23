@@ -59,7 +59,7 @@ interface MediaCardProps {
   selected: boolean;
   active: boolean;
   multiSelectMode: boolean;
-  onSelect: (item: MediaItem, multi: boolean) => void;
+  onSelect: (item: MediaItem, multi: boolean, shiftKey?: boolean) => void;
   onOpen: (item: MediaItem) => void;
   onToggleFavorite: (item: MediaItem) => void;
   onSaveAs: (item: MediaItem) => unknown | Promise<unknown>;
@@ -143,9 +143,9 @@ function MediaCardImpl({
     >
       <button
         type="button"
-        onClick={(_e) => {
-          if (multiSelectMode) {
-            onSelect(item, true);
+        onClick={(e) => {
+          if (multiSelectMode || e.metaKey || e.ctrlKey || e.shiftKey) {
+            onSelect(item, true, e.shiftKey);
             return;
           }
           onOpen(item);
