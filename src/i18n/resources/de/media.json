@@ -128,9 +128,9 @@
     "generatedNumber": "Generiert {{number}}",
     "saveBeforeCard": "Speichern Sie das Bild in Media Studio, bevor Sie eine Karte erstellen.",
     "characterCreatorLaunched": "AI Character Creator gestartet",
-    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
-    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
-    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
+    "enhancementFailed": "Prompt-Verbesserung fehlgeschlagen",
+    "enhancementProviderError": "Der interne Enhancer konnte die Venice-Anfrage nicht erreichen oder abschließen. Ihre ursprüngliche Eingabeaufforderung wurde beibehalten.",
+    "enhancementInvalidOutput": "Der interne Enhancer hat keine verwendbare Bildaufforderung zurückgegeben. Ihre ursprüngliche Eingabeaufforderung wurde beibehalten."
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

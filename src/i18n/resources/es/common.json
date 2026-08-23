@@ -2611,8 +2611,8 @@
             "workingGroupValue1Created": "Grupo de trabajo \"{{value1}}\" creado",
             "approvedEditAppliedAsANewRevision": "Edición aprobada aplicada como una nueva revisión",
             "proposalRejectedWithoutChanges": "Propuesta rechazada sin cambios",
-            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
-            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
+            "documentDeleted": "Documento eliminado",
+            "documentDeleteFailed": "No se pudo eliminar el documento"
           },
           "attribute": {
             "searchDocuments": "Buscar documentos…",
@@ -2625,10 +2625,10 @@
             "fileContentInspector": "Inspector de contenido de archivos"
           },
           "metadata": {
-            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+            "deleteDocument": "¿Eliminar documento?"
           },
           "description": {
-            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
+            "deleteDocumentPermanently": "¿Eliminar permanentemente {{name}} y todo su historial de revisiones?"
           }
         }
       },
@@ -3249,8 +3249,8 @@
             "fileUploadFailed": "Error al subir el archivo",
             "summarySavedToPromptLibrary": "Resumen guardado en la biblioteca de mensajes",
             "researchWorkflowCreated": "Flujo de trabajo de investigación creado",
-            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
-            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
+            "sessionDeleted": "Sesión de investigación eliminada",
+            "sessionDeleteFailed": "No se pudo eliminar la sesión de investigación"
           },
           "attribute": {
             "researchSessions": "Sesiones de investigación",

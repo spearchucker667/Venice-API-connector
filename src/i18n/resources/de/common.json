@@ -2611,8 +2611,8 @@
             "workingGroupValue1Created": "Arbeitsgruppe „ {{value1}} “ erstellt",
             "approvedEditAppliedAsANewRevision": "Genehmigte Bearbeitung als neue Revision angewendet",
             "proposalRejectedWithoutChanges": "Vorschlag ohne Änderungen abgelehnt",
-            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
-            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
+            "documentDeleted": "Dokument gelöscht",
+            "documentDeleteFailed": "Dokument konnte nicht gelöscht werden"
           },
           "attribute": {
             "searchDocuments": "Dokumente durchsuchen…",
@@ -2625,10 +2625,10 @@
             "fileContentInspector": "Dateiinhaltsinspektor"
           },
           "metadata": {
-            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+            "deleteDocument": "Dokument löschen?"
           },
           "description": {
-            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
+            "deleteDocumentPermanently": "{{name}} und den gesamten Revisionsverlauf dauerhaft löschen?"
           }
         }
       },
@@ -3249,8 +3249,8 @@
             "fileUploadFailed": "Das Hochladen der Datei ist fehlgeschlagen",
             "summarySavedToPromptLibrary": "Zusammenfassung in der Prompt-Bibliothek gespeichert",
             "researchWorkflowCreated": "Forschungsworkflow erstellt",
-            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
-            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
+            "sessionDeleted": "Forschungssitzung gelöscht",
+            "sessionDeleteFailed": "Forschungssitzung konnte nicht gelöscht werden"
           },
           "attribute": {
             "researchSessions": "Forschungssitzungen",

@@ -128,9 +128,9 @@
     "generatedNumber": "Généré {{number}}",
     "saveBeforeCard": "Enregistrez l'image dans Media Studio avant de créer une carte.",
     "characterCreatorLaunched": "Lancement du créateur de personnages AI",
-    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
-    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
-    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
+    "enhancementFailed": "Échec de l'amélioration de l'invite",
+    "enhancementProviderError": "L'amplificateur interne n'a pas pu atteindre ou terminer la requête Venice. Votre invite d'origine a été conservée.",
+    "enhancementInvalidOutput": "L'amplificateur interne n'a pas renvoyé d'invite d'image utilisable. Votre invite d'origine a été conservée."
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

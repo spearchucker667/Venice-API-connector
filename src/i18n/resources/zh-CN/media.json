@@ -128,9 +128,9 @@
     "generatedNumber": "生成{{number}}",
     "saveBeforeCard": "创建卡片之前将图像保存到 Media Studio。",
     "characterCreatorLaunched": "AI角色创建器推出",
-    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
-    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
-    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
+    "enhancementFailed": "提示增强失败",
+    "enhancementProviderError": "内部增强器无法到达或完成 Venice 请求。您的原始提示已保留。",
+    "enhancementInvalidOutput": "内部增强器未返回可用的图像提示。您的原始提示已保留。"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

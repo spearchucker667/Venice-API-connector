@@ -2611,8 +2611,8 @@
             "workingGroupValue1Created": "ワーキンググループ「 {{value1}} 」が作成されました",
             "approvedEditAppliedAsANewRevision": "承認された編集は新しいリビジョンとして適用されます",
             "proposalRejectedWithoutChanges": "提案は変更せずに却下されました",
-            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
-            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
+            "documentDeleted": "ドキュメントが削除されました",
+            "documentDeleteFailed": "ドキュメントを削除できませんでした"
           },
           "attribute": {
             "searchDocuments": "ドキュメントを検索…",
@@ -2625,10 +2625,10 @@
             "fileContentInspector": "ファイルコンテンツインスペクター"
           },
           "metadata": {
-            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+            "deleteDocument": "ドキュメントを削除しますか？"
           },
           "description": {
-            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
+            "deleteDocumentPermanently": "{{name}} とそのすべてのリビジョン履歴を完全に削除しますか？"
           }
         }
       },
@@ -3249,8 +3249,8 @@
             "fileUploadFailed": "ファイルのアップロードに失敗しました",
             "summarySavedToPromptLibrary": "プロンプト ライブラリに保存された概要",
             "researchWorkflowCreated": "研究ワークフローの作成",
-            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
-            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
+            "sessionDeleted": "リサーチセッションが削除されました",
+            "sessionDeleteFailed": "リサーチセッションを削除できませんでした"
           },
           "attribute": {
             "researchSessions": "研究会",

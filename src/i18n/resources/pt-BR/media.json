@@ -128,9 +128,9 @@
     "generatedNumber": "Gerado {{number}}",
     "saveBeforeCard": "Salve a imagem no Media Studio antes de criar um cartão.",
     "characterCreatorLaunched": "Criador de personagem AI lançado",
-    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
-    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
-    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
+    "enhancementFailed": "Falha no aprimoramento do prompt",
+    "enhancementProviderError": "O intensificador interno não conseguiu alcançar ou concluir a solicitação do Venice. Seu prompt original foi mantido.",
+    "enhancementInvalidOutput": "O intensificador interno não retornou um prompt de imagem utilizável. Seu prompt original foi mantido."
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

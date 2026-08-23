@@ -128,9 +128,9 @@
     "generatedNumber": "Genererad {{number}}",
     "saveBeforeCard": "Spara bilden i Media Studio innan du skapar ett kort.",
     "characterCreatorLaunched": "AI Character Creator lanseras",
-    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
-    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
-    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
+    "enhancementFailed": "Snabbförbättring misslyckades",
+    "enhancementProviderError": "Den interna förstärkaren kunde inte nå eller slutföra Venice-begäran. Din ursprungliga uppmaning behölls.",
+    "enhancementInvalidOutput": "Den interna förstärkaren returnerade inte en användbar bilduppmaning. Din ursprungliga uppmaning behölls."
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

@@ -2611,8 +2611,8 @@
             "workingGroupValue1Created": "कार्य समूह &quot; {{value1}} &quot; बनाया गया",
             "approvedEditAppliedAsANewRevision": "स्वीकृत संपादन नए संशोधन के रूप में लागू किया गया",
             "proposalRejectedWithoutChanges": "बिना किसी बदलाव के प्रस्ताव खारिज कर दिया गया",
-            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
-            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
+            "documentDeleted": "दस्तावेज़ हटाया गया",
+            "documentDeleteFailed": "दस्तावेज़ हटाया नहीं जा सका"
           },
           "attribute": {
             "searchDocuments": "दस्तावेज़ खोजें...",
@@ -2625,10 +2625,10 @@
             "fileContentInspector": "फ़ाइल सामग्री निरीक्षक"
           },
           "metadata": {
-            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+            "deleteDocument": "दस्तावेज़ हटाएं?"
           },
           "description": {
-            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
+            "deleteDocumentPermanently": "{{name}} और इसके सभी संशोधन इतिहास को स्थायी रूप से हटाएं?"
           }
         }
       },
@@ -3249,8 +3249,8 @@
             "fileUploadFailed": "फ़ाइल अपलोड विफल रहा",
             "summarySavedToPromptLibrary": "सारांश प्रॉम्प्ट लाइब्रेरी में सहेजा गया",
             "researchWorkflowCreated": "अनुसंधान वर्कफ़्लो बनाया गया",
-            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
-            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
+            "sessionDeleted": "शोध सत्र हटाया गया",
+            "sessionDeleteFailed": "शोध सत्र हटाया नहीं जा सका"
           },
           "attribute": {
             "researchSessions": "अनुसंधान सत्र",

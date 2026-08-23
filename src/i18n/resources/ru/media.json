@@ -128,9 +128,9 @@
     "generatedNumber": "Сгенерировано {{number}}",
     "saveBeforeCard": "Прежде чем создавать карточку, сохраните изображение в Media Studio.",
     "characterCreatorLaunched": "Запущен редактор персонажей с искусственным интеллектом",
-    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
-    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
-    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
+    "enhancementFailed": "Улучшение подсказки не удалось",
+    "enhancementProviderError": "Внутренний усилитель не смог достичь или завершить запрос Venice. Ваш исходный запрос был сохранён.",
+    "enhancementInvalidOutput": "Внутренний усилитель не вернул ни одного пригодного запроса изображения. Ваш исходный запрос был сохранён."
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

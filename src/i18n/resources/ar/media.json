@@ -128,9 +128,9 @@
     "generatedNumber": "تم إنشاؤها {{number}}",
     "saveBeforeCard": "احفظ الصورة في Media Studio قبل إنشاء البطاقة.",
     "characterCreatorLaunched": "تم إطلاق برنامج AI Character Creator",
-    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
-    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
-    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
+    "enhancementFailed": "فشل تحسين المطالبة",
+    "enhancementProviderError": "تعذر على المحسن الداخلي الوصول إلى طلب Venice أو إكماله. تم الاحتفاظ بمطالبتك الأصلية.",
+    "enhancementInvalidOutput": "لم يُرجع المحسن الداخلي مطالبة صورة واحدة قابلة للاستخدام. تم الاحتفاظ بمطالبتك الأصلية."
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

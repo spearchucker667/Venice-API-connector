@@ -2611,8 +2611,8 @@
             "workingGroupValue1Created": "Grupo de trabalho &quot; {{value1}} &quot; criado",
             "approvedEditAppliedAsANewRevision": "Edição aprovada aplicada como uma nova revisão",
             "proposalRejectedWithoutChanges": "Proposta rejeitada sem alterações",
-            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
-            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
+            "documentDeleted": "Documento excluído",
+            "documentDeleteFailed": "Não foi possível excluir o documento"
           },
           "attribute": {
             "searchDocuments": "Pesquisar documentos…",
@@ -2625,10 +2625,10 @@
             "fileContentInspector": "Inspetor de conteúdo de arquivo"
           },
           "metadata": {
-            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+            "deleteDocument": "Excluir documento?"
           },
           "description": {
-            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
+            "deleteDocumentPermanently": "Excluir permanentemente {{name}} e todo o seu histórico de revisões?"
           }
         }
       },
@@ -3249,8 +3249,8 @@
             "fileUploadFailed": "Falha no upload do arquivo",
             "summarySavedToPromptLibrary": "Resumo salvo na biblioteca de prompts",
             "researchWorkflowCreated": "Fluxo de trabalho de pesquisa criado",
-            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
-            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
+            "sessionDeleted": "Sessão de pesquisa excluída",
+            "sessionDeleteFailed": "Não foi possível excluir a sessão de pesquisa"
           },
           "attribute": {
             "researchSessions": "Sessões de pesquisa",

@@ -6,6 +6,21 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
+**Scope:** Final Acceptance, External Validation, and Closeout
+
+- Verified hosted GitHub CI for baseline commit `41a242fb`: CI (10/10 jobs) and CodeQL (2/2 jobs) all passed with no failures or flaky jobs.
+- Removed stale `credential.helper=copilot` from local `.git/config`; the broken helper warned on every Git operation but was shadowed by the working global `gh auth git-credential` helper. No repository file changed — this is a local-environment fix only.
+- Investigated the Vite `chatTtsController.ts` static+dynamic import warning. The dynamic import in `src/hooks/use-chat.ts` is harmless but ineffective because `ChatTtsPlayer.tsx` and `chat-view.tsx` statically import the module, so code splitting does not apply. No runtime impact; documented as informational.
+- Translated all 99 newly introduced `__MISSING__` review markers (9 English strings × 11 non-English locales) using established product vocabulary from each locale's existing catalog. No locale was promoted to native-reviewed — these are first-pass machine translations consistent with existing terminology.
+- The pre-existing 319 `__MISSING__` markers from prior work remain untouched.
+- Performed live Venice prompt-enhancement acceptance: BLOCKED. Credentials exist in Electron secure storage but are not available in `.env` for web proxy mode. A headed Electron session is required to exercise the live provider path through the app.
+- Headed Electron QA: BLOCKED by Freebuff terminal environment limitation. The three repaired flows pass all 83 focused regression tests. Electron smoke tests pass on hosted CI (Windows, macOS, Linux).
+- All validation gates re-executed and confirmed passing: ESLint, TypeScript (renderer + Electron), full Vitest suite (465 files, 5,157 passed, 1 skipped), production build, all feature verifiers, safety, Markdown links, i18n (both verifiers), agent docs, roadmap-current, repo-handoff-hygiene, aggregate contracts (103/103), distribution verification, `npm run ci`.
+- No new implementation defects identified during acceptance.
+
+## Prior Session Summary
+
+**Date:** 2026-08-23
 **Scope:** Repair Image Studio prompt-enhancement failure visibility and Research/Documents deletion
 
 - Fixed Image Studio's misleading prompt-enhancement success path. Provider failures and invalid enhancer envelopes now return a typed fallback reason; the renderer keeps the original prompt, suppresses the review panel, and shows a localized error instead of presenting unchanged text as a successful enhancement.
@@ -1945,6 +1960,34 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 
 ## Validation Matrix
 
+### August 23 — Final Acceptance and Closeout
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| Hosted GitHub CI (commit `41a242fb`) | PASS | CI run `32647639870`: 10/10 jobs green (coverage, windows-sensitive-tests, unit-and-integration-tests, lint-and-typecheck, contracts, macos-sensitive-tests, build, electron-smoke-windows, electron-smoke-linux, electron-smoke-macos). CodeQL run `32647639846`: both analyses (actions, javascript-typescript) green. |
+| Focused seven-file Vitest batch | PASS | 7 files; 83/83 tests. |
+| `npm run lint:eslint` | PASS | Zero warnings/errors. |
+| `npm run typecheck` | PASS | Renderer and Electron TypeScript projects clean. |
+| `npm test` | PASS | 465 files; 5,157 passed, 1 skipped. |
+| `npm run verify:document-agent` | PASS | Contracts intact. |
+| `npm run verify:research-workspace` | PASS | VERIFY-051; 114/114 tests. |
+| `npm run verify:model-aware-recipes` | PASS | Recipe contract intact. |
+| `npm run verify:i18n` | PASS with review-pending warnings | 319 pre-existing `__MISSING__` markers remain as warnings. All 99 newly introduced markers replaced with first-pass machine translations using established product vocabulary. |
+| `npm run verify:i18n-hardcoded-regressions` | PASS | Zero regressions. |
+| `npm run verify:safety-guard` | PASS | All enforcement checks passed. |
+| `npm run verify:markdown-links` | PASS | 254 Markdown files checked. |
+| `npm run verify:agent-docs` | PASS | Agent-document contract passed. |
+| `npm run verify:roadmap-current` | PASS | Roadmap current-work-only contract passed. |
+| `npm run verify:repo-handoff-hygiene` | PASS | Handoff hygiene passed. |
+| `npm run verify:contracts` | PASS | 103/103 checks passed. |
+| `npm run build` | PASS | Renderer, server, Electron main + preload built. |
+| `npm run ci` | PASS | Exit 0: lint, both typechecks, tests, audits (0 vulns), build, contracts, distribution verification. |
+| `git diff --check` | PASS | No whitespace errors. |
+| Git `credential-copilot` helper | FIXED | Removed stale `credential.helper=copilot` from local `.git/config`. Global `gh auth git-credential` is the working provider. No repository file changed. |
+| Vite `chatTtsController.ts` import warning | DOCUMENTED | Harmless — dynamic import is ineffective because static imports already pull the module. No runtime or bundle impact. |
+| Headed Electron QA | BLOCKED | Freebuff terminal environment cannot drive GUI interaction. Hosted electron-smoke passes on all three platforms. |
+| Live Venice prompt-enhancement acceptance | BLOCKED | Credentials in Electron secure storage, not in `.env`. Web proxy cannot authenticate. Prior session performed authenticated read-only registry check successfully. |
+
 ### August 23 — Prompt enhancement and session deletion repairs
 
 | Command / evidence | Result | Notes |
@@ -2809,6 +2852,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-08-23 — Final Acceptance and Closeout:** Completed final acceptance for commit `41a242fb`. Verified hosted CI (10/10 jobs + CodeQL 2/2 all green). Removed stale `credential-copilot` Git helper from local `.git/config` (no repo change). Investigated and documented the harmless Vite `chatTtsController.ts` dual-import warning. Translated all 99 newly introduced `__MISSING__` i18n markers (9 strings × 11 locales) using established product vocabulary — pre-existing 319 markers unchanged. Headed Electron QA blocked by Freebuff terminal environment; hosted electron-smoke passes on all platforms. Live Venice enhancement blocked by credentials in Electron secure storage only; prior session performed authenticated registry check successfully. Re-executed full validation matrix: ESLint, typecheck, 5,157 tests, build, all verifiers, contracts (103/103), `npm run ci`. Updated handoff documentation. No new implementation defects found.
 
 - **2026-08-23 — Prompt enhancement and session deletion repairs:** Reproduced the three user reports against current `main`. Image Studio was converting provider/validation failures into an indistinguishable unchanged-prompt success preview; typed fallback reasons now drive localized error UX while preserving the original. Research fired an unawaited delete and its store ignored the durable storage boolean; the UI now awaits deletion and the store retains state on failure. Documents had no managed-document deletion contract; added atomic document-plus-revisions deletion across service, profile-authoritative IPC, preload/types/desktop bridge, and a confirmation-gated UI action with audit logging. Added seven focused regression suites (83/83), synchronized locale structure with review-pending markers, and passed ESLint, both typechecks, feature verifiers, i18n gates, safety/Markdown/contracts, production build, distribution verification, both zero-vulnerability audits, aggregate CI, and the full 5,157-test repository suite. Paid-provider and headed Electron QA were not run.
 

@@ -128,9 +128,9 @@
     "generatedNumber": "Generado {{number}}",
     "saveBeforeCard": "Guarde la imagen en Media Studio antes de crear una tarjeta.",
     "characterCreatorLaunched": "Lanzamiento del creador de personajes con IA",
-    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
-    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
-    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
+    "enhancementFailed": "Falló la mejora del mensaje",
+    "enhancementProviderError": "El potenciador interno no pudo alcanzar o completar la solicitud de Venice. Se conservó su mensaje original.",
+    "enhancementInvalidOutput": "El potenciador interno no devolvió un mensaje de imagen utilizable. Se conservó su mensaje original."
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

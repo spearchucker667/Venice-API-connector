@@ -2611,8 +2611,8 @@
             "workingGroupValue1Created": "작업 그룹 &quot; {{value1}} &quot;이(가) 생성되었습니다.",
             "approvedEditAppliedAsANewRevision": "승인된 수정사항이 새 버전으로 적용되었습니다.",
             "proposalRejectedWithoutChanges": "변경사항 없이 제안이 거부됨",
-            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
-            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
+            "documentDeleted": "문서가 삭제되었습니다",
+            "documentDeleteFailed": "문서를 삭제할 수 없었습니다"
           },
           "attribute": {
             "searchDocuments": "문서 검색…",
@@ -2625,10 +2625,10 @@
             "fileContentInspector": "파일 콘텐츠 검사기"
           },
           "metadata": {
-            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+            "deleteDocument": "문서를 삭제하시겠습니까?"
           },
           "description": {
-            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
+            "deleteDocumentPermanently": "{{name}}과(와) 모든 개정 기록을 영구적으로 삭제하시겠습니까?"
           }
         }
       },
@@ -3249,8 +3249,8 @@
             "fileUploadFailed": "파일 업로드 실패",
             "summarySavedToPromptLibrary": "프롬프트 라이브러리에 요약이 저장되었습니다.",
             "researchWorkflowCreated": "연구 워크플로가 생성되었습니다.",
-            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
-            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
+            "sessionDeleted": "연구 세션이 삭제되었습니다",
+            "sessionDeleteFailed": "연구 세션을 삭제할 수 없었습니다"
           },
           "attribute": {
             "researchSessions": "연구 세션",

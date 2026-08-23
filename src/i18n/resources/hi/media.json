@@ -128,9 +128,9 @@
     "generatedNumber": "उत्पन्न {{number}}",
     "saveBeforeCard": "कार्ड बनाने से पहले छवि को मीडिया स्टूडियो में सहेजें।",
     "characterCreatorLaunched": "एआई कैरेक्टर क्रिएटर लॉन्च किया गया",
-    "enhancementFailed": "__MISSING__:imageStudioRuntime.enhancementFailed",
-    "enhancementProviderError": "__MISSING__:imageStudioRuntime.enhancementProviderError",
-    "enhancementInvalidOutput": "__MISSING__:imageStudioRuntime.enhancementInvalidOutput"
+    "enhancementFailed": "प्रॉम्प्ट उन्नति विफल",
+    "enhancementProviderError": "आंतरिक एन्हांसर Venice अनुरोध तक नहीं पहुंच सका या उसे पूरा नहीं कर सका। आपका मूल प्रॉम्प्ट रखा गया था।",
+    "enhancementInvalidOutput": "आंतरिक एन्हांसर ने एक भी उपयोग योग्य छवि प्रॉम्प्ट नहीं लौटाया। आपका मूल प्रॉम्प्ट रखा गया था।"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

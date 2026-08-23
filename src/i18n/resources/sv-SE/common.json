@@ -2611,8 +2611,8 @@
             "workingGroupValue1Created": "Arbetsgruppen &quot; {{value1}} &quot; skapad",
             "approvedEditAppliedAsANewRevision": "Godkänd redigering tillämpas som en ny version",
             "proposalRejectedWithoutChanges": "Förslaget avslogs utan ändringar",
-            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
-            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
+            "documentDeleted": "Dokument raderat",
+            "documentDeleteFailed": "Dokumentet kunde inte raderas"
           },
           "attribute": {
             "searchDocuments": "Sök i dokument...",
@@ -2625,10 +2625,10 @@
             "fileContentInspector": "Filinnehållsinspektör"
           },
           "metadata": {
-            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+            "deleteDocument": "Radera dokument?"
           },
           "description": {
-            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
+            "deleteDocumentPermanently": "Radera {{name}} permanent och all dess revisionshistorik?"
           }
         }
       },
@@ -3249,8 +3249,8 @@
             "fileUploadFailed": "Filuppladdning misslyckades",
             "summarySavedToPromptLibrary": "Sammanfattning sparad i promptbibliotek",
             "researchWorkflowCreated": "Forskningsarbetsflöde skapat",
-            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
-            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
+            "sessionDeleted": "Forskningssession raderad",
+            "sessionDeleteFailed": "Forskningssessionen kunde inte raderas"
           },
           "attribute": {
             "researchSessions": "Forskningssessioner",

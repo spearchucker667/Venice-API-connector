@@ -2611,8 +2611,8 @@
             "workingGroupValue1Created": "تم إنشاء مجموعة العمل &quot; {{value1}} &quot;",
             "approvedEditAppliedAsANewRevision": "تم تطبيق التعديل المعتمد كمراجعة جديدة",
             "proposalRejectedWithoutChanges": "تم رفض الاقتراح دون تغييرات",
-            "documentDeleted": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleted",
-            "documentDeleteFailed": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.documentDeleteFailed"
+            "documentDeleted": "تم حذف المستند",
+            "documentDeleteFailed": "تعذر حذف المستند"
           },
           "attribute": {
             "searchDocuments": "بحث في المستندات...",
@@ -2625,10 +2625,10 @@
             "fileContentInspector": "مفتش محتوى الملف"
           },
           "metadata": {
-            "deleteDocument": "__MISSING__:runtimeGenerated.components.documents.documentagentview.metadata.deleteDocument"
+            "deleteDocument": "حذف المستند؟"
           },
           "description": {
-            "deleteDocumentPermanently": "__MISSING__:runtimeGenerated.components.documents.documentagentview.description.deleteDocumentPermanently {{name}}"
+            "deleteDocumentPermanently": "حذف {{name}} نهائيًا وجميع سجل المراجعات الخاصة به؟"
           }
         }
       },
@@ -3249,8 +3249,8 @@
             "fileUploadFailed": "فشل تحميل الملف",
             "summarySavedToPromptLibrary": "تم حفظ الملخص في المكتبة السريعة",
             "researchWorkflowCreated": "تم إنشاء سير عمل البحث",
-            "sessionDeleted": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleted",
-            "sessionDeleteFailed": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.notification.sessionDeleteFailed"
+            "sessionDeleted": "تم حذف جلسة البحث",
+            "sessionDeleteFailed": "تعذر حذف جلسة البحث"
           },
           "attribute": {
             "researchSessions": "جلسات بحثية",
