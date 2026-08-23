@@ -251,7 +251,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Install Linux dependencies
-        run: sudo apt-get update && sudo apt-get install -y libxvfb libgbm-dev
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgbm-dev
       - name: Package Linux app
         run: npm run dist:linux
       - name: Verify Linux artifact

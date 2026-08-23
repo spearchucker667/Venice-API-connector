@@ -76,6 +76,14 @@ describe("verify:ci-contract external action pinning enforcement", () => {
     expect(source).toContain("must depend on both 'build'");
   });
 
+  it("enforces the Linux packaged smoke dependencies", () => {
+    const source = readVerifier();
+    expect(source).toContain("electron-smoke-linux");
+    expect(source).toContain("apt-get install -y xvfb libgbm-dev");
+    expect(source).toContain("nonexistent 'libxvfb'");
+    expect(source).toContain("xvfb-run --auto-servernum");
+  });
+
   it("enforces the CodeQL language matrix (javascript-typescript + actions)", () => {
     const source = readVerifier();
     expect(source).toContain("language: javascript-typescript");

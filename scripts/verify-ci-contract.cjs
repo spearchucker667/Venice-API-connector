@@ -200,6 +200,27 @@ if (!ciYaml.includes('RUN_ELECTRON_SMOKE: \'true\'')) {
 }
 console.log("✓ Windows packaged smoke job exists");
 
+// 5a. Verify Linux packaged smoke dependencies and headless execution. Ubuntu
+// provides xvfb-run via the `xvfb` package; `libxvfb` is not a valid package
+// name and causes the smoke job to fail before packaging begins.
+if (!ciYaml.includes('electron-smoke-linux:')) {
+  console.error("❌ ci.yml is missing 'electron-smoke-linux' job");
+  process.exit(1);
+}
+if (!ciYaml.includes('apt-get install -y xvfb libgbm-dev')) {
+  console.error("❌ ci.yml 'electron-smoke-linux' must install xvfb and libgbm-dev");
+  process.exit(1);
+}
+if (ciYaml.includes('libxvfb')) {
+  console.error("❌ ci.yml must install the Ubuntu package 'xvfb', not nonexistent 'libxvfb'");
+  process.exit(1);
+}
+if (!ciYaml.includes('xvfb-run --auto-servernum npx vitest run tests/smoke/electron-smoke.test.ts')) {
+  console.error("❌ ci.yml 'electron-smoke-linux' must run the packaged smoke test through xvfb-run");
+  process.exit(1);
+}
+console.log("✓ Linux packaged smoke job dependencies exist");
+
 // 6. Verify that every Vitest script that names explicit file or directory
 // arguments points to an existing path. This prevents silent narrowing of
 // coverage when a test file is renamed or removed.
