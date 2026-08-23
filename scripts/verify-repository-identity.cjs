@@ -12,16 +12,19 @@ const OBSOLETE_PATHS = [
   "/Users/super_user/Projects/Venice-Forge-Mac",
   "/Users/super_user/Projects/VeniceForgeMac",
 ];
+// Removed 2026-08-22 during repository hygiene pass:
+// - CLAUDE.md, GEMINI.md, .windsurfrules were redundant copies of AGENTS.md
+// - .cursorrules is a lightweight pointer, not a full agent instruction file
 const ACTIVE_AGENT_DOCS = [
   "AGENTS.md",
-  "CLAUDE.md",
-  "GEMINI.md",
-  ".cursorrules",
-  ".windsurfrules",
   ".github/copilot-instructions.md",
+];
+const AGENT_POINTER_FILES = [
+  ".cursorrules",
 ];
 const ACTIVE_DOCS = new Set([
   ...ACTIVE_AGENT_DOCS,
+  ...AGENT_POINTER_FILES,
   "README.md",
   "CONTRIBUTING.md",
   "SUPPORT.md",
@@ -231,6 +234,21 @@ function verifyRepositoryIdentity(rootDir) {
     }
   }
 
+  // Agent pointer files (e.g. .cursorrules) must exist but are intentionally
+  // lightweight pointers to AGENTS.md and do not need to include the full
+  // canonical path/repo markers.
+  for (const relativePath of AGENT_POINTER_FILES) {
+    const absolutePath = path.join(rootDir, relativePath);
+    if (!fs.existsSync(absolutePath)) {
+      reportLine(errors, relativePath, 1, "agent pointer file is missing");
+      continue;
+    }
+    const content = fs.readFileSync(absolutePath, "utf8");
+    if (!content.includes("AGENTS.md")) {
+      reportLine(errors, relativePath, 1, "agent pointer file must reference AGENTS.md");
+    }
+  }
+
   verifyReadmeClaims(rootDir, errors);
 
   for (const relativePath of files) {
@@ -299,6 +317,7 @@ function main() {
 
 module.exports = {
   ACTIVE_AGENT_DOCS,
+  AGENT_POINTER_FILES,
   CANONICAL_PATH,
   CANONICAL_REPOSITORY,
   README_REQUIRED_CUSTODY_MARKERS,

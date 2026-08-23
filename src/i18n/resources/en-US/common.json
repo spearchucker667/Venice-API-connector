@@ -2617,7 +2617,8 @@
             "aiAvatar": "AI avatar",
             "thinking": "Thinking…",
             "removeFromChat": "Remove from chat",
-            "tokensUsedForThisMessage": "Tokens used for this message"
+            "tokensUsedForThisMessage": "Tokens used for this message",
+            "generatedMedia": "Generated media"
           }
         }
       },

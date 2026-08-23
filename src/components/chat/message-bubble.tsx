@@ -1100,6 +1100,13 @@ function MessageBubbleImpl({
                     ) ??
                     ""
                   }
+                  alt={
+                    r.altText && r.altText.trim().length > 0
+                      ? r.altText
+                      : tRuntime(
+                          "runtimeGenerated.components.chat.messageBubble.attribute.generatedMedia",
+                        )
+                  }
                   className="w-full h-auto object-cover"
                 />
                 <button

@@ -1,184 +1,197 @@
 # Venice Forge Documentation Index
 
-This is the canonical source-of-truth navigation map for all documentation in this repository.
+This is the canonical source-of-truth navigation map for all documentation in this repository. Documents are organized by the [Diátaxis](https://diataxis.fr) framework: **tutorials** (learning), **how-to guides** (task), **reference** (information), and **explanation** (understanding).
 
 ---
 
-## 1. Start Here
+## Start Here
 
-- [README.md](../README.md) — The main user-facing repository landing page and setup guide.
-- [ABOUT.md](ABOUT.md) — Product goals, architecture, data flow, and overview of tabs.
-- [FAQ.md](FAQ.md) — Frequently asked questions about privacy, credentials, safety, storage, and character-card compatibility.
-- [SUPPORT.md](../SUPPORT.md) — Where to get help, how to request features, and what info to provide.
-
----
-
-## 2. User Docs
-
-- [ABOUT.md](ABOUT.md) — Comprehensive overview of features, tabs, and local-first goals.
-- [FAQ.md](FAQ.md) — Answers on local key custody, safety modes, storage, and ST Card Studio import/export behavior.
-- [SUPPORT.md](../SUPPORT.md) — User support guidelines.
-- [user/IMAGE_INSPECTOR.md](user/IMAGE_INSPECTOR.md) — Image-to-prompt analysis, supported inputs, text-based source discovery, privacy, and troubleshooting.
-- [i18n/TRANSLATION_GUIDE.md](i18n/TRANSLATION_GUIDE.md) — Translation guidelines and key conventions.
-- [i18n/GLOSSARY.md](i18n/GLOSSARY.md) — Internationalization terminology glossary.
-- [i18n/translation-status.json](i18n/translation-status.json) — Machine-readable structural, runtime-surface, and linguistic-review metadata (schema v4); the three dimensions are independent gates.
-- [i18n/native-review-status.json](i18n/native-review-status.json) — Per-locale qualified-review state, reviewer/date evidence, and production-completion input.
-- [i18n/identical-value-allowlist.json](i18n/identical-value-allowlist.json) — Locale-specific technical, format, brand, and cognate values allowed to remain identical to en-US; entries never constitute native review.
-- [Development/i18n-tooling.md](DEVELOPMENT/i18n-tooling.md) — `i18n:extract` / `i18n:sync-catalogs` / `i18n:coverage` workflow and the AST-driven extractor / safe-sync / sentinel-aware verifier contract.
-- [audits/Records/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md](audits/Records/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md) — Retained multilingual AI system prompt and instruction audit.
-- [LEGAL.md](../LEGAL.md) — Root legal notice, copyright statement, and trademark disclaimers.
-- [PRIVACY.md](../PRIVACY.md) — User privacy model summary.
+- [README.md](../README.md) — Repository landing page, features, setup, and architecture overview.
+- [ABOUT.md](ABOUT.md) — What Venice Forge is, goals, architecture, data flow, and tab overview.
+- [FAQ.md](FAQ.md) — Frequently asked questions about privacy, credentials, safety, storage, and compatibility.
+- [SUPPORT.md](../SUPPORT.md) — Where to get help and how to report issues.
 
 ---
 
-## 3. Developer Docs
+## Tutorials (Learning-Oriented)
 
-- [CONTRIBUTING.md](../CONTRIBUTING.md) — Branch conventions, validation commands, and PR checklist.
-- [AGENTS.md](../AGENTS.md) — Crucial guidance for AI coding agents and session handoffs.
-- [CLAUDE.md](../CLAUDE.md) — Pointer to AGENTS.md for Anthropic agents.
-- [GEMINI.md](../GEMINI.md) — Pointer to AGENTS.md for Gemini agents.
-- [DEVELOPMENT/building.md](DEVELOPMENT/building.md) — Local building, compilation, and packaging.
+> Step-by-step walkthroughs that teach a workflow and produce a meaningful result.
+
+- [user/ST_CARD_STUDIO.md](user/ST_CARD_STUDIO.md) — Import, edit, draft, chat, and export a character card.
+- [DEVELOPMENT/building.md](DEVELOPMENT/building.md) — Local development, packaging, and validation across Windows and macOS.
+- [DEVELOPMENT/macos.md](DEVELOPMENT/macos.md) — macOS-specific development setup, permissions, signing, and troubleshooting.
+
+---
+
+## How-To Guides (Task-Oriented)
+
+> Direct, actionable steps to solve a specific real-world problem.
+
+### Development
+
 - [DEVELOPMENT/troubleshooting.md](DEVELOPMENT/troubleshooting.md) — Solutions for common dev environment or build failures.
-- [DEVELOPMENT/platform-support.md](DEVELOPMENT/platform-support.md) — Desktop OS compatibility matrices.
-- [DEVELOPMENT/macos.md](DEVELOPMENT/macos.md) — macOS-specific development, permissions, signing, and troubleshooting notes.
-- [DEVELOPMENT/CONFIG.md](DEVELOPMENT/CONFIG.md) — Local YAML configuration options and secure key import.
-- [DEVELOPMENT/storage-policy.md](DEVELOPMENT/storage-policy.md) — IndexedDB storage configuration, encryption, and folder layouts.
-- [DEVELOPMENT/BRIDGE.md](DEVELOPMENT/BRIDGE.md) — Headless loopback bridge specifications.
-- [DEVELOPMENT/JINA_PROVIDER.md](DEVELOPMENT/JINA_PROVIDER.md) — Jina-backed search and scrape integrations.
-- [`../inactive-features/research-browser/README.md`](../inactive-features/research-browser/README.md) — Inactive archive boundary for the former embedded Research Browser.
-- [chat-model-selection.md](user/chat-model-selection.md) — Per-conversation model precedence, provider defaults, and fallback reconciliation.
-- [memory-isolation.md](architecture/memory-isolation.md) — Conversation-scoped memory retrieval, exclusions, and preview lifecycle.
-- [rp-token-counting.md](development/rp-token-counting.md) — Compiled prompt estimates and over-budget save behavior.
-- [DEVELOPMENT/image-model-capabilities.md](DEVELOPMENT/image-model-capabilities.md) — Image model capability registry, Seedream model reference, and guide for adding future models.
-- [developer/image-inspector-architecture.md](developer/image-inspector-architecture.md) — Image Inspector ingestion, IPC, structured analysis, error, source-discovery, and privacy contracts.
-- [developer/CHARACTER_CARD_CODEC.md](developer/CHARACTER_CARD_CODEC.md) — Trusted Character Card V2 PNG codec, limits, and verification contract.
-- [developer/CHARACTER_CARD_MAPPINGS.md](developer/CHARACTER_CARD_MAPPINGS.md) — Tavern/V2 DTO, internal card, and character-book mappings.
-- [data-export-format.md](architecture/data-export-format.md) — Authenticated `.vfbackup` envelope, portability, and compatibility contract.
-- [features/DOCUMENT_AGENT.md](features/DOCUMENT_AGENT.md) — Limited Documents, workspace grants, approval integrity, formats, path security, export, and validation.
-- [discovery/DISCOVERY_DOCUMENT_AGENT.md](discovery/DISCOVERY_DOCUMENT_AGENT.md) — Repository reconciliation and Phase 0 architecture evidence for the Document Agent work order.
-- [../scripts/dev-tools/README.md](../scripts/dev-tools/README.md) — Internal development-tool inventory; non-user-facing and noncanonical for product behavior.
+- [DEVELOPMENT/testing.md](DEVELOPMENT/testing.md) — Run targeted test shards, measure durations, and understand regression escalation.
+- [DEVELOPMENT/i18n-tooling.md](DEVELOPMENT/i18n-tooling.md) — `i18n:extract`, `i18n:sync-catalogs`, `i18n:coverage` workflow.
+- [DEVELOPMENT/performance-baselines.md](DEVELOPMENT/performance-baselines.md) — Profile bundle size and render performance before monolith refactors.
+- [DEVELOPMENT/CONFIG.md](DEVELOPMENT/CONFIG.md) — Configure local YAML options and import secure keys.
+
+### Backup & Sync
+
+- [user/backup-and-sync.md](user/backup-and-sync.md) — Create encrypted backups, import existing backups, and set up sync folders.
+- [user/sync-troubleshooting.md](user/sync-troubleshooting.md) — Safe recovery from passphrase loss, conflicts, and two-device problems.
+- [DEVELOPMENT/sync-testing.md](DEVELOPMENT/sync-testing.md) — Automated fixture tests and manual two-device QA protocol.
+
+### Media & Images
+
+- [user/IMAGE_INSPECTOR.md](user/IMAGE_INSPECTOR.md) — Analyze local images, extract prompts, and understand source discovery.
+- [user/chat-model-selection.md](user/chat-model-selection.md) — Select models per conversation, configure provider defaults, and reconcile fallbacks.
+
+### Release
+
+- [RELEASE/release.md](RELEASE/release.md) — Release requirements, versioning, and publishing checklist.
+- [RELEASE/signing-and-notarization.md](RELEASE/signing-and-notarization.md) — Set up certificates and resolve macOS app quarantine.
+
+### Translation
+
+- [i18n/TRANSLATION_GUIDE.md](i18n/TRANSLATION_GUIDE.md) — Translation guidelines, conventions, and contribution workflow.
 
 ---
 
-## 4. Architecture / Design Docs
+## Reference (Information-Oriented)
 
-- [design/THEME_SYSTEM.md](design/THEME_SYSTEM.md) — Theme variables, contrast checking, and custom YAML palette integration.
-- [design/DESIGN.md](design/DESIGN.md) — Current product design principles and interaction guidance.
-- [design/VENICE_UI_EXTRACTION.md](design/VENICE_UI_EXTRACTION.md) — Internal UI extraction/reference notes; implementation remains authoritative.
-- [design/LOADING_AND_SURFACE_CONTRACT.md](design/LOADING_AND_SURFACE_CONTRACT.md) — Semantic loading, reduced-motion, mesh structure, and interactive-border rules.
-- [design/CHARACTER_RP.md](design/CHARACTER_RP.md) — Local Character RP architecture and memory boundaries.
-- [design/ST_CARD_STUDIO.md](design/ST_CARD_STUDIO.md) — ST Card Studio compatibility decisions, trust boundaries, integration inventory, and phase gates.
-- [reference/CHARACTER_CARD_V2_COMPATIBILITY.md](reference/CHARACTER_CARD_V2_COMPATIBILITY.md) — Supported formats, mappings, limits, and runtime semantics.
-- [security/ST_CARD_IMPORT_THREAT_MODEL.md](security/ST_CARD_IMPORT_THREAT_MODEL.md) — Card/PNG/IPC/AI trust boundaries and logging rules.
-- [user/ST_CARD_STUDIO.md](user/ST_CARD_STUDIO.md) — Import, editing, draft, chat, and export guide.
-- [developer/CHARACTER_CARD_CODEC.md](developer/CHARACTER_CARD_CODEC.md) — Main-process PNG codec contract.
-- [developer/CHARACTER_CARD_MAPPINGS.md](developer/CHARACTER_CARD_MAPPINGS.md) — External/internal and character-book mappings.
-- [testing/CHARACTER_CARD_FIXTURES.md](testing/CHARACTER_CARD_FIXTURES.md) — Synthetic fixture policy and validation commands.
-- [design/MEDIA_STUDIO.md](design/MEDIA_STUDIO.md) — Media Studio command center actions, visual diffs, and lineage trees.
-- [design/MEMORY.md](design/MEMORY.md) — Semantic memory store structure and injection disclosures.
-- [design/LOREBOOKS.md](design/LOREBOOKS.md) — Lorebook JSON formats and key trigger injection.
-- [design/SCENE_GENERATION.md](design/SCENE_GENERATION.md) — Dynamic scene-generation rules and background asset maps.
-- [design/PUBLIC_PROFILE_DISCOVERY.md](design/PUBLIC_PROFILE_DISCOVERY.md) — platform-specific site query logic.
-- [design/REPOSITORY_TREE.md](design/REPOSITORY_TREE.md) — Detailed codebase design layout.
-- [backup-and-sync.md](user/backup-and-sync.md) — Manual encrypted backups and encrypted sync-folder operation.
-- [FILE_TREE.md](development/FILE_TREE.md) — Practical file tree of the actual directories.
-- [`../src/shared/chatMediaReferenceContracts.ts`](../src/shared/chatMediaReferenceContracts.ts) — Canonical Phase 6 parity contract for `ChatMediaReference`, mirrored between renderer and main; same id regex, unions, and runtime predicates.
-- [`../src/shared/promptLimits.ts`](../src/shared/promptLimits.ts) — Phase 4 user-system-prompt Unicode code-point budgets and dynamic-limit helper.
-- [reference/VENICE_API_SOURCE_MANIFEST.md](reference/VENICE_API_SOURCE_MANIFEST.md) — Authoritative upstream Venice API documentation mirror provenance, manifest, and synchronization contract.
+> Precise, systematic descriptions of interfaces, formats, and configuration.
+
+### API & Network Contracts
+
 - [reference/Venice_swagger_api.yaml](reference/Venice_swagger_api.yaml) — Authoritative local OpenAPI snapshot (`20260814.194349`) for Venice API requests/responses.
 - [reference/Venice_api_LLM_info.md](reference/Venice_api_LLM_info.md) — Venice-provided LLM integration reference.
 - [reference/VENICE_API_SYSTEM_PROMPT.md](reference/VENICE_API_SYSTEM_PROMPT.md) — Core system prompt for AI agents integrating with the Venice API.
-- [reference/seedance-2-0-api-guide.md](reference/seedance-2-0-api-guide.md) — Seedance video API reference.
-- [reference/seedance-face-consent-api-guide.md](reference/seedance-face-consent-api-guide.md) — Seedance face-consent API reference and boundary notes.
+- [reference/VENICE_API_SOURCE_MANIFEST.md](reference/VENICE_API_SOURCE_MANIFEST.md) — Upstream API documentation mirror provenance and sync contract.
+- [reference/seedance-2-0-api-guide.md](reference/seedance-2-0-api-guide.md) — Seedance video generation API reference.
+- [reference/seedance-face-consent-api-guide.md](reference/seedance-face-consent-api-guide.md) — Seedance face-consent API reference.
 
----
+### Formats & Compatibility
 
-## 5. Security / Privacy / Legal Docs
+- [reference/CHARACTER_CARD_V2_COMPATIBILITY.md](reference/CHARACTER_CARD_V2_COMPATIBILITY.md) — Supported Tavern/CCv2 formats, mappings, limits, and runtime semantics.
+- [developer/CHARACTER_CARD_CODEC.md](developer/CHARACTER_CARD_CODEC.md) — Character Card V2 PNG codec limits, verification, and chunk contract.
+- [developer/CHARACTER_CARD_MAPPINGS.md](developer/CHARACTER_CARD_MAPPINGS.md) — Tavern/V2 DTO to internal card and character-book mappings.
+- [testing/CHARACTER_CARD_FIXTURES.md](testing/CHARACTER_CARD_FIXTURES.md) — Synthetic fixture policy and validation commands.
+- [architecture/data-export-format.md](architecture/data-export-format.md) — Authenticated `.vfbackup` envelope, portability, and compatibility contract.
+- [design/LOADING_AND_SURFACE_CONTRACT.md](design/LOADING_AND_SURFACE_CONTRACT.md) — Semantic loading, reduced-motion, mesh structure, and interactive-border rules.
+- [design/THEME_SYSTEM.md](design/THEME_SYSTEM.md) — CSS custom property tokens, contrast checking, and YAML palette integration.
 
-- [SECURITY.md](../SECURITY.md) — Vulnerability reporting policy, encryption algorithms, and suppression lists.
-- [PRIVACY.md](../PRIVACY.md) — User-facing privacy summary.
-- [LEGAL.md](../LEGAL.md) — Public legal notices and unofficial client disclaimers.
+### Architecture Specifications
+
+- [DEVELOPMENT/FILE_TREE.md](DEVELOPMENT/FILE_TREE.md) — Directory structure reference.
+- [DEVELOPMENT/platform-support.md](DEVELOPMENT/platform-support.md) — Desktop OS compatibility matrices.
+- [DEVELOPMENT/storage-policy.md](DEVELOPMENT/storage-policy.md) — IndexedDB storage configuration, encryption, and folder layouts.
+- [DEVELOPMENT/BRIDGE.md](DEVELOPMENT/BRIDGE.md) — Headless loopback bridge specifications.
+- [DEVELOPMENT/JINA_PROVIDER.md](DEVELOPMENT/JINA_PROVIDER.md) — Jina-backed search and scrape integration reference.
+- [DEVELOPMENT/image-model-capabilities.md](DEVELOPMENT/image-model-capabilities.md) — Image model capability registry and Seedream model reference.
+- [DEVELOPMENT/sync-architecture.md](DEVELOPMENT/sync-architecture.md) — Main/renderer trust boundary, packet lifecycle, conflicts, tombstones, and recovery.
+- [DEVELOPMENT/sync-provider-interface.md](DEVELOPMENT/sync-provider-interface.md) — Fail-closed contract for deferred WebDAV/S3-compatible transports.
+- [developer/image-inspector-architecture.md](developer/image-inspector-architecture.md) — Image Inspector ingestion, IPC, structured analysis, error and privacy contracts.
+- [design/MEDIA_STUDIO.md](design/MEDIA_STUDIO.md) — Media Studio command center actions, visual diffs, and lineage trees.
+
+### Threat Models & Security
+
+- [security/ST_CARD_IMPORT_THREAT_MODEL.md](security/ST_CARD_IMPORT_THREAT_MODEL.md) — Card/PNG/IPC/AI trust boundaries and logging rules.
+- [security/security-model.md](security/security-model.md) — Credential, IPC, safety, and portable-data boundaries.
+- [security/sync-threat-model.md](security/sync-threat-model.md) — Attacker model and mitigations for untrusted sync folders.
+
+### Internationalization
+
+- [i18n/GLOSSARY.md](i18n/GLOSSARY.md) — Internationalization terminology glossary.
+- [i18n/translation-status.json](i18n/translation-status.json) — Machine-readable structural, runtime-surface, and linguistic-review metadata (schema v4).
+- [i18n/native-review-status.json](i18n/native-review-status.json) — Per-locale qualified-review state and production-completion input.
+
+### Release & Legal
+
+- [RELEASE/SIGNED_ARTIFACT_EVIDENCE.md](RELEASE/SIGNED_ARTIFACT_EVIDENCE.md) — Cryptographic verification hashes of released binaries.
+- [RELEASE/repository-settings.md](RELEASE/repository-settings.md) — GitHub environments and branch protections.
+- [RELEASE/ST_CARD_STUDIO_MIGRATION.md](RELEASE/ST_CARD_STUDIO_MIGRATION.md) — Character schema, draft, import/export, sync, and compatibility migration notes.
 - [legal/PRIVACY.md](legal/PRIVACY.md) — Detailed technical privacy and local credential storage model.
 - [legal/DISCLAIMER.md](legal/DISCLAIMER.md) — Liability exclusions and warranty waivers.
 - [legal/NOTICE.md](legal/NOTICE.md) — Copyright attributions and third-party notices.
 - [legal/THIRD_PARTY_NOTICES.md](legal/THIRD_PARTY_NOTICES.md) — Dependency licenses and brand attributions.
 - [legal/TRADEMARKS.md](legal/TRADEMARKS.md) — Venice.ai and external trademark nominative-use notices.
-- [security-model.md](security/security-model.md) — Credential, IPC, safety, and portable-data boundaries.
-- [sync-threat-model.md](security/sync-threat-model.md) — Attacker model and mitigations for untrusted sync folders.
-- [PRIVACY.md](../PRIVACY.md) — User privacy implications of encrypted backup and third-party-managed sync folders.
-- [sync-troubleshooting.md](user/sync-troubleshooting.md) — Safe recovery, passphrase-loss, conflict, and two-device troubleshooting.
-- [DEVELOPMENT/sync-architecture.md](DEVELOPMENT/sync-architecture.md) — Main/renderer trust boundary, packet lifecycle, conflicts, tombstones, and recovery.
-- [DEVELOPMENT/sync-testing.md](DEVELOPMENT/sync-testing.md) — Automated fixtures and two-device manual QA protocol.
-- [DEVELOPMENT/sync-provider-interface.md](DEVELOPMENT/sync-provider-interface.md) — Fail-closed contract for deferred WebDAV/S3-compatible transports.
-- [DEVELOPMENT/testing.md](DEVELOPMENT/testing.md) — Named test shards, measured durations, and regression escalation bounds.
-- [DEVELOPMENT/performance-baselines.md](DEVELOPMENT/performance-baselines.md) — Bundle/render profiling matrix required before monolith refactors.
+
+### Source Code Contracts
+
+- [`../src/shared/chatMediaReferenceContracts.ts`](../src/shared/chatMediaReferenceContracts.ts) — Canonical `ChatMediaReference` parity contract between renderer and main.
+- [`../src/shared/promptLimits.ts`](../src/shared/promptLimits.ts) — Unicode code-point budgets and dynamic-limit helper.
+- [`../inactive-features/research-browser/README.md`](../inactive-features/research-browser/README.md) — Inactive archive boundary for the former embedded Research Browser.
 
 ---
 
-## 6. Release Docs
+## Explanation (Understanding-Oriented)
 
-- [RELEASE/release.md](RELEASE/release.md) — Release requirements, versioning, and publishing checklist.
-- [RELEASE/signing-and-notarization.md](RELEASE/signing-and-notarization.md) — Certificate setups and macOS app quarantine workarounds.
-- [RELEASE/repository-settings.md](RELEASE/repository-settings.md) — GitHub environments and branch protections.
-- [RELEASE/SIGNED_ARTIFACT_EVIDENCE.md](RELEASE/SIGNED_ARTIFACT_EVIDENCE.md) — Cryptographic verification hashes of released binaries.
-- [RELEASE/ST_CARD_STUDIO_MIGRATION.md](RELEASE/ST_CARD_STUDIO_MIGRATION.md) — Character schema, draft, import/export, sync, and compatibility migration notes.
+> Why the system behaves as it does, how concepts relate, and design rationale.
+
+### Architecture & Design
+
+- [architecture/memory-isolation.md](architecture/memory-isolation.md) — Conversation-scoped memory retrieval, exclusions, and preview lifecycle.
+- [design/DESIGN.md](design/DESIGN.md) — Product design principles and interaction guidance.
+- [design/CHARACTER_RP.md](design/CHARACTER_RP.md) — Local Character RP architecture and memory boundaries.
+- [design/ST_CARD_STUDIO.md](design/ST_CARD_STUDIO.md) — ST Card Studio compatibility decisions, trust boundaries, and phase gates.
+- [design/MEMORY.md](design/MEMORY.md) — Semantic memory store structure and injection disclosures.
+- [design/LOREBOOKS.md](design/LOREBOOKS.md) — Lorebook JSON formats and key trigger injection.
+- [design/SCENE_GENERATION.md](design/SCENE_GENERATION.md) — Dynamic scene-generation rules and background asset maps.
+- [design/REPOSITORY_TREE.md](design/REPOSITORY_TREE.md) — Codebase layout and design rationale.
+- [DEVELOPMENT/rp-token-counting.md](DEVELOPMENT/rp-token-counting.md) — Compiled prompt estimates and over-budget save behavior.
+- [features/DOCUMENT_AGENT.md](features/DOCUMENT_AGENT.md) — Limited Documents, workspace grants, approval integrity, and path security.
+
+### Design History & Reports
+
+- [design/PUBLIC_PROFILE_DISCOVERY.md](design/PUBLIC_PROFILE_DISCOVERY.md) — Platform-specific site query logic.
+- [design/VENICE_UI_EXTRACTION.md](design/VENICE_UI_EXTRACTION.md) — Internal UI extraction/reference notes; implementation remains authoritative.
+- [design/pastel-theme-pack-report.md](design/pastel-theme-pack-report.md) — Pastel Aqua/Pink Theme Pack implementation report.
+
+### Discovery & Planning
+
+- [discovery/DISCOVERY_DOCUMENT_AGENT.md](discovery/DISCOVERY_DOCUMENT_AGENT.md) — Repository reconciliation and Phase 0 architecture evidence.
 
 ---
 
-## 7. Roadmap / Current Work
+## Developer Onboarding
 
-- [ROADMAP.md](ROADMAP.md) — Canonical current-work-only task ledger; closed work and historical validation stay in the session ledger and historical reports.
-- [summary_of_work.md](summary_of_work.md) — Active session ledger (recent sessions only).
-- [audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md](audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md) — Current exhaustive repository audit verdict, evidence map, findings, validation, and ordered remediation plan; machine-readable metadata is adjacent in `FINDINGS.json`.
+- [CONTRIBUTING.md](../CONTRIBUTING.md) — Branch conventions, validation commands, and PR checklist.
+- [AGENTS.md](../AGENTS.md) — Instructions for AI coding agents and session handoffs.
+- [.cursorrules](../.cursorrules) — Thin pointer to AGENTS.md for Cursor-compatible agents.
+- [AGENTS/AGENTS.md](AGENTS/AGENTS.md) — Supplementary multi-agent guidance and free-thread agent profiles.
+- [AGENTS/agent-reinitialization.md](AGENTS/agent-reinitialization.md) — Agent re-initialization protocol.
+- [../scripts/dev-tools/README.md](../scripts/dev-tools/README.md) — Internal development-tool inventory.
+
+---
+
+## Project Governance
+
+### Roadmap & Session Handoff
+
+- [ROADMAP.md](ROADMAP.md) — Canonical current-work-only task ledger.
+- [summary_of_work.md](summary_of_work.md) — Active session handoff ledger.
+
+### Audit Evidence
+
+- [audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md](audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md) — Current exhaustive repository audit verdict and remediation plan.
 - [audits/repository-hygiene-audit.md](audits/repository-hygiene-audit.md) — 2026-08-22 repository hygiene audit and reorganization plan.
-- [audits/repository-hygiene-final-report.md](audits/repository-hygiene-final-report.md) — 2026-08-22 hygiene execution report (removed/moved/updated files, validation results).
-- [audits/repo-management/](audits/repo-management/) — Historical client-provided repository hygiene and reorganization handoffs.
-- July 17 03:10 deep-scan audit evidence was processed; remediated live status remains in `ROADMAP.md` and `summary_of_work.md`.
+- [audits/repository-hygiene-final-report.md](audits/repository-hygiene-final-report.md) — 2026-08-22 hygiene execution report.
+- [audits/repo-management/](audits/repo-management/) — Historical repository hygiene and reorganization handoffs.
 
----
+### Historical Reports
 
-## 8. Historical Reports
-
-- [audits/Records/Function_calling_todo.md](audits/Records/Function_calling_todo.md) — Retained Document Agent implementation and acceptance specification; unfinished product scope is tracked in `ROADMAP.md`.
-- [audits/Records/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md](audits/Records/MULTILINGUAL_PROMPT_LANGUAGE_AUDIT.md) — Retained multilingual prompt-language audit evidence.
-- [audits/Records/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md](audits/Records/VF-I18N-REMEDIATION-FOUNDATION-2026-07-26.md) — Retained i18n foundation-phase remediation report.
-- [reports/historical/RUNTIME_I18N_FULL_UI_REMEDIATION_REPORT_2026-07-26.md](reports/historical/RUNTIME_I18N_FULL_UI_REMEDIATION_REPORT_2026-07-26.md) — Completed runtime-localization architecture remediation evidence: zero-debt expanded scanner, stable prompt/status contracts, full first-pass catalog sweep, rendered locale/RTL QA, validation, and external review limits.
-- [reports/MEDIA_PREVIEW_TRAFFIC_INSPECTOR_REMEDIATION_REPORT_2026-07-26.md](reports/MEDIA_PREVIEW_TRAFFIC_INSPECTOR_REMEDIATION_REPORT_2026-07-26.md) — Closure report for the Media Preview + Traffic Inspector remediation work order (Phases A–D + Phase C emitter wiring on 2026-07-27): durable image source resolver, legacy `venice()` consolidation, cross-process Inspector telemetry contract chain, Inspector pane capture-state pill + live request counter, and the remaining Phase C telemetry emitters (`VERIFY-153`, `VERIFY-154`, `VERIFY-156`, `VERIFY-157`, `VERIFY-158`) for video retrieve, Jina Research, guard pipeline, agent-tool executor, chat-agent runner, and main-video retrieve telemetry (`JinaRunResult.fail` body-pass-through + VERIFY-144 JSON-or-MP4 transport + VERIFY-158 `eventId` reuse / processing-poll non-terminal / `download_url` non-leak / dispatcher-throw sanitization regression corrections included). Phase C closure narrative is added to [summary_of_work.md](summary_of_work.md) Session History 2026-07-27 and the umbrella row in [ROADMAP.md](ROADMAP.md) (`VF-MEDIA-PREVIEW-TRAFFIC-INSPECTOR-001`) is now closed.
-- [reports/MEDIA_SAVE_PIPELINE_AUDIT_2026-07-28.md](reports/MEDIA_SAVE_PIPELINE_AUDIT_2026-07-28.md) — VF-VERIFY-005 canonical media Save As consolidation, write-path inventory, format/integrity policy, regression evidence, packaged arm64 evidence, and signed/notarized release blockers.
-- [audits/Records/Venice_Forge_Extensive_Scan_2026-07-22.md](audits/Records/Venice_Forge_Extensive_Scan_2026-07-22.md) — Retained July 22 repository scan and remediation addendum.
-- [audits/Records/Venice_Forge_Findings_2026-07-22.json](audits/Records/Venice_Forge_Findings_2026-07-22.json) — Machine-readable July 22 snapshot findings and dispositions.
-- [reports/historical/README.md](reports/historical/README.md) — Guideline explaining audit history and historical report rules.
+- [reports/historical/README.md](reports/historical/README.md) — Guideline for audit history and historical report rules.
 - [reports/historical/CANONICAL_REPORT_INDEX.md](reports/historical/CANONICAL_REPORT_INDEX.md) — Navigator for past validation audits.
 - [archives/README.md](archives/README.md) — Archive policy and non-authoritative historical-material boundary.
-- [reports/historical/INTENDED_FEATURE_VERIFICATION_2026-07-15.md](reports/historical/INTENDED_FEATURE_VERIFICATION_2026-07-15.md) — Historical snapshot reconciliation of the supplied intended-feature checklist.
-- [reports/historical/MEDIA_CHARACTER_REMEDIATION_REPORT.md](reports/historical/MEDIA_CHARACTER_REMEDIATION_REPORT.md) — Historical 2026-07-12/13 media/character implementation evidence.
-- [reports/historical/VIDEO_GALLERY_CHARACTER_CHATS_UI_SURFACE_REMEDIATION_REPORT.md](reports/historical/VIDEO_GALLERY_CHARACTER_CHATS_UI_SURFACE_REMEDIATION_REPORT.md) — Historical 2026-07-15 video, Character Chats, and UI evidence.
-- [reports/historical/VIDEO_PIPELINE_AND_RESEARCH_BROWSER_DEACTIVATION_2026-07-18.md](reports/historical/VIDEO_PIPELINE_AND_RESEARCH_BROWSER_DEACTIVATION_2026-07-18.md) — Historical implementation and validation report for streamed video durability and Research Browser deactivation.
-- [reports/historical/VENICE_FORGE_CHAT_FOLDERS_MEDIA_DOCUMENTS_REPORT_2026-07-19.md](reports/historical/VENICE_FORGE_CHAT_FOLDERS_MEDIA_DOCUMENTS_REPORT_2026-07-19.md) — Closure report for the 2026-07-19 chat folders / agent media / documents / video 9-phase work order.
-- [reports/historical/VENICE_FORGE_THEME_ENGINE_BORDER_AND_PORTABILITY_AUDIT_2026-07-21.md](reports/historical/VENICE_FORGE_THEME_ENGINE_BORDER_AND_PORTABILITY_AUDIT_2026-07-21.md) — Closure report for the 2026-07-21 Theme Engine, Border System, Focus Ring, and Theme Portability audit & remediation.
-- [reports/historical/MINIMAX_M3_I18N_FULL_APP_REMEDIATION_REPORT_2026-07-26.md](reports/historical/MINIMAX_M3_I18N_FULL_APP_REMEDIATION_REPORT_2026-07-26.md) — Retained full-app i18n remediation report and explicit manual-review deferrals.
-- [reports/historical/VENICE_FORGE_2026-07-20_REMEDIATION_REPORT.md](reports/historical/VENICE_FORGE_2026-07-20_REMEDIATION_REPORT.md) — Retained July 20 remediation report.
-- [pastel-theme-pack-report.md](design/pastel-theme-pack-report.md) — 2026-07-23 implementation report for the Pastel Aqua/Pink Theme Pack (Cotton Candy Console, Sweet Nightmare, Dual Persona, Polaroid Board). Records token corrections, WCAG AA validation, border analysis, and pre-existing failure evidence.
-- [reports/historical/character-creator-implementation-report.md](reports/historical/character-creator-implementation-report.md) — Implementation report for the Build Character Creator feature powered immutably by `zai-org-glm-5-2`.
-- [reports/historical/VENICE_FORGE_COMPLETION_EXECUTION_2026-07-25.md](reports/historical/VENICE_FORGE_COMPLETION_EXECUTION_2026-07-25.md) — Execution log for the 2026-07-25 master feature-completion work order.
-- [reports/historical/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md](reports/historical/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md) — Implementation report for the 2026-07-25 Image Generation Prompt, Aspect Ratio, Download, and Safety Remediation work order.
-- [reports/historical/final-massive-bug-hunt-with-proof.md](reports/historical/final-massive-bug-hunt-with-proof.md) — Historical audit log of closed validation checks from the v2.1.0 release boundary.
-- [audits/Records/Venice_Forge_Full_Repository_Audit_2026-07-18/12-final-report.md](audits/Records/Venice_Forge_Full_Repository_Audit_2026-07-18/12-final-report.md) — Retained July 18 full-repository audit evidence, moved byte-for-byte from the former active-audit location.
-- [audits/Records/Venice_Forge_Most_Recent_Change_Audit_2026-07-20/09-final-report.md](audits/Records/Venice_Forge_Most_Recent_Change_Audit_2026-07-20/09-final-report.md) — Retained July 20 recent-change audit evidence, moved byte-for-byte from the former active-audit location.
 
----
+### Retired / Deleted During Hygiene
 
-## 9. Retired / Deleted During Hygiene
+These files were removed, merged, or archived during the 2026-08-22 repository-wide hygiene pass:
+- `CLAUDE.md`, `GEMINI.md`, `.windsurfrules` — Redundant copies of AGENTS.md.
+- `docs/SUPPORT.md`, `docs/privacy.md` — Duplicates of root-level files.
+- `docs/BUG_HUNTING_AGENT_PROMPT.md` — Internal agent prompt; not user-facing documentation.
+- `docs/DEVELOPMENT/BUG_HUNTING_AGENT_PROMPT.md` — Duplicate of the above.
+- `docs/audits/CHANGELOG.md` — Duplicate history ledger.
+- `scratch/` — Directory added to `.gitignore`.
 
-Internal-only agent material such as `docs/development/BUG_HUNTING_AGENT_PROMPT.md` is intentionally excluded from the canonical user/developer graph; it is not an instruction authority and must not override `AGENTS.md`, `ROADMAP.md`, or this index.
-
-The following files were removed, merged, or archived during the repository-wide documentation hygiene pass:
-- `docs/audits/repository-todo-roadmap-current.md` — Merged into the clean [ROADMAP.md](ROADMAP.md).
-- `docs/audits/research-browser-plan.md` and `docs/DEVELOPMENT/research-browser.md` — Retained only in the inactive Research Browser archive.
-- `docs/audits/CHANGELOG.md` — Removed as a duplicate history ledger; current work is recorded in [summary_of_work.md](summary_of_work.md).
-- `docs/audits/exhaustive-bug-hunt-2026-06-19.md` — Removed as superseded historical evidence; current findings remain in the canonical roadmap and audit index.
-- `docs/LEGAL.md` — Deleted as a duplicate of the root [LEGAL.md](../LEGAL.md).
-- `docs/archives/VENICE_FORGE_TODO.md` — Superseded by the new [ROADMAP.md](ROADMAP.md).
-- `docs/archives/VENICE_FORGE_ZIP_AUDIT_HANDOFF.md` — Superseded by [summary_of_work.md](summary_of_work.md).
-- `scratch/` — Directory added to `.gitignore` and all transient agent notes removed.
-- Historical stub files under `docs/reports/historical/` (including `AUDIT_FOLLOWUP_2026_06_05.md`, `BUG_HUNT_REVIEW.md`, `CI_FAILURE_AND_BUG_HUNT_2026_06_09.md`, `DOCS_CANONICALIZATION_AND_STALE_PRUNE.md`, `EXHAUSTIVE_REPO_SCAN_TODO.md`, `FINAL_MASSIVE_BUG_HUNT_WITH_PROOF.md`, `HQE_AUDIT_REPORT.md`, `POST_VENICE_JINA_AUDIT_2026_06_06.md`, `SWARM_AUDIT_2026_06_09.md`) — Deleted as they were redundant 207-byte redirect stubs.
+Leaf nodes `docs/security-model.md`, `docs/data-export-format.md`, `docs/backup-and-sync.md`, `docs/sync-troubleshooting.md`, `docs/chat-model-selection.md`, and `docs/memory-isolation.md` were moved into topic subdirectories during the hygiene pass. The sole authority for current paths is this index.

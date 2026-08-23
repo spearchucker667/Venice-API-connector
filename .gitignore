@@ -321,5 +321,7 @@ _REPO_EXTRACT_METADATA/
 # Local repository tooling
 # =============================================================================
 
-/.freebuff
+/.freebuff/
 /docs/archives
+/inactive-features/research-browser/
+/.agents/skills

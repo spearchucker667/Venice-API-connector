@@ -294,7 +294,14 @@ export function ChatView() {
   // async handleForgetFact / handleRemoveFact callbacks always see the
   // post-render state, not whatever was captured at callback creation time.
   const pendingContextRef = useRef(pendingContext);
-  pendingContextRef.current = pendingContext;
+  // BUG-React#7 regression guard: mirror `pendingContext` through a ref so
+  // async handleForgetFact / handleRemoveFact callbacks always see the
+  // post-render state, not whatever was captured at callback creation time.
+  // Written in an effect (not during render) per React 19 rules — the ref is
+  // only read inside event handlers, never during render.
+  useEffect(() => {
+    pendingContextRef.current = pendingContext;
+  }, [pendingContext]);
   const [isEditingContext, setIsEditingContext] = useState(false);
   const [editedText, setEditedText] = useState("");
 
@@ -499,17 +506,22 @@ export function ChatView() {
 
   // BUG-React#2 regression guard: stable per-message callbacks for memoized
   // MessageBubble; mirrored live index via refs so stale closures still hit
-  // the right message when messages are prepended/inserted later.
+  // the right message when messages are prepended/inserted later. The memo
+  // reads `conversation` directly (the same values the refs used to mirror);
+  // refs are written in an effect (not during render) per React 19 rules and
+  // are read only inside event handlers.
   const messagesRef = useRef(conversation?.messages);
   const conversationIdRef = useRef(conversation?.id);
-  messagesRef.current = conversation?.messages;
-  conversationIdRef.current = conversation?.id;
+  useEffect(() => {
+    messagesRef.current = conversation?.messages;
+    conversationIdRef.current = conversation?.id;
+  }, [conversation?.messages, conversation?.id]);
 
   const characterSlug = conversation?.metadata?.character?.slug;
   const messageCallbacks = useMemo(() => {
     const map = new Map<string, MessageBubbleCallbacks>();
-    if (!conversationIdRef.current || !messagesRef.current) return map;
-    const messages = messagesRef.current;
+    if (!conversation?.id || !conversation?.messages) return map;
+    const messages = conversation.messages;
     const lastIndex = messages.length - 1;
     for (let i = 0; i < messages.length; i++) {
       const msg = messages[i];

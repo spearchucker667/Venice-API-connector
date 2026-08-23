@@ -234,7 +234,7 @@ console.log("✓ All explicit Vitest paths exist");
 // explicit contract segment. These directories previously fell through the
 // segmented test:ci union even though they contain release and security guards.
 const requiredContractTestPaths = [
-  'package-scripts.test.ts',
+  'tests/package-scripts.test.ts',
   'tests/backup',
   'tests/csp',
   'tests/electron',

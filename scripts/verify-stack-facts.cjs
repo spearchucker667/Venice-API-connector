@@ -12,13 +12,12 @@ const expected = {
   Express: major('express'),
 };
 const failures = [];
+// CLAUDE.md, GEMINI.md, .windsurfrules removed in 2026-08-22 hygiene pass.
+// .cursorrules is now a thin pointer to AGENTS.md.
 const assertions = {
   'README.md': [`Electron ${expected.Electron}`],
   'docs/ABOUT.md': [`Vite ${expected.Vite}`, `Electron ${expected.Electron}`, `Express ${expected.Express}`],
-  'CLAUDE.md': ['Stack versions are sourced from `package.json`'],
-  'GEMINI.md': ['Stack versions are sourced from `package.json`'],
-  '.cursorrules': ['Stack versions are sourced from `package.json`'],
-  '.windsurfrules': ['Stack versions are sourced from `package.json`'],
+  '.cursorrules': ['# See AGENTS.md'],
 };
 
 for (const [file, snippets] of Object.entries(assertions)) {

@@ -69,10 +69,11 @@ const SYNC_ENGINE_FILE = path.join(REPO, "src/services/syncEngine.ts");
 const SYNC_DELETE_COORDINATOR_FILE = path.join(REPO, "src/services/syncDeleteCoordinator.ts");
 const BACKUP_PANEL_FILE = path.join(REPO, "src/components/settings/BackupSyncPanel.tsx");
 const PRELOAD_FILE = path.join(REPO, "electron/preload.ts");
-const BACKUP_SYNC_DOC_FILE = path.join(REPO, "docs/backup-and-sync.md");
-const EXPORT_FORMAT_DOC_FILE = path.join(REPO, "docs/data-export-format.md");
-const SECURITY_MODEL_DOC_FILE = path.join(REPO, "docs/security-model.md");
-const SYNC_THREAT_MODEL_DOC_FILE = path.join(REPO, "docs/sync-threat-model.md");
+// Paths updated 2026-08-22 after docs restructuring (hygiene pass).
+const BACKUP_SYNC_DOC_FILE = path.join(REPO, "docs/user/backup-and-sync.md");
+const EXPORT_FORMAT_DOC_FILE = path.join(REPO, "docs/architecture/data-export-format.md");
+const SECURITY_MODEL_DOC_FILE = path.join(REPO, "docs/security/security-model.md");
+const SYNC_THREAT_MODEL_DOC_FILE = path.join(REPO, "docs/security/sync-threat-model.md");
 
 let failures = 0;
 function check(label, ok, detail) {

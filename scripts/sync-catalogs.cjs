@@ -69,8 +69,16 @@ function deepClone(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
-function synthesizePlaceholder(keyPath) {
-  return `${MISSING_PLACEHOLDER_PREFIX}${keyPath}`;
+function extractInterpolationVars(value) {
+  if (typeof value !== "string") return "";
+  const matches = value.match(/\{\{[^}]+\}\}/g);
+  if (!matches || matches.length === 0) return "";
+  return " " + matches.join(" ");
+}
+
+function synthesizePlaceholder(keyPath, canonicalValue) {
+  const suffix = extractInterpolationVars(canonicalValue);
+  return `${MISSING_PLACEHOLDER_PREFIX}${keyPath}${suffix}`;
 }
 
 function mergeTreeAdditive(enTree, localeTree, prefix = '') {
@@ -92,7 +100,7 @@ function mergeTreeAdditive(enTree, localeTree, prefix = '') {
           if (SENTINEL_RE.test(existing) || MISSING_MARKER_RE.test(existing)) {
             // Replace the sentinel/marker with a clean placeholder so the
             // leaf becomes self-evidently untranslated.
-            out[k] = synthesizePlaceholder(childPath);
+            out[k] = synthesizePlaceholder(childPath, v);
             added += 1;
           } else {
             skipped += 1;
@@ -101,11 +109,11 @@ function mergeTreeAdditive(enTree, localeTree, prefix = '') {
         }
         // Existing value is empty/whitespace — overwrite with placeholder so
         // the leaf is at least flagged.
-        out[k] = synthesizePlaceholder(childPath);
+        out[k] = synthesizePlaceholder(childPath, v);
         added += 1;
         continue;
       }
-      out[k] = synthesizePlaceholder(childPath);
+      out[k] = synthesizePlaceholder(childPath, v);
       added += 1;
     }
   }

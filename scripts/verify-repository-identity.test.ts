@@ -17,11 +17,17 @@ const {
   verifyRepositoryIdentity,
 } = require("./verify-repository-identity.cjs") as {
   ACTIVE_AGENT_DOCS: readonly string[];
+  AGENT_POINTER_FILES?: readonly string[];
   CANONICAL_PATH: string;
   CANONICAL_REPOSITORY: string;
   README_REQUIRED_CUSTODY_MARKERS: readonly string[];
   README_REQUIRED_TAB_LABELS: readonly string[];
   verifyRepositoryIdentity: (rootDir: string) => { passed: boolean; errors: string[] };
+};
+// AGENT_POINTER_FILES was added in the 2026-08-22 hygiene pass —
+// not present in the exported contract, derive from the module itself.
+const { AGENT_POINTER_FILES = [] } = require("./verify-repository-identity.cjs") as {
+  AGENT_POINTER_FILES?: readonly string[];
 };
 
 describe("VERIFY-069 repository identity", () => {
@@ -44,6 +50,10 @@ describe("VERIFY-069 repository identity", () => {
   function writeAgentDocs(): void {
     for (const relativePath of ACTIVE_AGENT_DOCS as string[]) {
       write(relativePath, `${CANONICAL_PATH}\n${CANONICAL_REPOSITORY}\ndocs/summary_of_work.md\n`);
+    }
+    // Agent pointer files only need to reference AGENTS.md (not full canonical paths).
+    for (const relativePath of AGENT_POINTER_FILES as string[]) {
+      write(relativePath, "# Venice Forge\n# See AGENTS.md for canonical instructions.\n");
     }
   }
 

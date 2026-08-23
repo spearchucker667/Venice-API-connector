@@ -4,6 +4,24 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+**Date:** 2026-08-22 (React Doctor Audit — chat-view ref lifecycle + message-bubble alt text)
+
+**Completed result:** Resolved all four React Doctor error-severity findings (`react-doctor` v4.1.10 scan).
+
+**Changes made:**
+
+- **P1 — Ref mutated during render in `chat-view.tsx` (`no-ref-current-in-render` ×3):** The latest-value mirror refs (`pendingContextRef`, `messagesRef`, `conversationIdRef`) were written during render. React can replay or discard render work, so uncommitted values could leak. Moved all three writes into `useEffect`s. `messageCallbacks` memo now reads `conversation` directly (identical values) instead of through refs; refs remain only for event-handler reads (`onDelete`, `onEdit`, `onRegenerateFromHere`, `onForkFromHere`, etc.).
+- **P1 — Missing image `alt` in `message-bubble.tsx` (`alt-text`):** Generated-media `<img>` had no alt. Now uses the reference's `altText` when present, else the new i18n key `runtimeGenerated.components.chat.messageBubble.attribute.generatedMedia` ("Generated media") — added to en-US and synced to all 12 catalogs via `sync-catalogs.cjs`.
+
+**Validation:**
+- React Doctor: 4 errors → 0 errors (674 warnings remain, all low/medium style+perf heuristics, e.g. `js-combine-iterations`, `label-has-associated-control`, `no-array-index-as-key`).
+- `npm run lint:eslint` — PASS (0 warnings).
+- `npx tsc --noEmit` — PASS.
+- `npm run verify:i18n` — PASS (12 locales).
+- `chat-view.test.tsx` (14 tests) + `message-bubble.test.tsx` (16 tests) — PASS.
+
+## Prior Session Summary
+
 **Date:** 2026-08-22 (Audit Remediation — Deferred Items: FSM Screen-Before-Persist, Single-Owner Music, Magic-Byte Separation)
 
 **Completed result:** Closed the remaining deferred items from the paid-queue follow-up audit, plus two P2 hardening items.

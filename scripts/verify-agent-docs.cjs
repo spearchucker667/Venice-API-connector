@@ -1,16 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
+// CLAUDE.md, GEMINI.md, .windsurfrules removed in 2026-08-22 hygiene pass.
 const DOCS = [
-  'CLAUDE.md',
-  'GEMINI.md',
   '.github/copilot-instructions.md',
   'AGENTS.md',
   '.cursorrules',
-  '.windsurfrules'
 ];
 
-const THIN_POINTERS = ['CLAUDE.md', 'GEMINI.md', '.cursorrules', '.windsurfrules'];
+const THIN_POINTERS = ['.cursorrules'];
 
 const CANONICAL_ROOT = '/Users/super_user/Projects/Venice_Forge';
 
@@ -193,14 +191,15 @@ function verifyAgentDocs(repoRoot) {
     }
   }
 
-  const fileTreePath = path.resolve(repoRoot, 'docs/FILE_TREE.md');
+  // FILE_TREE.md moved to docs/DEVELOPMENT/ during 2026-08-22 hygiene pass.
+  const fileTreePath = path.resolve(repoRoot, 'docs/DEVELOPMENT/FILE_TREE.md');
   if (!fs.existsSync(fileTreePath)) {
-    errorSet.add('ERROR: docs/FILE_TREE.md does not exist.');
+    errorSet.add('ERROR: docs/DEVELOPMENT/FILE_TREE.md does not exist.');
   } else {
     const fileTree = fs.readFileSync(fileTreePath, 'utf8');
     for (const marker of FILE_TREE_CURRENT_ARCHITECTURE_MARKERS) {
       if (!fileTree.includes(marker)) {
-        errorSet.add(`ERROR: docs/FILE_TREE.md is missing current architecture marker: ${marker}.`);
+        errorSet.add(`ERROR: docs/DEVELOPMENT/FILE_TREE.md is missing current architecture marker: ${marker}.`);
       }
     }
   }

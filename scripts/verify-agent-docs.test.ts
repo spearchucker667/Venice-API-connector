@@ -72,8 +72,9 @@ describe("verify-agent-docs", () => {
 
   function writeSupportingFiles() {
     writeDoc("docs/summary_of_work.md", "# Summary of Work\n");
+    // FILE_TREE.md moved to docs/DEVELOPMENT/ during 2026-08-22 hygiene pass.
     writeDoc(
-      "docs/FILE_TREE.md",
+      "docs/DEVELOPMENT/FILE_TREE.md",
       [
         "`src/config/tabs.ts`",
         "`src/services/desktopBridge.ts`",
@@ -158,7 +159,7 @@ describe("verify-agent-docs", () => {
     writeSupportingFiles();
     writeDoc("AGENTS.md", minimalAgentsMd());
     writeDoc(".github/copilot-instructions.md", minimalCopilotMd());
-    writeDoc("docs/FILE_TREE.md", "do not copy a numeric tab count\n");
+    writeDoc("docs/DEVELOPMENT/FILE_TREE.md", "do not copy a numeric tab count\n");
     const { passed, errors } = verifyAgentDocs(tmpDir);
     expect(passed).toBe(false);
     expect(errors.some((e: string) => e.includes("src/config/tabs.ts"))).toBe(true);
@@ -203,24 +204,23 @@ describe("verify-agent-docs", () => {
     return "Read [AGENTS.md](AGENTS.md) first. Follow [docs/summary_of_work.md](docs/summary_of_work.md).\n";
   }
 
-  function writeFullFixture(cursorRules?: string, windSurfRules?: string) {
+  // CLAUDE.md, GEMINI.md, .windsurfrules removed in 2026-08-22 hygiene pass.
+  function writeFullFixture(cursorRules?: string) {
     writeSupportingFiles();
     writeDoc("AGENTS.md", minimalAgentsMd());
     writeDoc(".github/copilot-instructions.md", minimalCopilotMd());
-    writeDoc("CLAUDE.md", validPointer());
-    writeDoc("GEMINI.md", validPointer());
     writeDoc(".cursorrules", cursorRules ?? validPointer());
-    writeDoc(".windsurfrules", windSurfRules ?? validPointer());
   }
 
-  it("includes .cursorrules and .windsurfrules in the checked document set", () => {
+  it(".cursorrules is in the checked document set and thin-pointers", () => {
     expect(DOCS).toContain(".cursorrules");
-    expect(DOCS).toContain(".windsurfrules");
     expect(THIN_POINTERS).toContain(".cursorrules");
-    expect(THIN_POINTERS).toContain(".windsurfrules");
+    // .windsurfrules was removed in the 2026-08-22 hygiene pass.
+    expect(DOCS).not.toContain(".windsurfrules");
+    expect(THIN_POINTERS).not.toContain(".windsurfrules");
   });
 
-  it("passes when .cursorrules and .windsurfrules are valid thin pointers", () => {
+  it("passes when .cursorrules is a valid thin pointer", () => {
     writeFullFixture();
     const { passed, errors } = verifyAgentDocs(tmpDir);
     expect(errors).toEqual([]);
@@ -235,7 +235,7 @@ describe("verify-agent-docs", () => {
   });
 
   it("fails when .cursorrules exceeds the thin-pointer length cap", () => {
-    writeFullFixture("AGENTS.md\n" + "x".repeat(3000), validPointer());
+    writeFullFixture("AGENTS.md\n" + "x".repeat(3000));
     const { passed, errors } = verifyAgentDocs(tmpDir);
     expect(passed).toBe(false);
     expect(errors.some((e: string) => e.includes(".cursorrules must be a thin pointer"))).toBe(true);
@@ -250,12 +250,7 @@ describe("verify-agent-docs", () => {
     expect(errors.some((e: string) => e.includes("docs/nope.md"))).toBe(true);
   });
 
-  it("fails when .windsurfrules omits the mandatory summary_of_work.md reference", () => {
-    writeFullFixture(validPointer(), "Read [AGENTS.md](AGENTS.md).\n");
-    const { passed, errors } = verifyAgentDocs(tmpDir);
-    expect(passed).toBe(false);
-    expect(errors.some((e: string) => e.includes(".windsurfrules does not contain"))).toBe(true);
-  });
+  // .windsurfrules removed in 2026-08-22 hygiene pass — test removed.
 
   it("passes against the actual repository", () => {
     const { passed, errors } = verifyAgentDocs(path.resolve(__dirname, ".."));

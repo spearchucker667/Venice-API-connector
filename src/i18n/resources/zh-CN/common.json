@@ -2599,7 +2599,8 @@
             "aiAvatar": "人工智能头像",
             "thinking": "思维…",
             "removeFromChat": "从聊天中删除",
-            "tokensUsedForThisMessage": "用于此消息的令牌"
+            "tokensUsedForThisMessage": "用于此消息的令牌",
+            "generatedMedia": "__MISSING__:runtimeGenerated.components.chat.messageBubble.attribute.generatedMedia"
           }
         }
       },
@@ -4527,9 +4528,9 @@
     "noItems": "__MISSING__:mediaSave.noItems",
     "exportFailed": "__MISSING__:mediaSave.exportFailed",
     "prepareFailed": "__MISSING__:mediaSave.prepareFailed",
-    "exported": "__MISSING__:mediaSave.exported",
-    "partiallyExported": "__MISSING__:mediaSave.partiallyExported",
-    "failedWithDetail": "__MISSING__:mediaSave.failedWithDetail"
+    "exported": "__MISSING__:mediaSave.exported {{count}}",
+    "partiallyExported": "__MISSING__:mediaSave.partiallyExported {{saved}} {{total}}",
+    "failedWithDetail": "__MISSING__:mediaSave.failedWithDetail {{detail}}"
   },
   "layout": {
     "sidebar": {

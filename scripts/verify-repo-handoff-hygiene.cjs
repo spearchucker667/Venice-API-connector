@@ -56,14 +56,20 @@ function walk(dir, out = []) {
   return out;
 }
 
-const prompt = read("docs/BUG_HUNTING_AGENT_PROMPT.md");
-for (const required of [
-  "Security, Storage, and Release Audit Agent",
-  "Repository Source Selection",
-  "LEAD-018",
-]) {
-  if (!prompt.includes(required)) {
-    fail(`docs/BUG_HUNTING_AGENT_PROMPT.md is missing required marker: ${required}`);
+// BUG_HUNTING_AGENT_PROMPT.md removed in 2026-08-22 hygiene pass.
+// The file was an operational agent prompt, not end-user documentation.
+// If reactivated, place it in docs/agent-prompts/ and update this verifier.
+const bugHuntPromptPath = "docs/BUG_HUNTING_AGENT_PROMPT.md";
+if (fs.existsSync(bugHuntPromptPath)) {
+  const prompt = read(bugHuntPromptPath);
+  for (const required of [
+    "Security, Storage, and Release Audit Agent",
+    "Repository Source Selection",
+    "LEAD-018",
+  ]) {
+    if (!prompt.includes(required)) {
+      fail(`docs/BUG_HUNTING_AGENT_PROMPT.md is missing required marker: ${required}`);
+    }
   }
 }
 
