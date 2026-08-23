@@ -159,13 +159,18 @@ function setAtPath(tree, dottedKey, value) {
   let cursor = tree;
   for (let i = 0; i < parts.length - 1; i += 1) {
     const part = parts[i];
+    if (BLOCKED_KEYS.has(part)) throw new Error(`Forbidden key segment: ${part}`);
     if (cursor[part] == null || typeof cursor[part] !== 'object') {
       cursor[part] = {};
     }
     cursor = cursor[part];
   }
-  cursor[parts[parts.length - 1]] = value;
+  const leaf = parts[parts.length - 1];
+  if (BLOCKED_KEYS.has(leaf)) throw new Error(`Forbidden key segment: ${leaf}`);
+  cursor[leaf] = value;
 }
+
+const BLOCKED_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
 function readState() {
   if (!fs.existsSync(STATE_PATH)) return { lastCompleted: null, runs: [] };

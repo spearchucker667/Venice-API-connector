@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
  */
 
 import { useEffect, useState } from "react";
-import mascotAnimated from "../../../assets/mio-xc3-nerdprofeta-gifs/mio-xc3-nerdprofeta-jumping.gif";
-import mascotStatic from "../../../assets/mio-xc3-nerdprofeta-gifs/mio-xc3-nerdprofeta-jumping-static.png";
+import mascotAnimated from "../../../assets/mascot/mio-xc3-nerdprofeta-jumping.gif";
+import mascotStatic from "../../../assets/mascot/mio-xc3-nerdprofeta-jumping-static.png";
 
 export interface CharacterCreatorMascotProps {
   size?: "nav" | "sm" | "md" | "lg";

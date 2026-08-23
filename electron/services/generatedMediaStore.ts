@@ -213,16 +213,21 @@ export async function verifyGeneratedMediaIntegrity(id: string): Promise<{
   const root = getGeneratedMediaRoot()
   const mediaPath = path.join(root, `${id}.${metadata.extension}`)
   if (!checkPathContained(mediaPath, root)) return { ok: false, reason: 'blob-missing' }
+  let handle: Awaited<ReturnType<typeof open>> | undefined
   try {
-    const stat = await fsStat(mediaPath)
+    // Use a file handle for stat+read to close the TOCTOU window.
+    handle = await open(mediaPath, 'r')
+    const stat = await handle.stat()
     if (!stat.isFile()) return { ok: false, reason: 'blob-missing' }
     if (stat.size !== metadata.byteCount) return { ok: false, reason: 'size-mismatch' }
-    const bytes = await readFile(mediaPath)
+    const bytes = await handle.readFile()
     const actualHash = crypto.createHash('sha256').update(bytes).digest('hex')
     if (actualHash !== id) return { ok: false, reason: 'hash-mismatch' }
     return { ok: true, media: { path: mediaPath, mimeType: metadata.mimeType, byteCount: metadata.byteCount } }
   } catch {
     return { ok: false, reason: 'blob-missing' }
+  } finally {
+    if (handle) await handle.close().catch(() => undefined)
   }
 }
 
@@ -261,16 +266,22 @@ export async function commitGeneratedMediaTempFile(input: {
   }
 
   let mediaBlobAlreadyCommitted = false
+  let checkHandle: Awaited<ReturnType<typeof open>> | undefined
   try {
-    const mediaStat = await fsStat(mediaPath)
+    // Use a file handle to close the stat-then-read TOCTOU window.
+    checkHandle = await open(mediaPath, 'r')
+    const mediaStat = await checkHandle.stat()
     if (mediaStat.isFile() && mediaStat.size === input.byteCount) {
-      const mediaBytes = await readFile(mediaPath)
+      const mediaBytes = await checkHandle.readFile()
       mediaBlobAlreadyCommitted = crypto.createHash('sha256').update(mediaBytes).digest('hex') === input.sha256
     }
+    await checkHandle.close()
+    checkHandle = undefined
     if (!mediaBlobAlreadyCommitted) {
       await rename(mediaPath, `${mediaPath}.corrupt-${Date.now()}`)
     }
   } catch (error) {
+    if (checkHandle) await checkHandle.close().catch(() => undefined)
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
   }
 

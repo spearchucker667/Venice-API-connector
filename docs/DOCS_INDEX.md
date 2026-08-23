@@ -9,7 +9,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [README.md](../README.md) — The main user-facing repository landing page and setup guide.
 - [ABOUT.md](ABOUT.md) — Product goals, architecture, data flow, and overview of tabs.
 - [FAQ.md](FAQ.md) — Frequently asked questions about privacy, credentials, safety, storage, and character-card compatibility.
-- [SUPPORT.md](SUPPORT.md) — Where to get help, how to request features, and what info to provide.
+- [SUPPORT.md](../SUPPORT.md) — Where to get help, how to request features, and what info to provide.
 
 ---
 
@@ -17,7 +17,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 
 - [ABOUT.md](ABOUT.md) — Comprehensive overview of features, tabs, and local-first goals.
 - [FAQ.md](FAQ.md) — Answers on local key custody, safety modes, storage, and ST Card Studio import/export behavior.
-- [SUPPORT.md](SUPPORT.md) — User support guidelines.
+- [SUPPORT.md](../SUPPORT.md) — User support guidelines.
 - [user/IMAGE_INSPECTOR.md](user/IMAGE_INSPECTOR.md) — Image-to-prompt analysis, supported inputs, text-based source discovery, privacy, and troubleshooting.
 - [i18n/TRANSLATION_GUIDE.md](i18n/TRANSLATION_GUIDE.md) — Translation guidelines and key conventions.
 - [i18n/GLOSSARY.md](i18n/GLOSSARY.md) — Internationalization terminology glossary.
@@ -46,14 +46,14 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [DEVELOPMENT/BRIDGE.md](DEVELOPMENT/BRIDGE.md) — Headless loopback bridge specifications.
 - [DEVELOPMENT/JINA_PROVIDER.md](DEVELOPMENT/JINA_PROVIDER.md) — Jina-backed search and scrape integrations.
 - [`../inactive-features/research-browser/README.md`](../inactive-features/research-browser/README.md) — Inactive archive boundary for the former embedded Research Browser.
-- [chat-model-selection.md](chat-model-selection.md) — Per-conversation model precedence, provider defaults, and fallback reconciliation.
-- [memory-isolation.md](memory-isolation.md) — Conversation-scoped memory retrieval, exclusions, and preview lifecycle.
-- [rp-token-counting.md](rp-token-counting.md) — Compiled prompt estimates and over-budget save behavior.
+- [chat-model-selection.md](user/chat-model-selection.md) — Per-conversation model precedence, provider defaults, and fallback reconciliation.
+- [memory-isolation.md](architecture/memory-isolation.md) — Conversation-scoped memory retrieval, exclusions, and preview lifecycle.
+- [rp-token-counting.md](development/rp-token-counting.md) — Compiled prompt estimates and over-budget save behavior.
 - [DEVELOPMENT/image-model-capabilities.md](DEVELOPMENT/image-model-capabilities.md) — Image model capability registry, Seedream model reference, and guide for adding future models.
 - [developer/image-inspector-architecture.md](developer/image-inspector-architecture.md) — Image Inspector ingestion, IPC, structured analysis, error, source-discovery, and privacy contracts.
 - [developer/CHARACTER_CARD_CODEC.md](developer/CHARACTER_CARD_CODEC.md) — Trusted Character Card V2 PNG codec, limits, and verification contract.
 - [developer/CHARACTER_CARD_MAPPINGS.md](developer/CHARACTER_CARD_MAPPINGS.md) — Tavern/V2 DTO, internal card, and character-book mappings.
-- [data-export-format.md](data-export-format.md) — Authenticated `.vfbackup` envelope, portability, and compatibility contract.
+- [data-export-format.md](architecture/data-export-format.md) — Authenticated `.vfbackup` envelope, portability, and compatibility contract.
 - [features/DOCUMENT_AGENT.md](features/DOCUMENT_AGENT.md) — Limited Documents, workspace grants, approval integrity, formats, path security, export, and validation.
 - [discovery/DISCOVERY_DOCUMENT_AGENT.md](discovery/DISCOVERY_DOCUMENT_AGENT.md) — Repository reconciliation and Phase 0 architecture evidence for the Document Agent work order.
 - [../scripts/dev-tools/README.md](../scripts/dev-tools/README.md) — Internal development-tool inventory; non-user-facing and noncanonical for product behavior.
@@ -80,8 +80,8 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [design/SCENE_GENERATION.md](design/SCENE_GENERATION.md) — Dynamic scene-generation rules and background asset maps.
 - [design/PUBLIC_PROFILE_DISCOVERY.md](design/PUBLIC_PROFILE_DISCOVERY.md) — platform-specific site query logic.
 - [design/REPOSITORY_TREE.md](design/REPOSITORY_TREE.md) — Detailed codebase design layout.
-- [backup-and-sync.md](backup-and-sync.md) — Manual encrypted backups and encrypted sync-folder operation.
-- [FILE_TREE.md](FILE_TREE.md) — Practical file tree of the actual directories.
+- [backup-and-sync.md](user/backup-and-sync.md) — Manual encrypted backups and encrypted sync-folder operation.
+- [FILE_TREE.md](development/FILE_TREE.md) — Practical file tree of the actual directories.
 - [`../src/shared/chatMediaReferenceContracts.ts`](../src/shared/chatMediaReferenceContracts.ts) — Canonical Phase 6 parity contract for `ChatMediaReference`, mirrored between renderer and main; same id regex, unions, and runtime predicates.
 - [`../src/shared/promptLimits.ts`](../src/shared/promptLimits.ts) — Phase 4 user-system-prompt Unicode code-point budgets and dynamic-limit helper.
 - [reference/VENICE_API_SOURCE_MANIFEST.md](reference/VENICE_API_SOURCE_MANIFEST.md) — Authoritative upstream Venice API documentation mirror provenance, manifest, and synchronization contract.
@@ -103,10 +103,10 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [legal/NOTICE.md](legal/NOTICE.md) — Copyright attributions and third-party notices.
 - [legal/THIRD_PARTY_NOTICES.md](legal/THIRD_PARTY_NOTICES.md) — Dependency licenses and brand attributions.
 - [legal/TRADEMARKS.md](legal/TRADEMARKS.md) — Venice.ai and external trademark nominative-use notices.
-- [security-model.md](security-model.md) — Credential, IPC, safety, and portable-data boundaries.
-- [sync-threat-model.md](sync-threat-model.md) — Attacker model and mitigations for untrusted sync folders.
-- [privacy.md](privacy.md) — User privacy implications of encrypted backup and third-party-managed sync folders.
-- [sync-troubleshooting.md](sync-troubleshooting.md) — Safe recovery, passphrase-loss, conflict, and two-device troubleshooting.
+- [security-model.md](security/security-model.md) — Credential, IPC, safety, and portable-data boundaries.
+- [sync-threat-model.md](security/sync-threat-model.md) — Attacker model and mitigations for untrusted sync folders.
+- [PRIVACY.md](../PRIVACY.md) — User privacy implications of encrypted backup and third-party-managed sync folders.
+- [sync-troubleshooting.md](user/sync-troubleshooting.md) — Safe recovery, passphrase-loss, conflict, and two-device troubleshooting.
 - [DEVELOPMENT/sync-architecture.md](DEVELOPMENT/sync-architecture.md) — Main/renderer trust boundary, packet lifecycle, conflicts, tombstones, and recovery.
 - [DEVELOPMENT/sync-testing.md](DEVELOPMENT/sync-testing.md) — Automated fixtures and two-device manual QA protocol.
 - [DEVELOPMENT/sync-provider-interface.md](DEVELOPMENT/sync-provider-interface.md) — Fail-closed contract for deferred WebDAV/S3-compatible transports.
@@ -130,6 +130,9 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [ROADMAP.md](ROADMAP.md) — Canonical current-work-only task ledger; closed work and historical validation stay in the session ledger and historical reports.
 - [summary_of_work.md](summary_of_work.md) — Active session ledger (recent sessions only).
 - [audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md](audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md) — Current exhaustive repository audit verdict, evidence map, findings, validation, and ordered remediation plan; machine-readable metadata is adjacent in `FINDINGS.json`.
+- [audits/repository-hygiene-audit.md](audits/repository-hygiene-audit.md) — 2026-08-22 repository hygiene audit and reorganization plan.
+- [audits/repository-hygiene-final-report.md](audits/repository-hygiene-final-report.md) — 2026-08-22 hygiene execution report (removed/moved/updated files, validation results).
+- [audits/repo-management/](audits/repo-management/) — Historical client-provided repository hygiene and reorganization handoffs.
 - July 17 03:10 deep-scan audit evidence was processed; remediated live status remains in `ROADMAP.md` and `summary_of_work.md`.
 
 ---
@@ -155,7 +158,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [reports/historical/VENICE_FORGE_THEME_ENGINE_BORDER_AND_PORTABILITY_AUDIT_2026-07-21.md](reports/historical/VENICE_FORGE_THEME_ENGINE_BORDER_AND_PORTABILITY_AUDIT_2026-07-21.md) — Closure report for the 2026-07-21 Theme Engine, Border System, Focus Ring, and Theme Portability audit & remediation.
 - [reports/historical/MINIMAX_M3_I18N_FULL_APP_REMEDIATION_REPORT_2026-07-26.md](reports/historical/MINIMAX_M3_I18N_FULL_APP_REMEDIATION_REPORT_2026-07-26.md) — Retained full-app i18n remediation report and explicit manual-review deferrals.
 - [reports/historical/VENICE_FORGE_2026-07-20_REMEDIATION_REPORT.md](reports/historical/VENICE_FORGE_2026-07-20_REMEDIATION_REPORT.md) — Retained July 20 remediation report.
-- [pastel-theme-pack-report.md](pastel-theme-pack-report.md) — 2026-07-23 implementation report for the Pastel Aqua/Pink Theme Pack (Cotton Candy Console, Sweet Nightmare, Dual Persona, Polaroid Board). Records token corrections, WCAG AA validation, border analysis, and pre-existing failure evidence.
+- [pastel-theme-pack-report.md](design/pastel-theme-pack-report.md) — 2026-07-23 implementation report for the Pastel Aqua/Pink Theme Pack (Cotton Candy Console, Sweet Nightmare, Dual Persona, Polaroid Board). Records token corrections, WCAG AA validation, border analysis, and pre-existing failure evidence.
 - [reports/historical/character-creator-implementation-report.md](reports/historical/character-creator-implementation-report.md) — Implementation report for the Build Character Creator feature powered immutably by `zai-org-glm-5-2`.
 - [reports/historical/VENICE_FORGE_COMPLETION_EXECUTION_2026-07-25.md](reports/historical/VENICE_FORGE_COMPLETION_EXECUTION_2026-07-25.md) — Execution log for the 2026-07-25 master feature-completion work order.
 - [reports/historical/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md](reports/historical/VENICE_FORGE_IMAGE_REMEDIATION_REPORT_2026-07-25.md) — Implementation report for the 2026-07-25 Image Generation Prompt, Aspect Ratio, Download, and Safety Remediation work order.
@@ -167,7 +170,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 
 ## 9. Retired / Deleted During Hygiene
 
-Internal-only agent material such as `docs/BUG_HUNTING_AGENT_PROMPT.md` is intentionally excluded from the canonical user/developer graph; it is not an instruction authority and must not override `AGENTS.md`, `ROADMAP.md`, or this index.
+Internal-only agent material such as `docs/development/BUG_HUNTING_AGENT_PROMPT.md` is intentionally excluded from the canonical user/developer graph; it is not an instruction authority and must not override `AGENTS.md`, `ROADMAP.md`, or this index.
 
 The following files were removed, merged, or archived during the repository-wide documentation hygiene pass:
 - `docs/audits/repository-todo-roadmap-current.md` — Merged into the clean [ROADMAP.md](ROADMAP.md).

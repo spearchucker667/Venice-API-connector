@@ -115,4 +115,4 @@ Tombstones use the same packet boundary and represent deletions. Conflict copies
 - A 12-byte IV selects the legacy/browser PBKDF2/AES-256-GCM path.
 - Authentication failure, malformed Base64, invalid lengths, unknown stores, invalid IDs, cross-profile packets, and cross-sync-set packets fail closed.
 
-See [`backup-and-sync.md`](backup-and-sync.md), [`security-model.md`](security-model.md), and [`sync-threat-model.md`](sync-threat-model.md) for user workflow and threat-boundary details.
+See [`backup-and-sync.md`](../user/backup-and-sync.md), [`security-model.md`](../security/security-model.md), and [`sync-threat-model.md`](../security/sync-threat-model.md) for user workflow and threat-boundary details.

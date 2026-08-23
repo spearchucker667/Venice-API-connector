@@ -106,16 +106,22 @@ export async function readImageInspectorDataUrl(mediaId: string): Promise<{
 }> {
   const resolved = await resolveGeneratedMedia(mediaId);
   if (!resolved || !SUPPORTED_IMAGE_MIME.has(resolved.mimeType)) throw new Error("Image media was not found.");
-  const stat = await fs.stat(resolved.path);
-  if (!stat.isFile() || stat.size <= 0 || stat.size > IMAGE_INSPECTOR_MAX_BYTES) {
-    throw new Error("Stored image size is invalid.");
+  // Use a file handle to avoid TOCTOU between stat and readFile.
+  const handle = await fs.open(resolved.path, 'r');
+  try {
+    const stat = await handle.stat();
+    if (!stat.isFile() || stat.size <= 0 || stat.size > IMAGE_INSPECTOR_MAX_BYTES) {
+      throw new Error("Stored image size is invalid.");
+    }
+    const bytes = await handle.readFile();
+    const validated = validateImageInspectorBytes(bytes);
+    if (validated.mimeType !== resolved.mimeType) throw new Error("Stored image metadata did not match its bytes.");
+    return {
+      dataUrl: `data:${validated.mimeType};base64,${bytes.toString("base64")}`,
+      mimeType: validated.mimeType,
+      byteLength: bytes.length,
+    };
+  } finally {
+    await handle.close();
   }
-  const bytes = await fs.readFile(resolved.path);
-  const validated = validateImageInspectorBytes(bytes);
-  if (validated.mimeType !== resolved.mimeType) throw new Error("Stored image metadata did not match its bytes.");
-  return {
-    dataUrl: `data:${validated.mimeType};base64,${bytes.toString("base64")}`,
-    mimeType: validated.mimeType,
-    byteLength: bytes.length,
-  };
 }

@@ -195,7 +195,7 @@ function parseMarkdownToBlocks(text: string): DocumentBlock[] {
   const flushTable = () => {
     if (tableBuffer.length > 0) {
       const rows = tableBuffer
-        .filter((line) => !line.match(/^\|?[\s:-|]+\|?$/)) // skip divider line
+        .filter((line) => !line.match(/^\|?[-\s:|]+\|?$/)) // skip divider line
         .map((line) => {
           const cells = line
             .split('|')

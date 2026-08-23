@@ -57,17 +57,21 @@ const NAMESPACES = [
   'accessibility',
 ];
 
+const BLOCKED_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 function setNestedKey(obj, keyPath, value) {
   const parts = keyPath.split('.');
   let current = obj;
   for (let i = 0; i < parts.length - 1; i++) {
     const p = parts[i];
+    if (BLOCKED_KEYS.has(p)) throw new Error(`Forbidden key segment: ${p}`);
     if (!current[p] || typeof current[p] !== 'object') {
       current[p] = {};
     }
     current = current[p];
   }
   const lastPart = parts[parts.length - 1];
+  if (BLOCKED_KEYS.has(lastPart)) throw new Error(`Forbidden key segment: ${lastPart}`);
   // Only set if not already set
   if (current[lastPart] === undefined) {
     current[lastPart] = value;

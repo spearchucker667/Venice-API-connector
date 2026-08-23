@@ -4527,9 +4527,9 @@
     "noItems": "__MISSING__:mediaSave.noItems",
     "exportFailed": "__MISSING__:mediaSave.exportFailed",
     "prepareFailed": "__MISSING__:mediaSave.prepareFailed",
-    "exported": "__MISSING__:mediaSave.exported {{count}}",
-    "partiallyExported": "__MISSING__:mediaSave.partiallyExported {{saved}} {{total}}",
-    "failedWithDetail": "__MISSING__:mediaSave.failedWithDetail {{detail}}"
+    "exported": "__MISSING__:mediaSave.exported",
+    "partiallyExported": "__MISSING__:mediaSave.partiallyExported",
+    "failedWithDetail": "__MISSING__:mediaSave.failedWithDetail"
   },
   "layout": {
     "sidebar": {

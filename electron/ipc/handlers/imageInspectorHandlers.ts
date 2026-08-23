@@ -42,17 +42,24 @@ export function registerImageInspectorHandlers(): void {
       if (result.canceled || result.filePaths.length === 0) return { ok: true, canceled: true };
 
       const filePath = result.filePaths[0];
-      const stats = await fs.stat(filePath);
-      if (!stats.isFile()) throw new Error("The selected image is not a regular file.");
-      if (stats.size <= 0 || stats.size > IMAGE_INSPECTOR_MAX_BYTES) {
-        throw new Error(`The selected image exceeds the ${IMAGE_INSPECTOR_MAX_BYTES}-byte limit.`);
+      // Use a file handle for stat+read to close the TOCTOU window.
+      const handle = await fs.open(filePath, 'r');
+      try {
+        const stats = await handle.stat();
+        if (!stats.isFile()) throw new Error("The selected image is not a regular file.");
+        if (stats.size <= 0 || stats.size > IMAGE_INSPECTOR_MAX_BYTES) {
+          throw new Error(`The selected image exceeds the ${IMAGE_INSPECTOR_MAX_BYTES}-byte limit.`);
+        }
+        const bytes = await handle.readFile();
+        const input = await persistImageInspectorInput({
+          bytes,
+          source: "file",
+          displayName: path.basename(filePath),
+        });
+        return { ok: true, result: input };
+      } finally {
+        await handle.close();
       }
-      const input = await persistImageInspectorInput({
-        bytes: await fs.readFile(filePath),
-        source: "file",
-        displayName: path.basename(filePath),
-      });
-      return { ok: true, result: input };
     } catch (error) {
       return failed(error);
     }

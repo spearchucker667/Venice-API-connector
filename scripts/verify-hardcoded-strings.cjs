@@ -154,8 +154,12 @@ function looksLikeVisibleText(text) {
   if (/^[a-z][a-z0-9_.:-]*$/.test(stripped)) return false;
   if (/^(?:https?:|data:|blob:|venice-)/i.test(stripped)) return false;
   if (/^#[0-9a-f]{3,8}$/i.test(stripped)) return false;
+  // Match MIME-type strings like "text/html" or "image/png,image/jpeg".
+  // Avoid ReDoS by bounding input length and keeping the comma outside
+  // the inner character class so it acts as a single unambiguous delimiter.
+  if (stripped.length > 256) return true;
   if (
-    /^(?:image|audio|video|text|application)\/[a-z0-9.+-]+(?:,[a-z0-9/.,+-]+)*$/i.test(
+    /^(?:image|audio|video|text|application)\/[a-z0-9.+-]+(?:,(?:image|audio|video|text|application)\/[a-z0-9.+-]+)*$/i.test(
       stripped,
     )
   )

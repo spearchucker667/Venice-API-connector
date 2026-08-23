@@ -793,7 +793,6 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
     // --- PHASE 2: Provider dispatch. ----
     const endpoint = input.operation === 'video' ? '/video/queue' : '/audio/queue';
 
-    let dispatchFailed = true;
     try {
       const guardedResult = await performGuardedVeniceRequest({
         endpoint,
@@ -803,8 +802,10 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
       });
 
       if (guardedResult.kind === 'blocked') {
-        dispatchFailed = false; // here "failed" means "don't scavenge as unknown"
-        void applyUpdate(intentTask.id, { status: 'failed', error: 'Blocked by Family Safe Mode' });
+        // Provider never saw this request — no billable submission occurred.
+        // Delete the write-ahead intent rather than leaving a failed task.
+        delete state.tasks[intentTask.id];
+        void flushPersist();
         return { ok: false, error: 'Blocked by Family Safe Mode' };
       }
 
@@ -812,11 +813,13 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
 
       if (response.status === 409) {
         const challenge = normalizeSeedanceConsentChallenge(409, response.body);
+        // Provider returned a consent challenge — no billable queue was created.
+        delete state.tasks[intentTask.id];
+        void flushPersist();
         if (challenge) {
-          dispatchFailed = false;
-          void applyUpdate(intentTask.id, { status: 'failed', error: challenge.error.message });
           return { ok: false, challenge, error: challenge.error.message };
         }
+        return { ok: false, error: 'Queue request returned 409 without a consent challenge.' };
       }
 
       if (response.status < 200 || response.status >= 300) {
@@ -826,8 +829,9 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
           : (typeof (errBody?.error as { message?: unknown })?.message === 'string'
             ? String((errBody?.error as { message: unknown }).message)
             : `Queue request failed (${response.status})`);
-        dispatchFailed = false;
-        void applyUpdate(intentTask.id, { status: 'failed', error: msg });
+        // Provider did not accept a billable job — clean up the intent.
+        delete state.tasks[intentTask.id];
+        void flushPersist();
         return { ok: false, error: msg };
       }
 
@@ -859,8 +863,6 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
         }
       }
 
-      dispatchFailed = false;
-
       // --- PHASE 3: Atomically finalize the intent. ----
       const existing = state.tasks[intentTask.id];
       if (existing) {
@@ -884,13 +886,11 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
 
       return { ok: true, task: existing };
     } catch (err) {
-      if (dispatchFailed) {
-        // Provider dispatch threw before we received any response.
-        // The intent journal still exists with status pending_finalize
-        // and no queueId. On restart it will be failed with "acceptance
-        // unknown" — safer than blind resubmission.
-        logError('Paid queue dispatch failed after journaling intent', sanitizeErrorText(String(err)));
-      }
+      // Provider dispatch threw without a response. The write-ahead intent
+      // journal still exists with status pending_finalize and no queueId.
+      // On restart it will be failed with "acceptance unknown" — safer
+      // than blind resubmission.
+      logError('Paid queue dispatch failed after journaling intent', sanitizeErrorText(String(err)));
       throw err;
     }
   };
