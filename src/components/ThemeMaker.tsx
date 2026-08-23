@@ -1015,7 +1015,7 @@ export function ThemeMaker() {
                   </div>
                 ) : (
                   <div className="h-12 w-full bg-surface-elevated flex items-center justify-center text-xs text-text-muted border-b border-border/50">
-                    Custom
+                    {tRuntime("runtimeGenerated.components.thememaker.metadata.customTheme")}
                   </div>
                 )}
                 <div className="px-2.5 py-2">

@@ -15,7 +15,9 @@ This is the active handoff and validation ledger. The canonical current-work led
   - Implemented standard OS-style modifier key handling in `src/components/gallery/media-card.tsx` (`onClick` checks for `shiftKey`, `metaKey`, `ctrlKey`).
   - Added range selection logic in `src/components/gallery/gallery-view.tsx` using `selectRange` when `shiftKey` is held.
   - Toggling items using modifier keys now automatically enables the UI's `multiSelectMode`, revealing the bulk-action toolbar.
-- **Validation:** `npm run typecheck` passed (after fixing `colors` vs `tokens` typings).
+- **Validation:** 
+  - `npm run typecheck` passed (after fixing `colors` vs `tokens` typings).
+  - Addressed a CI failure caught by `verify:i18n-hardcoded-regressions` by replacing the hardcoded `"Custom"` fallback text in the theme selector with the existing translation helper key. `npm run verify:i18n-hardcoded-regressions` now successfully reports 0 regressions.
 
 ## Prior Session Summary
 
