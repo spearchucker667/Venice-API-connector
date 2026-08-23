@@ -112,7 +112,7 @@ export function ThemePreview({ theme }: { theme: Theme }) {
           <strong><Trans i18nKey="common:surface.componentsThemepreview.text.contrastWarnings" /></strong>
           <ul className="mt-1 list-disc pl-4 space-y-0.5">
             {warnings.map((w, i) => (
-              <li key={i}>{w}</li>
+              <li key={`${i}-${w}`}>{w}</li>
             ))}
           </ul>
         </div>

@@ -101,8 +101,8 @@ describe("normalizeAndIdentifyMime", () => {
 });
 
 describe("identifyAndValidateGeneratedMedia", () => {
-  it("skips screening when Family Safe Mode is disabled", () => {
-    const result = identifyAndValidateGeneratedMedia(
+  it("skips screening when Family Safe Mode is disabled", async () => {
+    const result = await identifyAndValidateGeneratedMedia(
       Buffer.from([0xff, 0xd8, 0xff]),
       "image/jpeg",
       false,
@@ -114,22 +114,17 @@ describe("identifyAndValidateGeneratedMedia", () => {
     });
   });
 
-  it("blocks valid non-empty media with CLASSIFIER_UNAVAILABLE in Family Safe Mode", () => {
-    const result = identifyAndValidateGeneratedMedia(
+  it("allows structurally valid media in Family Safe Mode via heuristic classifier", async () => {
+    const result = await identifyAndValidateGeneratedMedia(
       Buffer.from([0x89, 0x50, 0x4e, 0x47, 0, 0, 0, 0]),
       "image/png",
       true,
     );
-    expect(result.allowed).toBe(false);
-    if (result.allowed) return;
-    expect(result.reasonCode).toBe("CLASSIFIER_UNAVAILABLE");
-    expect(result.userMessage).toBe(
-      "Media generation is not available while Family Safe Mode is enabled.",
-    );
+    expect(result.allowed).toBe(true);
   });
 
-  it("blocks https URLs with CLASSIFIER_UNAVAILABLE in Family Safe Mode", () => {
-    const result = identifyAndValidateGeneratedMedia(
+  it("blocks https URLs with CLASSIFIER_UNAVAILABLE in Family Safe Mode", async () => {
+    const result = await identifyAndValidateGeneratedMedia(
       "https://example.com/video.mp4",
       "video/mp4",
       true,

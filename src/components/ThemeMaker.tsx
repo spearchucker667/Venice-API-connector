@@ -421,6 +421,8 @@ export function ThemeMaker() {
   const [importModal, setImportModal] =
     useState<ImportPreviewModalState | null>(null);
 
+  // Intentional state-sync: Resets the editor draft when the globally selected
+  // theme or available themes change from outside.
   useEffect(() => {
     setSelector(selectedThemeId || "builtin-venice");
     const active =
@@ -957,7 +959,7 @@ export function ThemeMaker() {
       {/* Theme Selector Palette */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-text-secondary">
+          <label htmlFor="theme-maker-1" className="text-sm font-medium text-text-secondary">
             <Trans i18nKey="common:surface.componentsThememaker.label.selectActiveTheme" />
           </label>
           {isDraftDirty && (
@@ -989,7 +991,7 @@ export function ThemeMaker() {
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-3">
           <div className="flex items-center gap-3">
             <input
-              type="text"
+              type="text" id="theme-maker-1" 
               value={draft.name}
               onChange={(e) => updateName(e.target.value)}
               className="rounded-md border border-border bg-surface-elevated px-3 py-1 text-sm font-semibold text-text-primary"

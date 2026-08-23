@@ -920,22 +920,22 @@ function PromptDetail(props: PromptDetailProps) {
 
       <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-3">
         <div>
-          <label className="text-[12px] uppercase tracking-wide text-text-muted">
+          <label htmlFor="prompt-library-1" className="text-[12px] uppercase tracking-wide text-text-muted">
             <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.label.content" />
           </label>
           <textarea
-            value={content}
+            value={content} id="prompt-library-1" 
             onChange={(e) => setContent(e.target.value)}
             className="mt-1 w-full min-h-[180px] rounded-md border border-border bg-background px-2 py-1.5 text-[12.5px] font-mono"
             data-testid="prompt-library-content"
           />
         </div>
         <div>
-          <label className="text-[12px] uppercase tracking-wide text-text-muted">
+          <label htmlFor="prompt-library-2" className="text-[12px] uppercase tracking-wide text-text-muted">
             <Trans i18nKey="common:surface.componentsPromptsPromptlibraryview.label.negativeContent" />
           </label>
           <textarea
-            value={negativeContent}
+            value={negativeContent} id="prompt-library-2" 
             onChange={(e) => setNegativeContent(e.target.value)}
             className="mt-1 w-full min-h-[100px] rounded-md border border-border bg-background px-2 py-1.5 text-[12.5px] font-mono"
             data-testid="prompt-library-negative"

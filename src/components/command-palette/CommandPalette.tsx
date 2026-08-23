@@ -104,7 +104,8 @@ export function CommandPalette({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, onToggle, open]);
 
-  // Reset active index when opening or when the query changes
+  // Intentional state-sync: Resets the active keyboard-selection index when 
+  // the palette opens or the search query changes.
   useEffect(() => {
     if (open) {
       setActiveIndex(0);

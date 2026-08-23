@@ -175,7 +175,7 @@ function stringifyResponseForScreening(body: unknown): string | null {
   }
 }
 
-function screenUpstreamResponse(endpoint: string, method: string, response: VeniceIpcResponse): GuardedBlock | null {
+async function screenUpstreamResponse(endpoint: string, method: string, response: VeniceIpcResponse): Promise<GuardedBlock | null> {
   if (!getRuntimeLocalFamilySafeModeEnabled()) return null;
 
   // 1. Screen binary media fields semantically if present.
@@ -203,7 +203,7 @@ function screenUpstreamResponse(endpoint: string, method: string, response: Veni
         
         if (base64String) {
           // Pass the base64 content to the semantic media screener
-          const mediaScreen = identifyAndValidateGeneratedMedia(base64String, "application/octet-stream", true);
+          const mediaScreen = await identifyAndValidateGeneratedMedia(base64String, "application/octet-stream", true);
           if (!mediaScreen.allowed) {
             return {
               ok: false,
@@ -279,7 +279,7 @@ export async function performGuardedVeniceRequest(
     let requestForDispatch = withFamilySafeProviderOverride(rawRequest, endpoint);
     requestForDispatch = composeTrustedRequest(requestForDispatch);
     const response = await performVeniceRequest(requestForDispatch, options);
-    const responseBlock = screenUpstreamResponse(endpoint, method, response);
+    const responseBlock = await screenUpstreamResponse(endpoint, method, response);
     if (responseBlock) {
       try {
         publishInspectorCompletion({

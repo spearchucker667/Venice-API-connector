@@ -211,12 +211,12 @@ export function VeniceParams() {
         <div className="mt-2.5 pb-1 flex flex-col gap-2.5">
           <div>
             <div className="flex justify-between items-center mb-1">
-              <label className="text-[13px] text-text-muted/40 font-medium block uppercase tracking-[0.08em]">
+              <label htmlFor="venice-params-1" className="text-[13px] text-text-muted/40 font-medium block uppercase tracking-[0.08em]">
                 <Trans i18nKey="common:surface.componentsChatVeniceParams.label.appSystemPrompt" />
               </label>
               {!hydrated || loading ? (
                 <select
-                  disabled
+                  disabled id="venice-params-1" 
                   className="bg-surface-elevated border border-border rounded px-2 py-0.5 text-[12px] text-text-muted outline-none max-w-[200px] cursor-not-allowed"
                 >
                   <option>
@@ -361,7 +361,7 @@ function ParamSlider({
   return (
     <div>
       <div className="flex items-center justify-between mb-0.5">
-        <label className="text-[12px] text-text-muted/40 font-medium uppercase tracking-[0.08em]">
+        <label htmlFor="venice-params-2" className="text-[12px] text-text-muted/40 font-medium uppercase tracking-[0.08em]">
           {label}
         </label>
         <span className="text-[12px] text-text-muted/50 font-mono">
@@ -369,7 +369,7 @@ function ParamSlider({
         </span>
       </div>
       <input
-        type="range"
+        type="range" id="venice-params-2" 
         min={min}
         max={max}
         step={step}

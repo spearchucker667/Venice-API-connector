@@ -1034,11 +1034,11 @@ export function DocumentAgentView() {
             </h3>
             <div className="space-y-3">
               <div>
-                <label className="block text-[12px] text-foreground-muted mb-1">
+                <label htmlFor="doc-agent-1" className="block text-[12px] text-foreground-muted mb-1">
                   {tRuntime("runtimeSlashLabels.documentNamePath")}
                 </label>
                 <input
-                  value={newDocName}
+                  value={newDocName} id="doc-agent-1" 
                   onChange={(e) => setNewDocName(e.target.value)}
                   placeholder={tRuntime(
                     "runtimeGenerated.components.documents.documentagentview.attribute.eGNotesMd",
@@ -1047,11 +1047,11 @@ export function DocumentAgentView() {
                 />
               </div>
               <div>
-                <label className="block text-[12px] text-foreground-muted mb-1">
+                <label htmlFor="doc-agent-2" className="block text-[12px] text-foreground-muted mb-1">
                   <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.label.format" />
                 </label>
                 <select
-                  value={newDocFormat}
+                  value={newDocFormat} id="doc-agent-2" 
                   onChange={(e) =>
                     setNewDocFormat(e.target.value as DocumentFormat)
                   }
@@ -1081,7 +1081,7 @@ export function DocumentAgentView() {
                 </select>
               </div>
               <div>
-                <label className="block text-[12px] text-foreground-muted mb-1">
+                <label htmlFor="doc-agent-3" className="block text-[12px] text-foreground-muted mb-1">
                   <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.label.initialContent" />
                 </label>
                 <TextArea
@@ -1116,11 +1116,11 @@ export function DocumentAgentView() {
               <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.heading.createWorkingGroup" />
             </h3>
             <div>
-              <label className="block text-[12px] text-foreground-muted mb-1">
+              <label htmlFor="doc-agent-4" className="block text-[12px] text-foreground-muted mb-1">
                 <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.label.workingGroupName" />
               </label>
               <input
-                value={newGroupName}
+                value={newGroupName} id="doc-agent-4" 
                 onChange={(e) => setNewGroupName(e.target.value)}
                 placeholder={tRuntime(
                   "runtimeGenerated.components.documents.documentagentview.attribute.eGQ3Architecture",

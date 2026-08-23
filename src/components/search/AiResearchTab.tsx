@@ -55,9 +55,9 @@ export function AiResearchTab({
     setter: (n: number) => void,
   ) => (
     <div className="flex flex-col gap-1">
-      <label className="text-[12px] text-text-muted">{label}</label>
+      <label htmlFor="ai-research-1" className="text-[12px] text-text-muted">{label}</label>
       <input
-        type="number"
+        type="number" id="ai-research-1" 
         min={min}
         max={max}
         value={value}

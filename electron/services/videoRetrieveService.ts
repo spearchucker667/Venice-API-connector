@@ -76,7 +76,7 @@ async function screenPersistedVideoMedia(media: DurableGeneratedMedia): Promise<
     return new VideoRetrieveError('Persisted video could not be read for safety screening.', false)
   }
 
-  const screen = identifyAndValidateGeneratedMedia(buffer, media.mimeType, fsm)
+  const screen = await identifyAndValidateGeneratedMedia(buffer, media.mimeType, fsm)
   if (!screen.allowed) {
     return new VideoRetrieveError(
       screen.userMessage || 'Video generation is not available while Family Safe Mode is enabled.',
@@ -251,8 +251,8 @@ async function runVideoQueueResult(input: {
           // post-commit path is kept for code paths that bypass the stream
           // (e.g. completed JSON with a download URL).
           const screenSample = getRuntimeLocalFamilySafeModeEnabled()
-            ? (sample: Buffer, mimeType: string) => {
-                const result = identifyAndValidateGeneratedMedia(sample, mimeType, true)
+            ? async (sample: Buffer, mimeType: string) => {
+                const result = await identifyAndValidateGeneratedMedia(sample, mimeType, true)
                 return { allowed: result.allowed, userMessage: !result.allowed ? result.userMessage : undefined }
               }
             : undefined
@@ -278,10 +278,10 @@ async function runVideoQueueResult(input: {
           if (normalized.kind === 'failed') return resolve({ kind: 'failed', error: normalized.error, retryable: false })
 
           /** Screen an in-memory buffer through FSM before it is persisted. */
-          const screenVideoBuffer = (buffer: Buffer, mimeType: string): VideoRetrieveError | null => {
+          const screenVideoBuffer = async (buffer: Buffer, mimeType: string): Promise<VideoRetrieveError | null> => {
             const fsm = getRuntimeLocalFamilySafeModeEnabled()
             if (!fsm) return null
-            const screen = identifyAndValidateGeneratedMedia(buffer, mimeType, fsm)
+            const screen = await identifyAndValidateGeneratedMedia(buffer, mimeType, fsm)
             if (!screen.allowed) {
               return new VideoRetrieveError(
                 screen.userMessage || 'Video generation is not available while Family Safe Mode is enabled.',
@@ -312,7 +312,7 @@ async function runVideoQueueResult(input: {
             const commaIndex = normalized.mediaUrl.indexOf(',')
             const base64Data = commaIndex >= 0 ? normalized.mediaUrl.slice(commaIndex + 1) : ''
             const buffer = Buffer.from(base64Data, 'base64')
-            const fsmErr = screenVideoBuffer(buffer, normalized.mimeType)
+            const fsmErr = await screenVideoBuffer(buffer, normalized.mimeType)
             if (fsmErr) throw fsmErr
             await input.onStage?.('saving')
             const media = await persistGeneratedMedia(buffer, normalized.mimeType)

@@ -291,11 +291,12 @@ export function MediaToolbar({
           )}
         </div>
 
-        <label className="flex items-center gap-1 text-[12px] text-text-muted">
+        <label htmlFor="media-toolbar-sort" className="flex items-center gap-1 text-[12px] text-text-muted">
           <span>
             <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.sort" />
           </span>
           <select
+            id="media-toolbar-sort"
             value={sort}
             onChange={(e) => onSortChange(e.target.value as MediaSort)}
             className="rounded-md border border-border bg-surface-elevated px-2 py-1 text-[12px] text-text-primary focus:border-accent focus:outline-none"
@@ -433,11 +434,12 @@ export function MediaToolbar({
               </button>
             )}
             {onBulkProjectIdChange && (
-              <label className="flex items-center gap-1 text-[12px] text-text-muted">
+              <label htmlFor="media-toolbar-project" className="flex items-center gap-1 text-[12px] text-text-muted">
                 <span>
                   <Trans i18nKey="common:surface.componentsGalleryMediaToolbar.text.project" />
                 </span>
                 <select
+                  id="media-toolbar-project"
                   value={bulkProjectId ?? ""}
                   onChange={(e) => onBulkProjectIdChange(e.target.value)}
                   disabled={!hasSelection}

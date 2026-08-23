@@ -532,7 +532,7 @@ export function CompareView({ items, className, onClose }: CompareViewProps) {
                 </td>
                 {row.values.map((v, idx) => (
                   <td
-                    key={idx}
+                    key={items[idx]?.id ?? idx}
                     className={`px-2 py-1 break-words align-top ${
                       row.same ? "text-text-primary/80" : "text-text-primary"
                     }`}

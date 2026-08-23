@@ -2,7 +2,7 @@
  * @fileoverview Character Creator splash screen and idea composer with animated Mio mascot.
  */
 
-import { useState } from "react";
+import { useState, useId } from "react";
 import {
   Sparkles,
   FolderOpen,
@@ -42,6 +42,7 @@ export function CharacterCreatorWelcome({
   isGenerating = false,
 }: Props) {
   const { t: tRuntime } = useTranslation("common");
+  const baseId = useId();
   const [idea, setIdea] = useState("");
   const [showAdvancedContext, setShowAdvancedContext] = useState(false);
   const [context, setContext] = useState<OptionalDraftContext>({});
@@ -119,10 +120,10 @@ export function CharacterCreatorWelcome({
           {showAdvancedContext && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 pt-2">
               <div>
-                <label className="text-[11px] text-text-muted font-medium">
+                <label htmlFor={`${baseId}-w1`} className="text-[11px] text-text-muted font-medium">
                   {tRuntime("runtimeSlashLabels.settingWorld")}
                 </label>
-                <input
+                <input id={`${baseId}-w1`} 
                   type="text"
                   placeholder={tRuntime(
                     "runtimeGenerated.components.characterCreator.charactercreatorwelcome.attribute.eGNeoGothicMetropolis1920sNoir",
@@ -135,10 +136,10 @@ export function CharacterCreatorWelcome({
                 />
               </div>
               <div>
-                <label className="text-[11px] text-text-muted font-medium">
+                <label htmlFor={`${baseId}-w2`} className="text-[11px] text-text-muted font-medium">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.label.tone" />
                 </label>
-                <input
+                <input id={`${baseId}-w2`} 
                   type="text"
                   placeholder={tRuntime(
                     "runtimeGenerated.components.characterCreator.charactercreatorwelcome.attribute.eGGrittyMelancholicSatirical",
@@ -151,10 +152,10 @@ export function CharacterCreatorWelcome({
                 />
               </div>
               <div>
-                <label className="text-[11px] text-text-muted font-medium">
+                <label htmlFor={`${baseId}-w3`} className="text-[11px] text-text-muted font-medium">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.label.relationshipToUser" />
                 </label>
-                <input
+                <input id={`${baseId}-w3`} 
                   type="text"
                   placeholder={tRuntime(
                     "runtimeGenerated.components.characterCreator.charactercreatorwelcome.attribute.eGReluctantAllyMysteriousInformant",
@@ -167,10 +168,10 @@ export function CharacterCreatorWelcome({
                 />
               </div>
               <div>
-                <label className="text-[11px] text-text-muted font-medium">
+                <label htmlFor={`${baseId}-w4`} className="text-[11px] text-text-muted font-medium">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatorwelcome.label.contentRating" />
                 </label>
-                <select
+                <select id={`${baseId}-w4`} 
                   value={context.contentRating || "general"}
                   onChange={(e) =>
                     setContext({ ...context, contentRating: e.target.value })

@@ -2,7 +2,7 @@
  * @fileoverview Fully editable character card draft editor component.
  */
 
-import { useState } from "react";
+import { useState, useId } from "react";
 import {
   Save,
   Sparkles,
@@ -69,6 +69,7 @@ export function CharacterCreatorDraftEditor({
   isRevising = false,
 }: Props) {
   const { t: tRuntime } = useTranslation("common");
+  const baseId = useId();
   const [activeTab, setActiveTab] = useState<TabCategory>("overview");
   const [revisionInput, setRevisionInput] = useState("");
   const [showProcessLog, setShowProcessLog] = useState(false);
@@ -319,22 +320,22 @@ export function CharacterCreatorDraftEditor({
           {activeTab === "overview" && (
             <div className="flex flex-col gap-4">
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                <label htmlFor={`${baseId}-1`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.characterName" />
                 </label>
                 <input
-                  type="text"
+                  type="text" id={`${baseId}-1`} 
                   value={cardData.name}
                   onChange={(e) => updateCardField("name", e.target.value)}
                   className="w-full mt-1 p-3 text-sm rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                <label htmlFor={`${baseId}-2`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                   {tRuntime("runtimeSlashLabels.shortDescriptionSummary")}
                 </label>
                 <textarea
-                  rows={4}
+                  rows={4} id={`${baseId}-2`} 
                   value={cardData.description}
                   onChange={(e) =>
                     updateCardField("description", e.target.value)
@@ -343,11 +344,11 @@ export function CharacterCreatorDraftEditor({
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                <label htmlFor={`${baseId}-3`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.tagsCommaSeparated" />
                 </label>
                 <input
-                  type="text"
+                  type="text" id={`${baseId}-3`} 
                   value={cardData.tags.join(", ")}
                   onChange={(e) =>
                     updateCardField(
@@ -362,11 +363,11 @@ export function CharacterCreatorDraftEditor({
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                <label htmlFor={`${baseId}-4`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.creatorNotes" />
                 </label>
                 <textarea
-                  rows={3}
+                  rows={3} id={`${baseId}-4`} 
                   value={cardData.creator_notes}
                   onChange={(e) =>
                     updateCardField("creator_notes", e.target.value)
@@ -380,11 +381,11 @@ export function CharacterCreatorDraftEditor({
           {activeTab === "identity" && (
             <div className="flex flex-col gap-4">
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                <label htmlFor={`${baseId}-5`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.fullIdentityBackground" />
                 </label>
                 <textarea
-                  rows={8}
+                  rows={8} id={`${baseId}-5`} 
                   value={cardData.description}
                   onChange={(e) =>
                     updateCardField("description", e.target.value)
@@ -399,7 +400,7 @@ export function CharacterCreatorDraftEditor({
             <div className="flex flex-col gap-4">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                  <label htmlFor={`${baseId}-6`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                     <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.personalitySpeechStyle" />
                   </label>
                   <button
@@ -414,7 +415,7 @@ export function CharacterCreatorDraftEditor({
                   </button>
                 </div>
                 <textarea
-                  rows={8}
+                  rows={8} id={`${baseId}-6`} 
                   value={cardData.personality}
                   onChange={(e) =>
                     updateCardField("personality", e.target.value)
@@ -429,7 +430,7 @@ export function CharacterCreatorDraftEditor({
             <div className="flex flex-col gap-5">
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                  <label htmlFor={`${baseId}-7`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                     <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.scenarioContext" />
                   </label>
                   <button
@@ -444,7 +445,7 @@ export function CharacterCreatorDraftEditor({
                   </button>
                 </div>
                 <textarea
-                  rows={4}
+                  rows={4} id={`${baseId}-7`} 
                   value={cardData.scenario}
                   onChange={(e) => updateCardField("scenario", e.target.value)}
                   className="w-full p-3 text-xs rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
@@ -453,7 +454,7 @@ export function CharacterCreatorDraftEditor({
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                  <label htmlFor={`${baseId}-8`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                     <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.firstMessagePrimaryGreeting" />
                   </label>
                   <button
@@ -468,7 +469,7 @@ export function CharacterCreatorDraftEditor({
                   </button>
                 </div>
                 <textarea
-                  rows={5}
+                  rows={5} id={`${baseId}-8`} 
                   value={cardData.first_mes}
                   onChange={(e) => updateCardField("first_mes", e.target.value)}
                   className="w-full p-3 text-xs rounded-xl bg-surface border border-border text-text-primary focus:outline-none focus:border-accent"
@@ -476,14 +477,14 @@ export function CharacterCreatorDraftEditor({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                <label htmlFor={`${baseId}-9`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.alternateGreetings" />
                 </label>
                 <div className="flex flex-col gap-2 mt-1">
                   {cardData.alternate_greetings.map((g, idx) => (
                     <div key={idx} className="flex items-start gap-2">
                       <textarea
-                        rows={2}
+                        rows={2} id={`${baseId}-9`} 
                         value={g}
                         onChange={(e) => {
                           const next = [...cardData.alternate_greetings];
@@ -525,11 +526,11 @@ export function CharacterCreatorDraftEditor({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                <label htmlFor={`${baseId}-10`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.exampleDialogue" />
                 </label>
                 <textarea
-                  rows={6}
+                  rows={6} id={`${baseId}-10`} 
                   value={cardData.mes_example}
                   onChange={(e) =>
                     updateCardField("mes_example", e.target.value)
@@ -553,11 +554,11 @@ export function CharacterCreatorDraftEditor({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                <label htmlFor={`${baseId}-11`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.systemPromptOverride" />
                 </label>
                 <textarea
-                  rows={6}
+                  rows={6} id={`${baseId}-11`} 
                   value={cardData.system_prompt}
                   onChange={(e) =>
                     updateCardField("system_prompt", e.target.value)
@@ -567,11 +568,11 @@ export function CharacterCreatorDraftEditor({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                <label htmlFor={`${baseId}-12`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.postHistoryInstructions" />
                 </label>
                 <textarea
-                  rows={4}
+                  rows={4} id={`${baseId}-12`} 
                   value={cardData.post_history_instructions}
                   onChange={(e) =>
                     updateCardField("post_history_instructions", e.target.value)
@@ -601,16 +602,16 @@ export function CharacterCreatorDraftEditor({
                   )}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                  <div className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                     <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.avatarControls" />
-                  </label>
+                  </div>
                   <div className="flex flex-wrap gap-2">
-                    <label className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-elevated text-xs font-medium cursor-pointer transition-colors">
+                    <label htmlFor={`${baseId}-14`} className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-elevated text-xs font-medium cursor-pointer transition-colors">
                       <span>
                         <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.text.chooseImageFile" />
                       </span>
                       <input
-                        type="file"
+                        type="file" id={`${baseId}-14`} 
                         accept="image/*"
                         onChange={handleImageFileChange}
                         className="hidden"
@@ -633,11 +634,11 @@ export function CharacterCreatorDraftEditor({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                <label htmlFor={`${baseId}-15`} className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                   <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.visualAvatarPrompt" />
                 </label>
                 <textarea
-                  rows={4}
+                  rows={4} id={`${baseId}-15`} 
                   value={draft.creatorMetadata.avatarPrompt || ""}
                   onChange={(e) => {
                     onUpdateDraft({
@@ -746,9 +747,9 @@ export function CharacterCreatorDraftEditor({
                           />
                         </div>
                         <div className="flex items-center gap-2">
-                          <label className="flex items-center gap-1 text-[11px] text-text-secondary cursor-pointer">
+                          <label htmlFor={`${baseId}-16`} className="flex items-center gap-1 text-[11px] text-text-secondary cursor-pointer">
                             <input
-                              type="checkbox"
+                              type="checkbox" id={`${baseId}-16`} 
                               checked={entry.enabled}
                               onChange={(e) => {
                                 const entries = [
@@ -863,11 +864,11 @@ export function CharacterCreatorDraftEditor({
             onSubmit={handleFullRevisionSubmit}
             className="flex flex-col gap-2"
           >
-            <label className="text-[11px] text-text-muted font-medium">
+            <label htmlFor={`${baseId}-17`} className="text-[11px] text-text-muted font-medium">
               <Trans i18nKey="common:surface.componentsCharacterCreatorCharactercreatordrafteditor.label.naturalLanguageRequest" />
             </label>
             <textarea
-              rows={3}
+              rows={3} id={`${baseId}-17`} 
               value={revisionInput}
               onChange={(e) => setRevisionInput(e.target.value)}
               placeholder={tRuntime(

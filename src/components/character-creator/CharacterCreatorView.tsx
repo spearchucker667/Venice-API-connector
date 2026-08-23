@@ -131,6 +131,8 @@ export function CharacterCreatorView() {
     return { ok: true };
   };
 
+  // Intentional state-sync: Acts as a mount/activation handler for the Character Creator tab,
+  // consuming launch intents (e.g. "Edit this character") from the external store.
   useEffect(() => {
     void loadRecentDrafts();
     if (activeTab === "character-creator") {

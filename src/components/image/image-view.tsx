@@ -846,6 +846,8 @@ export function ImageView() {
     });
   };
 
+  // Intentional state-sync: Absorbs a one-shot cross-route draft handoff
+  // (e.g. remixing an image from the gallery) into the local form state.
   useEffect(() => {
     if (!pendingHandoff || pendingHandoff.target !== "generate") return;
     if (pendingHandoff.draft.model) {
@@ -867,6 +869,8 @@ export function ImageView() {
     useImageWorkspaceStore.getState().consume(pendingHandoff.id);
   }, [pendingHandoff, applyDraftFromGallery]);
 
+  // Intentional state-sync: Consumes a one-shot trigger ID to automatically
+  // start generation (e.g. immediately after a prompt-library template loads).
   useEffect(() => {
     if (!queuedAutoGenerateId) return;
     setQueuedAutoGenerateId(null);

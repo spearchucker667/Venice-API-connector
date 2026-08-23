@@ -133,7 +133,7 @@ See [SECURITY.md](SECURITY.md) for the full security model.
 - [ ] Platform-specific packaging checks pass for the target OS (`npm run verify:dist:win` and `npm run verify:dist:portable` on Windows; `npm run verify:dist:mac` on macOS)
 - [ ] New code includes tests where applicable
 - [ ] Documentation updated (README, AGENTS.md, docs/FAQ.md, etc.)
-- [ ] `docs/audits/CHANGELOG.md` updated under `[Unreleased]`
+- [ ] `docs/audits/Records/CHANGELOG.md` updated under `[Unreleased]`
 - [ ] Legal/TOS notes reviewed if Venice API behavior, privacy, or release claims changed
 - [ ] Markdown links checked when docs changed
 

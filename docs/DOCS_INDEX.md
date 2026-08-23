@@ -173,7 +173,8 @@ This is the canonical source-of-truth navigation map for all documentation in th
 
 ### Audit Evidence
 
-- [audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md](audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md) — Current exhaustive repository audit verdict and remediation plan.
+- [../VENICE_FORGE_COMPLETE_AUDIT.md](../VENICE_FORGE_COMPLETE_AUDIT.md) — Current exhaustive repository audit and remediation plan.
+- [audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md](audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md) — Historical exhaustive repository audit verdict and remediation plan.
 - [audits/repository-hygiene-audit.md](audits/repository-hygiene-audit.md) — 2026-08-22 repository hygiene audit and reorganization plan.
 - [audits/repository-hygiene-final-report.md](audits/repository-hygiene-final-report.md) — 2026-08-22 hygiene execution report.
 - [audits/repo-management/](audits/repo-management/) — Historical repository hygiene and reorganization handoffs.

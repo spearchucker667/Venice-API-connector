@@ -89,7 +89,7 @@ export function SearchTab({
           const url = r.url || r.link || "";
           return (
             <div
-              key={idx}
+              key={url || idx}
               className="rounded-lg bg-surface border border-border p-3 text-[13px]"
             >
               <strong className="text-text-primary block mb-1">

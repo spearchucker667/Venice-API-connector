@@ -14,3 +14,11 @@ export const VENICE_MAX_RAW_UPLOAD_BYTES = VENICE_MAX_BODY_BYTES;
 
 /** Maximum serialized (base64-expanded) upload payload allowed over IPC. */
 export const VENICE_MAX_SERIALIZED_UPLOAD_BYTES = Math.floor((VENICE_MAX_RAW_UPLOAD_BYTES * 4) / 3);
+
+/**
+ * Maximum Venice response body accumulated by the web proxy under Family Safe Mode.
+ * Enforced both via Content-Length pre-check (declared size) and via streaming byte
+ * counter (chunked transfer encoding) before any screening logic runs.
+ */
+export const VENICE_PROXY_MAX_FSM_RESPONSE_BYTES = 256 * MIB;
+

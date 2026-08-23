@@ -246,7 +246,7 @@ export function MemoryPanel() {
           {/* Enable Recording */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-[13.5px] font-medium text-text-primary">
+              <label htmlFor="memory-panel-1" className="text-[13.5px] font-medium text-text-primary">
                 <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.label.enableConversationRecording" />
               </label>
               <p className="text-[12px] text-text-muted mt-0.5">
@@ -254,7 +254,7 @@ export function MemoryPanel() {
               </p>
             </div>
             <input
-              type="checkbox"
+              type="checkbox" id="memory-panel-1" 
               checked={enableRecording}
               onChange={(e) => setEnableRecording(e.target.checked)}
               className="w-4 h-4 rounded accent-accent"
@@ -264,7 +264,7 @@ export function MemoryPanel() {
           {/* Enable Retrieval */}
           <div className="flex items-center justify-between soft-separator-y pt-3">
             <div>
-              <label className="text-[13.5px] font-medium text-text-primary">
+              <label htmlFor="memory-panel-2" className="text-[13.5px] font-medium text-text-primary">
                 <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.label.enableMemoryRetrieval" />
               </label>
               <p className="text-[12px] text-text-muted mt-0.5">
@@ -272,7 +272,7 @@ export function MemoryPanel() {
               </p>
             </div>
             <input
-              type="checkbox"
+              type="checkbox" id="memory-panel-2" 
               checked={enableMemoryRetrieval}
               onChange={(e) => setEnableMemoryRetrieval(e.target.checked)}
               className="w-4 h-4 rounded accent-accent"
@@ -282,7 +282,7 @@ export function MemoryPanel() {
           {/* Show Context Preview */}
           <div className="flex items-center justify-between soft-separator-y pt-3">
             <div>
-              <label className="text-[13.5px] font-medium text-text-primary">
+              <label htmlFor="memory-panel-3" className="text-[13.5px] font-medium text-text-primary">
                 <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.label.showPulledContextBeforeSending" />
               </label>
               <p className="text-[12px] text-text-muted mt-0.5">
@@ -290,7 +290,7 @@ export function MemoryPanel() {
               </p>
             </div>
             <input
-              type="checkbox"
+              type="checkbox" id="memory-panel-3" 
               checked={showPulledContextBeforeSending}
               onChange={(e) =>
                 setShowPulledContextBeforeSending(e.target.checked)
@@ -302,7 +302,7 @@ export function MemoryPanel() {
           {/* AI summaries toggle */}
           <div className="flex items-center justify-between soft-separator-y pt-3">
             <div>
-              <label className="text-[13.5px] font-medium text-text-primary">
+              <label htmlFor="memory-panel-4" className="text-[13.5px] font-medium text-text-primary">
                 <Trans i18nKey="common:surface.componentsLayoutMemoryPanel.label.useAiSummaries" />
               </label>
               <p className="text-[12px] text-text-muted mt-0.5">
@@ -310,7 +310,7 @@ export function MemoryPanel() {
               </p>
             </div>
             <input
-              type="checkbox"
+              type="checkbox" id="memory-panel-4" 
               checked={useAISummaries}
               onChange={(e) => setUseAISummaries(e.target.checked)}
               className="w-4 h-4 rounded accent-accent"

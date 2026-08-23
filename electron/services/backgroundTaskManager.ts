@@ -591,7 +591,7 @@ async function runPoll(taskId: string): Promise<void> {
         const audioBuffer = Buffer.from(normalized.dataBase64, 'base64');
         // Screen completed audio bytes through FSM before persistence.
         const fsm = getRuntimeLocalFamilySafeModeEnabled();
-        const screen = identifyAndValidateGeneratedMedia(audioBuffer, normalized.mimeType, fsm);
+        const screen = await identifyAndValidateGeneratedMedia(audioBuffer, normalized.mimeType, fsm);
         if (!screen.allowed) {
           const fsmError = screen.userMessage || 'Audio generation is not available while Family Safe Mode is enabled.';
           await applyUpdate(taskId, { status: 'failed', error: fsmError, pollAttempts: currentPolls, consecutiveFailures: 0 });

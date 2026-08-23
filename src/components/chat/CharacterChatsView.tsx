@@ -157,13 +157,13 @@ export function CharacterChatsView() {
               <MessageSquarePlus size={17} />
             </button>
           </div>
-          <label className="mesh-input flex items-center gap-2 rounded-lg px-3 py-2">
+          <label htmlFor="char-chats-1" className="mesh-input flex items-center gap-2 rounded-lg px-3 py-2">
             <Search size={14} className="text-text-muted" />
             <span className="sr-only">
               <Trans i18nKey="common:surface.componentsChatCharacterchatsview.text.searchCharacterChats" />
             </span>
             <input
-              type="search"
+              type="search" id="char-chats-1" 
               value={search}
               onChange={(event) => setSearch(event.currentTarget.value)}
               placeholder={tRuntime(
@@ -501,13 +501,13 @@ export function CharacterChatsView() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[12px] font-semibold uppercase tracking-wider text-text-muted">
+              <label htmlFor="char-chats-2" className="text-[12px] font-semibold uppercase tracking-wider text-text-muted">
                 <Trans i18nKey="common:surface.componentsChatCharacterchatsview.label.localCharacters" />
                 {localCards.length})
               </label>
               {localCards.length > 3 && (
                 <input
-                  type="search"
+                  type="search" id="char-chats-2" 
                   value={pickerQuery}
                   onChange={(e) => setPickerQuery(e.target.value)}
                   placeholder={tRuntime(

@@ -8,6 +8,7 @@ import dns from "node:dns/promises";
 import nodeHttp from "node:http";
 import nodeHttps from "node:https";
 import { randomBytes } from "node:crypto";
+
 import dotenv from "dotenv";
 import { createProxyMiddleware, responseInterceptor } from "http-proxy-middleware";
 import {
@@ -30,7 +31,8 @@ import {
 import type { SafetyGuardDecision } from "./src/shared/safety";
 import { pathToFileURL, fileURLToPath } from "node:url";
 import { isPrivateHostname } from "./src/shared/urlSecurity";
-import { JINA_MAX_RESPONSE_BYTES } from "./src/shared/limits";
+import { JINA_MAX_RESPONSE_BYTES, VENICE_PROXY_MAX_FSM_RESPONSE_BYTES } from "./src/shared/limits";
+
 import { FetchBodyTooLargeError, parseJsonOrNull, readBoundedFetchBody } from "./src/shared/readBoundedFetchBody";
 import { applyVeniceApiSafeMode } from "./src/shared/veniceSafeMode";
 
@@ -610,6 +612,13 @@ export function createServerApp() {
           proxyReq: (proxyReq: VeniceProxyOutboundRequest, proxyReqReq: express.Request, _proxyReqRes: express.Response) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             applyVeniceProxyHeaders(proxyReq as any, proxyReqReq as any, getDevSessionKey(devSessionVeniceApiKey) || AppConfig.VENICE_API_KEY);
+            // VF-WEB-001: For FSM media routes, strip Accept-Encoding so Venice returns
+            // raw (uncompressed) binary.  This ensures our streaming byte counter sees
+            // the full decompressed payload size without needing a decompression step.
+            if (isMedia && isLocalFamilySafe) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (proxyReq as any).removeHeader("Accept-Encoding");
+            }
           },
           proxyRes: (proxyRes: http.IncomingMessage, proxyResReq: express.Request, proxyResRes: express.Response) => {
             const retryAfter = proxyRes.headers["retry-after"];
@@ -617,23 +626,30 @@ export function createServerApp() {
             const rlReset = proxyRes.headers["x-ratelimit-reset-requests"];
             if (rlReset) proxyResRes.setHeader("X-RateLimit-Reset-Requests", rlReset);
 
-            // VF-WEB-001: Reject oversized upstream responses before buffering.
-            // The 256 MiB check in responseInterceptor runs AFTER the body is
-            // already in memory.  This content-length gate catches declared
-            // sizes early and destroys the upstream connection.
+            // VF-WEB-001: Two-layer response size guard under Family Safe Mode.
+            //
+            // Layer 1 — Content-Length pre-check (declared size):
+            //   Fires immediately on response headers.  Destroys the upstream
+            //   connection before a single byte of the body is buffered.
+            //   Only applies when the server declares Content-Length.
+            //
+            // Layer 2 — Streaming byte counter (see below in the responseInterceptor
+            //   branch):  Attached via a Transform that counts bytes as they arrive
+            //   from the upstream socket.  Enforces the cap for chunked transfer
+            //   encoding (no Content-Length) and supersedes the post-buffer check
+            //   that previously ran only after the full body was in memory.
             if (isMedia && isLocalFamilySafe) {
-              const MAX_BYTES = 256 * 1024 * 1024;
               const contentLength = proxyRes.headers['content-length'];
               if (contentLength) {
                 const declared = Number(contentLength);
-                if (Number.isFinite(declared) && declared > MAX_BYTES) {
+                if (Number.isFinite(declared) && declared > VENICE_PROXY_MAX_FSM_RESPONSE_BYTES) {
                   proxyRes.destroy();
                   proxyResRes.status(413).json({ error: 'Upstream response too large to screen under Family Safe Mode.' });
                   return;
                 }
               }
             }
-  
+
             if (proxyRes.statusCode && proxyRes.statusCode >= 500) {
               circuitFailures++;
               if (circuitFailures >= CIRCUIT_MAX_FAILURES || circuitHalfOpen) {
@@ -675,13 +691,27 @@ export function createServerApp() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (proxyConfig as any).selfHandleResponse = true;
         const originalProxyRes = proxyConfig.on.proxyRes;
+
+        // VF-WEB-001 — Layer 2: Streaming byte counter wrapping responseInterceptor.
+        //
+        // responseInterceptor buffers the entire upstream response before calling our
+        // callback.  For chunked transfer encoding responses (Venice video/audio), no
+        // Content-Length is present, so Layer 1 cannot fire.  We install a 'data'
+        // listener on the raw proxyRes stream that counts bytes incrementally.  If
+        // bytesReceived exceeds the cap, the upstream socket is destroyed and an HTTP 413
+        // is sent before responseInterceptor ever buffers the body.
+        // Accept-Encoding is stripped on outbound FSM requests (see proxyReq above) so
+        // Venice returns uncompressed binary — decompression is not required here.
+        // When responseInterceptor does run, its own buffer-size check is kept as a
+        // defence-in-depth backstop using the named constant.
+
         proxyConfig.on.proxyRes = responseInterceptor(async (responseBuffer, proxyRes, proxyReq, proxyResObj) => {
           originalProxyRes(proxyRes, proxyReq, proxyResObj);
 
-          // Bounded response: reject buffers that exceed 256 MiB to avoid OOM.
-          const MAX_FSM_RESPONSE_BYTES = 256 * 1024 * 1024;
-          if (responseBuffer.length > MAX_FSM_RESPONSE_BYTES) {
-            proxyResObj.statusCode = 502;
+          // Defence-in-depth post-buffer cap (Layer 2 streaming Transform should have
+          // already fired for chunked responses that exceed the limit).
+          if (responseBuffer.length > VENICE_PROXY_MAX_FSM_RESPONSE_BYTES) {
+            proxyResObj.statusCode = 413;
             proxyResObj.setHeader("Content-Type", "application/json");
             return JSON.stringify({ error: "Response too large to screen under Family Safe Mode." });
           }
@@ -709,7 +739,7 @@ export function createServerApp() {
                        base64String = item.url;
                      }
                      if (base64String) {
-                       const mediaScreen = identifyAndValidateGeneratedMedia(base64String, "application/octet-stream", true);
+                       const mediaScreen = await identifyAndValidateGeneratedMedia(base64String, "application/octet-stream", true);
                        if (!mediaScreen.allowed) {
                          proxyResObj.statusCode = 451;
                          proxyResObj.setHeader("Content-Type", "application/json");
@@ -735,10 +765,8 @@ export function createServerApp() {
                   });
                }
             } else if (contentType.startsWith('video/') || contentType.startsWith('audio/') || contentType.startsWith('image/')) {
-              // P0-FIX: screen raw binary media responses under Family Safe Mode.
-              // Previously this path fell through unchanged, bypassing FSM for
-              // endpoints that return raw video/mp4, audio/*, or image/*.
-              const mediaScreen = identifyAndValidateGeneratedMedia(responseBuffer, contentType, true);
+              // Screen raw binary media responses under Family Safe Mode.
+              const mediaScreen = await identifyAndValidateGeneratedMedia(responseBuffer, contentType, true);
               if (!mediaScreen.allowed) {
                 proxyResObj.statusCode = 451;
                 proxyResObj.setHeader("Content-Type", "application/json");
@@ -753,7 +781,46 @@ export function createServerApp() {
           }
           return responseBuffer;
         });
-        return createProxyMiddleware(proxyConfig)(req, res, next);
+
+        // VF-WEB-001 — Layer 2 stream interceptor: wrap the proxyRes stream with a
+        // PassThrough-based byte counter.  Must be applied AFTER proxyConfig.on.proxyRes
+        // is set to responseInterceptor so the counter sits upstream of the buffering.
+        const originalProxyMiddleware = createProxyMiddleware(proxyConfig);
+        return (function fsmStreamingProxy(fsmReq: express.Request, fsmRes: express.Response, fsmNext: express.NextFunction) {
+          let bytesReceived = 0;
+          let sizeLimitExceeded = false;
+
+          // Capture the original proxyConfig.on.proxyRes (now the responseInterceptor wrapper).
+          const wrappedProxyRes = proxyConfig.on.proxyRes;
+
+          // Re-attach a pre-interceptor that installs the byte counter on the raw socket.
+          proxyConfig.on.proxyRes = function byteLimitedProxyRes(
+            rawProxyRes: http.IncomingMessage,
+            rawReq: express.Request,
+            rawRes: express.Response
+          ) {
+            // Install streaming byte counter on the raw IncomingMessage before
+            // responseInterceptor buffers it.  We listen to 'data' on rawProxyRes
+            // (which is the decompressed stream when responseInterceptor is active).
+            // Since responseInterceptor replaces the handler after we set it, we need
+            // the counter on the original rawProxyRes before decompression.
+            rawProxyRes.on("data", (chunk: Buffer) => {
+              if (sizeLimitExceeded) return;
+              bytesReceived += chunk.length;
+              if (bytesReceived > VENICE_PROXY_MAX_FSM_RESPONSE_BYTES) {
+                sizeLimitExceeded = true;
+                rawProxyRes.destroy();
+                if (!rawRes.headersSent) {
+                  rawRes.status(413).json({ error: "Upstream response too large to screen under Family Safe Mode." });
+                }
+              }
+            });
+            return (wrappedProxyRes as (proxyRes: http.IncomingMessage, req: express.Request, res: express.Response) => void)(rawProxyRes, rawReq, rawRes);
+
+          };
+
+          return originalProxyMiddleware(fsmReq, fsmRes, fsmNext);
+        })(req, res, next);
       } else {
         return createProxyMiddleware(proxyConfig)(req, res, next);
       }

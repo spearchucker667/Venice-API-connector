@@ -1425,11 +1425,11 @@ export function MediaStudioView() {
       {/* Phase 2B: Bulk tag input row, visible in multi-select mode when items are selected. */}
       {multiSelectMode && selectedMediaIds.length > 0 && (
         <div className="border-t border-border/50 bg-surface px-5 py-2 flex items-center gap-2 text-[12px]">
-          <label className="text-text-muted">
+          <label htmlFor="gallery-view-1" className="text-text-muted">
             <Trans i18nKey="common:surface.componentsGalleryGalleryView.label.quickTag" />
           </label>
           <input
-            type="text"
+            type="text" id="gallery-view-1" 
             value={bulkTagInput}
             onChange={(e) => setBulkTagInput(e.target.value)}
             onKeyDown={(e) => {

@@ -197,9 +197,9 @@ export function CharacterCreatorProcessPanel({
           {processSummary.major_decisions &&
             processSummary.major_decisions.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1 pt-2 border-t border-accent/10">
-                {processSummary.major_decisions.map((d, idx) => (
+                {processSummary.major_decisions.map((d) => (
                   <div
-                    key={idx}
+                    key={d.area}
                     className="text-[11px] bg-surface/50 p-2 rounded-lg border border-border/40"
                   >
                     <span className="font-bold text-accent capitalize">
@@ -285,7 +285,7 @@ export function CharacterCreatorProcessPanel({
                   <div className="mt-2 pt-2 border-t border-border/40 pl-6 flex flex-col gap-1">
                     {ev.details.map((detail, idx) => (
                       <div
-                        key={idx}
+                        key={`${idx}-${detail.slice(0, 20)}`}
                         className="text-[11px] text-text-muted font-mono bg-surface/60 p-1.5 rounded"
                       >
                         {detail}

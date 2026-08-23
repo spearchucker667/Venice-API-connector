@@ -280,10 +280,10 @@ export function WorkflowTemplatesView() {
               <Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.heading.workflows" />
             </h2>
             <div className="flex gap-2">
-              <label className="text-xs bg-surface-hover hover:bg-surface-hover text-text-primary px-2 py-1 rounded cursor-pointer">
+              <label htmlFor="workflow-templates-1" className="text-xs bg-surface-hover hover:bg-surface-hover text-text-primary px-2 py-1 rounded cursor-pointer">
                 <Trans i18nKey="common:surface.componentsWorkflowsWorkflowtemplatesview.label.import" />
                 <input
-                  type="file"
+                  type="file" id="workflow-templates-1" 
                   accept=".json"
                   className="hidden"
                   onChange={handleImport}

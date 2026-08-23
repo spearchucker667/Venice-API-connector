@@ -202,6 +202,8 @@ export function ChatView() {
     element?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [activeSearchMatch, searchMatches]);
 
+  // Intentional state-sync: Repairs the conversation's active model if the previously
+  // selected model is no longer available in the API metadata.
   useEffect(() => {
     if (!conversation || !models?.length) return;
     if (models.some((candidate) => candidate.id === conversation.model)) return;
@@ -305,6 +307,8 @@ export function ChatView() {
   const [isEditingContext, setIsEditingContext] = useState(false);
   const [editedText, setEditedText] = useState("");
 
+  // Intentional state-sync: Initializes the editable text buffer when a new
+  // document context drops in from the parent.
   useEffect(() => {
     if (pendingContext) {
       setEditedText(pendingContext.injectedText);
@@ -498,6 +502,8 @@ export function ChatView() {
     isCharacterBound,
   ]);
 
+  // Intentional state-sync: Generates randomized prompt starters when the chat
+  // is empty. Requires an effect to avoid React hydration mismatch on random generation.
   useEffect(() => {
     if (messageCount === 0) {
       setStarters(getBalancedPromptStarters());
@@ -1334,11 +1340,11 @@ function PriorConversationContextSelector({
 
           {activeConversation && (
             <div className="mb-4">
-              <label className="text-[12px] text-text-secondary block mb-1">
+              <label htmlFor="chat-view-1" className="text-[12px] text-text-secondary block mb-1">
                 <Trans i18nKey="common:surface.componentsChatChatView.label.systemPromptMode" />
               </label>
               <select
-                value={systemPromptMode}
+                value={systemPromptMode} id="chat-view-1" 
                 onChange={(e) =>
                   setConversationSystemPromptMode(
                     activeConversation.id,
@@ -1361,12 +1367,12 @@ function PriorConversationContextSelector({
           )}
 
           {activeConversation && (
-            <label className="mb-2 flex items-center justify-between gap-3 text-[13px] text-text-primary">
+            <label htmlFor="chat-view-2" className="mb-2 flex items-center justify-between gap-3 text-[13px] text-text-primary">
               <span>
                 <Trans i18nKey="common:surface.componentsChatChatView.text.includeMemoryRetrievalForThisChat" />
               </span>
               <input
-                type="checkbox"
+                type="checkbox" id="chat-view-2" 
                 checked={memoryEnabled}
                 onChange={(event) =>
                   setConversationMemoryEnabled(
@@ -1378,12 +1384,12 @@ function PriorConversationContextSelector({
               />
             </label>
           )}
-          <label className="flex items-center justify-between gap-3 text-[13px] text-text-primary">
+          <label htmlFor="chat-view-3" className="flex items-center justify-between gap-3 text-[13px] text-text-primary">
             <span>
               <Trans i18nKey="common:surface.componentsChatChatView.text.includePriorConversationContext" />
             </span>
             <input
-              type="checkbox"
+              type="checkbox" id="chat-view-3" 
               checked={includePriorContext}
               onChange={(event) => onIncludeChange(event.target.checked)}
               className="h-4 w-4 accent-accent"

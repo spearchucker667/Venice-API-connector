@@ -141,7 +141,7 @@ export function ProfileDiscoveryTab({
         </div>
 
         <div className="space-y-2">
-          <label className="text-[12.5px] text-text-secondary block font-medium">
+          <label htmlFor="profile-discovery-1" className="text-[12.5px] text-text-secondary block font-medium">
             <Trans i18nKey="common:surface.componentsSearchProfilediscoverytab.label.platformsToSearch" />
           </label>
           <div className="flex flex-wrap gap-2">
@@ -164,9 +164,9 @@ export function ProfileDiscoveryTab({
           </div>
         </div>
 
-        <label className="flex items-start gap-3 p-4 rounded-xl border border-border bg-surface-elevated cursor-pointer mt-2">
+        <label htmlFor="profile-discovery-2" className="flex items-start gap-3 p-4 rounded-xl border border-border bg-surface-elevated cursor-pointer mt-2">
           <input
-            type="checkbox"
+            type="checkbox" id="profile-discovery-2" 
             className="mt-0.5 rounded border-border bg-surface text-accent focus:ring-offset-0 focus:ring-0 w-4 h-4 cursor-pointer"
             checked={authorized}
             onChange={(e) => setAuthorized(e.target.checked)}
@@ -221,7 +221,7 @@ export function ProfileDiscoveryTab({
           <div className="space-y-3">
             {profileCandidates.map((c, idx) => (
               <div
-                key={idx}
+                key={`${c.platform}-${c.handle}-${idx}`}
                 className="rounded-lg bg-surface border border-border p-3 text-[13px] space-y-2"
               >
                 <div className="flex items-center justify-between">

@@ -530,11 +530,12 @@ export default function HistoryView() {
 
             <div className="flex flex-wrap items-center gap-2">
               {selectedIds.length > 0 && (
-                <label className="flex items-center gap-1.5 text-[12px] text-text-muted">
+                <label htmlFor="history-folder-select" className="flex items-center gap-1.5 text-[12px] text-text-muted">
                   <span>
                     <Trans i18nKey="common:surface.componentsChatHistoryview.text.moveTo" />
                   </span>
                   <select
+                    id="history-folder-select"
                     onChange={(e) => {
                       if (e.target.value !== "") {
                         const target =

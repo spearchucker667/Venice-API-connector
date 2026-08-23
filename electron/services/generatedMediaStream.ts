@@ -26,7 +26,7 @@ export async function persistGeneratedMp4Stream(
      *  stream.  If the screener returns `{ allowed: false }`, the temp
      *  file is deleted and the promise rejects with an Error carrying
      *  `reasonCode: 'FSM_BLOCKED'`. */
-    screenSample?: (sample: Buffer, mimeType: string) => StreamSafetyResult
+    screenSample?: (sample: Buffer, mimeType: string) => StreamSafetyResult | Promise<StreamSafetyResult>
   } = {},
 ): Promise<DurableGeneratedMedia> {
   const configured = Number(process.env.VENICE_FORGE_MAX_GENERATED_VIDEO_BYTES)
@@ -63,7 +63,7 @@ export async function persistGeneratedMp4Stream(
     // If blocked, the temp file is cleaned up — blocked bytes never
     // reach the durable content-addressed store.
     if (options.screenSample) {
-      const screening = options.screenSample(sample, 'video/mp4')
+      const screening = await options.screenSample(sample, 'video/mp4')
       if (!screening.allowed) {
         await temporary.handle.close().catch(() => undefined)
         await fs.rm(temporary.path, { force: true }).catch(() => undefined)
