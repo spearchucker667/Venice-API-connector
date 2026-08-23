@@ -1,4 +1,4 @@
-import { test } from 'vitest';
+import { afterEach, describe, expect, test } from 'vitest';
 import { spawn } from 'child_process';
 import path from 'path';
 import fs from 'fs';
@@ -6,34 +6,105 @@ import os from 'os';
 
 const smokeTest = process.env.RUN_ELECTRON_SMOKE === 'true' ? test : test.skip;
 
-smokeTest('packaged electron app launches successfully', async () => {
-  const root = path.join(__dirname, '..', '..');
+const temporaryDirectories: string[] = [];
+
+export function findPackagedExecutable(
+  root: string,
+  platform: NodeJS.Platform = os.platform(),
+  architecture: string = os.arch(),
+): string | undefined {
   const releaseDir = path.join(root, 'release');
-  
-  let exePath: string | undefined;
-  
-  if (os.platform() === 'win32') {
-    if (!fs.existsSync(releaseDir)) throw new Error('release/ directory not found');
-    const files = fs.readdirSync(releaseDir);
-    const portable = files.find(f => f.endsWith('-Portable.exe'));
-    if (portable) exePath = path.join(releaseDir, portable);
-  } else if (os.platform() === 'darwin') {
-    const archs = os.arch() === 'arm64' ? ['mac-arm64', 'mac'] : ['mac', 'mac-arm64'];
-    for (const archDirName of archs) {
-      const archDir = path.join(releaseDir, archDirName);
-      if (fs.existsSync(archDir)) {
-        const files = fs.readdirSync(archDir);
-        const app = files.find(f => f.endsWith('.app'));
-        if (app) {
-          exePath = path.join(archDir, app, 'Contents', 'MacOS', 'Venice Forge');
-          break;
+
+  if (platform === 'win32') {
+    if (!fs.existsSync(releaseDir)) return undefined;
+    const portable = fs.readdirSync(releaseDir).find(file => file.endsWith('-Portable.exe'));
+    return portable ? path.join(releaseDir, portable) : undefined;
+  }
+
+  if (platform === 'darwin') {
+    const archs = architecture === 'arm64' ? ['mac-arm64', 'mac'] : ['mac', 'mac-arm64'];
+    const searchDirectories = [...archs.map(directory => path.join(releaseDir, directory)), releaseDir];
+
+    const findExecutableInBundle = (directory: string): string | undefined => {
+      if (!fs.existsSync(directory)) return undefined;
+      for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        const entryPath = path.join(directory, entry.name);
+        if (entry.name.endsWith('.app')) {
+          const executableDirectory = path.join(entryPath, 'Contents', 'MacOS');
+          if (!fs.existsSync(executableDirectory)) continue;
+          const executable = fs.readdirSync(executableDirectory, { withFileTypes: true })
+            .find(candidate => candidate.isFile());
+          if (executable) return path.join(executableDirectory, executable.name);
+          continue;
         }
+        const nestedExecutable = findExecutableInBundle(entryPath);
+        if (nestedExecutable) return nestedExecutable;
       }
+      return undefined;
+    };
+
+    for (const directory of searchDirectories) {
+      const executable = findExecutableInBundle(directory);
+      if (executable) return executable;
+    }
+    return undefined;
+  }
+
+  if (platform === 'linux') {
+    const unpackedDirectories = architecture === 'arm64'
+      ? ['linux-arm64-unpacked', 'linux-unpacked']
+      : ['linux-unpacked', 'linux-arm64-unpacked'];
+    for (const directory of unpackedDirectories) {
+      const executable = path.join(releaseDir, directory, 'venice-forge');
+      if (fs.existsSync(executable)) return executable;
     }
   }
 
+  return undefined;
+}
+
+afterEach(() => {
+  for (const directory of temporaryDirectories.splice(0)) {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+describe('packaged executable discovery', () => {
+  test('finds the unpacked Linux executable produced by electron-builder', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'venice-forge-smoke-'));
+    temporaryDirectories.push(root);
+    const executable = path.join(root, 'release', 'linux-unpacked', 'venice-forge');
+    fs.mkdirSync(path.dirname(executable), { recursive: true });
+    fs.writeFileSync(executable, 'fixture');
+
+    expect(findPackagedExecutable(root, 'linux', 'x64')).toBe(executable);
+  });
+
+  test('finds a macOS app executable without assuming the bundle or binary name', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'venice-forge-smoke-'));
+    temporaryDirectories.push(root);
+    const executable = path.join(root, 'release', 'mac-arm64', 'Renamed Product.app', 'Contents', 'MacOS', 'renamed-product');
+    fs.mkdirSync(path.dirname(executable), { recursive: true });
+    fs.writeFileSync(executable, 'fixture');
+
+    expect(findPackagedExecutable(root, 'darwin', 'arm64')).toBe(executable);
+  });
+
+  test('returns undefined when the platform package is absent', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'venice-forge-smoke-'));
+    temporaryDirectories.push(root);
+
+    expect(findPackagedExecutable(root, 'linux', 'x64')).toBeUndefined();
+  });
+});
+
+smokeTest('packaged electron app launches successfully', async () => {
+  const root = process.cwd();
+  const exePath = findPackagedExecutable(root);
+
   if (!exePath || !fs.existsSync(exePath)) {
-    throw new Error('Packaged app not found. Did you run `npm run dist`?');
+    throw new Error(`Packaged app not found for ${os.platform()}/${os.arch()}. Did you run the platform dist command?`);
   }
 
   return new Promise<void>((resolve, reject) => {
