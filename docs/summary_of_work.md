@@ -6,6 +6,17 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
+**Scope:** Hosted CI portability remediation — Markdown path casing and Windows theme permissions
+
+- **Hosted evidence:** Inspected failed CI run `32622366262` at commit `675d88b1`. `coverage` and `unit-and-integration-tests` both failed the same two `verify-markdown-links` cases on Ubuntu; `windows-sensitive-tests` failed the theme-file `0600` assertion. CodeQL passed.
+- **Markdown root cause and fix:** `verifyMarkdownLinks()` checked `fs.existsSync()` before consulting the canonical Git/fallback path index. Linux therefore classified wrong-case tracked paths as merely missing, while default macOS/Windows filesystems reached the intended case-mismatch diagnostic. Canonical-case comparison now runs first. A platform-independent regression forces the Linux-style nonexistence condition and proves that `existsSync()` is not consulted before case classification.
+- **Windows root cause and fix:** `saveTheme()` correctly requests mode `0600`, but Windows does not implement POSIX owner/group/other permission bits and reports `0666`. The integration test now proves the restrictive `writeFile` option on every platform and checks actual on-disk `0600` bits only on POSIX; production behavior is unchanged.
+- **Validation:** Focused tests 31/31; `test:ci` 4,497/4,497; `test:coverage` 5,069/5,069 across 459 files with 71.38% statements, 62.29% branches, 68.10% functions, and 74.27% lines; zero-warning ESLint; renderer and Electron typechecks; safety guard; 253-file Markdown verifier; complete contracts (including 103 release-packaging checks); build; distribution verification; and aggregate `npm run ci` all passed. Both dependency audits reported 0 vulnerabilities.
+- **External status:** Docker-based Linux replay could not run because the local Docker daemon was unavailable. The deterministic mocked-existence regression covers the Linux control flow locally. Hosted CI has not yet been rerun against these uncommitted changes at the time of this entry.
+
+## Prior Session Summary (CodeQL remediation)
+
+**Date:** 2026-08-23
 **Scope:** CodeQL Alert Remediation — 31 Open Alerts Triaged and Resolved
 
 - **Alert triage:** Pulled the live 31-alert inventory from GitHub Code Scanning. Classified each as: confirmed defect already fixed (17 alerts from prior CI remediation session), false positive with documented invariant (2 alerts — sync folder watcher temp-file check, video retrieve file-to-HTTP dataflow), test-fixture artifact (9 alerts — TOCTOU, temp files, URL checks in test harnesses), inactive-feature artifact (3 alerts — `inactive-features/research-browser/`).
@@ -1718,6 +1729,8 @@ The earlier P1 audit closure (P1 #1–#8 with `VERIFY-128..131`) remains the con
 
 ## Open TODO Ledger
 
+**Hosted CI portability failures from run `32622366262` (closed locally 2026-08-23; hosted rerun pending publication):** deterministic wrong-case Markdown classification and the Windows-inapplicable POSIX mode assertion are corrected with focused regressions. All local parity gates pass. No new roadmap item was created because no implementation work remains; publication and the resulting GitHub-hosted matrix are the outstanding evidence step for this session.
+
 **Exhaustive Audit `VF-EXHAUSTIVE-AUDIT-20260815` (open; WP-01..05 closed 2026-08-17):** WPs executed so far: WP-01 strict request-schema corrections (P1-001, P1-008, P2-001, P2-002 — `safe_mode` matrix, `veniceSearchWire`, top-level `prompt_cache_key`, `language_code`); WP-02 video contract corrections (P1-003 — `duration` required on quote/queue; coercer fields removed; workflow schema fail-closed on missing `videoDuration`); WP-03 shared SSE conformance (P1-002 — one incremental decoder in `src/shared/sseStreamDecoder.ts` powering both transports); WP-04 agent IPC durability (P1-006 — shared `src/shared/veniceStreamDelta.ts` envelope, preload forwards `appendedMessages` with media/document metadata, boundary validation); WP-05 capability-driven tools/references (P1-004 — `style_references` wire shape, invented `venice-character-reference-v1` removed, runtime-metadata gating; P1-005 — `tools` only when `supportsFunctionCalling`; P3-001 — `discount_to_user` + style-ref type surface, drift verifier). Remaining: WP-06 (post-delta retry safety, P1-007 — never auto-replay a billable stream after observable output; require explicit retry and preserve the partial result), WP-07 (schema-backed CI/external acceptance). Tracking and evidence per work package are in `docs/ROADMAP.md` under the audit row.
 
 **VF-VERIFY-005 media Save As architecture (2026-07-28, locally remediated; distribution evidence blocked):** every single-item image/audio/video save surface now calls `desktopMedia.saveMediaAs`, and Electron writes only through `generatedMediaExport.ts`. Obsolete fixed-folder writer IPCs were removed. Format, signature, byte preservation, filename, overwrite, cancellation, source-normalization, and large-file cases have regression coverage. The arm64 app/DMG/ZIP build and packaged smoke pass. Signed/notarized macOS, Intel macOS, Windows, paid-provider, and real backup-restored/migrated fixture acceptance remain blocked by missing identities/profiles/resources and are retained in `docs/ROADMAP.md`.
@@ -1856,9 +1869,27 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 - **Combined Phase 3 §3.7 validation:** `npx vitest run electron/agent/runtime/` → **26/26 PASS in 1.65 s**. `tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.electron.json` → **0 errors**. `lint:eslint --max-warnings=0` → **0 warnings**.
 - **Phase 3 remaining sub-steps** (§3.1 dedicated Component, §3.2 dedicated IPC channel, §3.3 grantId-from-model leak in `agent-tool-executor.ts`, §3.4 schema matrix, §3.5 unified `document.create`, §3.6 unimplemented-tool unadvertise, §3.10 `media.generateImage` executor contract hardening, §3.11 `DocumentAgentChat.tsx` UI, §3.12 17-bullet acceptance matrix) remain pending and progress to continuation 12.
 
-**Dependency-audit status (refreshed 2026-07-26):** `npm audit --audit-level=moderate` reports 16 high-severity transitive `brace-expansion` findings in Electron packaging dependencies. npm offers only `npm audit fix --force`, which would install the breaking Electron Builder 25.1.8 downgrade. No forced downgrade or advisory suppression was applied; the aggregate `npm run ci` gate therefore remains blocked at the audit step while every later gate is independently validated.
+**Dependency-audit status (refreshed 2026-08-23):** `npm audit --omit=dev --audit-level=moderate` and `npm audit --audit-level=critical` both report 0 vulnerabilities. The aggregate `npm run ci` gate is no longer blocked by dependency audit findings.
 
 ## Validation Matrix
+
+### August 23 — Hosted CI portability remediation
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| GitHub Actions run `32622366262` | FAIL (diagnosed) | Ubuntu coverage/unit jobs shared two wrong-case Markdown diagnostic failures; Windows failed a POSIX permission-bit assertion; CodeQL run `32622366151` passed. |
+| `npm exec vitest run scripts/verify-markdown-links.test.ts electron/services/themeService.test.ts -- --fileParallelism=false` | PASS | 2 files, 31 tests; includes forced case-sensitive nonexistence control flow and cross-platform `0600` write-option proof. |
+| `npm run lint:eslint -- --no-cache` | PASS | 0 warnings. |
+| `npm run typecheck` | PASS | Renderer and Electron TypeScript projects clean. |
+| `npm run test:ci` | PASS | 4,497 tests across all segmented suites. |
+| `npm run test:coverage` | PASS | 459 files / 5,069 tests; statements 71.38%, branches 62.29%, functions 68.10%, lines 74.27%. |
+| `npm run verify:safety-guard` | PASS | All transport and no-raw-log policies passed. |
+| `npm run verify:markdown-links` | PASS | 253 Markdown files checked. |
+| `npm run verify:contracts` | PASS | Static, feature, backup/sync, and 103 release-packaging checks passed. |
+| `npm run build` + `npm run verify:dist` | PASS | Renderer, server, Electron bundles and distribution outputs verified. |
+| `npm run ci` | PASS | Lint, typecheck, 4,497 tests, both 0-vulnerability audits, build, contracts, and distribution verification passed end-to-end. |
+| Linux Docker replay | NOT RUN | Docker CLI exists, but the local daemon socket was unavailable; deterministic mocked-existence regression covers the affected ordering. |
+| Manual UI QA | NOT RUN | Changes are verifier/test portability only; no user-visible runtime behavior changed. |
 
 ### August 17/18 — CI Markdown Link & Audit Artifact Tracking Remediation
 
@@ -2631,6 +2662,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-08-23 — Hosted CI portability remediation (run `32622366262`):** Diagnosed three failed jobs to two platform-ordering assumptions. Moved canonical tracked-path casing detection ahead of `existsSync()` in `scripts/verify-markdown-links.cjs`, so Linux reports the same actionable mismatch as case-insensitive hosts; added a regression that forces Linux-style nonexistence and proves the classification order. Updated `electron/services/themeService.test.ts` to verify that `saveTheme()` requests `0600` everywhere while asserting actual POSIX bits only where the platform supports them. Focused 31-test suite, 4,497-test `test:ci`, 5,069-test aggregate coverage, lint, both typechecks, safety/Markdown/contracts, build/dist, and aggregate `npm run ci` pass; both audits report 0 vulnerabilities. Docker replay was unavailable because the daemon was not running; hosted rerun remained pending before publication.
 
 - **2026-08-23 — CodeQL Alert Remediation (ff4ea95e):** Triaged 31 open CodeQL alerts: 17 auto-close on next analysis (unused imports, type comparisons, regex, pre-existing fixes from CI remediation), 2 documented false positives with `// nosec` annotations (syncFolderWatcher `js/insecure-temporary-file` — path from user sync folder, not temp dir; videoRetrieveService `js/file-access-to-http` — file bytes gate request but never reach network body), 9 test-fixture findings (TOCTOU/temp-file/URL checks in `*.test.ts`), 3 inactive-feature findings (`inactive-features/research-browser/`). Removed 4 stale eslint-disable directives. Updated SECURITY.md alert categories, nosec justifications, and action pin SHA references. All verifier tests (41/41), lint (0 warnings), typecheck, test:ci (234/234), coverage (branches 62.29%, functions 68.1%, lines 74.28%, statements 71.39%), build, verify:dist, verify:contracts, and verify:safety-guard pass.
 

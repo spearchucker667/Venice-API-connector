@@ -209,20 +209,31 @@ describe("loadAllThemes", () => {
 });
 
 describe("saveTheme / deleteTheme", () => {
-  it("writes a themes-wrapped YAML with owner-only permissions", async () => {
+  it("writes a themes-wrapped YAML with owner-only permissions where supported", async () => {
     const theme = {
       id: "custom-1",
       display_name: "Custom One",
       mode: "dark",
       tokens: validTokens(),
     };
-    await saveTheme(theme as never);
     const filePath = path.join(TEST_ROOT, "userData", "themes", "custom-1.yaml");
+    const writeSpy = vi.spyOn(fs, "writeFile");
+    await saveTheme(theme as never);
     const content = await fs.readFile(filePath, "utf8");
     expect(content).toContain("display_name: Custom One");
     expect(content).toContain("tokens:");
-    const stat = await fs.stat(filePath);
-    expect(stat.mode & 0o777).toBe(0o600);
+    expect(writeSpy).toHaveBeenCalledWith(
+      filePath,
+      expect.any(String),
+      expect.objectContaining({ encoding: "utf-8", mode: 0o600 }),
+    );
+    // Windows does not implement POSIX owner/group/other permission bits and
+    // reports the file as 0666 even when writeFile receives mode 0600. Linux
+    // and macOS CI still enforce the actual owner-only filesystem contract.
+    if (process.platform !== "win32") {
+      const stat = await fs.stat(filePath);
+      expect(stat.mode & 0o777).toBe(0o600);
+    }
   });
 
   it("deletes a theme file and tolerates a missing file", async () => {

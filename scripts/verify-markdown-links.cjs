@@ -266,16 +266,13 @@ function verifyMarkdownLinks(rootDir, options = {}) {
       const line = lineNumberAt(stripped, link.index);
 
       if (isIgnored(targetPath)) continue;
-      if (!fs.existsSync(targetPath)) {
-        errors.push({ sourcePath, line, destination, reason: "target does not exist" });
-        continue;
-      }
 
       // CI-006: enforce canonical tracked casing even on case-insensitive file
       // systems. A link may resolve on macOS/Windows but fail on Linux CI; the
       // git-tracked case is the source of truth. Directories are walked
       // implicitly by git ls-files, so a path whose casing differs anywhere is
-      // flagged here.
+      // flagged here. This check must precede existsSync(): on a case-sensitive
+      // filesystem, a wrong-case tracked path otherwise looks merely missing.
       if (cleanTarget) {
         const relativeCandidate = path
           .relative(rootDir, targetPath)
@@ -291,6 +288,11 @@ function verifyMarkdownLinks(rootDir, options = {}) {
           });
           continue;
         }
+      }
+
+      if (!fs.existsSync(targetPath)) {
+        errors.push({ sourcePath, line, destination, reason: "target does not exist" });
+        continue;
       }
 
       if (!fragment || !targetPath.toLowerCase().endsWith(".md")) continue;

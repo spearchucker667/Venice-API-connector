@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 const {
   collectMarkdownFiles,
@@ -225,6 +225,26 @@ describe("verifyMarkdownLinks canonical path casing (CI-006)", () => {
       "docs/guide.md": "# Guide\n",
     });
     const result = verifyMarkdownLinks(root, { files });
+    expect(result.errors[0]).toMatchObject({
+      destination: "docs/guide.MD",
+      reason: expect.stringContaining("path case mismatch"),
+    });
+  });
+
+  it("classifies a canonical case mismatch before a case-sensitive existence failure", () => {
+    const { root, files } = fixture({
+      "README.md": "[Guide](docs/guide.MD)\n",
+      "docs/guide.md": "# Guide\n",
+    });
+    const wrongCaseTarget = path.join(root, "docs", "guide.MD");
+    const realExistsSync = fs.existsSync.bind(fs);
+    const existsSpy = vi.spyOn(fs, "existsSync").mockImplementation((candidate) => (
+      path.resolve(String(candidate)) === wrongCaseTarget ? false : realExistsSync(candidate)
+    ));
+
+    const result = verifyMarkdownLinks(root, { files });
+
+    expect(existsSpy).not.toHaveBeenCalledWith(wrongCaseTarget);
     expect(result.errors[0]).toMatchObject({
       destination: "docs/guide.MD",
       reason: expect.stringContaining("path case mismatch"),
