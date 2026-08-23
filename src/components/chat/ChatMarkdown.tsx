@@ -19,10 +19,30 @@ function safeUrlTransform(url: string, key: string): string {
   return "";
 }
 
+function extractReactText(value: React.ReactNode): string {
+  if (typeof value === "string" || typeof value === "number") {
+    return String(value);
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(extractReactText).join("");
+  }
+
+  if (
+    React.isValidElement<{
+      children?: React.ReactNode;
+    }>(value)
+  ) {
+    return extractReactText(value.props.children);
+  }
+
+  return "";
+}
+
 function CodeRenderer({
   children,
   className,
-   _node,
+  node: _node,
   ...props
 }: ComponentPropsWithoutRef<"code"> & { node?: unknown }) {
   const match = /language-([a-zA-Z0-9#\-+]+)/.exec(className || "");
@@ -64,21 +84,17 @@ function PreRenderer({
   let rawText = "";
 
   React.Children.forEach(children, (child) => {
-    if (React.isValidElement(child)) {
-      const childEl = child as unknown;
-      const className = childEl.props.className || "";
+    if (
+      React.isValidElement<{
+        className?: string;
+        children?: React.ReactNode;
+      }>(child)
+    ) {
+      const className = child.props.className || "";
       const match = /language-([a-zA-Z0-9#\-+]+)/.exec(className);
       if (match) lang = match[1];
       
-      // Extract raw text from nested children
-      const extractText = (_node: React.ReactNode): string => {
-        if (typeof node === "string" || typeof node === "number") return String(node);
-        if (Array.isArray(node)) return node.map(extractText).join("");
-        if (React.isValidElement(node)) return extractText((node as unknown).props.children);
-        return "";
-      };
-      
-      rawText = extractText(childEl.props.children).replace(/\n$/, "");
+      rawText = extractReactText(child.props.children).replace(/\n$/, "");
     }
   });
 
@@ -164,7 +180,7 @@ export function ChatMarkdown({ content }: ChatMarkdownProps) {
         components={{
           pre: PreRenderer,
           code: CodeRenderer,
-          a: ({  _node, ...props }) => (
+          a: ({ node: _node, ...props }: ComponentPropsWithoutRef<"a"> & { node?: unknown }) => (
             <a {...props} target="_blank" rel="noopener noreferrer ugc" />
           ),
         }}

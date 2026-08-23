@@ -6,6 +6,16 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
+**Scope:** Emergency ChatMarkdown Runtime Regression Repair
+
+- **Bug Fix:** Fixed `ReferenceError: node is not defined` in `PreRenderer` inside `ChatMarkdown.tsx` which was crashing the renderer upon rendering any fenced code block. Replaced the inline `extractText` helper with a top-level `extractReactText` helper.
+- **AST Node Fixes:** Fixed incorrect destructuring of the AST `node` prop in `CodeRenderer` (`_node` -> `node: _node`) and the `a` tag renderer to avoid spreading the `node` object onto native DOM elements.
+- **Testing:** Addressed a critical testing gap. The prior commit's tests were running on an environment or state that didn't trigger the exception. Added an integration-level regression test in `chat-view.test.tsx` that strictly validates the end-to-end chat composer send flow with a markdown source payload. The test programmatically submits fenced markdown and ensures the request is dispatched and rendered without throwing.
+- **Validation:** Typecheck, ESLint, UI tests, and all contracts (i18n, theme-tokens) pass successfully on the current worktree.
+
+## Prior Session Summary
+
+**Date:** 2026-08-23
 **Scope:** Themes (Deduplication & UI Modernization) and Media Studio (Multi-select)
 
 - **Themes:** 

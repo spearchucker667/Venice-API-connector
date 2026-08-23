@@ -614,4 +614,74 @@ describe("ChatView", () => {
       { mode: "auto", source: "global" },
     );
   });
+
+  it("submits fenced Markdown, preserves literal source, and renders without throwing", async () => {
+    // Override the mock send just for this test to actually append the message,
+    // simulating the real useChat hook's behavior so we can observe the render.
+    chatHookMocks.send.mockImplementationOnce((content, _model) => {
+      useChatStore.setState((state) => {
+        const active = state.conversations.find((c) => c.id === state.activeConversationId);
+        if (active) {
+          active.messages.push({
+            id: "test-fenced-msg",
+            role: "user",
+            content,
+            timestamp: Date.now(),
+          });
+        }
+        return { conversations: [...state.conversations] };
+      });
+    });
+
+    useChatStore.setState({
+      conversations: [
+        {
+          id: "fenced-markdown-conv",
+          title: "Markdown test",
+          model: "llama-3.3-70b",
+          createdAt: 1,
+          updatedAt: 1,
+          messages: [],
+          metadata: { tags: [], pinned: false, archived: false, source: "chat", messageCount: 0 },
+          memory: { summary: "", topics: [], entities: [], userFacts: [], projectRefs: [] },
+        },
+      ],
+      activeConversationId: "fenced-markdown-conv",
+    });
+
+    render(<ChatView />);
+
+    const input = screen.getByLabelText("Message input");
+    
+    // Type fenced markdown block
+    const markdownSource = "```markdown\nmarkdown test\n```";
+    // userEvent.type has issues with backticks/newlines if not careful, better to paste or clear and type
+    // But pasting is safest for literal exact strings
+    fireEvent.change(input, { target: { value: markdownSource } });
+    
+    // We also need to simulate a submit, either by clicking send or Enter
+    // Assuming there's a Send button or Enter works. chat-view.test uses Enter
+    await userEvent.keyboard("{Enter}");
+
+    // Verify chat request dispatch is invoked exactly once
+    expect(chatHookMocks.send).toHaveBeenCalledTimes(1);
+    expect(chatHookMocks.send).toHaveBeenCalledWith(
+      markdownSource,
+      expect.any(String),
+      undefined,
+      "",
+      expect.any(Object),
+    );
+
+    // Verify composer resets
+    expect(input).toHaveValue("");
+
+    // Verify the fenced block renders in conversation history
+    // Should see 'markdown test' as the text and 'markdown' as the language
+    await waitFor(() => {
+      expect(screen.getByText("markdown test")).toBeInTheDocument();
+    });
+    // The language label should be present
+    expect(screen.getByText("markdown")).toBeInTheDocument();
+  });
 });

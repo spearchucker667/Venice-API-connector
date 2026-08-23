@@ -27,6 +27,7 @@ const requiredFiles = [
   "src/components/chat/chat-view.test.tsx",
   "src/components/chat/message-bubble.tsx",
   "src/components/chat/message-bubble.test.tsx",
+  "src/components/chat/ChatMarkdown.tsx",
   "src/components/research/ResearchWorkspaceView.tsx",
   "src/components/research/ResearchWorkspaceView.test.tsx",
 ];
@@ -139,7 +140,7 @@ function verifySourceIntegrationTokens() {
   );
 
   mustContain(
-    "src/components/chat/message-bubble.tsx",
+    "src/components/chat/ChatMarkdown.tsx",
     [
       "remarkMath",
       "rehypeKatex",
