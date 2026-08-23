@@ -520,3 +520,44 @@ export class ToolRegistry {
     return tool;
   }
 }
+
+import { supportsFunctionCalling, type FunctionCallingCapableModel } from "../../shared/modelCapabilities";
+import type { VeniceParameters } from "../../types/venice";
+
+/** 
+ * Resolves the final set of available tools for a chat stream request,
+ * acting as the single authoritative choke point for capability enforcement.
+ */
+export function resolveAvailableTools(
+  modelInfo: FunctionCallingCapableModel | undefined,
+  veniceParams: Partial<VeniceParameters>,
+  hasWorkspaceGrant: boolean
+): ProviderToolSchema[] {
+  if (!supportsFunctionCalling(modelInfo)) {
+    return [];
+  }
+
+  const allDefinitions = createCanonicalToolDefinitions();
+  const allowedTools: ProviderToolSchema[] = [];
+
+  // Media tools are universally exposed when function calling is supported.
+  allowedTools.push(
+    ...allDefinitions.filter(d => d.internalName.startsWith('media.')).map(t => t.schema)
+  );
+
+  // Document tools require explicit parameter opt-in.
+  if (veniceParams.enable_document_tools) {
+    allowedTools.push(
+      ...allDefinitions.filter(d => d.internalName.startsWith('document.')).map(t => t.schema)
+    );
+  }
+
+  // Workspace tools require an explicit workspace grant from the active tab.
+  if (hasWorkspaceGrant) {
+    allowedTools.push(
+      ...allDefinitions.filter(d => d.internalName.startsWith('workspace.')).map(t => t.schema)
+    );
+  }
+
+  return allowedTools;
+}

@@ -5,6 +5,17 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-22
+**Scope:** Remediation of 2026-08-22 Update Review (P1, P2, CI)
+
+- **VF-P1-007 (Retry Safety) & BUG-001/002:** Refactored `stream.ts` to use `structuredClone(payload)` (avoiding mutation of caller objects) and `chat-stream-manager.ts` to use `hasCommittedStreamState` (only dropping retries if actual durable content/tool-calls mutated the UI, preventing ghost retries). Replaced raw error logging with a structured, redacted telemetry payload.
+- **VF-P1-005 (Tool Capability Gating):** Centralized capability validation in `resolveAvailableTools` inside `tool-registry.ts`. Stream requests now use this single choke point rather than inline logic.
+- **VF-P1-004 (Scene References):** Added explicit unit tests to `payloadBuilders.modelAware.test.ts` to enforce that `style_references` drops payload references if the model explicitly lacks capability or metadata.
+- **P2-001 / P2-002:** Audited these findings and confirmed they are false alarms (already resolved by existing builder logic); `language` converts to `language_code` and `prompt_cache_key` handles proper nesting.
+- **CI / GitHub Actions:** Added Linux smoke testing with XVFB. Included `actions/upload-artifact@v4` steps to retain test results, coverage, and dist artifacts on failure. Verified `verify:contracts` already cascades to 103 checks including i18n and release metadata.
+
+## Prior Session Summary
+
+**Date:** 2026-08-22
 **Scope:** ESLint/React Doctor Fixes
 
 - **Accessibility:** Addressed 59 `label-has-associated-control` and `control-has-associated-label` findings by injecting proper `htmlFor` and `id` attributes across forms and modals including `CharacterCreatorDraftEditor.tsx`, `PromptCreateModal.tsx`, `ThemeMaker.tsx`, `DocumentAgentView.tsx`, `CharacterCreatorWelcome.tsx`, `HistoryView.tsx`, and more.

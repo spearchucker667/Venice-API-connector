@@ -43,13 +43,24 @@ export async function veniceStreamChat(
     "POST",
     payload,
   );
+  const payloadRecord = payload as Record<string, unknown> | null | undefined;
+  let requestPayload = payload;
+  if (payloadRecord && Array.isArray(payloadRecord.messages)) {
+    requestPayload = structuredClone(payload);
+    const clonedRecord = requestPayload as Record<string, unknown>;
+    clonedRecord.messages = (clonedRecord.messages as Record<string, unknown>[]).map((m: Record<string, unknown>) => {
+      const msg = { ...m };
+      delete msg.metadata;
+      return msg;
+    });
+  }
   const guardOutcome = deriveGuardOutcome(safetyDecision);
   const logId = useInspectorStore.getState().addLog({
     endpoint: "/chat/completions",
     method: "POST",
     transport: "venice",
     requestHeaders,
-    requestBody: sanitizeInspectorPayload(payload),
+    requestBody: sanitizeInspectorPayload(requestPayload),
     safetyDecision,
     previewDurationMs,
     guardOutcome,
@@ -66,22 +77,13 @@ export async function veniceStreamChat(
   };
 
   const startedAt = nowIso();
-  const payloadRecord = payload as Record<string, unknown> | null | undefined;
-  
-  if (payloadRecord && Array.isArray(payloadRecord.messages)) {
-    payloadRecord.messages = payloadRecord.messages.map(m => {
-      const msg = { ...m };
-      delete msg.metadata;
-      return msg;
-    });
-  }
 
   try {
     // Child exploitation safety guard — enforcement at transport boundary.
     // In desktop mode the IPC handler also runs the guard, so we skip the renderer check.
     if (!isElectron()) {
       const decision = maybeRunLocalFamilyGuard(
-        { endpoint: "/chat/completions", method: "POST", payload, source: "venice-client" },
+        { endpoint: "/chat/completions", method: "POST", payload: requestPayload, source: "venice-client" },
         useSettingsStore.getState().localFamilySafeModeEnabled,
       );
       if (!decision.allowed) {
@@ -107,7 +109,7 @@ export async function veniceStreamChat(
         {
           endpoint: "/chat/completions",
           method: "POST",
-          body: payload,
+          body: requestPayload,
           headers: { "Content-Type": "application/json" },
         },
         wrappedOnDelta,
@@ -197,7 +199,7 @@ export async function veniceStreamChat(
         response = await fetch(`${PROXY_BASE_PATH}/chat/completions`, {
           method: "POST",
           headers: requestHeadersWeb,
-          body: JSON.stringify(payload),
+          body: JSON.stringify(requestPayload),
           signal: deadlineController.signal,
         });
       } catch (err: unknown) {

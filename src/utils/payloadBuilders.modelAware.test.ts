@@ -152,4 +152,46 @@ describe("buildImagePayload — model-aware sanitization (VERIFY-043)", () => {
     });
     expect(payload).not.toHaveProperty("style_references");
   });
+
+
+  // VF-P1-004: Character scene references capability validation
+  it("omits style_references entirely if model explicitly sets supportsReferences = false", () => {
+    const payload = buildImagePayload("flux-dev", {
+      prompt: "Alice in a garden",
+      supportsReferences: false, // explicitly false
+      references: [
+        { entityId: "alice", mimeType: "image/png", contentHash: "abc", data: "iVBORw0KGgo=" },
+      ],
+    });
+    expect(payload).not.toHaveProperty("style_references");
+    expect(payload).not.toHaveProperty("reference_image_urls");
+  });
+
+  it("omits style_references if model is missing metadata (defaults to safe false)", () => {
+    const payload = buildImagePayload("unknown-model", {
+      prompt: "Alice in a garden",
+      supportsReferences: undefined, // missing capability flag
+      references: [
+        { entityId: "alice", mimeType: "image/png", contentHash: "abc", data: "iVBORw0KGgo=" },
+      ],
+    });
+    expect(payload).not.toHaveProperty("style_references");
+    expect(payload).not.toHaveProperty("reference_image_urls");
+  });
+
+  it("clamps references array to maxStyleReferences limit", () => {
+    const payload = buildImagePayload("flux-dev", {
+      prompt: "Alice in a garden",
+      supportsReferences: true,
+      maxStyleReferences: 1, // limited to 1
+      references: [
+        { entityId: "alice", mimeType: "image/png", contentHash: "abc", data: "iVBORw0KGgo=" },
+        { entityId: "bob", mimeType: "image/png", contentHash: "def", data: "iVBORw0KGgo=" },
+      ],
+    });
+    expect(payload).toHaveProperty("style_references");
+    const refs = payload.style_references as any[];
+    expect(refs).toHaveLength(1);
+    expect(refs[0].image).toMatch(/^data:image\/png;base64,/);
+  });
 });

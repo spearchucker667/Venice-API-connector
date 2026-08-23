@@ -13,12 +13,11 @@ import { getConversationPersonaBinding } from "../utils/conversationKind";
 import { applyVeniceApiSafeMode } from "../shared/veniceSafeMode";
 import type { AssistantToolCall, ChatMessage, VeniceParameters } from "../types/venice";
 import type { Conversation } from "../types/conversation";
-import { createCanonicalToolDefinitions, type ProviderToolSchema } from "../agent/registry/tool-registry";
+import { resolveAvailableTools, type ProviderToolSchema } from "../agent/registry/tool-registry";
 import type { VeniceStreamDelta } from "../shared/veniceStreamDelta";
 import { useDocumentAgentStore } from "./document-agent-store";
 import * as logger from "../shared/logger";
 import { getModelById } from "../services/modelService";
-import { supportsFunctionCalling } from "../shared/modelCapabilities";
 
 /** Safe, non-disclosing error text appended to assistant messages when a
  *  chat stream fails. Never include raw exception text, paths, or secrets. */
@@ -111,40 +110,14 @@ function buildStreamBody(convId: string, model: string): Record<string, unknown>
   };
 
   // P1-005: tool injection is gated on explicit runtime metadata only.
-  // A model that does not advertise `supportsFunctionCalling` (or whose
-  // metadata is missing) never receives `tools`, even when the user enabled
-  // document/media/workspace tool registries.
-  if (supportsFunctionCalling(modelInfo)) {
-    if (veniceParamsForRequest.enable_document_tools) {
-      const definitions = createCanonicalToolDefinitions();
-      // Only pass document tools, exclude workspace tools which need a specific grant.
-      const tools = definitions.filter(d => d.internalName.startsWith('document.')).map(t => t.schema);
-      if (tools.length > 0) {
-        baseBody.tools = baseBody.tools ? [...(baseBody.tools as ProviderToolSchema[]), ...tools] : tools;
-      }
-    }
-
-    // Phase 5: Expose media generation tools via structured tool-calling loop
-    const allDefinitions = createCanonicalToolDefinitions();
-    const mediaTools = allDefinitions.filter(d => d.internalName.startsWith('media.')).map(t => t.schema);
-    if (mediaTools.length > 0) {
-      baseBody.tools = baseBody.tools ? [...(baseBody.tools as ProviderToolSchema[]), ...mediaTools] : mediaTools;
-    }
-
-    // Include workspace tools when the Document Agent has an active workspace grant.
-    // The grant is set by DocumentAgentView when the user explicitly opens a workspace;
-    // it is null for ordinary chat and document-only sessions.
-    const docAgentState = useDocumentAgentStore.getState();
-    if (docAgentState.workspaceGrant) {
-      const workspaceTools = allDefinitions
-        .filter(d => d.internalName.startsWith('workspace.'))
-        .map(t => t.schema);
-      if (workspaceTools.length > 0) {
-        baseBody.tools = baseBody.tools
-          ? [...(baseBody.tools as ProviderToolSchema[]), ...workspaceTools]
-          : workspaceTools;
-      }
-    }
+  const docAgentState = useDocumentAgentStore.getState();
+  const availableTools = resolveAvailableTools(
+    modelInfo,
+    veniceParamsForRequest,
+    !!docAgentState.workspaceGrant
+  );
+  if (availableTools.length > 0) {
+    baseBody.tools = baseBody.tools ? [...(baseBody.tools as ProviderToolSchema[]), ...availableTools] : availableTools;
   }
 
   return applyVeniceApiSafeMode(
@@ -270,7 +243,7 @@ export async function startStream(
 
   try {
     let attempts = 0;
-    let hasReceivedOutput = false;
+    let hasCommittedStreamState = false;
     
     while (attempts <= MAX_STREAM_RETRIES) {
       try {
@@ -278,7 +251,13 @@ export async function startStream(
         await veniceStreamChat(body, {
           signal: controller.signal,
           onDelta: (chunk: StreamChunk) => {
-            hasReceivedOutput = true;
+            const hasContent = chunk.content && chunk.content.length > 0;
+            const hasReasoning = chunk.reasoning && chunk.reasoning.length > 0;
+            const hasToolCalls = chunk.tool_calls && chunk.tool_calls.length > 0;
+            const hasAppended = chunk.appendedMessages && chunk.appendedMessages.length > 0;
+            if (hasContent || hasReasoning || hasToolCalls || hasAppended || chunk.usage) {
+              hasCommittedStreamState = true;
+            }
             bufferStreamDelta(convId, chunk);
           },
         });
@@ -291,9 +270,9 @@ export async function startStream(
         }
         
         const retryable = isRetryableError(err);
-        if (retryable && attempts < MAX_STREAM_RETRIES && !hasReceivedOutput) {
+        if (retryable && attempts < MAX_STREAM_RETRIES && !hasCommittedStreamState) {
           attempts++;
-          logger.warn(`Stream dropped (attempt ${attempts}/${MAX_STREAM_RETRIES}). Retrying from checkpoint...`, err);
+          logger.warn({ category: "stream_retry", attempt: attempts, message: "Stream dropped. Retrying from checkpoint", status: (err as { status?: number, statusCode?: number })?.status || (err as { status?: number, statusCode?: number })?.statusCode || "unknown" });
           // Exponential backoff before retry (1s, 2s)
           await new Promise((resolve) => setTimeout(resolve, 1000 * Math.pow(2, attempts - 1)));
           continue;
