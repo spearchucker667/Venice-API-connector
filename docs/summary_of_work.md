@@ -6,17 +6,18 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
-**Scope:** Venice Forge — Five Custom Themes Implementation (VF-UI-003)
+**Scope:** CodeQL Alert Remediation — 31 Open Alerts Triaged and Resolved
 
-- **Phase 1-4 (Token Contract & Registration):** Defined 5 new custom themes (`obsidian-ember`, `midnight-cobalt`, `terminal-forest`, `porcelain-sky`, `sandstone`) matching the established canonical format in `src/theme/builtins/` and extended `src/theme/builtins/index.ts`.
-- **Phase 5-7 (Integration & Persistence):** Added 5 corresponding YAML files in `config/themes/` ensuring they are properly registered by `themeService.ts` for the Settings UI to pick up natively. They utilize the existing `selectedThemeId` and `appearanceMode` Zustand persistence and don't introduce new duplicate persistence vectors.
-- **Phase 8-10 (Hardcoded Colors & Contrast):** Audited the UI for hardcoded colors breaking custom themes. Confirmed the app natively uses CSS variable tokens and uses `THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR` sparingly for absolute intent (like overlay backgrounds).
-- **Accessibility & Contrast Verification:** Strengthened contrast of `danger`, `warning`, `success`, and `accent` semantic token values across the new themes, ensuring all 5 pass the rigorous `src/theme/contrast.test.ts` WCAG AA validations. Updated the i18n hardcoded baseline.
+- **Alert triage:** Pulled the live 31-alert inventory from GitHub Code Scanning. Classified each as: confirmed defect already fixed (17 alerts from prior CI remediation session), false positive with documented invariant (2 alerts — sync folder watcher temp-file check, video retrieve file-to-HTTP dataflow), test-fixture artifact (9 alerts — TOCTOU, temp files, URL checks in test harnesses), inactive-feature artifact (3 alerts — `inactive-features/research-browser/`).
+- **False-positive suppressions:** Added `// nosec:js/<rule-id>` annotations with inline justification to `electron/services/syncFolderWatcher.ts` (alert 203, `js/insecure-temporary-file`) and `electron/services/videoRetrieveService.ts` (alert 210, `js/file-access-to-http`). Both invariants are proven by code inspection; CodeQL cannot infer the static guarantees.
+- **Stale eslint-disable cleanup:** Removed three unused `eslint-disable` directives (`agent-tool-executor.ts`, `trusted-agent-request.test.ts`, `chatFolderService.ts`, `venice-params.tsx`) that masked imports already removed in the prior session.
+- **Verifier test repair:** Updated `scripts/verify-ci-contract.test.ts` assertions after removing the unused `FULL_SHA_RE` variable from the verifier.
+- **Documentation:** Updated `SECURITY.md` with the current alert triage categories, all `// nosec` suppression sites and their justifications, and corrected Action pin references to match the current workflow SHAs.
 
-## Prior Session Summary
+## Prior Session Summary (August 22 CI Remediation, superseded)
 
 **Date:** 2026-08-22
-**Scope:** Remediation of CI build failures (Markdown, Coverage, Distribution)
+**Scope:** Remediation of CI build failures (Markdown, Coverage, Distribution) — *superseded by systemic CI/security remediation.*
 
 - **Markdown Links:** Fixed a case-sensitivity issue in `README.md` where `docs/development/FILE_TREE.md` was incorrectly linked (the directory is tracked as `docs/DEVELOPMENT/`). This resolves the `verify-markdown-links` script failure on Linux CI.
 - **Coverage Threshold:** Lowered the branch coverage threshold in `vitest.config.ts` from `59%` to `58.9%` to reflect current coverage and unblock the pipeline.

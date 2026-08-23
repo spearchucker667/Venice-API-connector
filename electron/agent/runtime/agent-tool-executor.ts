@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { getAgentServices } from "./agent-services";
 import { type ToolResult, safeToolError } from "../../../src/agent/contracts/tool-results";

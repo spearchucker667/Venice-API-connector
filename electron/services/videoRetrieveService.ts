@@ -221,6 +221,11 @@ async function runVideoQueueResult(input: {
     const body = JSON.stringify(buildVideoRetrieveRequest(input.model, input.queueId))
 
     return await new Promise<VideoRetrieveResult>((resolve, reject) => {
+      // nosec:js/file-access-to-http — The outbound body contains only
+      // model + queueId (JSON-serialised from buildVideoRetrieveRequest).
+      // File-bytes read during screenPersistedVideoMedia are never
+      // included in the request payload; they gate whether the request
+      // proceeds but do not reach the network.
       const request = https.request({
         hostname: VENICE_API_HOST,
         path: `${VENICE_API_BASE_PATH}/video/retrieve`,

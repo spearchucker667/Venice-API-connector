@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { useState, useEffect } from "react";
 import { useShallow } from "zustand/shallow";
 import { useChatStore } from "../../stores/chat-store";

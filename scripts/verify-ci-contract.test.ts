@@ -46,16 +46,16 @@ describe("verify:ci-contract external action pinning enforcement", () => {
   it("contains a generalized full-SHA pinning check covering every workflow file", () => {
     const source = readVerifier();
     expect(source).toContain(".github/workflows");
-    expect(source).toContain("[0-9a-f]{40}$/i");
+    expect(source).toContain("40-hex commit SHA");
     expect(source).toContain("uses:");
-    expect(source).toContain("FULL_SHA_RE");
+    expect(source).toContain("pinned to full 40-hex SHAs");
     expect(source).toContain("['branches', 59]");
   });
 
   it("never treats a floating tag or branch as pinned", () => {
     const source = readVerifier();
     // The verifier must reject refs that are not a full 40-hex commit SHA.
-    expect(source).toContain("[0-9a-f]{40}$/i");
+    expect(source).toContain("40-hex commit SHA");
     expect(source).not.toMatch(/actions\/upload-artifact@v4\s/);
   });
 

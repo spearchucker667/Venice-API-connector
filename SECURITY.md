@@ -341,28 +341,55 @@ The tracked `.github/workflows/codeql.yml` workflow automatically runs CodeQL an
 
 The authoritative open-alert count lives in
 [Security → Code Scanning](https://github.com/spearchucker667/Venice_Forge/security/code-scanning).
-A snapshot taken on 2026-07-15 shows **six open high-severity alerts**. Alert
-178 (`js/file-system-race`) identified the TTS custom-protocol check/read race;
-the local remediation now reads through an `O_NOFOLLOW` descriptor and is
-locked by `VERIFY-126`, but the alert remains open until the eventual commit is
-analyzed. Alerts 183/185 flag the encrypted sync watcher even though it opens
-with `O_NOFOLLOW`, validates and bounds the opened descriptor, and reads from
-that descriptor; alert 184 is the paired test fixture. Alerts 181/182 flag
-substring checks in the local Venice API documentation verifier, which does not
-authorize requests or select an outbound destination. Full source evidence and
-dismissal rationale are retained in the 2026-07-15 repository audit package.
-The live view always reflects the current state.
+Alerts are triaged into these categories:
 
-Two intentional suppressions in `server.ts` are annotated at the call site with
-`// nosec:js/<rule-id>` plus an inline justification:
+- **Confirmed defects** — fixed in source; will auto-close on next CodeQL
+  analysis of the remediated commit.
+- **False positives with documented invariants** — suppressed with `// nosec`
+inline justification; the code's security property is proven by inspection and
+CodeQL cannot infer it statically.
+- **Test-fixture findings** — TOCTOU, temp-file, and URL-scheme checks in test
+files (`*.test.ts`) where the harness itself is the source; these are not
+exploitable in production and are documented below.
+- **Inactive-feature findings** — alerts under `inactive-features/` that are
+not part of the active codebase.
 
-- `server.ts:703-709` — `js/resource-exhaustion`: `setTimeout` duration is
+Alerts are never bulk-dismissed. Each confirmed defect is fixed at the root
+cause; each false positive is annotated at the call site and recorded here.
+
+#### Intentional `// nosec` suppressions
+
+All are annotated at the call site with `// nosec:js/<rule-id>` plus an inline
+justification:
+
+- `server.ts:917-931` — `js/resource-exhaustion`: `setTimeout` duration is
   `Math.min(timeoutMs, 180000) || 30000` (3-minute max). CodeQL does not see
   the clamp because it lives inside a conditional expression.
-- `server.ts:712-718` — `js/request-forgery`: The Jina Reader URL is parsed
+- `server.ts:926-931` — `js/request-forgery`: The Jina Reader URL is parsed
   from a user-supplied string but then restricted to the `r.jina.ai` /
   `s.jina.ai` allowlist and required to use `https:` (see `server.ts:362-365`).
   SSRF to internal services is impossible by construction.
+- `electron/services/syncFolderWatcher.ts:124` — `js/insecure-temporary-file`:
+  The file path originates from the user-configured sync folder (validated
+  against an allowlist of canonical parent directories), never from
+  `os.tmpdir()`. The descriptor is opened `O_NOFOLLOW`, verified against
+  `realpath`, and stat-checked as a regular file.
+- `electron/services/videoRetrieveService.ts:224` — `js/file-access-to-http`:
+  The outbound body contains only `model` + `queueId` (JSON-serialised from
+  `buildVideoRetrieveRequest`). File bytes read during
+  `screenPersistedVideoMedia` are never included in the request payload; they
+  gate whether the request proceeds but do not reach the network.
+
+#### Test-fixture and inactive-feature alerts
+
+The following alert categories fire on test harnesses or inactive features and
+are accepted as non-exploitable:
+
+- `js/file-system-race` / `js/insecure-temporary-file` in `*.test.ts` files
+  — test setup writes temp files and reads them back; these are synthetic
+  fixtures, not production paths.
+- `js/incomplete-url-scheme-check` / `js/incomplete-url-substring-sanitization`
+  in `inactive-features/research-browser/` — not part of the active codebase.
 
 If a future CodeQL update flags these sites again, the suppressions and
 allowlist check should be re-verified, not removed.
@@ -373,12 +400,12 @@ All third-party Actions are pinned to a commit SHA, not a tag, to prevent
 supply-chain attacks via a compromised tag update. The version comment is
 appended after the SHA for maintainer reference:
 
-- `actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5` (v4.2.2)
-- `actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020` (v4.4.0)
+- `actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1` (v7.0.1)
+- `actions/setup-node@820762786026740c76f36085b0efc47a31fe5020` (v7.0.0)
 - `actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02` (v4.6.2)
 - `actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093` (v4.3.0)
-- `softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda` (v3.0.0)
-- `github/codeql-action/*@dd903d2e4f5405488e5ef1422510ee31c8b32357` (v3)
+- `softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228` (v3.0.2)
+- `github/codeql-action/*@5595ccaf912efad79be6eef63a5619ff05969be3` (v4.37.6)
 - `actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48` (v4.9.0)
 
 When bumping any pinned action, look up the new SHA via

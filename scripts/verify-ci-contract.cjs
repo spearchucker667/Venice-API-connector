@@ -293,7 +293,6 @@ for (const entry of fs.readdirSync(path.join(root, '.github/workflows'))) {
   if (/\.ya?ml$/i.test(entry)) workflowFiles.push(path.join(root, '.github/workflows', entry));
 }
 
-const FULL_SHA_RE = /^[0-9a-f]{40}$/i;
 const EXTERNAL_USES_RE = /(^|\s)uses:\s*([^\s#]+)/g;
 const pinningErrors = [];
 let externalUsesCount = 0;
@@ -384,7 +383,7 @@ if (!codeqlYaml.includes('language: actions')) {
   process.exit(1);
 }
 if (!codeqlYaml.includes('languages: ${{ matrix.language }}')) {
-  console.error("❌ codeql.yml init must use 'languages: \${{ matrix.language }}'");
+  console.error("❌ codeql.yml init must use 'languages: ${{ matrix.language }}'");
   process.exit(1);
 }
 if (!codeqlYaml.includes('category: "/language:${{ matrix.language }}"')) {

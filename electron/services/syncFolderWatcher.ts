@@ -121,6 +121,10 @@ async function openSecureWatchedFile(filePath: string): Promise<Awaited<ReturnTy
   // O_NOFOLLOW is not enforced consistently on Windows. Check the directory
   // entry before and after opening so a reparse-point packet is never read.
   await assertNotSymlinkIfPresent(filePath);
+  // nosec:js/insecure-temporary-file — filePath originates from the
+  // user-configured sync folder (validated via allowedParents above),
+  // never from os.tmpdir(). The descriptor is opened O_NOFOLLOW,
+  // verified against realpath, and stat-checked as a regular file.
   const handle = await fs.open(filePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW);
   try {
     await assertNotSymlinkIfPresent(filePath);
