@@ -7,7 +7,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import "fake-indexeddb/auto";
 import StorageService from "../../src/services/storageService";
-import { CharacterDraftService, createBlankDraftCard } from "../../src/services/characterCreatorDraftService";
+import { CharacterDraftService } from "../../src/services/characterCreatorDraftService";
 import { CharacterCreatorImportService, validateCardForApproval } from "../../src/services/characterCreatorImportService";
 import { inspectCharacterCardPng, embedCharacterCardInPng } from "../../electron/services/characterCardPngCodec";
 import { useCharacterCardStore } from "../../src/stores/character-card-store";

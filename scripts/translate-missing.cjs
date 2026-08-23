@@ -159,18 +159,23 @@ function setAtPath(tree, dottedKey, value) {
   let cursor = tree;
   for (let i = 0; i < parts.length - 1; i += 1) {
     const part = parts[i];
-    if (BLOCKED_KEYS.has(part)) throw new Error(`Forbidden key segment: ${part}`);
-    if (cursor[part] == null || typeof cursor[part] !== 'object') {
-      cursor[part] = {};
+    if (part === '__proto__' || part === 'constructor' || part === 'prototype') {
+      throw new Error(`Forbidden key segment: ${part}`);
+    }
+    // Create branches with a null prototype so inherited properties (including
+    // Object.prototype members) can never be walked or overwritten.
+    if (!Object.prototype.hasOwnProperty.call(cursor, part) || cursor[part] == null || typeof cursor[part] !== 'object') {
+      cursor[part] = Object.create(null);
     }
     cursor = cursor[part];
   }
   const leaf = parts[parts.length - 1];
-  if (BLOCKED_KEYS.has(leaf)) throw new Error(`Forbidden key segment: ${leaf}`);
+  if (leaf === '__proto__' || leaf === 'constructor' || leaf === 'prototype') {
+    throw new Error(`Forbidden key segment: ${leaf}`);
+  }
   cursor[leaf] = value;
 }
 
-const BLOCKED_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
 function readState() {
   if (!fs.existsSync(STATE_PATH)) return { lastCompleted: null, runs: [] };

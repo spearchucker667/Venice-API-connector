@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { describe, it, expect, vi, beforeAll, beforeEach, afterAll } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useChatStore } from './chat-store'
 import { useMediaStore } from './media-store'
 import { useToastStore } from './toast-store'
@@ -11,9 +11,6 @@ import {
   isChatMediaReference,
   isChatMediaReferenceArray,
 } from '../types/conversation'
-import {
-  mediaMigrationMigratedMediaItem,
-} from '../services/mediaMigration'
 
 const localStorageStore: Record<string, string> = {}
 const localStorageMock = {
@@ -59,10 +56,6 @@ vi.mock('../services/desktopBridge', () => ({
   __esModule: true,
 }))
 
-vi.mock('../services/mediaMigration', () => ({
-  mediaMigrationMigratedMediaItem: vi.fn(),
-  __esModule: true,
-}))
 
 function resetStores() {
   useChatStore.setState({
@@ -132,15 +125,6 @@ function makeRef(overrides: Record<string, unknown> = {}) {
     ...overrides,
   } as never)
 }
-
-beforeAll(() => {
-  ;(mediaMigrationMigratedMediaItem as unknown as ReturnType<typeof vi.fn>)
-    .mockImplementation((item) => item)
-})
-
-afterAll(() => {
-  ;(mediaMigrationMigratedMediaItem as unknown as ReturnType<typeof vi.fn>).mockReset()
-})
 
 beforeEach(() => {
   resetStores()

@@ -136,7 +136,30 @@ if (fs.existsSync(vitestConfigPath)) {
       process.exit(1);
     }
   }
-  console.log("✓ vitest.config.ts coverage schema is valid");
+
+  // CI-002 regression guard: the coverage thresholds must never be weakened
+  // through a CI workaround. The established bar is branches >= 59,
+  // functions >= 68, lines >= 73, statements >= 70. Lowering any of them here
+  // intentionally fails this verifier (raise the bar only with evidence and an
+  // explicit policy change tracked in docs/).
+  for (const [name, minimum] of [
+    ['branches', 59],
+    ['functions', 68],
+    ['lines', 73],
+    ['statements', 70],
+  ]) {
+    const matcher = new RegExp(`${name}\\s*:\\s*([0-9]+(?:\\.[0-9]+)?)`);
+    const match = vitestConfig.match(matcher);
+    if (!match) {
+      console.error(`❌ vitest.config.ts must declare an explicit '${name}' coverage threshold`);
+      process.exit(1);
+    }
+    if (parseFloat(match[1]) < minimum) {
+      console.error(`❌ vitest.config.ts '${name}' coverage threshold (${match[1]}) is below the required minimum (${minimum}); the coverage bar cannot be lowered`);
+      process.exit(1);
+    }
+  }
+  console.log("✓ vitest.config.ts coverage schema is valid and thresholds meet the required bar");
 }
 
 // 4. Verify tracked security automation exists. SECURITY.md documents CodeQL
@@ -261,6 +284,114 @@ if (omittedContractPaths.length > 0) {
   process.exit(1);
 }
 console.log("✓ test:ci covers every required non-smoke contract test path");
+
+// 7. Every external GitHub Action must be pinned to a full 40-hex commit SHA.
+//    CodeQL's actions/unpinned-tag query flags non-immutable external refs;
+//    the workflow files must not regress. Local ./... references are allowed.
+const workflowFiles = [];
+for (const entry of fs.readdirSync(path.join(root, '.github/workflows'))) {
+  if (/\.ya?ml$/i.test(entry)) workflowFiles.push(path.join(root, '.github/workflows', entry));
+}
+
+const FULL_SHA_RE = /^[0-9a-f]{40}$/i;
+const EXTERNAL_USES_RE = /(^|\s)uses:\s*([^\s#]+)/g;
+const pinningErrors = [];
+let externalUsesCount = 0;
+for (const workflowPath of workflowFiles) {
+  const content = fs.readFileSync(workflowPath, 'utf8');
+  let usesMatch;
+  while ((usesMatch = EXTERNAL_USES_RE.exec(content)) !== null) {
+    let value = usesMatch[2].trim();
+    while (!value.startsWith('.') && !value.includes('@') && /[>|&]/.test(value.slice(-1))) {
+      value = value.slice(0, -1).trim();
+    }
+    if (value.startsWith('./')) continue; // repository-local action
+    if (value.startsWith('docker://')) continue; // registry containers are not pin-checked here
+    externalUsesCount += 1;
+    if (!/^[^.][^\s]*@[0-9a-fA-F]{40}$/.test(value)) {
+      pinningErrors.push({ workflowPath, value });
+    }
+  }
+}
+if (pinningErrors.length > 0) {
+  console.error("❌ External GitHub Actions must be pinned to a full 40-hex commit SHA (no branches or tags):");
+  for (const { workflowPath, value } of pinningErrors) {
+    console.error(`  - ${path.relative(root, workflowPath)}: ${value}`);
+  }
+  process.exit(1);
+}
+console.log(`✓ All ${externalUsesCount} external GitHub Action references are pinned to full 40-hex SHAs`);
+
+// 8. CI job dependency graph: the build must not run expensive/packaging work
+//    while a mandatory prerequisite (coverage, contracts, tests) is already
+//    red, and platform smoke jobs must wait for their platform-sensitive job.
+function needsOf(ciContent, jobName) {
+  const lines = ciContent.split(/\r?\n/);
+  let startIndex = -1;
+  for (let i = 0; i < lines.length; i += 1) {
+    if (lines[i] === `  ${jobName}:` || lines[i] === `  ${jobName} :`) {
+      startIndex = i;
+      break;
+    }
+  }
+  if (startIndex === -1) return null;
+  let needsMatch = null;
+  for (let i = startIndex + 1; i < lines.length; i += 1) {
+    const line = lines[i];
+    if (line.trim() !== '' && !line.startsWith('    ')) break; // next job at same indent
+    const m = line.match(/^\s*needs:\s*\[([^\]]*)\]/);
+    if (m) {
+      needsMatch = m[1];
+      break;
+    }
+  }
+  if (!needsMatch) return null;
+  return needsMatch.split(',').map((s) => s.trim());
+}
+const buildNeeds = needsOf(ciYaml, 'build');
+if (!buildNeeds || !buildNeeds.includes('coverage')) {
+  console.error("❌ ci.yml 'build' job must depend on the 'coverage' job (needs must include coverage)");
+  process.exit(1);
+}
+for (const gate of ['lint-and-typecheck', 'unit-and-integration-tests', 'contracts']) {
+  if (!buildNeeds.includes(gate)) {
+    console.error(`❌ ci.yml 'build' job must depend on '${gate}'`);
+    process.exit(1);
+  }
+}
+console.log("✓ ci.yml build job gates on lint/typecheck, tests, coverage, and contracts");
+
+for (const [smoke, sensitive] of [
+  ['electron-smoke-macos', 'macos-sensitive-tests'],
+  ['electron-smoke-windows', 'windows-sensitive-tests'],
+]) {
+  const smokeNeeds = needsOf(ciYaml, smoke);
+  if (!smokeNeeds || !smokeNeeds.includes(sensitive) || !smokeNeeds.includes('build')) {
+    console.error(`❌ ci.yml '${smoke}' must depend on both 'build' and '${sensitive}'`);
+    process.exit(1);
+  }
+}
+console.log("✓ Packaged smoke jobs gate on build and their platform-sensitive tests");
+
+// 9. Tracked CodeQL workflow must analyze both javascript-typescript and
+//    actions with immutable action refs and a deterministic category.
+if (!codeqlYaml.includes('language: javascript-typescript')) {
+  console.error("❌ codeql.yml must analyze the 'javascript-typescript' language");
+  process.exit(1);
+}
+if (!codeqlYaml.includes('language: actions')) {
+  console.error("❌ codeql.yml must analyze the 'actions' language (workflow supply-chain queries)");
+  process.exit(1);
+}
+if (!codeqlYaml.includes('languages: ${{ matrix.language }}')) {
+  console.error("❌ codeql.yml init must use 'languages: \${{ matrix.language }}'");
+  process.exit(1);
+}
+if (!codeqlYaml.includes('category: "/language:${{ matrix.language }}"')) {
+  console.error("❌ codeql.yml analyze must set a deterministic per-language category");
+  process.exit(1);
+}
+console.log("✓ CodeQL workflow analyzes javascript-typescript and actions with deterministic categories");
 
 console.log("CI contract check: PASS");
 process.exit(0);

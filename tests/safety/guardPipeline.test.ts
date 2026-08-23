@@ -19,7 +19,6 @@ import {
   setRuntimeLocalFamilySafeModeEnabled,
   getRuntimeLocalFamilySafeModeEnabled,
   setRuntimeVeniceApiSafeMode,
-  getRuntimeVeniceApiSafeMode,
 } from "../../electron/services/runtimeSafetySettings";
 import {
   buildGuardedBlock,
@@ -238,14 +237,42 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     expect(result.block.body.reasonCode).toBe("INVALID_MEDIA");
   });
 
-  it("semantically screens generated binary media and fails closed when classifier is unavailable", async () => {
+  // A tiny valid 1x1 PNG. Under the current structured heuristic classifier
+  // (tracking-pixel detection), dimensions <= 2 are an anomaly and must be
+  // blocked with CLASSIFIER_BLOCK. This locks the intentional
+  // magic-byte/FSM-separation contract added with the 2026-08-22 screening
+  // changes: structural anomalies are classified, not merely reported as
+  // "classifier unavailable".
+  it("semantically screens generated binary media and blocks tracking-pixel anomalies", async () => {
     mockedPerformVeniceRequest.mockResolvedValue({
       ok: true,
       status: 200,
       statusText: "OK",
       headers: {},
-      // A tiny valid PNG base64
+      // A tiny valid 1x1 PNG base64 (tracking-pixel shape)
       body: { image: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" },
+      contentType: "application/json",
+    });
+    const result = await performGuardedVeniceRequest({
+      endpoint: "/image/generate",
+      method: "POST",
+      body: { model: "m", prompt: benignInput("GENERIC") },
+    });
+    expect(result.kind).toBe("blocked");
+    if (result.kind !== "blocked") throw new Error("expected blocked");
+    expect(result.block.status).toBe(451);
+    expect(result.block.body.reasonCode).toBe("CLASSIFIER_BLOCK");
+  });
+
+  it("fails closed with CLASSIFIER_UNAVAILABLE for remote URL image items", async () => {
+    mockedPerformVeniceRequest.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      headers: {},
+      // Remote-URL image item: the screener cannot inline-screen it and must
+      // fail closed because no classifier can evaluate the remote resource.
+      body: { images: [{ url: "https://cdn.example.test/generated.png" }] },
       contentType: "application/json",
     });
     const result = await performGuardedVeniceRequest({

@@ -1,7 +1,10 @@
 /** @fileoverview Unit tests for release verification platform selection. */
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import { describe, it, expect } from "vitest";
 // @ts-expect-error - CJS import in TS file
-import { getTargets, FORBIDDEN_DIST_PATTERNS, SECRET_PATTERNS, FORBIDDEN_ELECTRON_TEXT_PATTERNS } from "./verify-dist.cjs";
+import { getTargets, FORBIDDEN_DIST_PATTERNS, SECRET_PATTERNS, FORBIDDEN_ELECTRON_TEXT_PATTERNS, brandingNoticesInSync } from "./verify-dist.cjs";
 
 describe("verify-dist platform selection", () => {
   it("selects Windows x64 when running on win32 with no args", () => {
@@ -149,6 +152,40 @@ describe("verify-dist Phase 2J hygiene guards", () => {
     for (const s of ok) {
       const hit = FORBIDDEN_ELECTRON_TEXT_PATTERNS.some(({ re }: { re: RegExp }) => re.test(s));
       expect(hit).toBe(false);
+    }
+  });
+});
+
+describe("verify-dist branding NOTICE sync (CI-007)", () => {
+  it("accepts identical tracked NOTICE files in the real repository", () => {
+    const repoRoot = path.resolve(__dirname, "..");
+    const result = brandingNoticesInSync(repoRoot);
+    expect(result.ok).toBe(true);
+  });
+
+  it("rejects a diverged runtime copy", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "vf-branding-"));
+    try {
+      fs.mkdirSync(path.join(root, "assets/branding"), { recursive: true });
+      fs.mkdirSync(path.join(root, "public/assets/branding"), { recursive: true });
+      fs.writeFileSync(path.join(root, "assets/branding/NOTICE.md"), "same\n");
+      fs.writeFileSync(path.join(root, "public/assets/branding/NOTICE.md"), "DIFFERENT\n");
+      const result = brandingNoticesInSync(root);
+      expect(result.ok).toBe(false);
+      expect(result.reason).toContain("must remain identical");
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a missing runtime copy", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "aff-branding2-"));
+    try {
+      fs.mkdirSync(path.join(root, "assets/branding"), { recursive: true });
+      fs.writeFileSync(path.join(root, "assets/branding/NOTICE.md"), "# Source\n");
+      expect(() => brandingNoticesInSync(root)).toThrow();
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
     }
   });
 });

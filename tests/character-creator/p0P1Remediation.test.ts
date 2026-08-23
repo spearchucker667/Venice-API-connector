@@ -5,7 +5,7 @@
  * 3. Event UUID generation and IPC channel consolidation.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { CharacterDraftService } from "../../src/services/characterCreatorDraftService";
 import { CharacterCreatorImportService } from "../../src/services/characterCreatorImportService";
 import { desktopCharacterCards } from "../../src/services/desktopBridge";

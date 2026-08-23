@@ -192,3 +192,50 @@ describe("verifyMarkdownLinks", () => {
     expect(verifyRetiredModuleReferences(files)).toEqual([]);
   });
 });
+
+describe("verifyMarkdownLinks canonical path casing (CI-006)", () => {
+  // VERIFY-029 extension: on case-insensitive filesystems (macOS default,
+  // Windows) a wrong-case link can resolve locally yet fail on Linux CI. The
+  // verifier must compare against canonical git-tracked casing.
+  it("rejects a link whose directory casing differs from the tracked path", () => {
+    // Temp fixtures are not git repos, so the verifier falls back to the
+    // case-sensitive traversal index. The link uses wrong-case `docs/DEVELOPMENT`.
+    const { root, files } = fixture({
+      "README.md": "[File tree](docs/development/FILE_TREE.md)\n",
+      "docs/DEVELOPMENT/FILE_TREE.md": "# File Tree\n",
+    });
+    const result = verifyMarkdownLinks(root, { files });
+    expect(result.errors[0]).toMatchObject({
+      destination: "docs/development/FILE_TREE.md",
+      reason: expect.stringContaining("path case mismatch"),
+    });
+  });
+
+  it("accepts an exactly-cased link", () => {
+    const { root, files } = fixture({
+      "README.md": "[File tree](docs/DEVELOPMENT/FILE_TREE.md)\n",
+      "docs/DEVELOPMENT/FILE_TREE.md": "# File Tree\n",
+    });
+    expect(verifyMarkdownLinks(root, { files }).errors).toEqual([]);
+  });
+
+  it("rejects a wrong-case file name inside an otherwise matching directory", () => {
+    const { root, files } = fixture({
+      "README.md": "[Guide](docs/guide.MD)\n",
+      "docs/guide.md": "# Guide\n",
+    });
+    const result = verifyMarkdownLinks(root, { files });
+    expect(result.errors[0]).toMatchObject({
+      destination: "docs/guide.MD",
+      reason: expect.stringContaining("path case mismatch"),
+    });
+  });
+
+  it("still accepts fragments on exact-cased links", () => {
+    const { root, files } = fixture({
+      "README.md": "[Guide](docs/DEVELOPMENT/FILE_TREE.md#tree)\n",
+      "docs/DEVELOPMENT/FILE_TREE.md": "# Tree\n",
+    });
+    expect(verifyMarkdownLinks(root, { files }).errors).toEqual([]);
+  });
+});

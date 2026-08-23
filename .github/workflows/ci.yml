@@ -40,11 +40,13 @@ jobs:
       - run: npm ci
       - run: npm run test:ci
       - name: Upload Test Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
           name: test-results
           path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7
 
   coverage:
     runs-on: ubuntu-22.04
@@ -56,21 +58,20 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run test:coverage:server
-      - run: npm run test:coverage:electron
-      - run: npm run test:coverage:ingestion
-      - run: npm run test:coverage:ui:layout
-      - run: npm run test:coverage:ui:chat
-      - run: npm run test:coverage:ui:media
-      - run: npm run test:coverage:ui:research
-      - run: npm run test:coverage:ui:settings
-      - run: npm run test:coverage:unit
+      # One aggregate coverage execution. The global thresholds in
+      # vitest.config.ts are enforced exactly once against the complete
+      # coverage map; segmented coverage shards are intentionally not used
+      # because each shard would enforce the global threshold against only a
+      # partial subset and later shards would overwrite coverage/.
+      - run: npm run test:coverage
       - name: Upload Coverage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
           name: coverage
           path: coverage/
+          if-no-files-found: ignore
+          retention-days: 7
 
   contracts:
     runs-on: ubuntu-22.04
@@ -89,7 +90,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     timeout-minutes: 30
-    needs: [lint-and-typecheck, unit-and-integration-tests, contracts]
+    needs: [lint-and-typecheck, unit-and-integration-tests, coverage, contracts]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -100,11 +101,13 @@ jobs:
       - run: npm run build
       - run: npm run verify:dist
       - name: Upload Dist Output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
           name: dist-artifacts
           path: dist/
+          if-no-files-found: ignore
+          retention-days: 7
 
   # Windows-sensitive-tests: targets the path-handling and Electron-specific
   # filesystem regressions the recent Windows path bug exposed. The main
@@ -192,7 +195,7 @@ jobs:
   electron-smoke-macos:
     runs-on: macos-14
     timeout-minutes: 45
-    needs: build
+    needs: [build, macos-sensitive-tests]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Use Node.js 22
@@ -214,7 +217,7 @@ jobs:
   electron-smoke-windows:
     runs-on: windows-2022
     timeout-minutes: 45
-    needs: build
+    needs: [build, windows-sensitive-tests]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Use Node.js 22

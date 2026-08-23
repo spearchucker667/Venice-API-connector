@@ -10,7 +10,6 @@ import { cn } from "../../lib/utils";
 import {
   countPromptCharacters,
   getUserSystemPromptLimit,
-  validateUserSystemPrompt,
   USER_SYSTEM_PROMPT_LIMITS,
 } from "../../shared/promptLimits";
 import { Trans, useTranslation } from "react-i18next";

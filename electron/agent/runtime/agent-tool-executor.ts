@@ -130,7 +130,7 @@ export async function executeAgentTool(profileId: string, toolCall: AssistantToo
         const grant = services.workspaceGrants.get(grantId, `runtime_${profileId}:agent_${agentSessionId || ""}`);
         if (!grant) return safeToolError(internalName, toolCall.id, "CAPABILITY_DENIED", "Valid grant not found for workspace.createFile");
         const change: import("../../../src/agent/contracts/workspace").WorkspaceChange = { type: "create_file", relativePath, expectedAbsent: true, format: "txt", content };
-        const { prepared, totalBytes, affectedPaths } = await services.workspaceMutations.prepareChangeset({ grant, sessionId: grant.sessionId, changes: [change] });
+        const { totalBytes, affectedPaths } = await services.workspaceMutations.prepareChangeset({ grant, sessionId: grant.sessionId, changes: [change] });
         const pending = await services.approvals.prepare({
           grantId: grant.id,
           proposalType: "workspace_changeset",
@@ -150,7 +150,7 @@ export async function executeAgentTool(profileId: string, toolCall: AssistantToo
         const grant = services.workspaceGrants.get(grantId, `runtime_${profileId}:agent_${agentSessionId || ""}`);
         if (!grant) return safeToolError(internalName, toolCall.id, "CAPABILITY_DENIED", "Valid grant not found for workspace.createDirectory");
         const change: import("../../../src/agent/contracts/workspace").WorkspaceChange = { type: "create_directory", relativePath, expectedAbsent: true };
-        const { prepared, totalBytes, affectedPaths } = await services.workspaceMutations.prepareChangeset({ grant, sessionId: grant.sessionId, changes: [change] });
+        const { totalBytes, affectedPaths } = await services.workspaceMutations.prepareChangeset({ grant, sessionId: grant.sessionId, changes: [change] });
         const pending = await services.approvals.prepare({
           grantId: grant.id,
           proposalType: "workspace_changeset",
@@ -169,7 +169,7 @@ export async function executeAgentTool(profileId: string, toolCall: AssistantToo
         const { grantId, workspaceId, summary, changes } = args as { grantId: string; workspaceId: string; summary: string; changes: import("../../../src/agent/contracts/workspace").WorkspaceChange[] };
         const grant = services.workspaceGrants.get(grantId, `runtime_${profileId}:agent_${agentSessionId || ""}`);
         if (!grant) return safeToolError(internalName, toolCall.id, "CAPABILITY_DENIED", "Valid grant not found for workspace.proposeChangeset");
-        const { prepared, totalBytes, affectedPaths } = await services.workspaceMutations.prepareChangeset({ grant, sessionId: grant.sessionId, changes });
+        const { totalBytes, affectedPaths } = await services.workspaceMutations.prepareChangeset({ grant, sessionId: grant.sessionId, changes });
         const pending = await services.approvals.prepare({
           grantId: grant.id,
           proposalType: "workspace_changeset",

@@ -5,7 +5,6 @@ import {
   listChatFolders as listChatFoldersFromStore,
   readChatFolder,
   saveChatFolder,
-  deleteChatFolderFile
 } from "./chatFolderStorage";
 import { getConversation, saveConversation, listConversations, deleteConversation } from "./chatStorage";
 import type {

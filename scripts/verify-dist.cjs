@@ -80,8 +80,32 @@ const FORBIDDEN_ELECTRON_TEXT_PATTERNS = [
   },
 ];
 
+// CI-007: the duplicated branding NOTICE (assets/branding/NOTICE.md and
+// public/assets/branding/NOTICE.md) must never silently diverge. This is the
+// single source-of-truth identity check referenced by the packaging contract.
+function brandingNoticesInSync(rootDir) {
+  const sourcePath = path.join(rootDir, "assets/branding/NOTICE.md");
+  const runtimePath = path.join(rootDir, "public/assets/branding/NOTICE.md");
+  const source = fs.readFileSync(sourcePath, "utf8");
+  const runtime = fs.readFileSync(runtimePath, "utf8");
+  return {
+    ok: source === runtime,
+    sourcePath,
+    runtimePath,
+    reason:
+      "Branding NOTICE files are out of sync. assets/branding/NOTICE.md and " +
+      "public/assets/branding/NOTICE.md must remain identical.",
+  };
+}
+
 if (require.main !== module) {
-  module.exports = { getTargets, FORBIDDEN_DIST_PATTERNS, SECRET_PATTERNS, FORBIDDEN_ELECTRON_TEXT_PATTERNS };
+  module.exports = {
+    getTargets,
+    FORBIDDEN_DIST_PATTERNS,
+    SECRET_PATTERNS,
+    FORBIDDEN_ELECTRON_TEXT_PATTERNS,
+    brandingNoticesInSync,
+  };
 } else {
 
 const { checkWin, checkMac, checkLinux, targetArches } = getTargets(process.platform, args);
@@ -277,26 +301,16 @@ if (!releaseArtifactsOnly) {
   verifyFileExists(path.join(root, "dist-electron", "package.json"), 20);
 }
 
-function assertBrandingNoticesInSync() {
-  const source = fs.readFileSync(path.join(root, "assets/branding/NOTICE.md"), "utf8");
-  const runtime = fs.readFileSync(path.join(root, "public/assets/branding/NOTICE.md"), "utf8");
-  if (source !== runtime) {
-    fail(
-      "Branding NOTICE files are out of sync. " +
-        "assets/branding/NOTICE.md and public/assets/branding/NOTICE.md must remain identical."
-    );
-  }
-}
-
 if (!releaseArtifactsOnly) {
   // Hygiene guards (Phase 2J) — run in BOTH local and release modes so a dirty
-  // build never passes verify-dist regardless of packaging intent.
+  // build never passes verify:dist regardless of packaging.
   assertNoForbiddenInDist(path.join(root, "dist"));
   assertNoForbiddenInDist(path.join(root, "dist-electron"));
   assertNoSecretsInDist(path.join(root, "dist"));
   assertNoSecretsInDist(path.join(root, "dist-electron"));
   assertNoForbiddenElectronText(path.join(root, "dist-electron"));
-  assertBrandingNoticesInSync();
+  const branding = brandingNoticesInSync(root);
+  if (!branding.ok) fail(branding.reason);
 }
 
 if (!verifyRelease) {

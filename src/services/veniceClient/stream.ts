@@ -324,7 +324,9 @@ export async function veniceStreamChat(
           }
           throw err;
         }
-        if (consumeSseEvents(tail)) streamFinished = true;
+        // `streamFinished` is not read after this point, so the flush result
+        // only needs to be consumed.
+        consumeSseEvents(tail);
       }
       if (malformedFrameCount > 0) {
         console.warn(

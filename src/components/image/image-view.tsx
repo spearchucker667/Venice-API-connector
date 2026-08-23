@@ -1425,24 +1425,22 @@ export function ImageView() {
           <ContextMenu
             position={lightboxMenu.menu}
             items={
-              selectedImage
-                ? ([
-                    {
-                      key: "save-as",
-                      label: tRuntime("actions.saveAs"),
-                      onSelect: () => {
-                        void downloadImage(selectedImage);
-                      },
-                    },
-                    {
-                      key: "copy",
-                      label: t("contextMenu.copyImage"),
-                      onSelect: () => {
-                        void copyText(toImageSrc(selectedImage));
-                      },
-                    },
-                  ] satisfies ContextMenuItem[])
-                : []
+              [
+                {
+                  key: "save-as",
+                  label: tRuntime("actions.saveAs"),
+                  onSelect: () => {
+                    void downloadImage(selectedImage);
+                  },
+                },
+                {
+                  key: "copy",
+                  label: t("contextMenu.copyImage"),
+                  onSelect: () => {
+                    void copyText(toImageSrc(selectedImage));
+                  },
+                },
+              ] satisfies ContextMenuItem[]
             }
             onClose={lightboxMenu.close}
             ariaLabel="Image preview actions"

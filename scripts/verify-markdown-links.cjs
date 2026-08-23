@@ -7,6 +7,52 @@ const SCAN_ROOTS = ["."];
 const EXCLUDED_DIRS = new Set(["node_modules", "dist", "dist-electron", "release", "coverage", ".git"]);
 const EXTERNAL_SCHEME_RE = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 
+/**
+ * Canonical-case index of every Git-tracked path. Git knows the true casing
+ * even on case-insensitive host filesystems (macOS/Windows), so a link like
+ * `docs/development/foo.md` can be rejected when the tree tracks
+ * `docs/DEVELOPMENT/foo.md`. The index maps lowercase relative paths to their
+ * exact tracked casing; falls back to a case-sensitive directory walk when
+ * `git` is unavailable.
+ */
+function buildTrackedPathIndex(rootDir) {
+  const index = new Map();
+  try {
+    const out = require("node:child_process").execFileSync(
+      "git",
+      ["ls-files", "-z"],
+      { cwd: rootDir, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+    );
+    for (const entry of out.split("\0")) {
+      if (!entry) continue;
+      index.set(entry.toLowerCase(), entry);
+    }
+    return index;
+  } catch {
+    // Fall back to a case-sensitive traversal so the verifier still works in
+    // shallow/foreign checkouts without git metadata.
+    const visit = (relative) => {
+      let entries;
+      try {
+        entries = fs.readdirSync(path.join(rootDir, relative), { withFileTypes: true });
+      } catch {
+        return;
+      }
+      for (const entry of entries) {
+        const child = relative ? `${relative}/${entry.name}` : entry.name;
+        if (entry.isDirectory()) {
+          if (EXCLUDED_DIRS.has(entry.name)) continue;
+          visit(child);
+        } else {
+          index.set(child.toLowerCase(), child);
+        }
+      }
+    };
+    visit("");
+    return index;
+  }
+}
+
 const RETIRED_MODULE_NAMES = ["SearchScrapeModule", "ChatModule", "ImageModule", "BatchModule"];
 const RETIRED_MODULE_RE = new RegExp(`\\b(${RETIRED_MODULE_NAMES.join("|")})\\b`, "g");
 const HISTORICAL_CONTEXT_RE = /\b(historical|retired|former|formerly|legacy|deprecated|removed|replaces?|replaced|refactored?|refactor|no longer exists?|no longer tracked|no longer used)\b/i;
@@ -198,6 +244,9 @@ function verifyMarkdownLinks(rootDir, options = {}) {
   const files = options.files || collectMarkdownFiles(rootDir, options.scanRoots, { isIgnored });
   const errors = [];
   const anchorCache = new Map();
+  // Canonical-case index of git-tracked paths. Built once; falls back to a
+  // case-sensitive traversal when git metadata is unavailable.
+  const trackedIndex = buildTrackedPathIndex(rootDir);
 
   for (const sourcePath of files) {
     const markdown = fs.readFileSync(sourcePath, "utf8");
@@ -221,6 +270,29 @@ function verifyMarkdownLinks(rootDir, options = {}) {
         errors.push({ sourcePath, line, destination, reason: "target does not exist" });
         continue;
       }
+
+      // CI-006: enforce canonical tracked casing even on case-insensitive file
+      // systems. A link may resolve on macOS/Windows but fail on Linux CI; the
+      // git-tracked case is the source of truth. Directories are walked
+      // implicitly by git ls-files, so a path whose casing differs anywhere is
+      // flagged here.
+      if (cleanTarget) {
+        const relativeCandidate = path
+          .relative(rootDir, targetPath)
+          .split(path.sep)
+          .join("/");
+        const canonical = trackedIndex.get(relativeCandidate.toLowerCase());
+        if (canonical && canonical !== relativeCandidate) {
+          errors.push({
+            source: sourcePath,
+            line,
+            destination,
+            reason: `path case mismatch: Git tracks "${canonical}", not "${relativeCandidate}"`,
+          });
+          continue;
+        }
+      }
+
       if (!fragment || !targetPath.toLowerCase().endsWith(".md")) continue;
 
       let anchors = anchorCache.get(targetPath);
@@ -282,6 +354,7 @@ function runCli() {
 if (require.main === module) runCli();
 
 module.exports = {
+  buildTrackedPathIndex,
   collectAnchors,
   collectMarkdownFiles,
   compileGitignorePattern,
