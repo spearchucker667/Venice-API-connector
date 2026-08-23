@@ -327,3 +327,4 @@ _REPO_EXTRACT_METADATA/
 /.agents/skills
 venice-forge-filelist.txt
 VENICE_FORGE_COMPLETE_AUDIT.md
+patch_summary.sh

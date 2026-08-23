@@ -6,6 +6,15 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
+**Scope:** Repair CI workflow failures in ChatMarkdown.tsx
+
+- **ESLint / Typescript Fix:** Removed the `Unexpected any` cast in `ChatMarkdown.tsx` where `PreRenderer` spread its `props`. Destructured `node` from `props` so it does not get spread as an invalid attribute onto the DOM `div`.
+- **i18n Hardcoded Regression Fix:** Replaced hardcoded `aria-label="Copy"` and `title="Copy"` strings in `PreRenderer` with their localized `tRuntime` equivalents (`runtimeGenerated.components.chat.messageBubble.text.copy`), resolving the `verify:i18n-hardcoded-regressions` failure.
+- **Validation:** `npm run lint:eslint`, `npm run typecheck`, and `npm run verify:contracts` all pass cleanly.
+
+## Prior Session Summary
+
+**Date:** 2026-08-23
 **Scope:** Emergency ChatMarkdown Runtime Regression Repair
 
 - **Bug Fix:** Fixed `ReferenceError: node is not defined` in `PreRenderer` inside `ChatMarkdown.tsx` which was crashing the renderer upon rendering any fenced code block. Replaced the inline `extractText` helper with a top-level `extractReactText` helper.
@@ -13,7 +22,6 @@ This is the active handoff and validation ledger. The canonical current-work led
 - **Testing:** Addressed a critical testing gap. The prior commit's tests were running on an environment or state that didn't trigger the exception. Added an integration-level regression test in `chat-view.test.tsx` that strictly validates the end-to-end chat composer send flow with a markdown source payload. The test programmatically submits fenced markdown and ensures the request is dispatched and rendered without throwing.
 - **Validation:** Typecheck, ESLint, UI tests, and all contracts (i18n, theme-tokens) pass successfully on the current worktree.
 
-## Prior Session Summary
 
 **Date:** 2026-08-23
 **Scope:** Themes (Deduplication & UI Modernization) and Media Studio (Multi-select)

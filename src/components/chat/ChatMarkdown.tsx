@@ -67,8 +67,9 @@ function CodeRenderer({
 
 function PreRenderer({
   children,
+  node: _node,
   ...props
-}: ComponentPropsWithoutRef<"pre">) {
+}: ComponentPropsWithoutRef<"pre"> & { node?: unknown }) {
   const { t: tRuntime } = useTranslation("common");
   const [codeCopied, setCodeCopied] = useState(false);
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -98,6 +99,8 @@ function PreRenderer({
     }
   });
 
+  const copyLabel = tRuntime("runtimeGenerated.components.chat.messageBubble.text.copy");
+
   return (
     <pre className="relative group/code mb-4 mt-2 overflow-hidden rounded-md border border-border bg-surface-sunken">
       <div className="flex items-center justify-between bg-surface-elevated px-3 py-1.5 border-b border-border/50">
@@ -106,8 +109,8 @@ function PreRenderer({
         </div>
         <button
           type="button"
-          aria-label="Copy"
-          title="Copy"
+          aria-label={copyLabel}
+          title={copyLabel}
           onClick={() => {
             if (rawText) {
               void copyText(rawText);
@@ -120,10 +123,10 @@ function PreRenderer({
         >
           {codeCopied
             ? tRuntime("runtimeGenerated.components.chat.messageBubble.text.copied")
-            : tRuntime("runtimeGenerated.components.chat.messageBubble.text.copy")}
+            : copyLabel}
         </button>
       </div>
-      <div className="p-3 overflow-x-auto text-[13px] leading-relaxed" {...(props as any)}>
+      <div className="p-3 overflow-x-auto text-[13px] leading-relaxed" {...(props as ComponentPropsWithoutRef<"div">)}>
         {children}
       </div>
     </pre>
