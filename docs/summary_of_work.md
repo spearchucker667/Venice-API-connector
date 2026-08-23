@@ -18,6 +18,8 @@ This is the active handoff and validation ledger. The canonical current-work led
 - **Validation:** 
   - `npm run typecheck` passed (after fixing `colors` vs `tokens` typings).
   - Addressed a CI failure caught by `verify:i18n-hardcoded-regressions` by replacing the hardcoded `"Custom"` fallback text in the theme selector with the existing translation helper key. `npm run verify:i18n-hardcoded-regressions` now successfully reports 0 regressions.
+  - Fixed a CSP inline style invariant violation (`inlineStyleInvariant.test.ts`) by removing all inline `style={...}` attributes in `ThemeMaker.tsx` and instead using a `ref` callback to dynamically set CSS variables (e.g. `--theme-bg`), which are then consumed safely via Tailwind arbitrary classes (`bg-[var(--theme-bg)]`).
+  - Fixed a UI test failure (`ThemeMaker.ui.test.tsx`) that expects "Custom Theme" to sort last by hiding the visual fallback swatch from screen readers (`aria-hidden="true"`), preventing its text from accidentally polluting the button's `textContent`.
 
 ## Prior Session Summary
 

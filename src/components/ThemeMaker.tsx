@@ -994,6 +994,14 @@ export function ThemeMaker() {
               <button
                 key={opt.id}
                 onClick={() => handleSelect(opt.id)}
+                ref={(el) => {
+                  if (el && theme) {
+                    el.style.setProperty('--theme-bg', theme.tokens.background);
+                    el.style.setProperty('--theme-surface', theme.tokens.surface);
+                    el.style.setProperty('--theme-accent', theme.tokens.accent);
+                    el.style.setProperty('--theme-text', theme.tokens.textPrimary || 'inherit');
+                  }
+                }}
                 className={`relative group flex flex-col overflow-hidden rounded-xl border text-left transition-all hover:shadow-sm ${
                   isSelected
                     ? "border-accent ring-1 ring-accent bg-surface"
@@ -1003,23 +1011,23 @@ export function ThemeMaker() {
               >
                 {theme ? (
                   <div 
-                    className="h-12 w-full flex border-b border-border/50" 
-                    style={{ backgroundColor: theme.tokens.background }}
+                    className="h-12 w-full flex border-b border-border/50 bg-[var(--theme-bg)]" 
+                    aria-hidden="true"
                   >
-                    <div 
-                      className="w-1/2 h-full flex items-end justify-start p-1"
-                      style={{ backgroundColor: theme.tokens.surface }}
-                    >
-                      <div className="h-4 w-4 rounded-full shadow-sm" style={{ backgroundColor: theme.tokens.accent }} />
+                    <div className="w-1/2 h-full flex items-end justify-start p-1 bg-[var(--theme-surface)]">
+                      <div className="h-4 w-4 rounded-full shadow-sm bg-[var(--theme-accent)]" />
                     </div>
                   </div>
                 ) : (
-                  <div className="h-12 w-full bg-surface-elevated flex items-center justify-center text-xs text-text-muted border-b border-border/50">
-                    {tRuntime("runtimeGenerated.components.thememaker.metadata.customTheme")}
+                  <div 
+                    className="h-12 w-full bg-surface-elevated flex items-center justify-center text-xs text-text-muted border-b border-border/50"
+                    aria-hidden="true"
+                  >
+                    {/* Fallback placeholder */}
                   </div>
                 )}
                 <div className="px-2.5 py-2">
-                  <div className="text-xs font-medium truncate" style={{ color: theme?.tokens.textPrimary || 'inherit' }}>
+                  <div className="text-xs font-medium truncate text-[var(--theme-text,inherit)]">
                     {opt.label}
                   </div>
                 </div>
