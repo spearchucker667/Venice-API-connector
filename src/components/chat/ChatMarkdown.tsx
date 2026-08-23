@@ -1,0 +1,176 @@
+import React, { useState, useRef, useEffect, type ComponentPropsWithoutRef } from "react";
+import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+import { useTranslation } from "react-i18next";
+import { copyText } from "../../stores/media-send-to";
+// Allow http/https/mailto links and image data: URIs only. Strips javascript:,
+// vbscript:, file:, and unknown other smuggled protocols.
+const SAFE_URL_PROTOCOLS = /^(https?:|mailto:|#)/i;
+
+function safeUrlTransform(url: string, key: string): string {
+  if (!url) return "";
+  const cleaned = defaultUrlTransform(url);
+  if (!cleaned) return "";
+  if (key === "src" && cleaned.startsWith("data:image/")) return cleaned;
+  if (SAFE_URL_PROTOCOLS.test(cleaned)) return cleaned;
+  return "";
+}
+
+function CodeRenderer({
+  children,
+  className,
+   _node,
+  ...props
+}: ComponentPropsWithoutRef<"code"> & { node?: unknown }) {
+  const match = /language-([a-zA-Z0-9#\-+]+)/.exec(className || "");
+  const hasNewline = String(children).includes("\n");
+  // If there's no language and no newline, treat it as inline code
+  if (!match && !hasNewline) {
+    return (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    );
+  }
+
+  // Otherwise, it's part of a block code (handled by PreRenderer)
+  // Just pass through the raw code with its class
+  return (
+    <code className={className} {...props}>
+      {children}
+    </code>
+  );
+}
+
+function PreRenderer({
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"pre">) {
+  const { t: tRuntime } = useTranslation("common");
+  const [codeCopied, setCodeCopied] = useState(false);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    };
+  }, []);
+
+  // Find the nested <code> element to extract language and raw text
+  let lang = "";
+  let rawText = "";
+
+  React.Children.forEach(children, (child) => {
+    if (React.isValidElement(child)) {
+      const childEl = child as unknown;
+      const className = childEl.props.className || "";
+      const match = /language-([a-zA-Z0-9#\-+]+)/.exec(className);
+      if (match) lang = match[1];
+      
+      // Extract raw text from nested children
+      const extractText = (_node: React.ReactNode): string => {
+        if (typeof node === "string" || typeof node === "number") return String(node);
+        if (Array.isArray(node)) return node.map(extractText).join("");
+        if (React.isValidElement(node)) return extractText((node as unknown).props.children);
+        return "";
+      };
+      
+      rawText = extractText(childEl.props.children).replace(/\n$/, "");
+    }
+  });
+
+  return (
+    <div className="relative group/code mb-4 mt-2 overflow-hidden rounded-md border border-border bg-surface-sunken">
+      <div className="flex items-center justify-between bg-surface-elevated px-3 py-1.5 border-b border-border/50">
+        <div className="text-[12px] text-text-muted font-mono uppercase tracking-wider select-none">
+          {lang || "text"}
+        </div>
+        <button
+          onClick={() => {
+            if (rawText) {
+              void copyText(rawText);
+              setCodeCopied(true);
+              if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+              copyTimeoutRef.current = setTimeout(() => setCodeCopied(false), 1500);
+            }
+          }}
+          className="px-2 py-1 text-[11px] font-medium text-text-muted hover:text-text-secondary bg-surface/50 hover:bg-surface rounded transition-colors cursor-pointer"
+        >
+          {codeCopied
+            ? tRuntime("runtimeGenerated.components.chat.messageBubble.text.copied")
+            : tRuntime("runtimeGenerated.components.chat.messageBubble.text.copy")}
+        </button>
+      </div>
+      <pre className="p-3 overflow-x-auto text-[13px] leading-relaxed" {...props}>
+        {children}
+      </pre>
+    </div>
+  );
+}
+
+interface ChatMarkdownProps {
+  content: string;
+}
+
+export function ChatMarkdown({ content }: ChatMarkdownProps) {
+  return (
+    <div className="prose-venice text-[15.5px] leading-relaxed text-text-primary">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm, remarkMath]}
+        rehypePlugins={[
+          rehypeKatex,
+          [
+            rehypeSanitize,
+            {
+              ...defaultSchema,
+              attributes: {
+                ...defaultSchema.attributes,
+                code: [
+                  ...(defaultSchema.attributes?.code || []),
+                  ["className", /^language-[a-zA-Z0-9#\-+]+$/],
+                ],
+                span: [
+                  ...(defaultSchema.attributes?.span || []),
+                  ["className", /^katex.*$/],
+                ],
+                div: [
+                  ...(defaultSchema.attributes?.div || []),
+                  ["className", /^katex.*$/],
+                ],
+                math: [...(defaultSchema.attributes?.math || []), "xmlns", "display"],
+                annotation: [...(defaultSchema.attributes?.annotation || []), "encoding"],
+                semantics: [...(defaultSchema.attributes?.semantics || [])],
+                mi: [...(defaultSchema.attributes?.mi || []), "mathvariant"],
+                mo: [...(defaultSchema.attributes?.mo || []), "mathvariant", "fence", "stretchy", "separator", "lspace", "rspace", "minsize", "maxsize"],
+                mn: [...(defaultSchema.attributes?.mn || [])],
+                mspace: [...(defaultSchema.attributes?.mspace || []), "width"],
+                mrow: [], mfrac: [], msqrt: [], mroot: [], mstyle: [], merror: [], mpadded: [], mphantom: [],
+                mfenced: [], menclose: [], msub: [], msup: [], msubsup: [], munder: [], mover: [],
+                munderover: [], mtable: [], mtr: [], mtd: [], maligngroup: [], malignmark: []
+              },
+              tagNames: [
+                ...(defaultSchema.tagNames || []),
+                "math", "semantics", "annotation", "mrow", "mi", "mo", "mn", "mspace", "mfrac", "msqrt", "mroot",
+                "mstyle", "merror", "mpadded", "mphantom", "mfenced", "menclose", "msub", "msup", "msubsup",
+                "munder", "mover", "munderover", "mtable", "mtr", "mtd", "maligngroup", "malignmark"
+              ]
+            },
+          ],
+        ]}
+        urlTransform={safeUrlTransform}
+        components={{
+          pre: PreRenderer,
+          code: CodeRenderer,
+          a: ({  _node, ...props }) => (
+            <a {...props} target="_blank" rel="noopener noreferrer ugc" />
+          ),
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+}

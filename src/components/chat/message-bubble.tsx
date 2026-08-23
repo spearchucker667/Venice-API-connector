@@ -8,13 +8,8 @@ import {
   useMemo,
   lazy,
   Suspense,
-  type ComponentPropsWithoutRef,
+
 } from "react";
-import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import type { ChatMessage, ContentPart } from "../../types/venice";
 import type { ChatAttachmentRef } from "../../types/chatAttachment";
 import type { ConversationCharacterMeta } from "../../types/conversationVault";
@@ -43,20 +38,7 @@ const ChatTtsPlayer = lazy(async () => {
 // (where index.html is served from project root) and in the packaged Electron
 // app (where loadFile points at dist/index.html beside ./assets/branding).
 export const DEFAULT_AI_AVATAR_SRC = "assets/branding/venice-seal-red-fill.svg";
-
-// Allow http/https/mailto links and image data: URIs only. Strips javascript:,
-// vbscript:, file:, and any other smuggled protocols.
-const SAFE_URL_PROTOCOLS = /^(https?:|mailto:|#)/i;
-function safeUrlTransform(url: string, key: string): string {
-  if (!url) return "";
-  // react-markdown's default already handles most protocol filtering; we layer
-  // an explicit allow-list on top because we render untrusted model output.
-  const cleaned = defaultUrlTransform(url);
-  if (!cleaned) return "";
-  if (key === "src" && cleaned.startsWith("data:image/")) return cleaned;
-  if (SAFE_URL_PROTOCOLS.test(cleaned)) return cleaned;
-  return "";
-}
+import { ChatMarkdown } from "./ChatMarkdown";
 
 type InjectedContextSource = NonNullable<
   ChatMessage["metadata"]
@@ -77,65 +59,6 @@ function formatInjectedContextSource(
     default:
       return "Injected context";
   }
-}
-
-function CodeBlock({
-  children,
-  className,
-  ...props
-}: ComponentPropsWithoutRef<"code">) {
-  const { t: tRuntime } = useTranslation("common");
-  const match = /language-(\w+)/.exec(className || "");
-  const lang = match ? match[1] : "";
-  const codeStr = String(children).replace(/\n$/, "");
-  const [codeCopied, setCodeCopied] = useState(false);
-  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  if (!className && !String(children).includes("\n")) {
-    return (
-      <code className={className} {...props}>
-        {children}
-      </code>
-    );
-  }
-
-  return (
-    <div className="relative group/code">
-      {lang && (
-        <div className="absolute top-0 left-0 px-3 py-1.5 text-[13px] text-text-muted/30 font-mono uppercase tracking-wider select-none">
-          {lang}
-        </div>
-      )}
-      <button
-        onClick={() => {
-          void copyText(codeStr);
-          setCodeCopied(true);
-          if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
-          copyTimeoutRef.current = setTimeout(() => setCodeCopied(false), 1500);
-        }}
-        className="absolute top-1.5 right-1.5 px-2 py-1 text-[13px] font-medium text-text-muted/40 hover:text-text-secondary bg-surface-elevated/40 hover:bg-surface-elevated/80 rounded-md transition-all opacity-0 group-hover/code:opacity-100 cursor-pointer"
-      >
-        {codeCopied
-          ? tRuntime(
-              "runtimeGenerated.components.chat.messageBubble.text.copied",
-            )
-          : tRuntime(
-              "runtimeGenerated.components.chat.messageBubble.text.copy",
-            )}
-      </button>
-      <code className={className} {...props}>
-        {children}
-      </code>
-    </div>
-  );
 }
 
 // Extract text and images from multimodal content
@@ -712,9 +635,7 @@ function MessageBubbleImpl({
                 </div>
               </div>
             ) : (
-              <div className="text-text-primary text-[15.5px] leading-relaxed whitespace-pre-wrap break-words">
-                {content}
-              </div>
+              <ChatMarkdown content={content} />
             )}
             {/* Structured attachment cards — rendered below visible text, never dumping extracted content */}
             {attachmentRefs.length > 0 && (
@@ -923,138 +844,52 @@ function MessageBubbleImpl({
             </div>
           </div>
         ) : content && !isTool ? (
-          redTeamMode ? (
-            <div className="space-y-2">
-              <div className="bg-surface-elevated/40 border border-border rounded-lg p-3 font-mono text-[13px] whitespace-pre-wrap break-all leading-relaxed select-text">
-                {content}
-              </div>
-              {localSafetyDecision && (
-                <div className="text-[12px] font-mono p-2 bg-surface border border-border/40 rounded-md text-text-secondary select-text space-y-1">
-                  <div className="flex items-center gap-1.5">
+          <div className="space-y-2">
+            <ChatMarkdown content={content} />
+            {redTeamMode && localSafetyDecision && (
+              <div className="text-[12px] font-mono p-2 bg-surface border border-border/40 rounded-md text-text-secondary select-text space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-semibold text-text-muted">
+                    <Trans i18nKey="common:surface.componentsChatMessageBubble.text.safety" />
+                  </span>
+                  <span
+                    className={
+                      localSafetyDecision.allow
+                        ? "text-accent font-semibold"
+                        : "text-danger font-semibold"
+                    }
+                  >
+                    {localSafetyDecision.allow
+                      ? tRuntime(
+                          "runtimeGenerated.components.chat.messageBubble.text.allow",
+                        )
+                      : tRuntime(
+                          "runtimeGenerated.components.chat.messageBubble.text.blocked",
+                        )}
+                  </span>
+                </div>
+                {localSafetyDecision.reasonCode && (
+                  <div>
                     <span className="font-semibold text-text-muted">
-                      <Trans i18nKey="common:surface.componentsChatMessageBubble.text.safety" />
-                    </span>
-                    <span
-                      className={
-                        localSafetyDecision.allow
-                          ? "text-accent font-semibold"
-                          : "text-danger font-semibold"
-                      }
-                    >
-                      {localSafetyDecision.allow
-                        ? tRuntime(
-                            "runtimeGenerated.components.chat.messageBubble.text.allow",
-                          )
-                        : tRuntime(
-                            "runtimeGenerated.components.chat.messageBubble.text.blocked",
-                          )}
-                    </span>
+                      <Trans i18nKey="common:surface.componentsChatMessageBubble.text.code" />
+                    </span>{" "}
+                    {localSafetyDecision.reasonCode}
                   </div>
-                  {localSafetyDecision.reasonCode && (
+                )}
+                {localSafetyDecision.signals &&
+                  localSafetyDecision.signals.length > 0 && (
                     <div>
                       <span className="font-semibold text-text-muted">
-                        <Trans i18nKey="common:surface.componentsChatMessageBubble.text.code" />
+                        <Trans i18nKey="common:surface.componentsChatMessageBubble.text.signals" />
                       </span>{" "}
-                      {localSafetyDecision.reasonCode}
+                      {localSafetyDecision.signals
+                        .map((s) => `${s.category}:${s.source}`)
+                        .join(", ")}
                     </div>
                   )}
-                  {localSafetyDecision.signals &&
-                    localSafetyDecision.signals.length > 0 && (
-                      <div>
-                        <span className="font-semibold text-text-muted">
-                          <Trans i18nKey="common:surface.componentsChatMessageBubble.text.signals" />
-                        </span>{" "}
-                        {localSafetyDecision.signals
-                          .map((s) => `${s.category}:${s.source}`)
-                          .join(", ")}
-                      </div>
-                    )}
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="prose-venice text-[15.5px] leading-relaxed text-text-primary">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm, remarkMath]}
-                rehypePlugins={[
-                  rehypeKatex,
-                  [
-                    rehypeSanitize,
-                    {
-                      ...defaultSchema,
-                      attributes: {
-                        ...defaultSchema.attributes,
-                        code: [
-                          ...(defaultSchema.attributes?.code || []),
-                          ["className", /^language-[a-zA-Z0-9-]+$/],
-                        ],
-                        span: [
-                          ...(defaultSchema.attributes?.span || []),
-                          ["className", /^katex.*$/],
-                        ],
-                        div: [
-                          ...(defaultSchema.attributes?.div || []),
-                          ["className", /^katex.*$/],
-                        ],
-                        math: [
-                          ...(defaultSchema.attributes?.math || []),
-                          "xmlns", "display"
-                        ],
-                        annotation: [
-                          ...(defaultSchema.attributes?.annotation || []),
-                          "encoding"
-                        ],
-                        semantics: [
-                          ...(defaultSchema.attributes?.semantics || []),
-                        ],
-                        mi: [
-                          ...(defaultSchema.attributes?.mi || []),
-                          "mathvariant"
-                        ],
-                        mo: [
-                          ...(defaultSchema.attributes?.mo || []),
-                          "mathvariant", "fence", "stretchy", "separator", "lspace", "rspace", "minsize", "maxsize"
-                        ],
-                        mn: [
-                          ...(defaultSchema.attributes?.mn || []),
-                        ],
-                        mspace: [
-                          ...(defaultSchema.attributes?.mspace || []),
-                          "width"
-                        ],
-                        // Add MathML elements that KaTeX might output
-                        mrow: [], mfrac: [], msqrt: [], mroot: [], mstyle: [], merror: [], mpadded: [], mphantom: [],
-                        mfenced: [], menclose: [], msub: [], msup: [], msubsup: [], munder: [], mover: [],
-                        munderover: [], mtable: [], mtr: [], mtd: [], maligngroup: [], malignmark: []
-                      },
-                      tagNames: [
-                        ...(defaultSchema.tagNames || []),
-                        "math", "semantics", "annotation", "mrow", "mi", "mo", "mn", "mspace", "mfrac", "msqrt", "mroot",
-                        "mstyle", "merror", "mpadded", "mphantom", "mfenced", "menclose", "msub", "msup", "msubsup",
-                        "munder", "mover", "munderover", "mtable", "mtr", "mtd", "maligngroup", "malignmark"
-                      ]
-                    },
-                  ],
-                ]}
-                urlTransform={safeUrlTransform}
-                components={{
-                  code: CodeBlock,
-                  a: ({ href, children, ...props }) => (
-                    <a
-                      {...props}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer ugc"
-                    >
-                      {children}
-                    </a>
-                  ),
-                }}
-              >
-                {content}
-              </ReactMarkdown>
-            </div>
-          )
+              </div>
+            )}
+          </div>
         ) : !isTool &&
           (!message.tool_calls || message.tool_calls.length === 0) ? (
           <div className="py-1">

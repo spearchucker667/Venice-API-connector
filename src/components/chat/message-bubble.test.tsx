@@ -18,7 +18,7 @@ vi.mock("../../stores/settings-store", () => ({
 }));
 
 vi.mock("../../shared/safety", () => ({
-  maybeRunLocalFamilyGuard: vi.fn(() => ({ allowed: true as const })),
+  maybeRunLocalFamilyGuard: vi.fn(() => ({ guardDecision: { allow: true } as any })),
 }));
 
 import { maybeRunLocalFamilyGuard } from "../../shared/safety";
@@ -30,7 +30,7 @@ beforeEach(() => {
   testSettings.redTeamMode = false;
   testSettings.localFamilySafeModeEnabled = false;
   vi.mocked(maybeRunLocalFamilyGuard).mockClear();
-  vi.mocked(maybeRunLocalFamilyGuard).mockReturnValue({ allowed: true as const });
+  vi.mocked(maybeRunLocalFamilyGuard).mockReturnValue({ guardDecision: { allow: true } } as any);
 });
 
 describe("MessageBubble accessibility", () => {
@@ -270,5 +270,110 @@ describe("MessageBubble local-family-guard gating (BUG-React#3)", () => {
 
     rerender(<MessageBubble message={messageB} index={0} onCopy={() => {}} onDelete={() => {}} />);
     expect(maybeRunLocalFamilyGuard).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("MessageBubble Markdown and Fenced Code Rendering (Regression)", () => {
+  const tSettings = testSettings as any;
+  beforeEach(() => {
+    tSettings.redTeamMode = false;
+  });
+
+  it("renders assistant fenced code properly (standard mode)", () => {
+    const message: ChatMessage = {
+      role: "assistant",
+      content: "```typescript\nconst x = 1;\n```",
+    };
+    const { container } = render(
+      <MessageBubble message={message} index={0} onCopy={() => {}} onDelete={() => {}} />
+    );
+    
+    const pre = container.querySelector("pre");
+    const code = pre?.querySelector("code");
+    expect(pre).not.toBeNull();
+    expect(code).not.toBeNull();
+    expect(code?.className).toContain("language-typescript");
+    expect(code?.textContent).toBe("const x = 1;\n");
+    expect(container.textContent).not.toContain("```typescript");
+    expect(screen.getByText("typescript")).toBeInTheDocument();
+    
+    // There's the message-level copy button and the code-block copy button
+    expect(screen.getAllByRole("button", { name: "Copy" }).length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("renders assistant fenced code properly (Traffic Inspector mode)", () => {
+    tSettings.redTeamMode = true;
+    tSettings.localFamilySafeModeEnabled = true;
+    
+    const message: ChatMessage = {
+      role: "assistant",
+      content: "```typescript\nconst x = 1;\n```",
+      metadata: {
+        localSafetyDecision: { allow: true }
+      }
+    };
+    const { container } = render(
+      <MessageBubble message={message} index={0} onCopy={() => {}} onDelete={() => {}} />
+    );
+    
+    const pre = container.querySelector("pre");
+    expect(pre).not.toBeNull();
+    // Safety UI still renders (using 'Allow' translation fallback if not strictly 'Safety')
+    expect(screen.getByText(/Allow/i)).toBeInTheDocument();
+  });
+
+  it("renders user fenced code properly", () => {
+    const message: ChatMessage = {
+      role: "user",
+      content: "```javascript\nconsole.log();\n```",
+    };
+    const { container } = render(
+      <MessageBubble message={message} index={0} onCopy={() => {}} onDelete={() => {}} />
+    );
+    
+    const pre = container.querySelector("pre");
+    expect(pre).not.toBeNull();
+    expect(container.textContent).not.toContain("```javascript");
+  });
+
+  it("renders inline code properly", () => {
+    const message: ChatMessage = {
+      role: "assistant",
+      content: "Use `npm run lint`.",
+    };
+    const { container } = render(
+      <MessageBubble message={message} index={0} onCopy={() => {}} onDelete={() => {}} />
+    );
+    
+    const code = container.querySelector("code");
+    expect(code).not.toBeNull();
+    expect(container.querySelector("pre")).toBeNull();
+  });
+
+  it("renders fenced code without a language", () => {
+    const message: ChatMessage = {
+      role: "assistant",
+      content: "```\none\ntwo\n```",
+    };
+    const { container } = render(
+      <MessageBubble message={message} index={0} onCopy={() => {}} onDelete={() => {}} />
+    );
+    
+    expect(container.querySelector("pre")).not.toBeNull();
+    expect(container.querySelector("code")?.textContent).toBe("one\ntwo\n");
+    expect(screen.getByText("text")).toBeInTheDocument();
+  });
+
+  it("renders HTML/XSS inside code as inert text", () => {
+    const message: ChatMessage = {
+      role: "assistant",
+      content: "```html\n<script>alert(1)</script>\n```",
+    };
+    const { container } = render(
+      <MessageBubble message={message} index={0} onCopy={() => {}} onDelete={() => {}} />
+    );
+    
+    expect(container.querySelector("script")).toBeNull();
+    expect(container.querySelector("code")?.textContent).toBe("<script>alert(1)</script>\n");
   });
 });

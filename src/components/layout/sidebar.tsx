@@ -231,9 +231,9 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
       enabled
         ? t(
             "inspector.enabledDetail",
-            "Raw responses, safety decisions, and adult character controls are visible.",
+            "Request/response diagnostics and safety decisions are visible.",
           )
-        : t("inspector.disabledDetail", "Standard rendering restored."),
+        : t("inspector.disabledDetail", "Diagnostic traffic inspection is hidden."),
     );
   };
 
@@ -924,7 +924,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
               <p className="text-[12px] leading-snug text-text-muted mt-0.5 [@media(max-height:800px)]:hidden">
                 {t(
                   "inspector.description",
-                  "Shows raw model output and local safety decisions.",
+                  "Shows diagnostics and local safety decisions.",
                 )}
               </p>
             </div>
