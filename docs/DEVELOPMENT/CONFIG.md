@@ -233,7 +233,8 @@ For API keys:
 internal_prompt_enhancer:
   enabled: true
   model: "venice-uncensored-1-2"
-  temperature: 0.4
+  enhanceTemperature: 0.2
+  remixTemperature: 0.4
   maxTokens: 350
   systemPrompt: ""
   remixSystemPrompt: ""
@@ -243,22 +244,53 @@ The internal prompt-enhancer is a hidden under-app LLM helper used
 exclusively for image prompt **Enhance** and **Remix** in Image Studio
 and the gallery inspector. It is **not** a user-chat-accessible model
 and the model id is **not** exposed in the normal chat / model
-selector. The default system prompts are task-focused and affirm that
-the app's existing safety guard and the upstream provider controls
-remain authoritative — they do not reframe the enhancer as
-overriding the local Family / CSAM rules.
+selector. Application-owned mandatory protocols first understand and
+preserve the original subject, named entity, franchise/source, subject
+count, intentional reinterpretations, and explicit constraints before
+adding detail. Those protocols also own the one-plain-text-prompt output
+contract. Existing safety guards and upstream provider controls remain
+authoritative outside the rewriter.
 
 - `enabled: false` disables the **Enhance** and **Remix** buttons in
   Image Studio and the gallery inspector (with a tooltip explaining
   why).
 - `model` is a verified Venice model id (e.g. `venice-uncensored-1-2`).
   The default is verified against the live `/models` endpoint.
-- `temperature` is clamped to `[0, 2]`.
+- `enhanceTemperature` defaults to `0.2`; `remixTemperature` defaults to
+  `0.4`. Both are clamped to `[0, 2]` during configuration normalization.
+  The deprecated legacy `temperature` key remains presence-aware input
+  compatibility: when supplied alone, it sets both mode temperatures; a
+  mode-specific key overrides it only for that mode. Fresh generated config
+  writes only the two mode-specific keys.
 - `maxTokens` is clamped to `[1, 4000]`.
-- `systemPrompt` and `remixSystemPrompt` accept custom task-focused
-  rewrites. Empty string falls back to the safe defaults in
-  `src/config/configSchema.ts` (`DEFAULT_ENHANCE_SYSTEM_PROMPT` /
-  `DEFAULT_REMIX_SYSTEM_PROMPT`).
+- `systemPrompt` and `remixSystemPrompt` are additive custom preferences,
+  not replacement system prompts. They are strongly delimited as untrusted,
+  lower-priority data and cannot disable semantic grounding, substitute a
+  named identity/franchise, reveal or alter hidden instructions, or change
+  the output format. Empty string means no additional preference.
+
+Both Enhance and Remix receive the selected downstream image-model ID,
+verified capability facts from the runtime model record and canonical image
+capability registry, applicable dimensions, selected style, generation mode,
+and bounded reference context. The internal text model configured above stays
+distinct from the target image model. Negative prompts, seeds, raw reference
+bytes, data/object URLs, local paths, signed URLs, and secrets are not included
+in the positive enhancer request.
+
+Enhance may add concrete composition, lighting, atmosphere, material, camera,
+and rendering detail while preserving the original idea. Remix may vary only
+details the user did not fix; it cannot vary named identity, franchise/source,
+subject count, or explicit character, clothing, setting, medium, style, pose,
+expression, color, text, reference, or exclusion constraints.
+
+`IMAGE_PROMPT_MAX_CHARS` remains the application ceiling. A reliable lower
+runtime model limit becomes the effective ceiling, but the limit is never a
+target for verbosity. Response validation rejects only high-confidence
+syntactic envelopes such as labelled JSON, explicit reasoning plus a separate
+answer, unmistakable refusals, or clearly labelled multiple alternatives.
+Missing, rejected, empty, or failed responses fall back to the original prompt.
+The candidate is still previewed and changes the stored prompt only after the
+user explicitly accepts it; cancellation keeps the original.
 
 ## Examples
 

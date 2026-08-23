@@ -135,12 +135,14 @@ describe("configSchema", () => {
       const cfg = emptyConfig();
       cfg.internal_prompt_enhancer.enabled = false;
       cfg.internal_prompt_enhancer.model = "custom-model-2";
-      cfg.internal_prompt_enhancer.temperature = 0.9;
+      cfg.internal_prompt_enhancer.enhanceTemperature = 0.9;
+      cfg.internal_prompt_enhancer.remixTemperature = 0.6;
       cfg.internal_prompt_enhancer.maxTokens = 200;
       const sanitized = sanitizeConfig(cfg);
       expect(sanitized.internal_prompt_enhancer.enabled).toBe(false);
       expect(sanitized.internal_prompt_enhancer.model).toBe("custom-model-2");
-      expect(sanitized.internal_prompt_enhancer.temperature).toBe(0.9);
+      expect(sanitized.internal_prompt_enhancer.enhanceTemperature).toBe(0.9);
+      expect(sanitized.internal_prompt_enhancer.remixTemperature).toBe(0.6);
       expect(sanitized.internal_prompt_enhancer.maxTokens).toBe(200);
     });
   });
@@ -150,33 +152,64 @@ describe("configSchema", () => {
       const result = validateConfig({ version: 1 });
       expect(result.config.internal_prompt_enhancer.enabled).toBe(true);
       expect(result.config.internal_prompt_enhancer.model).toBe("venice-uncensored-1-2");
-      expect(result.config.internal_prompt_enhancer.temperature).toBe(0.4);
+      expect(result.config.internal_prompt_enhancer.enhanceTemperature).toBe(0.2);
+      expect(result.config.internal_prompt_enhancer.remixTemperature).toBe(0.4);
       expect(result.config.internal_prompt_enhancer.maxTokens).toBe(350);
     });
 
-    it("clamps temperature and maxTokens to safe ranges", () => {
+    it("clamps mode-specific temperatures and maxTokens during normalization", () => {
       const result = validateConfig({
         version: 1,
-        internal_prompt_enhancer: { temperature: 5, maxTokens: 999999 },
+        internal_prompt_enhancer: {
+          enhanceTemperature: -1,
+          remixTemperature: 5,
+          maxTokens: 999999,
+        },
       });
-      expect(result.config.internal_prompt_enhancer.temperature).toBeLessThanOrEqual(2);
+      expect(result.config.internal_prompt_enhancer.enhanceTemperature).toBe(0);
+      expect(result.config.internal_prompt_enhancer.remixTemperature).toBe(2);
       expect(result.config.internal_prompt_enhancer.maxTokens).toBeLessThanOrEqual(4000);
     });
 
-    it("falls back to default system prompt when none provided", () => {
+    it("keeps absent configured instructions empty because they are additive", () => {
       const result = validateConfig({ version: 1 });
-      const prompt = result.config.internal_prompt_enhancer.systemPrompt;
-      expect(prompt).toMatch(/application-authored censorship layer/i);
-      expect(prompt).toMatch(/mandatory child-safety enforcement/i);
-      expect(prompt).not.toMatch(/any requests/i);
+      expect(result.config.internal_prompt_enhancer.systemPrompt).toBe("");
+      expect(result.config.internal_prompt_enhancer.remixSystemPrompt).toBe("");
     });
 
-    it("falls back to default remix system prompt when none provided", () => {
-      const result = validateConfig({ version: 1 });
-      const prompt = result.config.internal_prompt_enhancer.remixSystemPrompt;
-      expect(prompt).toMatch(/application-authored censorship layer/i);
-      expect(prompt).toMatch(/mandatory child-safety enforcement/i);
-      expect(prompt).not.toMatch(/any requests/i);
+    it.each([
+      {
+        label: "no temperature fields",
+        raw: {},
+        enhance: 0.2,
+        remix: 0.4,
+      },
+      {
+        label: "legacy temperature only",
+        raw: { temperature: 0.7 },
+        enhance: 0.7,
+        remix: 0.7,
+      },
+      {
+        label: "new enhance field plus legacy",
+        raw: { enhanceTemperature: 0.1, temperature: 0.8 },
+        enhance: 0.1,
+        remix: 0.8,
+      },
+      {
+        label: "both new fields",
+        raw: { enhanceTemperature: 0.15, remixTemperature: 0.55 },
+        enhance: 0.15,
+        remix: 0.55,
+      },
+    ])("migrates $label presence-aware", ({ raw, enhance, remix }) => {
+      const result = validateConfig({
+        version: 1,
+        internal_prompt_enhancer: raw,
+      });
+      expect(result.config.internal_prompt_enhancer.enhanceTemperature).toBe(enhance);
+      expect(result.config.internal_prompt_enhancer.remixTemperature).toBe(remix);
+      expect(result.config.internal_prompt_enhancer).not.toHaveProperty("temperature");
     });
 
     it("accepts a user-supplied system prompt", () => {

@@ -12,6 +12,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const mutate = vi.fn();
 const mediaUpsert = vi.fn();
 const mediaUpsertDerivative = vi.fn();
+const { enhancePromptMock } = vi.hoisted(() => ({ enhancePromptMock: vi.fn() }));
 const {
   isElectronMock,
   persistGeneratedImage,
@@ -50,6 +51,10 @@ vi.mock("../../hooks/use-models", () => ({
 }));
 
 vi.mock("../../hooks/use-styles", () => ({ useStyles: () => ({ data: [] }) }));
+
+vi.mock("../../services/prompt-enhancer-service", () => ({
+  enhancePrompt: enhancePromptMock,
+}));
 
 vi.mock("../../stores/auth-store", () => ({
   selectHasVeniceKey: (state: {
@@ -98,6 +103,11 @@ describe("ImageView model-aware payloads", () => {
     persistGeneratedImage.mockReset();
     retryGeneratedImage.mockReset();
     saveGeneratedImageRecovery.mockReset();
+    enhancePromptMock.mockReset().mockResolvedValue({
+      prompt: "Enhanced copper city",
+      modelUsed: "internal-text-enhancer",
+      truncated: false,
+    });
     useImageWorkspaceStore.getState().reset();
     useSettingsStore.setState((state) => ({
       ...state,
@@ -410,6 +420,30 @@ describe("ImageView model-aware payloads", () => {
     fireEvent.change(textarea, { target: { value: "a".repeat(2000) } });
 
     expect(screen.getByText("1500/1500")).toBeInTheDocument();
+  });
+
+  it("passes selected downstream context and requires explicit preview acceptance", async () => {
+    render(<ImageView />);
+    const textarea = screen.getByPlaceholderText(/serene mountain landscape/i);
+    fireEvent.change(textarea, { target: { value: "A copper city at dusk" } });
+    fireEvent.click(screen.getByRole("button", { name: "Enhance prompt" }));
+
+    await waitFor(() => expect(enhancePromptMock).toHaveBeenCalledTimes(1));
+    expect(enhancePromptMock.mock.calls[0][0]).toMatchObject({
+      mode: "enhance",
+      prompt: "A copper city at dusk",
+      targetModel: {
+        id: "nano-banana-v1",
+        dimensionMode: "aspectResolution",
+      },
+      dimensions: { aspectRatio: "1:1", resolution: "2k" },
+      generationMode: "text-to-image",
+    });
+    expect(textarea).toHaveValue("A copper city at dusk");
+    expect(await screen.findByText("Enhanced copper city")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Use enhanced prompt" }));
+    expect(textarea).toHaveValue("Enhanced copper city");
   });
 });
 

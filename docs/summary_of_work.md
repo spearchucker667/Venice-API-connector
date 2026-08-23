@@ -6,14 +6,15 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
-**Scope:** Semantic Image Prompt Enhancer design and compatibility decision
+**Scope:** Semantic Image Prompt Enhancer implementation and validation
 
-- Reconciled the semantic-enhancer repair handoff against the live `main` call graph, prompt defaults, configuration normalization, runtime model catalog, image-capability registry, Image Studio, Media Inspector, and existing tests.
-- Approved the typed layered architecture recorded in `docs/superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md`: mandatory enhance/remix protocols, separate generic defaults, additive configured instructions, typed downstream context, and syntactic output validation.
-- Froze two distinct authority dimensions. Original prompt constraints own image semantics; mandatory protocol/output rules own enhancer execution. Configured text is strongly delimited untrusted preference data and cannot replace either contract.
-- Froze presence-aware configuration normalization from the legacy `temperature` field to `enhanceTemperature` and `remixTemperature`, with defaults `0.2` and `0.4`; the enhancer service will receive normalized fields and contain no legacy fallback logic.
-- Registered the approved active design in `docs/DOCS_INDEX.md` and added the implementation-pending work item to `docs/ROADMAP.md`.
-- Design-checkpoint validation: `npm run verify:markdown-links` PASS (254 Markdown files), `npm run verify:agent-docs` PASS, `npm run verify:roadmap-current` PASS, and `git diff --check` PASS. Implementation and behavioral validation remain pending.
+- Implemented the approved layered enhancer contract from `docs/superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md`. Application-owned enhance/remix protocols now remain the mandatory system authority, while original prompt constraints own image semantics and configured instructions are bounded, strongly delimited, additive preference data.
+- Added pure typed downstream context derivation for selected model facts, dimensions, style, generation mode, and reference capabilities. Image Studio and Media Inspector pass the context they already own without adding store, React, network, or model-lookup dependencies to the enhancer service.
+- Isolated negative prompts and omitted seeds from positive-prompt rewriting. The service serializes only known canonical capability facts and states that the text enhancer cannot inspect referenced media.
+- Migrated normalized configuration from one legacy `temperature` to separate `enhanceTemperature` and `remixTemperature` values with presence-aware compatibility and defaults `0.2` and `0.4`. Generated configuration now documents the mandatory/additive boundary and no longer writes application defaults as editable custom instructions.
+- Added strictly syntactic output-envelope validation and original-prompt fallback for provider errors, JSON/fenced/labeled envelopes, analysis containers, multi-option wrappers, and unmistakable whole-response refusals. Natural brace-leading, numbered, and `Option 1` image prompts remain valid.
+- Preserved explicit preview acceptance in Image Studio and Media Inspector; enhanced text is not silently committed. Added regression coverage for context propagation, temperature migration, prompt ordering/delimitation, negative-prompt isolation, syntactic rejection/fallback, and the Frieren/Re:Zero cross-franchise case.
+- Updated the configuration guide and this documentation index, removed the completed current-work row from `docs/ROADMAP.md`, and retained the implemented design as the durable contract. No paid provider call or headed manual UI session was performed.
 
 ## Prior Session Summary
 
@@ -1799,8 +1800,6 @@ The earlier P1 audit closure (P1 #1–#8 with `VERIFY-128..131`) remains the con
 
 ## Open TODO Ledger
 
-**VF-SEMANTIC-PROMPT-ENHANCER-2026-08-23 (design approved; implementation pending):** implement the approved specification in `docs/superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md`. Required work includes mandatory enhance/remix protocols, additive untrusted custom instructions, dual semantic/execution authority, typed target-model/generation/reference context, presence-aware temperature migration during config normalization, high-confidence syntactic output-envelope validation, the Frieren/Re:Zero and adversarial-config regressions, documentation migration, focused component/service tests, canonical validation gates, and honest manual/live acceptance evidence.
-
 **Hosted CI portability failures from runs `32622366262`, `32624408721`, and `32625327617` (closed 2026-08-23):** deterministic wrong-case Markdown classification, the Windows-inapplicable POSIX mode assertion, nonexistent Ubuntu package `libxvfb`, and missing Linux executable discovery are corrected with focused regressions. Final CI run `32626615743` passed the complete matrix, including all three packaged-launch jobs; CodeQL run `32626615860` passed both analyses. No roadmap item was created because no implementation or hosted-evidence work remains for this failure chain.
 
 **Exhaustive Audit `VF-EXHAUSTIVE-AUDIT-20260815` (open; WP-01..05 closed 2026-08-17):** WPs executed so far: WP-01 strict request-schema corrections (P1-001, P1-008, P2-001, P2-002 — `safe_mode` matrix, `veniceSearchWire`, top-level `prompt_cache_key`, `language_code`); WP-02 video contract corrections (P1-003 — `duration` required on quote/queue; coercer fields removed; workflow schema fail-closed on missing `videoDuration`); WP-03 shared SSE conformance (P1-002 — one incremental decoder in `src/shared/sseStreamDecoder.ts` powering both transports); WP-04 agent IPC durability (P1-006 — shared `src/shared/veniceStreamDelta.ts` envelope, preload forwards `appendedMessages` with media/document metadata, boundary validation); WP-05 capability-driven tools/references (P1-004 — `style_references` wire shape, invented `venice-character-reference-v1` removed, runtime-metadata gating; P1-005 — `tools` only when `supportsFunctionCalling`; P3-001 — `discount_to_user` + style-ref type surface, drift verifier). Remaining: WP-06 (post-delta retry safety, P1-007 — never auto-replay a billable stream after observable output; require explicit retry and preserve the partial result), WP-07 (schema-backed CI/external acceptance). Tracking and evidence per work package are in `docs/ROADMAP.md` under the audit row.
@@ -1944,6 +1943,26 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 **Dependency-audit status (refreshed 2026-08-23):** `npm audit --omit=dev --audit-level=moderate` and `npm audit --audit-level=critical` both report 0 vulnerabilities. The aggregate `npm run ci` gate is no longer blocked by dependency audit findings.
 
 ## Validation Matrix
+
+### August 23 — Semantic Image Prompt Enhancer implementation
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| `npx vitest run src/services/prompt-enhancer-context.test.ts src/services/prompt-enhancer-service.test.ts` | PASS | 2 files; 36/36 tests. Covers pure context derivation, authority ordering, adversarial configured instructions, temperature selection, capability serialization, negative-prompt isolation, output validation, fallback, and prompt limits. |
+| `npx vitest run src/services/prompt-enhancer-context.test.ts src/services/prompt-enhancer-service.test.ts src/components/image/image-view.test.tsx src/components/gallery/media-inspector.test.tsx` | PASS | 4 files; 66/66 tests. Confirms both UI surfaces propagate their selected downstream context and preserve preview-before-accept behavior. |
+| Focused configuration, generated-config, store, and hydration Vitest batch | PASS | 8 files; 147/147 tests. Confirms separate mode temperatures, presence-aware legacy migration, empty additive preferences, and persisted config hydration. |
+| `npm run lint:eslint` | PASS | Zero warnings/errors after correcting two style findings in the new service. |
+| `npm run typecheck` | PASS | Renderer and Electron TypeScript projects clean. |
+| `npm test` | PASS after one timing-only rerun | Initial broad run had 5,150 passing tests, 1 skipped, and one 30-second timeout in the proxy-scrape rate-limit test. The exact test then passed in isolation (1 passed, 88 skipped), the CI server suite passed 60/60, and the final full rerun passed 464 files with 5,151 passed and 1 skipped in 474.54 seconds. |
+| `npm run verify:model-aware-recipes` | PASS | Selected-model recipe contract remains intact. |
+| `npm run verify:media-studio-power-tools` | PASS | Image/Media Studio surface contract remains intact. |
+| `npm run verify:safety-guard` | PASS | Renderer, Electron, server, and research safety enforcement checks passed. |
+| `npm run verify:markdown-links` | PASS | Final handoff state: 254 Markdown files checked. |
+| `npm run verify:agent-docs && npm run verify:roadmap-current && npm run verify:repo-handoff-hygiene && git diff --check` | PASS | Agent instructions, current-work-only roadmap, handoff hygiene, and whitespace checks passed on the final documentation state. |
+| `npm run verify:contracts` | PASS with pre-existing warnings | Aggregate contracts passed. The configured i18n verifier continues to report the existing 319 non-English `__MISSING__` markers as warnings. |
+| `npm run build` | PASS | Renderer, server bundle, Electron main, and preload built. |
+| `npm run ci` | PASS | Exit 0: lint, both typechecks, segmented tests, both dependency audits (0 vulnerabilities), build, contracts, and distribution verification passed. |
+| Headed UI and live provider acceptance | NOT RUN | Component tests prove the explicit preview/accept interaction contract. No paid provider request or headed desktop session was authorized or required; live semantic rewrite quality remains probabilistic and unverified. |
 
 ### August 23 — Semantic Image Prompt Enhancer design checkpoint
 
@@ -2772,6 +2791,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-08-23 — Semantic Image Prompt Enhancer implemented and validated:** Implemented the approved semantic grounding and trust-layer design across canonical prompt defaults, a pure typed downstream-context helper, the enhancer service, configuration normalization/generated config, Image Studio, and Media Inspector. Mandatory application protocols now own enhancer execution and output shape; the original prompt owns semantic identity/franchise/count/explicit constraints; custom configuration is strongly delimited additive preference data. Added separate enhance/remix temperatures with presence-aware legacy migration, known-fact-only target context, negative-prompt and seed isolation, syntactic envelope rejection with original-prompt fallback, runtime-aware prompt ceilings, and explicit preview acceptance. Added regressions for the Frieren/Re:Zero case, adversarial configured instructions, context propagation, configuration hydration, natural brace/numbered prompts, and provider/invalid-output fallback. Focused suites passed (36/36 service/context, 66/66 service/context/UI, 147/147 configuration/component batch); lint, both typechecks, feature verifiers, safety, Markdown links, contracts, build, distribution, both audits, aggregate CI, and the final 5,151-test full Vitest rerun passed. The initial full Vitest attempt had one proxy rate-limit timeout; that exact test, the 60-test CI server suite, and the final full rerun all passed, classifying it as a timing flake rather than a product regression. Updated configuration documentation and the documentation index, removed the completed roadmap row, and retained the implemented design as the durable contract. No paid inference or headed manual desktop QA was run.
 
 - **2026-08-23 — Semantic Image Prompt Enhancer design approved and frozen:** Reconciled the repair handoff against the live prompt service, call sites, config parser, generated config, runtime model metadata, image capability registry, and current tests. Selected the typed layered architecture: mandatory non-overridable enhance/remix protocols; distinct generic defaults; strongly delimited additive configured instructions; dual semantic-image versus enhancer-execution authority; typed target-model, dimensions, style, and reference facts; no React/Zustand/model lookup inside service/context helpers; presence-aware normalization from legacy `temperature` to `enhanceTemperature`/`remixTemperature`; and high-confidence syntactic response-envelope validation. Incorporated all four approval amendments and the adversarial configuration fixture in `docs/superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md`. Registered the specification in `docs/DOCS_INDEX.md` and the pending implementation in `docs/ROADMAP.md`. Design validation passed Markdown links (254 files), agent docs, roadmap-current, and diff whitespace checks; no implementation or manual/live acceptance was run at this checkpoint.
 

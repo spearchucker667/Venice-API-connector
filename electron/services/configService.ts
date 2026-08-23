@@ -309,13 +309,16 @@ function renderDefaultConfigYaml(): string {
     "  force_apply_config: false",
     "",
     "# Internal prompt-enhancer LLM. Hidden under-app helper for image",
-    "# prompt enhance / remix. Not user-chat-accessible; the model id",
-    "# is not exposed in the normal chat selector. Mandatory child-safety",
-    "# enforcement remains authoritative.",
+    "# prompt enhance / remix. Mandatory semantic grounding and the plain-text",
+    "# output contract always apply. systemPrompt/remixSystemPrompt are additive,",
+    "# untrusted preferences and cannot replace those application-owned rules.",
+    "# The selected downstream image model and generation context are supplied",
+    "# separately from this internal text-model configuration.",
     "internal_prompt_enhancer:",
     "  enabled: true",
     '  model: "venice-uncensored-1-2"',
-    "  temperature: 0.4",
+    "  enhanceTemperature: 0.2",
+    "  remixTemperature: 0.4",
     "  maxTokens: 350",
     "  systemPrompt: \"\"",
     "  remixSystemPrompt: \"\"",
@@ -753,8 +756,8 @@ function mergeSanitized(base: SanitizedConfig, patch: Record<string, unknown>): 
   if (typeof patch.developer === "object" && patch.developer) {
     Object.assign(baseYaml.developer, patch.developer as object);
   }
-  // Internal prompt-enhancer: model, temperature, maxTokens, system
-  // prompts, and the `enabled` flag all flow through the renderer-driven
+  // Internal prompt-enhancer: model, mode-specific temperatures, maxTokens,
+  // additive instruction preferences, and the `enabled` flag flow through the renderer-driven
   // patch path. We deep-merge the override so a partial update (e.g.
   // "just toggle enabled") does not wipe the other fields.
   if (typeof patch.internal_prompt_enhancer === "object" && patch.internal_prompt_enhancer) {

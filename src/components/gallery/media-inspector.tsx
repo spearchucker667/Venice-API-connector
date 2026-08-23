@@ -32,6 +32,12 @@ import {
   enhancePrompt,
   remixPrompt,
 } from "../../services/prompt-enhancer-service";
+import { derivePromptEnhancerModelFacts } from "../../services/prompt-enhancer-context";
+import {
+  buildDimensionOptions,
+  getImageModelCapabilities,
+  resolveStyleReferenceCapabilities,
+} from "../../config/image-model-capabilities";
 import { useConfigStore } from "../../stores/config-store";
 import { useModels } from "../../hooks/use-models";
 import type { MediaItem } from "../../types/media";
@@ -210,6 +216,37 @@ export function MediaInspector({
 
   const hasSeed = typeof item.seed === "number" && Number.isInteger(item.seed);
   const generationRecipe = useMemo(() => extractGenerationRecipe(item), [item]);
+  const enhancerModelFacts = useMemo(() => {
+    if (!item.model) return undefined;
+    const runtimeModel = modelsQuery.data?.find(
+      (candidate) => candidate.id === item.model,
+    );
+    const runtimeConstraints = runtimeModel?.model_spec?.constraints;
+    return derivePromptEnhancerModelFacts({
+      modelId: item.model,
+      runtimeModel,
+      capabilities: getImageModelCapabilities(item.model),
+      dimensionMode: buildDimensionOptions(
+        item.model,
+        runtimeConstraints && !("model_type" in runtimeConstraints)
+          ? runtimeConstraints
+          : undefined,
+      ).dimensionMode,
+      referenceCapabilities: resolveStyleReferenceCapabilities(
+        item.model,
+        runtimeModel?.model_spec,
+      ),
+    });
+  }, [item.model, modelsQuery.data]);
+  const enhancerDimensions = useMemo(
+    () => ({
+      width: generationRecipe?.width,
+      height: generationRecipe?.height,
+      aspectRatio: generationRecipe?.aspectRatio,
+      resolution: generationRecipe?.resolution,
+    }),
+    [generationRecipe],
+  );
 
   const handleCopyPrompt = useCallback(() => {
     void copyText(item.prompt || "");
@@ -349,8 +386,10 @@ export function MediaInspector({
           mode: "enhance",
           prompt: item.prompt,
           negativePrompt: item.negative ?? null,
-          model: item.model,
-          seed: item.seed ?? null,
+          targetModel: enhancerModelFacts,
+          dimensions: enhancerDimensions,
+          stylePreset: generationRecipe?.style ?? item.style,
+          generationMode: generationRecipe?.operation ?? item.operation,
         },
         enhancerConfig,
       );
@@ -361,8 +400,11 @@ export function MediaInspector({
   }, [
     item.prompt,
     item.negative,
-    item.model,
-    item.seed,
+    enhancerModelFacts,
+    enhancerDimensions,
+    generationRecipe,
+    item.style,
+    item.operation,
     enhancerEnabled,
     enhancerConfig,
   ]);
@@ -377,8 +419,10 @@ export function MediaInspector({
           mode: "remix",
           prompt: item.prompt,
           negativePrompt: item.negative ?? null,
-          model: item.model,
-          seed: item.seed ?? null,
+          targetModel: enhancerModelFacts,
+          dimensions: enhancerDimensions,
+          stylePreset: generationRecipe?.style ?? item.style,
+          generationMode: generationRecipe?.operation ?? item.operation,
         },
         enhancerConfig,
       );
@@ -389,8 +433,11 @@ export function MediaInspector({
   }, [
     item.prompt,
     item.negative,
-    item.model,
-    item.seed,
+    enhancerModelFacts,
+    enhancerDimensions,
+    generationRecipe,
+    item.style,
+    item.operation,
     enhancerEnabled,
     enhancerConfig,
   ]);

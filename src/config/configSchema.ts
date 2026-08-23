@@ -16,10 +16,6 @@ import { translateRuntime } from "../i18n/runtimeTranslator";
  *     warning so the UI can surface parse problems.
  */
 import { DEFAULT_PROMPT_ENHANCER_MODEL } from "../constants/venice";
-import {
-  DEFAULT_ENHANCE_SYSTEM_PROMPT,
-  DEFAULT_REMIX_SYSTEM_PROMPT,
-} from "../shared/imagePromptDefaults";
 import { isValidColorValue } from "../theme/validateColor";
 
 /** Current schema version. Bumping this is a breaking change. */
@@ -188,7 +184,8 @@ export interface YamlDeveloper {
 export interface YamlInternalPromptEnhancer {
   enabled: boolean;
   model: string;
-  temperature: number;
+  enhanceTemperature: number;
+  remixTemperature: number;
   maxTokens: number;
   systemPrompt: string;
   remixSystemPrompt: string;
@@ -754,17 +751,28 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
   const internal_prompt_enhancer: YamlInternalPromptEnhancer = {
     enabled: clampBool(enhancerRaw.enabled, true),
     model: clampString(enhancerRaw.model, 256, DEFAULT_PROMPT_ENHANCER_MODEL),
-    temperature: clampNumber(enhancerRaw.temperature, 0, 2, 0.4),
+    enhanceTemperature: clampNumber(
+      enhancerRaw.enhanceTemperature ?? enhancerRaw.temperature,
+      0,
+      2,
+      0.2,
+    ),
+    remixTemperature: clampNumber(
+      enhancerRaw.remixTemperature ?? enhancerRaw.temperature,
+      0,
+      2,
+      0.4,
+    ),
     maxTokens: clampInteger(enhancerRaw.maxTokens, 1, 4000, 350),
     systemPrompt: clampString(
       enhancerRaw.systemPrompt,
       ENHANCER_PROMPT_MAX_LENGTH,
-      DEFAULT_ENHANCE_SYSTEM_PROMPT,
+      "",
     ),
     remixSystemPrompt: clampString(
       enhancerRaw.remixSystemPrompt,
       ENHANCER_PROMPT_MAX_LENGTH,
-      DEFAULT_REMIX_SYSTEM_PROMPT,
+      "",
     ),
   };
 
@@ -952,10 +960,11 @@ export function emptyConfig(): YamlConfig {
     internal_prompt_enhancer: {
       enabled: true,
       model: DEFAULT_PROMPT_ENHANCER_MODEL,
-      temperature: 0.4,
+      enhanceTemperature: 0.2,
+      remixTemperature: 0.4,
       maxTokens: 350,
-      systemPrompt: DEFAULT_ENHANCE_SYSTEM_PROMPT,
-      remixSystemPrompt: DEFAULT_REMIX_SYSTEM_PROMPT,
+      systemPrompt: "",
+      remixSystemPrompt: "",
     },
   };
 }

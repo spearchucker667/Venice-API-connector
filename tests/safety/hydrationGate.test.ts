@@ -89,7 +89,8 @@ describe("VERIFY-017 hydration gate", () => {
           internal_prompt_enhancer: {
             enabled: true,
             model: "venice-uncensored-1-2",
-            temperature: 0.4,
+            enhanceTemperature: 0.2,
+            remixTemperature: 0.4,
             maxTokens: 350,
             systemPrompt: "",
             remixSystemPrompt: "",

@@ -175,6 +175,10 @@ describe("configService initialize", () => {
     expect(onDisk).toMatch(/internal_prompt_enhancer:/);
     expect(onDisk).toMatch(/venice-uncensored-1-2/);
     expect(onDisk).toMatch(/maxTokens: 350/);
+    expect(onDisk).toMatch(/enhanceTemperature: 0\.2/);
+    expect(onDisk).toMatch(/remixTemperature: 0\.4/);
+    expect(onDisk.slice(onDisk.indexOf("internal_prompt_enhancer:")))
+      .not.toMatch(/^\s+temperature:/m);
   });
 
   it("imports a plaintext Venice key into the secure store", async () => {
@@ -386,7 +390,7 @@ describe("configService writeSanitized", () => {
     expect(onDisk).not.toContain("trying-to-set");
   });
 
-  it("applies a partial internal_prompt_enhancer patch (model, maxTokens, temperature, systemPrompt)", async () => {
+  it("applies a partial internal_prompt_enhancer patch with mode-specific temperatures", async () => {
     const envConfig = path.join(tmpRoot, "config.yaml");
     const envThemes = path.join(tmpRoot, "themes.yaml");
     await writeYaml(envConfig, "version: 1\nsecrets:\n  venice_api_key: \"\"\n");
@@ -399,7 +403,8 @@ describe("configService writeSanitized", () => {
       internal_prompt_enhancer: {
         model: "custom-enhancer",
         maxTokens: 222,
-        temperature: 0.25,
+        enhanceTemperature: 0.25,
+        remixTemperature: 0.45,
         systemPrompt: "Custom enhance prompt.",
       },
     });
@@ -407,7 +412,8 @@ describe("configService writeSanitized", () => {
     const payload = getSanitizedConfig();
     expect(payload.config.internal_prompt_enhancer.model).toBe("custom-enhancer");
     expect(payload.config.internal_prompt_enhancer.maxTokens).toBe(222);
-    expect(payload.config.internal_prompt_enhancer.temperature).toBe(0.25);
+    expect(payload.config.internal_prompt_enhancer.enhanceTemperature).toBe(0.25);
+    expect(payload.config.internal_prompt_enhancer.remixTemperature).toBe(0.45);
     expect(payload.config.internal_prompt_enhancer.systemPrompt).toBe("Custom enhance prompt.");
   });
 

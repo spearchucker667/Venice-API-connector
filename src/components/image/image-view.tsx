@@ -44,8 +44,10 @@ import {
   getImageModelCapabilities,
   buildDimensionOptions,
   getRecipeCapabilityList,
+  resolveStyleReferenceCapabilities,
 } from "../../config/image-model-capabilities";
 import { enhancePrompt } from "../../services/prompt-enhancer-service";
+import { derivePromptEnhancerModelFacts } from "../../services/prompt-enhancer-context";
 import {
   buildImagePayload,
   clampSeed,
@@ -149,6 +151,20 @@ export function ImageView() {
   const dimOptions = useMemo(
     () => buildDimensionOptions(model, constraints),
     [model, constraints],
+  );
+  const enhancerModelFacts = useMemo(
+    () =>
+      derivePromptEnhancerModelFacts({
+        modelId: model,
+        runtimeModel: modelData,
+        capabilities: caps,
+        dimensionMode: dimOptions.dimensionMode,
+        referenceCapabilities: resolveStyleReferenceCapabilities(
+          model,
+          modelData?.model_spec,
+        ),
+      }),
+    [caps, dimOptions.dimensionMode, model, modelData],
   );
   const capabilitySummary = useMemo(
     () =>
@@ -445,7 +461,19 @@ export function ImageView() {
         {
           mode: "enhance",
           prompt: prompt.trim(),
-          negativePrompt: null,
+          negativePrompt: negativePrompt || null,
+          targetModel: enhancerModelFacts,
+          dimensions: hasAspectRatios
+            ? {
+                aspectRatio: aspectRatio || undefined,
+                resolution: resolution || undefined,
+              }
+            : {
+                width: Number(sizeKey.split("x")[0]) || undefined,
+                height: Number(sizeKey.split("x")[1]) || undefined,
+              },
+          stylePreset: style || undefined,
+          generationMode: caps.operation ?? "text-to-image",
         },
         enhancerConfig,
       );
@@ -464,7 +492,20 @@ export function ImageView() {
     } finally {
       setEnhancing(false);
     }
-  }, [prompt, enhancerEnabled, enhancerConfig, t]);
+  }, [
+    prompt,
+    negativePrompt,
+    enhancerEnabled,
+    enhancerConfig,
+    enhancerModelFacts,
+    hasAspectRatios,
+    aspectRatio,
+    resolution,
+    sizeKey,
+    style,
+    caps.operation,
+    t,
+  ]);
 
   const applyEnhancedPrompt = useCallback(() => {
     if (enhancedPrompt) setPromptClamped(enhancedPrompt);

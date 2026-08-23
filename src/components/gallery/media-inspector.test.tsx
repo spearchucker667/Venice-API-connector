@@ -2,12 +2,17 @@
 /** @fileoverview Tests for the MediaInspector new gallery actions. */
 
 import "@testing-library/jest-dom/vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+const { enhancePromptMock, remixPromptMock } = vi.hoisted(() => ({
+  enhancePromptMock: vi.fn(),
+  remixPromptMock: vi.fn(),
+}));
+
 vi.mock("../../services/prompt-enhancer-service", () => ({
-  enhancePrompt: vi.fn().mockResolvedValue({ prompt: "Enhanced prompt", modelUsed: "test" }),
-  remixPrompt: vi.fn().mockResolvedValue({ prompt: "Reviewed remix", modelUsed: "test" }),
+  enhancePrompt: enhancePromptMock,
+  remixPrompt: remixPromptMock,
 }));
 
 // Mock the React Query–backed models hook so these tests can exercise the
@@ -46,6 +51,8 @@ const baseItem: MediaItem = {
 };
 
 beforeEach(() => {
+  enhancePromptMock.mockReset().mockResolvedValue({ prompt: "Enhanced prompt", modelUsed: "test" });
+  remixPromptMock.mockReset().mockResolvedValue({ prompt: "Reviewed remix", modelUsed: "test" });
   useConfigStore.setState({
     config: {
       version: 1,
@@ -82,7 +89,8 @@ beforeEach(() => {
       internal_prompt_enhancer: {
         enabled: true,
         model: "venice-uncensored-1-2",
-        temperature: 0.4,
+        enhanceTemperature: 0.2,
+        remixTemperature: 0.4,
         maxTokens: 350,
         systemPrompt: "",
         remixSystemPrompt: "",
@@ -97,6 +105,41 @@ beforeEach(() => {
 });
 
 describe("MediaInspector — gallery actions", () => {
+  it("passes stored model, dimensions, style, and operation while preserving review", async () => {
+    const onPatch = vi.fn();
+    render(
+      <MediaInspector
+        item={{ ...baseItem, aspectRatio: "1:1", resolution: "1k", style: "cinematic" }}
+        parentItem={null}
+        childrenItems={[]}
+        missingChildIds={[]}
+        onPatch={onPatch}
+        onDelete={vi.fn()}
+        onOpenChild={vi.fn()}
+        onOpenParent={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+    fireEvent.click(screen.getByTestId("inspector-enhance"));
+    await waitFor(() => expect(enhancePromptMock).toHaveBeenCalledTimes(1));
+    expect(enhancePromptMock.mock.calls[0][0]).toMatchObject({
+      mode: "enhance",
+      prompt: "A misty mountain",
+      negativePrompt: "blurry",
+      targetModel: { id: "flux-dev", dimensionMode: "widthHeight" },
+      dimensions: {
+        width: 1024,
+        height: 1024,
+        aspectRatio: "1:1",
+        resolution: "1k",
+      },
+      stylePreset: "cinematic",
+      generationMode: "generate",
+    });
+    expect(onPatch).not.toHaveBeenCalled();
+    expect((await screen.findAllByText("Enhanced prompt")).length).toBeGreaterThan(0);
+  });
+
   it("renders Use settings / Regenerate / Same seed / Copy prompt / Copy negative / Copy seed / Copy metadata buttons", () => {
     render(
       <MediaInspector
