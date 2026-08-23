@@ -17,7 +17,8 @@
  *      is NOT true).
  *    - Default generated config files must never contain real keys.
  *    - No remote URLs.
- *    - Family Safe Mode is explicit and defaults on; provider safemode remains independent.
+ *    - Optional Family Safe Mode and provider safe_mode are independent and
+ *      default off; mandatory child-safety enforcement is not configurable.
  */
 import { app, shell } from "electron";
 import { promises as fs, constants as fsConstants } from "fs";
@@ -292,14 +293,14 @@ function renderDefaultConfigYaml(): string {
     "",
     "characters:",
     "  enabled: true",
-    "  include_adult_characters: false",
+    "  include_adult_characters: true",
     "  default_character_slug: \"\"",
     "",
     "safety:",
-    "  # Venice Forge local filter. Set false for Adult Mode.",
-    "  local_family_safe_mode_enabled: true",
+    "  # Optional Venice Forge family filter. Child-safety remains always on.",
+    "  local_family_safe_mode_enabled: false",
     "  # Provider-side Venice safe_mode parameter; separate from the local filter.",
-    "  venice_api_safe_mode: true",
+    "  venice_api_safe_mode: false",
     "",
     "developer:",
     "  verbose_config_logging: false",
@@ -309,8 +310,8 @@ function renderDefaultConfigYaml(): string {
     "",
     "# Internal prompt-enhancer LLM. Hidden under-app helper for image",
     "# prompt enhance / remix. Not user-chat-accessible; the model id",
-    "# is not exposed in the normal chat selector. Existing safety guard",
-    "# remains authoritative.",
+    "# is not exposed in the normal chat selector. Mandatory child-safety",
+    "# enforcement remains authoritative.",
     "internal_prompt_enhancer:",
     "  enabled: true",
     '  model: "venice-uncensored-1-2"',
@@ -608,8 +609,8 @@ export async function initializeConfig(): Promise<ConfigStatus> {
     logError("Config initialization failed", String(err));
     // Fall back to defaults so the app still boots.
     currentConfig = emptyConfig();
-    setRuntimeLocalFamilySafeModeEnabled(true);
-    setRuntimeVeniceApiSafeMode(true);
+    setRuntimeLocalFamilySafeModeEnabled(false);
+    setRuntimeVeniceApiSafeMode(false);
     currentStatus = buildDefaultStatus();
     currentStatus.parseError = err instanceof Error ? err.message : "Unknown config error";
     return currentStatus;

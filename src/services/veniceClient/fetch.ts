@@ -76,7 +76,6 @@ async function screenVeniceResponse(
   if (method !== "POST") return;
 
   const safeMode = useSettingsStore.getState().localFamilySafeModeEnabled;
-  if (!safeMode) return;
 
   const ct = (contentType || "").toLowerCase();
   if (

@@ -28,7 +28,7 @@ vi.mock("../../src/shared/safety", () => {
     readonly decision: unknown;
     readonly status = 451;
     constructor(decision: unknown) {
-      super("Blocked by Family Safe Mode");
+      super("Blocked by child-safety protections. This protection cannot be disabled.");
       this.name = "SafetyGuardBlockedError";
       this.decision = decision;
     }
@@ -45,10 +45,14 @@ vi.mock("../../src/shared/safety", () => {
     })),
     screenResponseBody: vi.fn(() => ({ allowed: true, skipped: false })),
     maybeRunLocalFamilyGuard: vi.fn((input: unknown, enabled: boolean) => {
-      if (!enabled) return { allowed: true, skipped: true, reason: "local-family-safe-mode-disabled" };
       const guardDecision = assessChildExploitationSafety(input);
       return guardDecision.allow
-        ? { allowed: true, guardDecision }
+        ? {
+            allowed: true,
+            skipped: !enabled,
+            reason: enabled ? undefined : "optional-local-family-filter-disabled-child-safety-checked",
+            guardDecision,
+          }
         : { allowed: false, reason: guardDecision.reasonCode, userMessage: guardDecision.userMessage, guardDecision };
     }),
   };

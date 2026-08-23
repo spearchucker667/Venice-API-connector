@@ -244,14 +244,14 @@ describe("veniceClient utilities", () => {
 
       await expect(
         veniceFetch("/chat/completions", { method: "POST", body: { messages: [] } })
-      ).rejects.toThrow("Blocked by Family Safe Mode");
+      ).rejects.toThrow("Blocked by child-safety protections");
 
       const log = useInspectorStore.getState().logs[0];
       expect(log?.status).toBe(451);
       expect(log?.guardOutcome).toBe("block");
     });
 
-    it("skips response screening when Family Safe Mode is disabled", async () => {
+    it("keeps mandatory response screening active when the optional family filter is disabled", async () => {
       useSettingsStore.getState().setLocalFamilySafeModeEnabled(false);
       globalThis.fetch = vi.fn<typeof fetch>().mockResolvedValue(
         new Response(JSON.stringify({ message: "draw me a loli character" }), {
@@ -260,12 +260,10 @@ describe("veniceClient utilities", () => {
         })
       );
 
-      const result = await veniceFetch("/chat/completions", {
+      await expect(veniceFetch("/chat/completions", {
         method: "POST",
         body: { messages: [] },
-      });
-
-      expect(result.data).toEqual({ message: "draw me a loli character" });
+      })).rejects.toThrow("Blocked by child-safety protections");
     });
   });
 });

@@ -15,9 +15,8 @@ describe('Model Capabilities', () => {
       expect(isImageEditModel({ id: 'custom-model', model_type: 'image-edit' })).toBe(true);
     });
 
-    it('identifies inpaint models from traits or capabilities', () => {
+    it('identifies inpaint models from provider traits', () => {
       expect(isImageEditModel({ id: 'custom-model', traits: ['inpaint'] })).toBe(true);
-      expect(isImageEditModel({ id: 'custom-model', model_spec: { capabilities: { supportsInpaint: true } } })).toBe(true);
     });
 
     it('identifies known edit model IDs', () => {
@@ -32,6 +31,7 @@ describe('Model Capabilities', () => {
       expect(isImageEditModel('lustify-sdxl')).toBe(false);
       expect(isImageEditModel('nano-banana-pro')).toBe(false);
       expect(isImageEditModel('seedream-v5-pro')).toBe(false);
+      expect(isImageEditModel({ id: 'misleading-edit-id', type: 'image' })).toBe(false);
     });
 
     it('correctly discriminates text-to-image models', () => {

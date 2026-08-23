@@ -4,21 +4,51 @@
 
 import type { ModelInfo } from "../types/venice";
 
-/** Determines the model category from its metadata. */
-function classifyModel(model: ModelInfo): "text" | "image" | "audio" | "video" | "embeddings" | "unknown" {
+/** Explicit Venice model type values mapped to canonical categories.
+ *  When the live API provides any of these, the classification is authoritative
+ *  and regex heuristics are skipped. */
+const EXPLICIT_TYPE_MAP: Record<string, "text" | "image" | "audio" | "video" | "embeddings"> = {
+  text: "text",
+  llm: "text",
+  chat: "text",
+  code: "text",
+  image: "image",
+  inpaint: "image",
+  upscale: "image",
+  tts: "audio",
+  asr: "audio",
+  audio: "audio",
+  music: "audio",
+  video: "video",
+  "video-generation": "video",
+  embedding: "embeddings",
+  embeddings: "embeddings",
+};
+
+/** Returns the canonical category for an explicit model type, or undefined if unrecognized. */
+function classifyExplicitType(type: string): "text" | "image" | "audio" | "video" | "embeddings" | undefined {
+  return EXPLICIT_TYPE_MAP[type.trim().toLowerCase()];
+}
+
+/** Determines the model category from its metadata.
+ *
+ *  Resolution order:
+ *  1. Explicit `type`/`model_type`/`modelType` value from the live API.
+ *  2. Regex heuristics on id/traits/capabilities for legacy/offline records.
+ *  3. `"unknown"` when no signal matches.
+ */
+export function classifyModel(model: ModelInfo): "text" | "image" | "audio" | "video" | "embeddings" | "unknown" {
+  const rawExplicitType = model.type || model.model_type || model.modelType;
+  const explicitType = classifyExplicitType(String(rawExplicitType || ""));
+  if (explicitType) return explicitType;
+  // Presence of unrecognized live metadata is authoritative. Guessing from
+  // the model id would silently relabel a new provider modality.
+  if (typeof rawExplicitType === "string" && rawExplicitType.trim()) return "unknown";
+
   const id = String(model.id || model.model || "").toLowerCase();
-  const type = String(
-    model.type || model.model_type || model.modelType || ""
-  ).toLowerCase();
   const traits = JSON.stringify(
     model.traits || model.capabilities || model.features || {}
   ).toLowerCase();
-
-  if (["text", "llm", "chat", "code"].includes(type)) return "text";
-  if (["image", "inpaint", "upscale"].includes(type)) return "image";
-  if (["tts", "asr", "audio", "music"].includes(type)) return "audio";
-  if (type === "video" || type === "video-generation") return "video";
-  if (["embedding", "embeddings"].includes(type)) return "embeddings";
 
   if (/embed/.test(id + traits)) return "embeddings";
   if (/image|sdxl|flux|fluently|lustify|pony|stable|diffusion|inpaint|upscale|banana/.test(id + traits))
@@ -66,11 +96,13 @@ export function flattenModels(payload: unknown): Record<string, ModelInfo[]> {
     else if (String(m.id || '').toLowerCase().includes('-fast-')) fidelity = 'standard';
     else if (String(m.id || '').toLowerCase().includes('seedance')) fidelity = 'high';
 
+    const resolvedType = classifyModel(m as unknown as ModelInfo);
+
     const normalized: ModelInfo = {
       ...(m as Record<string, unknown>),
       id: String(m.id || m.model || m.name || "unknown-model"),
       name: String(m.name || m.display_name || m.id || m.model || "unknown model"),
-      type: String(m.type || m.model_type || m.modelType || classifyModel(m as unknown as ModelInfo)),
+      type: resolvedType,
       isFallback: false,
       source: "live",
       contextLength: (modelSpec?.availableContextTokens as number) ?? (m.contextLength as number) ?? null,
@@ -83,7 +115,7 @@ export function flattenModels(payload: unknown): Record<string, ModelInfo[]> {
       },
       fidelity
     };
-    groups[classifyModel(normalized)].push(normalized);
+    groups[resolvedType].push(normalized);
   });
   return groups;
 }

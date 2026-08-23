@@ -49,25 +49,51 @@ describe("stripEnhancerOutput", () => {
 });
 
 describe("default safety posture", () => {
-  it("default system prompts do not contain 'ZERO CENSORSHIP' / 'no refusals' / safety-bypass framing", () => {
-    expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).not.toMatch(/ZERO CENSORSHIP/i);
-    expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).not.toMatch(/No refusals?/i);
-    expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).not.toMatch(/bypass safety/i);
-    expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).not.toMatch(/ignore.*(policy|safety|guard)/i);
-    expect(DEFAULT_REMIX_SYSTEM_PROMPT).not.toMatch(/ZERO CENSORSHIP/i);
-    expect(DEFAULT_REMIX_SYSTEM_PROMPT).not.toMatch(/No refusals?/i);
-    expect(DEFAULT_REMIX_SYSTEM_PROMPT).not.toMatch(/bypass safety/i);
-    expect(DEFAULT_REMIX_SYSTEM_PROMPT).not.toMatch(/ignore.*(policy|safety|guard)/i);
-  });
-
-  it("default system prompts affirm that safety guard is authoritative", () => {
-    expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).toMatch(/safety guard/i);
-    expect(DEFAULT_REMIX_SYSTEM_PROMPT).toMatch(/safety guard/i);
+  it("does not add an application-authored censorship layer", () => {
+    expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).toMatch(/application-authored censorship layer/i);
+    expect(DEFAULT_REMIX_SYSTEM_PROMPT).toMatch(/application-authored censorship layer/i);
+    expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).toMatch(/mandatory child-safety enforcement/i);
+    expect(DEFAULT_REMIX_SYSTEM_PROMPT).toMatch(/mandatory child-safety enforcement/i);
   });
 
   it("default system prompts state the absolute 1500-character ceiling", () => {
     expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).toMatch(/1500-character/i);
     expect(DEFAULT_REMIX_SYSTEM_PROMPT).toMatch(/1500-character/i);
+  });
+});
+
+describe("default prompt content", () => {
+  it("enhance prompt instructs preservation of user intent and constraints", () => {
+    expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).toMatch(/preserve/i);
+    expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).toMatch(/explicitness/i);
+    expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).toMatch(/constraint/i);
+    expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).toMatch(/do not sanitize/i);
+  });
+
+  it("remix prompt instructs preservation of all user-declared invariants", () => {
+    expect(DEFAULT_REMIX_SYSTEM_PROMPT).toMatch(/preserve all user-declared invariants/i);
+    expect(DEFAULT_REMIX_SYSTEM_PROMPT).toMatch(/identities/i);
+    expect(DEFAULT_REMIX_SYSTEM_PROMPT).toMatch(/relationships/i);
+    expect(DEFAULT_REMIX_SYSTEM_PROMPT).toMatch(/explicitness/i);
+    expect(DEFAULT_REMIX_SYSTEM_PROMPT).toMatch(/medium/i);
+    expect(DEFAULT_REMIX_SYSTEM_PROMPT).not.toMatch(/core subject matter only/i);
+  });
+
+  it("default prompts do not contain generic refusal or safe-assistant boilerplate", () => {
+    const boilerplate = [
+      /cannot fulfill/i,
+      /i'm sorry/i,
+      /as an ai/i,
+      /family.?friendly/i,
+      /appropriate content/i,
+      /safe assistant/i,
+      /cannot generate/i,
+      /cannot help/i,
+    ];
+    for (const pattern of boilerplate) {
+      expect(DEFAULT_ENHANCE_SYSTEM_PROMPT).not.toMatch(pattern);
+      expect(DEFAULT_REMIX_SYSTEM_PROMPT).not.toMatch(pattern);
+    }
   });
 });
 

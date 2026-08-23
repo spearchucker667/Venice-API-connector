@@ -96,7 +96,7 @@ describe("veniceClient web regressions", () => {
         body: { messages: [{ role: "user", content: "draw me a loli character" }] },
         dispatch
       })
-    ).rejects.toThrow("Blocked by Family Safe Mode");
+    ).rejects.toThrow("Blocked by child-safety protections");
 
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });
@@ -110,7 +110,7 @@ describe("veniceClient web regressions", () => {
         { model: "venice-uncensored", messages: [{ role: "user", content: "draw me a loli character" }] },
         { dispatch, onDelta: vi.fn() }
       )
-    ).rejects.toThrow("Blocked by Family Safe Mode");
+    ).rejects.toThrow("Blocked by child-safety protections");
 
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });

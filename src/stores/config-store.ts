@@ -1,14 +1,14 @@
 // Code Owner: fayeblade (@spearchucker667)
 /** @fileoverview Renderer-side cache of the sanitized local config.
  *  - Holds the last-seen config payload from the main process.
- *  - Provides `applyNonSecretDefaults()` to prepopulate settings on first run
- *    without overwriting existing user choices unless
- *    `developer.force_apply_config: true`.
+ *  - `refreshConfig()` / `reloadConfig()` push safety settings from the payload
+ *    into the settings store so the UI stays in sync with the YAML config.
  */
 import { create } from "zustand";
 import { desktopConfig, isElectron } from "../services/desktopBridge";
 import { redactErrorMessage } from "../shared/redaction";
 import { useSettingsStore } from "./settings-store";
+import { useCharacterStore } from "./character-store";
 import type { YamlInternalPromptEnhancer } from "../config/configSchema";
 import type { Theme } from "../theme";
 import { yamlThemeToTheme } from "../theme/yamlTheme";
@@ -173,6 +173,7 @@ export async function refreshConfig(): Promise<void> {
       useConfigStore.getState().setPayload(config, status);
       useSettingsStore.getState().setLocalFamilySafeModeEnabled(config.safety.local_family_safe_mode_enabled);
       useSettingsStore.getState().setVeniceApiSafeMode(config.safety.venice_api_safe_mode);
+      useCharacterStore.setState({ includeAdultCharacters: config.characters.include_adult_characters });
       // Load merged YAML themes so the theme picker and resolver can use them.
       const yamlThemes = await loadYamlThemes();
       useConfigStore.getState().setYamlThemes(yamlThemes);
@@ -197,6 +198,7 @@ export async function reloadConfig(): Promise<void> {
         useConfigStore.getState().setPayload(config, status);
         useSettingsStore.getState().setLocalFamilySafeModeEnabled(config.safety.local_family_safe_mode_enabled);
         useSettingsStore.getState().setVeniceApiSafeMode(config.safety.venice_api_safe_mode);
+        useCharacterStore.setState({ includeAdultCharacters: config.characters.include_adult_characters });
         // Refresh merged YAML themes after reload.
         const yamlThemes = await loadYamlThemes();
         useConfigStore.getState().setYamlThemes(yamlThemes);

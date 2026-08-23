@@ -958,7 +958,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
                   ? t("familySafeMode.on", "ON: local family filter runs.")
                   : t(
                       "familySafeMode.off",
-                      "OFF: Local filter OFF (Provider Safe Mode separate).",
+                      "OFF: Optional family layer off; child-safety remains active.",
                     )}
               </p>
             </div>
@@ -980,7 +980,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: Props) {
                     )
                   : t(
                       "familySafeMode.disabledTooltip",
-                      "Local Family Safe Mode disabled (Provider Safe Mode separate)",
+                      "Optional family layer disabled; child-safety remains active",
                     )
               }
             >

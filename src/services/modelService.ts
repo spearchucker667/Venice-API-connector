@@ -95,16 +95,22 @@ export async function refreshModels(dispatch: AppDispatch, force = false): Promi
 
   // Serve cached data immediately (even if stale) to reduce perceived latency.
   if (cached) {
-    dispatch({ type: "SET_MODELS", models: cached.grouped, fallback: false });
-    const cachedModels = Object.values(cached.grouped).flat();
-    replaceCanonicalModels(cachedModels, cached.grouped);
+    const cachedGrouped = Object.fromEntries(
+      Object.entries(cached.grouped).map(([type, models]) => [
+        type,
+        models.map((model) => ({ ...model, source: "cache" })),
+      ]),
+    );
+    dispatch({ type: "SET_MODELS", models: cachedGrouped, fallback: false });
+    const cachedModels = Object.values(cachedGrouped).flat();
+    replaceCanonicalModels(cachedModels, cachedGrouped);
     useModelCatalogRuntimeStore.getState().markReady({
       type: "all",
       totalCount: cachedModels.length,
-      countsByType: Object.fromEntries(Object.entries(cached.grouped).map(([type, models]) => [type, models.length])),
+      countsByType: Object.fromEntries(Object.entries(cachedGrouped).map(([type, models]) => [type, models.length])),
       source: "cache",
       liveModelIds: cachedModels.map((model) => model.id),
-      modelsByType: Object.fromEntries(Object.entries(cached.grouped).map(([type, models]) => [type, models.map((model) => model.id)])),
+      modelsByType: Object.fromEntries(Object.entries(cachedGrouped).map(([type, models]) => [type, models.map((model) => model.id)])),
     });
     const isStale = !!cached.isStale;
     if (!force && !isStale) {

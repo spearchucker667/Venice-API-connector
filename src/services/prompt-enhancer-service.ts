@@ -3,16 +3,19 @@
  *  enhancement and remix. Not user-chat-accessible, not selectable from the
  *  normal model dropdown, configured through config.yaml.
  *
- *  Safety posture: the Venice Forge local family / CSAM safety guard and
- *  the upstream provider controls remain authoritative. The enhancer is
- *  a task-focused prompt rewriter — it does not override safety, and its
- *  default system prompts do not claim to do so.
+ *  The enhancer is a task-focused prompt rewriter. Its system prompts instruct
+ *  the model to preserve user intent, avoid sanitizing content, and return only
+ *  the rewritten prompt without commentary.
  */
 
 import { DEFAULT_PROMPT_ENHANCER_MODEL } from "../constants/venice";
 import { venice } from "../lib/venice-client";
 import type { YamlInternalPromptEnhancer } from "../config/configSchema";
 import { IMAGE_PROMPT_MAX_CHARS } from "../utils/payloadBuilders";
+import {
+  DEFAULT_ENHANCE_SYSTEM_PROMPT,
+  DEFAULT_REMIX_SYSTEM_PROMPT,
+} from "../shared/imagePromptDefaults";
 
 export type PromptEnhanceMode = "enhance" | "remix";
 
@@ -44,22 +47,9 @@ export type PromptEnhancerConfig = Pick<
  *  via the live registry). */
 export const DEFAULT_ENHANCER_MODEL = DEFAULT_PROMPT_ENHANCER_MODEL;
 
-/** Default enhance system prompt. The Venice Forge safety guard and
- *  the upstream provider controls remain authoritative. This prompt
- *  is a task-focused rewrite instruction; it does not reframe itself
- *  as overriding safety. */
-export const DEFAULT_ENHANCE_SYSTEM_PROMPT = `You are Venice Forge's internal image-prompt enhancer. Rewrite the user's image prompt into one concise, vivid, production-ready image-generation prompt. Preserve the user's subject, composition, style, medium, and constraints. Improve specificity, visual language, lighting, camera/composition, material detail, and quality cues.
-
-Do not add moral commentary, policy commentary, disclaimers, refusals, markdown, alternatives, or explanations. Return only the improved prompt. The final prompt must stay under the absolute 1500-character ceiling.
-
-The app's existing safety guard and upstream provider controls remain authoritative. You do not override them.`;
-
-/** Default remix system prompt. Same safety posture as the enhance prompt. */
-export const DEFAULT_REMIX_SYSTEM_PROMPT = `You are Venice Forge's internal image-prompt remix engine. Create one visually distinct variation of the user's image prompt while preserving the core subject identity and user intent. Change composition, setting, lighting, camera angle, mood, and style.
-
-Do not add moral commentary, policy commentary, disclaimers, refusals, markdown, alternatives, or explanations. Return only the remixed prompt. The final prompt must stay under the absolute 1500-character ceiling.
-
-The app's existing safety guard and upstream provider controls remain authoritative. You do not override them.`;
+// Re-exported from the canonical defaults module so the service and the YAML
+// config schema always use the same prompts.
+export { DEFAULT_ENHANCE_SYSTEM_PROMPT, DEFAULT_REMIX_SYSTEM_PROMPT } from "../shared/imagePromptDefaults";
 
 /** Strip markdown code fences and any explanatory wrapper text from the LLM output. */
 export function stripEnhancerOutput(raw: string): string {
@@ -133,8 +123,8 @@ function buildEnhancePrompt(input: EnhancePromptInput): string {
     sections.push("Improve: descriptive detail, composition, lighting, textures, style specificity, and model optimization.");
   } else {
     sections.push("TASK: Remix the following image prompt into a distinct variation.");
-    sections.push("Alter: composition, setting, lighting, mood, camera angle, and artistic style.");
-    sections.push("Preserve: the core subject matter only.");
+    sections.push("Alter: composition, setting, lighting, mood, camera angle, time of day, depth of field, pose where not fixed, and color treatment.");
+    sections.push("Preserve: all user-declared invariants (subject, identities, relationships, age, explicitness level, style, medium, requested constraints). Do not drop or dilute any of them.");
   }
 
   sections.push("");
@@ -215,10 +205,9 @@ export class PromptEnhancerDisabledError extends Error {
  *  The enhancer uses the model, temperature, max tokens, and system
  *  prompt configured in `internal_prompt_enhancer` (renderer config
  *  store / main-process `config.yaml`). The model id default is
- *  `venice-uncensored-1-2` and the system prompts are task-focused;
- *  they do not reframe the enhancer as overriding the app's safety
- *  rules or the upstream provider controls. This function is never
- *  exposed to the user as a chat-accessible model.
+ *  `venice-uncensored-1-2` and the system prompts are task-focused
+ *  rewrite instructions that preserve user intent. This function is
+ *  never exposed to the user as a chat-accessible model.
  *
  *  @param input The prompt to enhance/remix.
  *  @param config Optional config from the renderer config store.

@@ -1,6 +1,6 @@
 /** Main-process runtime snapshot shared by config loading, IPC, and the bridge server. */
-let localFamilySafeModeEnabled = true;
-let veniceApiSafeMode = true;
+let localFamilySafeModeEnabled = false;
+let veniceApiSafeMode = false;
 
 export function setRuntimeLocalFamilySafeModeEnabled(enabled: boolean): void {
   localFamilySafeModeEnabled = enabled;

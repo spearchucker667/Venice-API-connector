@@ -1,6 +1,6 @@
 import type { CharacterSceneGenerationResult } from "./characterSceneGeneration";
 
-export type ModelType = 'text' | 'image' | 'audio' | 'tts' | 'video' | 'music' | 'embedding' | 'upscale' | 'asr' | 'code'
+export type ModelType = 'text' | 'image' | 'audio' | 'tts' | 'video' | 'music' | 'embedding' | 'upscale' | 'inpaint' | 'asr' | 'code'
 
 export interface ImageConstraints {
   promptCharacterLimit?: number
@@ -51,6 +51,36 @@ export interface ModelCapabilities {
   supportsXSearch?: boolean
 }
 
+export interface VenicePricingAmount {
+  usd?: number
+  diem?: number
+}
+
+/** Runtime `/models` pricing union normalized as optional fields. */
+export interface VeniceModelPricing {
+  input?: VenicePricingAmount
+  output?: VenicePricingAmount
+  cache_input?: VenicePricingAmount
+  cache_write?: VenicePricingAmount
+  generation?: VenicePricingAmount
+  resolutions?: Record<string, VenicePricingAmount>
+  quality?: Record<string, Record<string, VenicePricingAmount>>
+  upscale?: Record<string, VenicePricingAmount>
+  inpaint?: VenicePricingAmount
+  inputImages?: { included?: number; additional?: VenicePricingAmount }
+  durations?: Record<string, VenicePricingAmount & { min_seconds?: number; max_seconds?: number }>
+  per_second?: VenicePricingAmount
+  per_audio_second?: VenicePricingAmount
+  per_thousand_characters?: VenicePricingAmount
+  extended?: {
+    context_token_threshold?: number
+    input?: VenicePricingAmount
+    output?: VenicePricingAmount
+    cache_input?: VenicePricingAmount
+    cache_write?: VenicePricingAmount
+  }
+}
+
 export type ModelTrait =
   | 'default'
   | 'most_intelligent'
@@ -65,6 +95,9 @@ export interface VeniceModel {
   object: string
   created: number
   owned_by: string
+  /** Upstream ModelResponse modality. Optional only for persisted legacy
+   * records created before the field was normalized by Venice Forge. */
+  type?: ModelType
   /** Fractional reseller discount (Swagger `ModelResponse.discount_to_user`,
    *  e.g. 0.2 = 20% off). Omitted by the provider for every caller without a
    *  reseller agreement and for models no agreement covers — an absent field
@@ -82,11 +115,7 @@ export interface VeniceModel {
     constraints?: VideoConstraints | ImageConstraints
     model_sets?: string[]
     voices?: string[]
-    pricing?: {
-      input?: { usd?: number }
-      output?: { usd?: number }
-      durations?: Record<string, { usd?: number; diem?: number; min_seconds?: number; max_seconds?: number }>
-    }
+    pricing?: VeniceModelPricing
     supports_lyrics?: boolean
     lyrics_required?: boolean
     supports_force_instrumental?: boolean

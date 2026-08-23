@@ -63,12 +63,12 @@ research:
 
 characters:
   enabled: true
-  include_adult_characters: false
+  include_adult_characters: true        # defaults on; user can opt out in Settings
   default_character_slug: ""
 
 safety:
-  local_family_safe_mode_enabled: true  # false = Adult Mode; skips local rules
-  venice_api_safe_mode: true            # independent provider-side parameter
+  local_family_safe_mode_enabled: false # false = Adult Mode; skips only the optional family layer
+  venice_api_safe_mode: false           # independent provider-side parameter
 
 developer:
   verbose_config_logging: false

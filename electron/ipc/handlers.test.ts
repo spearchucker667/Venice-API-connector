@@ -464,19 +464,11 @@ describe("registerIpcHandlers", () => {
       expect(result).toMatchObject({ ok: true, status: 200 });
     });
 
-    it("skips the local guard in Adult Mode and calls the Venice client", async () => {
+    it("keeps mandatory child safety active when the optional family filter is disabled", async () => {
       const { performVeniceRequest } = await import("../services/veniceClient");
       const { getRuntimeLocalFamilySafeModeEnabled } = await import("../services/runtimeSafetySettings");
       // Flip the runtime snapshot to OFF for this test (Adult Mode).
       vi.mocked(getRuntimeLocalFamilySafeModeEnabled).mockReturnValueOnce(false);
-      vi.mocked(performVeniceRequest).mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        statusText: "OK",
-        headers: {},
-        body: { id: "adult-mode-forwarded" },
-        contentType: "application/json",
-      });
       const handler = capturedHandlers.get("venice:request");
 
       const result = await handler!(
@@ -491,8 +483,8 @@ describe("registerIpcHandlers", () => {
         },
       );
 
-      expect(performVeniceRequest).toHaveBeenCalled();
-      expect(result).toMatchObject({ ok: true, status: 200 });
+      expect(performVeniceRequest).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ ok: false, status: 451 });
     });
 
     // A2 regression: guard dedup contract — non-trigger payload reaches
@@ -1119,7 +1111,7 @@ describe("registerIpcHandlers", () => {
         category: "csam_request",
         severity: "critical",
       });
-      expect(result.body.error).toMatch(/family safe mode/i);
+      expect(result.body.error).toMatch(/child-safety protections/i);
       expect(JSON.stringify(result.body)).not.toContain("Some content");
     });
 
@@ -1208,16 +1200,17 @@ describe("registerIpcHandlers", () => {
       expect(cancelled).toBe(true);
     });
 
-    it("skips body screening in Adult Mode (runtime snapshot OFF)", async () => {
+    it("keeps mandatory response screening active when the optional filter is off", async () => {
       const { getRuntimeLocalFamilySafeModeEnabled } = await import("../services/runtimeSafetySettings");
       // Use mockReturnValue so the URL pre-check + the body screen both
       // observe Adult Mode.
       vi.mocked(getRuntimeLocalFamilySafeModeEnabled).mockReturnValue(false);
 
-      // Body is intentionally CSAM-flavoured; Adult Mode must NOT block.
+      // Body is intentionally child-exploitation material; the mandatory
+      // guard must block it even when the optional family filter is off.
       globalThis.fetch = vi.fn(async () =>
         new Response(
-          "csam term in body — should pass in Adult Mode",
+          "csam term in body — must remain blocked",
           { status: 200, headers: { "content-type": "text/plain" } },
         ),
       ) as unknown as typeof globalThis.fetch;
@@ -1228,8 +1221,8 @@ describe("registerIpcHandlers", () => {
         { url: "https://r.jina.ai/https://example.com", headers: {}, timeoutMs: 5000 },
       );
 
-      expect(result.status).toBe(200);
-      expect(result.ok).toBe(true);
+      expect(result.status).toBe(451);
+      expect(result.ok).toBe(false);
     });
   });
 

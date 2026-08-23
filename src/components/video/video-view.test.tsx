@@ -42,7 +42,7 @@ vi.mock('../../hooks/use-models', () => ({
               resolutions: ['480p', '720p'],
               aspect_ratios: ['16:9', '9:16'],
             },
-            pricing: { output: { usd: 0.123 } },
+            pricing: { durations: { '4s': { usd: 0.123 } } },
           },
         },
         imageModel: {
@@ -55,7 +55,7 @@ vi.mock('../../hooks/use-models', () => ({
               resolutions: ['480p', '720p'],
               aspect_ratios: ['16:9', '9:16'],
             },
-            pricing: { output: { usd: 0.234 } },
+            pricing: { durations: { '4s': { usd: 0.234 } } },
           },
         },
         sets: [],
@@ -288,12 +288,12 @@ describe('VideoView accessibility', () => {
     expect(JSON.stringify(mockToastError.mock.calls)).not.toContain('/Users/private')
   })
 
-  it('shows live pricing in the model selector for text-to-video mode', () => {
+  it('shows schema-qualified pricing in the model selector for text-to-video mode', () => {
     render(<VideoView />)
     const modelButton = screen.getByRole('button', { name: 'Model' })
     fireEvent.click(modelButton)
-    expect(screen.getAllByText('Priced Text-to-Video (Live $0.123)').length).toBeGreaterThanOrEqual(1)
-    expect(screen.getAllByText('Fallback Text-to-Video (Catalog)').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('Priced Text-to-Video (from $0.12/generation (4s))').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('Fallback Text-to-Video (Price unavailable)').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('No Text Model').length).toBeGreaterThanOrEqual(1)
   })
 
@@ -302,8 +302,8 @@ describe('VideoView accessibility', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Image to Video' }))
     const modelButton = screen.getByRole('button', { name: 'Model' })
     fireEvent.click(modelButton)
-    expect(screen.getAllByText('Priced Image-to-Video (Live $0.234)').length).toBeGreaterThanOrEqual(1)
-    expect(screen.getAllByText('Image-Only Video (Estimated ~$0.005)').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('Priced Image-to-Video (from $0.23/generation (4s))').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('Image-Only Video (Price unavailable)').length).toBeGreaterThanOrEqual(1)
   })
 
   it('falls back to the group name when the active-mode model is missing', () => {

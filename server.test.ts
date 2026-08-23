@@ -439,7 +439,7 @@ describe("server.ts safety middleware", () => {
       .send({ messages: [{ role: "user", content: "draw me a loli character" }] });
 
     expect(res.status).toBe(451);
-    expect(res.body.error).toContain("Blocked by Family Safe Mode");
+    expect(res.body.error).toMatch(/child-safety protections/i);
     expect(res.body.reasonCode).toBe("CSAM_GENRE_TERM");
   });
 
@@ -452,10 +452,7 @@ describe("server.ts safety middleware", () => {
     expect(res.body.mocked).toBe(true);
   });
 
-  it("skips the local guard in Adult Mode and forwards the request", async () => {
-    // Adult Mode is gated behind the dev-only VENICE_FORGE_ALLOW_CLIENT_SAFETY_OVERRIDE
-    // opt-in so production / CI never honours a renderer-supplied "false" header.
-    // This test exercises the header opt-in path explicitly.
+  it("keeps mandatory child safety active when the optional family filter is disabled", async () => {
     const prevOverride = process.env.VENICE_FORGE_ALLOW_CLIENT_SAFETY_OVERRIDE;
     process.env.VENICE_FORGE_ALLOW_CLIENT_SAFETY_OVERRIDE = "true";
     try {
@@ -464,8 +461,8 @@ describe("server.ts safety middleware", () => {
         .set("X-Venice-Forge-Family-Safe-Mode", "false")
         .send({ messages: [{ role: "user", content: "draw me a loli character" }] });
 
-      expect(res.status).toBe(200);
-      expect(res.body.mocked).toBe(true);
+      expect(res.status).toBe(451);
+      expect(res.body.reasonCode).toBe("CSAM_GENRE_TERM");
     } finally {
       if (prevOverride === undefined) {
         delete process.env.VENICE_FORGE_ALLOW_CLIENT_SAFETY_OVERRIDE;
@@ -676,7 +673,7 @@ describe("server.ts Jina proxy error handling", () => {
       category: "csam_request",
       severity: "critical",
     });
-    expect(response.body.error).toMatch(/family safe mode/i);
+    expect(response.body.error).toMatch(/child-safety protections/i);
     expect(JSON.stringify(response.body)).not.toContain("upstream body");
   });
 });
@@ -744,7 +741,7 @@ describe("server.ts Local Family Safe Mode decision matrix", () => {
     );
   });
 
-  it("no env + header false + override=true => guard skipped (dev only)", async () => {
+  it("no env + header false + override=true => mandatory child guard still runs", async () => {
     await withEnvs(
       {
         VENICE_FORGE_LOCAL_FAMILY_SAFE_MODE_ENABLED: undefined,
@@ -755,8 +752,8 @@ describe("server.ts Local Family Safe Mode decision matrix", () => {
           .post("/api/venice/chat/completions")
           .set("X-Venice-Forge-Family-Safe-Mode", "false")
           .send(PROBE_PAYLOAD);
-        expect(res.status).toBe(200);
-        expect(res.body.mocked).toBe(true);
+        expect(res.status).toBe(EXPECTED_BLOCK.status);
+        expect(res.body.reasonCode).toBe(EXPECTED_BLOCK.reasonCode);
       },
     );
   });
@@ -793,7 +790,7 @@ describe("server.ts Local Family Safe Mode decision matrix", () => {
     );
   });
 
-  it("env=false + header true + no override => guard skipped (env wins)", async () => {
+  it("env=false + header true + no override => mandatory child guard still runs", async () => {
     await withEnvs(
       {
         VENICE_FORGE_LOCAL_FAMILY_SAFE_MODE_ENABLED: "false",
@@ -804,13 +801,13 @@ describe("server.ts Local Family Safe Mode decision matrix", () => {
           .post("/api/venice/chat/completions")
           .set("X-Venice-Forge-Family-Safe-Mode", "true")
           .send(PROBE_PAYLOAD);
-        expect(res.status).toBe(200);
-        expect(res.body.mocked).toBe(true);
+        expect(res.status).toBe(EXPECTED_BLOCK.status);
+        expect(res.body.reasonCode).toBe(EXPECTED_BLOCK.reasonCode);
       },
     );
   });
 
-  it("env=0 (falsey) is treated as disabled", async () => {
+  it("env=0 disables only the optional filter, not mandatory child safety", async () => {
     await withEnvs(
       {
         VENICE_FORGE_LOCAL_FAMILY_SAFE_MODE_ENABLED: "0",
@@ -820,8 +817,8 @@ describe("server.ts Local Family Safe Mode decision matrix", () => {
         const res = await request(createServerApp())
           .post("/api/venice/chat/completions")
           .send(PROBE_PAYLOAD);
-        expect(res.status).toBe(200);
-        expect(res.body.mocked).toBe(true);
+        expect(res.status).toBe(EXPECTED_BLOCK.status);
+        expect(res.body.reasonCode).toBe(EXPECTED_BLOCK.reasonCode);
       },
     );
   });

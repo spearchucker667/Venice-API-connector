@@ -107,6 +107,14 @@ describe("configSchema", () => {
       const result = validateConfig({ version: 1, memory: { enable_memory_retrieval: "yes" as unknown as boolean } });
       expect(result.config.memory.enable_memory_retrieval).toBe(true); // default
     });
+
+    it("defaults safety filters off and adult characters on", () => {
+      const result = validateConfig({ version: 1 });
+      expect(result.config.safety.local_family_safe_mode_enabled).toBe(false);
+      expect(result.config.safety.venice_api_safe_mode).toBe(false);
+      expect(result.config.characters.include_adult_characters).toBe(true);
+      expect(result.config.chat.include_venice_system_prompt).toBe(true);
+    });
   });
 
   describe("sanitizeConfig", () => {
@@ -158,18 +166,17 @@ describe("configSchema", () => {
     it("falls back to default system prompt when none provided", () => {
       const result = validateConfig({ version: 1 });
       const prompt = result.config.internal_prompt_enhancer.systemPrompt;
-      // Default does NOT contain old unsafe wording.
-      expect(prompt).not.toMatch(/ZERO CENSORSHIP/i);
-      expect(prompt).not.toMatch(/No refusals?/i);
-      // It DOES affirm safety guard is authoritative.
-      expect(prompt).toMatch(/safety guard/i);
+      expect(prompt).toMatch(/application-authored censorship layer/i);
+      expect(prompt).toMatch(/mandatory child-safety enforcement/i);
+      expect(prompt).not.toMatch(/any requests/i);
     });
 
     it("falls back to default remix system prompt when none provided", () => {
       const result = validateConfig({ version: 1 });
       const prompt = result.config.internal_prompt_enhancer.remixSystemPrompt;
-      expect(prompt).not.toMatch(/ZERO CENSORSHIP/i);
-      expect(prompt).toMatch(/safety guard/i);
+      expect(prompt).toMatch(/application-authored censorship layer/i);
+      expect(prompt).toMatch(/mandatory child-safety enforcement/i);
+      expect(prompt).not.toMatch(/any requests/i);
     });
 
     it("accepts a user-supplied system prompt", () => {

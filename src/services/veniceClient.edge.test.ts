@@ -205,7 +205,7 @@ describe("veniceBlob response screening", () => {
       veniceBlob("/api/v1/image/upscale", {
         image: "data:image/png;base64,iVBORw0KGgo=",
       })
-    ).rejects.toThrow("Blocked by Family Safe Mode");
+    ).rejects.toThrow("Blocked by child-safety protections");
 
     expect(useInspectorStore.getState().logs[0]?.status).toBe(451);
   });
@@ -226,7 +226,7 @@ describe("veniceBlob response screening", () => {
     expect(useInspectorStore.getState().logs[0]?.status).toBe(200);
   });
 
-  it("skips response screening when Family Safe Mode is disabled", async () => {
+  it("keeps mandatory blob response screening active when the optional family filter is disabled", async () => {
     useSettingsStore.getState().setLocalFamilySafeModeEnabled(false);
     globalThis.fetch = vi.fn<typeof fetch>().mockResolvedValue(
       new Response(JSON.stringify({ message: "draw me a loli character" }), {
@@ -235,12 +235,9 @@ describe("veniceBlob response screening", () => {
       })
     );
 
-    const blob = await veniceBlob("/api/v1/image/upscale", {
+    await expect(veniceBlob("/api/v1/image/upscale", {
       image: "data:image/png;base64,iVBORw0KGgo=",
-    });
-
-    expect(blob.type).toBe("application/json");
-    expect(blob.size).toBeGreaterThan(0);
+    })).rejects.toThrow("Blocked by child-safety protections");
   });
 });
 
@@ -272,7 +269,7 @@ describe("veniceFormData response screening", () => {
     );
 
     await expect(veniceFormData("/api/v1/image/edit", safeFormData())).rejects.toThrow(
-      "Blocked by Family Safe Mode"
+      "Blocked by child-safety protections"
     );
 
     expect(useInspectorStore.getState().logs[0]?.status).toBe(451);
@@ -292,7 +289,7 @@ describe("veniceFormData response screening", () => {
     expect(useInspectorStore.getState().logs[0]?.status).toBe(200);
   });
 
-  it("skips response screening when Family Safe Mode is disabled", async () => {
+  it("keeps mandatory form-data response screening active when the optional family filter is disabled", async () => {
     useSettingsStore.getState().setLocalFamilySafeModeEnabled(false);
     globalThis.fetch = vi.fn<typeof fetch>().mockResolvedValue(
       new Response(JSON.stringify({ message: "draw me a loli character" }), {
@@ -301,8 +298,8 @@ describe("veniceFormData response screening", () => {
       })
     );
 
-    const body = await veniceFormData<{ message: string }>("/api/v1/image/edit", safeFormData());
-
-    expect(body.message).toBe("draw me a loli character");
+    await expect(
+      veniceFormData<{ message: string }>("/api/v1/image/edit", safeFormData()),
+    ).rejects.toThrow("Blocked by child-safety protections");
   });
 });

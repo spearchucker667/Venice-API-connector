@@ -59,9 +59,14 @@ vi.mock("./veniceClient", () => ({
   performVeniceRequest: vi.fn(async () => ({ ok: true, status: 200, body: {} })),
 }));
 
-vi.mock("../../src/shared/veniceSafeMode", () => ({
-  applyVeniceApiSafeMode: (e: string, b: unknown) => b,
-}));
+vi.mock("../../src/shared/veniceSafeMode", async () => {
+  const actual = await vi.importActual<typeof import("../../src/shared/veniceSafeMode")>(
+    "../../src/shared/veniceSafeMode",
+  );
+  return {
+    applyVeniceApiSafeMode: actual.applyVeniceApiSafeMode,
+  };
+});
 
 vi.mock("../agent/runtime/trusted-agent-request", () => ({
   composeTrustedRequest: (r: unknown) => r,
@@ -165,5 +170,96 @@ describe("Guard pipeline inspector telemetry", () => {
       body: {},
     });
     expect(out.kind).toBe("response");
+  });
+});
+
+describe("Venice API Safe Mode independence from Family Safe Mode", () => {
+  async function setRuntimeSettings(localFamily: boolean, veniceApi: boolean) {
+    const runtime = await import("./runtimeSafetySettings");
+    vi.mocked(runtime.getRuntimeLocalFamilySafeModeEnabled as unknown as ReturnType<typeof vi.fn>).mockReturnValue(localFamily);
+    vi.mocked(runtime.getRuntimeVeniceApiSafeMode as unknown as ReturnType<typeof vi.fn>).mockReturnValue(veniceApi);
+  }
+
+  async function allowGuard() {
+    const maybeRunGuard = (await import("../../src/shared/safety")).maybeRunLocalFamilyGuard;
+    vi.mocked(maybeRunGuard as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
+      allowed: true,
+      skipped: false,
+    });
+  }
+
+  beforeEach(async () => {
+    const performVeniceRequest = (await import("./veniceClient")).performVeniceRequest;
+    vi.mocked(performVeniceRequest as unknown as ReturnType<typeof vi.fn>).mockClear();
+    vi.mocked(performVeniceRequest as unknown as ReturnType<typeof vi.fn>).mockResolvedValue({
+      ok: true,
+      status: 200,
+      body: {},
+    });
+  });
+
+  it("does NOT contain safe_mode: true when Family Safe Mode is on but Venice API Safe Mode is off", async () => {
+    await setRuntimeSettings(true, false);
+    await allowGuard();
+    await performGuardedVeniceRequest({
+      endpoint: "/image/generate",
+      method: "POST",
+      body: { prompt: "a cat" },
+    });
+    const performVeniceRequest = (await import("./veniceClient")).performVeniceRequest;
+    const dispatched = vi.mocked(performVeniceRequest as unknown as ReturnType<typeof vi.fn>).mock.calls[0][0] as {
+      body?: Record<string, unknown>;
+    };
+    expect(dispatched.body).toBeDefined();
+    expect(dispatched.body?.safe_mode).not.toBe(true);
+    expect(dispatched.body?.safe_mode).toBe(false);
+  });
+
+  it("applies safe_mode: true when Venice API Safe Mode is on", async () => {
+    await setRuntimeSettings(false, true);
+    await allowGuard();
+    await performGuardedVeniceRequest({
+      endpoint: "/image/generate",
+      method: "POST",
+      body: { prompt: "a cat" },
+    });
+    const performVeniceRequest = (await import("./veniceClient")).performVeniceRequest;
+    const dispatched = vi.mocked(performVeniceRequest as unknown as ReturnType<typeof vi.fn>).mock.calls[0][0] as {
+      body?: Record<string, unknown>;
+    };
+    expect(dispatched.body?.safe_mode).toBe(true);
+  });
+
+  it("applies safe_mode to all supported image endpoints independently of Family Safe Mode", async () => {
+    await setRuntimeSettings(true, true);
+    await allowGuard();
+    for (const endpoint of ["/image/generate", "/image/edit", "/image/multi-edit"]) {
+      vi.mocked((await import("./veniceClient")).performVeniceRequest as unknown as ReturnType<typeof vi.fn>).mockClear();
+      await performGuardedVeniceRequest({
+        endpoint,
+        method: "POST",
+        body: { prompt: "a cat" },
+      });
+      const performVeniceRequest = (await import("./veniceClient")).performVeniceRequest;
+      const dispatched = vi.mocked(performVeniceRequest as unknown as ReturnType<typeof vi.fn>).mock.calls[0][0] as {
+        body?: Record<string, unknown>;
+      };
+      expect(dispatched.body?.safe_mode, `expected safe_mode for ${endpoint}`).toBe(true);
+    }
+  });
+
+  it("leaves unsupported endpoints without safe_mode even when Venice API Safe Mode is on", async () => {
+    await setRuntimeSettings(false, true);
+    await allowGuard();
+    await performGuardedVeniceRequest({
+      endpoint: "/chat/completions",
+      method: "POST",
+      body: { messages: [] },
+    });
+    const performVeniceRequest = (await import("./veniceClient")).performVeniceRequest;
+    const dispatched = vi.mocked(performVeniceRequest as unknown as ReturnType<typeof vi.fn>).mock.calls[0][0] as {
+      body?: Record<string, unknown>;
+    };
+    expect(dispatched.body).not.toHaveProperty("safe_mode");
   });
 });

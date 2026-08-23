@@ -102,12 +102,12 @@ research:
 
 characters:
   enabled: true
-  include_adult_characters: false
+  include_adult_characters: true        # defaults on; user can opt out in Settings
   default_character_slug: ""
 
 safety:
-  local_family_safe_mode_enabled: true  # false = Adult Mode; skips local rule evaluation
-  venice_api_safe_mode: true            # provider-side safe_mode, independent
+  local_family_safe_mode_enabled: false # false = Adult Mode; skips only the optional family layer
+  venice_api_safe_mode: false           # provider-side safe_mode, independent
 
 developer:
   verbose_config_logging: false
@@ -202,11 +202,15 @@ Token names may be written in snake_case (recommended for YAML) or camelCase. Mi
 | Generic patches cannot set plaintext keys | `writeSanitizedConfig()` strips `secrets.*` regardless of input |
 | Raw keys never logged | `electron/services/logger.ts` redacts `api_key`, `vn-`, etc. |
 | Export template contains no raw keys | `exportConfigTemplate()` builds a sanitized `YamlConfig` |
-| Safety controls remain independent | `safety.local_family_safe_mode_enabled` controls only the local filter; `safety.venice_api_safe_mode` controls only Venice's provider parameter |
+| Optional safety controls remain independent | `safety.local_family_safe_mode_enabled` controls the optional family layer; `safety.venice_api_safe_mode` controls only Venice's provider parameter; both default to `false`. The mandatory child-exploitation guard is always active and is not configurable. |
 
 ## Family Safe Mode and Adult Mode
 
-Family Safe Mode is Venice Forge's local child/family-safe filter and defaults to `true`. Adult Mode sets `local_family_safe_mode_enabled: false`; the local rule engine is not invoked at all. Venice API Safe Mode remains provider-side and is controlled separately by `venice_api_safe_mode`.
+Family Safe Mode is an optional local family-oriented layer. It defaults to `false` (Adult Mode) so the app does not silently impose an application-authored content-policy layer on top of the user's choices and Venice's own provider-side controls. The mandatory child-exploitation guard remains active in both modes and cannot be disabled.
+
+Venice API Safe Mode remains provider-side and is controlled separately by `venice_api_safe_mode`. It also defaults to `false` and must be enabled explicitly by the user.
+
+> Optional filters default off. Mandatory child-safety, credential, IPC, filesystem, and provider access controls remain enforced.
 
 ## Precedence
 

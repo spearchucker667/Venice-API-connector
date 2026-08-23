@@ -57,17 +57,16 @@ describe("VERIFY-016 inspector non-mutating preview", () => {
     expect(snap.allowed).toBe(0);
   });
 
-  it("previewLocalFamilyGuard returns a synthetic allow decision when Family Safe Mode is OFF", () => {
+  it("previewLocalFamilyGuard still blocks child-exploitation material when the optional filter is off", () => {
     const decision = previewLocalFamilyGuard(
       { text: triggerInput("CSAM_EXPLICIT"), endpoint: "/chat/completions", method: "POST", source: "venice-client" },
       false,
     );
-    expect(decision.allowed).toBe(true);
-    expect(decision.skipped).toBe(true);
-    expect(decision.reason).toBe("local-family-safe-mode-disabled");
+    expect(decision.allowed).toBe(false);
+    expect(decision.reason).toBeTruthy();
   });
 
-  it("previewLocalFamilyGuard does not increment counters in Adult Mode either", () => {
+  it("previewLocalFamilyGuard does not increment counters with the optional filter off", () => {
     previewLocalFamilyGuard(
       { text: triggerInput("CSAM_EXPLICIT"), endpoint: "/chat/completions", method: "POST", source: "venice-client" },
       false,

@@ -1,11 +1,12 @@
-/** Central conditional pipeline for Venice Forge's optional local family filter. */
+/** Central pipeline for Venice Forge's mandatory child-safety guard and
+ * optional local family-filter state. */
 import type { SafetyGuardDecision, SafetyGuardInput } from "./childExploitationGuard";
 import { recordDecision } from "./guardAudit";
 import { runLocalFamilyGuard } from "./localFamilyGuardRules";
 export { runLocalFamilyGuard } from "./localFamilyGuardRules";
 
 export const FAMILY_SAFE_MODE_BLOCK_MESSAGE =
-  "Blocked by Family Safe Mode. You can disable Family Safe Mode in Settings if you want to use Adult Mode.";
+  "Blocked by child-safety protections. This protection cannot be disabled.";
 
 export type LocalGuardDecision =
   | {
@@ -23,19 +24,15 @@ export type LocalGuardDecision =
       guardDecision: SafetyGuardDecision;
     };
 
-/** Skips rule evaluation entirely when Family Safe Mode is disabled. */
+/**
+ * Always evaluates the non-disableable child-exploitation guard. The
+ * `localFamilySafeModeEnabled` flag controls optional family-filter behavior,
+ * but it must never bypass legally required child-safety enforcement.
+ */
 export function maybeRunLocalFamilyGuard(
   input: SafetyGuardInput,
   localFamilySafeModeEnabled: boolean,
 ): LocalGuardDecision {
-  if (!localFamilySafeModeEnabled) {
-    return {
-      allowed: true,
-      skipped: true,
-      reason: "local-family-safe-mode-disabled",
-    };
-  }
-
   const guardDecision = runLocalFamilyGuard(input);
   recordDecision(guardDecision);
   if (!guardDecision.allow || guardDecision.action === "block") {
@@ -48,7 +45,14 @@ export function maybeRunLocalFamilyGuard(
     };
   }
 
-  return { allowed: true, guardDecision };
+  return localFamilySafeModeEnabled
+    ? { allowed: true, guardDecision }
+    : {
+        allowed: true,
+        skipped: true,
+        reason: "optional-local-family-filter-disabled-child-safety-checked",
+        guardDecision,
+      };
 }
 
 /**
@@ -66,14 +70,6 @@ export function previewLocalFamilyGuard(
   input: SafetyGuardInput,
   localFamilySafeModeEnabled: boolean,
 ): LocalGuardDecision {
-  if (!localFamilySafeModeEnabled) {
-    return {
-      allowed: true,
-      skipped: true,
-      reason: "local-family-safe-mode-disabled",
-    };
-  }
-
   const guardDecision = runLocalFamilyGuard(input);
   if (!guardDecision.allow || guardDecision.action === "block") {
     return {
@@ -85,7 +81,14 @@ export function previewLocalFamilyGuard(
     };
   }
 
-  return { allowed: true, guardDecision };
+  return localFamilySafeModeEnabled
+    ? { allowed: true, guardDecision }
+    : {
+        allowed: true,
+        skipped: true,
+        reason: "optional-local-family-filter-disabled-child-safety-checked",
+        guardDecision,
+      };
 }
 
 export type ResponseBodyScreenResult =
@@ -120,9 +123,9 @@ export function safetyBlockBodyFromResponseScreen(
 
 /**
  * Screens a string returned by a web-proxy or scrape boundary. The guard is
- * gated by the same `localFamilySafeModeEnabled` flag used elsewhere — when
- * Family Safe Mode is OFF (Adult Mode) the body is allowed through unchanged
- * and `skipped` is set so callers can record that no rule evaluation happened.
+ * always subject to the child-exploitation guard. When the optional Family
+ * Safe Mode setting is OFF, an allowed result is marked `skipped` only to
+ * describe the optional layer; child-safety evaluation still occurred.
  *
  * Callers MUST treat blocked results as a 451 with the supplied `userMessage`
  * (do not echo raw body content back to the user). When the input is shorter
@@ -135,12 +138,9 @@ export function screenResponseBody(
   localFamilySafeModeEnabled: boolean,
   sampleWindow = 8000,
 ): ResponseBodyScreenResult {
-  if (!localFamilySafeModeEnabled) {
-    return { allowed: true, skipped: true, reason: "local-family-safe-mode-disabled" };
-  }
   const sample = body.length > sampleWindow ? body.slice(0, sampleWindow) : body;
   const input: SafetyGuardInput = { ...context, text: sample };
-  const decision = maybeRunLocalFamilyGuard(input, true);
+  const decision = maybeRunLocalFamilyGuard(input, localFamilySafeModeEnabled);
   if (!decision.allowed) {
     return {
       allowed: false,
@@ -152,7 +152,13 @@ export function screenResponseBody(
       userMessage: decision.userMessage,
     };
   }
-  return { allowed: true, skipped: false };
+  return {
+    allowed: true,
+    skipped: !localFamilySafeModeEnabled,
+    ...(localFamilySafeModeEnabled
+      ? {}
+      : { reason: "optional-local-family-filter-disabled-child-safety-checked" }),
+  };
 }
 
 export * from "./mediaScreener";

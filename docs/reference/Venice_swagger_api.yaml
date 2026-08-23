@@ -1,7 +1,8 @@
 x-venice-forge-provenance:
   source: https://api.venice.ai/doc/api/swagger.yaml
-  retrieved: "2026-08-15"
-  content_version: "20260814.194349"
+  upstream_commit: 601b7bb19921f0e31bc805d51322085cd6fc4ac5
+  retrieved: "2026-08-23"
+  content_version: "20260821.193530"
 externalDocs:
   description: Venice.ai API documentation
   url: https://docs.venice.ai
@@ -9,7 +10,7 @@ info:
   description: The Venice.ai API.
   termsOfService: https://venice.ai/legal/tos
   title: Venice.ai API
-  version: "20260814.194349"
+  version: "20260821.193530"
   x-guidance: >-
     Venice.ai is an OpenAI-compatible inference API supporting text, image,
     audio, and video generation.
@@ -50,6 +51,11 @@ tags:
       return a response. Supports multimodal inputs including text, images,
       audio (input_audio), and video (video_url) for compatible models.
     name: Chat
+  - description: Create vector embeddings from text. `input` must be a string or an
+      array of strings. Token arrays are not supported. LangChain
+      OpenAIEmbeddings must set `check_embedding_ctx_length=False` to send text
+      instead of tiktoken IDs.
+    name: Embeddings
   - description: List and describe the various models available in the API.
     name: Models
   - description: Generate and manipulate images using AI models.
@@ -3270,60 +3276,30 @@ components:
             `base64`.
           example: float
         input:
+          description: Input text to embed, encoded as a string or array of strings. To
+            embed multiple inputs in a single request, pass an array of strings.
+            The input must not exceed the max input tokens for the model (8192
+            tokens), cannot be an empty string, and any array must contain 2048
+            items or less. Token arrays are not supported and return HTTP 400.
+            LangChain OpenAIEmbeddings sends token arrays unless you set
+            check_embedding_ctx_length=False.
           anyOf:
-            - type: string
-              minLength: 1
-              description: The string that will be turned into an embedding. Cannot be an
+            - description: The string that will be turned into an embedding. Cannot be an
                 empty string.
               example: This is a test.
+              minLength: 1
               title: string
-            - type: array
-              items:
-                type: string
-              minItems: 1
-              maxItems: 2048
-              description: The array of strings that will be turned into an embedding. Array
-                must be 2048 dimensions or less.
+              type: string
+            - description: The array of strings that will be turned into an embedding. Array
+                must contain 2048 items or less.
               example:
                 - This is a test.
-              title: array
-            - type: array
               items:
-                type: integer
-                minimum: 1
-              minItems: 1
+                type: string
               maxItems: 2048
-              description: The array of integers that will be turned into an embedding. Array
-                must be 2048 dimensions or less.
-              example:
-                - 1212
-                - 318
-                - 257
-                - 1332
-                - 13
-              title: array
-            - type: array
-              items:
-                type: array
-                items:
-                  type: integer
-                minItems: 1
               minItems: 1
-              maxItems: 2048
-              description: The array of arrays containing integers that will be turned into an
-                embedding. Array must be 2048 dimensions or less.
-              example:
-                - - 1212
-                  - 318
-                  - 257
-                  - 1332
-                  - 13
               title: array
-          description: Input text to embed, encoded as a string or array of tokens. To
-            embed multiple inputs in a single request, pass an array of strings
-            or array of token arrays. The input must not exceed the max input
-            tokens for the model (8192 tokens), cannot be an empty string, and
-            any array must be 2048 dimensions or less.
+              type: array
           example: The quick brown fox jumped over the lazy dog
         model:
           anyOf:
@@ -3668,6 +3644,21 @@ components:
             aspect ratio to the source clip (requires reference_video_urls on
             queue, or reference_video_total_duration on quote).
           example: 16:9
+        omni_reference_task_type:
+          type: string
+          enum:
+            - auto
+            - reference
+            - edit
+            - extend
+          description: Optional Seedance 2.5 reference-to-video task-type hint forwarded
+            to BytePlus (`auto` | `reference` | `edit` | `extend`). Aliases
+            `editing`→`edit` and `extension`→`extend` are accepted on the queue
+            API. Pre-guides classification to reduce async TaskTypeConstraint
+            errors. The prompt must still match the chosen type. When omitted,
+            Venice infers from the prompt if reference_video_urls are present.
+            Not supported on other models.
+          example: edit
         resolution:
           type: string
           enum:
@@ -3761,6 +3752,17 @@ components:
             URL.'
           example:
             - data:audio/mpeg;base64,SUQzBAAAAAA...
+        reference_document_urls:
+          type: array
+          items:
+            type: string
+          maxItems: 1
+          description: 'For models with document / webpage Omni-Reference (Wan 3.0), up to
+            1 URL. Document files and public webpage URLs are fetched by Venice
+            and forwarded as `type: "file"` (≤100 MB). Each must be a URL or
+            data URL.'
+          example:
+            - https://example.com/brief.pdf
         elements:
           type: array
           items:
@@ -8782,6 +8784,19 @@ paths:
                             of each UTC calendar month. `LIFETIME` never resets,
                             so the limit acts as a permanent cap on the key.
                           example: MONTH
+                        modelPrivacy:
+                          type: string
+                          enum:
+                            - ALL
+                            - PRIVATE_TEXT
+                            - PRIVATE_ONLY
+                          description: Which models this key may call, by privacy tier. `ALL` allows every
+                            model. `PRIVATE_TEXT` requires text and embedding
+                            models to be Private, TEE, or E2EE while other
+                            modalities may be Anonymous or Private.
+                            `PRIVATE_ONLY` requires every model to be Private,
+                            TEE, or E2EE; Anonymous models are rejected.
+                          example: ALL
                         createdAt:
                           type: string
                           nullable: true
@@ -8855,6 +8870,7 @@ paths:
                         - apiKeyType
                         - consumptionLimits
                         - limitPeriod
+                        - modelPrivacy
                         - createdAt
                         - expiresAt
                         - id
@@ -9000,6 +9016,18 @@ paths:
                     UTC calendar month. `LIFETIME` never resets, so the limit
                     acts as a permanent cap on the key.
                   example: MONTH
+                modelPrivacy:
+                  type: string
+                  enum:
+                    - ALL
+                    - PRIVATE_TEXT
+                    - PRIVATE_ONLY
+                  description: Which models this key may call, by privacy tier. `ALL` allows every
+                    model. `PRIVATE_TEXT` requires text and embedding models to
+                    be Private, TEE, or E2EE while other modalities may be
+                    Anonymous or Private. `PRIVATE_ONLY` requires every model to
+                    be Private, TEE, or E2EE; Anonymous models are rejected.
+                  example: ALL
                 description:
                   type: string
                   maxLength: 64
@@ -9102,6 +9130,19 @@ paths:
                           each UTC calendar month. `LIFETIME` never resets, so
                           the limit acts as a permanent cap on the key.
                         example: MONTH
+                      modelPrivacy:
+                        type: string
+                        enum:
+                          - ALL
+                          - PRIVATE_TEXT
+                          - PRIVATE_ONLY
+                        description: Which models this key may call, by privacy tier. `ALL` allows every
+                          model. `PRIVATE_TEXT` requires text and embedding
+                          models to be Private, TEE, or E2EE while other
+                          modalities may be Anonymous or Private. `PRIVATE_ONLY`
+                          requires every model to be Private, TEE, or E2EE;
+                          Anonymous models are rejected.
+                        example: ALL
                       description:
                         type: string
                         description: The API Key description
@@ -9120,6 +9161,7 @@ paths:
                       - apiKeyType
                       - consumptionLimit
                       - limitPeriod
+                      - modelPrivacy
                       - expiresAt
                       - id
                     additionalProperties: false
@@ -9154,8 +9196,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/StandardError"
     patch:
-      description: Update an existing API key. The description, expiration date, and
-        consumption limits can be updated.
+      description: Update an existing API key. The description, expiration date,
+        consumption limits, limit period, and model privacy can be updated.
       operationId: updateApiKey
       summary: /api/v1/api_keys
       tags:
@@ -9220,6 +9262,18 @@ paths:
                     UTC calendar month. `LIFETIME` never resets, so the limit
                     acts as a permanent cap on the key.
                   example: MONTH
+                modelPrivacy:
+                  type: string
+                  enum:
+                    - ALL
+                    - PRIVATE_TEXT
+                    - PRIVATE_ONLY
+                  description: Which models this key may call, by privacy tier. `ALL` allows every
+                    model. `PRIVATE_TEXT` requires text and embedding models to
+                    be Private, TEE, or E2EE while other modalities may be
+                    Anonymous or Private. `PRIVATE_ONLY` requires every model to
+                    be Private, TEE, or E2EE; Anonymous models are rejected.
+                  example: ALL
                 description:
                   type: string
                   maxLength: 64
@@ -9249,8 +9303,8 @@ paths:
                 - id
               additionalProperties: false
               description: The request body for updating an existing API key. The description,
-                expiration date, consumption limits and limit period (epoch /
-                month / lifetime) can be updated.
+                expiration date, consumption limits, limit period (epoch / month
+                / lifetime), and model privacy can be updated.
       responses:
         "200":
           description: OK
@@ -9323,6 +9377,19 @@ paths:
                           each UTC calendar month. `LIFETIME` never resets, so
                           the limit acts as a permanent cap on the key.
                         example: MONTH
+                      modelPrivacy:
+                        type: string
+                        enum:
+                          - ALL
+                          - PRIVATE_TEXT
+                          - PRIVATE_ONLY
+                        description: Which models this key may call, by privacy tier. `ALL` allows every
+                          model. `PRIVATE_TEXT` requires text and embedding
+                          models to be Private, TEE, or E2EE while other
+                          modalities may be Anonymous or Private. `PRIVATE_ONLY`
+                          requires every model to be Private, TEE, or E2EE;
+                          Anonymous models are rejected.
+                        example: ALL
                       createdAt:
                         type: string
                         nullable: true
@@ -9354,6 +9421,7 @@ paths:
                       - apiKeyType
                       - consumptionLimits
                       - limitPeriod
+                      - modelPrivacy
                       - createdAt
                       - expiresAt
                       - id
@@ -9471,6 +9539,19 @@ paths:
                           each UTC calendar month. `LIFETIME` never resets, so
                           the limit acts as a permanent cap on the key.
                         example: MONTH
+                      modelPrivacy:
+                        type: string
+                        enum:
+                          - ALL
+                          - PRIVATE_TEXT
+                          - PRIVATE_ONLY
+                        description: Which models this key may call, by privacy tier. `ALL` allows every
+                          model. `PRIVATE_TEXT` requires text and embedding
+                          models to be Private, TEE, or E2EE while other
+                          modalities may be Anonymous or Private. `PRIVATE_ONLY`
+                          requires every model to be Private, TEE, or E2EE;
+                          Anonymous models are rejected.
+                        example: ALL
                       createdAt:
                         type: string
                         nullable: true
@@ -9544,6 +9625,7 @@ paths:
                       - apiKeyType
                       - consumptionLimits
                       - limitPeriod
+                      - modelPrivacy
                       - createdAt
                       - expiresAt
                       - id
@@ -9561,6 +9643,7 @@ paths:
                       usd: 50
                       diem: 10
                     limitPeriod: MONTH
+                    modelPrivacy: ALL
                     createdAt: {}
                     description: Example API Key
                     expiresAt: {}
@@ -9875,6 +9958,18 @@ paths:
                     UTC calendar month. `LIFETIME` never resets, so the limit
                     acts as a permanent cap on the key.
                   example: MONTH
+                modelPrivacy:
+                  type: string
+                  enum:
+                    - ALL
+                    - PRIVATE_TEXT
+                    - PRIVATE_ONLY
+                  description: Which models this key may call, by privacy tier. `ALL` allows every
+                    model. `PRIVATE_TEXT` requires text and embedding models to
+                    be Private, TEE, or E2EE while other modalities may be
+                    Anonymous or Private. `PRIVATE_ONLY` requires every model to
+                    be Private, TEE, or E2EE; Anonymous models are rejected.
+                  example: ALL
                 description:
                   type: string
                   default: Web3 API Key
@@ -9989,6 +10084,19 @@ paths:
                           each UTC calendar month. `LIFETIME` never resets, so
                           the limit acts as a permanent cap on the key.
                         example: MONTH
+                      modelPrivacy:
+                        type: string
+                        enum:
+                          - ALL
+                          - PRIVATE_TEXT
+                          - PRIVATE_ONLY
+                        description: Which models this key may call, by privacy tier. `ALL` allows every
+                          model. `PRIVATE_TEXT` requires text and embedding
+                          models to be Private, TEE, or E2EE while other
+                          modalities may be Anonymous or Private. `PRIVATE_ONLY`
+                          requires every model to be Private, TEE, or E2EE;
+                          Anonymous models are rejected.
+                        example: ALL
                       description:
                         type: string
                         description: The API Key description
@@ -10007,6 +10115,7 @@ paths:
                       - apiKeyType
                       - consumptionLimit
                       - limitPeriod
+                      - modelPrivacy
                       - expiresAt
                       - id
                     additionalProperties: false
@@ -10674,7 +10783,12 @@ paths:
   /embeddings:
     post:
       description: >-
-        Create embeddings for the supplied input.
+        Create embeddings for the supplied input. `input` must be a string or an
+        array of strings. Token arrays (integer IDs) are rejected with HTTP 400.
+        LangChain `OpenAIEmbeddings` sends token arrays unless
+        `check_embedding_ctx_length` is `False`. Wrappers that construct
+        `OpenAIEmbeddings` without that flag, including gpt-researcher's
+        `openai` provider, still send token arrays.
 
 
         **Authentication:** This endpoint accepts either a Bearer API key or a

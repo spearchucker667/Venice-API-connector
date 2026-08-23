@@ -305,9 +305,9 @@ export const useSettingsStore = create<SettingsState>()(
       setImageDownloadDirectory: (dir) => set({ imageDownloadDirectory: dir }),
       redTeamMode: false,
       setRedTeamMode: (mode) => set({ redTeamMode: mode }),
-      localFamilySafeModeEnabled: true,
+      localFamilySafeModeEnabled: false,
       setLocalFamilySafeModeEnabled: (enabled) => set({ localFamilySafeModeEnabled: enabled }),
-      veniceApiSafeMode: true,
+      veniceApiSafeMode: false,
       setVeniceApiSafeMode: (enabled) => set({ veniceApiSafeMode: enabled }),
       showInspector: false,
       inspectorWidth: 480,
@@ -377,7 +377,7 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'venice-settings',
-      version: 14,
+      version: 15,
       storage: createJSONStorage(() => createSafeStorage()),
       migrate: (persisted) => {
         const state = persisted && typeof persisted === 'object'
@@ -389,8 +389,11 @@ export const useSettingsStore = create<SettingsState>()(
           // v14: collapse state and the separately clamped expanded width persist.
           sidebarOpen: typeof state.sidebarOpen === 'boolean' ? state.sidebarOpen : true,
           sidebarWidth: clampSidebarWidth(state.sidebarWidth),
-          localFamilySafeModeEnabled: state.localFamilySafeModeEnabled ?? true,
-          veniceApiSafeMode: state.veniceApiSafeMode ?? true,
+          // v15: optional content controls default off. Explicit persisted
+          // choices are preserved; the mandatory child-safety guard is not a
+          // setting and remains active in every mode.
+          localFamilySafeModeEnabled: state.localFamilySafeModeEnabled ?? false,
+          veniceApiSafeMode: state.veniceApiSafeMode ?? false,
           // v3: normalise legacy tab aliases (e.g. 'gallery' → 'media').
           activeTab: safeNormaliseTab(state.activeTab) as Tab,
           // v4 (workspace): ensure activeProjectId exists for Project switcher.

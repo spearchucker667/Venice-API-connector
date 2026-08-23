@@ -84,7 +84,7 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
   selectedCharacter: null,
   selectedCharacterSlug: null,
   selectedModel: null,
-  includeAdultCharacters: false,
+  includeAdultCharacters: true,
   webEnabledOnly: false,
   isLoading: false,
   error: null,

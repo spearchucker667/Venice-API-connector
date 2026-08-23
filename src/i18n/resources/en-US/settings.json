@@ -71,14 +71,14 @@
     "veniceApiSafeMode": "Venice API Safe Mode",
     "statusBanner": "Local filter: {{localStatus}} | Venice provider filtering: {{veniceStatus}}",
     "familySafeModeTitle": "Family Safe Mode",
-    "familySafeModeDescription": "Runs Venice Forge",
+    "familySafeModeDescription": "Controls the optional local family-oriented layer. Mandatory child-safety protection remains active in every mode.",
     "onFamilySafeMode": "ON: Family Safe Mode",
     "offAdultMode": "OFF: Adult Mode (Local Filter OFF)",
     "status": {
       "enabled": "When enabled, matching requests are blocked locally before the provider is called.",
-      "disabled": "Bypasses Venice Forge",
+      "disabled": "The optional family layer is off. Mandatory child-safety protection remains active; Venice API provider Safe Mode is controlled separately below.",
       "localOffProviderOn": "Local family filter is OFF, but Venice API provider-side Safe Mode is still ON. Outbound requests include safe_mode: true.",
-      "bothOff": "Both local family filter and Venice API provider Safe Mode are OFF. Outbound requests include safe_mode: false.",
+      "bothOff": "Both optional filters are OFF and outbound requests include safe_mode: false. Mandatory child-safety protection remains active.",
       "filteredLocally": "Matching requests are filtered locally before reaching the provider."
     },
     "effectiveStatus": "Effective Status: Local filter: {{local}} | Venice provider filtering: {{provider}}",

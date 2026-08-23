@@ -64,22 +64,17 @@ export function isImageEditModel(model: ModelMetadataLike | string): boolean {
 
   // Tier 1: Explicit provider type from /models?type=inpaint or /models/traits
   if (type === 'inpaint' || type === 'image-edit') return true;
+  if (type) return false;
 
   // Tier 2: Model traits
   if (Array.isArray(model.traits) && (model.traits.includes('inpaint') || model.traits.includes('edit'))) {
     return true;
   }
 
-  // Tier 3: Model capabilities
-  const caps = model.model_spec?.capabilities || model.capabilities;
-  if (caps && (caps.supportsInpaint === true || caps.supportsImageEdit === true)) {
-    return true;
-  }
-
-  // Tier 4: Exact known model ID
+  // Tier 3: Exact known model ID
   if (KNOWN_IMAGE_EDIT_MODELS.has(id)) return true;
 
-  // Tier 5: Conservative pattern match
+  // Tier 4: Conservative pattern match
   if (id.endsWith('-edit') || id.includes('-edit-') || id.includes('inpaint')) {
     return true;
   }

@@ -63,7 +63,7 @@ describe("VERIFY-015 guard pipeline — runtime source of truth", () => {
     });
     expect(block).not.toBeNull();
     expect(block?.status).toBe(451);
-    expect(block?.body.error).toMatch(/Family Safe Mode/i);
+    expect(block?.body.error).toMatch(/child-safety protections/i);
   });
 
   it("checkLocalFamilyGuard returns null when the input is benign", () => {
@@ -76,7 +76,7 @@ describe("VERIFY-015 guard pipeline — runtime source of truth", () => {
     expect(block).toBeNull();
   });
 
-  it("checkLocalFamilyGuard skips rule evaluation when runtime snapshot is OFF (Adult Mode)", () => {
+  it("checkLocalFamilyGuard keeps mandatory child safety active when the optional filter is off", () => {
     setRuntimeLocalFamilySafeModeEnabled(false);
     const block = checkLocalFamilyGuard({
       text: triggerInput("CSAM_EXPLICIT"),
@@ -84,7 +84,8 @@ describe("VERIFY-015 guard pipeline — runtime source of truth", () => {
       method: "POST",
       source: "ipc",
     });
-    expect(block).toBeNull();
+    expect(block).not.toBeNull();
+    expect(block?.status).toBe(451);
     // And the runtime snapshot remains the source of truth:
     expect(getRuntimeLocalFamilySafeModeEnabled()).toBe(false);
   });
@@ -108,7 +109,7 @@ describe("VERIFY-015 guard pipeline — canonical block shape", () => {
     expect(block.status).toBe(451);
     expect(block.statusText).toBe("Blocked by Family Safe Mode");
     expect(block.contentType).toBe("application/json");
-    expect(block.body.error).toMatch(/Family Safe Mode/i);
+    expect(block.body.error).toMatch(/child-safety protections/i);
     expect(typeof block.body.reasonCode).toBe("string");
     expect(typeof block.body.category).toBe("string");
     expect(typeof block.body.severity).toBe("string");
@@ -149,7 +150,7 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     expect(mockedPerformVeniceRequest).not.toHaveBeenCalled();
   });
 
-  it("forces provider safe_mode true for supported endpoints when Family Safe Mode is ON", async () => {
+  it("does not let the optional family filter force provider safe_mode", async () => {
     const upstream = {
       ok: true,
       status: 200,
@@ -168,7 +169,7 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     expect(mockedPerformVeniceRequest).toHaveBeenCalledWith(
       expect.objectContaining({
         endpoint: "/image/generate",
-        body: expect.objectContaining({ safe_mode: true }),
+        body: expect.objectContaining({ safe_mode: false }),
       }),
       expect.any(Object),
     );
@@ -213,7 +214,7 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     if (result.kind !== "blocked") throw new Error("expected blocked");
     expect(result.block.status).toBe(451);
     expect(result.block.body.reasonCode).toBe("IMAGE_GRAPHIC_GORE");
-    expect(result.block.body.error).toMatch(/Family Safe Mode/i);
+    expect(result.block.body.error).toMatch(/child-safety protections/i);
     expect(JSON.stringify(result.block.body)).not.toContain("dismemberment");
   });
 
@@ -306,7 +307,7 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     expect(result.block.body.reasonCode).toBe("INVALID_MEDIA");
   });
 
-  it("skips the guard when runtime snapshot is OFF (Adult Mode)", async () => {
+  it("blocks mandatory child-safety triggers when the optional filter is off", async () => {
     setRuntimeLocalFamilySafeModeEnabled(false);
     const upstream = { ok: true, status: 200, statusText: "OK", headers: {}, body: {}, contentType: "application/json" };
     mockedPerformVeniceRequest.mockResolvedValue(upstream);
@@ -315,9 +316,8 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
       method: "POST",
       body: { model: "m", messages: [{ role: "user", content: triggerInput("CSAM_EXPLICIT") }] },
     });
-    // Adult Mode: still forwards, because the runtime flag is OFF.
-    expect(result.kind).toBe("response");
-    expect(mockedPerformVeniceRequest).toHaveBeenCalledTimes(1);
+    expect(result.kind).toBe("blocked");
+    expect(mockedPerformVeniceRequest).not.toHaveBeenCalled();
   });
 
   it("forwards onDelta callback verbatim to performVeniceRequest", async () => {
@@ -411,7 +411,7 @@ describe("VERIFY-015 guard pipeline — screenResponseBody (web-proxy/scrape ret
     );
     expect(r.allowed).toBe(false);
     if (r.allowed) throw new Error("expected blocked");
-    expect(r.userMessage).toMatch(/Family Safe Mode/i);
+    expect(r.userMessage).toMatch(/child-safety protections/i);
     expect(r.reasonCode).toBe("CSAM_EXPLICIT_TERM");
     expect(r.category).toBe("csam_request");
     expect(r.severity).toBe("critical");
@@ -447,14 +447,13 @@ describe("VERIFY-015 guard pipeline — screenResponseBody (web-proxy/scrape ret
     expect(r.allowed).toBe(true);
   });
 
-  it("skips screening and reports skipped=true when Family Safe Mode is OFF", () => {
+  it("keeps mandatory child-safety response screening active when the optional filter is off", () => {
     const r = screenResponseBody(
       triggerInput("CSAM_EXPLICIT"),
       { endpoint: "https://r.jina.example/page", method: "GET", source: "web-proxy" },
       false,
     );
-    expect(r.allowed).toBe(true);
-    if (r.allowed) expect(r.skipped).toBe(true);
+    expect(r.allowed).toBe(false);
   });
 
   it("samples large bodies (window-size guard for O(1) screening)", () => {
@@ -533,10 +532,8 @@ describe("VERIFY-015 guard pipeline — endpoint coverage matrix", () => {
 });
 
 describe("VERIFY-015 guard pipeline — Provider Safe Mode (P1 #2 audit)", () => {
-  // These four cases verify that provider `safe_mode` is forced to true
-  // if either the localFamilySafeModeEnabled or the provider-side veniceApiSafeMode
-  // toggle is enabled. The runtime snapshot (Electron main) is the source of truth
-  // for both — renderer-supplied flags on the IPC body are ignored.
+  // These four cases verify that provider `safe_mode` is controlled only by
+  // the provider-side toggle. The optional local filter is independent.
   type StateName = "localOn-veniceOn" | "localOn-veniceOff" | "localOff-veniceOn" | "localOff-veniceOff";
   const expectations: StateName[] = [
     "localOn-veniceOn",
@@ -563,7 +560,7 @@ describe("VERIFY-015 guard pipeline — Provider Safe Mode (P1 #2 audit)", () =>
       expect(mockedPerformVeniceRequest).toHaveBeenCalledTimes(1);
       const forwarded = mockedPerformVeniceRequest.mock.calls[0]?.[0] as { body?: unknown };
       const body = (forwarded?.body ?? {}) as Record<string, unknown>;
-      expect(body.safe_mode).toBe(localEnabled || veniceEnabled);
+      expect(body.safe_mode).toBe(veniceEnabled);
     });
   }
 

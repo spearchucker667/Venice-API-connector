@@ -16,6 +16,10 @@ import { translateRuntime } from "../i18n/runtimeTranslator";
  *     warning so the UI can surface parse problems.
  */
 import { DEFAULT_PROMPT_ENHANCER_MODEL } from "../constants/venice";
+import {
+  DEFAULT_ENHANCE_SYSTEM_PROMPT,
+  DEFAULT_REMIX_SYSTEM_PROMPT,
+} from "../shared/imagePromptDefaults";
 import { isValidColorValue } from "../theme/validateColor";
 
 /** Current schema version. Bumping this is a breaking change. */
@@ -163,7 +167,10 @@ export interface YamlCharacters {
   default_character_slug: string;
 }
 
-/** Independent local and provider-side safety settings. */
+/** Independent local and provider-side safety settings.
+ *  Both default to false so the app does not silently impose a second
+ *  content-policy layer on top of the user's choices and Venice's own
+ *  provider-side controls. Users can opt in to either filter explicitly. */
 export interface YamlSafety {
   local_family_safe_mode_enabled: boolean;
   venice_api_safe_mode: boolean;
@@ -256,24 +263,6 @@ const THEME_NAME_MAX_LENGTH = 128;
 const PATH_MAX_LENGTH = 4096;
 const SYSTEM_PROMPT_MAX_LENGTH = 32768;
 const ENHANCER_PROMPT_MAX_LENGTH = 4096;
-
-/** Default enhance system prompt. The Venice Forge safety guard and the
- *  upstream provider controls remain authoritative. This prompt is a
- *  task-focused rewrite instruction; it must not reframe itself as
- *  overriding safety, and it must not instruct the model to ignore
- *  provider-level safety guidance. */
-const DEFAULT_ENHANCE_SYSTEM_PROMPT = `You are Venice Forge's internal image-prompt enhancer. Rewrite the user's image prompt into one concise, vivid, production-ready image-generation prompt. Preserve the user's subject, composition, style, medium, and constraints. Improve specificity, visual language, lighting, camera/composition, material detail, and quality cues.
-
-Do not add moral commentary, policy commentary, disclaimers, refusals, markdown, alternatives, or explanations. Return only the improved prompt. The final prompt must stay under the absolute 1500-character ceiling.
-
-The app's existing safety guard and upstream provider controls remain authoritative. You do not override them.`;
-
-/** Default remix system prompt. Same safety posture as the enhance prompt. */
-const DEFAULT_REMIX_SYSTEM_PROMPT = `You are Venice Forge's internal image-prompt remix engine. Create one visually distinct variation of the user's image prompt while preserving the core subject identity and user intent. Change composition, setting, lighting, camera angle, mood, and style.
-
-Do not add moral commentary, policy commentary, disclaimers, refusals, markdown, alternatives, or explanations. Return only the remixed prompt. The final prompt must stay under the absolute 1500-character ceiling.
-
-The app's existing safety guard and upstream provider controls remain authoritative. You do not override them.`;
 
 /** Returns true if the input is a local filesystem path (no scheme). */
 function looksLikeUrl(value: string): boolean {
@@ -721,7 +710,7 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
     enabled: clampBool(charRaw.enabled, true),
     include_adult_characters: clampBool(
       charRaw.include_adult_characters,
-      false,
+      true,
     ),
     default_character_slug: clampString(
       charRaw.default_character_slug,
@@ -735,11 +724,13 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
       ? (r.safety as Record<string, unknown>)
       : {};
   const safety: YamlSafety = {
+    // Defaults are intentionally off: the app should not silently enable an
+    // application-authored filter on top of the user's explicit choices.
     local_family_safe_mode_enabled: clampBool(
       safetyRaw.local_family_safe_mode_enabled,
-      true,
+      false,
     ),
-    venice_api_safe_mode: clampBool(safetyRaw.venice_api_safe_mode, true),
+    venice_api_safe_mode: clampBool(safetyRaw.venice_api_safe_mode, false),
   };
 
   // ── developer ──
@@ -945,12 +936,12 @@ export function emptyConfig(): YamlConfig {
     },
     characters: {
       enabled: true,
-      include_adult_characters: false,
+      include_adult_characters: true,
       default_character_slug: "",
     },
     safety: {
-      local_family_safe_mode_enabled: true,
-      venice_api_safe_mode: true,
+      local_family_safe_mode_enabled: false,
+      venice_api_safe_mode: false,
     },
     developer: {
       verbose_config_logging: false,

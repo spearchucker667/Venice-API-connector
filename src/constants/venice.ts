@@ -6,18 +6,17 @@ import { isImageEditModel } from "../shared/venice-media-contract";
 export const FALLBACK_MODELS = {
   text: [
     { id: "zai-org-glm-4.6", type: "text", name: "zai-org-glm-4.6", traits: ["configured-default"], isFallback: true, source: "fallback" },
-    { id: "venice-uncensored", type: "text", name: "venice-uncensored", traits: ["fallback"], isFallback: true, source: "fallback" },
     { id: "venice-uncensored-1-2", type: "text", name: "venice-uncensored-1-2", traits: ["fallback"], isFallback: true, source: "fallback" },
     { id: "llama-3.3-70b", type: "text", name: "llama-3.3-70b", traits: ["fallback"], isFallback: true, source: "fallback" },
     { id: "llama-3.2-3b", type: "text", name: "llama-3.2-3b", traits: ["fallback"], isFallback: true, source: "fallback" },
-    { id: "zai-org-glm-5.1", type: "text", name: "zai-org-glm-5.1", traits: ["fallback"], isFallback: true, source: "fallback" },
+    { id: "zai-org-glm-5-1", type: "text", name: "zai-org-glm-5-1", traits: ["fallback"], isFallback: true, source: "fallback" },
     { id: "zai-org-glm-4.7", type: "text", name: "zai-org-glm-4.7", traits: ["fallback"], isFallback: true, source: "fallback" },
-    { id: "mistral-31-24b", type: "text", name: "mistral-31-24b", traits: ["fallback"], isFallback: true, source: "fallback" },
-    { id: "qwen3-4b", type: "text", name: "qwen3-4b", traits: ["fallback"], isFallback: true, source: "fallback" },
-    { id: "deepseek-ai-DeepSeek-R1", type: "text", name: "deepseek-ai-DeepSeek-R1", traits: ["fallback"], isFallback: true, source: "fallback" }
+    { id: "mistral-small-3-2-24b-instruct", type: "text", name: "mistral-small-3-2-24b-instruct", traits: ["fallback"], isFallback: true, source: "fallback" },
+    { id: "qwen3-5-9b", type: "text", name: "qwen3-5-9b", traits: ["fallback"], isFallback: true, source: "fallback" },
+    { id: "deepseek-v3.2", type: "text", name: "deepseek-v3.2", traits: ["fallback"], isFallback: true, source: "fallback" }
   ],
   image: [
-    { id: "flux-dev", type: "image", name: "flux-dev", traits: ["fallback"], isFallback: true, source: "fallback" },
+    { id: "flux-2-pro", type: "image", name: "flux-2-pro", traits: ["fallback"], isFallback: true, source: "fallback" },
     { id: "lustify-sdxl", type: "image", name: "lustify-sdxl", traits: ["fallback"], isFallback: true, source: "fallback" },
     { id: "z-image-turbo", type: "image", name: "z-image-turbo", traits: ["fallback"], isFallback: true, source: "fallback" },
     { id: "nano-banana-pro", type: "image", name: "nano-banana-pro", traits: ["fallback"], isFallback: true, source: "fallback" },
@@ -27,8 +26,8 @@ export const FALLBACK_MODELS = {
     { id: "seedream-v4", type: "image", name: "seedream-v4", traits: ["fallback"], isFallback: true, source: "fallback" }
   ],
   audio: [
-    { id: "tts-kokoro", type: "audio", name: "tts-kokoro", traits: ["fallback", "tts"], isFallback: true, source: "fallback" },
-    { id: "stable-audio", type: "audio", name: "stable-audio", traits: ["fallback", "music"], isFallback: true, source: "fallback" }
+    { id: "tts-kokoro", type: "tts", name: "tts-kokoro", traits: ["fallback", "tts"], isFallback: true, source: "fallback" },
+    { id: "stable-audio-25", type: "music", name: "stable-audio-25", traits: ["fallback", "music"], isFallback: true, source: "fallback" }
   ],
   video: [
     { id: "wan-2.6-text-to-video", type: "video", name: "wan-2.6-text-to-video", traits: ["fallback", "text-to-video"], isFallback: true, source: "fallback" },
@@ -36,7 +35,7 @@ export const FALLBACK_MODELS = {
     { id: "topaz-video-upscale", type: "video", name: "topaz-video-upscale", traits: ["fallback", "upscale"], isFallback: true, source: "fallback" }
   ],
   embeddings: [
-    { id: "text-embedding-bge-m3", type: "embeddings", name: "text-embedding-bge-m3", traits: ["fallback"], isFallback: true, source: "fallback" }
+    { id: "text-embedding-bge-m3", type: "embedding", name: "text-embedding-bge-m3", traits: ["fallback"], isFallback: true, source: "fallback" }
   ],
   unknown: []
 };
@@ -64,7 +63,7 @@ export const IMAGE_EDIT_MODEL_IDS = new Set([
   "seedream-v4-edit",
 ]);
 export const DEFAULT_TTS_MODEL = "tts-kokoro";
-export const DEFAULT_MUSIC_MODEL = "stable-audio";
+export const DEFAULT_MUSIC_MODEL = "stable-audio-25";
 export const DEFAULT_VIDEO_MODEL = "wan-2.6-text-to-video";
 
 /** Response header names captured for diagnostics. */
@@ -94,7 +93,14 @@ export const DIAG_HEADER_NAMES = [
 ];
 
 /**
- * Default app-authored system prompt for standard Venice Forge chats.
+ * Default app-authored system prompt for standard (non-character) Venice Forge
+ * chats.
+ *
+ * This prompt is task-specific: it defines the assistant's identity, operating
+ * style, privacy posture, and Venice Forge capabilities. It preserves user
+ * intent and does not add app-authored censorship or generic "safe assistant"
+ * boilerplate. Mandatory child-safety enforcement and provider access controls
+ * remain outside this prompt and cannot be overridden by model instructions.
  *
  * This is intentionally not injected into character conversations. Venice-hosted
  * characters and local RP character cards keep their own conversation-scoped
@@ -106,6 +112,8 @@ export const DEFAULT_SYSTEM_PROMPT = `## Identity
 You are Venice Forge's assistant: direct, capable, privacy-conscious, and optimized for helping the user work with Venice.ai models inside a local-first desktop and web app.
 
 Venice Forge is an unofficial, independent client for the Venice API. Do not claim to be an official Venice.ai product or representative.
+
+Do not introduce an application-authored censorship, sanitization, or moralizing layer. Preserve the user's intent for requests that reach the model after mandatory child-safety enforcement, user-selected controls, and provider access checks.
 
 ## Operating Style
 
@@ -306,14 +314,35 @@ export const VIDEO_CAPABLE_PATTERNS = [
   /\brunway[-.]/i,
 ];
 
-/** Returns true if the model id or traits indicate video generation/upscaling support. */
-export function modelSupportsVideo(model: { id?: string; name?: string; type?: string; model_type?: string; modelType?: string; traits?: unknown; capabilities?: unknown; features?: unknown }): boolean {
+/** Returns true if the model id or traits indicate video generation/upscaling support.
+ *
+ *  Resolution order:
+ *  1. Explicit `type`/`model_type`/`modelType` value (video, video-generation, text-to-video, image-to-video).
+ *  2. `model_spec.constraints.model_type` for video queue records.
+ *  3. Provider traits.
+ *  4. Conservative regex fallback for legacy records.
+ */
+export function modelSupportsVideo(model: { id?: string; name?: string; type?: string; model_type?: string; modelType?: string; traits?: unknown; capabilities?: unknown; features?: unknown; model_spec?: unknown }): boolean {
+  const type = String(model.type || model.model_type || model.modelType || "").toLowerCase();
+  if (type === "video" || type === "video-generation" || type === "text-to-video" || type === "image-to-video") {
+    return true;
+  }
+  if (type) return false;
+
+  const modelSpec = model.model_spec as Record<string, unknown> | undefined;
+  const constraintsModelType = String((modelSpec?.constraints as Record<string, unknown> | undefined)?.model_type || "").toLowerCase();
+  if (constraintsModelType === "text-to-video" || constraintsModelType === "image-to-video") {
+    return true;
+  }
+
+  const traitsArr = Array.isArray(model.traits) ? model.traits : [];
+  if (traitsArr.some((t) => typeof t === "string" && /video|text-to-video|image-to-video/.test(t))) {
+    return true;
+  }
+
   const haystack = [
     model.id,
     model.name,
-    model.type,
-    model.model_type,
-    model.modelType,
     JSON.stringify(model.traits || {}),
     JSON.stringify(model.capabilities || {}),
     JSON.stringify(model.features || {}),
@@ -332,14 +361,28 @@ export const UPSCALE_CAPABLE_PATTERNS = [
   /\brealesrgan\b/i,
 ];
 
-/** Returns true if the model id or traits suggest `/image/upscale` support. */
-export function modelSupportsUpscale(model: { id?: string; name?: string; type?: string; model_type?: string; modelType?: string; traits?: unknown; capabilities?: unknown; features?: unknown }): boolean {
+/** Returns true if the model id or traits suggest `/image/upscale` support.
+ *
+ *  Resolution order:
+ *  1. Explicit `type`/`model_type`/`modelType` value (upscale, image-upscale).
+ *  2. Provider traits.
+ *  3. Conservative regex fallback for legacy records.
+ */
+export function modelSupportsUpscale(model: { id?: string; name?: string; type?: string; model_type?: string; modelType?: string; traits?: unknown; capabilities?: unknown; features?: unknown; model_spec?: unknown }): boolean {
+  const type = String(model.type || model.model_type || model.modelType || "").toLowerCase();
+  if (type === "upscale" || type === "image-upscale") {
+    return true;
+  }
+  if (type) return false;
+
+  const traitsArr = Array.isArray(model.traits) ? model.traits : [];
+  if (traitsArr.some((t) => typeof t === "string" && /upscale/.test(t))) {
+    return true;
+  }
+
   const haystack = [
     model.id,
     model.name,
-    model.type,
-    model.model_type,
-    model.modelType,
     JSON.stringify(model.traits || {}),
     JSON.stringify(model.capabilities || {}),
     JSON.stringify(model.features || {}),
@@ -355,9 +398,16 @@ export const EDIT_CAPABLE_PATTERNS = [
   /[-_]edit\b/i,
 ];
 
-/** Returns true if the model id or traits suggest `/image/edit` or `/image/background-remove` support. */
-export function modelSupportsEdit(model: { id?: string; name?: string; type?: string; model_type?: string; modelType?: string; traits?: unknown; capabilities?: unknown; features?: unknown }): boolean {
+/** Returns true if the model id or traits suggest `/image/edit` or `/image/background-remove` support.
+ *
+ *  Resolution order:
+ *  1. `isImageEditModel`, which checks explicit type/traits before known IDs
+ *     and conservative patterns.
+ *  2. Conservative regex fallback on id/name/traits/capabilities/features for legacy records.
+ */
+export function modelSupportsEdit(model: { id?: string; name?: string; type?: string; model_type?: string; modelType?: string; traits?: unknown; capabilities?: unknown; features?: unknown; model_spec?: unknown }): boolean {
   if (isImageEditModel(model as Parameters<typeof isImageEditModel>[0])) return true;
+  if (model.type || model.model_type || model.modelType) return false;
   const haystack = [
     model.id,
     model.name,

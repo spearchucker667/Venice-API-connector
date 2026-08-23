@@ -217,8 +217,8 @@ describe('settings-store', () => {
 
       expect(migrated.activeTab).toBe('chat')
       expect(migrated.sidebarOpen).toBe(true)
-      expect(migrated.localFamilySafeModeEnabled).toBe(true)
-      expect(migrated.veniceApiSafeMode).toBe(true)
+      expect(migrated.localFamilySafeModeEnabled).toBe(false)
+      expect(migrated.veniceApiSafeMode).toBe(false)
     })
 
     it('merges state correctly', () => {

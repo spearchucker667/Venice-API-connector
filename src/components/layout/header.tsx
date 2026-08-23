@@ -19,7 +19,7 @@ import { getActiveProfileId } from "../../services/activeProfile";
 import { resolveTab } from "../../config/tabs";
 import { formatModelLabelWithCost } from "../../utils/pricing";
 import { CharacterAvatar } from "../characters/CharacterAvatar";
-import type { ModelInfo, VeniceModel } from "../../types/venice";
+import type { ModelInfo } from "../../types/venice";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -71,7 +71,7 @@ export function Header({ onOpenApiKey, onOpenMobileSidebar }: Props) {
   const getModelLabel = useCallback(
     (m: ModelInfo) => {
       return modelType === "image" || modelType === "video"
-        ? formatModelLabelWithCost(m as unknown as VeniceModel)
+        ? formatModelLabelWithCost(m)
         : m.name || m.display_name || m.id;
     },
     [modelType],

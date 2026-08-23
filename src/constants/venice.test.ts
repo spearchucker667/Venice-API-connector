@@ -15,6 +15,9 @@ import {
   DEFAULT_TTS_MODEL,
   DEFAULT_VIDEO_MODEL,
   FALLBACK_MODELS,
+  modelSupportsEdit,
+  modelSupportsUpscale,
+  modelSupportsVideo,
   modelSupportsVision,
 } from "./venice";
 
@@ -103,6 +106,21 @@ describe("modality default models", () => {
     expect(FALLBACK_MODELS.video.some((model) => model.id === DEFAULT_VIDEO_MODEL)).toBe(true);
     expect(DEFAULT_VIDEO_MODEL).toBe("wan-2.6-text-to-video");
   });
+
+  it("does not retain model IDs absent from the refreshed 2026-08-22 registry", () => {
+    const fallbackIds = Object.values(FALLBACK_MODELS).flat().map((model) => model.id);
+    for (const retiredId of [
+      "venice-uncensored",
+      "zai-org-glm-5.1",
+      "mistral-31-24b",
+      "qwen3-4b",
+      "deepseek-ai-DeepSeek-R1",
+      "flux-dev",
+      "stable-audio",
+    ]) {
+      expect(fallbackIds).not.toContain(retiredId);
+    }
+  });
 });
 
 describe("DEFAULT_SYSTEM_PROMPT", () => {
@@ -138,7 +156,111 @@ describe("DEFAULT_SYSTEM_PROMPT", () => {
     expect(DEFAULT_SYSTEM_PROMPT).toContain("unofficial");
   });
 
+  it("rejects app-authored censorship while preserving hard boundaries", () => {
+    expect(DEFAULT_SYSTEM_PROMPT).toMatch(/application-authored censorship/i);
+    expect(DEFAULT_SYSTEM_PROMPT).toMatch(/mandatory child-safety enforcement/i);
+    expect(DEFAULT_SYSTEM_PROMPT).toMatch(/provider access checks/i);
+    expect(DEFAULT_SYSTEM_PROMPT).not.toMatch(/any requests/i);
+  });
+
+  it("does not contain generic safe-assistant or family-friendly boilerplate", () => {
+    expect(DEFAULT_SYSTEM_PROMPT).not.toMatch(/safe assistant/i);
+    expect(DEFAULT_SYSTEM_PROMPT).not.toMatch(/family.?friendly/i);
+    expect(DEFAULT_SYSTEM_PROMPT).not.toMatch(/appropriate content/i);
+    expect(DEFAULT_SYSTEM_PROMPT).not.toMatch(/child.?friendly/i);
+    expect(DEFAULT_SYSTEM_PROMPT).not.toMatch(/keep it clean/i);
+  });
+
   it("is a non-empty string longer than 100 characters", () => {
     expect(DEFAULT_SYSTEM_PROMPT.length).toBeGreaterThan(100);
+  });
+});
+
+
+describe("modelSupportsVideo", () => {
+  it("returns true for explicit video type values", () => {
+    expect(modelSupportsVideo({ id: "m", type: "video" })).toBe(true);
+    expect(modelSupportsVideo({ id: "m", type: "video-generation" })).toBe(true);
+    expect(modelSupportsVideo({ id: "m", model_type: "text-to-video" })).toBe(true);
+    expect(modelSupportsVideo({ id: "m", modelType: "image-to-video" })).toBe(true);
+  });
+
+  it("returns true for video model_type in model_spec.constraints", () => {
+    expect(modelSupportsVideo({ id: "m", model_spec: { constraints: { model_type: "text-to-video" } } })).toBe(true);
+    expect(modelSupportsVideo({ id: "m", model_spec: { constraints: { model_type: "image-to-video" } } })).toBe(true);
+  });
+
+  it("returns true for video traits", () => {
+    expect(modelSupportsVideo({ id: "m", traits: ["text-to-video"] })).toBe(true);
+    expect(modelSupportsVideo({ id: "m", traits: ["image-to-video"] })).toBe(true);
+    expect(modelSupportsVideo({ id: "m", traits: ["video"] })).toBe(true);
+  });
+
+  it("falls back to regex for id/name/features containing video terms", () => {
+    expect(modelSupportsVideo({ id: "some-video-model" })).toBe(true);
+    expect(modelSupportsVideo({ id: "seedance-thing" })).toBe(true);
+    expect(modelSupportsVideo({ id: "m", name: "Wan Video" })).toBe(true);
+    expect(modelSupportsVideo({ id: "m", features: { kind: "text-to-video" } })).toBe(true);
+  });
+
+  it("returns false for non-video models", () => {
+    expect(modelSupportsVideo({ id: "llama-3.3-70b", type: "text" })).toBe(false);
+    expect(modelSupportsVideo({ id: "flux-dev", type: "image" })).toBe(false);
+    expect(modelSupportsVideo({ id: "misleading-video-id", type: "text" })).toBe(false);
+    expect(modelSupportsVideo({ id: "mystery-model" })).toBe(false);
+  });
+});
+
+describe("modelSupportsUpscale", () => {
+  it("returns true for explicit upscale type values", () => {
+    expect(modelSupportsUpscale({ id: "m", type: "upscale" })).toBe(true);
+    expect(modelSupportsUpscale({ id: "m", model_type: "image-upscale" })).toBe(true);
+  });
+
+  it("returns true for upscale traits", () => {
+    expect(modelSupportsUpscale({ id: "m", traits: ["upscale"] })).toBe(true);
+    expect(modelSupportsUpscale({ id: "m", traits: ["image-upscale"] })).toBe(true);
+  });
+
+  it("falls back to regex for id/name/features containing upscale terms", () => {
+    expect(modelSupportsUpscale({ id: "clarity-upscale" })).toBe(true);
+    expect(modelSupportsUpscale({ id: "topaz-image-hd" })).toBe(true);
+    expect(modelSupportsUpscale({ id: "m", features: { mode: "upscale" } })).toBe(true);
+  });
+
+  it("returns false for non-upscale models", () => {
+    expect(modelSupportsUpscale({ id: "flux-dev", type: "image" })).toBe(false);
+    expect(modelSupportsUpscale({ id: "misleading-upscale-id", type: "image" })).toBe(false);
+    expect(modelSupportsUpscale({ id: "llama-3.3-70b", type: "text" })).toBe(false);
+    expect(modelSupportsUpscale({ id: "mystery-model" })).toBe(false);
+  });
+});
+
+describe("modelSupportsEdit", () => {
+  it("returns true for explicit edit type values", () => {
+    expect(modelSupportsEdit({ id: "m", type: "inpaint" })).toBe(true);
+    expect(modelSupportsEdit({ id: "m", model_type: "image-edit" })).toBe(true);
+  });
+
+  it("returns true for edit traits", () => {
+    expect(modelSupportsEdit({ id: "m", traits: ["inpaint"] })).toBe(true);
+    expect(modelSupportsEdit({ id: "m", traits: ["edit"] })).toBe(true);
+  });
+
+  it("returns true for known edit model ids", () => {
+    expect(modelSupportsEdit({ id: "firered-image-edit" })).toBe(true);
+    expect(modelSupportsEdit({ id: "seedream-v5-pro-edit" })).toBe(true);
+  });
+
+  it("falls back to regex for id/name/features containing edit terms", () => {
+    expect(modelSupportsEdit({ id: "custom-edit" })).toBe(true);
+    expect(modelSupportsEdit({ id: "m", features: { kind: "background_remove" } })).toBe(true);
+  });
+
+  it("returns false for non-edit models", () => {
+    expect(modelSupportsEdit({ id: "flux-dev", type: "image" })).toBe(false);
+    expect(modelSupportsEdit({ id: "llama-3.3-70b", type: "text" })).toBe(false);
+    expect(modelSupportsEdit({ id: "mystery-model" })).toBe(false);
+    expect(modelSupportsEdit({ id: "misleading-edit-id", type: "image" })).toBe(false);
   });
 });

@@ -43,7 +43,13 @@ describe('modelService cache behavior', () => {
   it('returns fresh cache without fetch', async () => {
     window.localStorage.setItem('venice-forge-models-cache-v2', JSON.stringify({ schemaVersion: 2, grouped: validGroupedModels, fetchedAt: Date.now() }));
     await refreshModels(dispatch, false);
-    expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'SET_MODELS', fallback: false }));
+    expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
+      type: 'SET_MODELS',
+      fallback: false,
+      models: expect.objectContaining({
+        text: [expect.objectContaining({ id: 'a', source: 'cache' })],
+      }),
+    }));
     expect(veniceFetch).not.toHaveBeenCalled();
   });
 

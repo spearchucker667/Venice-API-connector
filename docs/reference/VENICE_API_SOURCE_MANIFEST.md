@@ -2,9 +2,9 @@
 
 > **Upstream Repository:** `https://github.com/veniceai/api-docs`  
 > **Upstream Branch:** `main`  
-> **Upstream Commit SHA:** `6e69346b13695bd53ba33a1d34e7b28841e10f98`  
-> **Retrieval Date:** `2026-08-15`  
-> **Schema Version (`info.version`):** `20260814.194349`  
+> **Upstream Commit SHA:** `601b7bb19921f0e31bc805d51322085cd6fc4ac5`
+> **Retrieval Date:** `2026-08-23`
+> **Schema Version (`info.version`):** `20260821.193530`
 > **Local Reference Path (Ignored):** `docs/reference/venice-api-upstream/`  
 > **Tracked Canonical Snapshot:** `docs/reference/Venice_swagger_api.yaml`  
 

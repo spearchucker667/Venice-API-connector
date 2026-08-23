@@ -9,6 +9,12 @@
  *    - downstream code never reads the renderer-supplied
  *      `localFamilySafeModeEnabled` flag (defence-in-depth).
  *
+ *  IMPORTANT: the provider-side `safe_mode` parameter and the local
+ *  Family Safe Mode filter are INDEPENDENT. Local family-safe filtering
+ *  runs before dispatch and on responses; it never forces
+ *  `safe_mode: true` on the outbound Venice request. Only
+ *  `getRuntimeVeniceApiSafeMode()` drives the provider parameter.
+ *
  *  These helpers are main-process only. The renderer-side
  *  `src/shared/safety/localFamilySafeGuard.ts` is the primitive that
  *  actually evaluates a prompt; this file orchestrates it. */
@@ -141,16 +147,17 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function withFamilySafeProviderOverride(rawRequest: unknown, endpoint: string): unknown {
-  const localFamilySafeModeEnabled = getRuntimeLocalFamilySafeModeEnabled();
+  // Provider-side safe_mode is driven solely by the Venice API Safe Mode
+  // runtime setting. Local Family Safe Mode is an independent filter that
+  // runs before dispatch and on responses; it must not force safe_mode on.
   const veniceApiSafeMode = getRuntimeVeniceApiSafeMode();
-  const effectiveSafeMode = localFamilySafeModeEnabled || veniceApiSafeMode;
-  
+
   if (!isRecord(rawRequest)) return rawRequest;
   const body = rawRequest.body;
   if (!isRecord(body)) return rawRequest;
   return {
     ...rawRequest,
-    body: applyVeniceApiSafeMode(endpoint, body, effectiveSafeMode),
+    body: applyVeniceApiSafeMode(endpoint, body, veniceApiSafeMode),
   };
 }
 

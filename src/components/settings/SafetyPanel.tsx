@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MasterPasswordDialog } from "./MasterPasswordDialog";
 import { useProfileStore } from "../../stores/profile-store";
-import { toast } from "../../stores/toast-store";
 
 export interface SafetyPanelProps {
   localFamilySafeModeEnabled: boolean;
@@ -38,7 +37,7 @@ export function SafetyPanel({
             <p className="mt-1 text-[12.5px] text-text-secondary leading-relaxed">
               {t(
                 "settings:safety.familySafeModeDescription",
-                "Runs Venice Forge's local family-safe filter before sending requests. Designed for child/family-safe use.",
+                "Controls the optional local family-oriented layer. Mandatory child-safety protection remains active in every mode.",
               )}
             </p>
           </div>
@@ -79,7 +78,7 @@ export function SafetyPanel({
               )
             : t(
                 "settings:safety.status.disabled",
-                "Bypasses Venice Forge's local family-safe filter. Note: Venice API provider-side Safe Mode is controlled separately below.",
+                "The optional family layer is off. Mandatory child-safety protection remains active; Venice API provider Safe Mode is controlled separately below.",
               )}
         </p>
 
@@ -101,7 +100,7 @@ export function SafetyPanel({
               : !localFamilySafeModeEnabled && !veniceApiSafeMode
                 ? t(
                     "settings:safety.status.bothOff",
-                    "Both local family filter and Venice API provider Safe Mode are OFF. Outbound requests include safe_mode: false.",
+                    "Both optional filters are OFF and outbound requests include safe_mode: false. Mandatory child-safety protection remains active.",
                   )
                 : t(
                     "settings:safety.status.filteredLocally",
@@ -158,19 +157,6 @@ export function SafetyPanel({
             )}
             checked={veniceApiSafeMode}
             onChange={(event) => {
-              if (localFamilySafeModeEnabled && !event.target.checked) {
-                toast.error(
-                  t(
-                    "settings:safety.errors.cannotDisableTitle",
-                    "Cannot disable Provider Safe Mode",
-                  ),
-                  t(
-                    "settings:safety.errors.cannotDisableDetail",
-                    "Family Safe Mode must be turned off first.",
-                  ),
-                );
-                return;
-              }
               onUpdateSafetySetting(
                 "venice_api_safe_mode",
                 event.target.checked,

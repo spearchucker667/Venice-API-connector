@@ -6,6 +6,21 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
+**Scope:** Reconcile and complete the interrupted Kimi prompt, safety-default, pricing, and model-registry work
+
+- Reconciled the exported handoff against the live `main` worktree and the refreshed Venice API snapshot instead of accepting its partial completion claims. The upstream documentation snapshot is now pinned to commit `601b7bb19921f0e31bc805d51322085cd6fc4ac5`, dated 2026-08-22, schema version `20260821.193530`.
+- Decoupled the optional local family filter from Venice provider `safe_mode`. Both default off, adult-character discovery defaults on, and explicit stored user choices remain preserved. Mandatory child-exploitation request and textual-response screening always runs and cannot be disabled by the optional setting, environment flag, renderer header, or IPC payload.
+- Consolidated image enhance/remix prompts in `src/shared/imagePromptDefaults.ts`. The prompts preserve user-declared subject, identity, age, explicitness, style, medium, and constraints while remaining subordinate to mandatory child safety and provider access controls. The standard chat prompt uses the same boundary and does not promise to fulfill every possible request.
+- Replaced the fabricated flat-price fallback with schema-qualified model pricing for text tokens, TTS characters, images, inpaint/edit, upscale, timed audio/video/music, ASR, resolution, quality, and duration shapes. Labels distinguish cached, fallback, and catalog provenance and never describe unverified data as live.
+- Model classification now prefers explicit Venice model types, treats unrecognized explicit types as unknown, retains conservative fallback inference only when type metadata is absent, removes invented capability fields not present in the current Swagger, and marks cached registry records as cached.
+- Refreshed seven retired fallback model identifiers and corrected fallback subtype metadata for TTS, music, embeddings, inpaint, and upscale routing.
+- Performed a read-only authenticated live registry check through Electron secure storage without printing the API key or making paid inference calls: 336 models across text, image, video, music, embedding, TTS, upscale, inpaint, and ASR; traits and compatibility mappings also returned successfully. The observed pricing-shape inventory drove the formatter tests.
+- Added or updated focused regressions across configuration, safety, model classification/capabilities/cache provenance, pricing, prompt rewriting, Venice web/blob/form-data response screening, Express, Electron IPC/bridge, and Video Studio model labels.
+- Validation completed: ESLint and both TypeScript projects PASS; focused continuation suite PASS (294/294); full Vitest suite PASS (463 files, 5,133 passed, 1 skipped); safety, 253-file Markdown, API documentation/drift, i18n regression, aggregate contracts, production build, distribution, both dependency audits, and `npm run ci` all PASS. The configured i18n verifier continues to report the pre-existing 319 non-English `__MISSING__` markers as warnings.
+
+## Prior Session Summary
+
+**Date:** 2026-08-23
 **Scope:** Repair CI workflow failures in ChatMarkdown.tsx
 
 - **ESLint / Typescript Fix:** Removed the `Unexpected any` cast in `ChatMarkdown.tsx` where `PreRenderer` spread its `props`. Destructured `node` from `props` so it does not get spread as an invalid attribute onto the DOM `div`.
@@ -1916,6 +1931,26 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 
 ## Validation Matrix
 
+### August 23 — Kimi continuation: prompts, safety defaults, pricing, and model registry
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| `npm run docs:venice:sync` | PASS | Retrieved all 17 mandatory upstream files at commit `601b7bb19921f0e31bc805d51322085cd6fc4ac5`, schema `20260821.193530`. |
+| Read-only Electron live registry check | PASS | `/models?type=all` returned 336 models; traits and compatibility mappings succeeded; API key was not printed and no paid inference was invoked. |
+| Focused continuation Vitest command (9 initially failing safety/pricing files) | PASS | 294/294 after correcting stale optional-filter bypass and fabricated-pricing expectations. |
+| `npm run lint:eslint` | PASS | Zero warnings/errors. |
+| `npm run typecheck` | PASS | Renderer and Electron TypeScript projects clean. |
+| `npm test` | PASS | 463 files; 5,133 passed, 1 skipped. |
+| `npm run verify:safety-guard` | PASS | All renderer, Electron, server, and research enforcement checks passed. |
+| `npm run verify:markdown-links` | PASS | 253 Markdown files checked. |
+| `npm run verify:venice-api-docs` | PASS | Provenance and schema contracts parsed successfully. |
+| `npm run verify:venice-contract-drift` | PASS | All current Venice request/model drift checks passed. |
+| `npm run verify:i18n` | PASS with pre-existing warnings | 12 locales and 12 namespaces; 319 existing non-English `__MISSING__` markers remain warnings. |
+| `npm run verify:i18n-hardcoded-regressions` | PASS | Zero regressions and zero baseline decreases. |
+| `npm run verify:contracts` | PASS | Feature, security, storage, documentation, and release contracts passed. |
+| `npm run build` | PASS | Renderer, server bundle, Electron main, and preload built. |
+| `npm run ci` | PASS | Segmented tests, both audits (0 vulnerabilities), build, contracts, and distribution verification passed. |
+
 ### August 23 — Hosted CI portability remediation
 
 | Command / evidence | Result | Notes |
@@ -2712,6 +2747,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-08-23 — Interrupted Kimi continuation reconciled and completed:** Reviewed the export against current `main`, the canonical roadmap, the live diff, current Swagger, and a read-only authenticated registry response. Refreshed the API snapshot/provenance to schema `20260821.193530`; completed independent optional-local/provider safety defaults while making child-exploitation screening mandatory; consolidated user-intent-preserving image prompt defaults; replaced fabricated pricing labels with the observed schema families and explicit provenance; preferred explicit model types, removed invented capability flags, refreshed retired fallback IDs, and marked cached models accurately. Added and updated regression coverage across every changed boundary. Live registry discovery returned 336 models plus traits and compatibility mappings without printing the key or invoking paid inference. ESLint, both typechecks, the 5,133-test full Vitest suite, safety, Markdown, API drift, i18n regressions, contracts, build, distribution, dependency audits, and aggregate CI all passed; only the existing 319 allowed i18n missing-marker warnings remain.
 
 - **2026-08-23 — Hosted CI portability remediation (runs `32622366262` / `32624408721` / `32625327617` / `32626615743`):** Diagnosed three initial failures to two platform assumptions. Moved canonical tracked-path casing detection ahead of `existsSync()` and added a Linux-style regression. Updated the theme test to prove `0600` is requested everywhere while checking actual mode bits only on POSIX. Successively unblocked Linux smoke exposed nonexistent APT package `libxvfb` and then missing Linux executable discovery; corrected the package to `xvfb`, guarded the workflow contract, anchored smoke discovery at `process.cwd()`, resolved Linux unpacked binaries, and made macOS `.app`/binary discovery name-independent. Focused resolver tests, 4,497-test `test:ci`, 5,069-test coverage, zero-warning lint, both typechecks, safety/Markdown/contracts, build/dist, and aggregate `npm run ci` pass; both audits report 0 vulnerabilities. Final CI run `32626615743` passed every job, including Linux/macOS/Windows packaged launches, and CodeQL run `32626615860` passed both analyses.
 

@@ -67,14 +67,14 @@
   "familySafeMode": {
     "title": "Family Safe Mode",
     "on": "ON: local family filter runs.",
-    "off": "OFF: Local filter OFF (Provider Safe Mode separate).",
+    "off": "OFF: Optional family layer off; child-safety remains active.",
     "toggle": "Toggle Family Safe Mode",
     "enabledTooltip": "Family Safe Mode enabled",
-    "disabledTooltip": "Local Family Safe Mode disabled (Provider Safe Mode separate)",
+    "disabledTooltip": "Optional family layer disabled; child-safety remains active",
     "notSaved": "Family Safe Mode was not saved",
     "writeFailed": "Config write failed.",
     "enabledSuccess": "Family Safe Mode enabled — local family filter runs on every prompt",
-    "disabledSuccess": "Adult Mode enabled — local family filter is skipped"
+    "disabledSuccess": "Adult Mode enabled — optional family layer is skipped; child-safety remains active"
   },
   "keyboardShortcuts": {
     "switchTab": "Switch tab"
