@@ -99,12 +99,15 @@ function PreRenderer({
   });
 
   return (
-    <div className="relative group/code mb-4 mt-2 overflow-hidden rounded-md border border-border bg-surface-sunken">
+    <pre className="relative group/code mb-4 mt-2 overflow-hidden rounded-md border border-border bg-surface-sunken">
       <div className="flex items-center justify-between bg-surface-elevated px-3 py-1.5 border-b border-border/50">
         <div className="text-[12px] text-text-muted font-mono uppercase tracking-wider select-none">
           {lang || "text"}
         </div>
         <button
+          type="button"
+          aria-label="Copy"
+          title="Copy"
           onClick={() => {
             if (rawText) {
               void copyText(rawText);
@@ -120,10 +123,10 @@ function PreRenderer({
             : tRuntime("runtimeGenerated.components.chat.messageBubble.text.copy")}
         </button>
       </div>
-      <pre className="p-3 overflow-x-auto text-[13px] leading-relaxed" {...props}>
+      <div className="p-3 overflow-x-auto text-[13px] leading-relaxed" {...props}>
         {children}
-      </pre>
-    </div>
+      </div>
+    </pre>
   );
 }
 
