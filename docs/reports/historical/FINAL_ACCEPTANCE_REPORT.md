@@ -1,5 +1,8 @@
 # Final Acceptance Report
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
+
 **Date:** 2026-08-23
 **Scope:** Final Acceptance Hardening, Deferred Work Review, and Release Readiness
 

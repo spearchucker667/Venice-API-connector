@@ -1,5 +1,8 @@
 # Deferred Work Decision Record
 
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
+
 This document records the engineering decisions required to unblock externally deferred roadmap items.
 
 ## VF-FSM-003 Semantic Media Classifiers
