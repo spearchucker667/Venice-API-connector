@@ -123,7 +123,7 @@ function PreRenderer({
             : tRuntime("runtimeGenerated.components.chat.messageBubble.text.copy")}
         </button>
       </div>
-      <div className="p-3 overflow-x-auto text-[13px] leading-relaxed" {...props}>
+      <div className="p-3 overflow-x-auto text-[13px] leading-relaxed" {...(props as any)}>
         {children}
       </div>
     </pre>
