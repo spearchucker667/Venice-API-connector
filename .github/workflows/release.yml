@@ -57,9 +57,16 @@ jobs:
 
       - name: Check macOS signing credentials for tag releases
         if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          RELEASE_CSC_LINK: ${{ secrets.CSC_LINK }}
+          RELEASE_CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          RELEASE_APPLE_ID: ${{ secrets.APPLE_ID }}
+          RELEASE_APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          RELEASE_APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          RELEASE_ALLOW_UNSIGNED: ${{ vars.RELEASE_ALLOW_UNSIGNED }}
         run: |
-          if [[ -z "${{ secrets.CSC_LINK }}" || -z "${{ secrets.CSC_KEY_PASSWORD }}" || -z "${{ secrets.APPLE_ID }}" || -z "${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}" || -z "${{ secrets.APPLE_TEAM_ID }}" ]]; then
-            if [[ "${{ vars.RELEASE_ALLOW_UNSIGNED }}" != "true" ]]; then
+          if [[ -z "$RELEASE_CSC_LINK" || -z "$RELEASE_CSC_KEY_PASSWORD" || -z "$RELEASE_APPLE_ID" || -z "$RELEASE_APPLE_APP_SPECIFIC_PASSWORD" || -z "$RELEASE_APPLE_TEAM_ID" ]]; then
+            if [[ "$RELEASE_ALLOW_UNSIGNED" != "true" ]]; then
               echo "::error::macOS tag releases fail closed without signing/notarization credentials. Set RELEASE_ALLOW_UNSIGNED=true only for a deliberate unsigned draft exception."
               exit 1
             fi
@@ -144,9 +151,13 @@ jobs:
       - name: Check Windows signing credentials for tag releases
         if: startsWith(github.ref, 'refs/tags/v')
         shell: bash
+        env:
+          RELEASE_WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          RELEASE_WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+          RELEASE_ALLOW_UNSIGNED: ${{ vars.RELEASE_ALLOW_UNSIGNED }}
         run: |
-          if [[ -z "${{ secrets.WIN_CSC_LINK }}" || -z "${{ secrets.WIN_CSC_KEY_PASSWORD }}" ]]; then
-            if [[ "${{ vars.RELEASE_ALLOW_UNSIGNED }}" != "true" ]]; then
+          if [[ -z "$RELEASE_WIN_CSC_LINK" || -z "$RELEASE_WIN_CSC_KEY_PASSWORD" ]]; then
+            if [[ "$RELEASE_ALLOW_UNSIGNED" != "true" ]]; then
               echo "::error::Windows tag releases fail closed without signing credentials. Set RELEASE_ALLOW_UNSIGNED=true only for a deliberate unsigned draft exception."
               exit 1
             fi

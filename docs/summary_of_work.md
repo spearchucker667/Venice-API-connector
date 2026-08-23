@@ -6,6 +6,18 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-23
+**Scope:** Restore deterministic CI test isolation and harden release-workflow credential handling
+
+- Reproduced the current hosted CI failures on commit `3d8c1470`: Ubuntu, macOS, Windows, and contract jobs all failed after `vitest.config.ts` stopped loading the canonical test harness. The missing `globals: true` caused Electron suites to fail at import time (`afterEach is not defined`); the missing `tests/setup.ts` disabled Testing Library cleanup, fake IndexedDB, locale reset, and Electron mocks, causing cross-test DOM/state contamination.
+- Restored the canonical Vitest globals and setup-file contract without lowering coverage thresholds or weakening tests. Added CI verifier guards so either configuration deletion now fails before the broad matrix runs.
+- Removed direct GitHub secret/repository-variable interpolation from release credential-check shell source. Tag checks now receive credentials through step-scoped environment variables and still fail closed unless the deliberate unsigned-release exception is enabled.
+- Extended the release-packaging verifier to reject direct `${{ secrets.* }}` / `${{ vars.* }}` interpolation inside any `run:` scalar or block, with a negative fixture that proves the unsafe form exits non-zero.
+- Focused regressions pass: Electron IPC handlers 87/87, Research Workspace 114/114, CI verifier 14/14, release verifier 11/11, `verify:ci-contract`, and release-packaging 104/104.
+- `npm run ci` passes end-to-end: segmented tests, dependency audits (zero vulnerabilities), renderer/server/Electron builds, aggregate contracts, and distribution verification all completed successfully. The separate full `npm test` passes 5,163 tests with one existing skip across 465 files. Exact-commit hosted GitHub checks are recorded below after publication.
+
+## Prior Session Summary
+
+**Date:** 2026-08-23
 **Scope:** User-log remediation for Image Studio safety-block reporting and idempotent Research deletion
 
 - Reconciled the supplied Traffic Inspector export and desktop log against current `main`. The export proves two Image Studio enhancer calls reached `/chat/completions` and were rejected with HTTP 451 by mandatory child-safety enforcement while the optional safety setting was reported off; the privacy-safe export omits raw prompts, so it cannot prove whether either detector decision was a false positive.
@@ -1831,7 +1843,7 @@ The earlier P1 audit closure (P1 #1–#8 with `VERIFY-128..131`) remains the con
 
 **Hosted CI portability failures from runs `32622366262`, `32624408721`, and `32625327617` (closed 2026-08-23):** deterministic wrong-case Markdown classification, the Windows-inapplicable POSIX mode assertion, nonexistent Ubuntu package `libxvfb`, and missing Linux executable discovery are corrected with focused regressions. Final CI run `32626615743` passed the complete matrix, including all three packaged-launch jobs; CodeQL run `32626615860` passed both analyses. No roadmap item was created because no implementation or hosted-evidence work remains for this failure chain.
 
-**Exhaustive Audit `VF-EXHAUSTIVE-AUDIT-20260815` (open; WP-01..05 closed 2026-08-17):** WPs executed so far: WP-01 strict request-schema corrections (P1-001, P1-008, P2-001, P2-002 — `safe_mode` matrix, `veniceSearchWire`, top-level `prompt_cache_key`, `language_code`); WP-02 video contract corrections (P1-003 — `duration` required on quote/queue; coercer fields removed; workflow schema fail-closed on missing `videoDuration`); WP-03 shared SSE conformance (P1-002 — one incremental decoder in `src/shared/sseStreamDecoder.ts` powering both transports); WP-04 agent IPC durability (P1-006 — shared `src/shared/veniceStreamDelta.ts` envelope, preload forwards `appendedMessages` with media/document metadata, boundary validation); WP-05 capability-driven tools/references (P1-004 — `style_references` wire shape, invented `venice-character-reference-v1` removed, runtime-metadata gating; P1-005 — `tools` only when `supportsFunctionCalling`; P3-001 — `discount_to_user` + style-ref type surface, drift verifier). Remaining: WP-06 (post-delta retry safety, P1-007 — never auto-replay a billable stream after observable output; require explicit retry and preserve the partial result), WP-07 (schema-backed CI/external acceptance). Tracking and evidence per work package are in `docs/ROADMAP.md` under the audit row.
+**Exhaustive Audit `VF-EXHAUSTIVE-AUDIT-20260815` (local implementation closed; hosted closeout pending exact-commit evidence):** WP-01 through WP-05 corrected the request schemas, video contract, shared SSE decoder, agent IPC durability, and capability-driven tools/references. WP-06 post-delta retry safety was already implemented and regression-covered. WP-07's schema-backed local CI is restored by the 2026-08-23 Vitest harness correction and CI-contract guard. The audit row can leave `docs/ROADMAP.md` after the published commit's hosted CI and CodeQL matrices pass; signed, paid, cross-platform installation, multi-device, and manual accessibility acceptance remain independently tracked under `VF-VERIFY-005` and are not inferred from local automation.
 
 **VF-VERIFY-005 media Save As architecture (2026-07-28, locally remediated; distribution evidence blocked):** every single-item image/audio/video save surface now calls `desktopMedia.saveMediaAs`, and Electron writes only through `generatedMediaExport.ts`. Obsolete fixed-folder writer IPCs were removed. Format, signature, byte preservation, filename, overwrite, cancellation, source-normalization, and large-file cases have regression coverage. The arm64 app/DMG/ZIP build and packaged smoke pass. Signed/notarized macOS, Intel macOS, Windows, paid-provider, and real backup-restored/migrated fixture acceptance remain blocked by missing identities/profiles/resources and are retained in `docs/ROADMAP.md`.
 
@@ -1972,6 +1984,21 @@ One lint nag was sanitized during this session: the unused `originalRecord` dest
 **Dependency-audit status (refreshed 2026-08-23):** `npm audit --omit=dev --audit-level=moderate` and `npm audit --audit-level=critical` both report 0 vulnerabilities. The aggregate `npm run ci` gate is no longer blocked by dependency audit findings.
 
 ## Validation Matrix
+
+### August 23 — CI test-isolation and release-workflow hardening
+
+| Command / evidence | Result | Notes |
+|---|---|---|
+| Hosted CI run `32654915950` at `3d8c1470` | FAIL (reproduced baseline) | Ubuntu/macOS/Windows unit jobs failed on missing Vitest globals; contracts failed with 47 rendered-component failures and 7 environment errors after the canonical setup file was removed. |
+| `npx vitest run electron/ipc/handlers.test.ts --no-file-parallelism` | PASS | 87/87 tests. |
+| `npm run verify:research-workspace` | PASS | 7 files; 114/114 tests; VERIFY-051 passed. |
+| `npx vitest run scripts/verify-ci-contract.test.ts --no-file-parallelism` | PASS | 14/14 tests. |
+| `npm run verify:ci-contract` | PASS | Canonical Vitest harness, workflow dependency graph, and 43 full-SHA external-action pins verified. |
+| `npx vitest run scripts/verify-release-packaging-hardening.test.ts --no-file-parallelism` | PASS | 11/11 tests, including the unsafe direct-secret-interpolation fixture. |
+| `npm run verify:release-packaging-hardening` | PASS | 104/104 release checks. |
+| `npm run ci` | PASS | Segmented unit/integration/UI/contract suites, zero-vulnerability dependency audits, production builds, aggregate contracts, and distribution verification passed. |
+| `npm test` | PASS | 465 files; 5,163 passed; 1 skipped; 0 failed. |
+| Exact-commit hosted CI / CodeQL | PENDING PUBLICATION | Final run IDs and conclusions will replace this row after the validated commit is pushed. |
 
 ### August 23 — Image Studio safety-block and Research deletion follow-up
 
@@ -2883,6 +2910,8 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 | Signing/paid/two-device/manual accessibility prerequisites | BLOCKED EXTERNALLY | `gh secret list` reports no release secrets; `security find-identity -v -p codesigning` reports zero valid identities; no second device or paid-operation authorization/credentials are available. No success claim is made for those rows. |
 
 ## Session History
+
+- **2026-08-23 — CI test-isolation and release-workflow hardening:** Diagnosed hosted failures at `3d8c1470` to the removal of Vitest globals and `tests/setup.ts`, restored the canonical test harness, and added verifier regressions for both settings. Audited all four active workflows for permissions, pinned actions, job dependencies, and release behavior. Removed direct secret/repository-variable interpolation from release shell source, using step-scoped environment variables instead, and added a negative verifier fixture. Focused tests and the complete local `npm run ci` gate pass; exact-commit hosted CI and CodeQL evidence follows publication.
 
 - **2026-08-23 — Image Studio safety-block and Research deletion follow-up:** Analyzed the user-supplied privacy-safe Traffic Inspector export and desktop log. Confirmed two enhancer POSTs were blocked locally with HTTP 451 while optional safety was displayed off, but did not infer a false positive from redacted request bodies. Added a distinct `safety-block` enhancer fallback and localized UI explanation separating mandatory child-safety enforcement from optional Safe Mode. Traced Research’s persistent undeletable state to local deletion succeeding before immediate sync emission failed; retained the durable tombstone as retry state, returned local success with `syncPending`, and made Research removal idempotent for an already-absent row. Added focused service/store/UI regressions and rendered Browser evidence through the confirmation dialog; the destructive confirmation was cancelled. Focused tests, lint, typecheck, i18n, safety, Markdown, and build pass. The Research verifier and aggregate contracts reach their static checks but stop in unchanged rendered-component suites because tests accumulate DOM across cases under the lockfile-resolved Vitest 4.1.10; task-focused regressions pass independently.
 

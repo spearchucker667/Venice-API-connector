@@ -129,6 +129,19 @@ if (runsAggregate) {
 const vitestConfigPath = path.join(root, 'vitest.config.ts');
 if (fs.existsSync(vitestConfigPath)) {
   const vitestConfig = fs.readFileSync(vitestConfigPath, 'utf8');
+  // CI-003 regression guard: this repository's tests rely on Vitest globals
+  // and the canonical setup file for Testing Library cleanup, fake IndexedDB,
+  // the Electron mock, and deterministic locale reset. Removing either causes
+  // cross-test DOM/state contamination and platform-suite import failures.
+  if (!/globals:\s*true/.test(vitestConfig)) {
+    console.error("❌ vitest.config.ts must enable globals for the canonical test harness");
+    process.exit(1);
+  }
+  if (!/setupFiles:\s*\[\s*["']\.\/tests\/setup\.ts["']\s*\]/.test(vitestConfig)) {
+    console.error("❌ vitest.config.ts must load ./tests/setup.ts for canonical test isolation");
+    process.exit(1);
+  }
+
   if (vitestConfig.includes('global:') && vitestConfig.includes('thresholds:')) {
     const coverageBlock = vitestConfig.match(/coverage:\s*\{[\s\S]*?thresholds:\s*\{([\s\S]*?)\}/);
     if (coverageBlock && coverageBlock[1].includes('global:')) {
@@ -159,7 +172,7 @@ if (fs.existsSync(vitestConfigPath)) {
       process.exit(1);
     }
   }
-  console.log("✓ vitest.config.ts coverage schema is valid and thresholds meet the required bar");
+  console.log("✓ vitest.config.ts test isolation and coverage schema are valid");
 }
 
 // 4. Verify tracked security automation exists. SECURITY.md documents CodeQL

@@ -20,6 +20,12 @@ describe("verify:ci-contract required gate coverage", () => {
     expect(source).toContain("Coverage thresholds must not be nested under 'global'");
   });
 
+  it("requires the canonical Vitest globals and setup file", () => {
+    const source = fs.readFileSync(path.resolve(__dirname, "verify-ci-contract.cjs"), "utf8");
+    expect(source).toContain("must enable globals for the canonical test harness");
+    expect(source).toContain("must load ./tests/setup.ts for canonical test isolation");
+  });
+
   it("requires tracked CodeQL and dependency-review workflows", () => {
     const source = fs.readFileSync(path.resolve(__dirname, "verify-ci-contract.cjs"), "utf8");
     expect(source).toContain(".github/workflows/codeql.yml");

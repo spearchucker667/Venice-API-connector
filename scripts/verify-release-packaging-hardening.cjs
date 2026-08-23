@@ -351,6 +351,27 @@ if (pkg) {
     } else {
       pass(".github/workflows/release.yml fails closed for Windows tags by default");
     }
+    const releaseLines = release.split(/\r?\n/);
+    const vulnerableRunScript = releaseLines.some((line, index) => {
+      const match = line.match(/^(\s*)run:\s*(.*)$/);
+      if (!match) return false;
+      if (/\$\{\{\s*(?:secrets|vars)\./.test(match[2])) return true;
+      if (!/^[|>]/.test(match[2].trim())) return false;
+      const runIndent = match[1].length;
+      for (let cursor = index + 1; cursor < releaseLines.length; cursor += 1) {
+        const candidate = releaseLines[cursor];
+        if (candidate.trim() === "") continue;
+        const candidateIndent = candidate.match(/^\s*/)[0].length;
+        if (candidateIndent <= runIndent) break;
+        if (/\$\{\{\s*(?:secrets|vars)\./.test(candidate)) return true;
+      }
+      return false;
+    });
+    if (vulnerableRunScript) {
+      fail(".github/workflows/release.yml must pass secrets and repository variables through step env, not interpolate them into run scripts");
+    } else {
+      pass(".github/workflows/release.yml keeps secrets and repository variables out of run-script source");
+    }
     // Linux job must not run Windows packaging scripts
     if (release.includes("dist:win || true")) {
       fail(".github/workflows/release.yml Linux job must not run 'npm run dist:win || true'");

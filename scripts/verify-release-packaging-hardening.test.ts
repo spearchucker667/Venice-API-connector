@@ -405,4 +405,30 @@ describe("verify-release-packaging-hardening (VERIFY-052)", () => {
       rmSync(root, { recursive: true, force: true });
     }
   });
+
+  it("guards against direct secret or repository-variable interpolation in release scripts", () => {
+    const source = readFileSync(scriptPath, "utf8");
+    expect(source).toContain("must pass secrets and repository variables through step env");
+    expect(source).toContain("keeps secrets and repository variables out of run-script source");
+  });
+
+  it("rejects direct secret interpolation inside a release run block", () => {
+    const root = createMinimalValidRepo("venice-relpkg-run-injection-");
+    try {
+      const releasePath = join(root, ".github/workflows/release.yml");
+      const release = readFileSync(releasePath, "utf8");
+      writeFileSync(
+        releasePath,
+        `${release}\n      - name: Unsafe credential check\n        run: |\n          test -n "${"${{ secrets.CSC_LINK }}"}"\n`,
+      );
+
+      const out = spawnSync("node", [scriptPath], { cwd: root, encoding: "utf8" });
+      expect(out.status, `expected non-zero exit; got ${out.status}\nstdout: ${out.stdout}\nstderr: ${out.stderr}`).not.toBe(0);
+      expect(`${out.stdout}${out.stderr}`).toContain(
+        "must pass secrets and repository variables through step env",
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
 });
