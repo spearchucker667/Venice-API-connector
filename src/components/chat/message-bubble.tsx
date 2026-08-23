@@ -14,7 +14,7 @@ import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import rehypeSanitize from "rehype-sanitize";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import type { ChatMessage, ContentPart } from "../../types/venice";
 import type { ChatAttachmentRef } from "../../types/chatAttachment";
 import type { ConversationCharacterMeta } from "../../types/conversationVault";
@@ -976,7 +976,66 @@ function MessageBubbleImpl({
             <div className="prose-venice text-[15.5px] leading-relaxed text-text-primary">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkMath]}
-                rehypePlugins={[rehypeKatex, rehypeSanitize]}
+                rehypePlugins={[
+                  rehypeKatex,
+                  [
+                    rehypeSanitize,
+                    {
+                      ...defaultSchema,
+                      attributes: {
+                        ...defaultSchema.attributes,
+                        code: [
+                          ...(defaultSchema.attributes?.code || []),
+                          ["className", /^language-[a-zA-Z0-9\-]+$/],
+                        ],
+                        span: [
+                          ...(defaultSchema.attributes?.span || []),
+                          ["className", /^katex.*$/],
+                        ],
+                        div: [
+                          ...(defaultSchema.attributes?.div || []),
+                          ["className", /^katex.*$/],
+                        ],
+                        math: [
+                          ...(defaultSchema.attributes?.math || []),
+                          "xmlns", "display"
+                        ],
+                        annotation: [
+                          ...(defaultSchema.attributes?.annotation || []),
+                          "encoding"
+                        ],
+                        semantics: [
+                          ...(defaultSchema.attributes?.semantics || []),
+                        ],
+                        mi: [
+                          ...(defaultSchema.attributes?.mi || []),
+                          "mathvariant"
+                        ],
+                        mo: [
+                          ...(defaultSchema.attributes?.mo || []),
+                          "mathvariant", "fence", "stretchy", "separator", "lspace", "rspace", "minsize", "maxsize"
+                        ],
+                        mn: [
+                          ...(defaultSchema.attributes?.mn || []),
+                        ],
+                        mspace: [
+                          ...(defaultSchema.attributes?.mspace || []),
+                          "width"
+                        ],
+                        // Add MathML elements that KaTeX might output
+                        mrow: [], mfrac: [], msqrt: [], mroot: [], mstyle: [], merror: [], mpadded: [], mphantom: [],
+                        mfenced: [], menclose: [], msub: [], msup: [], msubsup: [], munder: [], mover: [],
+                        munderover: [], mtable: [], mtr: [], mtd: [], maligngroup: [], malignmark: []
+                      },
+                      tagNames: [
+                        ...(defaultSchema.tagNames || []),
+                        "math", "semantics", "annotation", "mrow", "mi", "mo", "mn", "mspace", "mfrac", "msqrt", "mroot",
+                        "mstyle", "merror", "mpadded", "mphantom", "mfenced", "menclose", "msub", "msup", "msubsup",
+                        "munder", "mover", "munderover", "mtable", "mtr", "mtd", "maligngroup", "malignmark"
+                      ]
+                    },
+                  ],
+                ]}
                 urlTransform={safeUrlTransform}
                 components={{
                   code: CodeBlock,
