@@ -986,7 +986,7 @@ function MessageBubbleImpl({
                         ...defaultSchema.attributes,
                         code: [
                           ...(defaultSchema.attributes?.code || []),
-                          ["className", /^language-[a-zA-Z0-9\-]+$/],
+                          ["className", /^language-[a-zA-Z0-9-]+$/],
                         ],
                         span: [
                           ...(defaultSchema.attributes?.span || []),
