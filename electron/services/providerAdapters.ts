@@ -189,6 +189,9 @@ export const providerAdapters: Record<string, AdapterFn> = {
         try {
           const json = JSON.parse(data)
           if (json && typeof json === 'object') {
+            if (json.type === 'error' || json.error) {
+              return { content: '', reasoning: '', parsed: true, malformed: true, rawData: data }
+            }
             if (json.type === 'content-delta' && json.delta?.message?.content?.text) {
               return { content: json.delta.message.content.text, reasoning: '', parsed: true, malformed: false }
             }

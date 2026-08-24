@@ -229,4 +229,19 @@ describe('cohere adapter', () => {
     })
     expect(normalized).toEqual({ error: { message: 'Invalid api key' } })
   })
+
+  it('extracts content from Cohere stream events', () => {
+    const route = providerAdapters.cohere('command-r-plus', 'key', '/chat/completions', { messages: [], stream: true })
+    const delta = route!.extractStreamDelta!(
+      JSON.stringify({ type: 'content-delta', delta: { message: { content: { text: 'Hello' } } } })
+    )
+    expect(delta).toEqual({ content: 'Hello', reasoning: '', parsed: true, malformed: false })
+  })
+
+  it('marks malformed JSON in stream deltas', () => {
+    const route = providerAdapters.cohere('command-r-plus', 'key', '/chat/completions', { messages: [], stream: true })
+    const delta = route!.extractStreamDelta!('{invalid')
+    expect(delta.parsed).toBe(false)
+    expect(delta.malformed).toBe(true)
+  })
 })
