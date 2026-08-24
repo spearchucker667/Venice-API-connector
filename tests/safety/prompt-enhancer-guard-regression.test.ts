@@ -4,8 +4,6 @@
 import { describe, expect, it } from "vitest";
 import { assessChildExploitationSafety } from "../../src/shared/safety/childExploitationGuard";
 import {
-  DEFAULT_ENHANCE_INSTRUCTIONS,
-  DEFAULT_REMIX_INSTRUCTIONS,
   MANDATORY_ENHANCE_PROTOCOL,
   MANDATORY_REMIX_PROTOCOL,
 } from "../../src/shared/imagePromptDefaults";

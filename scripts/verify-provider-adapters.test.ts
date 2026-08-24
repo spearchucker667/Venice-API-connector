@@ -11,7 +11,7 @@ import { providerAdapters } from '../electron/services/providerAdapters'
 import { FALLBACK_MODELS } from '../src/config/provider-models'
 import { validateProviderCredential } from '../electron/ipc/validation'
 
-function testCredentialFor(providerId: string): string | Record<string, string> {
+function testCredentialFor(providerId: string): any {
   switch (providerId) {
     case 'azure_openai':
       return {

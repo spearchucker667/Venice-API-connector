@@ -6,7 +6,21 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-24
-**Scope:** Deferred external-provider integration — Azure OpenAI graduation.
+**Scope:** GitHub Code Scanning Remediation
+
+- Reviewed all open GitHub Code Scanning alerts via GitHub API.
+- Resolved alert 247 (`js/unused-local-variable`) in `tests/safety/prompt-enhancer-guard-regression.test.ts` by removing unused imports (`DEFAULT_ENHANCE_INSTRUCTIONS`, `DEFAULT_REMIX_INSTRUCTIONS`).
+- Verified zero open alerts remain across Dependabot and Secret Scanning.
+- Fixed a pre-existing typecheck failure in `scripts/verify-provider-adapters.test.ts` where `testCredentialFor` returned an incompatible mock object; adjusted typing to satisfy the compiler.
+- Validation:
+  - `npm run lint:eslint` PASS
+  - `npm run typecheck` PASS
+  - `npm run build` PASS
+  - `npm test` PASS
+
+## Session History
+
+### 2026-08-24 — Deferred external-provider integration — Azure OpenAI graduation.
 
 - Implemented Azure OpenAI chat through the deployment-based OpenAI-compatible endpoint (`{resourceName}.openai.azure.com/openai/deployments/{deploymentName}/chat/completions`) in `electron/services/providerAdapters.ts`. The adapter uses the `api-key` header, URL-encodes the deployment name and API version, and sets the body `model` to the configured deployment name.
 - Added structured Azure OpenAI credential validation in `electron/ipc/validation.ts`, including `validateAzureResourceName` to enforce 2–64 lowercase alphanumeric/hyphen resource names and block SSRF attempts through the resource field.
