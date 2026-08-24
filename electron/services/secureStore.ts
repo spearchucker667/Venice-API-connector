@@ -352,6 +352,85 @@ export function isProviderApiKeyConfigured(providerId: string, profileId: string
   return getProviderApiKey(providerId, profileId) !== null;
 }
 
+// ── Structured Provider Credential Storage ──
+
+/** Encrypts and stores a structured provider credential using OS-level encryption when possible. */
+export function setProviderCredential(
+  providerId: string,
+  credential: Record<string, unknown>,
+  profileId: string = "default",
+): void {
+  const store = readStore("apiKey");
+  const k = profileId === "default" ? `${providerId}Credential` : `${providerId}Credential_${profileId}`;
+  const ke = profileId === "default" ? `${providerId}CredentialEncrypted` : `${providerId}CredentialEncrypted_${profileId}`;
+  const payload = JSON.stringify(credential);
+  if (safeStorage.isEncryptionAvailable()) {
+    store[k] = safeStorage.encryptString(payload).toString("base64");
+    store[ke] = "true";
+  } else {
+    if (process.platform === "win32" || process.platform === "darwin") {
+      throw new Error(
+        `${process.platform === "win32" ? "Windows" : "macOS"} secure storage is unavailable. Venice Forge will not store the credential without OS encryption.`
+      );
+    }
+    if (!isPlaintextFallbackAllowed()) {
+      throw new Error(
+        "OS secure storage is unavailable. Set VENICE_FORGE_ALLOW_PLAINTEXT_KEY_STORAGE=true to allow documented plaintext fallback."
+      );
+    }
+    console.warn(`[SECURITY] Using plaintext storage for credential "${providerId}" because OS secure storage is unavailable. Linux-only escape hatch.`);
+    store[k] = payload;
+    store[ke] = "false";
+  }
+  writeStore(store);
+}
+
+/** Retrieves and decrypts a structured provider credential, if available. */
+export function getProviderCredential(providerId: string, profileId: string = "default"): Record<string, unknown> | null {
+  const store = readStore("apiKey");
+  const k = profileId === "default" ? `${providerId}Credential` : `${providerId}Credential_${profileId}`;
+  const ke = profileId === "default" ? `${providerId}CredentialEncrypted` : `${providerId}CredentialEncrypted_${profileId}`;
+  const raw = store[k];
+  if (typeof raw !== "string" || raw.length === 0) return null;
+
+  const encryptedFlag = store[ke] as unknown;
+  const isEncrypted = encryptedFlag === "true" || encryptedFlag === true;
+
+  let payload: string;
+  if (isEncrypted) {
+    try {
+      payload = safeStorage.decryptString(Buffer.from(raw, "base64"));
+    } catch {
+      return null;
+    }
+  } else {
+    if (process.platform === "win32" || process.platform === "darwin") return null;
+    if (!isPlaintextFallbackAllowed()) return null;
+    payload = raw;
+  }
+
+  try {
+    return JSON.parse(payload) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+}
+
+/** Removes the stored structured provider credential from secure preferences. */
+export function deleteProviderCredential(providerId: string, profileId: string = "default"): void {
+  const store = readStore("apiKey");
+  const k = profileId === "default" ? `${providerId}Credential` : `${providerId}Credential_${profileId}`;
+  const ke = profileId === "default" ? `${providerId}CredentialEncrypted` : `${providerId}CredentialEncrypted_${profileId}`;
+  delete store[k];
+  delete store[ke];
+  writeStore(store);
+}
+
+/** Checks whether a usable structured provider credential is currently stored. */
+export function isProviderCredentialConfigured(providerId: string, profileId: string = "default"): boolean {
+  return getProviderCredential(providerId, profileId) !== null;
+}
+
 /** Checks whether OS-level encryption is available on this platform. */
 export function isEncryptionAvailable(): boolean {
   return safeStorage.isEncryptionAvailable();
