@@ -189,6 +189,7 @@ describe("backgroundTaskManager Replicate integration", () => {
   });
 
   it("persists the Replicate task across restart and resumes polling", async () => {
+    vi.useFakeTimers();
     const task = await createBackgroundTaskInMain({
       type: "image",
       providerId: "replicate",
@@ -201,7 +202,6 @@ describe("backgroundTaskManager Replicate integration", () => {
     // Simulate process restart: reset in-memory state but leave journal on disk.
     await __resetBackgroundTaskManagerForTests();
 
-    vi.useFakeTimers();
     vi.mocked(pollReplicatePrediction).mockResolvedValueOnce({
       kind: "pending",
       prediction: { id: "pred-5", status: "starting", input: {} },

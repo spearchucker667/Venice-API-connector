@@ -6,6 +6,23 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-24
+**Scope:** Diagnose and resolve failing CI workflows (specifically coverage thresholds).
+
+- Investigated failing CI workflow (run 32744892470) and found that function coverage (67.92%) fell below the global threshold (68%).
+- Added unit tests for previously untested files to increase function coverage:
+  - `src/shared/venice-media-contract/errors.test.ts`
+  - `src/shared/venice-media-contract/operations.test.ts`
+  - `src/services/veniceClient/errors.test.ts`
+  - `src/types/chatDocument.test.ts`
+  - `src/types/conversation.test.ts`
+- Fixed TypeScript errors in the newly added tests to ensure `npm run typecheck` passes.
+- Fixed flaky background test `electron/services/backgroundTaskManager.replicate.test.ts` where real timers caused tasks to begin processing prematurely.
+- Validated via `npm run typecheck` and `npm run ci` locally.
+
+## Session History
+
+
+**Date:** 2026-08-24
 **Scope:** Finish locally actionable deferred-provider integration and reliability work.
 
 - Refreshed the Cohere static catalog to current V2 models in `src/config/provider-models.ts` (`command-a-plus-05-2026`, `command-a-03-2025`, `command-r7b-12-2024`, `command-a-translate-08-2025`, `command-a-reasoning-08-2025`, `command-a-vision-07-2025`, `command-r-08-2024`, `command-r-plus-08-2024`) and marked legacy Command models as `deprecated` with `retirementDate: "2025-09-15"`. Added `lifecycle`/`retirementDate`/`source`/`isFallback` fields to `VeniceModel` (`src/types/venice.ts`) and surfaced lifecycle warnings in bundled picker names.
