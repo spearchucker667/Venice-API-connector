@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { resolveProviderRoute } from './providerAdapters'
+import { resolveProviderRoute, providerAdapters } from './providerAdapters'
 import { getProviderApiKey } from './secureStore'
 import { getProviderSettings } from './providerSettingsStore'
 
@@ -171,5 +171,34 @@ describe('providerAdapters', () => {
       expect(result?.route?.path).not.toContain('gemini-secret-key')
       expect(result?.route?.headers['x-goog-api-key']).toBe('gemini-secret-key')
     })
+  })
+})
+
+describe('cohere adapter', () => {
+  it('maps OpenAI messages to Cohere v2 roles', () => {
+    const originalBody = {
+      messages: [
+        { role: 'system', content: 'You are helpful.' },
+        { role: 'user', content: 'Hello' },
+        { role: 'assistant', content: 'Hi!' }
+      ],
+      temperature: 0.5,
+      max_tokens: 100,
+      top_p: 0.9,
+      stream: false
+    }
+    const route = providerAdapters.cohere('command-r-plus', 'key', '/chat/completions', originalBody)
+    expect(route).not.toBeNull()
+    const body = route!.transformBody!(originalBody, 'command-r-plus')
+    expect(body.model).toBe('command-r-plus')
+    expect(body.messages).toEqual([
+      { role: 'system', content: 'You are helpful.' },
+      { role: 'user', content: 'Hello' },
+      { role: 'assistant', content: 'Hi!' }
+    ])
+    expect(body.temperature).toBe(0.5)
+    expect(body.max_tokens).toBe(100)
+    expect(body.p).toBe(0.9)
+    expect(body.stream).toBe(false)
   })
 })
