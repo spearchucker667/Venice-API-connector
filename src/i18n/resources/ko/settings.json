@@ -461,13 +461,26 @@
       "enable": "{{label}} 활성화"
     },
     "status": {
-      "keyConfigured": "API 키 구성됨"
+      "keyConfigured": "API 키 구성됨",
+      "credentialConfigured": "__MISSING__:providers.status.credentialConfigured"
     },
     "actions": {
       "removeKey": "키 제거"
     },
     "inputs": {
-      "keyPlaceholder": "API 키 입력"
+      "keyPlaceholder": "API 키 입력",
+      "azureResourceName": "__MISSING__:providers.inputs.azureResourceName",
+      "azureDeploymentName": "__MISSING__:providers.inputs.azureDeploymentName",
+      "azureApiVersion": "__MISSING__:providers.inputs.azureApiVersion",
+      "azureApiKey": "__MISSING__:providers.inputs.azureApiKey",
+      "awsRegion": "__MISSING__:providers.inputs.awsRegion",
+      "awsApiKey": "__MISSING__:providers.inputs.awsApiKey",
+      "vertexExpressMode": "__MISSING__:providers.inputs.vertexExpressMode",
+      "vertexFullMode": "__MISSING__:providers.inputs.vertexFullMode",
+      "vertexApiKey": "__MISSING__:providers.inputs.vertexApiKey",
+      "vertexProjectId": "__MISSING__:providers.inputs.vertexProjectId",
+      "vertexLocation": "__MISSING__:providers.inputs.vertexLocation",
+      "vertexCredentialsJson": "__MISSING__:providers.inputs.vertexCredentialsJson"
     }
   },
   "errors": {

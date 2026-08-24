@@ -33,5 +33,6 @@ export {
   safetyBlockBodyFromResponseScreen,
   screenResponseBody,
   identifyAndValidateGeneratedMedia,
+  toSafetyDecision,
 } from "./localFamilySafeGuard";
-export type { LocalGuardDecision, ResponseBodyScreenResult, SafetyBlockBody, GeneratedMediaSafetyResult } from "./localFamilySafeGuard";
+export type { LocalGuardDecision, ResponseBodyScreenResult, SafetyBlockBody, GeneratedMediaSafetyResult, SafetyDecision, SafetyDecisionCategory } from "./localFamilySafeGuard";

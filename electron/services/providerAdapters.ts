@@ -1,7 +1,7 @@
 import { getProviderCredentialOrFallback } from './secureStore'
 import { getProviderSettings } from './providerSettingsStore'
 import type { StreamDelta } from './veniceClient'
-import { PROVIDER_REGISTRY, type AzureOpenAiConfig, type ProviderCredential } from '../../src/types/provider'
+import { PROVIDER_REGISTRY, type AzureOpenAiConfig, type AwsBedrockConfig, type GoogleVertexConfig, type ProviderCredential } from '../../src/types/provider'
 
 export interface ProviderRoute {
   host: string
@@ -33,6 +33,119 @@ function extractAzureOpenAiConfig(credential: ProviderCredential | string): Azur
     throw new Error('Azure OpenAI credential is missing required fields')
   }
   return c
+}
+
+/** Extracts and validates the structured AWS Bedrock credential. */
+function extractAwsBedrockConfig(credential: ProviderCredential | string): AwsBedrockConfig {
+  if (typeof credential === 'string' || !credential || typeof credential !== 'object' || credential.providerId !== 'aws_bedrock') {
+    throw new Error('AWS Bedrock credential is not structured correctly')
+  }
+  const c = credential as AwsBedrockConfig
+  if (!c.region || !c.apiKey) {
+    throw new Error('AWS Bedrock credential is missing required fields')
+  }
+  // Reject obviously invalid region shapes as defense-in-depth SSRF protection.
+  // Credential validation already constrains this; the adapter re-checks so a
+  // stale or tampered credential cannot be turned into an arbitrary host.
+  if (!/^[a-z0-9-]{2,32}$/.test(c.region) || c.region.startsWith('-') || c.region.endsWith('-')) {
+    throw new Error('AWS Bedrock region is invalid')
+  }
+  return c
+}
+
+/** Extracts and validates the structured Google Vertex credential.
+ *  Express Mode (authMode: 'express') is the supported production slice.
+ */
+function extractGoogleVertexConfig(credential: ProviderCredential | string): Extract<GoogleVertexConfig, { authMode: 'express' }> {
+  if (typeof credential === 'string' || !credential || typeof credential !== 'object' || credential.providerId !== 'google_vertex') {
+    throw new Error('Google Vertex credential is not structured correctly')
+  }
+  const c = credential as GoogleVertexConfig
+  if (c.authMode !== 'express') {
+    throw new Error('Google Vertex full OAuth/service-account mode is not implemented. Use Express Mode (API key).')
+  }
+  if (!c.apiKey || !c.projectId || !c.location) {
+    throw new Error('Google Vertex Express Mode credential is missing required fields')
+  }
+  // Re-validate routing fields at adapter time as SSRF defense-in-depth.
+  if (!/^[a-z][a-z0-9-]{4,28}[a-z0-9]?$/.test(c.projectId)) {
+    throw new Error('Google Cloud project ID is invalid')
+  }
+  if (!/^[a-z0-9-]{2,32}$/.test(c.location) || c.location.startsWith('-') || c.location.endsWith('-')) {
+    throw new Error('Google Cloud location is invalid')
+  }
+  return c
+}
+
+/** Builds a Vertex AI Express Mode HTTPS host from a validated location.
+ *  The global endpoint uses the bare aiplatform.googleapis.com host.
+ */
+function buildVertexHost(location: string): string {
+  return location === 'global' ? 'aiplatform.googleapis.com' : `${location}-aiplatform.googleapis.com`
+}
+
+/** Shared Gemini request normalization used by both the Gemini Developer API
+ *  and Vertex AI Express Mode adapters. */
+function geminiTransformBody(body: Record<string, unknown>, _realModel: string): Record<string, unknown> {
+  const messages = (body.messages as Record<string, unknown>[]) || []
+  const systemMessage = messages.find((m) => m.role === 'system')
+  const otherMessages = messages.filter((m) => m.role !== 'system').map((m) => ({
+    role: m.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: m.content }]
+  }))
+  return {
+    contents: otherMessages,
+    systemInstruction: systemMessage ? { parts: [{ text: systemMessage.content }] } : undefined,
+    generationConfig: {
+      temperature: body.temperature,
+      maxOutputTokens: body.max_tokens
+    }
+  }
+}
+
+/** Shared Gemini non-streaming response normalization. */
+function geminiTransformResponse(responseBody: unknown): unknown {
+  if (responseBody && typeof responseBody === 'object') {
+    const body = responseBody as Record<string, unknown>
+    if (body.error) {
+      const err = body.error as Record<string, unknown>
+      return { error: { message: err.message || 'Google API Error', type: err.status } }
+    }
+    if (Array.isArray(body.candidates)) {
+      const candidate = body.candidates[0] as Record<string, unknown> | undefined
+      const content = candidate?.content as Record<string, unknown> | undefined
+      const parts = content?.parts as Record<string, unknown>[] | undefined
+      const text = parts?.[0]?.text || ''
+      const usage = body.usageMetadata as Record<string, unknown> | undefined
+      return {
+        choices: [{ message: { content: text, role: 'assistant' } }],
+        usage: {
+          prompt_tokens: usage?.promptTokenCount,
+          completion_tokens: usage?.candidatesTokenCount,
+          total_tokens: usage?.totalTokenCount
+        }
+      }
+    }
+  }
+  return responseBody
+}
+
+/** Shared Gemini streaming delta extraction. */
+function geminiExtractStreamDelta(data: string): StreamDelta {
+  if (!data || data === '[DONE]') return { content: '', reasoning: '', parsed: true, malformed: false }
+  try {
+    const json = JSON.parse(data)
+    if (json && typeof json === 'object') {
+      if (json.error) {
+        return { content: '', reasoning: '', parsed: true, malformed: true, rawData: data }
+      }
+      const text = json.candidates?.[0]?.content?.parts?.[0]?.text || ''
+      return { content: text, reasoning: '', parsed: true, malformed: false }
+    }
+    return { content: '', reasoning: '', parsed: true, malformed: false }
+  } catch {
+    return { content: '', reasoning: '', parsed: false, malformed: true, rawData: data }
+  }
 }
 
 /** Builds an HTTPS Azure OpenAI host and rejects non-Azure or dangerous hosts.
@@ -252,66 +365,26 @@ export const providerAdapters: Record<string, AdapterFn> = {
         'x-goog-api-key': extractApiKey(credential),
         'Content-Type': 'application/json'
       },
-      transformBody: (body, _realModel) => {
-        const messages = (body.messages as Record<string, unknown>[]) || []
-        const systemMessage = messages.find((m) => m.role === 'system')
-        const otherMessages = messages.filter((m) => m.role !== 'system').map((m) => ({
-          role: m.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: m.content }]
-        }))
-        return {
-          contents: otherMessages,
-          systemInstruction: systemMessage ? { parts: [{ text: systemMessage.content }] } : undefined,
-          generationConfig: {
-            temperature: body.temperature,
-            maxOutputTokens: body.max_tokens
-          }
-        }
-      },
-      transformResponse: (responseBody: unknown) => {
-        if (responseBody && typeof responseBody === 'object') {
-          const body = responseBody as Record<string, unknown>
-          if (body.error) {
-            const err = body.error as Record<string, unknown>
-            return { error: { message: err.message || 'Google API Error', type: err.status } }
-          }
-          if (Array.isArray(body.candidates)) {
-            const candidate = body.candidates[0] as Record<string, unknown> | undefined
-            const content = candidate?.content as Record<string, unknown> | undefined
-            const parts = content?.parts as Record<string, unknown>[] | undefined
-            const text = parts?.[0]?.text || ''
-            const usage = body.usageMetadata as Record<string, unknown> | undefined
-            return {
-              choices: [{ message: { content: text, role: 'assistant' } }],
-              usage: {
-                prompt_tokens: usage?.promptTokenCount,
-                completion_tokens: usage?.candidatesTokenCount,
-                total_tokens: usage?.totalTokenCount
-              }
-            }
-          }
-        }
-        return responseBody
-      },
-      extractStreamDelta: (data: string): import('./veniceClient').StreamDelta => {
-        if (!data || data === '[DONE]') return { content: '', reasoning: '', parsed: true, malformed: false }
-        try {
-          const json = JSON.parse(data)
-          if (json && typeof json === 'object') {
-            if (json.error) {
-               return { content: '', reasoning: '', parsed: true, malformed: true, rawData: data }
-            }
-            const text = json.candidates?.[0]?.content?.parts?.[0]?.text || ''
-            return { content: text, reasoning: '', parsed: true, malformed: false }
-          }
-          return { content: '', reasoning: '', parsed: true, malformed: false }
-        } catch {
-          return { content: '', reasoning: '', parsed: false, malformed: true, rawData: data }
-        }
-      }
+      transformBody: geminiTransformBody,
+      transformResponse: geminiTransformResponse,
+      extractStreamDelta: geminiExtractStreamDelta
     }
   },
-  google_vertex: () => null,
+  google_vertex: (model, credential, originalPath, originalBody) => {
+    if (originalPath !== '/chat/completions') return null
+    const config = extractGoogleVertexConfig(credential)
+    const isStream = !!originalBody.stream
+    const host = buildVertexHost(config.location)
+    const path = `/v1/projects/${encodeURIComponent(config.projectId)}/locations/${encodeURIComponent(config.location)}/publishers/google/models/${encodeURIComponent(model)}:${isStream ? 'streamGenerateContent' : 'generateContent'}?key=${encodeURIComponent(config.apiKey)}`
+    return {
+      host,
+      path,
+      headers: { 'Content-Type': 'application/json' },
+      transformBody: geminiTransformBody,
+      transformResponse: geminiTransformResponse,
+      extractStreamDelta: geminiExtractStreamDelta
+    }
+  },
   fireworks: (model, credential, originalPath, _originalBody) => {
     if (originalPath !== '/chat/completions') return null
     return {
@@ -321,8 +394,32 @@ export const providerAdapters: Record<string, AdapterFn> = {
       transformBody: (body, realModel) => ({ ...body, model: realModel })
     }
   },
-  replicate: () => null,
-  aws_bedrock: () => null,
+  replicate: (model, credential, originalPath, _originalBody) => {
+    if (originalPath !== '/predictions') return null
+    return {
+      host: 'api.replicate.com',
+      path: '/v1/predictions',
+      headers: {
+        'Authorization': `Bearer ${extractApiKey(credential)}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'wait',
+      },
+      transformBody: (_body, _realModel) => ({ input: _body, version: model }),
+    }
+  },
+  aws_bedrock: (model, credential, originalPath, _originalBody) => {
+    if (originalPath !== '/chat/completions') return null
+    const config = extractAwsBedrockConfig(credential)
+    return {
+      host: `bedrock-mantle.${config.region}.api.aws`,
+      path: '/v1/chat/completions',
+      headers: {
+        'Authorization': `Bearer ${config.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      transformBody: (body, realModel) => ({ ...body, model: realModel })
+    }
+  },
   azure_openai: (model, credential, originalPath, _originalBody) => {
     if (originalPath !== '/chat/completions') return null
     const config = extractAzureOpenAiConfig(credential)

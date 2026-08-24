@@ -4076,6 +4076,9 @@
           "jinaConnectionSuccessful": "जीना कनेक्शन सफल",
           "jinaReturnedValue1": "जीना ने {{value1}} लौटाया",
           "networkErrorTestingJinaApiKey": "नेटवर्क त्रुटि परीक्षण जीना एपीआई कुंजी"
+        },
+        "error": {
+          "notSupportedInWebMode": "__MISSING__:runtimeGenerated.services.desktopbridge.error.notSupportedInWebMode"
         }
       },
       "imageinspectoranalysis": {
@@ -4383,7 +4386,9 @@
           "searchGroundedAndFastLlmApis": "खोज-आधारित और तेज़ एलएलएम एपीआई।",
           "cohereEnterpriseReadyMultilingualModels": "__MISSING__:runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels",
           "huggingFaceOpenSourceInferenceProviders": "__MISSING__:runtimeGenerated.types.provider.metadata.huggingFaceOpenSourceInferenceProviders",
-          "azureOpenAiDeploymentBasedChatCompletions": "__MISSING__:runtimeGenerated.types.provider.metadata.azureOpenAiDeploymentBasedChatCompletions"
+          "azureOpenAiDeploymentBasedChatCompletions": "__MISSING__:runtimeGenerated.types.provider.metadata.azureOpenAiDeploymentBasedChatCompletions",
+          "awsBedrockMantleOpenAiCompatibleInference": "__MISSING__:runtimeGenerated.types.provider.metadata.awsBedrockMantleOpenAiCompatibleInference",
+          "googleVertexAiExpressModeApiKey": "__MISSING__:runtimeGenerated.types.provider.metadata.googleVertexAiExpressModeApiKey"
         }
       }
     },

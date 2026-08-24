@@ -5,11 +5,16 @@ export type ApiConnectivityEndpoint = "models" | "chat" | "catalog" | "health";
 export type ApiConnectivityFailureKind =
   | "missing-api-key"
   | "invalid-api-key"
+  | "invalid-configuration"
+  | "model-not-found"
+  | "deployment-not-found"
+  | "rate-limited"
   | "network-failure"
   | "venice-error"
   | "proxy-failure"
   | "bridge-unavailable"
   | "catalog-failure"
+  | "provider-unavailable"
   | "unknown";
 
 export type ApiConnectivityStatus =
@@ -28,6 +33,30 @@ export type ApiConnectivityStatus =
       safeMessage: string;
       retryable: boolean;
     };
+
+/** Normalized result from a provider-specific connection/configuration test.
+ *  Mirrors ApiConnectivityStatus but is provider-scoped and includes a
+ *  human-readable message safe for UI surfacing. */
+export type ProviderConnectionResult = {
+  ok: boolean;
+  providerId: string;
+  statusCode?: number;
+  kind:
+    | "verified"
+    | "missing-credential"
+    | "invalid-credential"
+    | "invalid-configuration"
+    | "model-not-found"
+    | "deployment-not-found"
+    | "rate-limited"
+    | "provider-unavailable"
+    | "network-failure"
+    | "timeout"
+    | "unknown";
+  message: string;
+  checkedAt: string;
+  connectivity: ApiConnectivityStatus;
+};
 
 export type ApiKeyValidationStatus =
   | "not-configured"

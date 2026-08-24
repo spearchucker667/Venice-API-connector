@@ -59,7 +59,7 @@ export function CharacterCreatorError({
             </span>
           </button>
         </div>
-        <p className="text-xs text-text-secondary font-mono break-all line-clamp-4">
+        <p className="text-xs text-text-secondary font-mono break-all line-clamp-4 whitespace-pre-line">
           {error}
         </p>
       </div>

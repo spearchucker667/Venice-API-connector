@@ -8,12 +8,29 @@ export { runLocalFamilyGuard } from "./localFamilyGuardRules";
 export const FAMILY_SAFE_MODE_BLOCK_MESSAGE =
   "Blocked by child-safety protections. This protection cannot be disabled.";
 
+export type SafetyDecisionCategory =
+  | "adult-content-approved"
+  | "general"
+  | "child-safety"
+  | "illegal-content"
+  | "provider-policy"
+  | "validation-error";
+
+export type SafetyDecision =
+  | { allowed: true; category: "adult-content-approved" | "general" }
+  | {
+      allowed: false;
+      category: Exclude<SafetyDecisionCategory, "adult-content-approved" | "general">;
+      userMessage: string;
+    };
+
 export type LocalGuardDecision =
   | {
       allowed: true;
       skipped?: boolean;
       reason?: string;
       guardDecision?: SafetyGuardDecision;
+      category?: Extract<SafetyDecisionCategory, "adult-content-approved" | "general">;
     }
   | {
       allowed: false;
@@ -22,7 +39,74 @@ export type LocalGuardDecision =
       ruleId?: string;
       userMessage: string;
       guardDecision: SafetyGuardDecision;
+      category: Exclude<SafetyDecisionCategory, "adult-content-approved" | "general">;
     };
+
+function uiCategoryFromGuardCategory(
+  guardCategory: SafetyGuardDecision["category"],
+): SafetyDecision["category"] {
+  switch (guardCategory) {
+    case "adult_sexual_content":
+      return "adult-content-approved";
+    case "allowed_child_safety_context":
+    case "none":
+      return "general";
+    case "csam_request":
+      return "illegal-content";
+    case "minor_sexualization":
+    case "fictional_minor_sexualization":
+    case "obfuscated_minor_sexualization":
+    case "age_evasion":
+    case "grooming_or_exploitation":
+    case "unsafe_image_generation":
+    case "unsafe_roleplay":
+    case "unsafe_batch_or_automation":
+    case "ambiguous_youth_context":
+      return "child-safety";
+    default:
+      return "child-safety";
+  }
+}
+
+function userMessageForSafetyDecision(
+  category: Exclude<SafetyDecisionCategory, "adult-content-approved" | "general">,
+  _reasonCode: string,
+): string {
+  switch (category) {
+    case "illegal-content":
+      return "Blocked: illegal-content protection triggered.\n\nReason:\nThe request appears to involve child sexual abuse material or a CSAM genre label.\n\nAdult fictional content is not blocked by this rule.";
+    case "child-safety":
+      return "Blocked: child-safety protection triggered.\n\nReason:\nThe request appears to involve a minor, age-ambiguous subject, or exploitative content.\n\nAdult fictional content is not blocked by this rule.";
+    case "provider-policy":
+      return "Blocked: provider policy violation.\n\nReason:\nThe request violates the selected provider's content policy.";
+    case "validation-error":
+      return "Blocked: request validation failed.\n\nReason:\nThe request could not be validated for safety.";
+  }
+}
+
+export function toSafetyDecision(
+  guardDecision: SafetyGuardDecision,
+): SafetyDecision {
+  if (!guardDecision.allow || guardDecision.action === "block") {
+    const category = uiCategoryFromGuardCategory(guardDecision.category);
+    if (category === "adult-content-approved" || category === "general") {
+      return {
+        allowed: false,
+        category: "child-safety",
+        userMessage: userMessageForSafetyDecision("child-safety", guardDecision.reasonCode),
+      };
+    }
+    return {
+      allowed: false,
+      category,
+      userMessage: userMessageForSafetyDecision(category, guardDecision.reasonCode),
+    };
+  }
+  return {
+    allowed: true,
+    category: guardDecision.category === "adult_sexual_content" ? "adult-content-approved" : "general",
+  };
+}
 
 /**
  * Always evaluates the non-disableable child-exploitation guard. The
@@ -36,22 +120,30 @@ export function maybeRunLocalFamilyGuard(
   const guardDecision = runLocalFamilyGuard(input);
   recordDecision(guardDecision);
   if (!guardDecision.allow || guardDecision.action === "block") {
+    const decision = toSafetyDecision(guardDecision);
     return {
       allowed: false,
       reason: guardDecision.reasonCode,
       ruleId: guardDecision.reasonCode,
-      userMessage: FAMILY_SAFE_MODE_BLOCK_MESSAGE,
+      userMessage: decision.allowed ? FAMILY_SAFE_MODE_BLOCK_MESSAGE : decision.userMessage,
       guardDecision,
+      category: decision.allowed ? "child-safety" : decision.category,
     };
   }
 
+  const decision = toSafetyDecision(guardDecision);
+  const allowedCategory = decision.category as Extract<
+    SafetyDecisionCategory,
+    "adult-content-approved" | "general"
+  >;
   return localFamilySafeModeEnabled
-    ? { allowed: true, guardDecision }
+    ? { allowed: true, guardDecision, category: allowedCategory }
     : {
         allowed: true,
         skipped: true,
         reason: "optional-local-family-filter-disabled-child-safety-checked",
         guardDecision,
+        category: allowedCategory,
       };
 }
 
@@ -72,32 +164,41 @@ export function previewLocalFamilyGuard(
 ): LocalGuardDecision {
   const guardDecision = runLocalFamilyGuard(input);
   if (!guardDecision.allow || guardDecision.action === "block") {
+    const decision = toSafetyDecision(guardDecision);
     return {
       allowed: false,
       reason: guardDecision.reasonCode,
       ruleId: guardDecision.reasonCode,
-      userMessage: FAMILY_SAFE_MODE_BLOCK_MESSAGE,
+      userMessage: decision.allowed ? FAMILY_SAFE_MODE_BLOCK_MESSAGE : decision.userMessage,
       guardDecision,
+      category: decision.allowed ? "child-safety" : decision.category,
     };
   }
 
+  const decision = toSafetyDecision(guardDecision);
+  const allowedCategory = decision.category as Extract<
+    SafetyDecisionCategory,
+    "adult-content-approved" | "general"
+  >;
   return localFamilySafeModeEnabled
-    ? { allowed: true, guardDecision }
+    ? { allowed: true, guardDecision, category: allowedCategory }
     : {
         allowed: true,
         skipped: true,
         reason: "optional-local-family-filter-disabled-child-safety-checked",
         guardDecision,
+        category: allowedCategory,
       };
 }
 
 export type ResponseBodyScreenResult =
-  | { allowed: true; skipped: boolean; reason?: string }
+  | { allowed: true; skipped: boolean; reason?: string; uiCategory?: SafetyDecisionCategory }
   | {
       allowed: false;
       reason: string;
       reasonCode: string;
       category: SafetyGuardDecision["category"];
+      uiCategory: SafetyDecisionCategory;
       severity: SafetyGuardDecision["severity"];
       ruleId?: string;
       userMessage: string;
@@ -147,6 +248,7 @@ export function screenResponseBody(
       reason: decision.reason,
       reasonCode: decision.guardDecision.reasonCode,
       category: decision.guardDecision.category,
+      uiCategory: decision.category,
       severity: decision.guardDecision.severity,
       ruleId: decision.ruleId,
       userMessage: decision.userMessage,
@@ -155,6 +257,7 @@ export function screenResponseBody(
   return {
     allowed: true,
     skipped: !localFamilySafeModeEnabled,
+    uiCategory: decision.category,
     ...(localFamilySafeModeEnabled
       ? {}
       : { reason: "optional-local-family-filter-disabled-child-safety-checked" }),

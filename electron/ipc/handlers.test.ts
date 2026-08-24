@@ -1118,7 +1118,7 @@ describe("registerIpcHandlers", () => {
         category: "csam_request",
         severity: "critical",
       });
-      expect(result.body.error).toMatch(/child-safety protections/i);
+      expect(result.body.error).toMatch(/Blocked:/i);
       expect(JSON.stringify(result.body)).not.toContain("Some content");
     });
 

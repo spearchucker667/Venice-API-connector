@@ -154,7 +154,7 @@ export function initBackgroundTaskToastBridge() {
               ),
             persistent: true,
             actions: [
-              ...(isProviderPolledBackgroundTaskType(task.type)
+              ...(isProviderPolledBackgroundTaskType(task.type, task.providerId)
                 ? [
                     {
                       id: "retry",

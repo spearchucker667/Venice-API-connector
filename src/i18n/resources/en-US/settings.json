@@ -461,13 +461,26 @@
       "enable": "Enable {{label}}"
     },
     "status": {
-      "keyConfigured": "API Key Configured"
+      "keyConfigured": "API Key Configured",
+      "credentialConfigured": "Credential Configured"
     },
     "actions": {
       "removeKey": "Remove Key"
     },
     "inputs": {
-      "keyPlaceholder": "Enter API Key"
+      "keyPlaceholder": "Enter API Key",
+      "azureResourceName": "Azure Resource Name",
+      "azureDeploymentName": "Azure Deployment Name",
+      "azureApiVersion": "API Version",
+      "azureApiKey": "Azure API Key",
+      "awsRegion": "AWS Region",
+      "awsApiKey": "AWS Bedrock API Key",
+      "vertexExpressMode": "Express Mode (API key)",
+      "vertexFullMode": "Full Vertex (project/location + OAuth/service account)",
+      "vertexApiKey": "Vertex API Key",
+      "vertexProjectId": "Google Cloud Project ID",
+      "vertexLocation": "Vertex Location",
+      "vertexCredentialsJson": "Service-Account / OAuth Credentials JSON"
     }
   },
   "errors": {

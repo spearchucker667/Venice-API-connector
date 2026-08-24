@@ -16,6 +16,7 @@ import type {
   PromptEnhancerReferenceContext,
 } from "./prompt-enhancer-context";
 import { effectiveEnhancerPromptLimit } from "./prompt-enhancer-context";
+import { SafetyGuardBlockedError } from "../shared/safety";
 
 export type PromptEnhanceMode = "enhance" | "remix";
 
@@ -37,6 +38,8 @@ export interface EnhancePromptResult {
   modelUsed: string;
   truncated?: boolean;
   fallbackReason?: "provider-error" | "invalid-output" | "safety-block";
+  safetyCategory?: string;
+  safetyReasonCode?: string;
 }
 
 export type PromptEnhancerConfig = Pick<
@@ -335,6 +338,16 @@ export async function enhancePrompt(
     );
     return { prompt, modelUsed: effective.model, truncated };
   } catch (error) {
+    if (error instanceof SafetyGuardBlockedError) {
+      return {
+        prompt: input.prompt,
+        modelUsed: effective.model,
+        truncated: false,
+        fallbackReason: "safety-block",
+        safetyCategory: error.decision.category,
+        safetyReasonCode: error.decision.reasonCode,
+      };
+    }
     const status = error && typeof error === "object" && "status" in error
       ? (error as { status?: unknown }).status
       : undefined;

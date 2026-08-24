@@ -19,6 +19,8 @@ import { registerDocumentAgentHandlers } from "./documentAgentHandlers";
 import { registerChatFolderHandlers } from "./chatFolderHandlers";
 import { registerImageInspectorHandlers } from "./imageInspectorHandlers";
 import { registerInspectorTelemetryHandlers } from "./inspectorTelemetryHandlers";
+import { registerReplicateHandlers } from "./replicateHandlers";
+import { registerHuggingfaceHandlers } from "./huggingfaceHandlers";
 
 let ipcHandlersRegistered = false;
 
@@ -50,6 +52,12 @@ export function registerIpcHandlers(): void {
 
   // ── Background task manager (persistent main-process queue ownership) ──
   registerBackgroundTaskHandlers();
+
+  // ── Replicate async media generation ──
+  registerReplicateHandlers();
+
+  // ── Hugging Face live model discovery ──
+  registerHuggingfaceHandlers();
 
   // ── Config (local master YAML) ──
   // SECURITY: The renderer never receives raw API keys. The sanitized view

@@ -63,7 +63,7 @@ describe("VERIFY-015 guard pipeline — runtime source of truth", () => {
     });
     expect(block).not.toBeNull();
     expect(block?.status).toBe(451);
-    expect(block?.body.error).toMatch(/child-safety protections/i);
+    expect(block?.body.error).toMatch(/Blocked:/i);
   });
 
   it("checkLocalFamilyGuard returns null when the input is benign", () => {
@@ -109,7 +109,7 @@ describe("VERIFY-015 guard pipeline — canonical block shape", () => {
     expect(block.status).toBe(451);
     expect(block.statusText).toBe("Blocked by Family Safe Mode");
     expect(block.contentType).toBe("application/json");
-    expect(block.body.error).toMatch(/child-safety protections/i);
+    expect(block.body.error).toMatch(/Blocked:/i);
     expect(typeof block.body.reasonCode).toBe("string");
     expect(typeof block.body.category).toBe("string");
     expect(typeof block.body.severity).toBe("string");
@@ -214,7 +214,7 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     if (result.kind !== "blocked") throw new Error("expected blocked");
     expect(result.block.status).toBe(451);
     expect(result.block.body.reasonCode).toBe("IMAGE_GRAPHIC_GORE");
-    expect(result.block.body.error).toMatch(/child-safety protections/i);
+    expect(result.block.body.error).toMatch(/Blocked:/i);
     expect(JSON.stringify(result.block.body)).not.toContain("dismemberment");
   });
 
@@ -411,7 +411,7 @@ describe("VERIFY-015 guard pipeline — screenResponseBody (web-proxy/scrape ret
     );
     expect(r.allowed).toBe(false);
     if (r.allowed) throw new Error("expected blocked");
-    expect(r.userMessage).toMatch(/child-safety protections/i);
+    expect(r.userMessage).toMatch(/Blocked:/i);
     expect(r.reasonCode).toBe("CSAM_EXPLICIT_TERM");
     expect(r.category).toBe("csam_request");
     expect(r.severity).toBe("critical");

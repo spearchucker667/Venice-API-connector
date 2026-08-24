@@ -42,6 +42,7 @@ import {
 } from "../../services/desktopBridge";
 import { toast } from "../../stores/toast-store";
 import { AlertTriangle } from "lucide-react";
+import { SafetyGuardBlockedError } from "../../shared/safety";
 
 import { CharacterCreatorWelcome } from "./CharacterCreatorWelcome";
 import { CharacterCreatorGenerating } from "./CharacterCreatorGenerating";
@@ -51,6 +52,24 @@ import { CharacterCreatorCompleted } from "./CharacterCreatorCompleted";
 import { CharacterCreatorError } from "./CharacterCreatorError";
 import { CharacterCreatorLocalPickerModal } from "./CharacterCreatorLocalPickerModal";
 import { Trans, useTranslation } from "react-i18next";
+
+function formatSafetyError(err: SafetyGuardBlockedError): string {
+  const decision = err.decision;
+  const category = decision.category;
+  const reasonCode = decision.reasonCode;
+  let message = err.message;
+  if (!message || message.includes("Blocked by child-safety protections")) {
+    message = "Generation blocked: child-safety protection triggered.";
+  }
+  return `${message}\n\nBlocking layer: local safety guard\nCategory: ${category}\nReason code: ${reasonCode}`;
+}
+
+function normalizeCreatorError(err: unknown): string {
+  if (err instanceof SafetyGuardBlockedError) {
+    return formatSafetyError(err);
+  }
+  return err instanceof Error ? err.message : String(err);
+}
 
 export function CharacterCreatorView() {
   const { t: tRuntime } = useTranslation("common");
@@ -212,7 +231,7 @@ export function CharacterCreatorView() {
                 break;
             }
           } catch (err) {
-            const msg = err instanceof Error ? err.message : String(err);
+            const msg = normalizeCreatorError(err);
             setErrorDetails(msg);
             setViewState("error");
           }
@@ -288,7 +307,7 @@ export function CharacterCreatorView() {
         setViewState("welcome");
         return;
       }
-      const msg = err instanceof Error ? err.message : String(err);
+      const msg = normalizeCreatorError(err);
       setErrorDetails(msg);
       setViewState("error");
     }
@@ -397,7 +416,7 @@ export function CharacterCreatorView() {
         setViewState("welcome");
         return;
       }
-      const msg = err instanceof Error ? err.message : String(err);
+      const msg = normalizeCreatorError(err);
       setErrorDetails(msg);
       setViewState("error");
     }
@@ -571,7 +590,7 @@ export function CharacterCreatorView() {
         ),
       );
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
+      const msg = normalizeCreatorError(err);
       setErrorDetails(msg);
       setViewState("error");
     }
@@ -625,7 +644,7 @@ export function CharacterCreatorView() {
         ),
       );
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
+      const msg = normalizeCreatorError(err);
       setErrorDetails(msg);
       setViewState("error");
     }
@@ -706,7 +725,7 @@ export function CharacterCreatorView() {
         startNormalChatForCharacter(result.character.id);
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
+      const msg = normalizeCreatorError(err);
       setErrorDetails(msg);
       setViewState("error");
     }

@@ -4094,6 +4094,9 @@
           "jinaConnectionSuccessful": "Jina connection successful",
           "jinaReturnedValue1": "Jina returned {{value1}}",
           "networkErrorTestingJinaApiKey": "Network error testing Jina API key"
+        },
+        "error": {
+          "notSupportedInWebMode": "Not supported in web mode"
         }
       },
       "imageinspectoranalysis": {
@@ -4395,6 +4398,8 @@
           "ultraFastLpuInferenceEngine": "Ultra-fast LPU inference engine.",
           "highPerformanceLlmApis": "High-performance LLM APIs.",
           "notImplementedNoCredentialsOrRequestsAreAccepted": "Not implemented. No credentials or requests are accepted.",
+          "awsBedrockMantleOpenAiCompatibleInference": "AWS Bedrock Mantle OpenAI-compatible inference.",
+          "googleVertexAiExpressModeApiKey": "Google Vertex AI Express Mode (API-key authentication).",
           "geminiDeveloperApiAiStudio": "Gemini Developer API (AI Studio).",
           "mistralAiModelsAndEndpoints": "Mistral AI models and endpoints.",
           "claudeAndOtherSafeFoundationModels": "Claude and other safe foundation models.",

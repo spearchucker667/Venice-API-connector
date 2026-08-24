@@ -4076,6 +4076,9 @@
           "jinaConnectionSuccessful": "Jina-anslutningen lyckades",
           "jinaReturnedValue1": "Jina returnerade {{value1}}",
           "networkErrorTestingJinaApiKey": "Nätverksfel testar Jina API-nyckel"
+        },
+        "error": {
+          "notSupportedInWebMode": "__MISSING__:runtimeGenerated.services.desktopbridge.error.notSupportedInWebMode"
         }
       },
       "imageinspectoranalysis": {
@@ -4383,7 +4386,9 @@
           "searchGroundedAndFastLlmApis": "Sökbaserade och snabba LLM API:er.",
           "cohereEnterpriseReadyMultilingualModels": "__MISSING__:runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels",
           "huggingFaceOpenSourceInferenceProviders": "__MISSING__:runtimeGenerated.types.provider.metadata.huggingFaceOpenSourceInferenceProviders",
-          "azureOpenAiDeploymentBasedChatCompletions": "__MISSING__:runtimeGenerated.types.provider.metadata.azureOpenAiDeploymentBasedChatCompletions"
+          "azureOpenAiDeploymentBasedChatCompletions": "__MISSING__:runtimeGenerated.types.provider.metadata.azureOpenAiDeploymentBasedChatCompletions",
+          "awsBedrockMantleOpenAiCompatibleInference": "__MISSING__:runtimeGenerated.types.provider.metadata.awsBedrockMantleOpenAiCompatibleInference",
+          "googleVertexAiExpressModeApiKey": "__MISSING__:runtimeGenerated.types.provider.metadata.googleVertexAiExpressModeApiKey"
         }
       }
     },

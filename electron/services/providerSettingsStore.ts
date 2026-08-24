@@ -12,12 +12,13 @@ const NATIVE_FALLBACK_MODELS: Partial<Record<ProviderId, string>> = {
   groq: "llama3-70b-8192",
   fireworks: "accounts/fireworks/models/llama-v3p1-70b-instruct",
   google_gemini: "gemini-2.5-flash",
+  google_vertex: "gemini-2.5-flash",
   mistral: "mistral-large-latest",
   anthropic: "claude-3-5-sonnet-latest",
   perplexity: "sonar",
-  cohere: "command-r-plus",
+  cohere: "command-a-03-2025",
   huggingface: "deepseek-ai/DeepSeek-R1:fastest",
-  azure_openai: "gpt-4o",
+  aws_bedrock: "openai.gpt-oss-20b",
 };
 
 export interface ProviderSettingsSnapshot {
@@ -50,7 +51,10 @@ function nativeFallbackModels(): Partial<Record<ProviderId, string>> {
 
 export function isProviderAvailableForFallback(providerId: string): providerId is ProviderId {
   const definition = PROVIDER_REGISTRY[providerId as ProviderId];
-  return Boolean(definition && definition.id !== "venice" && !definition.unavailable && NATIVE_FALLBACK_MODELS[definition.id]);
+  // A provider is available for fallback consent if it is not Venice and not deferred.
+  // Native fallback models are only required for automatic fallback routing; explicit
+  // prefix routing (e.g. azure_openai:<deploymentName>) works without one.
+  return Boolean(definition && definition.id !== "venice" && !definition.unavailable);
 }
 
 function isAvailableFallbackProvider(value: string): value is ProviderId {

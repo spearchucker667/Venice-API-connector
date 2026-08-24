@@ -26,6 +26,7 @@ import { performGuardedVeniceRequest } from "./guardPipeline";
 import { computePayloadHash } from "../../src/shared/venice-media-contract/payload-hash";
 import { identifyAndValidateGeneratedMedia } from "../../src/shared/safety/mediaScreener";
 import { getRuntimeLocalFamilySafeModeEnabled } from "./runtimeSafetySettings";
+import { getProviderApiKey } from "./secureStore";
 
 import { logError } from "./logger";
 import { publishInspectorRequest, publishInspectorCompletion } from "./inspectorTelemetry";
@@ -33,6 +34,11 @@ import { buildAudioRetrieveRequest } from '../../src/services/media-request-adap
 import { normalizeAudioRetrieveResponse } from '../../src/services/audio-retrieve-normalizer';
 import { persistGeneratedMedia } from './generatedMediaStore';
 import { retrieveVideoQueueResult, VideoRetrieveError } from './videoRetrieveService';
+import {
+  cancelReplicatePrediction,
+  downloadReplicateOutput,
+  pollReplicatePrediction,
+} from "./replicateService";
 import {
   normalizeVideoQueueResponse,
   normalizeAudioQueueResponse,
@@ -247,7 +253,7 @@ export async function initBackgroundTaskManager(): Promise<void> {
         }
       }
       if (!isTerminalStatus(task.status)) {
-        if (isProviderPolledBackgroundTaskType(task.type)) {
+        if (isProviderPolledBackgroundTaskType(task.type, task.providerId)) {
           startPolling(task.id);
         } else {
           // image, research, document are synchronous/streaming connections that die on restart
@@ -403,7 +409,7 @@ export async function createBackgroundTaskInMain(
   state.tasks[task.id] = task;
   await flushPersistFatal();
   emit(task.id, task, 'created', task.profileId);
-  if (isProviderPolledBackgroundTaskType(task.type)) {
+  if (isProviderPolledBackgroundTaskType(task.type, task.providerId)) {
     startPolling(task.id);
   }
   return task;
@@ -421,7 +427,18 @@ export async function cancelBackgroundTaskInMain(taskId: string): Promise<Backgr
   await initBackgroundTaskManager();
   const task = state.tasks[taskId];
   stopPolling(taskId);
-  if (task && isProviderPolledBackgroundTaskType(task.type)) {
+  if (task && isProviderPolledBackgroundTaskType(task.type, task.providerId)) {
+    // For Replicate, attempt a real provider cancellation before marking aborted.
+    if (task.providerId === "replicate" && task.queueId) {
+      const apiToken = getProviderApiKey("replicate", task.profileId);
+      if (apiToken) {
+        try {
+          await cancelReplicatePrediction(apiToken, task.queueId);
+        } catch (err) {
+          logError(`Failed to cancel Replicate prediction ${task.queueId}`, sanitizeErrorText(String(err)));
+        }
+      }
+    }
     return applyUpdate(taskId, {
       status: "aborted",
       error: "Cancel requested (provider generation may still run)",
@@ -437,7 +454,7 @@ export async function retryBackgroundTaskInMain(taskId: string): Promise<Backgro
   if (!task || !task.queueId) return null;
   // Synchronous task records intentionally do not persist request bodies, so
   // only their originating workspace can safely recreate them.
-  if (!isProviderPolledBackgroundTaskType(task.type)) return task;
+  if (!isProviderPolledBackgroundTaskType(task.type, task.providerId)) return task;
   const nextAttempt = (task.attemptNumber ?? 1) + 1;
   const updated = await applyUpdate(taskId, {
     status: "queued",
@@ -479,7 +496,7 @@ function schedulePoll(taskId: string, delayMs: number): void {
 function startPolling(taskId: string): void {
   const task = state.tasks[taskId];
   if (!task || !task.queueId) return;
-  if (!isProviderPolledBackgroundTaskType(task.type)) return;
+  if (!isProviderPolledBackgroundTaskType(task.type, task.providerId)) return;
   if (isTerminalStatus(task.status)) return;
   schedulePoll(taskId, 0);
 }
@@ -644,6 +661,44 @@ async function runPoll(taskId: string): Promise<void> {
           summaries: { taskId, model: taskModel || undefined, durationMs: Date.now() - startedAt },
           eventId: musicTelemetryId,
         });
+      }
+    } else if (task.providerId === "replicate") {
+      const apiToken = getProviderApiKey("replicate", task.profileId);
+      if (!apiToken) {
+        await applyUpdate(taskId, { status: "failed", error: "Replicate API token is not configured.", pollAttempts: (task.pollAttempts ?? 0) + 1 });
+        stopPolling(taskId);
+        return;
+      }
+
+      await applyUpdate(taskId, { status: "processing", progress: undefined });
+      const normalized = await pollReplicatePrediction(apiToken, task.queueId);
+
+      const latestTask = state.tasks[taskId];
+      if (!latestTask || isTerminalStatus(latestTask.status)) return;
+      const currentPolls = (latestTask.pollAttempts ?? 0) + 1;
+
+      if (normalized.kind === "completed") {
+        const { buffer, mimeType } = await downloadReplicateOutput(normalized.outputUrl);
+        const fsm = getRuntimeLocalFamilySafeModeEnabled();
+        const screen = await identifyAndValidateGeneratedMedia(buffer, mimeType, fsm);
+        if (!screen.allowed) {
+          const fsmError = screen.userMessage || "Image generation is not available while Family Safe Mode is enabled.";
+          await applyUpdate(taskId, { status: "failed", error: fsmError, pollAttempts: currentPolls, consecutiveFailures: 0 });
+          stopPolling(taskId);
+          return;
+        }
+        const media = await persistGeneratedMedia(buffer, mimeType);
+        await applyUpdate(taskId, { status: "completed", progress: 1, resultUrl: media.url, resultMediaId: media.id, pollAttempts: currentPolls, consecutiveFailures: 0 });
+        stopPolling(taskId);
+      } else if (normalized.kind === "failed") {
+        await applyUpdate(taskId, { status: "failed", error: normalized.error, pollAttempts: currentPolls, consecutiveFailures: 0 });
+        stopPolling(taskId);
+      } else if (normalized.kind === "canceled") {
+        await applyUpdate(taskId, { status: "aborted", error: "Replicate prediction was canceled.", pollAttempts: currentPolls, consecutiveFailures: 0 });
+        stopPolling(taskId);
+      } else {
+        await applyUpdate(taskId, { status: "processing", progress: undefined, pollAttempts: currentPolls, consecutiveFailures: 0 });
+        schedulePoll(taskId, POLL_INTERVAL_MS);
       }
     }
   } catch (err: unknown) {

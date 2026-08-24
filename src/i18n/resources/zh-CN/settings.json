@@ -461,13 +461,26 @@
       "enable": "启用 {{label}}"
     },
     "status": {
-      "keyConfigured": "API 密钥已配置"
+      "keyConfigured": "API 密钥已配置",
+      "credentialConfigured": "__MISSING__:providers.status.credentialConfigured"
     },
     "actions": {
       "removeKey": "移除密钥"
     },
     "inputs": {
-      "keyPlaceholder": "输入API Key"
+      "keyPlaceholder": "输入API Key",
+      "azureResourceName": "__MISSING__:providers.inputs.azureResourceName",
+      "azureDeploymentName": "__MISSING__:providers.inputs.azureDeploymentName",
+      "azureApiVersion": "__MISSING__:providers.inputs.azureApiVersion",
+      "azureApiKey": "__MISSING__:providers.inputs.azureApiKey",
+      "awsRegion": "__MISSING__:providers.inputs.awsRegion",
+      "awsApiKey": "__MISSING__:providers.inputs.awsApiKey",
+      "vertexExpressMode": "__MISSING__:providers.inputs.vertexExpressMode",
+      "vertexFullMode": "__MISSING__:providers.inputs.vertexFullMode",
+      "vertexApiKey": "__MISSING__:providers.inputs.vertexApiKey",
+      "vertexProjectId": "__MISSING__:providers.inputs.vertexProjectId",
+      "vertexLocation": "__MISSING__:providers.inputs.vertexLocation",
+      "vertexCredentialsJson": "__MISSING__:providers.inputs.vertexCredentialsJson"
     }
   },
   "errors": {

@@ -32,6 +32,11 @@ vi.mock("../services/desktopBridge", () => ({
     delete: vi.fn(),
     isConfigured: vi.fn(async () => false),
   },
+  desktopProviderCredential: {
+    set: vi.fn(),
+    delete: vi.fn(),
+    isConfigured: vi.fn(async () => false),
+  },
   desktopProviderSettings: {
     get: bridgeMocks.getProviderSettings,
     update: vi.fn(),

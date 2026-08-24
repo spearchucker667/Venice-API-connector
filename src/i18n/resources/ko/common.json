@@ -4076,6 +4076,9 @@
           "jinaConnectionSuccessful": "지나 연결 성공",
           "jinaReturnedValue1": "Jina가 {{value1}} (를) 반환했습니다.",
           "networkErrorTestingJinaApiKey": "네트워크 오류 테스트 Jina API 키"
+        },
+        "error": {
+          "notSupportedInWebMode": "__MISSING__:runtimeGenerated.services.desktopbridge.error.notSupportedInWebMode"
         }
       },
       "imageinspectoranalysis": {
@@ -4383,7 +4386,9 @@
           "searchGroundedAndFastLlmApis": "검색 기반의 빠른 LLM API.",
           "cohereEnterpriseReadyMultilingualModels": "__MISSING__:runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels",
           "huggingFaceOpenSourceInferenceProviders": "__MISSING__:runtimeGenerated.types.provider.metadata.huggingFaceOpenSourceInferenceProviders",
-          "azureOpenAiDeploymentBasedChatCompletions": "__MISSING__:runtimeGenerated.types.provider.metadata.azureOpenAiDeploymentBasedChatCompletions"
+          "azureOpenAiDeploymentBasedChatCompletions": "__MISSING__:runtimeGenerated.types.provider.metadata.azureOpenAiDeploymentBasedChatCompletions",
+          "awsBedrockMantleOpenAiCompatibleInference": "__MISSING__:runtimeGenerated.types.provider.metadata.awsBedrockMantleOpenAiCompatibleInference",
+          "googleVertexAiExpressModeApiKey": "__MISSING__:runtimeGenerated.types.provider.metadata.googleVertexAiExpressModeApiKey"
         }
       }
     },

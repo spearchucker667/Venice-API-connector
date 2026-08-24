@@ -82,7 +82,7 @@ export function AudioView() {
   const voices = selectedModelVoices?.length
     ? selectedModelVoices
     : TTS_FALLBACK_VOICES;
-  const voiceOptions = voices.map((v) => {
+  const voiceOptions = voices.map((v: string) => {
     const prefix = v.slice(0, 2);
     const langMap: Record<
       string,

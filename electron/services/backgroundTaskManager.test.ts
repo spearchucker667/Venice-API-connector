@@ -96,6 +96,14 @@ describe("backgroundTaskManager", () => {
   });
 
   afterEach(async () => {
+    // Restore real timers first so any pending fire-and-forget persists run
+    // to completion before we drain and wipe the temp directory.
+    vi.useRealTimers();
+    // Drain any in-flight fire-and-forget persists before wiping the temp
+    // directory, otherwise a concurrent rename can fail with ENOENT.
+    await __resetBackgroundTaskManagerForTests();
+    await __flushBackgroundTaskPersistenceForTests();
+
     const dir = path.join(TMP_USERDATA, "background-tasks");
     try {
       const entries = await fs.readdir(dir);

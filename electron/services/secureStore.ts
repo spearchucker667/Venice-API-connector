@@ -11,6 +11,7 @@ import {
   writeWindowsCredential,
   deleteWindowsCredential,
 } from "./windowsCredentialStore";
+import { requiresStructuredCredential } from "../../src/types/provider";
 
 /** Name of the JSON file used for secure preferences storage. */
 const STORE_FILE = "secure-prefs.json";
@@ -431,17 +432,28 @@ export function isProviderCredentialConfigured(providerId: string, profileId: st
   return getProviderCredential(providerId, profileId) !== null;
 }
 
-/** Checks whether a provider has either a legacy single key or a structured credential. */
+/** Checks whether a provider is configured with the credential shape it requires.
+ *  Structured providers (Azure, Bedrock, Vertex) require a structured credential;
+ *  legacy single-key providers require a single API key. */
 export function isProviderConfigured(providerId: string, profileId: string = "default"): boolean {
-  return isProviderApiKeyConfigured(providerId, profileId) || isProviderCredentialConfigured(providerId, profileId);
+  if (requiresStructuredCredential(providerId as import("../../src/types/provider").ProviderId)) {
+    return isProviderCredentialConfigured(providerId, profileId);
+  }
+  return isProviderApiKeyConfigured(providerId, profileId);
 }
 
-/** Retrieves a structured credential when available, otherwise falls back to the
- *  legacy single-key store. Simple-key providers keep working while structured
- *  cloud credentials are introduced. */
-export function getProviderCredentialOrFallback(providerId: string, profileId: string = "default"): Record<string, unknown> | string | null {
-  const structured = getProviderCredential(providerId, profileId);
-  if (structured) return structured;
+/** Retrieves the correct credential representation for a provider.
+ *  Structured providers require a structured credential; simple-key providers
+ *  use the legacy single-key store. Returning a legacy string for a structured
+ *  provider would cause the adapter to fail, so this function returns null when
+ *  the required shape is missing. */
+export function getProviderCredentialOrFallback(
+  providerId: string,
+  profileId: string = "default",
+): Record<string, unknown> | string | null {
+  if (requiresStructuredCredential(providerId as import("../../src/types/provider").ProviderId)) {
+    return getProviderCredential(providerId, profileId);
+  }
   return getProviderApiKey(providerId, profileId);
 }
 

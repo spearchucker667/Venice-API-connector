@@ -461,13 +461,26 @@
       "enable": "Habilitar {{label}}"
     },
     "status": {
-      "keyConfigured": "Clave API configurada"
+      "keyConfigured": "Clave API configurada",
+      "credentialConfigured": "__MISSING__:providers.status.credentialConfigured"
     },
     "actions": {
       "removeKey": "Eliminar clave"
     },
     "inputs": {
-      "keyPlaceholder": "Ingresar API Key"
+      "keyPlaceholder": "Ingresar API Key",
+      "azureResourceName": "__MISSING__:providers.inputs.azureResourceName",
+      "azureDeploymentName": "__MISSING__:providers.inputs.azureDeploymentName",
+      "azureApiVersion": "__MISSING__:providers.inputs.azureApiVersion",
+      "azureApiKey": "__MISSING__:providers.inputs.azureApiKey",
+      "awsRegion": "__MISSING__:providers.inputs.awsRegion",
+      "awsApiKey": "__MISSING__:providers.inputs.awsApiKey",
+      "vertexExpressMode": "__MISSING__:providers.inputs.vertexExpressMode",
+      "vertexFullMode": "__MISSING__:providers.inputs.vertexFullMode",
+      "vertexApiKey": "__MISSING__:providers.inputs.vertexApiKey",
+      "vertexProjectId": "__MISSING__:providers.inputs.vertexProjectId",
+      "vertexLocation": "__MISSING__:providers.inputs.vertexLocation",
+      "vertexCredentialsJson": "__MISSING__:providers.inputs.vertexCredentialsJson"
     }
   },
   "errors": {

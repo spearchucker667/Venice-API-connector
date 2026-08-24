@@ -58,6 +58,7 @@ describe("maybeRunLocalFamilyGuard", () => {
       skipped: true,
       reason: "optional-local-family-filter-disabled-child-safety-checked",
       guardDecision: allowedDecision,
+      category: "general",
     });
   });
 
@@ -71,7 +72,8 @@ describe("maybeRunLocalFamilyGuard", () => {
     expect(runLocalFamilyGuard).toHaveBeenCalledOnce();
     expect(decision.allowed).toBe(false);
     if (!decision.allowed) {
-      expect(decision.userMessage).toMatch(/cannot be disabled/i);
+      expect(decision.category).toBe("illegal-content");
+      expect(decision.userMessage).toMatch(/illegal-content protection triggered/i);
     }
   });
 

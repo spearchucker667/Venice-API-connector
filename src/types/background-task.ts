@@ -5,14 +5,22 @@ export type BackgroundTaskStatus = 'idle' | 'queued' | 'processing' | 'completed
 export type BackgroundTaskType = 'video' | 'music' | 'image' | 'research' | 'document'
 export type VideoTaskStage = 'queued' | 'generating' | 'retrieving' | 'saving' | 'completed'
 
-/** Only these provider jobs expose durable queue retrieval endpoints. */
+/** Only these provider jobs expose durable queue retrieval endpoints.
+ *  Replicate image predictions are also polled because Replicate generation
+ *  is asynchronous and must survive renderer reloads/restarts.
+ */
 export const PROVIDER_POLLED_BACKGROUND_TASK_TYPES = ['video', 'music'] as const
 export type ProviderPolledBackgroundTaskType = typeof PROVIDER_POLLED_BACKGROUND_TASK_TYPES[number]
 
 export function isProviderPolledBackgroundTaskType(
   type: BackgroundTaskType,
-): type is ProviderPolledBackgroundTaskType {
-  return PROVIDER_POLLED_BACKGROUND_TASK_TYPES.includes(type as ProviderPolledBackgroundTaskType)
+  providerId?: string,
+): boolean {
+  if (PROVIDER_POLLED_BACKGROUND_TASK_TYPES.includes(type as ProviderPolledBackgroundTaskType)) {
+    return true
+  }
+  // Replicate uses the async prediction API for media; poll these tasks.
+  return type === 'image' && providerId === 'replicate'
 }
 
 export interface BackgroundTask {

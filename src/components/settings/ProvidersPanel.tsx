@@ -6,7 +6,9 @@ import {
   AVAILABLE_FALLBACK_PROVIDER_IDS,
   DEFERRED_PROVIDER_IDS,
   PROVIDER_REGISTRY,
+  requiresStructuredCredential,
   type ProviderId,
+  type ProviderCredential,
 } from '../../types/provider'
 import { PrimaryButton } from '../ui/shared'
 import { desktopProviderSettings, isElectron } from '../../services/desktopBridge'
@@ -23,11 +25,12 @@ const ALL_FEATURES = ['chat', 'image', 'video', 'audio', 'embeddings', 'vision']
 
 export function ProvidersPanel() {
   const { t } = useTranslation(['settings', 'common'])
-  const { configuredProviders, setProviderApiKey, clearProviderApiKey } = useAuthStore()
+  const { configuredProviders, setProviderApiKey, clearProviderApiKey, setProviderCredential, clearProviderCredential } = useAuthStore()
   const { enabledProviders, setEnabledProvider, autoFallbackEnabled, setAutoFallbackEnabled, fallbackOrdering, setFallbackOrdering } = useSettingsStore()
 
   // Track local input state per provider so we don't pollute global state while typing
   const [keyInputs, setKeyInputs] = useState<Record<string, string>>({})
+  const [structuredInputs, setStructuredInputs] = useState<Record<string, Record<string, string>>>({})
   const [isSaving, setIsSaving] = useState<Record<string, boolean>>({})
   const [errorMsg, setErrorMsg] = useState<Record<string, string>>({})
   const [fallbackInput, setFallbackInput] = useState<string>(fallbackOrdering.join(', '))
@@ -64,20 +67,61 @@ export function ProvidersPanel() {
     setKeyInputs(prev => ({ ...prev, [providerId]: val }))
   }
 
+  const handleStructuredChange = (providerId: string, field: string, val: string) => {
+    setStructuredInputs(prev => ({ ...prev, [providerId]: { ...prev[providerId], [field]: val } }))
+  }
+
+  function buildStructuredCredential(providerId: ProviderId, fields: Record<string, string>): ProviderCredential {
+    switch (providerId) {
+      case 'azure_openai':
+        return {
+          providerId,
+          resourceName: fields.resourceName?.trim() ?? '',
+          deploymentName: fields.deploymentName?.trim() ?? '',
+          apiVersion: fields.apiVersion?.trim() ?? '',
+          apiKey: fields.apiKey?.trim() ?? '',
+        } as ProviderCredential
+      case 'aws_bedrock':
+        return {
+          providerId,
+          region: fields.region?.trim() ?? '',
+          apiKey: fields.apiKey?.trim() ?? '',
+        } as ProviderCredential
+      case 'google_vertex':
+        return {
+          providerId,
+          authMode: fields.authMode === 'full' ? 'full' : 'express',
+          apiKey: fields.apiKey?.trim() ?? '',
+          projectId: fields.projectId?.trim() ?? '',
+          location: fields.location?.trim() ?? '',
+          credentialsJson: fields.credentialsJson?.trim() ?? '',
+        } as ProviderCredential
+      default:
+        throw new Error(`Unsupported structured provider: ${providerId}`)
+    }
+  }
+
   const handleSaveKey = async (providerId: string) => {
+    const isStructured = requiresStructuredCredential(providerId as ProviderId)
     const val = keyInputs[providerId]?.trim()
-    if (!val) return
+    if (!isStructured && !val) return
 
     setIsSaving(prev => ({ ...prev, [providerId]: true }))
     setErrorMsg(prev => ({ ...prev, [providerId]: '' }))
 
     try {
-      await setProviderApiKey(providerId, val)
-      setKeyInputs(prev => ({ ...prev, [providerId]: '' }))
+      if (isStructured) {
+        const credential = buildStructuredCredential(providerId as ProviderId, structuredInputs[providerId] ?? {})
+        await setProviderCredential(providerId as ProviderId, credential)
+        setStructuredInputs(prev => ({ ...prev, [providerId]: {} }))
+      } else {
+        await setProviderApiKey(providerId, val!)
+        setKeyInputs(prev => ({ ...prev, [providerId]: '' }))
+      }
     } catch (err) {
-      setErrorMsg(prev => ({ 
-        ...prev, 
-        [providerId]: err instanceof Error ? err.message : String(err) 
+      setErrorMsg(prev => ({
+        ...prev,
+        [providerId]: err instanceof Error ? err.message : String(err)
       }))
     } finally {
       setIsSaving(prev => ({ ...prev, [providerId]: false }))
@@ -88,12 +132,16 @@ export function ProvidersPanel() {
     setIsSaving(prev => ({ ...prev, [providerId]: true }))
     setErrorMsg(prev => ({ ...prev, [providerId]: '' }))
     try {
-      await clearProviderApiKey(providerId)
+      if (requiresStructuredCredential(providerId as ProviderId)) {
+        await clearProviderCredential(providerId as ProviderId)
+      } else {
+        await clearProviderApiKey(providerId)
+      }
       setEnabledProvider(providerId, false)
     } catch (err) {
-      setErrorMsg(prev => ({ 
-        ...prev, 
-        [providerId]: err instanceof Error ? err.message : String(err) 
+      setErrorMsg(prev => ({
+        ...prev,
+        [providerId]: err instanceof Error ? err.message : String(err)
       }))
     } finally {
       setIsSaving(prev => ({ ...prev, [providerId]: false }))
@@ -246,12 +294,14 @@ export function ProvidersPanel() {
                 </div>
               )}
 
-              <div className="flex gap-2 items-center">
+              <div className="space-y-2">
                 {isConfigured ? (
-                  <>
+                  <div className="flex gap-2 items-center">
                     <div className="text-sm text-[var(--color-success)] flex items-center gap-1.5 flex-1">
                       <div className="w-2 h-2 rounded-full bg-[var(--color-success)]" />
-                      {t('settings:providers.status.keyConfigured', 'API Key Configured')}
+                      {requiresStructuredCredential(provider.id as ProviderId)
+                        ? t('settings:providers.status.credentialConfigured', 'Credential Configured')
+                        : t('settings:providers.status.keyConfigured', 'API Key Configured')}
                     </div>
                     <button
                       className="px-3 py-1.5 text-sm rounded border border-[var(--color-border)] hover:bg-[var(--color-bg-hover)] disabled:opacity-50"
@@ -260,9 +310,124 @@ export function ProvidersPanel() {
                     >
                       {t('settings:providers.actions.removeKey', 'Remove Key')}
                     </button>
-                  </>
+                  </div>
+                ) : requiresStructuredCredential(provider.id as ProviderId) ? (
+                  <div className="space-y-2">
+                    {provider.id === 'azure_openai' && (
+                      <>
+                        <input
+                          type="text"
+                          placeholder={t('settings:providers.inputs.azureResourceName', 'Azure resource name')}
+                          value={structuredInputs[provider.id]?.resourceName || ''}
+                          onChange={(e) => handleStructuredChange(provider.id, 'resourceName', e.target.value)}
+                          className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                          disabled={saving || isUnavailable}
+                        />
+                        <input
+                          type="text"
+                          placeholder={t('settings:providers.inputs.azureDeploymentName', 'Azure deployment name')}
+                          value={structuredInputs[provider.id]?.deploymentName || ''}
+                          onChange={(e) => handleStructuredChange(provider.id, 'deploymentName', e.target.value)}
+                          className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                          disabled={saving || isUnavailable}
+                        />
+                        <input
+                          type="text"
+                          placeholder={t('settings:providers.inputs.azureApiVersion', 'Azure API version (e.g. 2024-08-01-preview)')}
+                          value={structuredInputs[provider.id]?.apiVersion || ''}
+                          onChange={(e) => handleStructuredChange(provider.id, 'apiVersion', e.target.value)}
+                          className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                          disabled={saving || isUnavailable}
+                        />
+                        <input
+                          type="password"
+                          placeholder={t('settings:providers.inputs.azureApiKey', 'Azure API key')}
+                          value={structuredInputs[provider.id]?.apiKey || ''}
+                          onChange={(e) => handleStructuredChange(provider.id, 'apiKey', e.target.value)}
+                          className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                          disabled={saving || isUnavailable}
+                        />
+                      </>
+                    )}
+                    {provider.id === 'aws_bedrock' && (
+                      <>
+                        <input
+                          type="text"
+                          placeholder={t('settings:providers.inputs.awsRegion', 'AWS region (e.g. us-east-1)')}
+                          value={structuredInputs[provider.id]?.region || ''}
+                          onChange={(e) => handleStructuredChange(provider.id, 'region', e.target.value)}
+                          className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                          disabled={saving || isUnavailable}
+                        />
+                        <input
+                          type="password"
+                          placeholder={t('settings:providers.inputs.awsApiKey', 'AWS Bedrock API key')}
+                          value={structuredInputs[provider.id]?.apiKey || ''}
+                          onChange={(e) => handleStructuredChange(provider.id, 'apiKey', e.target.value)}
+                          className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                          disabled={saving || isUnavailable}
+                        />
+                      </>
+                    )}
+                    {provider.id === 'google_vertex' && (
+                      <>
+                        <select
+                          value={structuredInputs[provider.id]?.authMode || 'express'}
+                          onChange={(e) => handleStructuredChange(provider.id, 'authMode', e.target.value)}
+                          className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                          disabled={saving || isUnavailable}
+                        >
+                          <option value="express">{t('settings:providers.inputs.vertexExpressMode', 'Express Mode (API key)')}</option>
+                          <option value="full">{t('settings:providers.inputs.vertexFullMode', 'Full Vertex (project/location/service account)')}</option>
+                        </select>
+                        {(structuredInputs[provider.id]?.authMode ?? 'express') === 'express' ? (
+                          <input
+                            type="password"
+                            placeholder={t('settings:providers.inputs.vertexApiKey', 'Vertex Express API key')}
+                            value={structuredInputs[provider.id]?.apiKey || ''}
+                            onChange={(e) => handleStructuredChange(provider.id, 'apiKey', e.target.value)}
+                            className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                            disabled={saving || isUnavailable}
+                          />
+                        ) : (
+                          <>
+                            <input
+                              type="text"
+                              placeholder={t('settings:providers.inputs.vertexProjectId', 'Google Cloud project ID')}
+                              value={structuredInputs[provider.id]?.projectId || ''}
+                              onChange={(e) => handleStructuredChange(provider.id, 'projectId', e.target.value)}
+                              className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                              disabled={saving || isUnavailable}
+                            />
+                            <input
+                              type="text"
+                              placeholder={t('settings:providers.inputs.vertexLocation', 'Google Cloud location (e.g. us-central1)')}
+                              value={structuredInputs[provider.id]?.location || ''}
+                              onChange={(e) => handleStructuredChange(provider.id, 'location', e.target.value)}
+                              className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                              disabled={saving || isUnavailable}
+                            />
+                            <textarea
+                              placeholder={t('settings:providers.inputs.vertexCredentialsJson', 'Service account JSON')}
+                              value={structuredInputs[provider.id]?.credentialsJson || ''}
+                              onChange={(e) => handleStructuredChange(provider.id, 'credentialsJson', e.target.value)}
+                              className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                              disabled={saving || isUnavailable}
+                              rows={3}
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
+                    <PrimaryButton
+                      onClick={() => handleSaveKey(provider.id)}
+                      disabled={saving || isUnavailable}
+                    >
+                      {saving ? t('common:actions.saving', 'Saving...') : t('common:actions.save', 'Save')}
+                    </PrimaryButton>
+                  </div>
                 ) : (
-                  <>
+                  <div className="flex gap-2 items-center">
                     <input
                       type="password"
                       placeholder={t('settings:providers.inputs.keyPlaceholder', 'Enter API Key')}
@@ -277,7 +442,7 @@ export function ProvidersPanel() {
                     >
                       {saving ? t('common:actions.saving', 'Saving...') : t('common:actions.save', 'Save')}
                     </PrimaryButton>
-                  </>
+                  </div>
                 )}
               </div>
             </div>

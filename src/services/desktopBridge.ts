@@ -30,6 +30,7 @@ import type {
   BackgroundTaskIpcEnvelope,
 } from "../types/background-task";
 import { veniceFetch } from "./veniceClient";
+import type { ProviderCredential } from "../types/provider";
 import type { VeniceStreamDelta } from "../shared/veniceStreamDelta";
 import {
   buildInspectorTelemetryPatch,
@@ -326,6 +327,12 @@ export const desktopApiKey = {
   },
 };
 
+const webModeNotSupportedMessage = () =>
+  translateRuntime(
+    "runtimeGenerated.services.desktopbridge.error.notSupportedInWebMode",
+    "Not supported in web mode",
+  );
+
 /** Bridge interface for fallback provider API keys. */
 export const desktopProviderApiKey = {
   async isConfigured(providerId: string): Promise<boolean> {
@@ -347,7 +354,7 @@ export const desktopProviderApiKey = {
         key,
         getActiveProfileId(),
       );
-    return { ok: false, error: "Not supported in web mode" };
+    return { ok: false, error: webModeNotSupportedMessage() };
   },
 
   async delete(providerId: string): Promise<{ ok: boolean; error?: string }> {
@@ -356,7 +363,63 @@ export const desktopProviderApiKey = {
         providerId,
         getActiveProfileId(),
       );
-    return { ok: false, error: "Not supported in web mode" };
+    return { ok: false, error: webModeNotSupportedMessage() };
+  },
+
+  async test(
+    providerId: string,
+  ): Promise<{ ok: boolean; status?: number; message: string; connectivity?: ApiConnectivityStatus }> {
+    if (isElectron())
+      return window.veniceForge!.providerApiKey.test(
+        providerId,
+        getActiveProfileId(),
+      );
+    return { ok: false, message: webModeNotSupportedMessage() };
+  },
+};
+
+/** Bridge interface for structured fallback provider credentials (Azure, Bedrock, Vertex). */
+export const desktopProviderCredential = {
+  async isConfigured(providerId: string): Promise<boolean> {
+    if (isElectron())
+      return window.veniceForge!.providerCredential.isConfigured(
+        providerId,
+        getActiveProfileId(),
+      );
+    return false;
+  },
+
+  async set(
+    providerId: string,
+    credential: ProviderCredential,
+  ): Promise<{ ok: boolean; error?: string }> {
+    if (isElectron())
+      return window.veniceForge!.providerCredential.set(
+        providerId,
+        credential,
+        getActiveProfileId(),
+      );
+    return { ok: false, error: webModeNotSupportedMessage() };
+  },
+
+  async delete(providerId: string): Promise<{ ok: boolean; error?: string }> {
+    if (isElectron())
+      return window.veniceForge!.providerCredential.delete(
+        providerId,
+        getActiveProfileId(),
+      );
+    return { ok: false, error: webModeNotSupportedMessage() };
+  },
+
+  async test(
+    providerId: string,
+  ): Promise<{ ok: boolean; status?: number; message: string; connectivity?: ApiConnectivityStatus }> {
+    if (isElectron())
+      return window.veniceForge!.providerCredential.test(
+        providerId,
+        getActiveProfileId(),
+      );
+    return { ok: false, message: webModeNotSupportedMessage() };
   },
 };
 
@@ -2567,5 +2630,39 @@ export const desktopCharacterCreator = {
         };
       }
     ).veniceForge.characterCreator.exportCard(payload);
+  },
+};
+
+/** Replicate async media-generation bridge. */
+export const desktopReplicate = {
+  async generateImage(input: {
+    model: string;
+    input: Record<string, unknown>;
+  }): Promise<{
+    ok: boolean;
+    task?: BackgroundTask;
+    error?: string;
+  }> {
+    if (!isElectron()) {
+      return { ok: false, error: "Replicate generation is only available in the desktop app." };
+    }
+    return window.veniceForge!.replicate.generateImage(input);
+  },
+};
+
+/** Hugging Face Inference Providers live model-discovery bridge. */
+export const desktopHuggingFace = {
+  async getModelCatalog(): Promise<import("../types/provider").ProviderModelCatalogResult> {
+    if (!isElectron()) {
+      return {
+        providerId: "huggingface",
+        models: [],
+        fetchedAt: Date.now(),
+        stale: true,
+        source: "bundled",
+        error: "Hugging Face model discovery is only available in the desktop app.",
+      };
+    }
+    return window.veniceForge!.huggingFace.getModelCatalog(getActiveProfileId());
   },
 };

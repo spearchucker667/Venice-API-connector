@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("../lib/venice-client", () => ({ venice: vi.fn() }));
 
 import { venice } from "../lib/venice-client";
+import { SafetyGuardBlockedError, type SafetyGuardDecision } from "../shared/safety";
 import type { PromptEnhancerModelFacts } from "./prompt-enhancer-context";
 import {
   DEFAULT_ENHANCER_MODEL,
@@ -217,6 +218,36 @@ describe("fallback and bounds", () => {
         modelUsed: "internal-text-enhancer",
         fallbackReason: "safety-block",
       });
+  });
+
+  it("propagates safety category and reason code from SafetyGuardBlockedError", async () => {
+    const decision: SafetyGuardDecision = {
+      allow: false,
+      action: "block",
+      severity: "critical",
+      category: "csam_request",
+      reasonCode: "CSAM_GENRE_TERM",
+      userMessage: "blocked",
+      developerMessage: "blocked",
+      normalizedChanged: false,
+      signals: [],
+      audit: {
+        decisionId: "test-decision",
+        createdAt: new Date().toISOString(),
+        promptHash: "00000000",
+        promptLength: 4,
+        matchedFieldPaths: [],
+      },
+    };
+    mockedVenice.mockRejectedValueOnce(new SafetyGuardBlockedError(decision));
+    const result = await enhancePrompt({ mode: "enhance", prompt: "original" }, config);
+    expect(result).toMatchObject({
+      prompt: "original",
+      modelUsed: "internal-text-enhancer",
+      fallbackReason: "safety-block",
+      safetyCategory: "csam_request",
+      safetyReasonCode: "CSAM_GENRE_TERM",
+    });
   });
 
   it("clamps valid output to the effective downstream limit", async () => {

@@ -32,7 +32,8 @@ describe("fallback provider catalog status", () => {
   it("includes a non-empty Cohere chat catalog", () => {
     const cohereModels = FALLBACK_MODELS.cohere;
     expect(cohereModels.length).toBeGreaterThan(0);
-    expect(cohereModels.some((m) => m.id === "cohere:command-r-plus")).toBe(true);
+    expect(cohereModels.some((m) => m.id === "cohere:command-a-03-2025" && m.lifecycle === "active")).toBe(true);
+    expect(cohereModels.some((m) => m.id === "cohere:command-r-plus" && m.lifecycle === "deprecated")).toBe(true);
     expect(cohereModels.every((m) => m._type === "text")).toBe(true);
   });
 });

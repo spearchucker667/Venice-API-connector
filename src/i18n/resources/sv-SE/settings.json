@@ -461,13 +461,26 @@
       "enable": "Aktivera {{label}}"
     },
     "status": {
-      "keyConfigured": "API-nyckel konfigurerad"
+      "keyConfigured": "API-nyckel konfigurerad",
+      "credentialConfigured": "__MISSING__:providers.status.credentialConfigured"
     },
     "actions": {
       "removeKey": "Ta bort nyckel"
     },
     "inputs": {
-      "keyPlaceholder": "Ange API-nyckel"
+      "keyPlaceholder": "Ange API-nyckel",
+      "azureResourceName": "__MISSING__:providers.inputs.azureResourceName",
+      "azureDeploymentName": "__MISSING__:providers.inputs.azureDeploymentName",
+      "azureApiVersion": "__MISSING__:providers.inputs.azureApiVersion",
+      "azureApiKey": "__MISSING__:providers.inputs.azureApiKey",
+      "awsRegion": "__MISSING__:providers.inputs.awsRegion",
+      "awsApiKey": "__MISSING__:providers.inputs.awsApiKey",
+      "vertexExpressMode": "__MISSING__:providers.inputs.vertexExpressMode",
+      "vertexFullMode": "__MISSING__:providers.inputs.vertexFullMode",
+      "vertexApiKey": "__MISSING__:providers.inputs.vertexApiKey",
+      "vertexProjectId": "__MISSING__:providers.inputs.vertexProjectId",
+      "vertexLocation": "__MISSING__:providers.inputs.vertexLocation",
+      "vertexCredentialsJson": "__MISSING__:providers.inputs.vertexCredentialsJson"
     }
   },
   "errors": {

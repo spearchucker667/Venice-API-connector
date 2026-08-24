@@ -28,6 +28,22 @@ vi.mock('./secureStore', () => ({
         apiKey: 'fake-azure-key'
       }
     }
+    if (providerId === 'aws_bedrock') {
+      return {
+        providerId: 'aws_bedrock',
+        region: 'us-east-1',
+        apiKey: 'fake-bedrock-key'
+      }
+    }
+    if (providerId === 'google_vertex') {
+      return {
+        providerId: 'google_vertex',
+        authMode: 'express',
+        apiKey: 'fake-vertex-key',
+        projectId: 'venice-forge-test',
+        location: 'global'
+      }
+    }
     return null
   }),
 }))
@@ -42,6 +58,8 @@ vi.mock('./providerSettingsStore', () => ({
       google_gemini: true,
       huggingface: true,
       azure_openai: true,
+      aws_bedrock: true,
+      google_vertex: true,
     },
     autoFallbackEnabled: false,
     fallbackOrdering: [],
@@ -127,18 +145,6 @@ describe('providerAdapters', () => {
       expect(getProviderCredentialOrFallback).toHaveBeenCalledWith('anthropic', 'work-profile')
     })
 
-    it('rejects providers marked unavailable before reading credentials', () => {
-      const request = {
-        endpoint: '/chat/completions',
-        body: { model: 'aws_bedrock:anthropic.claude-3-sonnet', messages: [] }
-      }
-
-      const result = resolveProviderRoute(request, 'work-profile')
-
-      expect(result?.error).toMatch(/not available/i)
-      expect(getProviderCredentialOrFallback).not.toHaveBeenCalled()
-    })
-
     it('resolves the correct route for Together', () => {
       const request = {
         endpoint: '/chat/completions',
@@ -183,6 +189,90 @@ describe('providerAdapters', () => {
 
       const transformedBody = result?.route?.transformBody!(request.body, 'gpt-4o')
       expect(transformedBody.model).toBe('gpt-4o')
+    })
+
+    it('resolves the correct route for AWS Bedrock Mantle and uses the region in the host', () => {
+      const request = {
+        endpoint: '/chat/completions',
+        body: { model: 'aws_bedrock:openai.gpt-oss-20b', messages: [] }
+      }
+      const result = resolveProviderRoute(request)
+      expect(result?.error).toBeUndefined()
+      expect(result?.route?.host).toBe('bedrock-mantle.us-east-1.api.aws')
+      expect(result?.route?.path).toBe('/v1/chat/completions')
+      expect(result?.route?.headers['Authorization']).toBe('Bearer fake-bedrock-key')
+
+      const transformedBody = result?.route?.transformBody!(request.body, 'openai.gpt-oss-20b')
+      expect(transformedBody.model).toBe('openai.gpt-oss-20b')
+    })
+
+    it('rejects AWS Bedrock requests when the credential region is dangerous', () => {
+      vi.mocked(getProviderCredentialOrFallback).mockReturnValueOnce({
+        providerId: 'aws_bedrock',
+        region: 'evil.com/',
+        apiKey: 'fake-bedrock-key'
+      })
+
+      const result = resolveProviderRoute({
+        endpoint: '/chat/completions',
+        body: { model: 'aws_bedrock:openai.gpt-oss-20b', messages: [] }
+      })
+
+      expect(result?.error).toMatch(/invalid/i)
+    })
+
+    it('resolves the correct route for Google Vertex Express Mode and embeds API key in path', () => {
+      const request = {
+        endpoint: '/chat/completions',
+        body: { model: 'google_vertex:gemini-2.5-flash', messages: [] }
+      }
+      const result = resolveProviderRoute(request)
+      expect(result?.error).toBeUndefined()
+      expect(result?.route?.host).toBe('aiplatform.googleapis.com')
+      expect(result?.route?.path).toBe('/v1/projects/venice-forge-test/locations/global/publishers/google/models/gemini-2.5-flash:generateContent?key=fake-vertex-key')
+
+      const transformedBody = result?.route?.transformBody!(request.body, 'gemini-2.5-flash')
+      expect(transformedBody).toHaveProperty('contents')
+    })
+
+    it('rejects Google Vertex requests when the credential location is dangerous', () => {
+      vi.mocked(getProviderCredentialOrFallback).mockReturnValueOnce({
+        providerId: 'google_vertex',
+        authMode: 'express',
+        apiKey: 'fake-vertex-key',
+        projectId: 'venice-forge-test',
+        location: 'evil.com/'
+      })
+
+      const result = resolveProviderRoute({
+        endpoint: '/chat/completions',
+        body: { model: 'google_vertex:gemini-2.5-flash', messages: [] }
+      })
+
+      expect(result?.error).toMatch(/invalid/i)
+    })
+
+    it('uses the configured deployment name as the authoritative routing identity', () => {
+      vi.mocked(getProviderCredentialOrFallback).mockReturnValueOnce({
+        providerId: 'azure_openai',
+        resourceName: 'venice-forge-test',
+        deploymentName: 'custom-deployment-42',
+        apiVersion: '2024-08-01-preview',
+        apiKey: 'fake-azure-key'
+      })
+
+      const result = resolveProviderRoute({
+        endpoint: '/chat/completions',
+        body: { model: 'azure_openai:unused-model-suffix', messages: [] }
+      })
+
+      expect(result?.error).toBeUndefined()
+      expect(result?.route?.path).toBe('/openai/deployments/custom-deployment-42/chat/completions?api-version=2024-08-01-preview')
+      const transformedBody = result?.route?.transformBody!(
+        { model: 'azure_openai:unused-model-suffix', messages: [] },
+        'unused-model-suffix',
+      )
+      expect(transformedBody.model).toBe('custom-deployment-42')
     })
 
     it('rejects Azure OpenAI requests when the credential resource name is dangerous', () => {

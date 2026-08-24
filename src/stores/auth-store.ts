@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import { desktopApiKey, desktopJinaApiKey, desktopProviderApiKey, desktopProviderSettings } from '../services/desktopBridge' // TARGET Bridge
-import { PROVIDER_REGISTRY, type ProviderId } from '../types/provider'
+import { desktopApiKey, desktopJinaApiKey, desktopProviderApiKey, desktopProviderCredential, desktopProviderSettings } from '../services/desktopBridge' // TARGET Bridge
+import { PROVIDER_REGISTRY, requiresStructuredCredential, type ProviderId } from '../types/provider'
 import { redactErrorMessage } from '../shared/redaction'
 import { invalidateModelQueries } from '../services/modelQueryCoordinator'
 import { useModelCatalogRuntimeStore } from './model-catalog-runtime-store'
@@ -24,6 +24,8 @@ export interface AuthState {
   configuredProviders: Record<string, boolean>
   setProviderApiKey: (providerId: string, key: string) => Promise<void>
   clearProviderApiKey: (providerId: string) => Promise<void>
+  setProviderCredential: (providerId: ProviderId, credential: import('../types/provider').ProviderCredential) => Promise<void>
+  clearProviderCredential: (providerId: ProviderId) => Promise<void>
 }
 
 /** True when Venice requests can authenticate without exposing a persisted key. */
@@ -55,7 +57,11 @@ export const useAuthStore = create<AuthState>()((set) => ({
 
       await desktopProviderSettings.get()
       const providerConfigs = await Promise.all(
-        providerIds.map(id => desktopProviderApiKey.isConfigured(id)),
+        providerIds.map((id) =>
+          requiresStructuredCredential(id)
+            ? desktopProviderCredential.isConfigured(id)
+            : desktopProviderApiKey.isConfigured(id),
+        ),
       )
       const configuredProviders = providerIds.reduce((acc, id, index) => {
         acc[id] = providerConfigs[index]
@@ -109,6 +115,26 @@ export const useAuthStore = create<AuthState>()((set) => ({
 
   clearProviderApiKey: async (providerId) => {
     await desktopProviderApiKey.delete(providerId)
+    set((s) => ({
+      configuredProviders: { ...s.configuredProviders, [providerId]: false }
+    }))
+  },
+
+  setProviderCredential: async (providerId, credential) => {
+    const result = await desktopProviderCredential.set(providerId, credential)
+    if (!result.ok) {
+      throw new Error(`Failed to save credential for ${providerId}: ${result.error ?? 'unknown error'}`)
+    }
+    set((s) => ({
+      configuredProviders: { ...s.configuredProviders, [providerId]: true }
+    }))
+  },
+
+  clearProviderCredential: async (providerId) => {
+    const result = await desktopProviderCredential.delete(providerId)
+    if (!result.ok) {
+      throw new Error(`Failed to clear credential for ${providerId}: ${result.error ?? 'unknown error'}`)
+    }
     set((s) => ({
       configuredProviders: { ...s.configuredProviders, [providerId]: false }
     }))

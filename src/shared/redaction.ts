@@ -106,3 +106,28 @@ export function redactErrorDetails(error: Error): { message: string; stack?: str
   const stack = error.stack ? sanitizeErrorText(error.stack) : undefined;
   return { message, stack };
 }
+
+/**
+ * Redacts query-string credentials, usernames, and fragments from a URL while
+ * preserving the host and path for diagnostics.
+ * @param value The raw URL string.
+ * @returns A sanitized URL string.
+ */
+export function redactUrl(value: string): string {
+  try {
+    const url = new URL(value);
+    if (url.username || url.password) {
+      url.username = "[REDACTED]";
+      url.password = "[REDACTED]";
+    }
+    for (const [key] of url.searchParams) {
+      if (SECRET_KEY_PATTERN.test(key)) {
+        url.searchParams.set(key, "[REDACTED]");
+      }
+    }
+    url.hash = "";
+    return url.toString();
+  } catch {
+    return "[REDACTED-URL]";
+  }
+}

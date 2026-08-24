@@ -177,7 +177,7 @@ export const useBackgroundTaskStore = create<BackgroundTaskState>((set, get) => 
   cancelTask: (taskId) => {
     const task = get().tasks[taskId]
     if (!task) return
-    if (isProviderPolledBackgroundTaskType(task.type)) {
+    if (isProviderPolledBackgroundTaskType(task.type, task.providerId)) {
       get().updateTask(taskId, {
         status: 'aborted',
         error: 'Cancel requested (provider generation may still run)',
@@ -217,7 +217,7 @@ export const useBackgroundTaskStore = create<BackgroundTaskState>((set, get) => 
 
   retryTask: (taskId) => {
     const task = get().tasks[taskId]
-    if (!task || !task.queueId || !isProviderPolledBackgroundTaskType(task.type)) return
+    if (!task || !task.queueId || !isProviderPolledBackgroundTaskType(task.type, task.providerId)) return
     get().updateTask(taskId, { status: 'queued', stage: task.type === 'video' ? 'queued' : undefined, error: undefined })
     if (isElectron()) {
       get().ensureDesktopSubscription()
@@ -236,7 +236,7 @@ export const useBackgroundTaskStore = create<BackgroundTaskState>((set, get) => 
 
     // Image, research, and document work is owned and completed by the
     // initiating request. Those task records are journals, not provider queues.
-    if (!isProviderPolledBackgroundTaskType(task.type)) return
+    if (!isProviderPolledBackgroundTaskType(task.type, task.providerId)) return
 
     if (activePolls[taskId]) {
       clearInterval(activePolls[taskId])

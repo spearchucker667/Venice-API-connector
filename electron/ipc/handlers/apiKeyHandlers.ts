@@ -5,10 +5,12 @@ import {
   isApiKeyConfigured,
   setApiKey,
   deleteProviderApiKey,
+  getProviderApiKey,
   isProviderApiKeyConfigured,
   setProviderApiKey,
   setProviderCredential,
   deleteProviderCredential,
+  getProviderCredential,
   isProviderCredentialConfigured,
   isProviderConfigured,
   setCredential,
@@ -29,9 +31,9 @@ import { performGuardedVeniceRequest } from "../../services/guardPipeline";
 import { validateApiKeyInput, validateProviderCredential } from "../validation";
 import { redactErrorMessage } from "../../../src/shared/redaction";
 import { isValidProfileStorageId } from "../../../src/utils/profileIdValidation";
-import type { ApiConnectivityFailureKind, ApiConnectivityStatus } from "../../../src/types/api-connectivity";
+import type { ApiConnectivityFailureKind, ApiConnectivityStatus, ProviderConnectionResult } from "../../../src/types/api-connectivity";
 import { registerIpcChannel } from "./common";
-import { PROVIDER_REGISTRY, requiresStructuredCredential, type ProviderId } from "../../../src/types/provider";
+import { PROVIDER_REGISTRY, requiresStructuredCredential, type ProviderId, type AzureOpenAiConfig, type AwsBedrockConfig, type GoogleVertexConfig } from "../../../src/types/provider";
 import { getProfileSessionId, setProfileSessionId } from "../../services/profileSession";
 import {
   disableProvider,
@@ -160,6 +162,257 @@ function isReservedCredentialName(name: unknown): boolean {
   if (lower.includes("password")) return true;
   if (/unlock[_-]?secret|secret[_-]?unlock|unlocksecret|secretunlock/.test(lower)) return true;
   return false;
+}
+
+interface ProviderTestRequest {
+  url: string;
+  headers: Record<string, string>;
+}
+
+function isAzureOpenAiConfig(credential: unknown): credential is AzureOpenAiConfig {
+  return (
+    typeof credential === "object" &&
+    credential !== null &&
+    "resourceName" in credential &&
+    "deploymentName" in credential &&
+    "apiVersion" in credential &&
+    "apiKey" in credential
+  );
+}
+
+function isAwsBedrockConfig(credential: unknown): credential is AwsBedrockConfig {
+  if (typeof credential !== "object" || credential === null) return false;
+  const c = credential as Record<string, unknown>;
+  return (
+    c.providerId === "aws_bedrock" &&
+    typeof c.region === "string" &&
+    typeof c.apiKey === "string"
+  );
+}
+
+function isGoogleVertexConfig(credential: unknown): credential is GoogleVertexConfig {
+  if (typeof credential !== "object" || credential === null) return false;
+  const c = credential as Record<string, unknown>;
+  if (c.providerId !== "google_vertex") return false;
+  if (c.authMode === "express") {
+    return (
+      typeof c.apiKey === "string" &&
+      typeof c.projectId === "string" &&
+      typeof c.location === "string"
+    );
+  }
+  if (c.authMode === "full") {
+    return typeof c.projectId === "string" && typeof c.location === "string";
+  }
+  return false;
+}
+
+function buildProviderTestRequest(
+  providerId: ProviderId,
+  credential: string | AzureOpenAiConfig | AwsBedrockConfig | GoogleVertexConfig,
+): ProviderTestRequest | null {
+  if (providerId === "azure_openai") {
+    if (!isAzureOpenAiConfig(credential)) return null;
+    return {
+      url: `https://${credential.resourceName}.openai.azure.com/openai/deployments?api-version=${encodeURIComponent(credential.apiVersion)}`,
+      headers: { "api-key": credential.apiKey },
+    };
+  }
+
+  if (providerId === "aws_bedrock") {
+    if (!isAwsBedrockConfig(credential)) return null;
+    return {
+      url: `https://bedrock-mantle.${encodeURIComponent(credential.region)}.api.aws/v1/models`,
+      headers: { Authorization: `Bearer ${credential.apiKey}` },
+    };
+  }
+
+  if (providerId === "google_vertex") {
+    if (!isGoogleVertexConfig(credential)) return null;
+    if (credential.authMode === "express") {
+      const host = credential.location === "global"
+        ? "aiplatform.googleapis.com"
+        : `${encodeURIComponent(credential.location)}-aiplatform.googleapis.com`;
+      return {
+        url: `https://${host}/v1/projects/${encodeURIComponent(credential.projectId)}/locations/${encodeURIComponent(credential.location)}/publishers/google/models?key=${encodeURIComponent(credential.apiKey)}`,
+        headers: {},
+      };
+    }
+    // Full Vertex OAuth/service-account mode is not implemented.
+    return null;
+  }
+
+  const key = typeof credential === "string" ? credential : "";
+  const bearer: Record<string, string> = key ? { Authorization: `Bearer ${key}` } : {};
+
+  switch (providerId) {
+    case "together":
+      return { url: "https://api.together.xyz/v1/models", headers: bearer };
+    case "groq":
+      return { url: "https://api.groq.com/openai/v1/models", headers: bearer };
+    case "fireworks":
+      return { url: "https://api.fireworks.ai/inference/v1/models", headers: bearer };
+    case "mistral":
+      return { url: "https://api.mistral.ai/v1/models", headers: bearer };
+    case "perplexity":
+      return { url: "https://api.perplexity.ai/models", headers: bearer };
+    case "huggingface":
+      return { url: "https://router.huggingface.co/v1/models", headers: bearer };
+    case "replicate": {
+      const replicateKey = typeof credential === "string" ? credential : "";
+      return {
+        url: "https://api.replicate.com/v1/models/black-forest-labs/flux-schnell",
+        headers: replicateKey ? { Authorization: `Bearer ${replicateKey}`, "Content-Type": "application/json" } : {},
+      };
+    }
+    case "cohere":
+      return { url: "https://api.cohere.com/v2/models", headers: bearer };
+    case "anthropic":
+      return {
+        url: "https://api.anthropic.com/v1/models",
+        headers: { ...bearer, "anthropic-version": "2023-06-01" },
+      };
+    case "google_gemini": {
+      const apiKey = typeof credential === "string" ? credential : "";
+      return {
+        url: `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`,
+        headers: {},
+      };
+    }
+    default:
+      return null;
+  }
+}
+
+async function performProviderConnectionTest(
+  providerId: ProviderId,
+  profileId?: string,
+): Promise<ProviderConnectionResult> {
+  const checkedAt = new Date().toISOString();
+  const definition = PROVIDER_REGISTRY[providerId];
+  if (!definition || definition.unavailable) {
+    return {
+      ok: false,
+      providerId,
+      kind: "provider-unavailable",
+      message: `Provider ${providerId} is not available.`,
+      checkedAt,
+      connectivity: connectivityFailure(
+        "provider-unavailable",
+        "Provider is not available.",
+      ),
+    };
+  }
+
+  let credential: string | AzureOpenAiConfig | AwsBedrockConfig | GoogleVertexConfig | null = null;
+  if (requiresStructuredCredential(providerId)) {
+    const structured = getProviderCredential(providerId, profileId);
+    if (
+      !isAzureOpenAiConfig(structured) &&
+      !isAwsBedrockConfig(structured) &&
+      !isGoogleVertexConfig(structured)
+    ) {
+      return {
+        ok: false,
+        providerId,
+        kind: "missing-credential",
+        message: "Structured credential is not configured.",
+        checkedAt,
+        connectivity: connectivityFailure(
+          "missing-api-key",
+          "Credential is missing. Configure it in Settings > Providers.",
+        ),
+      };
+    }
+    credential = structured as AzureOpenAiConfig | AwsBedrockConfig | GoogleVertexConfig;
+  } else {
+    credential = getProviderApiKey(providerId, profileId);
+  }
+
+  if (!credential) {
+    return {
+      ok: false,
+      providerId,
+      kind: "missing-credential",
+      message: "No API key configured.",
+      checkedAt,
+      connectivity: connectivityFailure(
+        "missing-api-key",
+        "API key is missing. Open Settings > Providers and add a key.",
+      ),
+    };
+  }
+
+  const testReq = buildProviderTestRequest(providerId, credential);
+  if (!testReq) {
+    return {
+      ok: false,
+      providerId,
+      kind: "provider-unavailable",
+      message: "Connection test is not implemented for this provider.",
+      checkedAt,
+      connectivity: connectivityFailure(
+        "provider-unavailable",
+        "Connection test is not implemented for this provider.",
+      ),
+    };
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15_000);
+  try {
+    const response = await fetch(testReq.url, {
+      method: "GET",
+      headers: testReq.headers,
+      signal: controller.signal,
+    });
+    if (response.ok) {
+      return {
+        ok: true,
+        providerId,
+        statusCode: response.status,
+        kind: "verified",
+        message: "Connection successful",
+        checkedAt,
+        connectivity: {
+          ok: true,
+          kind: "verified",
+          checkedAt,
+          statusCode: response.status,
+          endpoint: "models",
+        },
+      };
+    }
+    const text = await response.text().catch(() => "");
+    const message = text ? readResponseError({ ok: false, status: response.status, statusText: response.statusText, headers: {}, body: text, contentType: response.headers.get("content-type") || "application/json" }) : `${response.status} ${response.statusText}`;
+    const kind = response.status === 401 || response.status === 403 ? "invalid-credential" : "provider-unavailable";
+    return {
+      ok: false,
+      providerId,
+      statusCode: response.status,
+      kind,
+      message,
+      checkedAt,
+      connectivity: classifyConnectivityFailure(response.status, message),
+    };
+  } catch (err) {
+    const message = redactErrorMessage(err);
+    const kind = /abort/i.test(message) ? "timeout" : "network-failure";
+    return {
+      ok: false,
+      providerId,
+      kind,
+      message,
+      checkedAt,
+      connectivity: connectivityFailure(
+        "network-failure",
+        "Network request failed before the provider responded. Check connection, proxy, VPN, or firewall.",
+        { statusCode: 0, retryable: true },
+      ),
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export function registerApiKeyHandlers(): void {
@@ -405,6 +658,9 @@ export function registerApiKeyHandlers(): void {
     const { providerId, key } = payload as { providerId: unknown, key: unknown, profileId?: unknown };
     try {
       const validProviderId = parseProviderId(providerId);
+      if (requiresStructuredCredential(validProviderId as ProviderId)) {
+        throw new Error(`Provider ${validProviderId} requires a structured credential, not a single API key.`);
+      }
       const validId = getProfileSessionId(event.sender);
       const trimmed = validateApiKeyInput(key);
       setProviderApiKey(validProviderId, trimmed, validId);
@@ -528,5 +784,47 @@ export function registerApiKeyHandlers(): void {
 
   registerIpcChannel("apiKey:test", (event, _profileId?: unknown) => {
     return testVeniceConnection(getProfileSessionId(event.sender));
+  });
+
+  registerIpcChannel("providerApiKey:test", (event, payload: unknown) => {
+    const { providerId } = typeof payload === "object" && payload !== null && "providerId" in payload ? payload as { providerId: unknown, profileId?: unknown } : { providerId: payload };
+    try {
+      const validProviderId = parseProviderId(providerId);
+      if (requiresStructuredCredential(validProviderId as ProviderId)) {
+        throw new Error(`Provider ${validProviderId} requires a structured credential test.`);
+      }
+      return performProviderConnectionTest(validProviderId as ProviderId, getProfileSessionId(event.sender));
+    } catch (err) {
+      const message = redactErrorMessage(err);
+      return {
+        ok: false,
+        message,
+        connectivity: connectivityFailure(
+          "bridge-unavailable",
+          message,
+        ),
+      };
+    }
+  });
+
+  registerIpcChannel("providerCredential:test", (event, payload: unknown) => {
+    const { providerId } = typeof payload === "object" && payload !== null && "providerId" in payload ? payload as { providerId: unknown, profileId?: unknown } : { providerId: payload };
+    try {
+      const validProviderId = parseProviderId(providerId);
+      if (!requiresStructuredCredential(validProviderId as ProviderId)) {
+        throw new Error(`Provider ${validProviderId} does not use structured credentials.`);
+      }
+      return performProviderConnectionTest(validProviderId as ProviderId, getProfileSessionId(event.sender));
+    } catch (err) {
+      const message = redactErrorMessage(err);
+      return {
+        ok: false,
+        message,
+        connectivity: connectivityFailure(
+          "bridge-unavailable",
+          message,
+        ),
+      };
+    }
   });
 }

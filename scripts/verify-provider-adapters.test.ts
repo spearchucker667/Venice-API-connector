@@ -6,12 +6,13 @@ import {
   DEFERRED_PROVIDER_IDS,
   PROVIDER_CAPABILITIES,
   PROVIDER_REGISTRY,
+  type ProviderCredential,
 } from '../src/types/provider'
 import { providerAdapters } from '../electron/services/providerAdapters'
 import { FALLBACK_MODELS } from '../src/config/provider-models'
 import { validateProviderCredential } from '../electron/ipc/validation'
 
-function testCredentialFor(providerId: string): any {
+function testCredentialFor(providerId: string): ProviderCredential | string {
   switch (providerId) {
     case 'azure_openai':
       return {
@@ -22,7 +23,19 @@ function testCredentialFor(providerId: string): any {
         apiKey: 'test-key',
       }
     case 'aws_bedrock':
+      return {
+        providerId: 'aws_bedrock',
+        region: 'us-east-1',
+        apiKey: 'test-key',
+      }
     case 'google_vertex':
+      return {
+        providerId: 'google_vertex',
+        authMode: 'express',
+        apiKey: 'test-key',
+        projectId: 'venice-forge-test',
+        location: 'global',
+      }
     case 'replicate':
       // These providers remain deferred; this branch is unreachable for the
       // advertised-fallback loop but keeps the helper exhaustive.
@@ -44,11 +57,7 @@ describe('Provider Adapters Contract', () => {
   })
 
   it('keeps deferred providers fail-closed and out of the advertised fallback catalog', () => {
-    expect(DEFERRED_PROVIDER_IDS).toEqual([
-      'replicate',
-      'aws_bedrock',
-      'google_vertex',
-    ])
+    expect(DEFERRED_PROVIDER_IDS).toEqual([])
     for (const providerId of DEFERRED_PROVIDER_IDS) {
       expect(PROVIDER_REGISTRY[providerId].unavailable).toBe(true)
       expect(FALLBACK_MODELS[providerId]).toEqual([])
@@ -59,7 +68,12 @@ describe('Provider Adapters Contract', () => {
     for (const providerId of AVAILABLE_FALLBACK_PROVIDER_IDS) {
       expect(PROVIDER_REGISTRY[providerId].unavailable).not.toBe(true)
       expect(typeof providerAdapters[providerId]).toBe('function')
-      expect(FALLBACK_MODELS[providerId].length).toBeGreaterThan(0)
+      // Deployment-discovered providers (Azure) do not ship a static catalog;
+      // the deployment name is the authoritative model identity.
+      const discovery = PROVIDER_CAPABILITIES[providerId].find((c) => c.implemented)?.modelDiscovery
+      if (discovery !== 'deployment') {
+        expect(FALLBACK_MODELS[providerId].length).toBeGreaterThan(0)
+      }
     }
   })
 
@@ -69,6 +83,9 @@ describe('Provider Adapters Contract', () => {
         expect(capability.implemented).toBe(true)
         expect(PROVIDER_REGISTRY[providerId].supportedTypes).toContain(capability.feature)
         expect(providerAdapters[providerId]('model', testCredentialFor(providerId), capability.route, {})).not.toBeNull()
+        // Deployment-discovered providers have no static catalog; the adapter is
+        // the only source of truth for model routing.
+        if (capability.modelDiscovery === 'deployment') continue
         const expectedType = capability.feature === 'chat' ? 'text' : capability.feature
         expect(FALLBACK_MODELS[providerId].some((model) => model._type === expectedType)).toBe(true)
       }

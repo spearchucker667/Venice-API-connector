@@ -144,13 +144,32 @@ export function validateAzureResourceName(value: unknown): string {
   return name;
 }
 
-/** Validates an optional string field with a maximum length. */
-function validateOptionalCredentialString(value: unknown, name: string, maxLength = 512): string | undefined {
-  if (value === undefined || value === null) return undefined;
-  if (typeof value !== "string") throw new Error(`${name} must be a string.`);
-  const trimmed = value.trim();
-  if (trimmed.length > maxLength) throw new Error(`${name} is too long.`);
-  return trimmed.length > 0 ? trimmed : undefined;
+/** AWS region identifiers are lowercase alphanumeric plus hyphens, 2–32 chars.
+ *  @throws If the value is not a valid AWS region.
+ */
+export function validateAwsRegion(value: unknown): string {
+  const region = validateCredentialString(value, "AWS region", 32);
+  if (!/^[a-z0-9-]{2,32}$/.test(region)) {
+    throw new Error("AWS region must be a valid region identifier.");
+  }
+  if (region.startsWith("-") || region.endsWith("-")) {
+    throw new Error("AWS region cannot start or end with a hyphen.");
+  }
+  return region;
+}
+
+/** Google Cloud location/region identifiers are lowercase alphanumeric plus hyphens.
+ *  @throws If the value is not a valid location.
+ */
+export function validateGoogleLocation(value: unknown): string {
+  const location = validateCredentialString(value, "Google Cloud location", 32);
+  if (!/^[a-z0-9-]{2,32}$/.test(location)) {
+    throw new Error("Google Cloud location must be a valid location identifier.");
+  }
+  if (location.startsWith("-") || location.endsWith("-")) {
+    throw new Error("Google Cloud location cannot start or end with a hyphen.");
+  }
+  return location;
 }
 
 /** Validates a structured provider credential payload before secure storage.
@@ -182,30 +201,35 @@ export function validateProviderCredential(providerId: string, credential: unkno
     case "aws_bedrock": {
       return {
         providerId,
-        region: validateCredentialString(c.region, "AWS region", 64),
-        accessKeyId: validateCredentialString(c.accessKeyId, "AWS access key ID", 128),
-        secretAccessKey: validateCredentialString(c.secretAccessKey, "AWS secret access key", 512),
-        sessionToken: validateOptionalCredentialString(c.sessionToken, "AWS session token", 2048),
+        region: validateAwsRegion(c.region),
+        apiKey: validateCredentialString(c.apiKey, "AWS Bedrock API key", 512),
       };
     }
     case "google_vertex": {
+      const authMode = c.authMode === "full" ? "full" : "express";
+      if (authMode === "express") {
+        const projectId = validateCredentialString(c.projectId, "Google Cloud project ID", 128);
+        if (!/^[a-z][a-z0-9-]{4,28}[a-z0-9]?$/.test(projectId)) {
+          throw new Error("Google Cloud project ID is not valid.");
+        }
+        return {
+          providerId,
+          authMode,
+          apiKey: validateCredentialString(c.apiKey, "Google Cloud API key", 512),
+          projectId,
+          location: validateGoogleLocation(c.location),
+        };
+      }
+      const projectId = validateCredentialString(c.projectId, "Google Cloud project ID", 128);
+      if (!/^[a-z][a-z0-9-]{4,28}[a-z0-9]?$/.test(projectId)) {
+        throw new Error("Google Cloud project ID is not valid.");
+      }
       return {
         providerId,
-        projectId: validateCredentialString(c.projectId, "Google Cloud project ID", 128),
-        location: validateCredentialString(c.location, "Google Cloud location", 64),
-        apiKey: validateOptionalCredentialString(c.apiKey, "Google Cloud API key", 512),
-      };
-    }
-    case "huggingface": {
-      return {
-        providerId,
-        apiKey: validateCredentialString(c.apiKey, "Hugging Face API key", 512),
-      };
-    }
-    case "replicate": {
-      return {
-        providerId,
-        apiToken: validateCredentialString(c.apiToken, "Replicate API token", 512),
+        authMode,
+        projectId,
+        location: validateGoogleLocation(c.location),
+        credentialsJson: validateCredentialString(c.credentialsJson, "Google Cloud service account JSON", 8192),
       };
     }
     default:

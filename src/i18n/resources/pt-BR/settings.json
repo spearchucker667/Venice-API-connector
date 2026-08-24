@@ -461,13 +461,26 @@
       "enable": "Ativar {{label}}"
     },
     "status": {
-      "keyConfigured": "Chave de API Configurada"
+      "keyConfigured": "Chave de API Configurada",
+      "credentialConfigured": "__MISSING__:providers.status.credentialConfigured"
     },
     "actions": {
       "removeKey": "Remover Chave"
     },
     "inputs": {
-      "keyPlaceholder": "Digite a Chave de API"
+      "keyPlaceholder": "Digite a Chave de API",
+      "azureResourceName": "__MISSING__:providers.inputs.azureResourceName",
+      "azureDeploymentName": "__MISSING__:providers.inputs.azureDeploymentName",
+      "azureApiVersion": "__MISSING__:providers.inputs.azureApiVersion",
+      "azureApiKey": "__MISSING__:providers.inputs.azureApiKey",
+      "awsRegion": "__MISSING__:providers.inputs.awsRegion",
+      "awsApiKey": "__MISSING__:providers.inputs.awsApiKey",
+      "vertexExpressMode": "__MISSING__:providers.inputs.vertexExpressMode",
+      "vertexFullMode": "__MISSING__:providers.inputs.vertexFullMode",
+      "vertexApiKey": "__MISSING__:providers.inputs.vertexApiKey",
+      "vertexProjectId": "__MISSING__:providers.inputs.vertexProjectId",
+      "vertexLocation": "__MISSING__:providers.inputs.vertexLocation",
+      "vertexCredentialsJson": "__MISSING__:providers.inputs.vertexCredentialsJson"
     }
   },
   "errors": {

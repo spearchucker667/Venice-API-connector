@@ -1,4 +1,5 @@
 import type { CharacterSceneGenerationResult } from "./characterSceneGeneration";
+import type { ProviderModelLifecycle } from "./provider";
 
 export type ModelType = 'text' | 'image' | 'audio' | 'tts' | 'video' | 'music' | 'embedding' | 'upscale' | 'inpaint' | 'asr' | 'code'
 
@@ -104,6 +105,15 @@ export interface VeniceModel {
    *  means no discount. Prices in model_spec.pricing are the undiscounted
    *  base rate. Added in upstream Swagger `20260814.194349` (P3-001). */
   discount_to_user?: number
+  /** Lifecycle state for fallback-provider models (active, deprecated, retiring,
+   *  unavailable, unknown). Used to surface picker warnings and avoid routing
+   *  new requests to retired models. */
+  lifecycle?: ProviderModelLifecycle
+  retirementDate?: string
+  /** Provenance marker for models merged from fallback-provider catalogs. */
+  source?: "live" | "fallback" | string
+  /** True when the model comes from a bundled/static fallback catalog. */
+  isFallback?: boolean
   model_spec?: {
     availableContextTokens?: number
     maxCompletionTokens?: number

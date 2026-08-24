@@ -47,44 +47,23 @@ export interface AzureOpenAiConfig {
 
 export interface AwsBedrockConfig {
   region: string;
-  accessKeyId: string;
-  secretAccessKey: string;
-  sessionToken?: string;
-}
-
-export interface GoogleVertexConfig {
-  projectId: string;
-  location: string;
-  apiKey?: string;
-}
-
-export interface HuggingFaceConfig {
   apiKey: string;
 }
 
-export interface ReplicateConfig {
-  apiToken: string;
-}
-
-export interface CohereConfig {
-  apiKey: string;
-}
+export type GoogleVertexConfig =
+  | { authMode: "express"; apiKey: string; projectId: string; location: string }
+  | { authMode: "full"; projectId: string; location: string; credentialsJson: string };
 
 export type ProviderCredential =
   | ({ providerId: "azure_openai" } & AzureOpenAiConfig)
   | ({ providerId: "aws_bedrock" } & AwsBedrockConfig)
-  | ({ providerId: "google_vertex" } & GoogleVertexConfig)
-  | ({ providerId: "huggingface" } & HuggingFaceConfig)
-  | ({ providerId: "replicate" } & ReplicateConfig)
-  | ({ providerId: "cohere" } & CohereConfig);
+  | ({ providerId: "google_vertex" } & GoogleVertexConfig);
 
 /** Providers whose credential storage is structured rather than a single API key. */
 export const STRUCTURED_CREDENTIAL_PROVIDER_IDS = [
   "azure_openai",
   "aws_bedrock",
   "google_vertex",
-  "huggingface",
-  "replicate",
 ] as const satisfies readonly ProviderId[];
 
 export function requiresStructuredCredential(providerId: ProviderId): boolean {
@@ -97,6 +76,53 @@ export interface ProviderCapability {
   implemented: boolean;
   modelDiscovery: "live" | "static" | "deployment" | "none";
 }
+
+/** Lifecycle state of a provider model as understood by Venice Forge.
+ *  Used to drive picker warnings, fallback eligibility, and deprecation UI. */
+export type ProviderModelLifecycle =
+  | "active"
+  | "deprecated"
+  | "retiring"
+  | "unavailable"
+  | "unknown";
+
+export interface ProviderModel {
+  id: string;
+  name: string;
+  provider: ProviderId;
+  capabilities: Partial<Record<ProviderFeature, boolean>>;
+  lifecycle: ProviderModelLifecycle;
+  retirementDate?: string;
+  region?: string;
+  deploymentRequired?: boolean;
+}
+
+export interface ProviderModelCatalogResult {
+  providerId: ProviderId;
+  models: ProviderModel[];
+  fetchedAt: number;
+  stale: boolean;
+  source: "live" | "cached" | "bundled";
+  error?: string;
+}
+
+/** Normalized provider failure taxonomy. Provider-specific errors are mapped
+ *  into this shape before crossing the IPC boundary so the renderer never has
+ *  to parse raw upstream envelopes. */
+export type ProviderFailureKind =
+  | "authentication"
+  | "authorization"
+  | "configuration"
+  | "model-not-found"
+  | "deployment-not-found"
+  | "rate-limit"
+  | "quota"
+  | "timeout"
+  | "network"
+  | "provider-unavailable"
+  | "invalid-request"
+  | "content-policy"
+  | "unknown";
 
 /** Canonical endpoint-granular capability contract used by UI, catalogs, routing tests, and diagnostics. */
 export const PROVIDER_CAPABILITIES: Record<
@@ -197,9 +223,30 @@ export const PROVIDER_CAPABILITIES: Record<
       modelDiscovery: "static",
     },
   ],
-  replicate: [],
-  aws_bedrock: [],
-  google_vertex: [],
+  replicate: [
+    {
+      feature: "image",
+      route: "/predictions",
+      implemented: true,
+      modelDiscovery: "static",
+    },
+  ],
+  aws_bedrock: [
+    {
+      feature: "chat",
+      route: "/chat/completions",
+      implemented: true,
+      modelDiscovery: "live",
+    },
+  ],
+  google_vertex: [
+    {
+      feature: "chat",
+      route: "/chat/completions",
+      implemented: true,
+      modelDiscovery: "static",
+    },
+  ],
   azure_openai: [
     {
       feature: "chat",
@@ -213,7 +260,7 @@ export const PROVIDER_CAPABILITIES: Record<
       feature: "chat",
       route: "/chat/completions",
       implemented: true,
-      modelDiscovery: "static",
+      modelDiscovery: "live",
     },
   ],
   cohere: [
@@ -287,12 +334,11 @@ export const PROVIDER_REGISTRY: Record<ProviderId, ProviderDefinition> = {
     label: "Replicate",
     get description() {
       return translateRuntime(
-        "runtimeGenerated.types.provider.metadata.notImplementedNoCredentialsOrRequestsAreAccepted",
-        "Not implemented. No credentials or requests are accepted.",
+        "runtimeGenerated.types.provider.metadata.replicateAsyncMediaPredictions",
+        "Async media generation via Replicate predictions.",
       );
     },
     supportedTypes: implementedFeatures("replicate"),
-    unavailable: true,
   },
   aws_bedrock: {
     id: "aws_bedrock",
@@ -300,12 +346,11 @@ export const PROVIDER_REGISTRY: Record<ProviderId, ProviderDefinition> = {
     label: "AWS Bedrock",
     get description() {
       return translateRuntime(
-        "runtimeGenerated.types.provider.metadata.notImplementedNoCredentialsOrRequestsAreAccepted",
-        "Not implemented. No credentials or requests are accepted.",
+        "runtimeGenerated.types.provider.metadata.awsBedrockMantleOpenAiCompatibleInference",
+        "AWS Bedrock Mantle OpenAI-compatible inference.",
       );
     },
     supportedTypes: implementedFeatures("aws_bedrock"),
-    unavailable: true,
   },
   google_vertex: {
     id: "google_vertex",
@@ -313,12 +358,11 @@ export const PROVIDER_REGISTRY: Record<ProviderId, ProviderDefinition> = {
     label: "Google Vertex AI",
     get description() {
       return translateRuntime(
-        "runtimeGenerated.types.provider.metadata.notImplementedNoCredentialsOrRequestsAreAccepted",
-        "Not implemented. No credentials or requests are accepted.",
+        "runtimeGenerated.types.provider.metadata.googleVertexAiExpressModeApiKey",
+        "Google Vertex AI Express Mode (API-key authentication).",
       );
     },
     supportedTypes: implementedFeatures("google_vertex"),
-    unavailable: true,
   },
   google_gemini: {
     id: "google_gemini",
@@ -407,11 +451,7 @@ export const PROVIDER_REGISTRY: Record<ProviderId, ProviderDefinition> = {
 };
 
 /** Providers intentionally deferred in this release. They accept no keys or traffic. */
-export const DEFERRED_PROVIDER_IDS = [
-  "replicate",
-  "aws_bedrock",
-  "google_vertex",
-] as const satisfies readonly ProviderId[];
+export const DEFERRED_PROVIDER_IDS: readonly ProviderId[] = [] as const;
 
 /** Non-primary providers with implemented adapters, catalogs, and secure key custody. */
 export const AVAILABLE_FALLBACK_PROVIDER_IDS = Object.values(PROVIDER_REGISTRY)

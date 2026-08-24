@@ -8,6 +8,8 @@ import { useCharacterCardStore } from "../../stores/character-card-store";
 import { useSettingsStore } from "../../stores/settings-store";
 import { useCharacterCreatorLaunchStore } from "../../stores/character-creator-launch-store";
 import { CHARACTER_CREATOR_MODEL_ID } from "../../constants/character-creator";
+import { SafetyGuardBlockedError } from "../../shared/safety";
+import type { SafetyGuardDecision } from "../../shared/safety";
 
 vi.mock("../../services/storageService", () => {
   const store = new Map<string, Record<string, unknown>>();
@@ -151,6 +153,42 @@ describe("CharacterCreatorView Component", () => {
     await waitFor(() => {
       expect(screen.getByText("Character Creator Error")).toBeInTheDocument();
       expect(screen.getByText(/MODEL_UNAVAILABLE/i)).toBeInTheDocument();
+    });
+  });
+
+  it("surfaces the actual safety category when generation is blocked", async () => {
+    const decision: SafetyGuardDecision = {
+      allow: false,
+      action: "block",
+      severity: "critical",
+      category: "csam_request",
+      reasonCode: "CSAM_GENRE_TERM",
+      userMessage: "Blocked: illegal-content protection triggered.",
+      developerMessage: "CSAM genre label detected.",
+      normalizedChanged: false,
+      signals: [],
+      audit: {
+        decisionId: "test-decision",
+        createdAt: new Date().toISOString(),
+        promptHash: "00000000",
+        promptLength: 4,
+        matchedFieldPaths: [],
+      },
+    };
+    vi.mocked(aiService.generateCharacterCreatorDraft).mockRejectedValueOnce(
+      new SafetyGuardBlockedError(decision),
+    );
+
+    render(<CharacterCreatorView />);
+
+    const input = screen.getByPlaceholderText(/I want a brooding nocturnal detective/i);
+    fireEvent.change(input, { target: { value: "draw me a loli character" } });
+    fireEvent.click(screen.getByRole("button", { name: /Create Draft/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Character Creator Error")).toBeInTheDocument();
+      expect(screen.getByText(/Category: csam_request/i)).toBeInTheDocument();
+      expect(screen.getByText(/Reason code: CSAM_GENRE_TERM/i)).toBeInTheDocument();
     });
   });
 

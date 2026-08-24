@@ -170,6 +170,24 @@ const veniceForge = {
     delete: (providerId: string, profileId?: string) => {
       return ipcRenderer.invoke("providerApiKey:delete", { providerId, profileId });
     },
+    test: (providerId: string, profileId?: string) => {
+      return ipcRenderer.invoke("providerApiKey:test", { providerId, profileId });
+    },
+  },
+
+  providerCredential: {
+    isConfigured: (providerId: string, profileId?: string) => {
+      return ipcRenderer.invoke("providerCredential:isConfigured", { providerId, profileId });
+    },
+    set: (providerId: string, credential: unknown, profileId?: string) => {
+      return ipcRenderer.invoke("providerCredential:set", { providerId, credential, profileId });
+    },
+    delete: (providerId: string, profileId?: string) => {
+      return ipcRenderer.invoke("providerCredential:delete", { providerId, profileId });
+    },
+    test: (providerId: string, profileId?: string) => {
+      return ipcRenderer.invoke("providerCredential:test", { providerId, profileId });
+    },
   },
 
   providerSettings: {
@@ -855,6 +873,22 @@ const veniceForge = {
         ipcRenderer.removeListener("inspector:telemetry", listener);
         void ipcRenderer.invoke("inspector:telemetry:unsubscribe").catch(() => {});
       };
+    },
+  },
+
+  replicate: {
+    generateImage(input: { model: string; input: Record<string, unknown> }): Promise<{
+      ok: boolean;
+      task?: BackgroundTask;
+      error?: string;
+    }> {
+      return ipcRenderer.invoke("replicate:generateImage", input);
+    },
+  },
+
+  huggingFace: {
+    getModelCatalog(profileId?: string): Promise<import("../src/types/provider").ProviderModelCatalogResult> {
+      return ipcRenderer.invoke("huggingface:getModelCatalog", { profileId });
     },
   },
 };

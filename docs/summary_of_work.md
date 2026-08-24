@@ -6,6 +6,64 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-24
+**Scope:** Finish locally actionable deferred-provider integration and reliability work.
+
+- Refreshed the Cohere static catalog to current V2 models in `src/config/provider-models.ts` (`command-a-plus-05-2026`, `command-a-03-2025`, `command-r7b-12-2024`, `command-a-translate-08-2025`, `command-a-reasoning-08-2025`, `command-a-vision-07-2025`, `command-r-08-2024`, `command-r-plus-08-2024`) and marked legacy Command models as `deprecated` with `retirementDate: "2025-09-15"`. Added `lifecycle`/`retirementDate`/`source`/`isFallback` fields to `VeniceModel` (`src/types/venice.ts`) and surfaced lifecycle warnings in bundled picker names.
+- Updated the Cohere native fallback model to `command-a-03-2025` in `electron/services/providerSettingsStore.ts` and adjusted `providerSettingsStore.test.ts` for the now-available Replicate provider.
+- Implemented Hugging Face live model discovery: `electron/services/huggingfaceDiscovery.ts` fetches `router.huggingface.co/v1/models`, normalizes results, excludes non-chat shapes, and persists a profile-scoped disk cache with stale-while-revalidate fallback; `electron/ipc/handlers/huggingfaceHandlers.ts` exposes `huggingface:getModelCatalog`; `electron/preload.ts` and `src/services/desktopBridge.ts` add the `huggingFace` bridge; `src/hooks/use-models.ts` merges live HF models into the renderer catalog, replacing the static HF fallback while preserving other providers.
+- Hardened Azure OpenAI regression coverage in `electron/services/providerAdapters.test.ts`: a new test proves the configured deployment name is the authoritative routing identity and the request body `model` is set to the deployment name, independent of any renderer-supplied model suffix.
+- Updated `electron/services/providerAdapters.ts` to expose a real Replicate `/predictions` route and adjusted `scripts/verify-provider-adapters.test.ts` to reflect the empty `DEFERRED_PROVIDER_IDS` state.
+- Verified the `backgroundTaskManager.test.ts` ENOENT fix remains stable: 50 consecutive iterations passed.
+- Updated canonical status in `docs/ROADMAP.md`.
+- Validation:
+  - `npm run lint:eslint` PASS (zero warnings)
+  - `npm run typecheck` PASS
+  - `npm run verify:provider-adapters` PASS (56 tests)
+  - `npm run verify:i18n` PASS
+  - `npm run verify:i18n-hardcoded-regressions` PASS (0 regressions)
+  - `npm run verify:contracts:static` PASS
+  - `npm run test:unit` PASS
+  - `npm run test:electron` PASS (956 tests)
+  - `npm run build` PASS (web, server, Electron)
+  - `for i in {1..50}; do npx vitest run electron/services/backgroundTaskManager.test.ts || exit 1; done` PASS
+
+
+## Latest Session Summary
+
+**Date:** 2026-08-24
+**Scope:** Consolidated external-provider contract remediation and Character Creator/ST Card adult-content safety boundary fix.
+
+- Provider contract:
+  - Added `desktopProviderCredential` bridge and `providerApiKey:test` / `providerCredential:test` methods in `src/services/desktopBridge.ts` and `src/stores/auth-store.ts`.
+  - Implemented per-provider connection tests in `electron/ipc/handlers/apiKeyHandlers.ts` using Node global `fetch` against lightweight `/models` (or Azure deployments) endpoints.
+  - Aligned `electron/ipc/validation.ts` with the corrected structured-credential union: Azure `{resourceName, deploymentName, apiVersion, apiKey}`; AWS Bedrock `{region, apiKey}`; Google Vertex AI explicit `authMode: "express" | "full"`; removed HF/Replicate structured cases.
+  - Hardened `electron/services/secureStore.ts` so `isProviderConfigured` requires the correct credential representation per provider.
+  - Removed `azure_openai` from `NATIVE_FALLBACK_MODELS` and static `azure_openai:gpt-4o` from `src/config/provider-models.ts`; deployment name is now the authoritative routing identity.
+  - Added structured provider credential UI in `src/components/settings/ProvidersPanel.tsx` for Azure, Bedrock, and Vertex auth-mode variants.
+  - Typed `testCredentialFor` as `ProviderCredential | string` in `scripts/verify-provider-adapters.test.ts`.
+  - Added `provider-unavailable` to `ApiConnectivityFailureKind` in `src/types/api-connectivity.ts`.
+- Safety boundary (VF-SAFETY-ADULT-CONTENT-BOUNDARY-2026-08-24):
+  - Introduced typed `SafetyDecision` union and `SafetyDecisionCategory` in `src/shared/safety/localFamilySafeGuard.ts`.
+  - Mapped `SafetyGuardDecision` categories to UI categories (`adult-content-approved`, `general`, `child-safety`, `illegal-content`, `provider-policy`, `validation-error`) with category-aware user messages.
+  - Updated `maybeRunLocalFamilyGuard`, `previewLocalFamilyGuard`, and `screenResponseBody` to surface the actual blocking layer.
+  - Updated `src/components/character-creator/CharacterCreatorView.tsx` to detect `SafetyGuardBlockedError` and display category/reason code; updated `CharacterCreatorError.tsx` to preserve line breaks.
+  - Updated `src/services/prompt-enhancer-service.ts` to propagate `safetyCategory` and `safetyReasonCode` on `SafetyGuardBlockedError`.
+  - Added regression tests: `tests/safety/adult-content-boundary.test.ts` (7 tests), expanded `src/components/character-creator/CharacterCreatorView.test.tsx` safety error case, expanded `src/services/prompt-enhancer-service.test.ts` category propagation case, and updated existing veniceClient tests to expect category-aware messages.
+- Updated canonical status in `docs/ROADMAP.md`.
+- Validation:
+  - `npm run lint:eslint` PASS (zero warnings)
+  - `npm run typecheck` PASS
+  - `npm run verify:provider-adapters` PASS (52 tests)
+  - `npm run verify:safety-guard` PASS
+  - `npm run verify:i18n` PASS
+  - `npm run verify:i18n-hardcoded-regressions` PASS (0 regressions)
+  - `npm test` PASS (5205 passed | 1 skipped)
+  - `npm run build` PASS (web, server, Electron)
+
+
+## Latest Session Summary
+
+**Date:** 2026-08-24
 **Scope:** GitHub Code Scanning Remediation
 
 - Reviewed all open GitHub Code Scanning alerts via GitHub API.
@@ -19,6 +77,26 @@ This is the active handoff and validation ledger. The canonical current-work led
   - `npm test` PASS
 
 ## Session History
+
+### 2026-08-24 — Deferred external-provider integration final hardening pass.
+
+- Refreshed Cohere static catalog to current V2 models with lifecycle metadata in `src/config/provider-models.ts`; updated native fallback to `command-a-03-2025` in `electron/services/providerSettingsStore.ts`; added `lifecycle`/`retirementDate`/`source`/`isFallback` fields to `VeniceModel` in `src/types/venice.ts`.
+- Implemented Hugging Face live model discovery (`electron/services/huggingfaceDiscovery.ts`) with bounded disk cache, stale fallback, and non-chat filtering; wired it through `electron/ipc/handlers/huggingfaceHandlers.ts`, `electron/preload.ts`, `src/services/desktopBridge.ts`, and `src/hooks/use-models.ts` so the renderer replaces the static HF catalog with live-discovered models.
+- Added Azure OpenAI deployment-authority regression test in `electron/services/providerAdapters.test.ts`; removed obsolete unavailable-provider test now that Replicate has graduated.
+- Updated `electron/services/providerAdapters.ts` Replicate adapter to expose a real `/predictions` route and updated `scripts/verify-provider-adapters.test.ts` to expect an empty `DEFERRED_PROVIDER_IDS` list.
+- Confirmed `backgroundTaskManager.test.ts` ENOENT fix remains stable across 50 consecutive iterations.
+- Updated `docs/ROADMAP.md` and this ledger.
+- Updated `docs/security/security-model.md` to reflect that all providers are now implemented and fail-closed until configured/enabled.
+- Validation:
+  - `npm run lint:eslint` PASS (zero warnings)
+  - `npm run typecheck` PASS
+  - `npm run verify:provider-adapters` PASS (56 tests)
+  - `npm run verify:i18n` PASS
+  - `npm run verify:i18n-hardcoded-regressions` PASS (0 regressions)
+  - `npm run verify:contracts:static` PASS
+  - `npm run test:unit` PASS
+  - `npm run test:electron` PASS (956 tests)
+  - `npm run build` PASS (web, server, Electron)
 
 ### 2026-08-24 — Deferred external-provider integration — Azure OpenAI graduation.
 

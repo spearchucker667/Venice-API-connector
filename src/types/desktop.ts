@@ -29,6 +29,14 @@ export interface VeniceForgeProviderApiKey {
   isConfigured: (providerId: string, profileId?: string) => Promise<boolean>;
   set: (providerId: string, key: string, profileId?: string) => Promise<{ ok: boolean; error?: string }>;
   delete: (providerId: string, profileId?: string) => Promise<{ ok: boolean; error?: string }>;
+  test: (providerId: string, profileId?: string) => Promise<{ ok: boolean; status?: number; message: string; connectivity: ApiConnectivityStatus }>;
+}
+
+export interface VeniceForgeProviderCredential {
+  isConfigured: (providerId: string, profileId?: string) => Promise<boolean>;
+  set: (providerId: string, credential: import("./provider").ProviderCredential, profileId?: string) => Promise<{ ok: boolean; error?: string }>;
+  delete: (providerId: string, profileId?: string) => Promise<{ ok: boolean; error?: string }>;
+  test: (providerId: string, profileId?: string) => Promise<{ ok: boolean; status?: number; message: string; connectivity: ApiConnectivityStatus }>;
 }
 
 export interface ProviderSettingsSnapshot {
@@ -443,6 +451,20 @@ export interface VeniceForgeDocumentAgent {
   };
 }
 
+/** Replicate async media-generation bridge. */
+export interface VeniceForgeReplicate {
+  generateImage(input: { model: string; input: Record<string, unknown> }): Promise<{
+    ok: boolean;
+    task?: BackgroundTask;
+    error?: string;
+  }>;
+}
+
+/** Hugging Face Inference Providers live model-discovery bridge. */
+export interface VeniceForgeHuggingFace {
+  getModelCatalog(profileId?: string): Promise<import("./provider").ProviderModelCatalogResult>;
+}
+
 /** Root interface for the Venice Forge preload bridge exposed on the window object. */
 
 export interface VeniceForgeCredentials {
@@ -547,6 +569,7 @@ export interface VeniceForge {
   apiKey: VeniceForgeApiKey;
   jinaApiKey: VeniceForgeApiKey;
   providerApiKey: VeniceForgeProviderApiKey;
+  providerCredential: VeniceForgeProviderCredential;
   providerSettings: VeniceForgeProviderSettings;
   jina: VeniceForgeJina;
   tts: VeniceForgeTts;
@@ -568,6 +591,8 @@ export interface VeniceForge {
   backgroundTask: VeniceForgeBackgroundTask;
   inspector: VeniceForgeInspector;
   documentAgent: VeniceForgeDocumentAgent;
+  replicate: VeniceForgeReplicate;
+  huggingFace: VeniceForgeHuggingFace;
 }
 
 export interface EncryptedBackupManifestTransport {

@@ -26,13 +26,13 @@ describe("providerSettingsStore", () => {
 
   it("keeps provider consent profile-scoped and filters renderer-controlled values", () => {
     const work = updateProviderSettings("work", {
-      enabledProviders: { anthropic: true, aws_bedrock: true, unknown: true },
+      enabledProviders: { anthropic: true, replicate: true, unknown: true },
       autoFallbackEnabled: true,
-      fallbackOrdering: ["anthropic", "unknown", "anthropic", "aws_bedrock"],
+      fallbackOrdering: ["anthropic", "unknown", "anthropic", "replicate"],
     });
 
-    expect(work.enabledProviders).toEqual({ anthropic: true });
-    expect(work.fallbackOrdering).toEqual(["anthropic"]);
+    expect(work.enabledProviders).toEqual({ anthropic: true, replicate: true });
+    expect(work.fallbackOrdering).toEqual(["anthropic", "replicate"]);
     expect(work.nativeFallbackModels.anthropic).toBe("claude-3-5-sonnet-latest");
     expect(getProviderSettings("default").enabledProviders).toEqual({});
   });

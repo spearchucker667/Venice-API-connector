@@ -1,15 +1,54 @@
 import { useQuery } from '@tanstack/react-query'
 import { venice } from '../lib/venice-client'
 import type { ModelsResponse, VeniceModel, VideoConstraints } from '../types/venice'
+import type { ProviderModel } from '../types/provider'
 import { getEnabledProviderModels } from '../config/provider-models'
 
 import { useSettingsStore } from '../stores/settings-store'
 import { useModelCatalogRuntimeStore } from '../stores/model-catalog-runtime-store'
 import { mergeCanonicalModels, replaceCanonicalModels } from '../services/modelCatalogCache'
 import { flattenModels } from '../services/modelClassification'
+import { desktopHuggingFace } from '../services/desktopBridge'
 
 interface UseModelsOptions {
   enabled?: boolean
+}
+
+/** In-memory live HF catalog so the synchronous `select` can surface discovery
+ *  results without re-running the Venice query. */
+let liveHfModels: VeniceModel[] | null = null
+
+function normalizeHfProviderModel(model: ProviderModel, fetchedAt: number): VeniceModel {
+  return {
+    id: model.id,
+    object: 'model',
+    created: fetchedAt,
+    owned_by: 'huggingface',
+    type: 'text',
+    lifecycle: model.lifecycle,
+    retirementDate: model.retirementDate,
+    source: 'live',
+    isFallback: false,
+    model_spec: {
+      name: `${model.name} · HF Inference Providers`,
+      capabilities: {
+        supportsVision: model.capabilities.vision ?? false,
+        supportsFunctionCalling: false,
+      },
+    },
+  }
+}
+
+async function refreshHuggingFaceModelsIfEnabled(enabledProviders: Record<string, boolean>): Promise<void> {
+  if (!enabledProviders.huggingface) return
+  try {
+    const result = await desktopHuggingFace.getModelCatalog()
+    if (result.models.length > 0) {
+      liveHfModels = result.models.map((m) => normalizeHfProviderModel(m, result.fetchedAt))
+    }
+  } catch {
+    // Discovery is best-effort; static bundled fallbacks remain available.
+  }
 }
 
 export function useModels(type?: string, options: UseModelsOptions = {}) {
@@ -50,6 +89,9 @@ export function useModels(type?: string, options: UseModelsOptions = {}) {
             ? Object.fromEntries(Object.entries(grouped).map(([key, models]) => [key, models.map((model) => model.id)]))
             : { [queryType]: liveModels.map((model) => model.id) },
         })
+        // Refresh HF discovery in the background after Venice models load so the
+        // next render or query cache read can replace the static HF catalog.
+        await refreshHuggingFaceModelsIfEnabled(enabledProviders)
         return response
       } catch (error) {
         const current = useModelCatalogRuntimeStore.getState()
@@ -62,8 +104,22 @@ export function useModels(type?: string, options: UseModelsOptions = {}) {
       const liveModels = data.data
         .filter((m) => !m.model_spec?.offline)
 
-      const fallbackModels = getEnabledProviderModels(normalizedType)
-      
+      let fallbackModels = getEnabledProviderModels(normalizedType)
+
+      // Replace the static Hugging Face catalog with live-discovered models when
+      // available. Existing chats and other providers keep their fallback entries.
+      const cachedHfModels = liveHfModels
+      const hfLiveApplicable =
+        enabledProviders.huggingface &&
+        cachedHfModels !== null &&
+        cachedHfModels.length > 0 &&
+        (!normalizedType || normalizedType === 'text')
+      if (hfLiveApplicable) {
+        fallbackModels = fallbackModels.filter((m) => m.owned_by !== 'huggingface')
+        return [...liveModels, ...cachedHfModels, ...fallbackModels]
+          .sort((a, b) => a.id.localeCompare(b.id))
+      }
+
       return [...liveModels, ...fallbackModels]
         .sort((a, b) => a.id.localeCompare(b.id))
     },
