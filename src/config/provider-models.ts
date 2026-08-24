@@ -157,7 +157,41 @@ export const FALLBACK_MODELS: Record<ProviderId, FallbackModelDef[]> = {
       }
     }
   ],
-  cohere: []
+  cohere: [
+    {
+      id: 'cohere:command-r-plus',
+      object: 'model',
+      created: FALLBACK_MODEL_CATALOG_TIMESTAMP,
+      owned_by: 'cohere',
+      _type: 'text',
+      model_spec: {
+        name: 'Command R+',
+        capabilities: { supportsVision: false, supportsFunctionCalling: false },
+      }
+    },
+    {
+      id: 'cohere:command-r',
+      object: 'model',
+      created: FALLBACK_MODEL_CATALOG_TIMESTAMP,
+      owned_by: 'cohere',
+      _type: 'text',
+      model_spec: {
+        name: 'Command R',
+        capabilities: { supportsVision: false, supportsFunctionCalling: false },
+      }
+    },
+    {
+      id: 'cohere:command-light',
+      object: 'model',
+      created: FALLBACK_MODEL_CATALOG_TIMESTAMP,
+      owned_by: 'cohere',
+      _type: 'text',
+      model_spec: {
+        name: 'Command Light',
+        capabilities: { supportsVision: false, supportsFunctionCalling: false },
+      }
+    }
+  ]
 }
 
 /**

@@ -15,6 +15,7 @@ const NATIVE_FALLBACK_MODELS: Partial<Record<ProviderId, string>> = {
   mistral: "mistral-large-latest",
   anthropic: "claude-3-5-sonnet-latest",
   perplexity: "sonar",
+  cohere: "command-r-plus",
 };
 
 export interface ProviderSettingsSnapshot {

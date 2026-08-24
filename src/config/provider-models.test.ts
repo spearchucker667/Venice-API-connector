@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { VeniceModel } from "../types/venice";
 import { useSettingsStore } from "../stores/settings-store";
-import { getEnabledProviderModels, getFallbackCatalogStatus } from "./provider-models";
+import { getEnabledProviderModels, getFallbackCatalogStatus, FALLBACK_MODELS } from "./provider-models";
 
 // VERIFY-142 regression guard: bundled fallback catalogs never masquerade as live/fresh discovery.
 describe("fallback provider catalog status", () => {
@@ -27,5 +27,12 @@ describe("fallback provider catalog status", () => {
     expect((model as VeniceModel & { name: string }).name).toContain("verify before paid request");
     expect(model.model_spec?.name).toContain("bundled static");
     expect(model.model_spec?.description).toContain("may be stale");
+  });
+
+  it("includes a non-empty Cohere chat catalog", () => {
+    const cohereModels = FALLBACK_MODELS.cohere;
+    expect(cohereModels.length).toBeGreaterThan(0);
+    expect(cohereModels.some((m) => m.id === "cohere:command-r-plus")).toBe(true);
+    expect(cohereModels.every((m) => m._type === "text")).toBe(true);
   });
 });
