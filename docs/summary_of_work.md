@@ -4,6 +4,20 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 
 ## Latest Session Summary
+## Latest Session Summary
+
+**Date:** 2026-08-23
+**Scope:** Reconcile duplicate defaults in validateConfig() and emptyConfig(), and fix CI test surface omission.
+
+- Extracted `DEFAULT_CONFIG` in `src/config/configSchema.ts` to ensure `validateConfig()` and `emptyConfig()` use the exact same literal sources for all default properties, including `chat.include_venice_system_prompt`, `chat.system_prompt`, and the `internal_prompt_enhancer` configurations. This permanently eliminates the literal divergence issue.
+- Added a regression test to `src/config/configSchema.test.ts` to enforce that `validateConfig({ version: 1 })` strictly deep equals `emptyConfig()`.
+- Discovered and addressed a CI architecture gap where several top-level `src/` directories containing tests (`agent`, `config`, `constants`, `i18n`, `research`) were omitted from `test:unit` and `npm run test:ci`. Appended test scripts to `package.json` for all these directories and aggregated them into the `test:unit` script.
+- Extended `scripts/verify-ci-contract.cjs` with a new check (Check 10) that dynamically parses the `test:ci` script subtree and validates that all top-level directories in `src/` containing test files are correctly represented in the CI run, preventing future tests from being silently omitted.
+- Validation:
+  - `npm test` PASS (5178 passed, 1 skipped) - the `configSchema.test.ts` failure is fully resolved.
+  - `node scripts/verify-ci-contract.cjs` PASS
+  - `npm run ci` PASS
+
 
 **Date:** 2026-08-23
 **Scope:** Image prompt enhancer aspect-ratio/dimension omission and character-ceiling bump; Research Workspace per-session deletion
@@ -21,6 +35,20 @@ This is the active handoff and validation ledger. The canonical current-work led
   - `npm test` 1 failed | 5176 passed | 1 skipped (5178 total). The single failure is the pre-existing unrelated `src/config/configSchema.test.ts:116` expectation that `chat.include_venice_system_prompt` defaults to `false`; `configSchema.ts` currently defaults it to `true`. This failure is outside the current scope and was present before these changes.
 
 ## Latest Session Summary
+## Latest Session Summary
+
+**Date:** 2026-08-23
+**Scope:** Reconcile duplicate defaults in validateConfig() and emptyConfig(), and fix CI test surface omission.
+
+- Extracted `DEFAULT_CONFIG` in `src/config/configSchema.ts` to ensure `validateConfig()` and `emptyConfig()` use the exact same literal sources for all default properties, including `chat.include_venice_system_prompt`, `chat.system_prompt`, and the `internal_prompt_enhancer` configurations. This permanently eliminates the literal divergence issue.
+- Added a regression test to `src/config/configSchema.test.ts` to enforce that `validateConfig({ version: 1 })` strictly deep equals `emptyConfig()`.
+- Discovered and addressed a CI architecture gap where several top-level `src/` directories containing tests (`agent`, `config`, `constants`, `i18n`, `research`) were omitted from `test:unit` and `npm run test:ci`. Appended test scripts to `package.json` for all these directories and aggregated them into the `test:unit` script.
+- Extended `scripts/verify-ci-contract.cjs` with a new check (Check 10) that dynamically parses the `test:ci` script subtree and validates that all top-level directories in `src/` containing test files are correctly represented in the CI run, preventing future tests from being silently omitted.
+- Validation:
+  - `npm test` PASS (5178 passed, 1 skipped) - the `configSchema.test.ts` failure is fully resolved.
+  - `node scripts/verify-ci-contract.cjs` PASS
+  - `npm run ci` PASS
+
 
 **Date:** 2026-08-23
 **Scope:** Repair Family Safe Mode toggle and prompt-enhancement false-positive safety block
@@ -45,6 +73,20 @@ This is the active handoff and validation ledger. The canonical current-work led
   - `npm run build` PASS (web, server, Electron)
 
 ## Latest Session Summary
+## Latest Session Summary
+
+**Date:** 2026-08-23
+**Scope:** Reconcile duplicate defaults in validateConfig() and emptyConfig(), and fix CI test surface omission.
+
+- Extracted `DEFAULT_CONFIG` in `src/config/configSchema.ts` to ensure `validateConfig()` and `emptyConfig()` use the exact same literal sources for all default properties, including `chat.include_venice_system_prompt`, `chat.system_prompt`, and the `internal_prompt_enhancer` configurations. This permanently eliminates the literal divergence issue.
+- Added a regression test to `src/config/configSchema.test.ts` to enforce that `validateConfig({ version: 1 })` strictly deep equals `emptyConfig()`.
+- Discovered and addressed a CI architecture gap where several top-level `src/` directories containing tests (`agent`, `config`, `constants`, `i18n`, `research`) were omitted from `test:unit` and `npm run test:ci`. Appended test scripts to `package.json` for all these directories and aggregated them into the `test:unit` script.
+- Extended `scripts/verify-ci-contract.cjs` with a new check (Check 10) that dynamically parses the `test:ci` script subtree and validates that all top-level directories in `src/` containing test files are correctly represented in the CI run, preventing future tests from being silently omitted.
+- Validation:
+  - `npm test` PASS (5178 passed, 1 skipped) - the `configSchema.test.ts` failure is fully resolved.
+  - `node scripts/verify-ci-contract.cjs` PASS
+  - `npm run ci` PASS
+
 
 **Date:** 2026-08-23
 **Scope:** Final Acceptance Hardening, Deferred Work Review, and Release Readiness
@@ -57,6 +99,20 @@ This is the active handoff and validation ledger. The canonical current-work led
 - Validated skipped tests are conditionally skipped based on valid environmental limitations (e.g. `RUN_ELECTRON_SMOKE` for binary testing).
 
 ## Latest Session Summary
+## Latest Session Summary
+
+**Date:** 2026-08-23
+**Scope:** Reconcile duplicate defaults in validateConfig() and emptyConfig(), and fix CI test surface omission.
+
+- Extracted `DEFAULT_CONFIG` in `src/config/configSchema.ts` to ensure `validateConfig()` and `emptyConfig()` use the exact same literal sources for all default properties, including `chat.include_venice_system_prompt`, `chat.system_prompt`, and the `internal_prompt_enhancer` configurations. This permanently eliminates the literal divergence issue.
+- Added a regression test to `src/config/configSchema.test.ts` to enforce that `validateConfig({ version: 1 })` strictly deep equals `emptyConfig()`.
+- Discovered and addressed a CI architecture gap where several top-level `src/` directories containing tests (`agent`, `config`, `constants`, `i18n`, `research`) were omitted from `test:unit` and `npm run test:ci`. Appended test scripts to `package.json` for all these directories and aggregated them into the `test:unit` script.
+- Extended `scripts/verify-ci-contract.cjs` with a new check (Check 10) that dynamically parses the `test:ci` script subtree and validates that all top-level directories in `src/` containing test files are correctly represented in the CI run, preventing future tests from being silently omitted.
+- Validation:
+  - `npm test` PASS (5178 passed, 1 skipped) - the `configSchema.test.ts` failure is fully resolved.
+  - `node scripts/verify-ci-contract.cjs` PASS
+  - `npm run ci` PASS
+
 
 **Date:** 2026-08-23
 **Scope:** Repair Image Studio prompt enhancement failure due to false-positive child-safety block

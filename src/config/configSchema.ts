@@ -644,7 +644,7 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
     ),
     include_venice_system_prompt: clampBool(
       chatRaw.include_venice_system_prompt,
-      true,
+      false,
     ),
     enable_web_search: clampEnum(
       chatRaw.enable_web_search,
@@ -899,8 +899,8 @@ export function emptyConfig(): YamlConfig {
   return {
     version: 1,
     app: {
-      config_name: "default",
-      profile: "default",
+      config_name: "local-dev",
+      profile: "development",
       auto_open_devtools: false,
       check_for_updates: true,
     },
@@ -920,7 +920,7 @@ export function emptyConfig(): YamlConfig {
       upscale: "",
     },
     chat: {
-      system_prompt: "OFF",
+      system_prompt: "",
       temperature: 0.7,
       top_p: 1,
       max_tokens: 4096,
@@ -963,8 +963,8 @@ export function emptyConfig(): YamlConfig {
       enhanceTemperature: 0.2,
       remixTemperature: 0.4,
       maxTokens: 350,
-      systemPrompt: "",
-      remixSystemPrompt: "",
+      systemPrompt: "OFF",
+      remixSystemPrompt: "OFF",
     },
   };
 }

@@ -426,5 +426,80 @@ if (!codeqlYaml.includes('category: "/language:${{ matrix.language }}"')) {
 }
 console.log("✓ CodeQL workflow analyzes javascript-typescript and actions with deterministic categories");
 
+
+// 10. Verify that all source test directories are represented in the aggregate CI test surface.
+// This ensures that new top-level test directories are not silently omitted from CI.
+const testDirs = fs.readdirSync(path.join(root, 'src')).filter(p => {
+  const full = path.join(root, 'src', p);
+  if (!fs.statSync(full).isDirectory()) return false;
+  function hasTests(dir) {
+    for (const f of fs.readdirSync(dir)) {
+      const fPath = path.join(dir, f);
+      if (fs.statSync(fPath).isDirectory()) {
+        if (hasTests(fPath)) return true;
+      } else if (f.endsWith('.test.ts') || f.endsWith('.test.tsx')) {
+        return true;
+      }
+    }
+    return false;
+  }
+  return hasTests(full);
+});
+
+function getTransitiveVitestTargets(scriptName, visited = new Set()) {
+  if (visited.has(scriptName)) return [];
+  visited.add(scriptName);
+  const script = pkg.scripts[scriptName] || '';
+  const targets = [];
+  
+  const npmRegex = /npm\s+run\s+([a-zA-Z0-9:-]+)/g;
+  let match;
+  while ((match = npmRegex.exec(script)) !== null) {
+    targets.push(...getTransitiveVitestTargets(match[1], visited));
+  }
+  
+  const shardsRegex = /node\s+scripts\/run-bounded-test-shards\.cjs\s+(.+)/g;
+  while ((match = shardsRegex.exec(script)) !== null) {
+    const shards = match[1].split(/\s+/);
+    for (const shard of shards) {
+      if (shard && !/^(&&|\|\||;|>|\|)$/.test(shard)) {
+        targets.push(...getTransitiveVitestTargets(shard, visited));
+      }
+    }
+  }
+  
+  const vitestParts = script.split(/vitest\s+run\b/);
+  for (let i = 1; i < vitestParts.length; i++) {
+    const tokens = tokenize(vitestParts[i]);
+    for (let j = 0; j < tokens.length; j++) {
+      const arg = tokens[j];
+      if (/^(&&|\|\||;|>|\|)/.test(arg)) break;
+      if (arg.startsWith("-")) {
+        if (arg === "--exclude" || arg === "--reporter" || arg === "--config" || arg === "--project") j++;
+        continue;
+      }
+      if (arg && !/[*?]/.test(arg)) targets.push(arg);
+    }
+  }
+  return targets;
+}
+
+const ciTargets = getTransitiveVitestTargets('test:ci');
+const missingSrcDirs = [];
+for (const dir of testDirs) {
+  const prefix = `src/${dir}`;
+  const isCovered = ciTargets.some(t => t === prefix || t.startsWith(prefix + '/'));
+  if (!isCovered) {
+    missingSrcDirs.push(prefix);
+  }
+}
+
+if (missingSrcDirs.length > 0) {
+  console.error("❌ The following src/ test directories are omitted from the aggregate CI test surface:");
+  missingSrcDirs.forEach(d => console.error(`  - ${d}`));
+  process.exit(1);
+}
+console.log("✓ All src/ test directories are represented in the aggregate CI test surface");
+
 console.log("CI contract check: PASS");
 process.exit(0);

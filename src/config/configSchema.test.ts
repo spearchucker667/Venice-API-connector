@@ -115,6 +115,11 @@ describe("configSchema", () => {
       expect(result.config.characters.include_adult_characters).toBe(true);
       expect(result.config.chat.include_venice_system_prompt).toBe(false);
     });
+
+    it("verifies that validateConfig({ version: 1 }) is identical to emptyConfig()", () => {
+      const result = validateConfig({ version: 1 });
+      expect(result.config).toEqual(emptyConfig());
+    });
   });
 
   describe("sanitizeConfig", () => {
