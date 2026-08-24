@@ -18,6 +18,7 @@ import { VENICE_API_HOST } from "../../src/shared/apiConfig";
 import type { MutationOrigin } from "../../src/types/sync";
 import { assertValidProfileStorageId } from "../../src/utils/profileIdValidation";
 import { countPromptCharacters, SYSTEM_PROMPT_LARGE_CONTEXT_OVERRIDE } from "../../src/shared/promptLimits";
+import { PROVIDER_REGISTRY } from "../../src/types/provider";
 
 /** Describes a validated Venice IPC request ready for the main process.
  *
@@ -116,6 +117,85 @@ export function validateApiKeyInput(key: unknown): string {
   const trimmed = key.trim();
   if (trimmed.length > 512) throw new Error("Venice API key is too long.");
   return trimmed;
+}
+
+/** Validates a non-empty string field with a maximum length. */
+function validateCredentialString(value: unknown, name: string, maxLength = 512): string {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new Error(`${name} is required.`);
+  }
+  const trimmed = value.trim();
+  if (trimmed.length > maxLength) throw new Error(`${name} is too long.`);
+  return trimmed;
+}
+
+/** Validates an optional string field with a maximum length. */
+function validateOptionalCredentialString(value: unknown, name: string, maxLength = 512): string | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value !== "string") throw new Error(`${name} must be a string.`);
+  const trimmed = value.trim();
+  if (trimmed.length > maxLength) throw new Error(`${name} is too long.`);
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
+/** Validates a structured provider credential payload before secure storage.
+ *  Secret values are accepted; non-secret routing fields are constrained.
+ *  @returns A normalized credential object safe to persist.
+ */
+export function validateProviderCredential(providerId: string, credential: unknown): Record<string, unknown> {
+  if (!credential || typeof credential !== "object" || Array.isArray(credential)) {
+    throw new Error("Credential must be an object.");
+  }
+  if (!(providerId in PROVIDER_REGISTRY)) {
+    throw new Error(`Unknown provider: ${providerId}`);
+  }
+  const definition = PROVIDER_REGISTRY[providerId as keyof typeof PROVIDER_REGISTRY];
+  if (definition.unavailable) {
+    throw new Error(`Provider ${providerId} is not available for credential storage.`);
+  }
+  const c = credential as Record<string, unknown>;
+  switch (providerId) {
+    case "azure_openai": {
+      return {
+        providerId,
+        resourceName: validateCredentialString(c.resourceName, "Azure resource name", 128),
+        deploymentName: validateCredentialString(c.deploymentName, "Azure deployment name", 128),
+        apiVersion: validateCredentialString(c.apiVersion, "Azure API version", 64),
+        apiKey: validateCredentialString(c.apiKey, "Azure API key", 512),
+      };
+    }
+    case "aws_bedrock": {
+      return {
+        providerId,
+        region: validateCredentialString(c.region, "AWS region", 64),
+        accessKeyId: validateCredentialString(c.accessKeyId, "AWS access key ID", 128),
+        secretAccessKey: validateCredentialString(c.secretAccessKey, "AWS secret access key", 512),
+        sessionToken: validateOptionalCredentialString(c.sessionToken, "AWS session token", 2048),
+      };
+    }
+    case "google_vertex": {
+      return {
+        providerId,
+        projectId: validateCredentialString(c.projectId, "Google Cloud project ID", 128),
+        location: validateCredentialString(c.location, "Google Cloud location", 64),
+        apiKey: validateOptionalCredentialString(c.apiKey, "Google Cloud API key", 512),
+      };
+    }
+    case "huggingface": {
+      return {
+        providerId,
+        apiKey: validateCredentialString(c.apiKey, "Hugging Face API key", 512),
+      };
+    }
+    case "replicate": {
+      return {
+        providerId,
+        apiToken: validateCredentialString(c.apiToken, "Replicate API token", 512),
+      };
+    }
+    default:
+      throw new Error(`Provider ${providerId} does not support structured credentials.`);
+  }
 }
 
 /** Validates and sanitizes a Venice IPC request from the renderer.

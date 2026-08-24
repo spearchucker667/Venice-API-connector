@@ -1,7 +1,7 @@
-import { getProviderApiKey } from './secureStore'
+import { getProviderCredentialOrFallback } from './secureStore'
 import { getProviderSettings } from './providerSettingsStore'
 import type { StreamDelta } from './veniceClient'
-import { PROVIDER_REGISTRY } from '../../src/types/provider'
+import { PROVIDER_REGISTRY, type ProviderCredential } from '../../src/types/provider'
 
 export interface ProviderRoute {
   host: string
@@ -12,40 +12,49 @@ export interface ProviderRoute {
   extractStreamDelta?: (data: string) => StreamDelta
 }
 
-type AdapterFn = (model: string, apiKey: string, originalPath: string, _originalBody: Record<string, unknown>) => ProviderRoute | null
+type AdapterFn = (model: string, credential: ProviderCredential | string, originalPath: string, _originalBody: Record<string, unknown>) => ProviderRoute | null
+
+/** Extracts a single API key from a simple credential object or string. */
+function extractApiKey(credential: ProviderCredential | string): string {
+  if (typeof credential === 'string') return credential
+  if (credential && typeof credential === 'object' && 'apiKey' in credential && typeof credential.apiKey === 'string') {
+    return credential.apiKey
+  }
+  throw new Error('Credential does not contain a usable API key')
+}
 
 export const providerAdapters: Record<string, AdapterFn> = {
-  together: (model, apiKey, originalPath, _originalBody) => {
+  together: (model, credential, originalPath, _originalBody) => {
     if (originalPath !== '/chat/completions' && originalPath !== '/images/generations') return null
     return {
       host: 'api.together.xyz',
       path: '/v1' + originalPath,
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${extractApiKey(credential)}`,
         'Content-Type': 'application/json'
       },
       transformBody: (body, realModel) => ({ ...body, model: realModel })
     }
   },
-  groq: (model, apiKey, originalPath, _originalBody) => {
+  groq: (model, credential, originalPath, _originalBody) => {
     if (originalPath !== '/chat/completions') return null
     return {
       host: 'api.groq.com',
       path: '/openai/v1' + originalPath,
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${extractApiKey(credential)}`,
         'Content-Type': 'application/json'
       },
       transformBody: (body, realModel) => ({ ...body, model: realModel })
     }
   },
-  anthropic: (model, apiKey, originalPath, _originalBody) => {
+  anthropic: (model, credential, originalPath, _originalBody) => {
     if (originalPath !== '/chat/completions') return null
     return {
       host: 'api.anthropic.com',
       path: '/v1/messages', // Anthropic uses a different endpoint for chat
       headers: {
-        'x-api-key': apiKey,
+        'x-api-key': extractApiKey(credential),
         'anthropic-version': '2023-06-01',
         'Content-Type': 'application/json'
       },
@@ -116,25 +125,25 @@ export const providerAdapters: Record<string, AdapterFn> = {
       }
     }
   },
-  mistral: (model, apiKey, originalPath, _originalBody) => {
+  mistral: (model, credential, originalPath, _originalBody) => {
     if (originalPath !== '/chat/completions') return null
     return {
       host: 'api.mistral.ai',
       path: '/v1' + originalPath,
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${extractApiKey(credential)}`,
         'Content-Type': 'application/json'
       },
       transformBody: (body, realModel) => ({ ...body, model: realModel })
     }
   },
-  cohere: (model, apiKey, originalPath, _originalBody) => {
+  cohere: (model, credential, originalPath, _originalBody) => {
     if (originalPath !== '/chat/completions') return null
     return {
       host: 'api.cohere.com',
       path: '/v2/chat',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${extractApiKey(credential)}`,
         'Content-Type': 'application/json'
       },
       transformBody: (body, realModel) => {
@@ -208,14 +217,14 @@ export const providerAdapters: Record<string, AdapterFn> = {
       }
     }
   },
-  google_gemini: (model, apiKey, originalPath, originalBody) => {
+  google_gemini: (model, credential, originalPath, originalBody) => {
     if (originalPath !== '/chat/completions') return null
     const isStream = !!originalBody.stream
     return {
       host: 'generativelanguage.googleapis.com',
       path: `/v1beta/models/${model}:${isStream ? 'streamGenerateContent' : 'generateContent'}`,
       headers: {
-        'x-goog-api-key': apiKey,
+        'x-goog-api-key': extractApiKey(credential),
         'Content-Type': 'application/json'
       },
       transformBody: (body, _realModel) => {
@@ -278,12 +287,12 @@ export const providerAdapters: Record<string, AdapterFn> = {
     }
   },
   google_vertex: () => null,
-  fireworks: (model, apiKey, originalPath, _originalBody) => {
+  fireworks: (model, credential, originalPath, _originalBody) => {
     if (originalPath !== '/chat/completions') return null
     return {
       host: 'api.fireworks.ai',
       path: '/inference/v1' + originalPath,
-      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      headers: { 'Authorization': `Bearer ${extractApiKey(credential)}`, 'Content-Type': 'application/json' },
       transformBody: (body, realModel) => ({ ...body, model: realModel })
     }
   },
@@ -291,12 +300,12 @@ export const providerAdapters: Record<string, AdapterFn> = {
   aws_bedrock: () => null,
   azure_openai: () => null,
   huggingface: () => null,
-  perplexity: (model, apiKey, originalPath, _originalBody) => {
+  perplexity: (model, credential, originalPath, _originalBody) => {
     if (originalPath !== '/chat/completions') return null
     return {
       host: 'api.perplexity.ai',
       path: originalPath,
-      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      headers: { 'Authorization': `Bearer ${extractApiKey(credential)}`, 'Content-Type': 'application/json' },
       transformBody: (body, realModel) => ({ ...body, model: realModel })
     }
   }
@@ -343,13 +352,12 @@ export function resolveProviderRoute(
   }
   const adapter = providerAdapters[providerId]
 
-  // Use the new generic key system `[providerId]_api_key`
-  const apiKey = getProviderApiKey(providerId, profileId)
-  if (!apiKey) {
-    return { error: `API key is not configured for provider: ${providerId}` }
+  const credential = getProviderCredentialOrFallback(providerId, profileId)
+  if (!credential) {
+    return { error: `Credentials are not configured for provider: ${providerId}` }
   }
 
-  const route = adapter(realModel, apiKey, request.endpoint as string, body)
+  const route = adapter(realModel, credential as ProviderCredential | string, request.endpoint as string, body)
   if (!route) {
     return { error: `Provider ${providerId} does not support endpoint ${request.endpoint}`, unsupported: true }
   }

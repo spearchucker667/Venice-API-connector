@@ -21,6 +21,11 @@ vi.mock("./secureStore", () => ({
     if (providerId === 'anthropic') return 'test-anthropic-key'
     if (providerId === 'together') return 'test-together-key'
     return null
+  }),
+  getProviderCredentialOrFallback: vi.fn((providerId, _profileId) => {
+    if (providerId === 'anthropic') return 'test-anthropic-key'
+    if (providerId === 'together') return 'test-together-key'
+    return null
   })
 }));
 
@@ -42,7 +47,7 @@ vi.mock("./logger", () => ({
 }));
 
 import { performVeniceRequest } from "./veniceClient";
-import { getProviderApiKey } from "./secureStore";
+import { getProviderCredentialOrFallback } from "./secureStore";
 import { getProviderSettings } from "./providerSettingsStore";
 
 interface MockRequest extends EventEmitter {
@@ -169,7 +174,7 @@ describe("performVeniceRequest multi-provider adapter integration", () => {
       },
     });
 
-    expect(getProviderApiKey).toHaveBeenCalledWith("anthropic", "work-profile");
+    expect(getProviderCredentialOrFallback).toHaveBeenCalledWith("anthropic", "work-profile");
     expect((requestOptions.headers as Record<string, string>)["x-api-key"]).toBe("test-anthropic-key");
   });
 

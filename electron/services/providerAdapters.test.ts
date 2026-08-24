@@ -1,12 +1,19 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { resolveProviderRoute, providerAdapters } from './providerAdapters'
-import { getProviderApiKey } from './secureStore'
+import { getProviderCredentialOrFallback } from './secureStore'
 import { getProviderSettings } from './providerSettingsStore'
 
-// Mock getProviderApiKey to return a fake key for testing
+// Mock credential lookups to return a fake key for testing
 vi.mock('./secureStore', () => ({
   getProviderApiKey: vi.fn((providerId, _profileId) => {
+    if (providerId === 'together') return 'fake-together-key'
+    if (providerId === 'groq') return 'fake-groq-key'
+    if (providerId === 'anthropic') return 'fake-anthropic-key'
+    if (providerId === 'mistral') return 'fake-mistral-key'
+    return null
+  }),
+  getProviderCredentialOrFallback: vi.fn((providerId, _profileId) => {
     if (providerId === 'together') return 'fake-together-key'
     if (providerId === 'groq') return 'fake-groq-key'
     if (providerId === 'anthropic') return 'fake-anthropic-key'
@@ -50,10 +57,10 @@ describe('providerAdapters', () => {
         body: { model: 'together:meta-llama/Llama-3-70b-chat-hf' }
       }
       
-      vi.mocked(getProviderApiKey).mockReturnValueOnce(null)
+      vi.mocked(getProviderCredentialOrFallback).mockReturnValueOnce(null)
       
       const result = resolveProviderRoute(request)
-      expect(result?.error).toMatch(/API key is not configured/)
+      expect(result?.error).toMatch(/Credentials are not configured/)
     })
 
     it('rejects a renderer-selected provider that main-process consent has disabled', () => {
@@ -70,7 +77,7 @@ describe('providerAdapters', () => {
       }, 'work-profile')
 
       expect(result?.error).toMatch(/disabled for this profile/i)
-      expect(getProviderApiKey).not.toHaveBeenCalled()
+      expect(getProviderCredentialOrFallback).not.toHaveBeenCalled()
     })
 
     it('routes an automatic fallback with provider and model as separate authority fields', () => {
@@ -105,7 +112,7 @@ describe('providerAdapters', () => {
 
       resolveProviderRoute(request, 'work-profile')
 
-      expect(getProviderApiKey).toHaveBeenCalledWith('anthropic', 'work-profile')
+      expect(getProviderCredentialOrFallback).toHaveBeenCalledWith('anthropic', 'work-profile')
     })
 
     it('rejects providers marked unavailable before reading credentials', () => {
@@ -117,7 +124,7 @@ describe('providerAdapters', () => {
       const result = resolveProviderRoute(request, 'work-profile')
 
       expect(result?.error).toMatch(/not available/i)
-      expect(getProviderApiKey).not.toHaveBeenCalled()
+      expect(getProviderCredentialOrFallback).not.toHaveBeenCalled()
     })
 
     it('resolves the correct route for Together', () => {
@@ -160,7 +167,7 @@ describe('providerAdapters', () => {
     })
 
     it('keeps the Gemini API key out of the request URL', () => {
-      vi.mocked(getProviderApiKey).mockReturnValueOnce('gemini-secret-key')
+      vi.mocked(getProviderCredentialOrFallback).mockReturnValueOnce('gemini-secret-key')
       const request = {
         endpoint: '/chat/completions',
         body: { model: 'google_gemini:gemini-2.5-flash', messages: [] }

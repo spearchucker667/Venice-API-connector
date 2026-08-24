@@ -431,6 +431,20 @@ export function isProviderCredentialConfigured(providerId: string, profileId: st
   return getProviderCredential(providerId, profileId) !== null;
 }
 
+/** Checks whether a provider has either a legacy single key or a structured credential. */
+export function isProviderConfigured(providerId: string, profileId: string = "default"): boolean {
+  return isProviderApiKeyConfigured(providerId, profileId) || isProviderCredentialConfigured(providerId, profileId);
+}
+
+/** Retrieves a structured credential when available, otherwise falls back to the
+ *  legacy single-key store. Simple-key providers keep working while structured
+ *  cloud credentials are introduced. */
+export function getProviderCredentialOrFallback(providerId: string, profileId: string = "default"): Record<string, unknown> | string | null {
+  const structured = getProviderCredential(providerId, profileId);
+  if (structured) return structured;
+  return getProviderApiKey(providerId, profileId);
+}
+
 /** Checks whether OS-level encryption is available on this platform. */
 export function isEncryptionAvailable(): boolean {
   return safeStorage.isEncryptionAvailable();

@@ -9,6 +9,7 @@ import {
 } from '../src/types/provider'
 import { providerAdapters } from '../electron/services/providerAdapters'
 import { FALLBACK_MODELS } from '../src/config/provider-models'
+import { validateProviderCredential } from '../electron/ipc/validation'
 
 describe('Provider Adapters Contract', () => {
   it('should have an adapter for every non-venice provider', () => {
@@ -67,6 +68,38 @@ describe('Provider Adapters Contract', () => {
     expect(PROVIDER_REGISTRY.mistral.supportedTypes).toEqual(['chat'])
     expect(PROVIDER_REGISTRY.anthropic.supportedTypes).toEqual(['chat'])
     expect(PROVIDER_REGISTRY.cohere.supportedTypes).toEqual(['chat'])
+  })
+
+  it('rejects credential storage for deferred providers', () => {
+    for (const providerId of DEFERRED_PROVIDER_IDS) {
+      expect(() => validateProviderCredential(providerId, { apiKey: 'test' })).toThrow()
+    }
+  })
+
+  it('has no duplicate provider IDs in the registry', () => {
+    const ids = Object.values(PROVIDER_REGISTRY).map((p) => p.id)
+    expect(new Set(ids).size).toBe(ids.length)
+  })
+
+  it('only includes known, available providers in the fallback list', () => {
+    for (const providerId of AVAILABLE_FALLBACK_PROVIDER_IDS) {
+      expect(PROVIDER_REGISTRY[providerId]).toBeDefined()
+      expect(PROVIDER_REGISTRY[providerId].unavailable).not.toBe(true)
+    }
+  })
+
+  it('does not list deferred providers as fallback-eligible', () => {
+    for (const providerId of DEFERRED_PROVIDER_IDS) {
+      expect(AVAILABLE_FALLBACK_PROVIDER_IDS).not.toContain(providerId)
+    }
+  })
+
+  it('matches implemented capabilities to the registry supportedTypes for every provider', () => {
+    for (const [providerId, capabilities] of Object.entries(PROVIDER_CAPABILITIES)) {
+      const implemented = capabilities.filter((c) => c.implemented).map((c) => c.feature)
+      const supported = PROVIDER_REGISTRY[providerId as keyof typeof PROVIDER_REGISTRY].supportedTypes
+      expect(new Set(implemented)).toEqual(new Set(supported))
+    }
   })
 
   // We could add more contract tests per provider here

@@ -7,6 +7,10 @@ import {
   deleteProviderApiKey,
   isProviderApiKeyConfigured,
   setProviderApiKey,
+  setProviderCredential,
+  deleteProviderCredential,
+  isProviderCredentialConfigured,
+  isProviderConfigured,
   setCredential,
   getCredential,
   deleteCredential,
@@ -22,12 +26,12 @@ import {
 } from "../../services/secureStore";
 import { readResponseError } from "../../services/veniceClient";
 import { performGuardedVeniceRequest } from "../../services/guardPipeline";
-import { validateApiKeyInput } from "../validation";
+import { validateApiKeyInput, validateProviderCredential } from "../validation";
 import { redactErrorMessage } from "../../../src/shared/redaction";
 import { isValidProfileStorageId } from "../../../src/utils/profileIdValidation";
 import type { ApiConnectivityFailureKind, ApiConnectivityStatus } from "../../../src/types/api-connectivity";
 import { registerIpcChannel } from "./common";
-import { PROVIDER_REGISTRY } from "../../../src/types/provider";
+import { PROVIDER_REGISTRY, requiresStructuredCredential, type ProviderId } from "../../../src/types/provider";
 import { getProfileSessionId, setProfileSessionId } from "../../services/profileSession";
 import {
   disableProvider,
@@ -423,6 +427,46 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
+  registerIpcChannel("providerCredential:isConfigured", (event, payload: unknown) => {
+    const { providerId } = typeof payload === "object" && payload !== null && "providerId" in payload ? payload as { providerId: unknown, profileId?: unknown } : { providerId: payload };
+    try {
+      return isProviderCredentialConfigured(parseProviderId(providerId), getProfileSessionId(event.sender));
+    } catch {
+      return false;
+    }
+  });
+
+  registerIpcChannel("providerCredential:set", (event, payload: unknown) => {
+    try {
+      if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+        throw new Error("Invalid credential payload.");
+      }
+      const { providerId, credential } = payload as { providerId: unknown, credential: unknown };
+      const validProviderId = parseProviderId(providerId);
+      if (!requiresStructuredCredential(validProviderId as ProviderId)) {
+        throw new Error(`Provider ${validProviderId} does not use structured credentials.`);
+      }
+      const validCredential = validateProviderCredential(validProviderId, credential);
+      setProviderCredential(validProviderId, validCredential, getProfileSessionId(event.sender));
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: redactErrorMessage(err) };
+    }
+  });
+
+  registerIpcChannel("providerCredential:delete", (event, payload: unknown) => {
+    const { providerId } = typeof payload === "object" && payload !== null && "providerId" in payload ? payload as { providerId: unknown, profileId?: unknown } : { providerId: payload };
+    try {
+      const validProviderId = parseProviderId(providerId);
+      const profileId = getProfileSessionId(event.sender);
+      deleteProviderCredential(validProviderId, profileId);
+      disableProvider(profileId, validProviderId);
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: redactErrorMessage(err) };
+    }
+  });
+
   registerIpcChannel("providerSettings:get", (event) => {
     return getProviderSettings(getProfileSessionId(event.sender));
   });
@@ -444,8 +488,8 @@ export function registerApiKeyHandlers(): void {
           if (enabled && !isProviderAvailableForFallback(validProviderId)) {
             throw new Error(`Provider ${validProviderId} is not available for fallback routing.`);
           }
-          if (enabled && !isProviderApiKeyConfigured(validProviderId, profileId)) {
-            throw new Error(`API key is not configured for provider: ${validProviderId}`);
+          if (enabled && !isProviderConfigured(validProviderId, profileId)) {
+            throw new Error(`Credentials are not configured for provider: ${validProviderId}`);
           }
         }
       }
@@ -471,8 +515,8 @@ export function registerApiKeyHandlers(): void {
           if (enabledProviders[validProviderId] !== true) {
             throw new Error(`Provider ${validProviderId} must be enabled before it is ordered.`);
           }
-          if (!isProviderApiKeyConfigured(validProviderId, profileId)) {
-            throw new Error(`API key is not configured for provider: ${validProviderId}`);
+          if (!isProviderConfigured(validProviderId, profileId)) {
+            throw new Error(`Credentials are not configured for provider: ${validProviderId}`);
           }
         }
       }

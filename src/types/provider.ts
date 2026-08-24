@@ -78,6 +78,19 @@ export type ProviderCredential =
   | ({ providerId: "replicate" } & ReplicateConfig)
   | ({ providerId: "cohere" } & CohereConfig);
 
+/** Providers whose credential storage is structured rather than a single API key. */
+export const STRUCTURED_CREDENTIAL_PROVIDER_IDS = [
+  "azure_openai",
+  "aws_bedrock",
+  "google_vertex",
+  "huggingface",
+  "replicate",
+] as const satisfies readonly ProviderId[];
+
+export function requiresStructuredCredential(providerId: ProviderId): boolean {
+  return (STRUCTURED_CREDENTIAL_PROVIDER_IDS as readonly ProviderId[]).includes(providerId);
+}
+
 export interface ProviderCapability {
   feature: ProviderFeature;
   route: string;
