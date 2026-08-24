@@ -129,6 +129,21 @@ function validateCredentialString(value: unknown, name: string, maxLength = 512)
   return trimmed;
 }
 
+/** Azure resource names are alphanumeric plus hyphens, 2–64 characters. They
+ *  must not contain dots, protocol, ports, paths, or other URL metacharacters.
+ *  @throws If the value is not a valid Azure resource name.
+ */
+export function validateAzureResourceName(value: unknown): string {
+  const name = validateCredentialString(value, "Azure resource name", 64);
+  if (!/^[a-z0-9-]{2,64}$/.test(name)) {
+    throw new Error("Azure resource name must be 2–64 lowercase alphanumeric characters or hyphens.");
+  }
+  if (name.startsWith("-") || name.endsWith("-")) {
+    throw new Error("Azure resource name cannot start or end with a hyphen.");
+  }
+  return name;
+}
+
 /** Validates an optional string field with a maximum length. */
 function validateOptionalCredentialString(value: unknown, name: string, maxLength = 512): string | undefined {
   if (value === undefined || value === null) return undefined;
@@ -158,7 +173,7 @@ export function validateProviderCredential(providerId: string, credential: unkno
     case "azure_openai": {
       return {
         providerId,
-        resourceName: validateCredentialString(c.resourceName, "Azure resource name", 128),
+        resourceName: validateAzureResourceName(c.resourceName),
         deploymentName: validateCredentialString(c.deploymentName, "Azure deployment name", 128),
         apiVersion: validateCredentialString(c.apiVersion, "Azure API version", 64),
         apiKey: validateCredentialString(c.apiKey, "Azure API key", 512),

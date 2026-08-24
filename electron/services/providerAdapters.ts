@@ -1,7 +1,7 @@
 import { getProviderCredentialOrFallback } from './secureStore'
 import { getProviderSettings } from './providerSettingsStore'
 import type { StreamDelta } from './veniceClient'
-import { PROVIDER_REGISTRY, type ProviderCredential } from '../../src/types/provider'
+import { PROVIDER_REGISTRY, type AzureOpenAiConfig, type ProviderCredential } from '../../src/types/provider'
 
 export interface ProviderRoute {
   host: string
@@ -21,6 +21,31 @@ function extractApiKey(credential: ProviderCredential | string): string {
     return credential.apiKey
   }
   throw new Error('Credential does not contain a usable API key')
+}
+
+/** Extracts and validates the structured Azure OpenAI credential. */
+function extractAzureOpenAiConfig(credential: ProviderCredential | string): AzureOpenAiConfig {
+  if (typeof credential === 'string' || !credential || typeof credential !== 'object' || credential.providerId !== 'azure_openai') {
+    throw new Error('Azure OpenAI credential is not structured correctly')
+  }
+  const c = credential as AzureOpenAiConfig
+  if (!c.resourceName || !c.deploymentName || !c.apiVersion || !c.apiKey) {
+    throw new Error('Azure OpenAI credential is missing required fields')
+  }
+  return c
+}
+
+/** Builds an HTTPS Azure OpenAI host and rejects non-Azure or dangerous hosts.
+ *  The resource name is validated at credential-storage time; this is a
+ *  defense-in-depth runtime guard against SSRF and credential downgrade.
+ */
+function buildAzureOpenAiHost(resourceName: string): string {
+  // Reject the same dangerous shapes that credential validation rejects,
+  // so a stale or tampered credential cannot be turned into an arbitrary host.
+  if (!/^[a-z0-9-]{2,64}$/.test(resourceName) || resourceName.startsWith('-') || resourceName.endsWith('-')) {
+    throw new Error('Azure OpenAI resource name is invalid')
+  }
+  return `${resourceName}.openai.azure.com`.toLowerCase()
 }
 
 export const providerAdapters: Record<string, AdapterFn> = {
@@ -298,7 +323,26 @@ export const providerAdapters: Record<string, AdapterFn> = {
   },
   replicate: () => null,
   aws_bedrock: () => null,
-  azure_openai: () => null,
+  azure_openai: (model, credential, originalPath, _originalBody) => {
+    if (originalPath !== '/chat/completions') return null
+    const config = extractAzureOpenAiConfig(credential)
+    const host = buildAzureOpenAiHost(config.resourceName)
+    const deploymentName = encodeURIComponent(config.deploymentName)
+    const apiVersion = encodeURIComponent(config.apiVersion)
+    return {
+      host,
+      path: `/openai/deployments/${deploymentName}/chat/completions?api-version=${apiVersion}`,
+      headers: {
+        'api-key': config.apiKey,
+        'Content-Type': 'application/json'
+      },
+      transformBody: (body, _realModel) => ({
+        ...body,
+        // The deployment name in the URL is authoritative on Azure.
+        model: config.deploymentName
+      })
+    }
+  },
   perplexity: (model, credential, originalPath, _originalBody) => {
     if (originalPath !== '/chat/completions') return null
     return {
@@ -368,7 +412,13 @@ export function resolveProviderRoute(
     return { error: `Credentials are not configured for provider: ${providerId}` }
   }
 
-  const route = adapter(realModel, credential as ProviderCredential | string, request.endpoint as string, body)
+  let route: ProviderRoute | null
+  try {
+    route = adapter(realModel, credential as ProviderCredential | string, request.endpoint as string, body)
+  } catch (adapterError) {
+    const message = adapterError instanceof Error ? adapterError.message : 'Provider adapter failed'
+    return { error: message }
+  }
   if (!route) {
     return { error: `Provider ${providerId} does not support endpoint ${request.endpoint}`, unsupported: true }
   }

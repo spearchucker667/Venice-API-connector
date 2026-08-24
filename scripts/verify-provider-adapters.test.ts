@@ -11,6 +11,27 @@ import { providerAdapters } from '../electron/services/providerAdapters'
 import { FALLBACK_MODELS } from '../src/config/provider-models'
 import { validateProviderCredential } from '../electron/ipc/validation'
 
+function testCredentialFor(providerId: string): string | Record<string, string> {
+  switch (providerId) {
+    case 'azure_openai':
+      return {
+        providerId: 'azure_openai',
+        resourceName: 'venice-forge-test',
+        deploymentName: 'gpt-4o',
+        apiVersion: '2024-08-01-preview',
+        apiKey: 'test-key',
+      }
+    case 'aws_bedrock':
+    case 'google_vertex':
+    case 'replicate':
+      // These providers remain deferred; this branch is unreachable for the
+      // advertised-fallback loop but keeps the helper exhaustive.
+      return 'test-key'
+    default:
+      return 'test-key'
+  }
+}
+
 describe('Provider Adapters Contract', () => {
   it('should have an adapter for every non-venice provider', () => {
     const providers = Object.values(PROVIDER_REGISTRY)
@@ -27,7 +48,6 @@ describe('Provider Adapters Contract', () => {
       'replicate',
       'aws_bedrock',
       'google_vertex',
-      'azure_openai',
     ])
     for (const providerId of DEFERRED_PROVIDER_IDS) {
       expect(PROVIDER_REGISTRY[providerId].unavailable).toBe(true)
@@ -48,7 +68,7 @@ describe('Provider Adapters Contract', () => {
       for (const capability of PROVIDER_CAPABILITIES[providerId]) {
         expect(capability.implemented).toBe(true)
         expect(PROVIDER_REGISTRY[providerId].supportedTypes).toContain(capability.feature)
-        expect(providerAdapters[providerId]('model', 'test-key', capability.route, {})).not.toBeNull()
+        expect(providerAdapters[providerId]('model', testCredentialFor(providerId), capability.route, {})).not.toBeNull()
         const expectedType = capability.feature === 'chat' ? 'text' : capability.feature
         expect(FALLBACK_MODELS[providerId].some((model) => model._type === expectedType)).toBe(true)
       }

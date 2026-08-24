@@ -19,6 +19,15 @@ vi.mock('./secureStore', () => ({
     if (providerId === 'anthropic') return 'fake-anthropic-key'
     if (providerId === 'mistral') return 'fake-mistral-key'
     if (providerId === 'huggingface') return 'fake-huggingface-key'
+    if (providerId === 'azure_openai') {
+      return {
+        providerId: 'azure_openai',
+        resourceName: 'venice-forge-test',
+        deploymentName: 'gpt-4o',
+        apiVersion: '2024-08-01-preview',
+        apiKey: 'fake-azure-key'
+      }
+    }
     return null
   }),
 }))
@@ -32,6 +41,7 @@ vi.mock('./providerSettingsStore', () => ({
       mistral: true,
       google_gemini: true,
       huggingface: true,
+      azure_openai: true,
     },
     autoFallbackEnabled: false,
     fallbackOrdering: [],
@@ -157,6 +167,39 @@ describe('providerAdapters', () => {
 
       const transformedBody = result?.route?.transformBody!(request.body, 'deepseek-ai/DeepSeek-R1:fastest')
       expect(transformedBody.model).toBe('deepseek-ai/DeepSeek-R1:fastest')
+    })
+
+    it('resolves the correct route for Azure OpenAI and uses deployment name in path and body', () => {
+      const request = {
+        endpoint: '/chat/completions',
+        body: { model: 'azure_openai:gpt-4o', messages: [] }
+      }
+      const result = resolveProviderRoute(request)
+      expect(result?.error).toBeUndefined()
+      expect(result?.route?.host).toBe('venice-forge-test.openai.azure.com')
+      expect(result?.route?.path).toBe('/openai/deployments/gpt-4o/chat/completions?api-version=2024-08-01-preview')
+      expect(result?.route?.headers['api-key']).toBe('fake-azure-key')
+      expect(result?.route?.headers['Authorization']).toBeUndefined()
+
+      const transformedBody = result?.route?.transformBody!(request.body, 'gpt-4o')
+      expect(transformedBody.model).toBe('gpt-4o')
+    })
+
+    it('rejects Azure OpenAI requests when the credential resource name is dangerous', () => {
+      vi.mocked(getProviderCredentialOrFallback).mockReturnValueOnce({
+        providerId: 'azure_openai',
+        resourceName: 'evil.com/',
+        deploymentName: 'gpt-4o',
+        apiVersion: '2024-08-01-preview',
+        apiKey: 'fake-azure-key'
+      })
+
+      const result = resolveProviderRoute({
+        endpoint: '/chat/completions',
+        body: { model: 'azure_openai:gpt-4o', messages: [] }
+      })
+
+      expect(result?.error).toMatch(/invalid/i)
     })
 
     it('resolves the correct route for Anthropic and transforms the body', () => {

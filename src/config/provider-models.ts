@@ -129,7 +129,19 @@ export const FALLBACK_MODELS: Record<ProviderId, FallbackModelDef[]> = {
   replicate: [],
   aws_bedrock: [],
   google_vertex: [],
-  azure_openai: [],
+  azure_openai: [
+    {
+      id: 'azure_openai:gpt-4o',
+      object: 'model',
+      created: FALLBACK_MODEL_CATALOG_TIMESTAMP,
+      owned_by: 'azure_openai',
+      _type: 'text',
+      model_spec: {
+        name: 'Azure OpenAI GPT-4o (deployment-configured)',
+        capabilities: { supportsVision: true, supportsFunctionCalling: true },
+      }
+    }
+  ],
   huggingface: [
     {
       id: 'huggingface:deepseek-ai/DeepSeek-R1:fastest',

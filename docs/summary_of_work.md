@@ -6,6 +6,27 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-24
+**Scope:** Deferred external-provider integration — Azure OpenAI graduation.
+
+- Implemented Azure OpenAI chat through the deployment-based OpenAI-compatible endpoint (`{resourceName}.openai.azure.com/openai/deployments/{deploymentName}/chat/completions`) in `electron/services/providerAdapters.ts`. The adapter uses the `api-key` header, URL-encodes the deployment name and API version, and sets the body `model` to the configured deployment name.
+- Added structured Azure OpenAI credential validation in `electron/ipc/validation.ts`, including `validateAzureResourceName` to enforce 2–64 lowercase alphanumeric/hyphen resource names and block SSRF attempts through the resource field.
+- Added a static Azure OpenAI chat model catalog (`azure_openai:gpt-4o`) in `src/config/provider-models.ts` with an explicit deployment-configured description, and registered `gpt-4o` as the native fallback model.
+- Enabled Azure OpenAI in `src/types/provider.ts`: declared chat capability `implemented: true`, `modelDiscovery: "deployment"`, removed `unavailable`, and removed `azure_openai` from `DEFERRED_PROVIDER_IDS`.
+- Added the canonical English i18n description key for Azure OpenAI in `src/i18n/resources/en-US/common.json` and synchronized all non-English catalogs with `__MISSING__` placeholders.
+- Added focused adapter tests for Azure OpenAI request transformation, deployment-path construction, SSRF rejection, and credential validation tests in `electron/services/providerAdapters.test.ts` and `electron/ipc/validation.test.ts`.
+- Updated contract tests in `scripts/verify-provider-adapters.test.ts` to reflect the new deferred-provider list.
+- Updated live documentation: `docs/ROADMAP.md`, `docs/security/security-model.md`.
+- Validation:
+  - `npm run verify:i18n` PASS (12 locales; new Azure key synced with `__MISSING__` placeholders)
+  - `npm run lint:eslint` PASS (zero warnings)
+  - `npm run typecheck` PASS
+  - `npm run verify:provider-adapters` PASS
+  - `npm run test:unit` PASS (all suites)
+  - `npm run test:electron` PASS
+
+## Latest Session Summary
+
+**Date:** 2026-08-24
 **Scope:** Deferred external-provider integration — Hugging Face graduation.
 
 - Implemented Hugging Face chat through the OpenAI-compatible Inference Providers endpoint (`router.huggingface.co/v1/chat/completions`) in `electron/services/providerAdapters.ts`.

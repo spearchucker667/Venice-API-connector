@@ -4400,7 +4400,8 @@
           "claudeAndOtherSafeFoundationModels": "Claude and other safe foundation models.",
           "searchGroundedAndFastLlmApis": "Search-grounded and fast LLM APIs.",
           "cohereEnterpriseReadyMultilingualModels": "Enterprise-ready multilingual models.",
-          "huggingFaceOpenSourceInferenceProviders": "Open-source model inference via Hugging Face Inference Providers."
+          "huggingFaceOpenSourceInferenceProviders": "Open-source model inference via Hugging Face Inference Providers.",
+          "azureOpenAiDeploymentBasedChatCompletions": "Azure OpenAI deployment-based chat completions."
         }
       }
     },

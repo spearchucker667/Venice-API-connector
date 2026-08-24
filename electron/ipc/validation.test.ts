@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 import {
   MAX_VENICE_IPC_BODY_BYTES,
   validateApiKeyInput,
+  validateAzureResourceName,
   validateMutationOrigin,
   validateVeniceIpcRequest,
 } from "./validation";
@@ -73,6 +74,16 @@ describe("Electron IPC validation", () => {
     expect(validateApiKeyInput("  vn-test-key  ")).toBe("vn-test-key");
     expect(() => validateApiKeyInput("")).toThrow(/enter/i);
     expect(() => validateApiKeyInput("x".repeat(513))).toThrow(/too long/i);
+  });
+
+  /** Validates Azure resource names to prevent SSRF via the resource field. */
+  it("validates Azure resource names", () => {
+    expect(validateAzureResourceName("venice-forge-test")).toBe("venice-forge-test");
+    expect(() => validateAzureResourceName("")).toThrow(/required/i);
+    expect(() => validateAzureResourceName("a")).toThrow(/2–64/i);
+    expect(() => validateAzureResourceName("-invalid")).toThrow(/hyphen/i);
+    expect(() => validateAzureResourceName("invalid.com")).toThrow(/2–64/i);
+    expect(() => validateAzureResourceName("https://evil")).toThrow(/2–64/i);
   });
 
   /** Validates mutation origin values and defaults omitted origins to local-user. */

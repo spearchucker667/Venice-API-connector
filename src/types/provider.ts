@@ -204,7 +204,7 @@ export const PROVIDER_CAPABILITIES: Record<
     {
       feature: "chat",
       route: "/chat/completions",
-      implemented: false,
+      implemented: true,
       modelDiscovery: "deployment",
     },
   ],
@@ -338,12 +338,11 @@ export const PROVIDER_REGISTRY: Record<ProviderId, ProviderDefinition> = {
     label: "Azure OpenAI",
     get description() {
       return translateRuntime(
-        "runtimeGenerated.types.provider.metadata.notImplementedNoCredentialsOrRequestsAreAccepted",
-        "Not implemented. No credentials or requests are accepted.",
+        "runtimeGenerated.types.provider.metadata.azureOpenAiDeploymentBasedChatCompletions",
+        "Azure OpenAI deployment-based chat completions.",
       );
     },
     supportedTypes: implementedFeatures("azure_openai"),
-    unavailable: true,
   },
   huggingface: {
     id: "huggingface",
@@ -412,7 +411,6 @@ export const DEFERRED_PROVIDER_IDS = [
   "replicate",
   "aws_bedrock",
   "google_vertex",
-  "azure_openai",
 ] as const satisfies readonly ProviderId[];
 
 /** Non-primary providers with implemented adapters, catalogs, and secure key custody. */

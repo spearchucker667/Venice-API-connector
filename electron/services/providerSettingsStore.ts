@@ -17,6 +17,7 @@ const NATIVE_FALLBACK_MODELS: Partial<Record<ProviderId, string>> = {
   perplexity: "sonar",
   cohere: "command-r-plus",
   huggingface: "deepseek-ai/DeepSeek-R1:fastest",
+  azure_openai: "gpt-4o",
 };
 
 export interface ProviderSettingsSnapshot {
