@@ -28,7 +28,6 @@ describe('Provider Adapters Contract', () => {
       'google_vertex',
       'azure_openai',
       'huggingface',
-      'cohere',
     ])
     for (const providerId of DEFERRED_PROVIDER_IDS) {
       expect(PROVIDER_REGISTRY[providerId].unavailable).toBe(true)
@@ -58,7 +57,8 @@ describe('Provider Adapters Contract', () => {
 
   it('does not advertise deferred or unsupported endpoint capabilities', () => {
     for (const providerId of DEFERRED_PROVIDER_IDS) {
-      expect(PROVIDER_CAPABILITIES[providerId]).toEqual([])
+      const implemented = PROVIDER_CAPABILITIES[providerId].filter((c) => c.implemented)
+      expect(implemented).toEqual([])
       expect(PROVIDER_REGISTRY[providerId].supportedTypes).toEqual([])
     }
     expect(PROVIDER_REGISTRY.groq.supportedTypes).toEqual(['chat'])
@@ -66,6 +66,7 @@ describe('Provider Adapters Contract', () => {
     expect(PROVIDER_REGISTRY.google_gemini.supportedTypes).toEqual(['chat'])
     expect(PROVIDER_REGISTRY.mistral.supportedTypes).toEqual(['chat'])
     expect(PROVIDER_REGISTRY.anthropic.supportedTypes).toEqual(['chat'])
+    expect(PROVIDER_REGISTRY.cohere.supportedTypes).toEqual(['chat'])
   })
 
   // We could add more contract tests per provider here

@@ -13,6 +13,7 @@ vi.mock("electron", () => ({
 }));
 
 import { disableProvider, getProviderSettings, isProviderAvailableForFallback, updateProviderSettings } from "./providerSettingsStore";
+import { DEFERRED_PROVIDER_IDS } from "../../src/types/provider";
 
 describe("providerSettingsStore", () => {
   beforeEach(() => {
@@ -50,7 +51,7 @@ describe("providerSettingsStore", () => {
   });
 
   it("never accepts deferred providers into credential-backed fallback routing", () => {
-    for (const providerId of ["replicate", "aws_bedrock", "google_vertex", "azure_openai", "huggingface", "cohere"]) {
+    for (const providerId of DEFERRED_PROVIDER_IDS) {
       expect(isProviderAvailableForFallback(providerId)).toBe(false);
     }
   });

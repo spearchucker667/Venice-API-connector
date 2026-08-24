@@ -196,7 +196,14 @@ export const PROVIDER_CAPABILITIES: Record<
     },
   ],
   huggingface: [],
-  cohere: [],
+  cohere: [
+    {
+      feature: "chat",
+      route: "/chat/completions",
+      implemented: true,
+      modelDiscovery: "static",
+    },
+  ],
 };
 
 function implementedFeatures(providerId: ProviderId): ProviderFeature[] {
@@ -373,12 +380,11 @@ export const PROVIDER_REGISTRY: Record<ProviderId, ProviderDefinition> = {
     label: "Cohere",
     get description() {
       return translateRuntime(
-        "runtimeGenerated.types.provider.metadata.notImplementedNoCredentialsOrRequestsAreAccepted",
-        "Not implemented. No credentials or requests are accepted.",
+        "runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels",
+        "Enterprise-ready multilingual models.",
       );
     },
     supportedTypes: implementedFeatures("cohere"),
-    unavailable: true,
   },
 };
 
@@ -389,7 +395,6 @@ export const DEFERRED_PROVIDER_IDS = [
   "google_vertex",
   "azure_openai",
   "huggingface",
-  "cohere",
 ] as const satisfies readonly ProviderId[];
 
 /** Non-primary providers with implemented adapters, catalogs, and secure key custody. */
