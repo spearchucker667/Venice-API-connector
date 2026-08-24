@@ -160,17 +160,24 @@ export const providerAdapters: Record<string, AdapterFn> = {
           }
           if (body.message) {
              const message = body.message as Record<string, unknown>
-             const content = message.content as Array<Record<string, unknown>>
-             const text = content?.[0]?.text || ''
+             const content = Array.isArray(message.content)
+               ? (message.content as Array<Record<string, unknown>>)
+               : []
+             const text = content.map((c) => c.text ?? '').join('')
              const usage = body.usage as Record<string, unknown> | undefined
              const billed = usage?.billed_units as Record<string, unknown> | undefined
+             const promptTokens = billed?.input_tokens ?? usage?.tokens?.input_tokens
+             const completionTokens = billed?.output_tokens ?? usage?.tokens?.output_tokens
+             const totalTokens = promptTokens !== undefined && completionTokens !== undefined
+               ? (Number(promptTokens) || 0) + (Number(completionTokens) || 0)
+               : undefined
              return {
                id: body.id,
                choices: [{ message: { content: text, role: 'assistant' } }],
                usage: {
-                 prompt_tokens: billed?.input_tokens,
-                 completion_tokens: billed?.output_tokens,
-                 total_tokens: (Number(billed?.input_tokens) || 0) + (Number(billed?.output_tokens) || 0)
+                 prompt_tokens: promptTokens,
+                 completion_tokens: completionTokens,
+                 total_tokens: totalTokens,
                }
              }
           }

@@ -201,4 +201,32 @@ describe('cohere adapter', () => {
     expect(body.p).toBe(0.9)
     expect(body.stream).toBe(false)
   })
+
+  it('normalizes a non-streaming chat response', () => {
+    const route = providerAdapters.cohere('command-r-plus', 'key', '/chat/completions', { messages: [] })
+    const normalized = route!.transformResponse!({
+      id: 'msg-123',
+      message: {
+        role: 'assistant',
+        content: [{ type: 'text', text: 'Hello there!' }]
+      },
+      usage: {
+        billed_units: { input_tokens: 10, output_tokens: 5 },
+        tokens: { input_tokens: 10, output_tokens: 5 }
+      }
+    })
+    expect(normalized).toEqual({
+      id: 'msg-123',
+      choices: [{ message: { role: 'assistant', content: 'Hello there!' } }],
+      usage: { prompt_tokens: 10, completion_tokens: 5, total_tokens: 15 }
+    })
+  })
+
+  it('normalizes a Cohere error response', () => {
+    const route = providerAdapters.cohere('command-r-plus', 'key', '/chat/completions', { messages: [] })
+    const normalized = route!.transformResponse!({
+      message: 'Invalid api key'
+    })
+    expect(normalized).toEqual({ error: { message: 'Invalid api key' } })
+  })
 })
