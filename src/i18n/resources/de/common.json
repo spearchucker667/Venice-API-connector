@@ -4380,7 +4380,8 @@
           "geminiDeveloperApiAiStudio": "Gemini-Entwickler-API (AI Studio).",
           "mistralAiModelsAndEndpoints": "Mistral-KI-Modelle und -Endpunkte.",
           "claudeAndOtherSafeFoundationModels": "Claude und andere sichere Fundamentmodelle.",
-          "searchGroundedAndFastLlmApis": "Suchbasierte und schnelle LLM-APIs."
+          "searchGroundedAndFastLlmApis": "Suchbasierte und schnelle LLM-APIs.",
+          "cohereEnterpriseReadyMultilingualModels": "__MISSING__:runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels"
         }
       }
     },

@@ -166,8 +166,9 @@ export const providerAdapters: Record<string, AdapterFn> = {
              const text = content.map((c) => c.text ?? '').join('')
              const usage = body.usage as Record<string, unknown> | undefined
              const billed = usage?.billed_units as Record<string, unknown> | undefined
-             const promptTokens = billed?.input_tokens ?? usage?.tokens?.input_tokens
-             const completionTokens = billed?.output_tokens ?? usage?.tokens?.output_tokens
+             const tokenUsage = usage?.tokens as Record<string, unknown> | undefined
+             const promptTokens = billed?.input_tokens ?? tokenUsage?.input_tokens
+             const completionTokens = billed?.output_tokens ?? tokenUsage?.output_tokens
              const totalTokens = promptTokens !== undefined && completionTokens !== undefined
                ? (Number(promptTokens) || 0) + (Number(completionTokens) || 0)
                : undefined

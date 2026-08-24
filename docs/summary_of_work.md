@@ -4,9 +4,34 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 
 ## Latest Session Summary
-## Latest Session Summary
 
-**Date:** 2026-08-23
+**Date:** 2026-08-24
+**Scope:** Deferred external-provider integration — shared infrastructure and Cohere graduation.
+
+- Added a `deployment` model-discovery mode to `ProviderCapability` and typed structured credential config interfaces for Azure OpenAI, AWS Bedrock, Google Vertex AI, Hugging Face, Replicate, and Cohere in `src/types/provider.ts`.
+- Added encrypted structured-credential storage (`setProviderCredential`, `getProviderCredential`, `deleteProviderCredential`, `isProviderCredentialConfigured`) to `electron/services/secureStore.ts` with focused tests.
+- Audited and corrected the existing Cohere adapter in `electron/services/providerAdapters.ts`: request transformation, response normalization (including concatenated content blocks and undefined usage), and streaming delta extraction (including error events).
+- Added a static Cohere chat model catalog (`command-r-plus`, `command-r`, `command-light`) in `src/config/provider-models.ts` and registered `command-r-plus` as the native fallback model.
+- Enabled Cohere in `src/types/provider.ts` (chat capability, static discovery, removed `unavailable`, removed from `DEFERRED_PROVIDER_IDS`) and updated contract tests in `scripts/verify-provider-adapters.test.ts` and `electron/services/providerSettingsStore.test.ts`.
+- Added the canonical English i18n description key for Cohere in `src/i18n/resources/en-US/common.json`.
+- Updated `docs/security/security-model.md` to reflect that Cohere is implemented and the remaining five providers are still deferred.
+- Validation:
+  - `npm run verify:i18n` PASS (12 locales; new Cohere key synced with `__MISSING__` placeholders)
+  - `npm run lint:eslint` PASS
+  - `npm run typecheck` PASS
+  - `npm run verify:provider-adapters` PASS (43/43)
+  - `npm run test:unit` PASS (all suites)
+  - `npm run test:electron` PASS (920/920)
+  - `npx vitest run electron/services/providerAdapters.test.ts` PASS (15/15)
+  - `npx vitest run src/config/provider-models.test.ts` PASS (3/3)
+  - `npx vitest run electron/services/providerSettingsStore.test.ts` PASS (3/3)
+  - `npx vitest run src/types/provider.test.ts` PASS (2/2)
+  - `npx vitest run electron/services/secureStore.providerCredential.test.ts` PASS (1/1)
+
+## Session History
+
+### 2026-08-23 — Config defaults reconciliation and CI test surface
+
 **Scope:** Reconcile duplicate defaults in validateConfig() and emptyConfig(), and fix CI test surface omission.
 
 - Extracted `DEFAULT_CONFIG` in `src/config/configSchema.ts` to ensure `validateConfig()` and `emptyConfig()` use the exact same literal sources for all default properties, including `chat.include_venice_system_prompt`, `chat.system_prompt`, and the `internal_prompt_enhancer` configurations. This permanently eliminates the literal divergence issue.

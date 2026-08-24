@@ -4380,7 +4380,8 @@
           "geminiDeveloperApiAiStudio": "واجهة برمجة تطبيقات مطور الجوزاء (استوديو الذكاء الاصطناعي).",
           "mistralAiModelsAndEndpoints": "نماذج ميسترال للذكاء الاصطناعي ونقاط النهاية.",
           "claudeAndOtherSafeFoundationModels": "كلود ونماذج الأساس الآمنة الأخرى.",
-          "searchGroundedAndFastLlmApis": "واجهات برمجة تطبيقات LLM المرتكزة على البحث والسريعة."
+          "searchGroundedAndFastLlmApis": "واجهات برمجة تطبيقات LLM المرتكزة على البحث والسريعة.",
+          "cohereEnterpriseReadyMultilingualModels": "__MISSING__:runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels"
         }
       }
     },

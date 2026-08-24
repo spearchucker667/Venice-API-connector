@@ -4380,7 +4380,8 @@
           "geminiDeveloperApiAiStudio": "API de desarrollador de Géminis (AI Studio).",
           "mistralAiModelsAndEndpoints": "Modelos y puntos finales de Mistral AI.",
           "claudeAndOtherSafeFoundationModels": "Claude y otros modelos de cimentaciones seguras.",
-          "searchGroundedAndFastLlmApis": "API LLM rápidas y basadas en búsquedas."
+          "searchGroundedAndFastLlmApis": "API LLM rápidas y basadas en búsquedas.",
+          "cohereEnterpriseReadyMultilingualModels": "__MISSING__:runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels"
         }
       }
     },
