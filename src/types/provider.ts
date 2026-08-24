@@ -42,7 +42,7 @@ export interface ProviderCapability {
   feature: ProviderFeature;
   route: string;
   implemented: boolean;
-  modelDiscovery: "live" | "static" | "none";
+  modelDiscovery: "live" | "static" | "deployment" | "none";
 }
 
 /** Canonical endpoint-granular capability contract used by UI, catalogs, routing tests, and diagnostics. */
@@ -147,7 +147,14 @@ export const PROVIDER_CAPABILITIES: Record<
   replicate: [],
   aws_bedrock: [],
   google_vertex: [],
-  azure_openai: [],
+  azure_openai: [
+    {
+      feature: "chat",
+      route: "/chat/completions",
+      implemented: false,
+      modelDiscovery: "deployment",
+    },
+  ],
   huggingface: [],
   cohere: [],
 };
