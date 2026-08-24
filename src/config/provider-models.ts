@@ -130,7 +130,41 @@ export const FALLBACK_MODELS: Record<ProviderId, FallbackModelDef[]> = {
   aws_bedrock: [],
   google_vertex: [],
   azure_openai: [],
-  huggingface: [],
+  huggingface: [
+    {
+      id: 'huggingface:deepseek-ai/DeepSeek-R1:fastest',
+      object: 'model',
+      created: FALLBACK_MODEL_CATALOG_TIMESTAMP,
+      owned_by: 'huggingface',
+      _type: 'text',
+      model_spec: {
+        name: 'DeepSeek R1 (HF Inference Providers)',
+        capabilities: { supportsVision: false, supportsFunctionCalling: false },
+      }
+    },
+    {
+      id: 'huggingface:meta-llama/Meta-Llama-3.1-70B-Instruct:fastest',
+      object: 'model',
+      created: FALLBACK_MODEL_CATALOG_TIMESTAMP,
+      owned_by: 'huggingface',
+      _type: 'text',
+      model_spec: {
+        name: 'Llama 3.1 70B Instruct (HF Inference Providers)',
+        capabilities: { supportsVision: false, supportsFunctionCalling: true },
+      }
+    },
+    {
+      id: 'huggingface:Qwen/Qwen2.5-72B-Instruct:fastest',
+      object: 'model',
+      created: FALLBACK_MODEL_CATALOG_TIMESTAMP,
+      owned_by: 'huggingface',
+      _type: 'text',
+      model_spec: {
+        name: 'Qwen 2.5 72B Instruct (HF Inference Providers)',
+        capabilities: { supportsVision: false, supportsFunctionCalling: true },
+      }
+    }
+  ],
   mistral: [
     {
       id: 'mistral:mistral-large-latest',

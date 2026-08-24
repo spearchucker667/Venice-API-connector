@@ -28,7 +28,6 @@ describe('Provider Adapters Contract', () => {
       'aws_bedrock',
       'google_vertex',
       'azure_openai',
-      'huggingface',
     ])
     for (const providerId of DEFERRED_PROVIDER_IDS) {
       expect(PROVIDER_REGISTRY[providerId].unavailable).toBe(true)

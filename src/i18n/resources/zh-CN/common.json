@@ -4381,7 +4381,8 @@
           "mistralAiModelsAndEndpoints": "Mistral AI 模型和端点。",
           "claudeAndOtherSafeFoundationModels": "克劳德和其他安全基础模型。",
           "searchGroundedAndFastLlmApis": "基于搜索的快速 LLM API。",
-          "cohereEnterpriseReadyMultilingualModels": "__MISSING__:runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels"
+          "cohereEnterpriseReadyMultilingualModels": "__MISSING__:runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels",
+          "huggingFaceOpenSourceInferenceProviders": "__MISSING__:runtimeGenerated.types.provider.metadata.huggingFaceOpenSourceInferenceProviders"
         }
       }
     },

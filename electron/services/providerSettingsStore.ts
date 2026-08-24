@@ -16,6 +16,7 @@ const NATIVE_FALLBACK_MODELS: Partial<Record<ProviderId, string>> = {
   anthropic: "claude-3-5-sonnet-latest",
   perplexity: "sonar",
   cohere: "command-r-plus",
+  huggingface: "deepseek-ai/DeepSeek-R1:fastest",
 };
 
 export interface ProviderSettingsSnapshot {

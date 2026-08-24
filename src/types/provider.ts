@@ -208,7 +208,14 @@ export const PROVIDER_CAPABILITIES: Record<
       modelDiscovery: "deployment",
     },
   ],
-  huggingface: [],
+  huggingface: [
+    {
+      feature: "chat",
+      route: "/chat/completions",
+      implemented: true,
+      modelDiscovery: "static",
+    },
+  ],
   cohere: [
     {
       feature: "chat",
@@ -344,12 +351,11 @@ export const PROVIDER_REGISTRY: Record<ProviderId, ProviderDefinition> = {
     label: "Hugging Face",
     get description() {
       return translateRuntime(
-        "runtimeGenerated.types.provider.metadata.notImplementedNoCredentialsOrRequestsAreAccepted",
-        "Not implemented. No credentials or requests are accepted.",
+        "runtimeGenerated.types.provider.metadata.huggingFaceOpenSourceInferenceProviders",
+        "Open-source model inference via Hugging Face Inference Providers.",
       );
     },
     supportedTypes: implementedFeatures("huggingface"),
-    unavailable: true,
   },
   mistral: {
     id: "mistral",
@@ -407,7 +413,6 @@ export const DEFERRED_PROVIDER_IDS = [
   "aws_bedrock",
   "google_vertex",
   "azure_openai",
-  "huggingface",
 ] as const satisfies readonly ProviderId[];
 
 /** Non-primary providers with implemented adapters, catalogs, and secure key custody. */

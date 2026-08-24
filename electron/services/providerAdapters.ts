@@ -299,13 +299,24 @@ export const providerAdapters: Record<string, AdapterFn> = {
   replicate: () => null,
   aws_bedrock: () => null,
   azure_openai: () => null,
-  huggingface: () => null,
   perplexity: (model, credential, originalPath, _originalBody) => {
     if (originalPath !== '/chat/completions') return null
     return {
       host: 'api.perplexity.ai',
       path: originalPath,
       headers: { 'Authorization': `Bearer ${extractApiKey(credential)}`, 'Content-Type': 'application/json' },
+      transformBody: (body, realModel) => ({ ...body, model: realModel })
+    }
+  },
+  huggingface: (model, credential, originalPath, _originalBody) => {
+    if (originalPath !== '/chat/completions') return null
+    return {
+      host: 'router.huggingface.co',
+      path: '/v1' + originalPath,
+      headers: {
+        'Authorization': `Bearer ${extractApiKey(credential)}`,
+        'Content-Type': 'application/json'
+      },
       transformBody: (body, realModel) => ({ ...body, model: realModel })
     }
   }

@@ -18,6 +18,7 @@ vi.mock('./secureStore', () => ({
     if (providerId === 'groq') return 'fake-groq-key'
     if (providerId === 'anthropic') return 'fake-anthropic-key'
     if (providerId === 'mistral') return 'fake-mistral-key'
+    if (providerId === 'huggingface') return 'fake-huggingface-key'
     return null
   }),
 }))
@@ -30,6 +31,7 @@ vi.mock('./providerSettingsStore', () => ({
       anthropic: true,
       mistral: true,
       google_gemini: true,
+      huggingface: true,
     },
     autoFallbackEnabled: false,
     fallbackOrdering: [],
@@ -140,6 +142,21 @@ describe('providerAdapters', () => {
       
       const transformedBody = result?.route?.transformBody!(request.body, 'meta-llama/Llama-3-70b-chat-hf')
       expect(transformedBody.model).toBe('meta-llama/Llama-3-70b-chat-hf')
+    })
+
+    it('resolves the correct route for Hugging Face Inference Providers', () => {
+      const request = {
+        endpoint: '/chat/completions',
+        body: { model: 'huggingface:deepseek-ai/DeepSeek-R1:fastest', messages: [] }
+      }
+      const result = resolveProviderRoute(request)
+      expect(result?.error).toBeUndefined()
+      expect(result?.route?.host).toBe('router.huggingface.co')
+      expect(result?.route?.path).toBe('/v1/chat/completions')
+      expect(result?.route?.headers['Authorization']).toBe('Bearer fake-huggingface-key')
+
+      const transformedBody = result?.route?.transformBody!(request.body, 'deepseek-ai/DeepSeek-R1:fastest')
+      expect(transformedBody.model).toBe('deepseek-ai/DeepSeek-R1:fastest')
     })
 
     it('resolves the correct route for Anthropic and transforms the body', () => {

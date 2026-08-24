@@ -4381,7 +4381,8 @@
           "mistralAiModelsAndEndpoints": "मिस्ट्रल एआई मॉडल और समापन बिंदु।",
           "claudeAndOtherSafeFoundationModels": "क्लाउड और अन्य सुरक्षित फाउंडेशन मॉडल।",
           "searchGroundedAndFastLlmApis": "खोज-आधारित और तेज़ एलएलएम एपीआई।",
-          "cohereEnterpriseReadyMultilingualModels": "__MISSING__:runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels"
+          "cohereEnterpriseReadyMultilingualModels": "__MISSING__:runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels",
+          "huggingFaceOpenSourceInferenceProviders": "__MISSING__:runtimeGenerated.types.provider.metadata.huggingFaceOpenSourceInferenceProviders"
         }
       }
     },

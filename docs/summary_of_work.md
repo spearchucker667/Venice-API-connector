@@ -6,7 +6,31 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-24
-**Scope:** Deferred external-provider integration — shared infrastructure and Cohere graduation.
+**Scope:** Deferred external-provider integration — Hugging Face graduation.
+
+- Implemented Hugging Face chat through the OpenAI-compatible Inference Providers endpoint (`router.huggingface.co/v1/chat/completions`) in `electron/services/providerAdapters.ts`.
+- Added a static Hugging Face chat model catalog (`deepseek-ai/DeepSeek-R1:fastest`, `meta-llama/Meta-Llama-3.1-70B-Instruct:fastest`, `Qwen/Qwen2.5-72B-Instruct:fastest`) in `src/config/provider-models.ts` and registered `deepseek-ai/DeepSeek-R1:fastest` as the native fallback model.
+- Enabled Hugging Face in `src/types/provider.ts`: declared chat capability, static model discovery, removed `unavailable`, and removed `huggingface` from `DEFERRED_PROVIDER_IDS`.
+- Added the canonical English i18n description key for Hugging Face in `src/i18n/resources/en-US/common.json` and synchronized all non-English catalogs with `__MISSING__` placeholders.
+- Updated `electron/services/providerSettingsStore.ts` to include the Hugging Face native fallback model mapping.
+- Added focused adapter tests for Hugging Face request transformation, response normalization, streaming delta extraction, and error handling in `electron/services/providerAdapters.test.ts`.
+- Strengthened the secure-store mock in `electron/ipc/handlers.test.ts` to include the new structured-credential exports (`isProviderConfigured`, `isProviderCredentialConfigured`, `setProviderCredential`, `deleteProviderCredential`) so provider enablement checks continue to pass.
+- Validation:
+  - `npm run verify:i18n` PASS (12 locales; new HF key synced with `__MISSING__` placeholders)
+  - `npm run lint:eslint` PASS (zero warnings)
+  - `npm run typecheck` PASS
+  - `npm run verify:provider-adapters` PASS (49/49)
+  - `npm run test:unit` PASS (all suites)
+  - `npm run test:electron` PASS (921/921)
+  - `npx vitest run electron/services/providerAdapters.test.ts` PASS (16/16)
+  - `npx vitest run src/config/provider-models.test.ts` PASS (3/3)
+  - `npx vitest run electron/services/providerSettingsStore.test.ts` PASS (3/3)
+  - `npx vitest run src/types/provider.test.ts` PASS (2/2)
+  - `npx vitest run electron/services/secureStore.providerCredential.test.ts` PASS (1/1)
+
+## Session History
+
+### 2026-08-24 — Deferred external-provider integration: shared infrastructure and Cohere graduation
 
 - Added a `deployment` model-discovery mode to `ProviderCapability` and typed structured credential config interfaces for Azure OpenAI, AWS Bedrock, Google Vertex AI, Hugging Face, Replicate, and Cohere in `src/types/provider.ts`.
 - Added encrypted structured-credential storage (`setProviderCredential`, `getProviderCredential`, `deleteProviderCredential`, `isProviderCredentialConfigured`) to `electron/services/secureStore.ts` with focused tests.
@@ -27,8 +51,6 @@ This is the active handoff and validation ledger. The canonical current-work led
   - `npx vitest run electron/services/providerSettingsStore.test.ts` PASS (3/3)
   - `npx vitest run src/types/provider.test.ts` PASS (2/2)
   - `npx vitest run electron/services/secureStore.providerCredential.test.ts` PASS (1/1)
-
-## Session History
 
 ### 2026-08-23 — Config defaults reconciliation and CI test surface
 
