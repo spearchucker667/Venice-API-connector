@@ -38,6 +38,46 @@ export interface ProviderDefinition {
 export type ProviderFeature =
   "chat" | "image" | "video" | "audio" | "embeddings" | "rerank" | "vision";
 
+export interface AzureOpenAiConfig {
+  resourceName: string;
+  deploymentName: string;
+  apiVersion: string;
+  apiKey: string;
+}
+
+export interface AwsBedrockConfig {
+  region: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  sessionToken?: string;
+}
+
+export interface GoogleVertexConfig {
+  projectId: string;
+  location: string;
+  apiKey?: string;
+}
+
+export interface HuggingFaceConfig {
+  apiKey: string;
+}
+
+export interface ReplicateConfig {
+  apiToken: string;
+}
+
+export interface CohereConfig {
+  apiKey: string;
+}
+
+export type ProviderCredential =
+  | ({ providerId: "azure_openai" } & AzureOpenAiConfig)
+  | ({ providerId: "aws_bedrock" } & AwsBedrockConfig)
+  | ({ providerId: "google_vertex" } & GoogleVertexConfig)
+  | ({ providerId: "huggingface" } & HuggingFaceConfig)
+  | ({ providerId: "replicate" } & ReplicateConfig)
+  | ({ providerId: "cohere" } & CohereConfig);
+
 export interface ProviderCapability {
   feature: ProviderFeature;
   route: string;
