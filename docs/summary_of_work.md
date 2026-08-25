@@ -19,9 +19,18 @@ Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full 
 - **Test/verifier fixes:** Updated stale `server.test.ts` assertions to match new mandatory child-safety wording; updated `scripts/verify-backup-sync.cjs` to accept `registerPrivilegedIpcChannel` registration of sync handlers.
 - **Docs:** Reconciled `docs/ROADMAP.md`, `SECURITY.md`, and `docs/security/security-model.md` to describe the actual safety-layer and IPC sender-validation behavior; external acceptance remains explicitly blocked.
 - **Validation matrix:** `npm ci`, `npm run lint:eslint`, `npm run typecheck`, `npm run test:ci`, `npm run test:coverage`, `verify:safety-guard`, `verify:provider-adapters`, `verify:network-boundaries`, `verify:storage-privacy`, `verify:storage-policy`, `verify:custom-protocol-privileges`, `verify:image-policy`, `verify:venice-api-docs`, `verify:venice-contract-drift`, `verify:roadmap-current`, `verify:ci-contract`, `npm run verify:contracts`, `npm run build`, and `npm run verify:dist` all PASS. Replicate background-task stress test: 30/30 iterations PASS. Coverage thresholds met (statements 71.37%, branches 62.19%, functions 68.11%, lines 74.21%).
+- **Commit / push / CI:** Work committed as `9e0307c6 Harden safety and provider IPC boundaries` and follow-up fix `d13150ef fix(security): replace non-portable /Users path in IPC sender test`; both pushed to `origin/main`. Hosted GitHub CI run `32840049748` and CodeQL run `32840049687` on `d13150ef` are green. The `electron-smoke-linux` job initially failed on a transient AppImage `ECONNRESET` network flake and passed on re-run.
 - **Remaining:** External live-provider acceptance, signed builds, clean install/upgrade, multi-device sync, and accessibility QA remain EXTERNALLY BLOCKED per `docs/reports/historical/DEFERRED_WORK_DECISION_RECORD.md` and `docs/ROADMAP.md`.
 
 ## Session History
+
+### 2026-08-25 — Commit, push, and confirm hosted workflows green.
+
+- Committed follow-up fix `d13150ef fix(security): replace non-portable /Users path in IPC sender test` after `verify:repository-identity` flagged a non-portable `file:///Users/alice/index.html` test fixture.
+- Pushed both `9e0307c6` (remediation squash) and `d13150ef` to `origin/main`.
+- Verified hosted GitHub CI run `32840049748`: all jobs green. The `electron-smoke-linux` job initially failed with a transient AppImage `ECONNRESET` network flake during `electron-builder` packaging; re-running the failed job produced a green result.
+- Verified hosted CodeQL run `32840049687`: green.
+- Updated `docs/summary_of_work.md` and `docs/reports/VENICE_FORGE_POST_AUGUST_24_AUDIT_REPORT.md` to reflect committed/pushed state and final CI/CodeQL status.
 
 ### 2026-08-25 — Complete IPC sender-validation audit and adversarial regression tests.
 

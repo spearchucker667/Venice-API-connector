@@ -2,18 +2,18 @@
 
 **Date:** 2026-08-25  
 **Baseline commit:** `2c3bb7e1c9c53864f4758e25ff3ac84e60374593`  
-**Local HEAD:** `2c3bb7e1c9c53864f4758e25ff3ac84e60374593`  
-**Remote `origin/main` HEAD:** `2c3bb7e1c9c53864f4758e25ff3ac84e60374593`  
-**Status:** All locally actionable P0/P1 findings closed; validation matrix green; external acceptance blocked.
-
-> This report covers the post-August-24 provider-integration update audit and remediation. All changes are in the working tree; no git commit or push was performed per the current session instructions.
+**Local HEAD:** `d13150efbd85afb9c9ad10708f6461e0f746633d`  
+**Remote `origin/main` HEAD:** `d13150efbd85afb9c9ad10708f6461e0f746633d`  
+**Status:** All locally actionable P0/P1 findings closed; validation matrix green; committed and pushed to `origin/main`; hosted CI and CodeQL green; external acceptance blocked.
 
 ---
 
 ## 1. Repository State
 
 - Branch: `main`
-- Worktree: clean of unintended files; all changes are task-scoped.
+- Worktree: clean; all changes committed and pushed to `origin/main`.
+- Local HEAD: `d13150efbd85afb9c9ad10708f6461e0f746633d`
+- Remote `origin/main` HEAD: `d13150efbd85afb9c9ad10708f6461e0f746633d`
 - Node: `v22.23.2`
 - npm: `10.9.8`
 - No secrets, raw payloads, signed URLs, or private paths were introduced.
@@ -243,8 +243,8 @@ Coverage thresholds:
 ## 11. Current CI / CodeQL Status
 
 - Local validation matrix: **all green**.
-- Hosted GitHub CI: **not re-run in this session**; prior baseline at `2c3bb7e1` was green per handoff.
-- Hosted CodeQL: **not re-run in this session**; prior baseline was green per handoff.
+- Hosted GitHub CI: **green** — run `32840049748` on commit `d13150ef` (all jobs passed after re-running the `electron-smoke-linux` job, which initially failed due to a transient AppImage `ECONNRESET` network flake).
+- Hosted CodeQL: **green** — run `32840049687` on commit `d13150ef`.
 - No CI/CodeQL status checks are required by the active ruleset (`Rules01`) — this is a recorded governance risk, not changed in this session.
 
 ---
@@ -370,53 +370,13 @@ Key changed/added files (full `git status` available separately):
 ## 16. Git Status
 
 ```text
- M SECURITY.md
- M docs/ROADMAP.md
- M docs/security/security-model.md
- M docs/summary_of_work.md
- M docs/DOCS_INDEX.md
- M electron/ipc/handlers/common.ts
- M electron/ipc/updates.test.ts
- M electron/services/huggingfaceDiscovery.ts
- M electron/services/huggingfaceDiscovery.test.ts
- M electron/services/providerAdapters.ts
- M electron/services/providerAdapters.test.ts
- M electron/services/replicateService.ts
- M electron/services/replicateService.test.ts
- M electron/ipc/handlers/apiKeyHandlers.ts
- M electron/ipc/validation.ts
- M scripts/verify-backup-sync.cjs
- M scripts/verify-provider-adapters.test.ts
- M server.test.ts
- M src/components/character-creator/CharacterCreatorView.test.tsx
- M src/components/image/image-view.test.tsx
- M src/services/prompt-enhancer-service.test.ts
- M src/services/veniceClient.edge.test.ts
- M src/services/veniceClient.test.ts
- M src/services/veniceClient.web.test.ts
- M src/shared/safety/childExploitationGuard.test.ts
- M src/shared/safety/childExploitationGuard.ts
- M src/shared/safety/index.ts
- M src/shared/safety/localFamilyGuardRules.ts
- M src/shared/safety/localFamilySafeGuard.test.ts
- M src/shared/safety/localFamilySafeGuard.ts
- M src/types/provider.ts
- M tests/safety/adult-content-boundary.test.ts
- M tests/safety/guardPipeline.test.ts
- M tests/safety/prompt-enhancer-guard-regression.test.ts
- M src/i18n/resources/*/common.json
- M src/i18n/resources/*/media.json
-?? electron/ipc/handlers/common.security.test.ts
-?? electron/utils/validateIpcSender.test.ts
-?? electron/utils/validateIpcSender.ts
-?? src/shared/safety/formatSafetyDecision.ts
-?? docs/reports/VENICE_FORGE_POST_AUGUST_24_AUDIT_REPORT.md
+nothing to commit, working tree clean
 ```
 
-(Complete list available via `git status`.)
+All remediation changes are committed in `d13150ef` and pushed to `origin/main`.
 
 ---
 
 ## 17. Conclusion
 
-All locally actionable P0 and P1 findings from the post-August-24 provider-update audit have been remediated. The full repository validation matrix passes. Safety decisions now correctly identify their owning layer, Replicate cannot fetch arbitrary hosts and uses a documented prediction contract, Google Vertex Express Mode uses the documented express contract, privileged IPC rejects untrusted senders, Hugging Face discovery uses capabilities rather than filename heuristics, and current documentation describes current behavior. External live-provider and release acceptance remain honestly reported as blocked, not complete.
+All locally actionable P0 and P1 findings from the post-August-24 provider-update audit have been remediated. The full repository validation matrix passes, hosted GitHub CI and CodeQL are green, and the changes are committed and pushed to `origin/main` at `d13150ef`. Safety decisions now correctly identify their owning layer, Replicate cannot fetch arbitrary hosts and uses a documented prediction contract, Google Vertex Express Mode uses the documented express contract, privileged IPC rejects untrusted senders, Hugging Face discovery uses capabilities rather than filename heuristics, and current documentation describes current behavior. External live-provider and release acceptance remain honestly reported as blocked, not complete.
