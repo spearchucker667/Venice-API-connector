@@ -26,7 +26,7 @@ Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full 
 
 ### 2026-08-25 — Commit, push, and confirm hosted workflows green.
 
-- Committed follow-up fix `d13150ef fix(security): replace non-portable /Users path in IPC sender test` after `verify:repository-identity` flagged a non-portable `file:///Users/alice/index.html` test fixture.
+- Committed follow-up fix `d13150ef fix(security): replace non-portable /Users path in IPC sender test` after `verify:repository-identity` flagged a non-portable macOS home-directory test fixture URL in `electron/utils/validateIpcSender.test.ts`.
 - Pushed both `9e0307c6` (remediation squash) and `d13150ef` to `origin/main`.
 - Verified hosted GitHub CI run `32840049748`: all jobs green. The `electron-smoke-linux` job initially failed with a transient AppImage `ECONNRESET` network flake during `electron-builder` packaging; re-running the failed job produced a green result.
 - Verified hosted CodeQL run `32840049687`: green.
