@@ -18,8 +18,10 @@ permissions:
 jobs:
   analyze:
     name: Analyze ${{ matrix.language }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
+    # Emergency bypass to disable CodeQL if infrastructure issues block releases.
+    # To use, set repository variable VENICE_FORGE_DISABLE_CODEQL="true".
     if: vars.VENICE_FORGE_DISABLE_CODEQL != 'true'
     strategy:
       fail-fast: false

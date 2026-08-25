@@ -6,6 +6,17 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-25
+**Scope:** Finalize Post-August-24 provider-update audit governance and validation.
+
+Completed the remaining governance tasks from the audit handoff and verified all prior code changes.
+
+- **Governance (P3):** Pinned CodeQL workflow to `ubuntu-24.04` and added explicit documentation for the `VENICE_FORGE_DISABLE_CODEQL` bypass variable.
+- **Roadmap Updates:** Logged `VF-GOVERNANCE-2026-08-25-001` (Branch Ruleset updates to require CI/CodeQL) and `VF-GOVERNANCE-2026-08-25-002` (Commit Provenance standards) into `docs/ROADMAP.md` as externally blocked tasks requiring repository admin privileges.
+- **Verification:** Ran `npm run lint:eslint && npm run typecheck && npm run verify:contracts` successfully to confirm no regressions were introduced.
+
+### Prior Session Summary (Post-August-24 Remediation Closeout) [demoted from "Latest Session Summary"]
+
+**Date:** 2026-08-25
 **Scope:** Post-August-24 provider-update audit and remediation closeout.
 
 Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full repository validation matrix.
@@ -6997,3 +7008,4 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 - **2026-08-23** — Final Acceptance Release Config Hardening: Fixed CI node version reproducibility, ESLint typescript script coverage, vitest script coverage threshold isolation, disabled implicit node env in .env.example, hardened electron main permission requests, updated prerelease action logic, and removed duplicate duplicate release builds.
 
 - **2026-08-24 — Stash and Repository Hygiene Cleanup**: Audited three leftover local stashes (`stash@{0}` to `stash@{2}`) dating back to July 2026. Determined that they contained obsolete implementations (e.g. initial `BackgroundTaskStore`, early UI redesigns) which have already been finalized and merged into the current `main` branch. Safely dropped all three stashes (`git stash clear`) to prevent regressions and keep the workspace completely clean, per the user's instructions.
+- **2026-08-25 — Final Post-Audit Handoff Checks**: Reviewed the `kimi-export-session_-20260825-114912.md` tasks and confirmed that almost all actionable local defects were fixed and merged. Addressed remaining governance issues: pinned CodeQL workflow to `ubuntu-24.04`, documented the `VENICE_FORGE_DISABLE_CODEQL` repository variable, and logged `VF-GOVERNANCE-2026-08-25-001` (Branch Ruleset requirement for CI/CodeQL) and `VF-GOVERNANCE-2026-08-25-002` (Commit Provenance) into `docs/ROADMAP.md` as they are externally blocked (requiring repository admin privileges). Completed validation matrix checks.
