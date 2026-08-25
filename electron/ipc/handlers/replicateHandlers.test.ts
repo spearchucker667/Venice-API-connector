@@ -27,6 +27,9 @@ vi.mock("./common", () => ({
   registerIpcChannel: vi.fn((channel: string, handler: (...args: unknown[]) => unknown) => {
     capturedHandlers.set(channel, handler);
   }),
+  registerPrivilegedIpcChannel: vi.fn((channel: string, handler: (...args: unknown[]) => unknown) => {
+    capturedHandlers.set(channel, handler);
+  }),
   safeSendToRenderer: vi.fn(),
 }));
 

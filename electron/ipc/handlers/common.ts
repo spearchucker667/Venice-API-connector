@@ -1,12 +1,18 @@
 /** @fileoverview Shared IPC handler utilities used by the domain-specific
  *  handler modules. */
 
-import { ipcMain, type WebContents } from "electron";
+import { ipcMain, type IpcMainInvokeEvent, type WebContents } from "electron";
 import { rateLimitIpcHandler } from "../../utils/rateLimit";
+import { validateIpcSender } from "../../utils/validateIpcSender";
 
 const registeredChannels = new Set<string>();
 
-/** Registers an IPC channel with the rate-limit wrapper applied. */
+/** Registers an IPC channel with the rate-limit wrapper applied.
+ *
+ *  Use this for non-privileged channels that do not require sender-frame
+ *  validation. All channels that touch secrets, config, files, provider
+ *  dispatch, paid generation, sync, documents, passwords, background tasks,
+ *  or media must use {@link registerPrivilegedIpcChannel} instead. */
 export function registerIpcChannel(
   channel: string,
   handler: Parameters<typeof ipcMain.handle>[1],
@@ -16,6 +22,27 @@ export function registerIpcChannel(
   }
   registeredChannels.add(channel);
   ipcMain.handle(channel, rateLimitIpcHandler(channel, handler));
+}
+
+/** Registers a privileged IPC channel with sender validation followed by the
+ *  rate-limit wrapper. Untrusted renderer frames receive an immediate error
+ *  before the handler or rate-limit bucket is touched. */
+export function registerPrivilegedIpcChannel(
+  channel: string,
+  handler: Parameters<typeof ipcMain.handle>[1],
+): void {
+  if (registeredChannels.has(channel)) {
+    throw new Error(`IPC channel "${channel}" is already registered. Duplicate registration is not allowed.`);
+  }
+  registeredChannels.add(channel);
+
+  const rateLimitedHandler = rateLimitIpcHandler(channel, handler);
+  const wrappedHandler = async (event: IpcMainInvokeEvent, ...args: unknown[]) => {
+    validateIpcSender(event);
+    return rateLimitedHandler(event, ...args);
+  };
+
+  ipcMain.handle(channel, wrappedHandler as Parameters<typeof ipcMain.handle>[1]);
 }
 
 export function clearRegisteredChannelsForTesting(): void {

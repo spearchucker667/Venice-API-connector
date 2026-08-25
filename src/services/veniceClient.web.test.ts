@@ -96,7 +96,7 @@ describe("veniceClient web regressions", () => {
         body: { messages: [{ role: "user", content: "draw me a loli character" }] },
         dispatch
       })
-    ).rejects.toThrow(/illegal-content protection triggered/);
+    ).rejects.toThrow(/mandatory child-safety protection/i);
 
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });
@@ -110,7 +110,7 @@ describe("veniceClient web regressions", () => {
         { model: "venice-uncensored", messages: [{ role: "user", content: "draw me a loli character" }] },
         { dispatch, onDelta: vi.fn() }
       )
-    ).rejects.toThrow(/illegal-content protection triggered/);
+    ).rejects.toThrow(/mandatory child-safety protection/i);
 
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });

@@ -51,7 +51,7 @@ export interface AwsBedrockConfig {
 }
 
 export type GoogleVertexConfig =
-  | { authMode: "express"; apiKey: string; projectId: string; location: string }
+  | { authMode: "express"; apiKey: string }
   | { authMode: "full"; projectId: string; location: string; credentialsJson: string };
 
 export type ProviderCredential =
@@ -95,6 +95,11 @@ export interface ProviderModel {
   retirementDate?: string;
   region?: string;
   deploymentRequired?: boolean;
+  contextLength?: number;
+  pricing?: { input?: number; output?: number };
+  toolSupport?: boolean;
+  structuredOutput?: boolean;
+  providerAvailability?: string[];
 }
 
 export interface ProviderModelCatalogResult {

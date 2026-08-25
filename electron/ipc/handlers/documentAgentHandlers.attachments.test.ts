@@ -20,7 +20,7 @@ const documentsDelete = vi.hoisted(() => vi.fn(async () => true));
 
 vi.mock("electron", () => ({
   ipcMain: { handle: vi.fn((channel: string, handler: (...args: unknown[]) => unknown) => handlers.set(channel, handler)) },
-  app: { getPath: vi.fn(() => "/tmp/vf-doc-agent-test") },
+  app: { getPath: vi.fn(() => "/tmp/vf-doc-agent-test"), isPackaged: false },
   BrowserWindow: class {},
   dialog: { showSaveDialog: vi.fn(async () => ({ canceled: true })) },
 }));
@@ -93,7 +93,7 @@ describe("documentAgent:attachments:promote channel", () => {
     const handler = handlers.get("documentAgent:attachments:promote");
     expect(handler).toBeTypeOf("function");
 
-    const event = { sender: { id: 42 } } as unknown as Electron.IpcMainInvokeEvent;
+    const event = { sender: { id: 42 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent;
     const envelope = await handler!(event, {
       attachmentId: "att_001",
       projectId: "project_alpha",
@@ -140,7 +140,7 @@ describe("documentAgent:attachments:promote channel", () => {
     registerDocumentAgentHandlers();
 
     const handler = handlers.get("documentAgent:attachments:promote")!;
-    const envelope = await handler({ sender: { id: 7 } } as unknown as Electron.IpcMainInvokeEvent, {
+    const envelope = await handler({ sender: { id: 7 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent, {
       attachmentId: "att_big",
       projectId: "project_alpha",
       relativePath: "promoted/big.bin",
@@ -162,7 +162,7 @@ describe("documentAgent:attachments:promote channel", () => {
     registerDocumentAgentHandlers();
     const handler = handlers.get("documentAgent:attachments:promote")!;
 
-    const unsupported = await handler({ sender: { id: 7 } } as unknown as Electron.IpcMainInvokeEvent, {
+    const unsupported = await handler({ sender: { id: 7 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent, {
       attachmentId: "att_x",
       projectId: "project_alpha",
       relativePath: "promoted/file.bin",
@@ -173,7 +173,7 @@ describe("documentAgent:attachments:promote channel", () => {
     expect(attachmentsPromote).toHaveBeenCalledTimes(1);
     expect(unsupported.error).not.toContain("Error:");
 
-    const missing = await handler({ sender: { id: 7 } } as unknown as Electron.IpcMainInvokeEvent, {
+    const missing = await handler({ sender: { id: 7 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent, {
       projectId: "project_alpha",
       relativePath: "promoted/file.txt",
       mimeType: "text/plain",
@@ -190,7 +190,7 @@ describe("documentAgent:documents:delete channel", () => {
     registerDocumentAgentHandlers();
     const handler = handlers.get("documentAgent:documents:delete");
     expect(handler).toBeTypeOf("function");
-    const event = { sender: { id: 51 } } as unknown as Electron.IpcMainInvokeEvent;
+    const event = { sender: { id: 51 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent;
 
     const envelope = await handler!(event, { documentId: "doc_1" });
 

@@ -1,8 +1,8 @@
-import { dialog, ipcMain, nativeImage } from "electron";
+import { dialog, nativeImage } from "electron";
 import crypto from "crypto";
 import fs from "fs/promises";
 import path from "path";
-import { rateLimitIpcHandler } from "../utils/rateLimit";
+import { registerPrivilegedIpcChannel } from "./handlers/common";
 import { parseCharacterCardJson, createImportPreview, mapInternalToV2, mapV2ToInternal } from "../../src/services/characterCards/characterCardAdapter";
 import { embedCharacterCardInPng, inspectCharacterCardPng } from "../services/characterCardPngCodec";
 import { listCharacterCards, readCharacterCard, saveCharacterCard } from "../services/characterCardStorage";
@@ -117,7 +117,7 @@ function buildExportReport(card: CharacterCardV1, dto: ReturnType<typeof exportD
 }
 
 export function registerCharacterCardFileHandlers(): void {
-  ipcMain.handle("characterCards:chooseImportFile", rateLimitIpcHandler("characterCards:chooseImportFile", async (event) => {
+  registerPrivilegedIpcChannel("characterCards:chooseImportFile", async (event) => {
     try {
       cleanExpired();
       // Main-owned picker is the character-card import trust boundary; no path is returned to the renderer.
@@ -157,9 +157,9 @@ export function registerCharacterCardFileHandlers(): void {
     } catch (error) {
       return { ok: false, error: redactErrorMessage(error) };
     }
-  }));
+  });
 
-  ipcMain.handle("characterCards:consumeImportCandidate", rateLimitIpcHandler("characterCards:consumeImportCandidate", async (event, handle: unknown) => {
+  registerPrivilegedIpcChannel("characterCards:consumeImportCandidate", async (event, handle: unknown) => {
     try {
       cleanExpired();
       if (typeof handle !== "string" || !handle) return { ok: false, error: "Invalid import handle." };
@@ -187,9 +187,9 @@ export function registerCharacterCardFileHandlers(): void {
     } catch (error) {
       return { ok: false, error: redactErrorMessage(error) };
     }
-  }));
+  });
 
-  ipcMain.handle("characterCards:applyImport", rateLimitIpcHandler("characterCards:applyImport", async (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("characterCards:applyImport", async (event, payload: unknown) => {
     try {
       cleanExpired();
       if (!payload || typeof payload !== "object") return { ok: false, error: "Invalid import request." };
@@ -258,9 +258,9 @@ export function registerCharacterCardFileHandlers(): void {
     } catch (error) {
       return { ok: false, error: redactErrorMessage(error) };
     }
-  }));
+  });
 
-  ipcMain.handle("characterCards:undoImport", rateLimitIpcHandler("characterCards:undoImport", async (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("characterCards:undoImport", async (event, payload: unknown) => {
     cleanExpired();
     if (!payload || typeof payload !== "object" || typeof (payload as Record<string, unknown>).handle !== "string") return { ok: false, error: "Invalid undo request." };
     const handle = (payload as { handle: string }).handle;
@@ -272,9 +272,9 @@ export function registerCharacterCardFileHandlers(): void {
     if (!saved.ok) return { ok: false, error: saved.error };
     await emitSyncPacket("character_cards", record.previous.id, record.previous, "local-user");
     return { ok: true, cardId: record.previous.id };
-  }));
+  });
 
-  ipcMain.handle("characterCards:exportJson", rateLimitIpcHandler("characterCards:exportJson", async (_event, payload: unknown) => {
+  registerPrivilegedIpcChannel("characterCards:exportJson", async (_event, payload: unknown) => {
     try {
       const request = parseExportRequest(payload);
       if (!request) return { ok: false, error: "Invalid export request." };
@@ -294,9 +294,9 @@ export function registerCharacterCardFileHandlers(): void {
     } catch (error) {
       return { ok: false, error: redactErrorMessage(error) };
     }
-  }));
+  });
 
-  ipcMain.handle("characterCards:exportPng", rateLimitIpcHandler("characterCards:exportPng", async (_event, payload: unknown) => {
+  registerPrivilegedIpcChannel("characterCards:exportPng", async (_event, payload: unknown) => {
     try {
       const request = parseExportRequest(payload);
       if (!request) return { ok: false, error: "Invalid export request." };
@@ -320,5 +320,5 @@ export function registerCharacterCardFileHandlers(): void {
     } catch (error) {
       return { ok: false, error: redactErrorMessage(error) };
     }
-  }));
+  });
 }

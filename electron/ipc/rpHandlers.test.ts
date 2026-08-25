@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ipcMain } from "electron";
+import { clearRegisteredChannelsForTesting } from "./handlers/common";
 import { registerRpIpcHandlers } from "./rpHandlers";
 import * as characterCardStorage from "../services/characterCardStorage";
 import {
@@ -13,6 +14,7 @@ import * as logger from "../services/logger";
 import * as syncBridge from "../services/syncBridge";
 
 vi.mock("electron", () => ({
+  app: { isPackaged: false },
   ipcMain: {
     handle: vi.fn(),
   },
@@ -32,9 +34,12 @@ vi.mock("../services/syncBridge", () => ({
   emitSyncTombstone: vi.fn(async () => undefined),
 }));
 
+const trustedEvent = { senderFrame: { url: "http://localhost:5173" } } as any;
+
 describe("rpHandlers", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    clearRegisteredChannelsForTesting();
   });
 
   it("should register all expected handlers", () => {
@@ -56,7 +61,7 @@ describe("rpHandlers", () => {
     const handler = vi.mocked(ipcMain.handle).mock.calls.find((call) => call[0] === "characterCards:list")?.[1] as (...args: any[]) => any;
     
     vi.mocked(characterCardStorage.listCharacterCards).mockResolvedValueOnce({ cards: [], truncated: false, totalScanned: 0 });
-    const result = await handler({} as any);
+    const result = await handler(trustedEvent);
     expect(result.ok).toBe(true);
     expect(result.cards).toEqual([]);
   });
@@ -66,7 +71,7 @@ describe("rpHandlers", () => {
     const handler = vi.mocked(ipcMain.handle).mock.calls.find((call) => call[0] === "characterCards:list")?.[1] as (...args: any[]) => any;
     
     vi.mocked(characterCardStorage.listCharacterCards).mockRejectedValueOnce(new Error("Disk error"));
-    const result = await handler({} as any);
+    const result = await handler(trustedEvent);
     expect(result.ok).toBe(false);
     expect(result.error).toBe("Disk error");
     expect(logger.logError).toHaveBeenCalled();
@@ -90,7 +95,7 @@ describe("rpHandlers", () => {
     vi.mocked(characterCardStorage.saveCharacterCard).mockResolvedValueOnce({ ok: true });
     vi.mocked(characterCardStorage.readCharacterCard).mockResolvedValueOnce(card as never);
 
-    const result = await handler({} as any, { card, origin: "local-user" });
+    const result = await handler(trustedEvent, { card, origin: "local-user" });
 
     expect(result).toMatchObject({ ok: true, card: { id: "card-1" } });
     expect(characterCardStorage.saveCharacterCard).toHaveBeenCalledWith(card);
@@ -104,7 +109,7 @@ describe("rpHandlers", () => {
     vi.mocked(personaStore.save).mockResolvedValueOnce({ ok: true });
     vi.mocked(personaStore.read).mockResolvedValueOnce(persona as never);
 
-    const result = await handler({} as any, { persona, origin: "remote-sync" });
+    const result = await handler(trustedEvent, { persona, origin: "remote-sync" });
 
     expect(result).toMatchObject({ ok: true, persona });
     expect(personaStore.save).toHaveBeenCalledWith(persona);
@@ -118,7 +123,7 @@ describe("rpHandlers", () => {
     vi.mocked(personaStore.save).mockResolvedValueOnce({ ok: true });
     vi.mocked(personaStore.read).mockResolvedValueOnce({ id: "123", name: "Test" } as any);
     
-    const result = await handler({} as any, { id: "123" });
+    const result = await handler(trustedEvent, { id: "123" });
     expect(result.ok).toBe(true);
     expect(result.persona?.name).toBe("Test");
   });
@@ -132,7 +137,7 @@ describe("rpHandlers", () => {
     vi.mocked(personaStore.save).mockResolvedValueOnce({ ok: true });
     vi.mocked(personaStore.read).mockResolvedValueOnce(persona as any);
 
-    const result = await handler({} as any, persona);
+    const result = await handler(trustedEvent, persona);
     expect(result.ok).toBe(true);
     expect(result.persona?.image).toEqual(image);
   });
@@ -141,7 +146,7 @@ describe("rpHandlers", () => {
     registerRpIpcHandlers();
     const handler = vi.mocked(ipcMain.handle).mock.calls.find((call) => call[0] === "rpChats:delete")?.[1] as (...args: any[]) => any;
 
-    const result = await handler({} as any, { id: 123 }); // id is not a string
+    const result = await handler(trustedEvent, { id: 123 }); // id is not a string
     expect(result.ok).toBe(false);
     expect(result.error).toBe("Invalid id");
   });
@@ -150,7 +155,7 @@ describe("rpHandlers", () => {
     registerRpIpcHandlers();
     const handler = vi.mocked(ipcMain.handle).mock.calls.find((call) => call[0] === "rpChats:delete")?.[1] as (...args: any[]) => any;
 
-    const result = await handler({} as any, "legacy-string-id");
+    const result = await handler(trustedEvent, "legacy-string-id");
     expect(result.ok).toBe(false);
     expect(result.error).toBe("Invalid payload");
   });
@@ -159,7 +164,7 @@ describe("rpHandlers", () => {
     registerRpIpcHandlers();
     const handler = vi.mocked(ipcMain.handle).mock.calls.find((call) => call[0] === "rpChats:delete")?.[1] as (...args: any[]) => any;
 
-    const result = await handler({} as any, { id: "valid-id", origin: "bad-origin" });
+    const result = await handler(trustedEvent, { id: "valid-id", origin: "bad-origin" });
     expect(result.ok).toBe(false);
     expect(result.error).toMatch(/invalid mutation origin/i);
   });
@@ -170,7 +175,7 @@ describe("rpHandlers", () => {
 
     vi.mocked(personaStore.remove).mockResolvedValueOnce({ ok: true });
 
-    const result = await handler({} as any, { id: "persona-1", origin: "local-user" });
+    const result = await handler(trustedEvent, { id: "persona-1", origin: "local-user" });
     expect(result.ok).toBe(true);
     expect(personaStore.remove).toHaveBeenCalledWith("persona-1");
   });
@@ -186,7 +191,7 @@ describe("rpHandlers", () => {
       vi.mocked(personaStore.save).mockResolvedValueOnce({ ok: true });
       vi.mocked(personaStore.read).mockResolvedValueOnce({ id: "p-1", name: "Test" } as any);
 
-      await handler({} as any, { id: "p-1", name: "Test", origin: "remote-sync" });
+      await handler(trustedEvent, { id: "p-1", name: "Test", origin: "remote-sync" });
       expect(syncBridge.emitSyncPacket).not.toHaveBeenCalled();
     });
 
@@ -196,7 +201,7 @@ describe("rpHandlers", () => {
       vi.mocked(personaStore.save).mockResolvedValueOnce({ ok: true });
       vi.mocked(personaStore.read).mockResolvedValueOnce({ id: "p-1", name: "Test" } as any);
 
-      await handler({} as any, { id: "p-1", name: "Test", origin: "local-user" });
+      await handler(trustedEvent, { id: "p-1", name: "Test", origin: "local-user" });
       expect(syncBridge.emitSyncPacket).toHaveBeenCalledTimes(1);
       expect(syncBridge.emitSyncPacket).toHaveBeenCalledWith("personas", "p-1", { id: "p-1", name: "Test" }, "local-user");
     });
@@ -207,7 +212,7 @@ describe("rpHandlers", () => {
       vi.mocked(personaStore.save).mockResolvedValueOnce({ ok: true });
       vi.mocked(personaStore.read).mockResolvedValueOnce({ id: "p-1", name: "Test" } as any);
 
-      await handler({} as any, { id: "p-1", name: "Test" });
+      await handler(trustedEvent, { id: "p-1", name: "Test" });
       expect(syncBridge.emitSyncPacket).toHaveBeenCalledTimes(1);
       expect(syncBridge.emitSyncPacket).toHaveBeenCalledWith("personas", "p-1", { id: "p-1", name: "Test" }, "local-user");
     });
@@ -217,7 +222,7 @@ describe("rpHandlers", () => {
       const handler = vi.mocked(ipcMain.handle).mock.calls.find((call) => call[0] === "personas:save")?.[1] as (...args: any[]) => any;
       vi.mocked(personaStore.save).mockResolvedValueOnce({ ok: true });
 
-      const result = await handler({} as any, { id: "p-1", name: "Test", origin: "bad-origin" });
+      const result = await handler(trustedEvent, { id: "p-1", name: "Test", origin: "bad-origin" });
       expect(result.ok).toBe(false);
       expect(result.error).toMatch(/invalid mutation origin/i);
       expect(syncBridge.emitSyncPacket).not.toHaveBeenCalled();
@@ -228,7 +233,7 @@ describe("rpHandlers", () => {
       const handler = vi.mocked(ipcMain.handle).mock.calls.find((call) => call[0] === "personas:delete")?.[1] as (...args: any[]) => any;
       vi.mocked(personaStore.remove).mockResolvedValueOnce({ ok: true });
 
-      await handler({} as any, { id: "p-1", origin: "remote-sync" });
+      await handler(trustedEvent, { id: "p-1", origin: "remote-sync" });
       expect(syncBridge.emitSyncTombstone).not.toHaveBeenCalled();
     });
 
@@ -237,7 +242,7 @@ describe("rpHandlers", () => {
       const handler = vi.mocked(ipcMain.handle).mock.calls.find((call) => call[0] === "personas:delete")?.[1] as (...args: any[]) => any;
       vi.mocked(personaStore.remove).mockResolvedValueOnce({ ok: true });
 
-      await handler({} as any, { id: "p-1", origin: "local-user" });
+      await handler(trustedEvent, { id: "p-1", origin: "local-user" });
       expect(syncBridge.emitSyncTombstone).toHaveBeenCalledTimes(1);
       expect(syncBridge.emitSyncTombstone).toHaveBeenCalledWith("personas", "p-1", "local-user");
     });
@@ -253,7 +258,7 @@ describe("rpHandlers", () => {
       vi.mocked(store.save).mockResolvedValueOnce({ ok: true });
       vi.mocked(store.read).mockResolvedValueOnce(base as any);
 
-      await handler({} as any, { ...base, origin: "local-user" });
+      await handler(trustedEvent, { ...base, origin: "local-user" });
 
       expect(store.save).toHaveBeenCalledTimes(1);
       const saved = vi.mocked(store.save).mock.calls[0][0] as Record<string, unknown>;

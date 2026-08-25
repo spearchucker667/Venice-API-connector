@@ -45,13 +45,11 @@ describe("maybeRunLocalFamilyGuard", () => {
 
   it("keeps mandatory child-safety evaluation active when the optional family filter is off", async () => {
     const sendToVeniceApi = vi.fn().mockResolvedValue({ ok: true });
-    const decision = maybeRunLocalFamilyGuard(
-      { text: "synthetic fixture", endpoint: "/chat/completions", method: "POST", source: "chat" },
-      false,
-    );
+    const input = { text: "synthetic fixture", endpoint: "/chat/completions", method: "POST", source: "chat" as const };
+    const decision = maybeRunLocalFamilyGuard(input, false);
     if (decision.allowed) await sendToVeniceApi();
 
-    expect(runLocalFamilyGuard).toHaveBeenCalledOnce();
+    expect(runLocalFamilyGuard).toHaveBeenCalledExactlyOnceWith(input, false);
     expect(sendToVeniceApi).toHaveBeenCalled();
     expect(decision).toEqual({
       allowed: true,
@@ -59,36 +57,37 @@ describe("maybeRunLocalFamilyGuard", () => {
       reason: "optional-local-family-filter-disabled-child-safety-checked",
       guardDecision: allowedDecision,
       category: "general",
+      layer: "mandatory-child-safety",
     });
   });
 
   it("blocks child-exploitation content even when the optional family filter is off", () => {
     vi.mocked(runLocalFamilyGuard).mockReturnValue(blockedDecision);
-    const decision = maybeRunLocalFamilyGuard(
-      { text: "synthetic blocked fixture", endpoint: "/chat/completions", method: "POST", source: "chat" },
-      false,
-    );
+    const input = { text: "synthetic blocked fixture", endpoint: "/chat/completions", method: "POST", source: "chat" as const };
+    const decision = maybeRunLocalFamilyGuard(input, false);
 
-    expect(runLocalFamilyGuard).toHaveBeenCalledOnce();
+    expect(runLocalFamilyGuard).toHaveBeenCalledExactlyOnceWith(input, false);
     expect(decision.allowed).toBe(false);
     if (!decision.allowed) {
       expect(decision.category).toBe("illegal-content");
-      expect(decision.userMessage).toMatch(/illegal-content protection triggered/i);
+      expect(decision.layer).toBe("mandatory-child-safety");
+      expect(decision.userMessage).toMatch(/mandatory child-safety protection/i);
     }
   });
 
   it("blocks locally and does not call the provider when Family Safe Mode is on", async () => {
     vi.mocked(runLocalFamilyGuard).mockReturnValue(blockedDecision);
     const sendToVeniceApi = vi.fn();
-    const decision = maybeRunLocalFamilyGuard(
-      { text: "synthetic blocked fixture", endpoint: "/chat/completions", method: "POST", source: "chat" },
-      true,
-    );
+    const input = { text: "synthetic blocked fixture", endpoint: "/chat/completions", method: "POST", source: "chat" as const };
+    const decision = maybeRunLocalFamilyGuard(input, true);
     if (decision.allowed) await sendToVeniceApi();
 
-    expect(runLocalFamilyGuard).toHaveBeenCalledOnce();
+    expect(runLocalFamilyGuard).toHaveBeenCalledExactlyOnceWith(input, true);
     expect(sendToVeniceApi).not.toHaveBeenCalled();
     expect(decision.allowed).toBe(false);
+    if (!decision.allowed) {
+      expect(decision.layer).toBe("mandatory-child-safety");
+    }
   });
 
   it.each([
@@ -98,14 +97,17 @@ describe("maybeRunLocalFamilyGuard", () => {
     { localFamilySafeModeEnabled: false, veniceApiSafeMode: false },
   ])("keeps local and provider settings independent: %o", (settings) => {
     vi.mocked(runLocalFamilyGuard).mockReturnValue(allowedDecision);
-    const result = maybeRunLocalFamilyGuard(
-      { text: "synthetic fixture", endpoint: "/image/generate", method: "POST", source: "image" },
-      settings.localFamilySafeModeEnabled,
-    );
+    const input = { text: "synthetic fixture", endpoint: "/image/generate", method: "POST", source: "image" as const };
+    const result = maybeRunLocalFamilyGuard(input, settings.localFamilySafeModeEnabled);
     const providerPayload = { safe_mode: settings.veniceApiSafeMode };
 
     expect(result.allowed).toBe(true);
-    expect(runLocalFamilyGuard).toHaveBeenCalledOnce();
+    expect(runLocalFamilyGuard).toHaveBeenCalledExactlyOnceWith(input, settings.localFamilySafeModeEnabled);
     expect(providerPayload.safe_mode).toBe(settings.veniceApiSafeMode);
+    if (result.allowed) {
+      expect(result.layer).toBe(
+        settings.localFamilySafeModeEnabled ? "optional-family-policy" : "mandatory-child-safety"
+      );
+    }
   });
 });

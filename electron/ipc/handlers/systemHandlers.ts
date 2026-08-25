@@ -28,7 +28,7 @@ import { redactErrorMessage } from "../../../src/shared/redaction";
 import { VENICE_MAX_BODY_BYTES } from "../../../src/shared/limits";
 
 const IPC_PAYLOAD_TOO_LARGE = "Conversation payload is too large.";
-import { registerIpcChannel } from "./common";
+import { registerPrivilegedIpcChannel } from "./common";
 import { validateMutationOrigin } from "../validation";
 import { getProfileSessionId } from "../../services/profileSession";
 
@@ -73,7 +73,7 @@ function parseSaveOrigin(raw: unknown): [string, null] | [null, import("../../..
 }
 
 export function registerSystemHandlers(): void {
-  registerIpcChannel("profile:purge", async (event, requestedProfileId: unknown) => {
+  registerPrivilegedIpcChannel("profile:purge", async (event, requestedProfileId: unknown) => {
     try {
       if (typeof requestedProfileId !== "string") throw new Error("Invalid profile id.");
       const sessionProfileId = getProfileSessionId(event.sender);
@@ -85,7 +85,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:proxyScrape", async (_event, url: unknown) => {
+  registerPrivilegedIpcChannel("app:proxyScrape", async (_event, url: unknown) => {
     try {
       if (typeof url !== "string") {
         return { ok: false, error: "Missing or invalid URL" };
@@ -229,11 +229,11 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:getVersion", () => app.getVersion());
+  registerPrivilegedIpcChannel("app:getVersion", () => app.getVersion());
 
-  registerIpcChannel("app:isEncryptionAvailable", () => getSecureStoreStatus().encryptionAvailable);
+  registerPrivilegedIpcChannel("app:isEncryptionAvailable", () => getSecureStoreStatus().encryptionAvailable);
 
-  registerIpcChannel("app:getDiagnostics", () => {
+  registerPrivilegedIpcChannel("app:getDiagnostics", () => {
     const secureStore = getSecureStoreStatus();
     return {
       isDesktop: true,
@@ -253,9 +253,9 @@ export function registerSystemHandlers(): void {
     };
   });
 
-  registerIpcChannel("app:openLogsFolder", () => openLogsFolder());
+  registerPrivilegedIpcChannel("app:openLogsFolder", () => openLogsFolder());
 
-  registerIpcChannel("chat:list", async (event) => {
+  registerPrivilegedIpcChannel("chat:list", async (event) => {
     try {
       const result = await listConversations(undefined, getProfileSessionId(event.sender));
       // listConversations returns either Conversation[] (back-compat) or
@@ -278,7 +278,7 @@ export function registerSystemHandlers(): void {
   // { offset, limit } object and returns the conversation-list envelope
   // directly (no back-compat shim). The renderer should call this when
   // a chat:list result has `truncated: true` to fetch subsequent pages.
-  registerIpcChannel("chat:listPage", async (event, params: unknown) => {
+  registerPrivilegedIpcChannel("chat:listPage", async (event, params: unknown) => {
     try {
       const offset = typeof params === "object" && params !== null && "offset" in params
         ? Number((params as { offset: unknown }).offset)
@@ -305,7 +305,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("chat:get", async (event, id: unknown) => {
+  registerPrivilegedIpcChannel("chat:get", async (event, id: unknown) => {
     try {
       if (typeof id !== "string" || id.length > 128) {
         return { ok: false, error: "Invalid conversation id", conversation: null };
@@ -319,7 +319,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("chat:save", async (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("chat:save", async (event, payload: unknown) => {
     try {
       if (!payload || typeof payload !== "object") {
         return { ok: false, error: "Invalid payload" };
@@ -354,7 +354,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("chat:delete", async (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("chat:delete", async (event, payload: unknown) => {
     try {
       const [error, parsed] = parseDeletePayload(payload);
       if (error || !parsed) {
@@ -376,7 +376,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("conversations:list", async (event, filter: unknown) => {
+  registerPrivilegedIpcChannel("conversations:list", async (event, filter: unknown) => {
     try {
       const cleanFilter: {
         archived?: boolean;
@@ -405,7 +405,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("conversations:get", async (event, id: unknown) => {
+  registerPrivilegedIpcChannel("conversations:get", async (event, id: unknown) => {
     try {
       if (typeof id !== "string" || id.length > 128 || id.includes("\0")) {
         return { ok: false, error: "Invalid conversation id" };
@@ -418,7 +418,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("conversations:save", async (event, record: unknown) => {
+  registerPrivilegedIpcChannel("conversations:save", async (event, record: unknown) => {
     try {
       const [originError, origin] = parseSaveOrigin(record);
       if (originError) {
@@ -452,7 +452,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("conversations:delete", async (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("conversations:delete", async (event, payload: unknown) => {
     try {
       const [error, parsed] = parseDeletePayload(payload);
       if (error || !parsed) {
@@ -473,7 +473,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("conversations:archive", async (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("conversations:archive", async (event, payload: unknown) => {
     try {
       const [error, parsed] = parseDeletePayload(payload);
       if (error || !parsed) {
@@ -490,7 +490,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("conversations:search", async (event, query: unknown, options: unknown) => {
+  registerPrivilegedIpcChannel("conversations:search", async (event, query: unknown, options: unknown) => {
     try {
       if (typeof query !== "string" || query.length > 1024) {
         return { ok: false, error: "Invalid query" };
@@ -509,7 +509,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("conversations:pullContext", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("conversations:pullContext", async (event, input: unknown) => {
     try {
       if (!input || typeof input !== "object") {
         return { ok: false, error: "Invalid input" };
@@ -578,7 +578,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("conversations:rebuildIndex", async (event) => {
+  registerPrivilegedIpcChannel("conversations:rebuildIndex", async (event) => {
     try {
       const { rebuildIndex } = await import("../../services/memoryPuller");
       const itemsIndexed = await rebuildIndex(getProfileSessionId(event.sender));
@@ -588,7 +588,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("conversations:migrateLegacyHistory", async (event) => {
+  registerPrivilegedIpcChannel("conversations:migrateLegacyHistory", async (event) => {
     try {
       if (getProfileSessionId(event.sender) !== "default") {
         return {
@@ -606,7 +606,7 @@ export function registerSystemHandlers(): void {
     }
   });
 
-  registerIpcChannel("conversations:detectLegacyHistory", async (event) => {
+  registerPrivilegedIpcChannel("conversations:detectLegacyHistory", async (event) => {
     try {
       if (getProfileSessionId(event.sender) !== "default") return false;
       const { detectLegacyHistory } = await import("../../services/vaultMigration");

@@ -27,6 +27,7 @@ const destroyedSender = {
 };
 
 vi.mock("electron", () => ({
+  app: { isPackaged: false },
   ipcMain: {
     handle: vi.fn((channel: string, handler: (...args: unknown[]) => unknown) => {
       capturedHandlers.set(channel, handler);
@@ -43,6 +44,7 @@ import {
   registerInspectorTelemetryHandlers,
   __resetInspectorTelemetryHandlersForTests,
 } from "./inspectorTelemetryHandlers";
+import { clearRegisteredChannelsForTesting } from "./common";
 
 describe("Inspector Inspector telemetry IPC", () => {
   beforeEach(() => {
@@ -56,6 +58,7 @@ describe("Inspector Inspector telemetry IPC", () => {
     destroyedSender.isDestroyed.mockReturnValue(true);
     __resetInspectorTelemetryHandlersForTests();
     clearInspectorTelemetryListeners();
+    clearRegisteredChannelsForTesting();
   });
 
   it("registers subscribe/unsubscribe handlers exactly once", () => {
@@ -78,10 +81,10 @@ describe("Inspector Inspector telemetry IPC", () => {
     expect(sentEvents).toHaveLength(0);
   });
 
-  it("forwards lifecycle events to subscribed senders with the dedicated channel", () => {
+  it("forwards lifecycle events to subscribed senders with the dedicated channel", async () => {
     registerInspectorTelemetryHandlers();
     const subscribe = capturedHandlers.get("inspector:telemetry:subscribe")!;
-    const subscribeResult = subscribe({ sender: mockSender });
+    const subscribeResult = await subscribe({ sender: mockSender, senderFrame: { url: "http://localhost:5173" } });
     expect(subscribeResult).toEqual({ ok: true });
 
     emitInspectorTelemetry({
@@ -106,7 +109,7 @@ describe("Inspector Inspector telemetry IPC", () => {
 
   it("delivers a follow-up `completed` event under the same eventId so the renderer can merge", () => {
     registerInspectorTelemetryHandlers();
-    capturedHandlers.get("inspector:telemetry:subscribe")!({ sender: mockSender });
+    capturedHandlers.get("inspector:telemetry:subscribe")!({ sender: mockSender, senderFrame: { url: "http://localhost:5173" } });
 
     emitInspectorTelemetry({
       phase: "updated",
@@ -137,7 +140,7 @@ describe("Inspector Inspector telemetry IPC", () => {
 
   it("drops destroyed senders so a closed window cannot stall the bus", () => {
     registerInspectorTelemetryHandlers();
-    capturedHandlers.get("inspector:telemetry:subscribe")!({ sender: destroyedSender });
+    capturedHandlers.get("inspector:telemetry:subscribe")!({ sender: destroyedSender, senderFrame: { url: "http://localhost:5173" } });
     expect(() =>
       emitInspectorTelemetry({
         phase: "updated",
@@ -152,8 +155,8 @@ describe("Inspector Inspector telemetry IPC", () => {
 
   it("stops forwarding after unsubscribe", () => {
     registerInspectorTelemetryHandlers();
-    capturedHandlers.get("inspector:telemetry:subscribe")!({ sender: mockSender });
-    capturedHandlers.get("inspector:telemetry:unsubscribe")!({ sender: mockSender });
+    capturedHandlers.get("inspector:telemetry:subscribe")!({ sender: mockSender, senderFrame: { url: "http://localhost:5173" } });
+    capturedHandlers.get("inspector:telemetry:unsubscribe")!({ sender: mockSender, senderFrame: { url: "http://localhost:5173" } });
     emitInspectorTelemetry({
       phase: "updated",
       endpoint: "/audio/retrieve",

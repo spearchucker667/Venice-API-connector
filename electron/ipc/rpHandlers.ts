@@ -16,8 +16,7 @@
  * for any Venice calls (e.g. scene generation).
  */
 
-import { ipcMain } from "electron";
-import { rateLimitIpcHandler } from "../utils/rateLimit";
+import { registerPrivilegedIpcChannel } from "./handlers/common";
 import { emitSyncPacket, emitSyncTombstone } from "../services/syncBridge";
 import {
   listCharacterCards,
@@ -92,8 +91,8 @@ function chatIdFilter(raw: unknown): string | undefined {
 }
 
 export function registerRpIpcHandlers(): void {
-  const handleIpc = (channel: string, handler: Parameters<typeof ipcMain.handle>[1]) => {
-    ipcMain.handle(channel, rateLimitIpcHandler(channel, handler));
+  const handleIpc = (channel: string, handler: Parameters<typeof registerPrivilegedIpcChannel>[1]) => {
+    registerPrivilegedIpcChannel(channel, handler);
   };
 
   // ── Character cards ──

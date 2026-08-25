@@ -21,6 +21,7 @@ vi.mock('electron', () => ({
 }))
 vi.mock('./common', () => ({
   registerIpcChannel: (channel: string, handler: (...args: unknown[]) => Promise<unknown>) => mocks.handlers.set(channel, handler),
+  registerPrivilegedIpcChannel: (channel: string, handler: (...args: unknown[]) => Promise<unknown>) => mocks.handlers.set(channel, handler),
 }))
 vi.mock('../../services/generatedMediaExport', () => ({
   saveGeneratedMediaAs: mocks.saveGeneratedMediaAs,

@@ -10,7 +10,7 @@ import {
   readImageInspectorDataUrl,
   resolveImageInspectorInput,
 } from "../../services/imageInspectorInput";
-import { registerIpcChannel } from "./common";
+import { registerPrivilegedIpcChannel } from "./common";
 
 function objectInput(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -32,7 +32,7 @@ function failed(error: unknown): { ok: false; error: string } {
 }
 
 export function registerImageInspectorHandlers(): void {
-  registerIpcChannel(imageInspectorIpc.chooseImage, async () => {
+  registerPrivilegedIpcChannel(imageInspectorIpc.chooseImage, async () => {
     try {
       // verify-no-native-dialogs: allow — explicit user-mediated Image Inspector file selection.
       const result = await dialog.showOpenDialog({
@@ -65,7 +65,7 @@ export function registerImageInspectorHandlers(): void {
     }
   });
 
-  registerIpcChannel(imageInspectorIpc.ingestClipboardImage, async () => {
+  registerPrivilegedIpcChannel(imageInspectorIpc.ingestClipboardImage, async () => {
     try {
       const image = clipboard.readImage();
       if (image.isEmpty()) return { ok: false, error: "Clipboard does not contain an image." };
@@ -80,7 +80,7 @@ export function registerImageInspectorHandlers(): void {
     }
   });
 
-  registerIpcChannel(imageInspectorIpc.resolveMediaInput, async (_event, value: unknown) => {
+  registerPrivilegedIpcChannel(imageInspectorIpc.resolveMediaInput, async (_event, value: unknown) => {
     try {
       const input = objectInput(value);
       const source = input.type === "attachment" ? "attachment" : "app-media";
@@ -90,7 +90,7 @@ export function registerImageInspectorHandlers(): void {
     }
   });
 
-  registerIpcChannel(imageInspectorIpc.readMediaDataUrl, async (_event, value: unknown) => {
+  registerPrivilegedIpcChannel(imageInspectorIpc.readMediaDataUrl, async (_event, value: unknown) => {
     try {
       return { ok: true, result: await readImageInspectorDataUrl(mediaIdInput(value)) };
     } catch (error) {

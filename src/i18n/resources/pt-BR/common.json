@@ -4557,5 +4557,35 @@
       "resetWidth": "__MISSING__:layout.sidebar.resetWidth",
       "width": "__MISSING__:layout.sidebar.width"
     }
+  },
+  "safetyDecision": {
+    "userMessage": {
+      "mandatory-child-safety": "__MISSING__:safetyDecision.userMessage.mandatory-child-safety",
+      "optional-family-policy": "__MISSING__:safetyDecision.userMessage.optional-family-policy",
+      "provider-policy": "__MISSING__:safetyDecision.userMessage.provider-policy",
+      "request-validation": "__MISSING__:safetyDecision.userMessage.request-validation"
+    },
+    "layer": {
+      "mandatory-child-safety": "__MISSING__:safetyDecision.layer.mandatory-child-safety",
+      "optional-family-policy": "__MISSING__:safetyDecision.layer.optional-family-policy",
+      "provider-policy": "__MISSING__:safetyDecision.layer.provider-policy",
+      "request-validation": "__MISSING__:safetyDecision.layer.request-validation"
+    },
+    "category": {
+      "minor-sexualization": "__MISSING__:safetyDecision.category.minor-sexualization",
+      "csam": "__MISSING__:safetyDecision.category.csam",
+      "grooming": "__MISSING__:safetyDecision.category.grooming",
+      "age-evasion": "__MISSING__:safetyDecision.category.age-evasion",
+      "adult-explicit-image": "__MISSING__:safetyDecision.category.adult-explicit-image",
+      "graphic-gore": "__MISSING__:safetyDecision.category.graphic-gore",
+      "provider-restriction": "__MISSING__:safetyDecision.category.provider-restriction",
+      "validation-error": "__MISSING__:safetyDecision.category.validation-error",
+      "unknown": "__MISSING__:safetyDecision.category.unknown"
+    },
+    "label": {
+      "blockingLayer": "__MISSING__:safetyDecision.label.blockingLayer {{layer}}",
+      "category": "__MISSING__:safetyDecision.label.category {{category}}",
+      "reasonCode": "__MISSING__:safetyDecision.label.reasonCode {{reasonCode}}"
+    }
   }
 }

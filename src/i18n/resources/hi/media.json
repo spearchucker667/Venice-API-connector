@@ -131,7 +131,10 @@
     "enhancementFailed": "प्रॉम्प्ट उन्नति विफल",
     "enhancementProviderError": "आंतरिक एन्हांसर Venice अनुरोध तक नहीं पहुंच सका या उसे पूरा नहीं कर सका। आपका मूल प्रॉम्प्ट रखा गया था।",
     "enhancementInvalidOutput": "आंतरिक एन्हांसर ने एक भी उपयोग योग्य छवि प्रॉम्प्ट नहीं लौटाया। आपका मूल प्रॉम्प्ट रखा गया था।",
-    "enhancementSafetyBlocked": "प्रॉम्प्ट सुधार को अनिवार्य बाल-सुरक्षा उपायों ने रोक दिया। ये वैकल्पिक सुरक्षित मोड सेटिंग से अलग हैं। आपका मूल प्रॉम्प्ट सुरक्षित रखा गया है।"
+    "enhancementSafetyBlocked": "प्रॉम्प्ट सुधार को अनिवार्य बाल-सुरक्षा उपायों ने रोक दिया। ये वैकल्पिक सुरक्षित मोड सेटिंग से अलग हैं। आपका मूल प्रॉम्प्ट सुरक्षित रखा गया है।",
+    "enhancementSafetyBlockedMandatory": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedMandatory",
+    "enhancementSafetyBlockedFamily": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedFamily",
+    "enhancementSafetyBlockedProvider": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedProvider"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

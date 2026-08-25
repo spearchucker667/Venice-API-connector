@@ -7,7 +7,7 @@ import type { WorkspaceGrant } from "../../../src/agent/contracts/capabilities";
 import { redactErrorMessage } from "../../../src/shared/redaction";
 import { serializeDocument } from "../../agent/documents/document-serializer-service";
 import { getProfileSessionId } from "../../services/profileSession";
-import { registerIpcChannel } from "./common";
+import { registerPrivilegedIpcChannel } from "./common";
 
 import { getAgentServices, RUNTIME_SESSION_ID } from "../../agent/runtime/agent-services";
 
@@ -145,7 +145,7 @@ async function atomicExternalWrite(target: string, bytes: Uint8Array): Promise<v
 export function registerDocumentAgentHandlers(): void {
   const { documents, attachments, approvals, audit, workspaceGrants, workspaceFiles, workspaceMutations } = getAgentServices();
 
-  registerIpcChannel("documentAgent:documents:create", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:documents:create", async (event, input: unknown) => {
     try {
       const value = record(input);
       if (value.overwrite !== false || !Array.isArray(value.blocks)) throw new Error("Managed document creation requires overwrite=false and normalized blocks.");
@@ -161,24 +161,24 @@ export function registerDocumentAgentHandlers(): void {
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:documents:list", async (event, projectId: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:documents:list", async (event, projectId: unknown) => {
     try { return { ok: true, documents: await documents.list(getProfileSessionId(event.sender), typeof projectId === "string" ? projectId : "") }; }
     catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:documents:read", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:documents:read", async (event, input: unknown) => {
     try {
       const value = record(input);
       return { ok: true, result: await documents.read(getProfileSessionId(event.sender), stringField(value, "documentId", 128), optionalString(value, "revisionId"), optionalString(value, "cursor")) };
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:documents:revisions", async (event, documentId: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:documents:revisions", async (event, documentId: unknown) => {
     try { return { ok: true, revisions: await documents.listRevisions(getProfileSessionId(event.sender), typeof documentId === "string" ? documentId : "") }; }
     catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:documents:delete", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:documents:delete", async (event, input: unknown) => {
     try {
       const value = record(input);
       const documentId = stringField(value, "documentId", 128);
@@ -197,7 +197,7 @@ export function registerDocumentAgentHandlers(): void {
     }
   });
 
-  registerIpcChannel("documentAgent:documents:proposeEdits", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:documents:proposeEdits", async (event, input: unknown) => {
     try {
       const value = record(input);
       if (!Array.isArray(value.operations) || value.operations.length === 0 || value.operations.length > 200) throw new Error("Invalid edit operations.");
@@ -222,7 +222,7 @@ export function registerDocumentAgentHandlers(): void {
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:approvals:decide", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:approvals:decide", async (event, input: unknown) => {
     try {
       const value = record(input);
       const decision = stringField(value, "decision", 10);
@@ -262,7 +262,7 @@ export function registerDocumentAgentHandlers(): void {
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:documents:proposeRestore", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:documents:proposeRestore", async (event, input: unknown) => {
     try {
       const value = record(input);
       const profileId = getProfileSessionId(event.sender);
@@ -285,7 +285,7 @@ export function registerDocumentAgentHandlers(): void {
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:approvals:list", async (event) => {
+  registerPrivilegedIpcChannel("documentAgent:approvals:list", async (event) => {
     try {
       const grantId = `limited:${getProfileSessionId(event.sender)}`;
       return { ok: true, pending: (await approvals.listPendingWithViews()).filter((entry) => entry.approval.grantId === grantId) };
@@ -293,7 +293,7 @@ export function registerDocumentAgentHandlers(): void {
     catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:documents:export", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:documents:export", async (event, input: unknown) => {
     try {
       const owner = BrowserWindow.fromWebContents(event.sender);
       if (!owner || event.senderFrame !== event.sender.mainFrame) throw new Error("Export sender was rejected.");
@@ -312,7 +312,7 @@ export function registerDocumentAgentHandlers(): void {
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:attachments:promote", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:attachments:promote", async (event, input: unknown) => {
     try {
       const value = record(input);
       const attachmentId = stringField(value, "attachmentId", 128);
@@ -351,7 +351,7 @@ export function registerDocumentAgentHandlers(): void {
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:workspace:choose", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:workspace:choose", async (event, input: unknown) => {
     try {
       const owner = BrowserWindow.fromWebContents(event.sender);
       if (!owner || event.senderFrame !== event.sender.mainFrame) throw new Error("Workspace picker sender was rejected.");
@@ -365,7 +365,7 @@ export function registerDocumentAgentHandlers(): void {
   });
 
   
-  registerIpcChannel("documentAgent:workspace:proposeChangeset", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:workspace:proposeChangeset", async (event, input: unknown) => {
     try {
       const value = record(input);
       const agentSessionId = optionalString(value, "agentSessionId") ?? undefined;
@@ -394,7 +394,7 @@ export function registerDocumentAgentHandlers(): void {
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:workspace:proposeMove", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:workspace:proposeMove", async (event, input: unknown) => {
     try {
       const value = record(input);
       const agentSessionId = optionalString(value, "agentSessionId") ?? undefined;
@@ -421,7 +421,7 @@ export function registerDocumentAgentHandlers(): void {
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:workspace:proposeTrash", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:workspace:proposeTrash", async (event, input: unknown) => {
     try {
       const value = record(input);
       const agentSessionId = optionalString(value, "agentSessionId") ?? undefined;
@@ -447,7 +447,7 @@ export function registerDocumentAgentHandlers(): void {
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
-  registerIpcChannel("documentAgent:workspace:revoke", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("documentAgent:workspace:revoke", async (event, input: unknown) => {
     try {
       const value = record(input);
       return { ok: workspaceGrants.revoke(stringField(value, "grantId", 128), rendererSession(event.sender.id, stringField(value, "agentSessionId", 128))) };
@@ -455,7 +455,7 @@ export function registerDocumentAgentHandlers(): void {
   });
 
   for (const [channel, operation] of [["list", "list"], ["read", "read"], ["search", "search"]] as const) {
-    registerIpcChannel(`documentAgent:workspace:${channel}`, async (event, input: unknown) => {
+    registerPrivilegedIpcChannel(`documentAgent:workspace:${channel}`, async (event, input: unknown) => {
       try {
         const value = record(input);
         const grant = workspaceGrants.get(stringField(value, "grantId", 128), rendererSession(event.sender.id, stringField(value, "agentSessionId", 128)));

@@ -17,7 +17,7 @@ import {
   getCachedCharacterImage,
   getCharacterImageCacheInventory,
 } from "../../services/characterImageCache";
-import { registerIpcChannel } from "./common";
+import { registerPrivilegedIpcChannel } from "./common";
 import { getProfileSessionId } from "../../services/profileSession";
 import {
   exportMediaBatchAs,
@@ -83,7 +83,7 @@ function sniffRoutedImageContentType(buffer: Buffer): string | null {
 }
 
 export function registerFileHandlers(): void {
-  registerIpcChannel("app:media:persist-generated-image", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("app:media:persist-generated-image", async (event, input: unknown) => {
     let validatedBytes: Buffer | undefined;
     let validatedMime: string | undefined;
     try {
@@ -128,7 +128,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:media:retry-generated-image", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("app:media:retry-generated-image", async (event, input: unknown) => {
     try {
       const owner = BrowserWindow.fromWebContents(event.sender);
       if (!owner || event.senderFrame !== event.sender.mainFrame) {
@@ -148,7 +148,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:media:save-generated-recovery", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("app:media:save-generated-recovery", async (event, input: unknown) => {
     try {
       const owner = BrowserWindow.fromWebContents(event.sender);
       if (!owner || event.senderFrame !== event.sender.mainFrame) {
@@ -171,7 +171,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:media:save-generated", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("app:media:save-generated", async (event, input: unknown) => {
     try {
       const owner = BrowserWindow.fromWebContents(event.sender);
       if (!owner || event.senderFrame !== event.sender.mainFrame) {
@@ -191,7 +191,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:media:save-data-url", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("app:media:save-data-url", async (event, input: unknown) => {
     try {
       const owner = BrowserWindow.fromWebContents(event.sender);
       if (!owner || event.senderFrame !== event.sender.mainFrame) {
@@ -210,7 +210,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:media:export-files", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("app:media:export-files", async (event, input: unknown) => {
     try {
       const owner = BrowserWindow.fromWebContents(event.sender);
       if (!owner || event.senderFrame !== event.sender.mainFrame) {
@@ -240,7 +240,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:saveJsonFile", async (_event, data: unknown, defaultPath: unknown) => {
+  registerPrivilegedIpcChannel("app:saveJsonFile", async (_event, data: unknown, defaultPath: unknown) => {
     try {
       if (typeof data !== "string") throw new Error("Export data must be a string.");
       if (Buffer.byteLength(data, "utf-8") > MAX_JSON_FILE_BYTES) {
@@ -263,7 +263,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:saveYamlFile", async (_event, data: unknown, defaultPath: unknown) => {
+  registerPrivilegedIpcChannel("app:saveYamlFile", async (_event, data: unknown, defaultPath: unknown) => {
     try {
       if (typeof data !== "string") throw new Error("Export data must be a string.");
       if (Buffer.byteLength(data, "utf-8") > MAX_JSON_FILE_BYTES) {
@@ -286,7 +286,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:loadYamlFile", async () => {
+  registerPrivilegedIpcChannel("app:loadYamlFile", async () => {
     try {
       // verify-no-native-dialogs: allow — intentional open dialog for theme import
       const result = await dialog.showOpenDialog({
@@ -311,7 +311,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:loadJsonFile", async () => {
+  registerPrivilegedIpcChannel("app:loadJsonFile", async () => {
     try {
       // verify-no-native-dialogs: allow — intentional open dialog for data import
       const result = await dialog.showOpenDialog({
@@ -336,7 +336,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:readLocalFile", async () => {
+  registerPrivilegedIpcChannel("app:readLocalFile", async () => {
     try {
       // verify-no-native-dialogs: allow — intentional open dialog for text attachment
       const result = await dialog.showOpenDialog({
@@ -384,7 +384,7 @@ export function registerFileHandlers(): void {
   // Documents, Desktop, or Pictures/Venice Forge) and return it as a
   // data URL plus metadata. The renderer uses this to import a previously
   // generated image that was not saved to IDB.
-  registerIpcChannel("app:media:import", async (_event, input: unknown) => {
+  registerPrivilegedIpcChannel("app:media:import", async (_event, input: unknown) => {
     try {
       if (!input || typeof input !== "object") {
         return { ok: false, error: "Import payload must be an object." };
@@ -411,7 +411,7 @@ export function registerFileHandlers(): void {
   // Media Studio: reveal a file in the OS file manager. The path must be
   // inside one of the reveal-safe base directories (Pictures/Venice Forge,
   // Desktop, Downloads, Documents, or the userData thumb cache).
-  registerIpcChannel("app:media:reveal", async (_event, input: unknown) => {
+  registerPrivilegedIpcChannel("app:media:reveal", async (_event, input: unknown) => {
     try {
       if (!input || typeof input !== "object") {
         return { ok: false, error: "Reveal payload must be an object." };
@@ -430,7 +430,7 @@ export function registerFileHandlers(): void {
   // Media Studio: filesystem metadata for a reveal-safe path. The renderer
   // uses this to display the on-disk file size / modification time and to
   // confirm the file is still present after an export.
-  registerIpcChannel("app:media:meta", async (_event, input: unknown) => {
+  registerPrivilegedIpcChannel("app:media:meta", async (_event, input: unknown) => {
     try {
       if (!input || typeof input !== "object") {
         return { ok: false, error: "Meta payload must be an object." };
@@ -454,7 +454,7 @@ export function registerFileHandlers(): void {
 
   // Media Studio: generate (or return cached) thumbnail for a sha256-keyed
   // image. Returns a file:// URL the renderer can drop into an <img> src.
-  registerIpcChannel("app:media:thumb", async (_event, input: unknown) => {
+  registerPrivilegedIpcChannel("app:media:thumb", async (_event, input: unknown) => {
     try {
       if (!input || typeof input !== "object") {
         return { ok: false, error: "Thumb payload must be an object." };
@@ -474,7 +474,7 @@ export function registerFileHandlers(): void {
 
   // Character avatar image cache: fetch and cache a Venice character photo
   // and return a file:// URL. The renderer never loads remote URLs directly.
-  registerIpcChannel("app:characterImage:get", async (_event, input: unknown) => {
+  registerPrivilegedIpcChannel("app:characterImage:get", async (_event, input: unknown) => {
     try {
       let url = "";
       if (typeof input === "string") {
@@ -494,7 +494,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:characterImage:clearCache", async () => {
+  registerPrivilegedIpcChannel("app:characterImage:clearCache", async () => {
     try {
       const result = await clearCharacterImageCache();
       if (!result.ok) return { ok: false, error: redactErrorMessage(result.error) };
@@ -504,7 +504,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:characterImage:inventory", async () => {
+  registerPrivilegedIpcChannel("app:characterImage:inventory", async () => {
     try {
       const inventory = await getCharacterImageCacheInventory();
       return { ok: true, ...inventory };
@@ -513,7 +513,7 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerIpcChannel("app:openConversationsFolder", async (event) => {
+  registerPrivilegedIpcChannel("app:openConversationsFolder", async (event) => {
     const { getProfileConversationsDir } = await import("../../services/conversationVault");
     await shell.openPath(getProfileConversationsDir(getProfileSessionId(event.sender)));
     return { ok: true };

@@ -158,20 +158,6 @@ export function validateAwsRegion(value: unknown): string {
   return region;
 }
 
-/** Google Cloud location/region identifiers are lowercase alphanumeric plus hyphens.
- *  @throws If the value is not a valid location.
- */
-export function validateGoogleLocation(value: unknown): string {
-  const location = validateCredentialString(value, "Google Cloud location", 32);
-  if (!/^[a-z0-9-]{2,32}$/.test(location)) {
-    throw new Error("Google Cloud location must be a valid location identifier.");
-  }
-  if (location.startsWith("-") || location.endsWith("-")) {
-    throw new Error("Google Cloud location cannot start or end with a hyphen.");
-  }
-  return location;
-}
-
 /** Validates a structured provider credential payload before secure storage.
  *  Secret values are accepted; non-secret routing fields are constrained.
  *  @returns A normalized credential object safe to persist.
@@ -207,29 +193,13 @@ export function validateProviderCredential(providerId: string, credential: unkno
     }
     case "google_vertex": {
       const authMode = c.authMode === "full" ? "full" : "express";
-      if (authMode === "express") {
-        const projectId = validateCredentialString(c.projectId, "Google Cloud project ID", 128);
-        if (!/^[a-z][a-z0-9-]{4,28}[a-z0-9]?$/.test(projectId)) {
-          throw new Error("Google Cloud project ID is not valid.");
-        }
-        return {
-          providerId,
-          authMode,
-          apiKey: validateCredentialString(c.apiKey, "Google Cloud API key", 512),
-          projectId,
-          location: validateGoogleLocation(c.location),
-        };
-      }
-      const projectId = validateCredentialString(c.projectId, "Google Cloud project ID", 128);
-      if (!/^[a-z][a-z0-9-]{4,28}[a-z0-9]?$/.test(projectId)) {
-        throw new Error("Google Cloud project ID is not valid.");
+      if (authMode === "full") {
+        throw new Error("Google Vertex full OAuth/service-account mode is not implemented. Use Express Mode (API key).");
       }
       return {
         providerId,
         authMode,
-        projectId,
-        location: validateGoogleLocation(c.location),
-        credentialsJson: validateCredentialString(c.credentialsJson, "Google Cloud service account JSON", 8192),
+        apiKey: validateCredentialString(c.apiKey, "Google Cloud API key", 512),
       };
     }
     default:

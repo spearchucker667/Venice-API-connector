@@ -33,6 +33,7 @@ vi.mock("../../../src/shared/readBoundedFetchBody", async () => {
 vi.stubGlobal("fetch", stubFetch);
 
 vi.mock("electron", () => ({
+  app: { isPackaged: false },
   ipcMain: {
     handle: vi.fn((channel: string, handler: (...args: unknown[]) => unknown) => {
       capturedHandlers.set(channel, handler);
@@ -88,7 +89,7 @@ import {
   publishInspectorCompletion,
 } from "../../services/inspectorTelemetry";
 
-const fakeSender = { id: 1 } as unknown;
+const fakeSender = { id: 1, senderFrame: { url: "http://localhost:5173" } } as unknown;
 
 describe("Jina IPC handler", () => {
   beforeEach(async () => {

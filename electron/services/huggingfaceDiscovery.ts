@@ -1,6 +1,7 @@
 /** @fileoverview Hugging Face Inference Providers live model discovery with
  *  bounded disk cache and stale-while-revalidate fallback. */
 
+import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import { app } from "electron";
@@ -11,6 +12,7 @@ import type {
 } from "../../src/types/provider";
 import { getProviderApiKey } from "./secureStore";
 import { redactErrorMessage } from "../../src/shared/redaction";
+import { assertValidProfileStorageId } from "../../src/utils/profileIdValidation";
 
 const HF_MODELS_ENDPOINT = "https://router.huggingface.co/v1/models";
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
@@ -51,7 +53,9 @@ function readCache(profileId: string): HuggingFaceModelsCache | null {
 
 function writeCache(profileId: string, models: ProviderModel[], fetchedAt: number): void {
   const target = cacheFilePath(profileId);
-  const temporary = `${target}.tmp`;
+  // Use a random temporary name so concurrent refreshes cannot race on the same
+  // .tmp file; atomic rename gives last-write-wins consistency.
+  const temporary = `${target}.${crypto.randomUUID()}.tmp`;
   try {
     fs.mkdirSync(path.dirname(target), { recursive: true });
     fs.writeFileSync(
@@ -63,17 +67,20 @@ function writeCache(profileId: string, models: ProviderModel[], fetchedAt: numbe
   } catch (error) {
     // Cache writes are best-effort; discovery still returns live data.
     console.warn("[huggingfaceDiscovery] cache write failed:", redactErrorMessage(error));
+    try {
+      fs.unlinkSync(temporary);
+    } catch {
+      // ignore cleanup failure
+    }
   }
 }
 
-function isHfChatModel(modelId: string): boolean {
-  // The HF Inference Providers chat endpoint supports a broad set of models.
-  // We exclude obviously non-chat modalities (embeddings, image-only, audio,
-  // classification) and treat everything else as chat-capable, which the UI
-  // marks as live-discovered.
+/** Conservative name-based fallback blacklist for obviously non-chat models. */
+function isBlacklistedName(modelId: string): boolean {
   const lower = modelId.toLowerCase();
   const excludedSubstrings = [
     "embedding",
+    "embeddings",
     "similarity",
     "classifier",
     "classification",
@@ -86,22 +93,145 @@ function isHfChatModel(modelId: string): boolean {
     "sentence-transformers",
     "all-minilm",
   ];
-  if (excludedSubstrings.some((substring) => lower.includes(substring))) return false;
-  return true;
+  return excludedSubstrings.some((substring) => lower.includes(substring));
+}
+
+function isPositiveChatArchitecture(entry: Record<string, unknown>): boolean {
+  const modalities = entry.modalities;
+  if (modalities && typeof modalities === "object" && !Array.isArray(modalities)) {
+    const m = modalities as Record<string, unknown>;
+    const input = Array.isArray(m.input) ? (m.input as string[]) : [];
+    const output = Array.isArray(m.output) ? (m.output as string[]) : [];
+    if (input.includes("text") && output.includes("text")) {
+      return true;
+    }
+  }
+
+  const pipelineTag = typeof entry.pipeline_tag === "string" ? entry.pipeline_tag.toLowerCase() : "";
+  const task = typeof entry.task === "string" ? entry.task.toLowerCase() : "";
+  const chatTags = new Set([
+    "text-generation",
+    "text2text-generation",
+    "conversational",
+    "chat-completion",
+    "chat-completions",
+  ]);
+  if (chatTags.has(pipelineTag) || chatTags.has(task)) {
+    return true;
+  }
+
+  const inference = typeof entry.inference === "string" ? entry.inference.toLowerCase() : "";
+  if (inference.includes("chat") || inference.includes("conversational")) {
+    return true;
+  }
+
+  return false;
+}
+
+function isUnavailable(entry: Record<string, unknown>): boolean {
+  const status = typeof entry.status === "string" ? entry.status.toLowerCase() : "";
+  const lifecycle = typeof entry.lifecycle === "string" ? entry.lifecycle.toLowerCase() : "";
+  if (["unavailable", "retired", "deprecated", "stale", "disabled"].includes(status)) return true;
+  if (["unavailable", "retired"].includes(lifecycle)) return true;
+
+  const providers = entry.providers;
+  if (Array.isArray(providers) && providers.length === 0) return true;
+
+  return false;
+}
+
+function hasCompatibleProvider(entry: Record<string, unknown>): boolean {
+  const providers = entry.providers;
+  if (!Array.isArray(providers)) return true; // assume routable if provider list is absent
+  if (providers.length === 0) return false;
+
+  // The router can dispatch to any provider returned by the HF /v1/models endpoint
+  // that supports the chat-completions interface.
+  const providerIds = providers
+    .map((p) => (typeof p === "string" ? p : (p as Record<string, unknown>)?.id))
+    .filter((id): id is string => typeof id === "string");
+  if (providerIds.length === 0) return false;
+
+  const chatProviders = new Set([
+    "hf-inference",
+    "inference-providers",
+    "together",
+    "fireworks-ai",
+    "hyperbolic",
+    "fal-ai",
+    "replicate",
+    "sambanova",
+    "cohere",
+    "novita",
+    "black-forest-labs",
+    "ibm",
+    "cmu",
+  ]);
+  return providerIds.some((id) => chatProviders.has(id.toLowerCase()));
 }
 
 function normalizeHfModel(raw: unknown): ProviderModel | null {
   if (!raw || typeof raw !== "object") return null;
   const entry = raw as Record<string, unknown>;
   const id = typeof entry.id === "string" ? entry.id : null;
-  if (!id || !isHfChatModel(id)) return null;
+  if (!id) return null;
+  if (isBlacklistedName(id)) return null;
+
+  const hasPositiveEvidence = isPositiveChatArchitecture(entry);
+  if (!hasPositiveEvidence) return null;
+  if (isUnavailable(entry)) return null;
+  if (!hasCompatibleProvider(entry)) return null;
+
   const lifecycle: ProviderModelLifecycle = "active";
+  const contextLength =
+    typeof entry.context_length === "number"
+      ? entry.context_length
+      : typeof entry.context === "number"
+        ? entry.context
+        : undefined;
+
+  const pricing =
+    entry.pricing && typeof entry.pricing === "object" && !Array.isArray(entry.pricing)
+      ? (entry.pricing as Record<string, unknown>)
+      : undefined;
+
+  const toolSupport =
+    typeof entry.supports_tool_calling === "boolean"
+      ? entry.supports_tool_calling
+      : typeof entry.tool_use === "boolean"
+        ? entry.tool_use
+        : undefined;
+
+  const structuredOutput =
+    typeof entry.supports_structured_output === "boolean"
+      ? entry.supports_structured_output
+      : typeof entry.json_mode === "boolean"
+        ? entry.json_mode
+        : undefined;
+
+  const providerAvailability = Array.isArray(entry.providers)
+    ? entry.providers
+        .map((p) => (typeof p === "string" ? p : (p as Record<string, unknown>)?.id))
+        .filter((id): id is string => typeof id === "string")
+    : undefined;
+
   return {
     id: `huggingface:${id}`,
     name: id,
     provider: "huggingface",
     capabilities: { chat: true },
     lifecycle,
+    contextLength,
+    pricing:
+      pricing
+        ? {
+            input: typeof pricing.input === "number" ? pricing.input : undefined,
+            output: typeof pricing.output === "number" ? pricing.output : undefined,
+          }
+        : undefined,
+    toolSupport,
+    structuredOutput,
+    providerAvailability,
   };
 }
 
@@ -150,6 +280,7 @@ export async function getHuggingFaceModelCatalog(
   profileId: string,
   options: { force?: boolean } = {},
 ): Promise<ProviderModelCatalogResult> {
+  assertValidProfileStorageId(profileId);
   const checkedAt = Date.now();
   const apiKey = getProviderApiKey("huggingface", profileId);
 
@@ -212,6 +343,7 @@ export async function getHuggingFaceModelCatalog(
 
 /** Clears the cached Hugging Face model catalog for a profile. */
 export function clearHuggingFaceModelCache(profileId: string): void {
+  assertValidProfileStorageId(profileId);
   try {
     fs.unlinkSync(cacheFilePath(profileId));
   } catch {

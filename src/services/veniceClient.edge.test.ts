@@ -205,7 +205,7 @@ describe("veniceBlob response screening", () => {
       veniceBlob("/api/v1/image/upscale", {
         image: "data:image/png;base64,iVBORw0KGgo=",
       })
-    ).rejects.toThrow(/illegal-content protection triggered/);
+    ).rejects.toThrow(/mandatory child-safety protection/i);
 
     expect(useInspectorStore.getState().logs[0]?.status).toBe(451);
   });
@@ -237,7 +237,7 @@ describe("veniceBlob response screening", () => {
 
     await expect(veniceBlob("/api/v1/image/upscale", {
       image: "data:image/png;base64,iVBORw0KGgo=",
-    })).rejects.toThrow(/illegal-content protection triggered/);
+    })).rejects.toThrow(/mandatory child-safety protection/i);
   });
 });
 
@@ -269,7 +269,7 @@ describe("veniceFormData response screening", () => {
     );
 
     await expect(veniceFormData("/api/v1/image/edit", safeFormData())).rejects.toThrow(
-      /illegal-content protection triggered/
+      /mandatory child-safety protection/i
     );
 
     expect(useInspectorStore.getState().logs[0]?.status).toBe(451);
@@ -300,6 +300,6 @@ describe("veniceFormData response screening", () => {
 
     await expect(
       veniceFormData<{ message: string }>("/api/v1/image/edit", safeFormData()),
-    ).rejects.toThrow(/illegal-content protection triggered/);
+    ).rejects.toThrow(/mandatory child-safety protection/i);
   });
 });

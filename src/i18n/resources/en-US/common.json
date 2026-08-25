@@ -4557,5 +4557,35 @@
     "matureDarkThemes": "Mature / Dark Themes",
     "documentNamePath": "Document Name / Path",
     "characterPersonaReferences": "Character / Persona references"
+  },
+  "safetyDecision": {
+    "userMessage": {
+      "mandatory-child-safety": "Generation blocked: mandatory child-safety protection triggered.",
+      "optional-family-policy": "Generation blocked: optional Family Safe Mode triggered.",
+      "provider-policy": "Generation blocked: provider policy violation.",
+      "request-validation": "Generation blocked: request validation failed."
+    },
+    "layer": {
+      "mandatory-child-safety": "Mandatory child safety",
+      "optional-family-policy": "Optional family policy",
+      "provider-policy": "Provider policy",
+      "request-validation": "Request validation"
+    },
+    "category": {
+      "minor-sexualization": "Minor sexualization",
+      "csam": "CSAM or child exploitation",
+      "grooming": "Grooming or exploitation",
+      "age-evasion": "Age evasion",
+      "adult-explicit-image": "Adult explicit image",
+      "graphic-gore": "Graphic gore",
+      "provider-restriction": "Provider restriction",
+      "validation-error": "Validation error",
+      "unknown": "Unknown safety category"
+    },
+    "label": {
+      "blockingLayer": "Blocking layer: {{layer}}",
+      "category": "Category: {{category}}",
+      "reasonCode": "Reason code: {{reasonCode}}"
+    }
   }
 }

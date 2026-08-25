@@ -31,7 +31,19 @@ vi.mock("electron", () => ({
   },
   ipcMain: {
     handle: vi.fn((channel: string, handler: (...args: unknown[]) => unknown) => {
-      capturedHandlers.set(channel, handler);
+      // Wrap handlers with a default trusted dev sender so existing handler
+      // logic tests continue to pass without every test reconstructing a
+      // WebFrameMain. Sender-validation adversarial tests override this by
+      // passing an explicit untrusted senderFrame.
+      capturedHandlers.set(channel, (event, ...args) => {
+        const trustedEvent =
+          event && typeof event === "object"
+            ? event.senderFrame
+              ? event
+              : { ...event, senderFrame: { url: "http://localhost:5173" } }
+            : { senderFrame: { url: "http://localhost:5173" } };
+        return handler(trustedEvent, ...args);
+      });
     }),
   },
   BrowserWindow: {
@@ -1118,7 +1130,7 @@ describe("registerIpcHandlers", () => {
         category: "csam_request",
         severity: "critical",
       });
-      expect(result.body.error).toMatch(/Blocked:/i);
+      expect(result.body.error).toMatch(/blocked by mandatory child-safety protection/i);
       expect(JSON.stringify(result.body)).not.toContain("Some content");
     });
 
@@ -1590,6 +1602,65 @@ describe("registerIpcHandlers", () => {
         remoteApplyToken: token,
       });
       expect(result).toEqual({ ok: false, error: "lorebooks(delete): rejected" });
+    });
+  });
+
+  describe("sender-frame validation on privileged channels", () => {
+    function untrustedEvent(senderExtras = {}) {
+      return {
+        senderFrame: { url: "http://evil.com/attacker.html" },
+        sender: { isDestroyed: () => false, send: vi.fn(), getURL: () => "http://evil.com/attacker.html", ...senderExtras } as unknown as Electron.WebContents,
+      };
+    }
+
+    it.each([
+      ["credential:get", ["some-key"]],
+      ["apiKey:isConfigured", ["default"]],
+    ])("rejects secret API access from an untrusted frame on %s", async (channel, args) => {
+      const handler = capturedHandlers.get(channel);
+      await expect(handler!(untrustedEvent(), ...args)).rejects.toThrow(/untrusted/i);
+    });
+
+    it.each([
+      ["config:writeSanitized", [{ theme: "dark" }]],
+      ["safety:setFamilySafeMode", [{ enabled: true, masterPassword: "secret" }]],
+    ])("rejects config mutation from an untrusted frame on %s", async (channel, args) => {
+      const handler = capturedHandlers.get(channel);
+      await expect(handler!(untrustedEvent(), ...args)).rejects.toThrow(/untrusted/i);
+    });
+
+    it.each([
+      ["app:readLocalFile", []],
+      ["app:saveJsonFile", ["{}", "export.json"]],
+    ])("rejects file operation from an untrusted frame on %s", async (channel, args) => {
+      const handler = capturedHandlers.get(channel);
+      await expect(handler!(untrustedEvent(), ...args)).rejects.toThrow(/untrusted/i);
+    });
+
+    it.each([
+      ["replicate:generateImage", [{ model: "black-forest-labs/flux-schnell", input: { prompt: "test" } }]],
+      ["huggingface:getModelCatalog", [{}]],
+    ])("rejects provider dispatch from an untrusted frame on %s", async (channel, args) => {
+      const handler = capturedHandlers.get(channel);
+      await expect(handler!(untrustedEvent(), ...args)).rejects.toThrow(/untrusted/i);
+    });
+
+    it("rejects paid generation submission from an untrusted frame", async () => {
+      const handler = capturedHandlers.get("backgroundTask:submitPaidQueue");
+      await expect(handler!(untrustedEvent(), {
+        operation: "video",
+        wirePayload: { model: "test", prompt: "test" },
+      })).rejects.toThrow(/untrusted/i);
+    });
+
+    it("allows a trusted dev sender to invoke a privileged handler", async () => {
+      const handler = capturedHandlers.get("apiKey:isConfigured");
+      const trusted = {
+        senderFrame: { url: "http://localhost:5173" },
+        sender: { isDestroyed: () => false, send: vi.fn(), getURL: () => "http://localhost:5173" } as unknown as Electron.WebContents,
+      };
+      vi.mocked(isApiKeyConfigured).mockReturnValueOnce(true);
+      await expect(handler!(trusted, "default")).resolves.toBe(true);
     });
   });
 });

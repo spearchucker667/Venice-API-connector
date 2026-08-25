@@ -1,13 +1,13 @@
-import { ipcMain } from "electron";
 import { synthesizeSpeech, clearTtsCache } from "../../services/chatTtsBridge";
 import { getProfileSessionId } from "../../services/profileSession";
+import { registerPrivilegedIpcChannel } from "./common";
 
 export function registerChatTtsHandlers() {
-  ipcMain.handle("tts:synthesize", async (event, opts: unknown, cacheEnabled: unknown) => {
+  registerPrivilegedIpcChannel("tts:synthesize", async (event, opts: unknown, cacheEnabled: unknown) => {
     return synthesizeSpeech(opts, cacheEnabled, getProfileSessionId(event.sender));
   });
 
-  ipcMain.handle("tts:clearCache", async (event) => {
+  registerPrivilegedIpcChannel("tts:clearCache", async (event) => {
     return clearTtsCache(getProfileSessionId(event.sender));
   });
 }

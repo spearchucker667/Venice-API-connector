@@ -1,4 +1,5 @@
-import { app, ipcMain, dialog, BrowserWindow } from "electron";
+import { app, dialog, BrowserWindow } from "electron";
+import { registerPrivilegedIpcChannel } from "./common";
 import { setSyncFolder, getSyncFolder, getSyncStatus, setSyncEmissionSuppressed, setRendererSessionAttached, startSyncWatcher, stopSyncWatcher, pauseSyncWatcher, acknowledgeOperation } from "../../services/syncFolderWatcher";
 import { redactErrorMessage } from "../../../src/shared/redaction";
 import { validateMutationAuthority } from "../../services/remoteApplyAuthority";
@@ -13,7 +14,7 @@ const BACKUP_EXPORT_LEASE_MS = 5 * 60 * 1000;
 const backupExportLeases = new WeakMap<Electron.WebContents, { token: string; profileId: string; expiresAt: number }>();
 
 export function registerSyncHandlers(): void {
-  ipcMain.handle("sync:chooseSyncFolder", async (event) => {
+  registerPrivilegedIpcChannel("sync:chooseSyncFolder", async (event) => {
     try {
       const mainWindow = BrowserWindow.fromWebContents(event.sender);
       if (!mainWindow) return { ok: false, error: "Main window not found." };
@@ -37,18 +38,18 @@ export function registerSyncHandlers(): void {
     }
   });
 
-  ipcMain.handle("sync:getSyncFolder", async () => {
+  registerPrivilegedIpcChannel("sync:getSyncFolder", async () => {
     return { ok: true, path: getSyncFolder(), ...getSyncStatus() };
   });
 
-  ipcMain.handle("sync:setSyncFolder", async (_event, input: { path: string }) => {
+  registerPrivilegedIpcChannel("sync:setSyncFolder", async (_event, input: { path: string }) => {
     if (!input || typeof input.path !== "string" || input.path !== getSyncFolder()) {
       return { ok: false, error: "Sync folders must be approved through the main-process folder picker." };
     }
     return { ok: true };
   });
 
-  ipcMain.handle("sync:startSync", async (event, params: { password?: unknown; profileId?: unknown; includeMedia?: unknown }) => {
+  registerPrivilegedIpcChannel("sync:startSync", async (event, params: { password?: unknown; profileId?: unknown; includeMedia?: unknown }) => {
     if (!params || typeof params.password !== "string") {
       return { ok: false, error: "Invalid sync start payload." };
     }
@@ -56,13 +57,13 @@ export function registerSyncHandlers(): void {
     return await startSyncWatcher(params.password, getProfileSessionId(event.sender), includeMedia);
   });
 
-  ipcMain.handle("sync:stopSync", async () => {
+  registerPrivilegedIpcChannel("sync:stopSync", async () => {
     return await stopSyncWatcher();
   });
-  ipcMain.handle("sync:pauseSync", async () => pauseSyncWatcher());
-  ipcMain.handle("sync:getStatus", async () => ({ ok: true, ...getSyncStatus() }));
+  registerPrivilegedIpcChannel("sync:pauseSync", async () => pauseSyncWatcher());
+  registerPrivilegedIpcChannel("sync:getStatus", async () => ({ ok: true, ...getSyncStatus() }));
 
-  ipcMain.handle("sync:rendererSessionAttached", async (_event, input: { attached: boolean }) => {
+  registerPrivilegedIpcChannel("sync:rendererSessionAttached", async (_event, input: { attached: boolean }) => {
     try {
       setRendererSessionAttached(input.attached === true);
       return { ok: true };
@@ -72,7 +73,7 @@ export function registerSyncHandlers(): void {
     }
   });
 
-  ipcMain.handle("sync:setEmissionSuppressed", async (_event, input: { suppressed: boolean }) => {
+  registerPrivilegedIpcChannel("sync:setEmissionSuppressed", async (_event, input: { suppressed: boolean }) => {
     try {
       setSyncEmissionSuppressed(input.suppressed === true);
       return { ok: true };
@@ -82,12 +83,12 @@ export function registerSyncHandlers(): void {
     }
   });
 
-  ipcMain.handle("sync:writePacket", async (_event, input: { storeName: string; id: string; recordJson: string }) => {
+  registerPrivilegedIpcChannel("sync:writePacket", async (_event, input: { storeName: string; id: string; recordJson: string }) => {
     const { writePacket } = await import("../../services/syncFolderWatcher");
     return await writePacket(input.storeName, input.id, input.recordJson);
   });
 
-  ipcMain.handle("sync:applyRemoteMutation", async (event, input: { storeName?: unknown; id?: unknown; recordJson?: unknown; delete?: unknown; remoteApplyToken?: unknown }) => {
+  registerPrivilegedIpcChannel("sync:applyRemoteMutation", async (event, input: { storeName?: unknown; id?: unknown; recordJson?: unknown; delete?: unknown; remoteApplyToken?: unknown }) => {
     if (!input || typeof input.storeName !== "string" || typeof input.id !== "string" || !isValidId(input.id)) {
       return { ok: false, error: "Invalid remote mutation payload." };
     }
@@ -166,7 +167,7 @@ export function registerSyncHandlers(): void {
 
   const OPERATION_ID_RE = /^[a-f0-9]{64}$/;
 
-  ipcMain.handle("sync:acknowledgeOperation", async (_event, input: { operationId: string; ok: boolean }) => {
+  registerPrivilegedIpcChannel("sync:acknowledgeOperation", async (_event, input: { operationId: string; ok: boolean }) => {
     if (!input || typeof input.operationId !== "string" || typeof input.ok !== "boolean") {
       return { ok: false, error: "Invalid acknowledgment payload." };
     }
@@ -177,7 +178,7 @@ export function registerSyncHandlers(): void {
   });
 
   // Manual Backup Support
-  ipcMain.handle("sync:beginBackupExport", async (event) => {
+  registerPrivilegedIpcChannel("sync:beginBackupExport", async (event) => {
     const profileId = getProfileSessionId(event.sender);
     const deviceId = await getDeviceId();
     const token = crypto.randomUUID();
@@ -189,7 +190,7 @@ export function registerSyncHandlers(): void {
     return { ok: true, token, profileId, deviceId };
   });
 
-  ipcMain.handle("sync:encryptBackup", async (event, params: { payload: string, password: string, token: string }) => {
+  registerPrivilegedIpcChannel("sync:encryptBackup", async (event, params: { payload: string, password: string, token: string }) => {
     try {
       const lease = backupExportLeases.get(event.sender);
       backupExportLeases.delete(event.sender);
@@ -213,7 +214,7 @@ export function registerSyncHandlers(): void {
     }
   });
 
-  ipcMain.handle("sync:decryptBackup", async (_event, params: { ciphertext: string, salt: string, iv: string, password: string }) => {
+  registerPrivilegedIpcChannel("sync:decryptBackup", async (_event, params: { ciphertext: string, salt: string, iv: string, password: string }) => {
     try {
       const { decryptPayload } = await import("../../services/backupCrypto");
       const decrypted = await decryptPayload(params.ciphertext, params.salt, params.iv, params.password);
@@ -224,7 +225,7 @@ export function registerSyncHandlers(): void {
     }
   });
 
-  ipcMain.handle("sync:createReplaceImportRecovery", async (event, input: { manifest?: unknown; password?: unknown }) => {
+  registerPrivilegedIpcChannel("sync:createReplaceImportRecovery", async (event, input: { manifest?: unknown; password?: unknown }) => {
     if (!input || typeof input.password !== "string" || !input.manifest || typeof input.manifest !== "object") {
       return { ok: false, error: "Invalid replace-import recovery payload." };
     }
@@ -242,7 +243,7 @@ export function registerSyncHandlers(): void {
     }
   });
 
-  ipcMain.handle("sync:getLatestReplaceImportRecovery", async (event) => {
+  registerPrivilegedIpcChannel("sync:getLatestReplaceImportRecovery", async (event) => {
     try {
       const { getLatestReplaceImportRecovery } = await import("../../services/replaceImportRecovery");
       const recovery = await getLatestReplaceImportRecovery(
@@ -255,7 +256,7 @@ export function registerSyncHandlers(): void {
     }
   });
 
-  ipcMain.handle("sync:loadReplaceImportRecovery", async (event, input: { id?: unknown; password?: unknown }) => {
+  registerPrivilegedIpcChannel("sync:loadReplaceImportRecovery", async (event, input: { id?: unknown; password?: unknown }) => {
     if (!input || typeof input.id !== "string" || typeof input.password !== "string") {
       return { ok: false, error: "Invalid replace-import recovery request." };
     }

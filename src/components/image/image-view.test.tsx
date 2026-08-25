@@ -500,6 +500,96 @@ describe("ImageView model-aware payloads", () => {
     expect(screen.queryByText("Enhanced prompt preview")).not.toBeInTheDocument();
     expect(textarea).toHaveValue("A copper city at dusk");
   });
+
+  it("uses the mandatory-child-safety toast message when the safety layer is present", async () => {
+    enhancePromptMock.mockResolvedValueOnce({
+      prompt: "A copper city at dusk",
+      modelUsed: "internal-text-enhancer",
+      truncated: false,
+      fallbackReason: "safety-block",
+      safetyLayer: "mandatory-child-safety",
+      safetyCategory: "csam",
+      safetyReasonCode: "CSAM_GENRE_TERM",
+    });
+    render(<ImageView />);
+    fireEvent.change(
+      screen.getByPlaceholderText(/serene mountain landscape/i),
+      { target: { value: "A copper city at dusk" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Enhance prompt" }));
+
+    await waitFor(() => {
+      expect(useToastStore.getState().toasts).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            variant: "error",
+            title: "Prompt enhancement failed",
+            description: expect.stringMatching(/mandatory child-safety protections/i),
+          }),
+        ]),
+      );
+    });
+  });
+
+  it("uses the optional-family-policy toast message for family-filter blocks", async () => {
+    enhancePromptMock.mockResolvedValueOnce({
+      prompt: "A copper city at dusk",
+      modelUsed: "internal-text-enhancer",
+      truncated: false,
+      fallbackReason: "safety-block",
+      safetyLayer: "optional-family-policy",
+      safetyCategory: "adult-explicit-image",
+      safetyReasonCode: "ADULT_EXPLICIT_IMAGE",
+    });
+    render(<ImageView />);
+    fireEvent.change(
+      screen.getByPlaceholderText(/serene mountain landscape/i),
+      { target: { value: "A copper city at dusk" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Enhance prompt" }));
+
+    await waitFor(() => {
+      expect(useToastStore.getState().toasts).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            variant: "error",
+            title: "Prompt enhancement failed",
+            description: expect.stringMatching(/optional Family Safe Mode/i),
+          }),
+        ]),
+      );
+    });
+  });
+
+  it("uses the provider-policy toast message for provider safety blocks", async () => {
+    enhancePromptMock.mockResolvedValueOnce({
+      prompt: "A copper city at dusk",
+      modelUsed: "internal-text-enhancer",
+      truncated: false,
+      fallbackReason: "safety-block",
+      safetyLayer: "provider-policy",
+      safetyCategory: "provider-restriction",
+      safetyReasonCode: "PROVIDER_SAFE_MODE",
+    });
+    render(<ImageView />);
+    fireEvent.change(
+      screen.getByPlaceholderText(/serene mountain landscape/i),
+      { target: { value: "A copper city at dusk" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Enhance prompt" }));
+
+    await waitFor(() => {
+      expect(useToastStore.getState().toasts).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            variant: "error",
+            title: "Prompt enhancement failed",
+            description: expect.stringMatching(/provider policy/i),
+          }),
+        ]),
+      );
+    });
+  });
 });
 
 describe("ImageView lightbox", () => {

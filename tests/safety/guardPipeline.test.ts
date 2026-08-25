@@ -63,7 +63,7 @@ describe("VERIFY-015 guard pipeline — runtime source of truth", () => {
     });
     expect(block).not.toBeNull();
     expect(block?.status).toBe(451);
-    expect(block?.body.error).toMatch(/Blocked:/i);
+    expect(block?.body.error).toMatch(/blocked/i);
   });
 
   it("checkLocalFamilyGuard returns null when the input is benign", () => {
@@ -109,7 +109,7 @@ describe("VERIFY-015 guard pipeline — canonical block shape", () => {
     expect(block.status).toBe(451);
     expect(block.statusText).toBe("Blocked by Family Safe Mode");
     expect(block.contentType).toBe("application/json");
-    expect(block.body.error).toMatch(/Blocked:/i);
+    expect(block.body.error).toMatch(/blocked/i);
     expect(typeof block.body.reasonCode).toBe("string");
     expect(typeof block.body.category).toBe("string");
     expect(typeof block.body.severity).toBe("string");
@@ -214,7 +214,7 @@ describe("VERIFY-015 guard pipeline — performGuardedVeniceRequest", () => {
     if (result.kind !== "blocked") throw new Error("expected blocked");
     expect(result.block.status).toBe(451);
     expect(result.block.body.reasonCode).toBe("IMAGE_GRAPHIC_GORE");
-    expect(result.block.body.error).toMatch(/Blocked:/i);
+    expect(result.block.body.error).toMatch(/optional Family Safe Mode/i);
     expect(JSON.stringify(result.block.body)).not.toContain("dismemberment");
   });
 
@@ -411,7 +411,7 @@ describe("VERIFY-015 guard pipeline — screenResponseBody (web-proxy/scrape ret
     );
     expect(r.allowed).toBe(false);
     if (r.allowed) throw new Error("expected blocked");
-    expect(r.userMessage).toMatch(/Blocked:/i);
+    expect(r.userMessage).toMatch(/mandatory child-safety protection/i);
     expect(r.reasonCode).toBe("CSAM_EXPLICIT_TERM");
     expect(r.category).toBe("csam_request");
     expect(r.severity).toBe("critical");
@@ -456,23 +456,24 @@ describe("VERIFY-015 guard pipeline — screenResponseBody (web-proxy/scrape ret
     expect(r.allowed).toBe(false);
   });
 
-  it("samples large bodies (window-size guard for O(1) screening)", () => {
-    // Pad a benign prefix with 50 KiB of filler; trigger should still be
-    // found inside the 8 KiB sample window when appended at the end of
-    // the sample — verifying the slice(0, sampleWindow) contract.
+  it("detects a trigger at the end of a large body via tail window", () => {
+    // Pad a benign prefix with 50 KiB of filler; trigger at the end is now
+    // caught by the tail window (TAIL_SCAN_CHARS), not missed as it was under
+    // the old single 8 KiB head sample. A word-space is added around the
+    // trigger so the guard's word-boundary patterns match.
     const benign = benignInput("GENERIC");
     const filler = benignInput("GENERIC").repeat(1000);
     const trigger = triggerInput("CSAM_EXPLICIT");
-    const body = benign + filler + trigger;
+    const body = benign + filler + " " + trigger + " ";
     const r = screenResponseBody(
       body,
       { endpoint: "https://example.com/large", method: "GET", source: "web-proxy" },
       true,
     );
-    // Trigger is OUTSIDE the 8 KiB sample window, so screening sees only benign
-    // content and must allow. (Sampling is best-effort; this is the documented
-    // contract, not a guarantee of detection outside the window.)
-    expect(r.allowed).toBe(true);
+    expect(r.allowed).toBe(false);
+    if (!r.allowed) {
+      expect(r.reasonCode).toBe("CSAM_EXPLICIT_TERM");
+    }
   });
 
   it("screening handles empty body gracefully", () => {

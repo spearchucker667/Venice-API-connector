@@ -131,7 +131,10 @@
     "enhancementFailed": "Falha no aprimoramento do prompt",
     "enhancementProviderError": "O intensificador interno não conseguiu alcançar ou concluir a solicitação do Venice. Seu prompt original foi mantido.",
     "enhancementInvalidOutput": "O intensificador interno não retornou um prompt de imagem utilizável. Seu prompt original foi mantido.",
-    "enhancementSafetyBlocked": "O aprimoramento do prompt foi interrompido pelas proteções obrigatórias de segurança infantil, que são separadas das configurações opcionais do Modo Seguro. O prompt original foi mantido."
+    "enhancementSafetyBlocked": "O aprimoramento do prompt foi interrompido pelas proteções obrigatórias de segurança infantil, que são separadas das configurações opcionais do Modo Seguro. O prompt original foi mantido.",
+    "enhancementSafetyBlockedMandatory": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedMandatory",
+    "enhancementSafetyBlockedFamily": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedFamily",
+    "enhancementSafetyBlockedProvider": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedProvider"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

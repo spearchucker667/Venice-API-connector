@@ -244,7 +244,7 @@ describe("veniceClient utilities", () => {
 
       await expect(
         veniceFetch("/chat/completions", { method: "POST", body: { messages: [] } })
-      ).rejects.toThrow(/illegal-content protection triggered/);
+      ).rejects.toThrow(/mandatory child-safety protection/i);
 
       const log = useInspectorStore.getState().logs[0];
       expect(log?.status).toBe(451);
@@ -263,7 +263,7 @@ describe("veniceClient utilities", () => {
       await expect(veniceFetch("/chat/completions", {
         method: "POST",
         body: { messages: [] },
-      })).rejects.toThrow(/illegal-content protection triggered/);
+      })).rejects.toThrow(/mandatory child-safety protection/i);
     });
   });
 });

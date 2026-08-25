@@ -8,7 +8,7 @@ import { createReplicatePrediction, validateReplicateModel } from "../../service
 import { createBackgroundTaskInMain } from "../../services/backgroundTaskManager";
 import { getProviderApiKey } from "../../services/secureStore";
 import { getProfileSessionId } from "../../services/profileSession";
-import { registerIpcChannel } from "./common";
+import { registerPrivilegedIpcChannel } from "./common";
 import { redactErrorMessage } from "../../../src/shared/redaction";
 
 export interface ReplicateGenerateImageInput {
@@ -40,7 +40,7 @@ function validateGenerateImageInput(raw: unknown): ReplicateGenerateImageInput {
 }
 
 export function registerReplicateHandlers(): void {
-  registerIpcChannel("replicate:generateImage", async (event, raw: unknown) => {
+  registerPrivilegedIpcChannel("replicate:generateImage", async (event, raw: unknown) => {
     try {
       const profileId = getProfileSessionId(event.sender);
       const apiToken = getProviderApiKey("replicate", profileId);

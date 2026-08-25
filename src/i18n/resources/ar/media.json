@@ -131,7 +131,10 @@
     "enhancementFailed": "فشل تحسين المطالبة",
     "enhancementProviderError": "تعذر على المحسن الداخلي الوصول إلى طلب Venice أو إكماله. تم الاحتفاظ بمطالبتك الأصلية.",
     "enhancementInvalidOutput": "لم يُرجع المحسن الداخلي مطالبة صورة واحدة قابلة للاستخدام. تم الاحتفاظ بمطالبتك الأصلية.",
-    "enhancementSafetyBlocked": "تم إيقاف تحسين المطالبة بواسطة وسائل حماية سلامة الأطفال الإلزامية، وهي منفصلة عن إعدادات الوضع الآمن الاختيارية. تم الاحتفاظ بمطالبتك الأصلية."
+    "enhancementSafetyBlocked": "تم إيقاف تحسين المطالبة بواسطة وسائل حماية سلامة الأطفال الإلزامية، وهي منفصلة عن إعدادات الوضع الآمن الاختيارية. تم الاحتفاظ بمطالبتك الأصلية.",
+    "enhancementSafetyBlockedMandatory": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedMandatory",
+    "enhancementSafetyBlockedFamily": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedFamily",
+    "enhancementSafetyBlockedProvider": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedProvider"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

@@ -18,6 +18,9 @@ vi.mock("./common", () => ({
   registerIpcChannel: (channel: string, handler: (...args: unknown[]) => unknown) => {
     handlers.set(channel, handler);
   },
+  registerPrivilegedIpcChannel: (channel: string, handler: (...args: unknown[]) => unknown) => {
+    handlers.set(channel, handler);
+  },
 }));
 vi.mock("../../services/imageInspectorInput", () => ({
   IMAGE_INSPECTOR_MAX_BYTES: 18 * 1024 * 1024,

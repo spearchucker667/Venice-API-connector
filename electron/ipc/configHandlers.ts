@@ -1,7 +1,7 @@
-import { ipcMain, dialog } from "electron";
+import { dialog } from "electron";
 import path from "node:path";
 import { redactErrorMessage } from "../../src/shared/redaction";
-import { rateLimitIpcHandler } from "../utils/rateLimit";
+import { registerPrivilegedIpcChannel } from "./handlers/common";
 import {
   exportConfigTemplate,
   getPaths,
@@ -30,8 +30,8 @@ export function redactConfigPaths(paths: Record<string, unknown>): Record<string
  * and theming.
  */
 export function registerConfigIpcHandlers() {
-  const handleIpc = (channel: string, handler: Parameters<typeof ipcMain.handle>[1]) => {
-    ipcMain.handle(channel, rateLimitIpcHandler(channel, handler));
+  const handleIpc = (channel: string, handler: Parameters<typeof registerPrivilegedIpcChannel>[1]) => {
+    registerPrivilegedIpcChannel(channel, handler);
   };
 
   handleIpc("config:get", () => {

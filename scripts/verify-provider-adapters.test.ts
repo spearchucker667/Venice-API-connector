@@ -33,22 +33,24 @@ function testCredentialFor(providerId: string): ProviderCredential | string {
         providerId: 'google_vertex',
         authMode: 'express',
         apiKey: 'test-key',
-        projectId: 'venice-forge-test',
-        location: 'global',
       }
     case 'replicate':
-      // These providers remain deferred; this branch is unreachable for the
-      // advertised-fallback loop but keeps the helper exhaustive.
+      // Replicate is registered but routed through a dedicated async prediction
+      // lifecycle rather than the generic chat/image adapter.
       return 'test-key'
     default:
       return 'test-key'
   }
 }
 
+/** Providers that are intentionally present in the registry but do not expose a
+ *  generic adapter because they use a dedicated main-process handler. */
+const ADAPTER_EXCLUDED_PROVIDER_IDS: string[] = ['replicate']
+
 describe('Provider Adapters Contract', () => {
-  it('should have an adapter for every non-venice provider', () => {
+  it('should have an adapter for every non-venice provider except dedicated-lifecycle providers', () => {
     const providers = Object.values(PROVIDER_REGISTRY)
-      .filter(p => p.id !== 'venice')
+      .filter(p => p.id !== 'venice' && !ADAPTER_EXCLUDED_PROVIDER_IDS.includes(p.id))
 
     for (const provider of providers) {
       expect(providerAdapters).toHaveProperty(provider.id)
@@ -67,7 +69,9 @@ describe('Provider Adapters Contract', () => {
   it('gives every advertised fallback provider a real adapter and model catalog', () => {
     for (const providerId of AVAILABLE_FALLBACK_PROVIDER_IDS) {
       expect(PROVIDER_REGISTRY[providerId].unavailable).not.toBe(true)
-      expect(typeof providerAdapters[providerId]).toBe('function')
+      if (!ADAPTER_EXCLUDED_PROVIDER_IDS.includes(providerId)) {
+        expect(typeof providerAdapters[providerId]).toBe('function')
+      }
       // Deployment-discovered providers (Azure) do not ship a static catalog;
       // the deployment name is the authoritative model identity.
       const discovery = PROVIDER_CAPABILITIES[providerId].find((c) => c.implemented)?.modelDiscovery
@@ -82,7 +86,9 @@ describe('Provider Adapters Contract', () => {
       for (const capability of PROVIDER_CAPABILITIES[providerId]) {
         expect(capability.implemented).toBe(true)
         expect(PROVIDER_REGISTRY[providerId].supportedTypes).toContain(capability.feature)
-        expect(providerAdapters[providerId]('model', testCredentialFor(providerId), capability.route, {})).not.toBeNull()
+        if (!ADAPTER_EXCLUDED_PROVIDER_IDS.includes(providerId)) {
+          expect(providerAdapters[providerId]('model', testCredentialFor(providerId), capability.route, {})).not.toBeNull()
+        }
         // Deployment-discovered providers have no static catalog; the adapter is
         // the only source of truth for model routing.
         if (capability.modelDiscovery === 'deployment') continue

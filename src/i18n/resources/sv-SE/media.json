@@ -131,7 +131,10 @@
     "enhancementFailed": "Snabbförbättring misslyckades",
     "enhancementProviderError": "Den interna förstärkaren kunde inte nå eller slutföra Venice-begäran. Din ursprungliga uppmaning behölls.",
     "enhancementInvalidOutput": "Den interna förstärkaren returnerade inte en användbar bilduppmaning. Din ursprungliga uppmaning behölls.",
-    "enhancementSafetyBlocked": "Promptförbättringen stoppades av obligatoriska barnsäkerhetsskydd, som är separata från de valfria inställningarna för säkert läge. Din ursprungliga prompt behölls."
+    "enhancementSafetyBlocked": "Promptförbättringen stoppades av obligatoriska barnsäkerhetsskydd, som är separata från de valfria inställningarna för säkert läge. Din ursprungliga prompt behölls.",
+    "enhancementSafetyBlockedMandatory": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedMandatory",
+    "enhancementSafetyBlockedFamily": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedFamily",
+    "enhancementSafetyBlockedProvider": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedProvider"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

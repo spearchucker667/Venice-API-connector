@@ -212,15 +212,18 @@ describe("fallback and bounds", () => {
 
   it("distinguishes a mandatory safety block from a provider failure", async () => {
     mockedVenice.mockRejectedValueOnce(Object.assign(new Error("blocked"), { status: 451 }));
-    await expect(enhancePrompt({ mode: "enhance", prompt: "original" }, config))
-      .resolves.toMatchObject({
-        prompt: "original",
-        modelUsed: "internal-text-enhancer",
-        fallbackReason: "safety-block",
-      });
+    const result = await enhancePrompt({ mode: "enhance", prompt: "original" }, config);
+    expect(result).toMatchObject({
+      prompt: "original",
+      modelUsed: "internal-text-enhancer",
+      fallbackReason: "safety-block",
+      safetyLayer: "mandatory-child-safety",
+      safetyCategory: "provider-restriction",
+      safetyReasonCode: "PROVIDER_451",
+    });
   });
 
-  it("propagates safety category and reason code from SafetyGuardBlockedError", async () => {
+  it("propagates safety layer, category and reason code from SafetyGuardBlockedError", async () => {
     const decision: SafetyGuardDecision = {
       allow: false,
       action: "block",
@@ -245,8 +248,60 @@ describe("fallback and bounds", () => {
       prompt: "original",
       modelUsed: "internal-text-enhancer",
       fallbackReason: "safety-block",
-      safetyCategory: "csam_request",
+      safetyLayer: "mandatory-child-safety",
+      safetyCategory: "csam",
       safetyReasonCode: "CSAM_GENRE_TERM",
+      safetyUserMessage: "blocked",
+    });
+  });
+
+  it("maps optional family-filter blocks to the optional-family-policy layer", async () => {
+    const decision: SafetyGuardDecision = {
+      allow: false,
+      action: "block",
+      severity: "high",
+      category: "unsafe_image_generation",
+      reasonCode: "ADULT_EXPLICIT_IMAGE",
+      userMessage: "blocked",
+      developerMessage: "blocked",
+      normalizedChanged: false,
+      signals: [],
+      audit: {
+        decisionId: "test-decision",
+        createdAt: new Date().toISOString(),
+        promptHash: "00000000",
+        promptLength: 4,
+        matchedFieldPaths: [],
+      },
+    };
+    mockedVenice.mockRejectedValueOnce(new SafetyGuardBlockedError(decision));
+    const result = await enhancePrompt({ mode: "enhance", prompt: "original" }, config);
+    expect(result).toMatchObject({
+      fallbackReason: "safety-block",
+      safetyLayer: "optional-family-policy",
+      safetyCategory: "adult-explicit-image",
+      safetyReasonCode: "ADULT_EXPLICIT_IMAGE",
+    });
+  });
+
+  it("honors layer/category/reasonCode from a structured 451 error body", async () => {
+    const error = Object.assign(new Error("blocked"), {
+      status: 451,
+      body: {
+        layer: "provider-policy",
+        category: "provider-restriction",
+        reasonCode: "PROVIDER_SAFE_MODE",
+        userMessage: "Provider blocked this request.",
+      },
+    });
+    mockedVenice.mockRejectedValueOnce(error);
+    const result = await enhancePrompt({ mode: "enhance", prompt: "original" }, config);
+    expect(result).toMatchObject({
+      fallbackReason: "safety-block",
+      safetyLayer: "provider-policy",
+      safetyCategory: "provider-restriction",
+      safetyReasonCode: "PROVIDER_SAFE_MODE",
+      safetyUserMessage: "Provider blocked this request.",
     });
   });
 

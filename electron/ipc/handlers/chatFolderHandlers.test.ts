@@ -18,7 +18,10 @@ const locks = vi.hoisted(() => ({
 }));
 const dialog = vi.hoisted(() => ({ showOpenDialog: vi.fn(), showSaveDialog: vi.fn() }));
 
-vi.mock("./common", () => ({ registerIpcChannel: (name: string, handler: (...args: any[]) => any) => handlers.set(name, handler) }));
+vi.mock("./common", () => ({
+  registerIpcChannel: (name: string, handler: (...args: any[]) => any) => handlers.set(name, handler),
+  registerPrivilegedIpcChannel: (name: string, handler: (...args: any[]) => any) => handlers.set(name, handler),
+}));
 vi.mock("../../services/profileSession", () => profileSession);
 vi.mock("../../services/chatFolderService", () => services);
 vi.mock("../../services/chatFolderStorage", () => ({ isValidId: (value: unknown) => typeof value === "string" && /^[a-zA-Z0-9_-]{1,128}$/.test(value) }));

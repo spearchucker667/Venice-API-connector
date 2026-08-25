@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ipcMain, dialog } from "electron";
+import { clearRegisteredChannelsForTesting } from "./handlers/common";
 import { registerCharacterCreatorHandlers, characterCreatorIpcChannels } from "./characterCreatorHandlers";
 import type { CharacterCardV2Dto } from "../../src/types/character-card-spec";
 
@@ -7,6 +8,7 @@ vi.mock("electron", () => {
   type HandlerFn = (...args: unknown[]) => unknown;
   const handlers = new Map<string, HandlerFn>();
   return {
+    app: { isPackaged: false },
     ipcMain: {
       handle: vi.fn((channel: string, handler: HandlerFn) => {
         handlers.set(channel, handler);
@@ -40,6 +42,7 @@ describe("Character Creator IPC Handlers", () => {
   beforeEach(() => {
     (ipcMain as any)._clear();
     vi.clearAllMocks();
+    clearRegisteredChannelsForTesting();
     registerCharacterCreatorHandlers();
   });
 
@@ -65,7 +68,7 @@ describe("Character Creator IPC Handlers", () => {
       },
     };
 
-    const res = await (ipcMain as any)._invoke(characterCreatorIpcChannels.validateCard, {}, { card: validCard });
+    const res = await (ipcMain as any)._invoke(characterCreatorIpcChannels.validateCard, { senderFrame: { url: "http://localhost:5173" } }, { card: validCard });
     expect(res.ok).toBe(true);
     expect(res.valid).toBe(true);
   });
@@ -97,7 +100,7 @@ describe("Character Creator IPC Handlers", () => {
       },
     };
 
-    const res = await (ipcMain as any)._invoke(characterCreatorIpcChannels.exportCard, {}, {
+    const res = await (ipcMain as any)._invoke(characterCreatorIpcChannels.exportCard, { senderFrame: { url: "http://localhost:5173" } }, {
       card: validCard,
       format: "json",
     });

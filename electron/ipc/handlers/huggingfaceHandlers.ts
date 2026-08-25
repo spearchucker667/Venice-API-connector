@@ -4,13 +4,13 @@
  *  redacted catalog result.
  */
 
-import { registerIpcChannel } from "./common";
+import { registerPrivilegedIpcChannel } from "./common";
 import { getHuggingFaceModelCatalog } from "../../services/huggingfaceDiscovery";
 import { getProfileSessionId } from "../../services/profileSession";
 import { redactErrorMessage } from "../../../src/shared/redaction";
 
 export function registerHuggingfaceHandlers(): void {
-  registerIpcChannel("huggingface:getModelCatalog", async (event, raw: unknown) => {
+  registerPrivilegedIpcChannel("huggingface:getModelCatalog", async (event, raw: unknown) => {
     try {
       const profileId = getProfileSessionId(event.sender);
       const force = Boolean(

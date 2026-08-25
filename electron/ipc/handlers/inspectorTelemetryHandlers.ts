@@ -7,11 +7,11 @@
  *  via the new `upsertByEventId` action — see `src/stores/inspector-store.ts`.
  */
 
-import { ipcMain, type WebContents } from "electron";
+import { type WebContents } from "electron";
 import type { InspectorTelemetryEvent } from "../../../src/shared/inspectorTelemetryContracts";
 import { INSPECTOR_TELEMETRY_CHANNEL } from "../../../src/shared/inspectorTelemetryContracts";
 import { subscribeInspectorTelemetry } from "../../services/inspectorTelemetry";
-import { safeSendToRenderer } from "./common";
+import { registerPrivilegedIpcChannel, safeSendToRenderer } from "./common";
 
 const subscribers = new Set<WebContents>();
 let busAttached = false;
@@ -28,12 +28,12 @@ export function registerInspectorTelemetryHandlers(): void {
   if (handlersRegistered) return;
   handlersRegistered = true;
 
-  ipcMain.handle("inspector:telemetry:subscribe", (event) => {
+  registerPrivilegedIpcChannel("inspector:telemetry:subscribe", (event) => {
     subscribers.add(event.sender);
     return { ok: true };
   });
 
-  ipcMain.handle("inspector:telemetry:unsubscribe", (event) => {
+  registerPrivilegedIpcChannel("inspector:telemetry:unsubscribe", (event) => {
     subscribers.delete(event.sender);
     return { ok: true };
   });

@@ -480,16 +480,21 @@ export function ImageView() {
       if (result.fallbackReason) {
         setEnhancedPrompt(null);
         setShowEnhanceReview(false);
-        toast.error(
-          t("imageStudioRuntime.enhancementFailed"),
-          t(
-            result.fallbackReason === "safety-block"
-              ? "imageStudioRuntime.enhancementSafetyBlocked"
-              : result.fallbackReason === "provider-error"
-                ? "imageStudioRuntime.enhancementProviderError"
-                : "imageStudioRuntime.enhancementInvalidOutput",
-          ),
-        );
+        const description =
+          result.fallbackReason === "safety-block"
+            ? t(
+                result.safetyLayer === "mandatory-child-safety"
+                  ? "imageStudioRuntime.enhancementSafetyBlockedMandatory"
+                  : result.safetyLayer === "optional-family-policy"
+                    ? "imageStudioRuntime.enhancementSafetyBlockedFamily"
+                    : result.safetyLayer === "provider-policy"
+                      ? "imageStudioRuntime.enhancementSafetyBlockedProvider"
+                      : "imageStudioRuntime.enhancementSafetyBlocked",
+              )
+            : result.fallbackReason === "provider-error"
+              ? t("imageStudioRuntime.enhancementProviderError")
+              : t("imageStudioRuntime.enhancementInvalidOutput");
+        toast.error(t("imageStudioRuntime.enhancementFailed"), description);
         return;
       }
       setEnhancedPrompt(result.prompt);

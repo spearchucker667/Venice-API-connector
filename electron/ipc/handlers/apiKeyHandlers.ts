@@ -32,7 +32,7 @@ import { validateApiKeyInput, validateProviderCredential } from "../validation";
 import { redactErrorMessage } from "../../../src/shared/redaction";
 import { isValidProfileStorageId } from "../../../src/utils/profileIdValidation";
 import type { ApiConnectivityFailureKind, ApiConnectivityStatus, ProviderConnectionResult } from "../../../src/types/api-connectivity";
-import { registerIpcChannel } from "./common";
+import { registerPrivilegedIpcChannel } from "./common";
 import { PROVIDER_REGISTRY, requiresStructuredCredential, type ProviderId, type AzureOpenAiConfig, type AwsBedrockConfig, type GoogleVertexConfig } from "../../../src/types/provider";
 import { getProfileSessionId, setProfileSessionId } from "../../services/profileSession";
 import {
@@ -230,11 +230,8 @@ function buildProviderTestRequest(
   if (providerId === "google_vertex") {
     if (!isGoogleVertexConfig(credential)) return null;
     if (credential.authMode === "express") {
-      const host = credential.location === "global"
-        ? "aiplatform.googleapis.com"
-        : `${encodeURIComponent(credential.location)}-aiplatform.googleapis.com`;
       return {
-        url: `https://${host}/v1/projects/${encodeURIComponent(credential.projectId)}/locations/${encodeURIComponent(credential.location)}/publishers/google/models?key=${encodeURIComponent(credential.apiKey)}`,
+        url: `https://aiplatform.googleapis.com/v1/publishers/google/models?key=${encodeURIComponent(credential.apiKey)}`,
         headers: {},
       };
     }
@@ -417,7 +414,7 @@ async function performProviderConnectionTest(
 
 export function registerApiKeyHandlers(): void {
 
-  registerIpcChannel("credential:set", (_event, payload: { key: string, value: string }) => {
+  registerPrivilegedIpcChannel("credential:set", (_event, payload: { key: string, value: string }) => {
     try {
       if (isReservedCredentialName(payload.key)) {
         return { ok: false, error: `Credential name "${payload.key}" is reserved. Use typed password/profile APIs.` };
@@ -429,7 +426,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("credential:get", (_event, key: string) => {
+  registerPrivilegedIpcChannel("credential:get", (_event, key: string) => {
     try {
       if (isReservedCredentialName(key)) {
         return { ok: true, value: null };
@@ -441,7 +438,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("credential:delete", (_event, key: string) => {
+  registerPrivilegedIpcChannel("credential:delete", (_event, key: string) => {
     try {
       if (isReservedCredentialName(key)) {
         return { ok: true };
@@ -453,9 +450,9 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("masterPassword:isSet", () => isMasterPasswordSet());
+  registerPrivilegedIpcChannel("masterPassword:isSet", () => isMasterPasswordSet());
 
-  registerIpcChannel("masterPassword:set", (_event, password: unknown) => {
+  registerPrivilegedIpcChannel("masterPassword:set", (_event, password: unknown) => {
     try {
       if (isMasterPasswordSet()) {
         return { ok: false, error: "Master password is already set." };
@@ -470,7 +467,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("masterPassword:change", (_event, payload: unknown) => {
+  registerPrivilegedIpcChannel("masterPassword:change", (_event, payload: unknown) => {
     try {
       if (!payload || typeof payload !== "object") throw new Error("Invalid payload.");
       const { currentPassword, newPassword } = payload as { currentPassword?: string, newPassword?: string };
@@ -494,7 +491,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("masterPassword:verify", (_event, password: unknown) => {
+  registerPrivilegedIpcChannel("masterPassword:verify", (_event, password: unknown) => {
     try {
       if (typeof password !== "string") {
         return { ok: true, verified: false, lockedOutSeconds: 0 };
@@ -506,7 +503,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("masterPassword:clear", (_event, payload: unknown) => {
+  registerPrivilegedIpcChannel("masterPassword:clear", (_event, payload: unknown) => {
     try {
       if (!isMasterPasswordSet()) return { ok: true }; // Already clear
       if (!payload || typeof payload !== "object") throw new Error("Invalid payload.");
@@ -528,7 +525,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("profilePassword:isSet", (_event, profileId: unknown) => {
+  registerPrivilegedIpcChannel("profilePassword:isSet", (_event, profileId: unknown) => {
     try {
       return isProfilePasswordSet(parseProfileId(profileId));
     } catch {
@@ -536,7 +533,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("profileSession:activate", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("profileSession:activate", (event, payload: unknown) => {
     try {
       if (!payload || typeof payload !== "object") {
         throw new Error("Invalid profile activation payload.");
@@ -559,7 +556,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("profilePassword:set", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("profilePassword:set", (event, payload: unknown) => {
     try {
       if (!payload || typeof payload !== "object") {
         throw new Error("Invalid profile password payload.");
@@ -583,7 +580,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("profilePassword:verify", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("profilePassword:verify", (event, payload: unknown) => {
     try {
       if (!payload || typeof payload !== "object") {
         throw new Error("Invalid profile password payload.");
@@ -603,7 +600,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("profilePassword:clear", (event, profileId: unknown) => {
+  registerPrivilegedIpcChannel("profilePassword:clear", (event, profileId: unknown) => {
     try {
       // The default profile cannot acquire a verifier; allowing explicit
       // default cleanup preserves recovery from historical orphan rows.
@@ -616,7 +613,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("apiKey:isConfigured", (event, _profileId?: unknown) => {
+  registerPrivilegedIpcChannel("apiKey:isConfigured", (event, _profileId?: unknown) => {
     try {
       return isApiKeyConfigured(getProfileSessionId(event.sender));
     } catch {
@@ -624,7 +621,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("apiKey:set", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("apiKey:set", (event, payload: unknown) => {
     const { key } = typeof payload === "object" && payload !== null && "key" in payload ? payload as { key: unknown, profileId?: unknown } : { key: payload };
     try {
       const validId = getProfileSessionId(event.sender);
@@ -636,7 +633,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("apiKey:delete", (event, _profileId?: unknown) => {
+  registerPrivilegedIpcChannel("apiKey:delete", (event, _profileId?: unknown) => {
     try {
       deleteApiKey(getProfileSessionId(event.sender));
       return { ok: true };
@@ -645,7 +642,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("providerApiKey:isConfigured", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("providerApiKey:isConfigured", (event, payload: unknown) => {
     const { providerId } = typeof payload === "object" && payload !== null && "providerId" in payload ? payload as { providerId: unknown, profileId?: unknown } : { providerId: payload };
     try {
       return isProviderApiKeyConfigured(parseProviderId(providerId), getProfileSessionId(event.sender));
@@ -654,7 +651,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("providerApiKey:set", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("providerApiKey:set", (event, payload: unknown) => {
     const { providerId, key } = payload as { providerId: unknown, key: unknown, profileId?: unknown };
     try {
       const validProviderId = parseProviderId(providerId);
@@ -670,7 +667,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("providerApiKey:delete", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("providerApiKey:delete", (event, payload: unknown) => {
     const { providerId } = payload as { providerId: unknown, profileId?: unknown };
     try {
       const validProviderId = parseProviderId(providerId);
@@ -683,7 +680,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("providerCredential:isConfigured", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("providerCredential:isConfigured", (event, payload: unknown) => {
     const { providerId } = typeof payload === "object" && payload !== null && "providerId" in payload ? payload as { providerId: unknown, profileId?: unknown } : { providerId: payload };
     try {
       return isProviderCredentialConfigured(parseProviderId(providerId), getProfileSessionId(event.sender));
@@ -692,7 +689,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("providerCredential:set", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("providerCredential:set", (event, payload: unknown) => {
     try {
       if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
         throw new Error("Invalid credential payload.");
@@ -710,7 +707,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("providerCredential:delete", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("providerCredential:delete", (event, payload: unknown) => {
     const { providerId } = typeof payload === "object" && payload !== null && "providerId" in payload ? payload as { providerId: unknown, profileId?: unknown } : { providerId: payload };
     try {
       const validProviderId = parseProviderId(providerId);
@@ -723,11 +720,11 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("providerSettings:get", (event) => {
+  registerPrivilegedIpcChannel("providerSettings:get", (event) => {
     return getProviderSettings(getProfileSessionId(event.sender));
   });
 
-  registerIpcChannel("providerSettings:update", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("providerSettings:update", (event, payload: unknown) => {
     try {
       if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
         throw new Error("Invalid provider settings update.");
@@ -782,11 +779,11 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("apiKey:test", (event, _profileId?: unknown) => {
+  registerPrivilegedIpcChannel("apiKey:test", (event, _profileId?: unknown) => {
     return testVeniceConnection(getProfileSessionId(event.sender));
   });
 
-  registerIpcChannel("providerApiKey:test", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("providerApiKey:test", (event, payload: unknown) => {
     const { providerId } = typeof payload === "object" && payload !== null && "providerId" in payload ? payload as { providerId: unknown, profileId?: unknown } : { providerId: payload };
     try {
       const validProviderId = parseProviderId(providerId);
@@ -807,7 +804,7 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
-  registerIpcChannel("providerCredential:test", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("providerCredential:test", (event, payload: unknown) => {
     const { providerId } = typeof payload === "object" && payload !== null && "providerId" in payload ? payload as { providerId: unknown, profileId?: unknown } : { providerId: payload };
     try {
       const validProviderId = parseProviderId(providerId);

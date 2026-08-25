@@ -3,6 +3,7 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
 vi.mock("electron", () => ({
+  app: { isPackaged: false },
   ipcMain: { handle: vi.fn() },
   dialog: { showSaveDialog: vi.fn() },
 }));
@@ -30,6 +31,9 @@ import { isMasterPasswordSet, verifyMasterPassword } from "../services/secureSto
 import { writeSanitizedConfig } from "../services/configService";
 import { redactConfigPaths, registerConfigIpcHandlers } from "./configHandlers";
 import { resetIpcRateLimitForTests } from "../utils/rateLimit";
+import { clearRegisteredChannelsForTesting } from "./handlers/common";
+
+const trustedEvent = { senderFrame: { url: "http://localhost:5173" } };
 
 describe("configHandlers", () => {
   it("redacts absolute config paths before returning status to the renderer", () => {
@@ -55,6 +59,7 @@ describe("safety:setFamilySafeMode", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resetIpcRateLimitForTests();
+    clearRegisteredChannelsForTesting();
     handlers = {};
     (ipcMain.handle as any).mockImplementation((channel: string, handler: () => void) => {
       handlers[channel] = handler;
@@ -63,7 +68,7 @@ describe("safety:setFamilySafeMode", () => {
   });
 
   const callHandler = async (payload: any) => {
-    return handlers["safety:setFamilySafeMode"]({} as any, payload);
+    return handlers["safety:setFamilySafeMode"](trustedEvent as any, payload);
   };
 
   it("rejects when no master password is set", async () => {
@@ -107,6 +112,7 @@ describe("config:writeSanitized generic patch rejection", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resetIpcRateLimitForTests();
+    clearRegisteredChannelsForTesting();
     handlers = {};
     (ipcMain.handle as any).mockImplementation((channel: string, handler: () => void) => {
       handlers[channel] = handler;
@@ -115,7 +121,7 @@ describe("config:writeSanitized generic patch rejection", () => {
   });
 
   const callHandler = async (patch: any) => {
-    return handlers["config:writeSanitized"]({} as any, patch);
+    return handlers["config:writeSanitized"](trustedEvent as any, patch);
   };
 
   it("rejects generic modification of Family Safe Mode", async () => {

@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   showOpenDialog: vi.fn(), showSaveDialog: vi.fn(), list: vi.fn(), read: vi.fn(), save: vi.fn(), loreSave: vi.fn(), sync: vi.fn(),
 }));
 vi.mock("electron", () => ({
+  app: { isPackaged: false },
   ipcMain: { handle: vi.fn((channel: string, handler: (...args: unknown[]) => unknown) => mocks.handlers.set(channel, handler)) },
   dialog: { showOpenDialog: mocks.showOpenDialog, showSaveDialog: mocks.showSaveDialog },
   nativeImage: { createFromBuffer: vi.fn(() => ({ isEmpty: () => false, toPNG: () => Buffer.alloc(0) })) },
@@ -18,14 +19,16 @@ vi.mock("../services/syncBridge", () => ({ emitSyncPacket: mocks.sync }));
 vi.mock("../../src/shared/safety/characterImportSafety", () => ({ assessCharacterImport: vi.fn(() => ({ allow: true })) }));
 vi.mock("../services/runtimeSafetySettings", () => ({ getRuntimeLocalFamilySafeModeEnabled: vi.fn(() => true) }));
 
+import { clearRegisteredChannelsForTesting } from "./handlers/common";
 import { registerCharacterCardFileHandlers } from "./characterCardFileHandlers";
 
 const existing: CharacterCardV1 = { schema: "CharacterCardV1", id: "existing-1", name: "Aster Vale", description: "Old", systemPrompt: "Old system", tags: [], adult: false, exampleDialogues: [], author: "Venice Forge Tests", createdAt: 1, updatedAt: 2 };
-const event = { sender: { id: 7, once: vi.fn() } };
+const event = { sender: { id: 7, once: vi.fn() }, senderFrame: { url: "http://localhost:5173" } };
 
 describe("character card file IPC", () => {
   beforeEach(() => {
     vi.useRealTimers(); mocks.handlers.clear(); vi.clearAllMocks();
+    clearRegisteredChannelsForTesting();
     mocks.list.mockResolvedValue({ cards: [], truncated: false, totalScanned: 0 });
     mocks.save.mockImplementation(async () => ({ ok: true })); mocks.loreSave.mockResolvedValue({ ok: true }); mocks.sync.mockResolvedValue(undefined);
     registerCharacterCardFileHandlers();

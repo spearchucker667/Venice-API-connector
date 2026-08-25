@@ -16,7 +16,13 @@ import type {
   PromptEnhancerReferenceContext,
 } from "./prompt-enhancer-context";
 import { effectiveEnhancerPromptLimit } from "./prompt-enhancer-context";
-import { SafetyGuardBlockedError } from "../shared/safety";
+import {
+  SafetyGuardBlockedError,
+  guardCategoryToSafetyCategory,
+  safetyLayerFromGuardCategory,
+  type SafetyCategory,
+  type SafetyLayer,
+} from "../shared/safety";
 
 export type PromptEnhanceMode = "enhance" | "remix";
 
@@ -38,8 +44,10 @@ export interface EnhancePromptResult {
   modelUsed: string;
   truncated?: boolean;
   fallbackReason?: "provider-error" | "invalid-output" | "safety-block";
-  safetyCategory?: string;
+  safetyLayer?: SafetyLayer;
+  safetyCategory?: SafetyCategory | string;
   safetyReasonCode?: string;
+  safetyUserMessage?: string;
 }
 
 export type PromptEnhancerConfig = Pick<
@@ -344,18 +352,59 @@ export async function enhancePrompt(
         modelUsed: effective.model,
         truncated: false,
         fallbackReason: "safety-block",
-        safetyCategory: error.decision.category,
+        safetyLayer: safetyLayerFromGuardCategory(error.decision.category),
+        safetyCategory: guardCategoryToSafetyCategory(error.decision.category),
         safetyReasonCode: error.decision.reasonCode,
+        safetyUserMessage: error.decision.userMessage,
       };
     }
     const status = error && typeof error === "object" && "status" in error
       ? (error as { status?: unknown }).status
       : undefined;
+    if (status === 451) {
+      const body =
+        error && typeof error === "object" && "body" in error
+          ? (error as { body?: unknown }).body
+          : undefined;
+      let layer: SafetyLayer = "mandatory-child-safety";
+      let category: SafetyCategory | string = "provider-restriction";
+      let reasonCode = "PROVIDER_451";
+      let userMessage: string | undefined;
+      if (body && typeof body === "object") {
+        const record = body as Record<string, unknown>;
+        const maybeLayer = record.layer;
+        if (
+          maybeLayer === "mandatory-child-safety" ||
+          maybeLayer === "provider-policy"
+        ) {
+          layer = maybeLayer;
+        }
+        if (typeof record.category === "string") {
+          category = record.category;
+        }
+        if (typeof record.reasonCode === "string") {
+          reasonCode = record.reasonCode;
+        }
+        if (typeof record.userMessage === "string") {
+          userMessage = record.userMessage;
+        }
+      }
+      return {
+        prompt: input.prompt,
+        modelUsed: effective.model,
+        truncated: false,
+        fallbackReason: "safety-block",
+        safetyLayer: layer,
+        safetyCategory: category,
+        safetyReasonCode: reasonCode,
+        safetyUserMessage: userMessage,
+      };
+    }
     return {
       prompt: input.prompt,
       modelUsed: effective.model,
       truncated: false,
-      fallbackReason: status === 451 ? "safety-block" : "provider-error",
+      fallbackReason: "provider-error",
     };
   }
 }

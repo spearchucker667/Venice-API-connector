@@ -439,7 +439,7 @@ describe("server.ts safety middleware", () => {
       .send({ messages: [{ role: "user", content: "draw me a loli character" }] });
 
     expect(res.status).toBe(451);
-    expect(res.body.error).toMatch(/illegal-content protection/i);
+    expect(res.body.error).toMatch(/mandatory child-safety protection/i);
     expect(res.body.reasonCode).toBe("CSAM_GENRE_TERM");
   });
 
@@ -673,7 +673,7 @@ describe("server.ts Jina proxy error handling", () => {
       category: "csam_request",
       severity: "critical",
     });
-    expect(response.body.error).toMatch(/illegal-content protection/i);
+    expect(response.body.error).toMatch(/mandatory child-safety protection/i);
     expect(JSON.stringify(response.body)).not.toContain("upstream body");
   });
 });

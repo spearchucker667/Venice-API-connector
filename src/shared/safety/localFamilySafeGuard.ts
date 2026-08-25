@@ -3,15 +3,39 @@
 import type { SafetyGuardDecision, SafetyGuardInput } from "./childExploitationGuard";
 import { recordDecision } from "./guardAudit";
 import { runLocalFamilyGuard } from "./localFamilyGuardRules";
+import {
+  MAX_SCAN_CHARS,
+  TAIL_SCAN_CHARS,
+  MIDDLE_SCAN_CHARS,
+} from "./normalization";
 export { runLocalFamilyGuard } from "./localFamilyGuardRules";
 
 export const FAMILY_SAFE_MODE_BLOCK_MESSAGE =
   "Blocked by child-safety protections. This protection cannot be disabled.";
 
+/** Identifies which layer of the safety stack produced a decision. */
+export type SafetyLayer =
+  | "mandatory-child-safety"
+  | "optional-family-policy"
+  | "provider-policy"
+  | "request-validation";
+
+/** Normalized safety-category vocabulary for UI/telemetry. */
+export type SafetyCategory =
+  | "minor-sexualization"
+  | "csam"
+  | "grooming"
+  | "age-evasion"
+  | "adult-explicit-image"
+  | "graphic-gore"
+  | "provider-restriction"
+  | "validation-error";
+
 export type SafetyDecisionCategory =
   | "adult-content-approved"
   | "general"
   | "child-safety"
+  | "adult-content-blocked"
   | "illegal-content"
   | "provider-policy"
   | "validation-error";
@@ -31,6 +55,7 @@ export type LocalGuardDecision =
       reason?: string;
       guardDecision?: SafetyGuardDecision;
       category?: Extract<SafetyDecisionCategory, "adult-content-approved" | "general">;
+      layer: SafetyLayer;
     }
   | {
       allowed: false;
@@ -40,6 +65,7 @@ export type LocalGuardDecision =
       userMessage: string;
       guardDecision: SafetyGuardDecision;
       category: Exclude<SafetyDecisionCategory, "adult-content-approved" | "general">;
+      layer: SafetyLayer;
     };
 
 function uiCategoryFromGuardCategory(
@@ -53,12 +79,13 @@ function uiCategoryFromGuardCategory(
       return "general";
     case "csam_request":
       return "illegal-content";
+    case "unsafe_image_generation":
+      return "adult-content-blocked";
     case "minor_sexualization":
     case "fictional_minor_sexualization":
     case "obfuscated_minor_sexualization":
     case "age_evasion":
     case "grooming_or_exploitation":
-    case "unsafe_image_generation":
     case "unsafe_roleplay":
     case "unsafe_batch_or_automation":
     case "ambiguous_youth_context":
@@ -70,18 +97,47 @@ function uiCategoryFromGuardCategory(
 
 function userMessageForSafetyDecision(
   category: Exclude<SafetyDecisionCategory, "adult-content-approved" | "general">,
-  _reasonCode: string,
 ): string {
   switch (category) {
     case "illegal-content":
-      return "Blocked: illegal-content protection triggered.\n\nReason:\nThe request appears to involve child sexual abuse material or a CSAM genre label.\n\nAdult fictional content is not blocked by this rule.";
+      return (
+        "This request was blocked by mandatory child-safety protection because it appears to " +
+        "involve child sexual abuse material or a CSAM genre label. " +
+        "The request was not sent to the API.\n\n" +
+        "Adult fictional content is not blocked by this rule."
+      );
     case "child-safety":
-      return "Blocked: child-safety protection triggered.\n\nReason:\nThe request appears to involve a minor, age-ambiguous subject, or exploitative content.\n\nAdult fictional content is not blocked by this rule.";
+      return (
+        "This request was blocked by mandatory child-safety protection because it appears to " +
+        "involve a minor, age-ambiguous subject, or exploitative content. " +
+        "The request was not sent to the API.\n\n" +
+        "Adult fictional content is not blocked by this rule."
+      );
+    case "adult-content-blocked":
+      return (
+        "This request was blocked by optional Family Safe Mode because it requested " +
+        "adult explicit imagery or graphic content that is filtered while Family Safe Mode is on. " +
+        "The request was not sent to the API."
+      );
     case "provider-policy":
       return "Blocked: provider policy violation.\n\nReason:\nThe request violates the selected provider's content policy.";
     case "validation-error":
       return "Blocked: request validation failed.\n\nReason:\nThe request could not be validated for safety.";
   }
+}
+
+function deriveSafetyLayer(
+  allowed: boolean,
+  uiCategory: SafetyDecisionCategory,
+  familyModeEnabled: boolean,
+): SafetyLayer {
+  if (!allowed && uiCategory === "adult-content-blocked") {
+    return "optional-family-policy";
+  }
+  if (uiCategory === "provider-policy") return "provider-policy";
+  if (uiCategory === "validation-error") return "request-validation";
+  if (allowed && familyModeEnabled) return "optional-family-policy";
+  return "mandatory-child-safety";
 }
 
 export function toSafetyDecision(
@@ -93,13 +149,13 @@ export function toSafetyDecision(
       return {
         allowed: false,
         category: "child-safety",
-        userMessage: userMessageForSafetyDecision("child-safety", guardDecision.reasonCode),
+        userMessage: userMessageForSafetyDecision("child-safety"),
       };
     }
     return {
       allowed: false,
       category,
-      userMessage: userMessageForSafetyDecision(category, guardDecision.reasonCode),
+      userMessage: userMessageForSafetyDecision(category),
     };
   }
   return {
@@ -113,38 +169,73 @@ export function toSafetyDecision(
  * `localFamilySafeModeEnabled` flag controls optional family-filter behavior,
  * but it must never bypass legally required child-safety enforcement.
  */
-export function maybeRunLocalFamilyGuard(
-  input: SafetyGuardInput,
-  localFamilySafeModeEnabled: boolean,
-): LocalGuardDecision {
-  const guardDecision = runLocalFamilyGuard(input);
-  recordDecision(guardDecision);
-  if (!guardDecision.allow || guardDecision.action === "block") {
-    const decision = toSafetyDecision(guardDecision);
+function buildBlockedLocalDecision(
+  guardDecision: SafetyGuardDecision,
+  familyModeEnabled: boolean,
+): Extract<LocalGuardDecision, { allowed: false }> {
+  const decision = toSafetyDecision(guardDecision);
+  if (decision.allowed) {
+    // Guard reported a block, so toSafetyDecision must also report a block.
+    // This fallback is only here to keep the type-checker happy.
     return {
       allowed: false,
       reason: guardDecision.reasonCode,
       ruleId: guardDecision.reasonCode,
-      userMessage: decision.allowed ? FAMILY_SAFE_MODE_BLOCK_MESSAGE : decision.userMessage,
+      userMessage: "Blocked by safety guard.",
       guardDecision,
-      category: decision.allowed ? "child-safety" : decision.category,
+      category: "child-safety",
+      layer: "mandatory-child-safety",
     };
   }
+  const category = decision.category;
+  return {
+    allowed: false,
+    reason: guardDecision.reasonCode,
+    ruleId: guardDecision.reasonCode,
+    userMessage: decision.userMessage,
+    guardDecision,
+    category,
+    layer: deriveSafetyLayer(false, category, familyModeEnabled),
+  };
+}
 
+function buildAllowedLocalDecision(
+  guardDecision: SafetyGuardDecision,
+  familyModeEnabled: boolean,
+): Extract<LocalGuardDecision, { allowed: true }> {
   const decision = toSafetyDecision(guardDecision);
-  const allowedCategory = decision.category as Extract<
+  const category = decision.category as Extract<
     SafetyDecisionCategory,
     "adult-content-approved" | "general"
   >;
-  return localFamilySafeModeEnabled
-    ? { allowed: true, guardDecision, category: allowedCategory }
+  const layer = deriveSafetyLayer(true, category, familyModeEnabled);
+  return familyModeEnabled
+    ? { allowed: true, guardDecision, category, layer }
     : {
         allowed: true,
         skipped: true,
         reason: "optional-local-family-filter-disabled-child-safety-checked",
         guardDecision,
-        category: allowedCategory,
+        category,
+        layer,
       };
+}
+
+/**
+ * Always evaluates the non-disableable child-exploitation guard. The
+ * `localFamilySafeModeEnabled` flag controls optional family-filter behavior,
+ * but it must never bypass legally required child-safety enforcement.
+ */
+export function maybeRunLocalFamilyGuard(
+  input: SafetyGuardInput,
+  localFamilySafeModeEnabled: boolean,
+): LocalGuardDecision {
+  const guardDecision = runLocalFamilyGuard(input, localFamilySafeModeEnabled);
+  recordDecision(guardDecision);
+  if (!guardDecision.allow || guardDecision.action === "block") {
+    return buildBlockedLocalDecision(guardDecision, localFamilySafeModeEnabled);
+  }
+  return buildAllowedLocalDecision(guardDecision, localFamilySafeModeEnabled);
 }
 
 /**
@@ -162,33 +253,11 @@ export function previewLocalFamilyGuard(
   input: SafetyGuardInput,
   localFamilySafeModeEnabled: boolean,
 ): LocalGuardDecision {
-  const guardDecision = runLocalFamilyGuard(input);
+  const guardDecision = runLocalFamilyGuard(input, localFamilySafeModeEnabled);
   if (!guardDecision.allow || guardDecision.action === "block") {
-    const decision = toSafetyDecision(guardDecision);
-    return {
-      allowed: false,
-      reason: guardDecision.reasonCode,
-      ruleId: guardDecision.reasonCode,
-      userMessage: decision.allowed ? FAMILY_SAFE_MODE_BLOCK_MESSAGE : decision.userMessage,
-      guardDecision,
-      category: decision.allowed ? "child-safety" : decision.category,
-    };
+    return buildBlockedLocalDecision(guardDecision, localFamilySafeModeEnabled);
   }
-
-  const decision = toSafetyDecision(guardDecision);
-  const allowedCategory = decision.category as Extract<
-    SafetyDecisionCategory,
-    "adult-content-approved" | "general"
-  >;
-  return localFamilySafeModeEnabled
-    ? { allowed: true, guardDecision, category: allowedCategory }
-    : {
-        allowed: true,
-        skipped: true,
-        reason: "optional-local-family-filter-disabled-child-safety-checked",
-        guardDecision,
-        category: allowedCategory,
-      };
+  return buildAllowedLocalDecision(guardDecision, localFamilySafeModeEnabled);
 }
 
 export type ResponseBodyScreenResult =
@@ -222,6 +291,53 @@ export function safetyBlockBodyFromResponseScreen(
   };
 }
 
+/** Overlap used around window boundaries so a prohibited signal split by a
+ *  sampling cut is still captured in at least one contiguous slice. */
+const SCREEN_WINDOW_OVERLAP = 256;
+
+/** Maximum number of middle windows used when screening very large bodies. */
+const MAX_SCREEN_MIDDLE_WINDOWS = 3;
+
+/**
+ * Builds a bounded head + middle + tail sample of a potentially very large
+ * response body. Uses the same window constants as the prompt normalizer so
+ * screening cost stays O(1) on payload size while still catching signals at
+ * the start, end, and middle of the body.
+ */
+function buildScreeningSample(body: string): string {
+  if (body.length <= MAX_SCAN_CHARS) {
+    return body;
+  }
+
+  const head = body.slice(0, MAX_SCAN_CHARS);
+  const tail = body.slice(-TAIL_SCAN_CHARS);
+  const headEnd = MAX_SCAN_CHARS;
+  const tailStart = body.length - TAIL_SCAN_CHARS;
+  const parts: string[] = [head];
+
+  if (tailStart > headEnd) {
+    // Boundary overlap slices catch signals that span the head/middle or
+    // middle/tail cuts.
+    parts.push(body.slice(headEnd - SCREEN_WINDOW_OVERLAP, headEnd + SCREEN_WINDOW_OVERLAP));
+    parts.push(body.slice(tailStart - SCREEN_WINDOW_OVERLAP, tailStart + SCREEN_WINDOW_OVERLAP));
+
+    // Evenly-spaced middle windows cover the unscanned gap between head and tail.
+    const gap = tailStart - headEnd;
+    const windowCount = Math.min(MAX_SCREEN_MIDDLE_WINDOWS, Math.ceil(gap / MIDDLE_SCAN_CHARS));
+    for (let i = 0; i < windowCount; i++) {
+      const center = headEnd + Math.floor((gap * (i + 1)) / (windowCount + 1));
+      const start = Math.max(
+        headEnd,
+        Math.min(center - Math.floor(MIDDLE_SCAN_CHARS / 2), tailStart - MIDDLE_SCAN_CHARS),
+      );
+      parts.push(body.slice(start, start + MIDDLE_SCAN_CHARS));
+    }
+  }
+
+  parts.push(tail);
+  return parts.filter(Boolean).join(" ");
+}
+
 /**
  * Screens a string returned by a web-proxy or scrape boundary. The guard is
  * always subject to the child-exploitation guard. When the optional Family
@@ -231,15 +347,16 @@ export function safetyBlockBodyFromResponseScreen(
  * Callers MUST treat blocked results as a 451 with the supplied `userMessage`
  * (do not echo raw body content back to the user). When the input is shorter
  * than the guard's prompt-hash budget we screen verbatim; for very large
- * bodies we sample a window to keep evaluation O(1) on payload size.
+ * bodies we sample bounded head + middle + tail windows to keep evaluation
+ * O(1) on payload size.
  */
 export function screenResponseBody(
   body: string,
   context: SafetyGuardInput,
   localFamilySafeModeEnabled: boolean,
-  sampleWindow = 8000,
+  _sampleWindow = MAX_SCAN_CHARS,
 ): ResponseBodyScreenResult {
-  const sample = body.length > sampleWindow ? body.slice(0, sampleWindow) : body;
+  const sample = buildScreeningSample(body);
   const input: SafetyGuardInput = { ...context, text: sample };
   const decision = maybeRunLocalFamilyGuard(input, localFamilySafeModeEnabled);
   if (!decision.allowed) {

@@ -46,15 +46,52 @@ they are sent upstream. It does **not** guarantee that all unsafe, unlawful, or
 policy-violating content will be prevented, and it is not a legal/compliance
 system.
 
-When Family Safe Mode is enabled, Venice Forge evaluates prompt-like request
-fields with the local guard in `src/shared/safety/childExploitationGuard.ts`
-and `src/shared/safety/localFamilySafeGuard.ts`. The guard is endpoint-aware and
-extracts prompt-like fields such as `messages`, `prompt`, `negative_prompt`,
-`query`, `text`, and `input`. It uses rule-based normalization, cross-sentence
-context detection, and endpoint-aware extraction. When Family Safe Mode is
-disabled, **Adult Mode** skips the local rule engine entirely. Adult Mode does
-not disable Venice's own provider controls, nor the separate Venice API
-`safe_mode` parameter.
+Venice Forge applies two distinct local safety layers.
+
+The **mandatory child-safety layer** (`src/shared/safety/childExploitationGuard.ts`)
+runs on every guarded request regardless of settings. It blocks sexualization of
+minors, CSAM requests, grooming/exploitation, age-evasion attempts, fictional
+minor sexualization, obfuscated minor sexualization, and equivalent mandatory
+child-protection cases. This layer cannot be disabled by the user.
+
+The **optional Family Safe Mode / adult-content layer**
+(`src/shared/safety/localFamilySafeGuard.ts` and `src/shared/safety/localFamilyGuardRules.ts`)
+runs only when Family Safe Mode is enabled. It blocks adult explicit nudity,
+adult erotic framing, and non-child graphic gore for image generation and other
+covered endpoints. Turning Family Safe Mode off removes these adult-oriented
+restrictions but does not affect mandatory child safety.
+
+Both layers are endpoint-aware and extract prompt-like fields such as `messages`,
+`prompt`, `negative_prompt`, `query`, `text`, and `input`. They use rule-based
+normalization, cross-sentence context detection, and endpoint-aware extraction.
+Adult Mode does not disable Venice's own provider controls, nor the separate
+Venice API `safe_mode` parameter.
+
+## IPC sender validation
+
+Privileged Electron IPC handlers (secrets, configuration, filesystem, provider
+dispatch, paid generation, background tasks, sync, documents, and media) are
+registered through `registerPrivilegedIpcChannel()` in
+`electron/ipc/handlers/common.ts`. Before a handler body runs, the wrapper
+validates the sender frame with `validateIpcSender()` in
+`electron/utils/validateIpcSender.ts`.
+
+Validation rules:
+
+- In development (`app.isPackaged === false`) only the Vite dev-server origin
+  `http://localhost:5173` is trusted.
+- In packaged production only `file://` URLs inside the packaged renderer root
+  (`dist/`) are trusted.
+- Loopback, link-local, RFC1918, and `file://localhost` origins are rejected.
+- Non-`file:` protocols (including `data:`, `http:`, and `https:`) are rejected
+  in production.
+- `event.senderFrame.url` is preferred over `event.sender.getURL()`.
+- Untrusted frames receive an immediate error before rate-limit state or handler
+  logic is touched.
+
+The renderer preload bridge exposes only named, typed channels; raw
+`ipcRenderer` is not exposed. `contextIsolation` is enabled, `nodeIntegration` is
+disabled, and `sandbox` is enabled.
 
 ## Document Agent boundary
 
@@ -75,8 +112,9 @@ Export is always user-mediated by a native save dialog. The model does not choos
   routed through guarded transports/providers.
 - Jina and generic scrape **response-body** screening through
   `screenResponseBody()` for `/api/proxy-jina`, `/api/proxy-scrape`, and the
-  corresponding Electron IPC handlers. Large text responses are sampled against
-  the first 8 KiB window before the app returns them to the renderer.
+  corresponding Electron IPC handlers. Large text responses are sampled with
+  bounded head+middle+tail windows so prohibited signals near the start, middle,
+  end, or split across chunk boundaries are evaluated.
 
 ### Where it runs
 
@@ -191,8 +229,9 @@ npm test -- --fileParallelism=false
 
 ### Known limitations and future work
 
-- Response-body screening currently samples only the first 8 KiB of Jina/scrape
-  text responses.
+- Response-body screening uses bounded head+middle+tail windows. It is not a
+  byte-for-byte scan of arbitrarily large responses; the windows are sized to
+  catch concentrated signals without buffering unbounded text.
 - The safety verifier is boundary-oriented. It proves routing and no-raw-log
   policy, not semantic completeness.
 - The endpoint matrix is explicit rather than automatic; new prompt-carrying

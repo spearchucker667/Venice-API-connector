@@ -10,6 +10,7 @@
 import { describe, it, expect, beforeAll, beforeEach, vi } from "vitest";
 import path from "path";
 import os from "os";
+import fs from "fs";
 
 // vi.hoisted runs synchronously at module init time and is accessible
 // inside vi.mock factories, so we can use it as a hoisted mock store.
@@ -98,10 +99,23 @@ vi.mock("../services/chatStorage", () => ({
 }));
 
 import { registerIpcHandlers } from "./handlers";
+import { clearRegisteredChannelsForTesting } from "./handlers/common";
+import { setRendererRootForTesting } from "../utils/validateIpcSender";
+
+const tempRendererRoot = fs.mkdtempSync(path.join(os.tmpdir(), "vf-updates-test-renderer-root-"));
+fs.writeFileSync(path.join(tempRendererRoot, "index.html"), "<html></html>");
+
+function trustedEvent(): Electron.IpcMainInvokeEvent {
+  const url = mocks.isPackaged.value
+    ? `file://${path.join(tempRendererRoot, "index.html")}`
+    : "http://localhost:5173";
+  return { senderFrame: { url } } as unknown as Electron.IpcMainInvokeEvent;
+}
 
 describe("app:*update IPC handlers", () => {
   beforeAll(() => {
     mocks.capturedHandlers.clear();
+    clearRegisteredChannelsForTesting();
     registerIpcHandlers();
   });
 
@@ -114,19 +128,29 @@ describe("app:*update IPC handlers", () => {
     mocks.mockQuitAndInstall.mockReset();
     mocks.mockLogError.mockReset();
     mocks.isPackaged.value = false;
+    setRendererRootForTesting(tempRendererRoot);
+  });
+
+  afterAll(() => {
+    try {
+      fs.rmSync(tempRendererRoot, { recursive: true, force: true });
+    } catch {
+      // Best-effort cleanup.
+    }
+    setRendererRootForTesting(undefined);
   });
 
   it("app:checkForUpdates returns a friendly error in dev mode", async () => {
     const handler = mocks.capturedHandlers.get("app:checkForUpdates");
     expect(handler).toBeDefined();
-    const result = await handler!();
+    const result = await handler!(trustedEvent());
     expect(result).toMatchObject({ ok: false });
     expect(result.error).toMatch(/production/i);
   });
 
   it("app:installUpdate refuses to install when no update was downloaded", async () => {
     const handler = mocks.capturedHandlers.get("app:installUpdate");
-    const result = await handler!();
+    const result = await handler!(trustedEvent());
     expect(result).toMatchObject({ ok: false });
     expect(result.error).toMatch(/no update downloaded/i);
     expect(mocks.mockQuitAndInstall).not.toHaveBeenCalled();
@@ -138,7 +162,7 @@ describe("app:*update IPC handlers", () => {
       new Error("feed https://secret.example Authorization: Bearer fixture /Users/private/update.yml"),
     );
     const handler = mocks.capturedHandlers.get("app:checkForUpdates");
-    const result = await handler!();
+    const result = await handler!(trustedEvent());
     expect(result).toEqual({ ok: false, error: "Update check failed. Please try again later." });
     expect(JSON.stringify(mocks.mockLogError.mock.calls)).not.toContain("Bearer fixture");
     expect(JSON.stringify(mocks.mockLogError.mock.calls)).not.toContain("/Users/private");
@@ -149,7 +173,7 @@ describe("app:*update IPC handlers", () => {
       new Error("token sk-secret-fixture at /Users/private/update.zip"),
     );
     const handler = mocks.capturedHandlers.get("app:downloadUpdate");
-    const result = await handler!();
+    const result = await handler!(trustedEvent());
     expect(result).toEqual({ ok: false, error: "Update download failed. Please try again later." });
     expect(JSON.stringify(mocks.mockLogError.mock.calls)).not.toContain("sk-secret-fixture");
     expect(JSON.stringify(mocks.mockLogError.mock.calls)).not.toContain("/Users/private");

@@ -131,7 +131,10 @@
     "enhancementFailed": "Улучшение подсказки не удалось",
     "enhancementProviderError": "Внутренний усилитель не смог достичь или завершить запрос Venice. Ваш исходный запрос был сохранён.",
     "enhancementInvalidOutput": "Внутренний усилитель не вернул ни одного пригодного запроса изображения. Ваш исходный запрос был сохранён.",
-    "enhancementSafetyBlocked": "Улучшение промпта было остановлено обязательными мерами защиты детей, которые не зависят от необязательных настроек безопасного режима. Исходный промпт был сохранён."
+    "enhancementSafetyBlocked": "Улучшение промпта было остановлено обязательными мерами защиты детей, которые не зависят от необязательных настроек безопасного режима. Исходный промпт был сохранён.",
+    "enhancementSafetyBlockedMandatory": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedMandatory",
+    "enhancementSafetyBlockedFamily": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedFamily",
+    "enhancementSafetyBlockedProvider": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedProvider"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

@@ -2,7 +2,8 @@
  *  main-process task manager to the renderer process.
  */
 
-import { ipcMain, type WebContents } from "electron";
+import { type WebContents } from "electron";
+import { registerPrivilegedIpcChannel } from "./common";
 import type { BackgroundTaskCreateInput, BackgroundTaskIpcEnvelope, BackgroundTaskUpdate } from "../../../src/types/background-task";
 import { isValidTaskType, isValidTaskStatus, isValidVideoTaskStage } from "../../../src/types/background-task";
 import {
@@ -73,7 +74,7 @@ function taskNotFound(): { ok: false; error: string } {
 export function registerBackgroundTaskHandlers(): void {
   registerBroadcastListener();
 
-  ipcMain.handle("backgroundTask:subscribe", async (event) => {
+  registerPrivilegedIpcChannel("backgroundTask:subscribe", async (event) => {
     try {
       await initBackgroundTaskManager();
       subscribers.add(event.sender);
@@ -84,12 +85,12 @@ export function registerBackgroundTaskHandlers(): void {
     }
   });
 
-  ipcMain.handle("backgroundTask:unsubscribe", async (event) => {
+  registerPrivilegedIpcChannel("backgroundTask:unsubscribe", async (event) => {
     subscribers.delete(event.sender);
     return { ok: true };
   });
 
-  ipcMain.handle("backgroundTask:create", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("backgroundTask:create", async (event, input: unknown) => {
     try {
       await initBackgroundTaskManager();
       if (!input || typeof input !== "object") {
@@ -115,7 +116,7 @@ export function registerBackgroundTaskHandlers(): void {
     }
   });
 
-  ipcMain.handle("backgroundTask:update", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("backgroundTask:update", async (event, input: unknown) => {
     try {
       await initBackgroundTaskManager();
       if (!input || typeof input !== "object") {
@@ -167,7 +168,7 @@ export function registerBackgroundTaskHandlers(): void {
     }
   });
 
-  ipcMain.handle("backgroundTask:list", async (event) => {
+  registerPrivilegedIpcChannel("backgroundTask:list", async (event) => {
     try {
       await initBackgroundTaskManager();
       const profileId = getProfileSessionId(event.sender);
@@ -177,7 +178,7 @@ export function registerBackgroundTaskHandlers(): void {
     }
   });
 
-  ipcMain.handle("backgroundTask:cancel", async (event, taskId: unknown) => {
+  registerPrivilegedIpcChannel("backgroundTask:cancel", async (event, taskId: unknown) => {
     try {
       await initBackgroundTaskManager();
       if (typeof taskId !== "string" || taskId.length === 0 || taskId.length > 128) {
@@ -191,7 +192,7 @@ export function registerBackgroundTaskHandlers(): void {
     }
   });
 
-  ipcMain.handle("backgroundTask:retry", async (event, taskId: unknown) => {
+  registerPrivilegedIpcChannel("backgroundTask:retry", async (event, taskId: unknown) => {
     try {
       await initBackgroundTaskManager();
       if (typeof taskId !== "string" || taskId.length === 0 || taskId.length > 128) {
@@ -205,7 +206,7 @@ export function registerBackgroundTaskHandlers(): void {
     }
   });
 
-  ipcMain.handle("backgroundTask:clear", async (event, taskId: unknown) => {
+  registerPrivilegedIpcChannel("backgroundTask:clear", async (event, taskId: unknown) => {
     try {
       await initBackgroundTaskManager();
       if (typeof taskId !== "string" || taskId.length === 0 || taskId.length > 128) {
@@ -219,7 +220,7 @@ export function registerBackgroundTaskHandlers(): void {
     }
   });
 
-  ipcMain.handle("backgroundTask:submitPaidQueue", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("backgroundTask:submitPaidQueue", async (event, input: unknown) => {
     try {
       await initBackgroundTaskManager();
       if (!input || typeof input !== "object") {

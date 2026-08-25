@@ -10,7 +10,7 @@ const getLatestReplaceImportRecovery = vi.hoisted(() => vi.fn(async () => null))
 const loadReplaceImportRecovery = vi.hoisted(() => vi.fn(async () => ({ version: 2, exportedAt: "2026-07-15T00:00:00.000Z", salt: "salt", iv: "iv", ciphertext: "ciphertext" })));
 
 vi.mock("electron", () => ({
-  app: { getPath: vi.fn(() => "/user-data") },
+  app: { getPath: vi.fn(() => "/user-data"), isPackaged: false },
   ipcMain: { handle: vi.fn((channel: string, handler: (...args: unknown[]) => unknown) => handlers.set(channel, handler)) },
   dialog: { showOpenDialog: vi.fn() },
   BrowserWindow: { fromWebContents: vi.fn() },
@@ -29,30 +29,35 @@ vi.mock("../../services/replaceImportRecovery", () => ({
 vi.mock("../../services/remoteApplyAuthority", () => ({ validateMutationAuthority: vi.fn() }));
 vi.mock("../../../src/shared/redaction", () => ({ redactErrorMessage: String }));
 
+import { clearRegisteredChannelsForTesting } from "./common";
 import { registerSyncHandlers } from "./syncHandlers";
+
+const trustedEvent = { senderFrame: { url: "http://localhost:5173" } };
 
 describe("syncHandlers profile authority", () => {
   it("ignores a forged renderer profile when starting sync", async () => {
+    clearRegisteredChannelsForTesting();
     registerSyncHandlers();
     const sender = {} as Electron.WebContents;
-    await handlers.get("sync:startSync")!({ sender }, { password: "passphrase", profileId: "forged" });
+    await handlers.get("sync:startSync")!({ ...trustedEvent, sender }, { password: "passphrase", profileId: "forged" });
 
     expect(getProfileSessionId).toHaveBeenCalledWith(sender);
     expect(startSyncWatcher).toHaveBeenCalledWith("passphrase", "work", false);
   });
 
   it("derives replace-recovery profile authority from the sender", async () => {
+    clearRegisteredChannelsForTesting();
     registerSyncHandlers();
     const sender = {} as Electron.WebContents;
     const manifest = { version: 2, exportedAt: "2026-07-15T00:00:00.000Z", salt: "salt", iv: "iv", ciphertext: "ciphertext" };
 
     await handlers.get("sync:createReplaceImportRecovery")!(
-      { sender },
+      { ...trustedEvent, sender },
       { manifest, password: "passphrase", profileId: "forged" },
     );
-    await handlers.get("sync:getLatestReplaceImportRecovery")!({ sender });
+    await handlers.get("sync:getLatestReplaceImportRecovery")!({ ...trustedEvent, sender });
     await handlers.get("sync:loadReplaceImportRecovery")!(
-      { sender },
+      { ...trustedEvent, sender },
       { id: "recovery-1", password: "passphrase", profileId: "forged" },
     );
 

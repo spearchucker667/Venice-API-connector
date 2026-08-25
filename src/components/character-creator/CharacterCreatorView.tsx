@@ -42,7 +42,13 @@ import {
 } from "../../services/desktopBridge";
 import { toast } from "../../stores/toast-store";
 import { AlertTriangle } from "lucide-react";
-import { SafetyGuardBlockedError } from "../../shared/safety";
+import {
+  SafetyGuardBlockedError,
+  formatSafetyDecision,
+  guardCategoryToSafetyCategory,
+  isSafetyBlockResult,
+  safetyLayerFromGuardCategory,
+} from "../../shared/safety";
 
 import { CharacterCreatorWelcome } from "./CharacterCreatorWelcome";
 import { CharacterCreatorGenerating } from "./CharacterCreatorGenerating";
@@ -53,20 +59,26 @@ import { CharacterCreatorError } from "./CharacterCreatorError";
 import { CharacterCreatorLocalPickerModal } from "./CharacterCreatorLocalPickerModal";
 import { Trans, useTranslation } from "react-i18next";
 
-function formatSafetyError(err: SafetyGuardBlockedError): string {
-  const decision = err.decision;
-  const category = decision.category;
-  const reasonCode = decision.reasonCode;
-  let message = err.message;
-  if (!message || message.includes("Blocked by child-safety protections")) {
-    message = "Generation blocked: child-safety protection triggered.";
-  }
-  return `${message}\n\nBlocking layer: local safety guard\nCategory: ${category}\nReason code: ${reasonCode}`;
+type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
+
+function formatSafetyError(
+  t: TranslateFn,
+  err: SafetyGuardBlockedError,
+): string {
+  return formatSafetyDecision(t, {
+    layer: safetyLayerFromGuardCategory(err.decision.category),
+    category: guardCategoryToSafetyCategory(err.decision.category),
+    reasonCode: err.decision.reasonCode,
+    userMessage: err.decision.userMessage,
+  });
 }
 
-function normalizeCreatorError(err: unknown): string {
+function normalizeCreatorError(t: TranslateFn, err: unknown): string {
+  if (isSafetyBlockResult(err)) {
+    return formatSafetyDecision(t, err);
+  }
   if (err instanceof SafetyGuardBlockedError) {
-    return formatSafetyError(err);
+    return formatSafetyError(t, err);
   }
   return err instanceof Error ? err.message : String(err);
 }
@@ -231,7 +243,7 @@ export function CharacterCreatorView() {
                 break;
             }
           } catch (err) {
-            const msg = normalizeCreatorError(err);
+            const msg = normalizeCreatorError(tRuntime, err);
             setErrorDetails(msg);
             setViewState("error");
           }
@@ -307,7 +319,7 @@ export function CharacterCreatorView() {
         setViewState("welcome");
         return;
       }
-      const msg = normalizeCreatorError(err);
+      const msg = normalizeCreatorError(tRuntime, err);
       setErrorDetails(msg);
       setViewState("error");
     }
@@ -416,7 +428,7 @@ export function CharacterCreatorView() {
         setViewState("welcome");
         return;
       }
-      const msg = normalizeCreatorError(err);
+      const msg = normalizeCreatorError(tRuntime, err);
       setErrorDetails(msg);
       setViewState("error");
     }
@@ -590,7 +602,7 @@ export function CharacterCreatorView() {
         ),
       );
     } catch (err) {
-      const msg = normalizeCreatorError(err);
+      const msg = normalizeCreatorError(tRuntime, err);
       setErrorDetails(msg);
       setViewState("error");
     }
@@ -644,7 +656,7 @@ export function CharacterCreatorView() {
         ),
       );
     } catch (err) {
-      const msg = normalizeCreatorError(err);
+      const msg = normalizeCreatorError(tRuntime, err);
       setErrorDetails(msg);
       setViewState("error");
     }
@@ -725,7 +737,7 @@ export function CharacterCreatorView() {
         startNormalChatForCharacter(result.character.id);
       }
     } catch (err) {
-      const msg = normalizeCreatorError(err);
+      const msg = normalizeCreatorError(tRuntime, err);
       setErrorDetails(msg);
       setViewState("error");
     }

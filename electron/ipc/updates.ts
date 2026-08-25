@@ -1,8 +1,8 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 import { logError, logInfo } from "../services/logger";
 import { redactErrorMessage } from "../../src/shared/redaction";
-import { rateLimitIpcHandler } from "../utils/rateLimit";
+import { registerPrivilegedIpcChannel } from "./handlers/common";
 
 /** Timeout (ms) for a manual update check before giving up. */
 const UPDATE_CHECK_TIMEOUT_MS = 30_000;
@@ -32,8 +32,8 @@ export function registerUpdateHandlers(): void {
   if (updateHandlersRegistered) return;
   updateHandlersRegistered = true;
 
-  const handleIpc = (channel: string, handler: Parameters<typeof ipcMain.handle>[1]) => {
-    ipcMain.handle(channel, rateLimitIpcHandler(channel, handler));
+  const handleIpc = (channel: string, handler: Parameters<typeof registerPrivilegedIpcChannel>[1]) => {
+    registerPrivilegedIpcChannel(channel, handler);
   };
 
   // IPC Handlers

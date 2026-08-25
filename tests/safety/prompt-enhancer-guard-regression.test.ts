@@ -1,13 +1,22 @@
 /**
  * @vitest-environment node
  */
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { assessChildExploitationSafety } from "../../src/shared/safety/childExploitationGuard";
 import {
   MANDATORY_ENHANCE_PROTOCOL,
   MANDATORY_REMIX_PROTOCOL,
 } from "../../src/shared/imagePromptDefaults";
-import { buildEnhancerUserMessage } from "../../src/services/prompt-enhancer-service";
+import {
+  buildEnhancerUserMessage,
+  enhancePrompt,
+} from "../../src/services/prompt-enhancer-service";
+
+vi.mock("../../src/lib/venice-client", () => ({ venice: vi.fn() }));
+
+import { venice } from "../../src/lib/venice-client";
+
+const mockedVenice = vi.mocked(venice);
 
 /**
  * Builds the exact outbound /chat/completions payload used by the internal
@@ -116,5 +125,21 @@ describe("prompt enhancer guard regression", () => {
     }
     // Sanity: the output contract reminder should still be present.
     expect(userMessage).toMatch(/Preserve the original subject/);
+  });
+});
+
+describe("prompt enhancer safety provenance", () => {
+  it("preserves layer, category and reason code for a generic 451 response", async () => {
+    mockedVenice.mockRejectedValueOnce(
+      Object.assign(new Error("blocked"), { status: 451 }),
+    );
+    const result = await enhancePrompt({ mode: "enhance", prompt: "cat" });
+    expect(result).toMatchObject({
+      prompt: "cat",
+      fallbackReason: "safety-block",
+      safetyLayer: "mandatory-child-safety",
+      safetyCategory: "provider-restriction",
+      safetyReasonCode: "PROVIDER_451",
+    });
   });
 });

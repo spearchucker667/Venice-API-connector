@@ -2,11 +2,11 @@
  * @fileoverview Main-process IPC handlers for Character Creator operations.
  */
 
-import { dialog, ipcMain, nativeImage } from "electron";
+import { dialog, nativeImage } from "electron";
 import fs from "fs/promises";
 import path from "path";
 import crypto from "crypto";
-import { rateLimitIpcHandler } from "../utils/rateLimit";
+import { registerPrivilegedIpcChannel } from "./handlers/common";
 import { embedCharacterCardInPng } from "../services/characterCardPngCodec";
 import type { CharacterCardV2Dto } from "../../src/types/character-card-spec";
 
@@ -51,9 +51,9 @@ async function atomicWriteFile(destinationPath: string, data: Buffer | string): 
 }
 
 export function registerCharacterCreatorHandlers(): void {
-  ipcMain.handle(
+  registerPrivilegedIpcChannel(
     characterCreatorIpcChannels.validateCard,
-    rateLimitIpcHandler(characterCreatorIpcChannels.validateCard, async (_event, payload: unknown) => {
+    async (_event, payload: unknown) => {
       if (!payload || typeof payload !== "object" || hasForbiddenKeys(payload)) {
         return { ok: false, error: "Invalid card payload." };
       }
@@ -63,12 +63,12 @@ export function registerCharacterCreatorHandlers(): void {
         return { ok: true, valid: false, errors: ["Invalid Character Card V2 structure or missing name."] };
       }
       return { ok: true, valid: true, errors: [], warnings: [] };
-    }),
+    },
   );
 
-  ipcMain.handle(
+  registerPrivilegedIpcChannel(
     characterCreatorIpcChannels.exportCard,
-    rateLimitIpcHandler(characterCreatorIpcChannels.exportCard, async (_event, payload: unknown) => {
+    async (_event, payload: unknown) => {
       if (!payload || typeof payload !== "object" || hasForbiddenKeys(payload)) {
         return { ok: false, error: "Invalid export parameters." };
       }
@@ -125,6 +125,6 @@ export function registerCharacterCreatorHandlers(): void {
         await atomicWriteFile(targetPath, pngBuffer);
         return { ok: true, canceled: false, filename: path.basename(targetPath) };
       }
-    }),
+    },
   );
 }

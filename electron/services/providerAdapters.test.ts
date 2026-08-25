@@ -40,8 +40,6 @@ vi.mock('./secureStore', () => ({
         providerId: 'google_vertex',
         authMode: 'express',
         apiKey: 'fake-vertex-key',
-        projectId: 'venice-forge-test',
-        location: 'global'
       }
     }
     return null
@@ -60,6 +58,7 @@ vi.mock('./providerSettingsStore', () => ({
       azure_openai: true,
       aws_bedrock: true,
       google_vertex: true,
+      replicate: true,
     },
     autoFallbackEnabled: false,
     fallbackOrdering: [],
@@ -132,6 +131,14 @@ describe('providerAdapters', () => {
       }
       const result = resolveProviderRoute(request)
       expect(result?.error).toMatch(/does not support endpoint/)
+    })
+
+    it('rejects replicate: prefixed fallback models because Replicate uses a dedicated async lifecycle', () => {
+      const result = resolveProviderRoute({
+        endpoint: '/chat/completions',
+        body: { model: 'replicate:black-forest-labs/flux-schnell', messages: [] }
+      })
+      expect(result?.error).toMatch(/unsupported provider prefix/i)
     })
 
     it('uses the requested profile when resolving a provider credential', () => {
@@ -229,19 +236,19 @@ describe('providerAdapters', () => {
       const result = resolveProviderRoute(request)
       expect(result?.error).toBeUndefined()
       expect(result?.route?.host).toBe('aiplatform.googleapis.com')
-      expect(result?.route?.path).toBe('/v1/projects/venice-forge-test/locations/global/publishers/google/models/gemini-2.5-flash:generateContent?key=fake-vertex-key')
+      expect(result?.route?.path).toBe('/v1/publishers/google/models/gemini-2.5-flash:generateContent?key=fake-vertex-key')
 
       const transformedBody = result?.route?.transformBody!(request.body, 'gemini-2.5-flash')
       expect(transformedBody).toHaveProperty('contents')
     })
 
-    it('rejects Google Vertex requests when the credential location is dangerous', () => {
+    it('rejects Google Vertex requests for unsupported full OAuth mode', () => {
       vi.mocked(getProviderCredentialOrFallback).mockReturnValueOnce({
         providerId: 'google_vertex',
-        authMode: 'express',
-        apiKey: 'fake-vertex-key',
+        authMode: 'full',
         projectId: 'venice-forge-test',
-        location: 'evil.com/'
+        location: 'us-central1',
+        credentialsJson: '{}'
       })
 
       const result = resolveProviderRoute({
@@ -249,7 +256,7 @@ describe('providerAdapters', () => {
         body: { model: 'google_vertex:gemini-2.5-flash', messages: [] }
       })
 
-      expect(result?.error).toMatch(/invalid/i)
+      expect(result?.error).toMatch(/not implemented/i)
     })
 
     it('uses the configured deployment name as the authoritative routing identity', () => {

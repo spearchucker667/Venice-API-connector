@@ -163,7 +163,7 @@ describe("CharacterCreatorView Component", () => {
       severity: "critical",
       category: "csam_request",
       reasonCode: "CSAM_GENRE_TERM",
-      userMessage: "Blocked: illegal-content protection triggered.",
+      userMessage: "Blocked: mandatory child-safety protection triggered.",
       developerMessage: "CSAM genre label detected.",
       normalizedChanged: false,
       signals: [],
@@ -187,8 +187,32 @@ describe("CharacterCreatorView Component", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Character Creator Error")).toBeInTheDocument();
-      expect(screen.getByText(/Category: csam_request/i)).toBeInTheDocument();
+      expect(screen.getByText(/Blocking layer: Mandatory child safety/i)).toBeInTheDocument();
+      expect(screen.getByText(/Category: CSAM or child exploitation/i)).toBeInTheDocument();
       expect(screen.getByText(/Reason code: CSAM_GENRE_TERM/i)).toBeInTheDocument();
+    });
+  });
+
+  it("formats a serializable safety block result without relying on Error subclasses", async () => {
+    vi.mocked(aiService.generateCharacterCreatorDraft).mockRejectedValueOnce({
+      kind: "safety-block",
+      layer: "provider-policy",
+      category: "provider-restriction",
+      reasonCode: "PROVIDER_SAFE_MODE",
+      userMessage: "Provider policy violation.",
+    });
+
+    render(<CharacterCreatorView />);
+
+    const input = screen.getByPlaceholderText(/I want a brooding nocturnal detective/i);
+    fireEvent.change(input, { target: { value: "blocked concept" } });
+    fireEvent.click(screen.getByRole("button", { name: /Create Draft/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Character Creator Error")).toBeInTheDocument();
+      expect(screen.getByText(/Blocking layer: Provider policy/i)).toBeInTheDocument();
+      expect(screen.getByText(/Category: Provider restriction/i)).toBeInTheDocument();
+      expect(screen.getByText(/Reason code: PROVIDER_SAFE_MODE/i)).toBeInTheDocument();
     });
   });
 

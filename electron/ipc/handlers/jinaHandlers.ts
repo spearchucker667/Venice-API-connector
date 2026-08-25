@@ -21,7 +21,7 @@ import {
 import { checkLocalFamilyGuard } from "../../services/guardPipeline";
 import { getProfileSessionId } from "../../services/profileSession";
 import { getRuntimeLocalFamilySafeModeEnabled } from "../../services/runtimeSafetySettings";
-import { registerIpcChannel } from "./common";
+import { registerPrivilegedIpcChannel } from "./common";
 import {
   publishInspectorRequest,
   publishInspectorCompletion,
@@ -89,7 +89,7 @@ function sanitizeJinaForwardHeaders(input: unknown): Record<string, string> {
 }
 
 export function registerJinaHandlers(): void {
-  registerIpcChannel("jinaApiKey:isConfigured", (event, _profileId?: unknown) => {
+  registerPrivilegedIpcChannel("jinaApiKey:isConfigured", (event, _profileId?: unknown) => {
     try {
       return isJinaApiKeyConfigured(getProfileSessionId(event.sender));
     } catch {
@@ -97,7 +97,7 @@ export function registerJinaHandlers(): void {
     }
   });
 
-  registerIpcChannel("jinaApiKey:set", (event, payload: unknown) => {
+  registerPrivilegedIpcChannel("jinaApiKey:set", (event, payload: unknown) => {
     const { key } = typeof payload === "object" && payload !== null && "key" in payload ? payload as { key: unknown, profileId?: unknown } : { key: payload };
     try {
       const validId = getProfileSessionId(event.sender);
@@ -111,7 +111,7 @@ export function registerJinaHandlers(): void {
     }
   });
 
-  registerIpcChannel("jinaApiKey:delete", (event, _profileId?: unknown) => {
+  registerPrivilegedIpcChannel("jinaApiKey:delete", (event, _profileId?: unknown) => {
     try {
       deleteJinaApiKey(getProfileSessionId(event.sender));
       return { ok: true };
@@ -121,7 +121,7 @@ export function registerJinaHandlers(): void {
   });
 
   /* INSPECTOR_TELEMETRY_JINA_WIRED */
-  registerIpcChannel("jina:request", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("jina:request", async (event, input: unknown) => {
     const startedAt = Date.now();
     const eventId = publishInspectorRequest({
       source: "main-research",
@@ -286,7 +286,7 @@ export function registerJinaHandlers(): void {
 
   
 
-  registerIpcChannel("jinaApiKey:test", async (event, _profileId?: unknown) => {
+  registerPrivilegedIpcChannel("jinaApiKey:test", async (event, _profileId?: unknown) => {
     const validProfileId = getProfileSessionId(event.sender);
     const jinaKey = (() => {
       try {

@@ -55,6 +55,7 @@ function extractAwsBedrockConfig(credential: ProviderCredential | string): AwsBe
 
 /** Extracts and validates the structured Google Vertex credential.
  *  Express Mode (authMode: 'express') is the supported production slice.
+ *  Full OAuth/service-account mode is typed but rejected until implemented.
  */
 function extractGoogleVertexConfig(credential: ProviderCredential | string): Extract<GoogleVertexConfig, { authMode: 'express' }> {
   if (typeof credential === 'string' || !credential || typeof credential !== 'object' || credential.providerId !== 'google_vertex') {
@@ -64,24 +65,17 @@ function extractGoogleVertexConfig(credential: ProviderCredential | string): Ext
   if (c.authMode !== 'express') {
     throw new Error('Google Vertex full OAuth/service-account mode is not implemented. Use Express Mode (API key).')
   }
-  if (!c.apiKey || !c.projectId || !c.location) {
+  if (!c.apiKey) {
     throw new Error('Google Vertex Express Mode credential is missing required fields')
-  }
-  // Re-validate routing fields at adapter time as SSRF defense-in-depth.
-  if (!/^[a-z][a-z0-9-]{4,28}[a-z0-9]?$/.test(c.projectId)) {
-    throw new Error('Google Cloud project ID is invalid')
-  }
-  if (!/^[a-z0-9-]{2,32}$/.test(c.location) || c.location.startsWith('-') || c.location.endsWith('-')) {
-    throw new Error('Google Cloud location is invalid')
   }
   return c
 }
 
-/** Builds a Vertex AI Express Mode HTTPS host from a validated location.
- *  The global endpoint uses the bare aiplatform.googleapis.com host.
+/** Builds a Vertex AI Express Mode HTTPS host.
+ *  The documented Express endpoint is always aiplatform.googleapis.com.
  */
-function buildVertexHost(location: string): string {
-  return location === 'global' ? 'aiplatform.googleapis.com' : `${location}-aiplatform.googleapis.com`
+function buildVertexHost(): string {
+  return 'aiplatform.googleapis.com'
 }
 
 /** Shared Gemini request normalization used by both the Gemini Developer API
@@ -374,8 +368,8 @@ export const providerAdapters: Record<string, AdapterFn> = {
     if (originalPath !== '/chat/completions') return null
     const config = extractGoogleVertexConfig(credential)
     const isStream = !!originalBody.stream
-    const host = buildVertexHost(config.location)
-    const path = `/v1/projects/${encodeURIComponent(config.projectId)}/locations/${encodeURIComponent(config.location)}/publishers/google/models/${encodeURIComponent(model)}:${isStream ? 'streamGenerateContent' : 'generateContent'}?key=${encodeURIComponent(config.apiKey)}`
+    const host = buildVertexHost()
+    const path = `/v1/publishers/google/models/${encodeURIComponent(model)}:${isStream ? 'streamGenerateContent' : 'generateContent'}?key=${encodeURIComponent(config.apiKey)}`
     return {
       host,
       path,
@@ -392,19 +386,6 @@ export const providerAdapters: Record<string, AdapterFn> = {
       path: '/inference/v1' + originalPath,
       headers: { 'Authorization': `Bearer ${extractApiKey(credential)}`, 'Content-Type': 'application/json' },
       transformBody: (body, realModel) => ({ ...body, model: realModel })
-    }
-  },
-  replicate: (model, credential, originalPath, _originalBody) => {
-    if (originalPath !== '/predictions') return null
-    return {
-      host: 'api.replicate.com',
-      path: '/v1/predictions',
-      headers: {
-        'Authorization': `Bearer ${extractApiKey(credential)}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'wait',
-      },
-      transformBody: (_body, _realModel) => ({ input: _body, version: model }),
     }
   },
   aws_bedrock: (model, credential, originalPath, _originalBody) => {

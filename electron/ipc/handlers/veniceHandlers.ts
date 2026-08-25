@@ -9,7 +9,7 @@ import { getProfileSessionId } from "../../services/profileSession";
 import { validateVeniceIpcRequest } from "../validation";
 import { redactErrorMessage } from "../../../src/shared/redaction";
 import { SafetyGuardBlockedError } from "../../../src/shared/safety";
-import { registerIpcChannel, safeSendToRenderer } from "./common";
+import { registerPrivilegedIpcChannel, safeSendToRenderer } from "./common";
 import { runChatAgentLoop } from "../../agent/runtime/chat-agent-runner";
 import type { VeniceStreamDeltaEnvelope } from "../../../src/shared/veniceStreamDelta";
 
@@ -46,7 +46,7 @@ function withSessionProfile(input: unknown, profileId: string): unknown {
 }
 
 export function registerVeniceHandlers(): void {
-  registerIpcChannel("venice:request", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("venice:request", async (event, input: unknown) => {
     try {
       // Credential selection is main-process authoritative. Replace any
       // renderer-supplied profile before validation so a forged invalid id
@@ -67,7 +67,7 @@ export function registerVeniceHandlers(): void {
     }
   });
 
-  registerIpcChannel("venice:streamChat", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("venice:streamChat", async (event, input: unknown) => {
     try {
       const request = validateVeniceIpcRequest(
         withSessionProfile(input, getProfileSessionId(event.sender)),
@@ -111,7 +111,7 @@ export function registerVeniceHandlers(): void {
     }
   });
 
-  registerIpcChannel("venice:abort", (_event, signalId: unknown) => {
+  registerPrivilegedIpcChannel("venice:abort", (_event, signalId: unknown) => {
     if (typeof signalId !== "string" || signalId.length > 128) return { ok: false };
     return abortVeniceRequest(signalId);
   });

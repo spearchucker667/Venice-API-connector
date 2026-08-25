@@ -2,7 +2,7 @@ import crypto from "crypto";
 import fs from "fs/promises";
 import path from "path";
 import { dialog } from "electron";
-import { registerIpcChannel } from "./common";
+import { registerPrivilegedIpcChannel } from "./common";
 import { requireProfileSessionId as getProfileSessionId } from "../../services/profileSession";
 import {
   listChatFolders,
@@ -207,7 +207,7 @@ function safeError(error: unknown, fallback: string): string {
 }
 
 export function registerChatFolderHandlers(): void {
-  registerIpcChannel("chat-folders:list", async (event) => {
+  registerPrivilegedIpcChannel("chat-folders:list", async (event) => {
     try {
       const result = await listChatFolders(getProfileSessionId(event.sender));
       return { ok: true, folders: result.folders };
@@ -217,49 +217,49 @@ export function registerChatFolderHandlers(): void {
     }
   });
 
-  registerIpcChannel("chat-folders:create", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:create", async (event, input: unknown) => {
     if (!isCreateInput(input)) return { ok: false, error: "Invalid create-folder input" };
     try { return { ok: true, folder: await createChatFolder(input, getProfileSessionId(event.sender)) }; }
     catch (error) { return { ok: false, error: safeError(error, "Failed to create folder") }; }
   });
 
-  registerIpcChannel("chat-folders:rename", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:rename", async (event, input: unknown) => {
     if (!isRenameInput(input)) return { ok: false, error: "Invalid rename-folder input" };
     try { return { ok: true, folder: await renameChatFolder(input, getProfileSessionId(event.sender)) }; }
     catch (error) { return { ok: false, error: safeError(error, "Failed to rename folder") }; }
   });
 
-  registerIpcChannel("chat-folders:reorder", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:reorder", async (event, input: unknown) => {
     if (!isReorderInput(input)) return { ok: false, error: "Invalid reorder input" };
     try { return { ok: true, result: await reorderChatFolders(input, getProfileSessionId(event.sender)) }; }
     catch (error) { return { ok: false, error: safeError(error, "Failed to reorder folders") }; }
   });
 
-  registerIpcChannel("chat-folders:move-conversation", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:move-conversation", async (event, input: unknown) => {
     if (!isMoveInput(input)) return { ok: false, error: "Invalid move input" };
     try { return { ok: true, result: await moveConversationToFolder(input, getProfileSessionId(event.sender)) }; }
     catch (error) { return { ok: false, error: safeError(error, "Failed to move conversation") }; }
   });
 
-  registerIpcChannel("chat-folders:move-conversations", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:move-conversations", async (event, input: unknown) => {
     if (!isBulkMoveInput(input)) return { ok: false, error: "Invalid bulk-move input" };
     try { return { ok: true, result: await moveConversationsToFolder(input, getProfileSessionId(event.sender)) }; }
     catch (error) { return { ok: false, error: safeError(error, "Failed to move conversations") }; }
   });
 
-  registerIpcChannel("chat-folders:delete", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:delete", async (event, input: unknown) => {
     if (!isDeleteInput(input)) return { ok: false, error: "Invalid delete-folder input" };
     try { return { ok: true, result: await deleteChatFolder(input, getProfileSessionId(event.sender)) }; }
     catch (error) { return { ok: false, error: safeError(error, "Failed to delete folder") }; }
   });
 
-  registerIpcChannel("chat-folders:get-backup-preview", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:get-backup-preview", async (event, input: unknown) => {
     if (!isFolderIdInput(input)) return { ok: false, error: "Invalid backup-preview input" };
     try { return { ok: true, preview: await getBackupPreview(input, getProfileSessionId(event.sender)) }; }
     catch (error) { return { ok: false, error: safeError(error, "Failed to get backup preview") }; }
   });
 
-  registerIpcChannel("chat-folders:export-backup", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:export-backup", async (event, input: unknown) => {
     if (!isExportInput(input)) return { ok: false, error: "Export requires a folder id and matching 8+ character passphrases" };
     const defaultName = `venice-forge-folder-backup-${Date.now()}.vfbackup`;
     // verify-no-native-dialogs: allow — explicit user-mediated encrypted folder-backup export
@@ -278,7 +278,7 @@ export function registerChatFolderHandlers(): void {
     catch (error) { return { ok: false, error: safeError(error, "Failed to export backup") }; }
   });
 
-  registerIpcChannel("chat-folders:pick-import-file", async (event) => {
+  registerPrivilegedIpcChannel("chat-folders:pick-import-file", async (event) => {
     // verify-no-native-dialogs: allow — explicit user-mediated encrypted folder-backup import
     const selection = await dialog.showOpenDialog({
       title: "Select encrypted chat-folder backup",
@@ -295,7 +295,7 @@ export function registerChatFolderHandlers(): void {
     }
   });
 
-  registerIpcChannel("chat-folders:preview-import", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:preview-import", async (event, input: unknown) => {
     if (!isPreviewImportInput(input)) return { ok: false, error: "Invalid import-preview input" };
     try {
       const profileId = getProfileSessionId(event.sender);
@@ -304,7 +304,7 @@ export function registerChatFolderHandlers(): void {
     } catch (error) { return { ok: false, error: safeError(error, "Failed to preview import") }; }
   });
 
-  registerIpcChannel("chat-folders:import-backup", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:import-backup", async (event, input: unknown) => {
     if (!isImportInput(input)) return { ok: false, error: "Import requires an approved backup file, mode, and passphrase" };
     try {
       const profileId = getProfileSessionId(event.sender);
@@ -313,13 +313,13 @@ export function registerChatFolderHandlers(): void {
     } catch (error) { return { ok: false, error: safeError(error, "Failed to import backup") }; }
   });
 
-  registerIpcChannel("chat-folders:lock", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:lock", async (event, input: unknown) => {
     if (!isLockInput(input)) return { ok: false, error: "Lock requires a folder id and an 8+ character passphrase" };
     try { await lockFolder(input, getProfileSessionId(event.sender)); return { ok: true }; }
     catch (error) { return { ok: false, error: safeError(error, "Failed to lock folder") }; }
   });
 
-  registerIpcChannel("chat-folders:unlock", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:unlock", async (event, input: unknown) => {
     if (!isUnlockInput(input)) return { ok: false, error: "Unlock requires valid credentials" };
     try { await unlockFolder(input, getProfileSessionId(event.sender)); return { ok: true }; }
     catch (error) {
@@ -328,7 +328,7 @@ export function registerChatFolderHandlers(): void {
     }
   });
 
-  registerIpcChannel("chat-folders:get-lock-state", async (event, input: unknown) => {
+  registerPrivilegedIpcChannel("chat-folders:get-lock-state", async (event, input: unknown) => {
     if (!isFolderIdInput(input)) return { ok: false, error: "Invalid lock-state input" };
     try { return { ok: true, lockState: await getLockState(input.folderId, getProfileSessionId(event.sender)) }; }
     catch (error) { return { ok: false, error: safeError(error, "Failed to get lock state") }; }

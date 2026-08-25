@@ -131,7 +131,10 @@
     "enhancementFailed": "Échec de l'amélioration de l'invite",
     "enhancementProviderError": "L'amplificateur interne n'a pas pu atteindre ou terminer la requête Venice. Votre invite d'origine a été conservée.",
     "enhancementInvalidOutput": "L'amplificateur interne n'a pas renvoyé d'invite d'image utilisable. Votre invite d'origine a été conservée.",
-    "enhancementSafetyBlocked": "L’amélioration du prompt a été arrêtée par les protections obligatoires de sécurité des enfants, qui sont distinctes des paramètres facultatifs du mode sécurisé. Votre prompt d’origine a été conservé."
+    "enhancementSafetyBlocked": "L’amélioration du prompt a été arrêtée par les protections obligatoires de sécurité des enfants, qui sont distinctes des paramètres facultatifs du mode sécurisé. Votre prompt d’origine a été conservé.",
+    "enhancementSafetyBlockedMandatory": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedMandatory",
+    "enhancementSafetyBlockedFamily": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedFamily",
+    "enhancementSafetyBlockedProvider": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedProvider"
   },
   "contextMenu": {
     "saveAs": "__MISSING__:contextMenu.saveAs",

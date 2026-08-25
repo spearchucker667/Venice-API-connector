@@ -8,18 +8,27 @@ const clearCache = vi.hoisted(() => vi.fn(async () => ({ ok: true })));
 const getProfileSessionId = vi.hoisted(() => vi.fn(() => "work"));
 
 vi.mock("electron", () => ({
+  app: { isPackaged: false },
   ipcMain: { handle: vi.fn((channel: string, handler: (...args: unknown[]) => unknown) => handlers.set(channel, handler)) },
 }));
 vi.mock("../../services/chatTtsBridge", () => ({ synthesizeSpeech: synthesize, clearTtsCache: clearCache }));
 vi.mock("../../services/profileSession", () => ({ getProfileSessionId }));
 
+import { clearRegisteredChannelsForTesting } from "./common";
 import { registerChatTtsHandlers } from "./chatTtsHandlers";
 
+const trustedEvent = { senderFrame: { url: "http://localhost:5173" } };
+
 describe("chatTtsHandlers", () => {
+  beforeEach(() => {
+    handlers.clear();
+    clearRegisteredChannelsForTesting();
+  });
+
   it("ignores renderer profile authority and supplies the sender session", async () => {
     registerChatTtsHandlers();
     const sender = {} as Electron.WebContents;
-    await handlers.get("tts:synthesize")!({ sender }, { text: "hello", profileId: "forged" }, false);
+    await handlers.get("tts:synthesize")!({ ...trustedEvent, sender }, { text: "hello", profileId: "forged" }, false);
 
     expect(getProfileSessionId).toHaveBeenCalledWith(sender);
     expect(synthesize).toHaveBeenCalledWith({ text: "hello", profileId: "forged" }, false, "work");

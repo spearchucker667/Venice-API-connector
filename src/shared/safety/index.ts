@@ -35,4 +35,12 @@ export {
   identifyAndValidateGeneratedMedia,
   toSafetyDecision,
 } from "./localFamilySafeGuard";
-export type { LocalGuardDecision, ResponseBodyScreenResult, SafetyBlockBody, GeneratedMediaSafetyResult, SafetyDecision, SafetyDecisionCategory } from "./localFamilySafeGuard";
+export type { LocalGuardDecision, ResponseBodyScreenResult, SafetyBlockBody, GeneratedMediaSafetyResult, SafetyDecision, SafetyDecisionCategory, SafetyLayer, SafetyCategory } from "./localFamilySafeGuard";
+
+export {
+  formatSafetyDecision,
+  guardCategoryToSafetyCategory,
+  isSafetyBlockResult,
+  safetyLayerFromGuardCategory,
+} from "./formatSafetyDecision";
+export type { SafetyBlockResult } from "./formatSafetyDecision";
