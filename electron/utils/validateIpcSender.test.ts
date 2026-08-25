@@ -118,7 +118,7 @@ describe("validateIpcSender", () => {
 
     it("rejects file:// URLs outside the renderer root", () => {
       expect(isTrustedIpcSender(makeEvent("file:///etc/passwd"))).toBe(false);
-      expect(isTrustedIpcSender(makeEvent("file:///Users/alice/index.html"))).toBe(false);
+      expect(isTrustedIpcSender(makeEvent("file:///var/tmp/outside-renderer/index.html"))).toBe(false);
     });
 
     it("rejects file://localhost URLs", () => {
