@@ -1964,14 +1964,12 @@ both still assert the invariant "atomic-claim failure → character rolled back"
 
 ### Latest Session Summary
 
-**Date:** 2026-08-22
-**Scope:** ESLint/React Doctor Fixes
+**Date:** 2026-08-24
+**Scope:** Stash and Repository Hygiene Cleanup
 
-- **Accessibility:** Addressed 59 `label-has-associated-control` and `control-has-associated-label` findings by injecting proper `htmlFor` and `id` attributes across forms and modals including `CharacterCreatorDraftEditor.tsx`, `PromptCreateModal.tsx`, `ThemeMaker.tsx`, `DocumentAgentView.tsx`, `CharacterCreatorWelcome.tsx`, `HistoryView.tsx`, and more.
-- **Effect Chains (React Hooks):** Addressed 8 `no-effect-chain` warnings in `ThemeMaker.tsx`, `chat-view.tsx`, `CommandPalette.tsx`, `image-view.tsx`, and `CharacterCreatorView.tsx`. Verified that these are intentional state synchronizations reacting to external props/store events and added explicit comments documenting the intent.
-- **Index as Key:** Fixed `no-array-index-as-key` issues in `CharacterCreatorProcessPanel.tsx`, `compare-view.tsx`, `ThemePreview.tsx`, `ProfileDiscoveryTab.tsx`, and `SearchTab.tsx` by replacing array index keys with stable identity keys.
-- **Validation:** Typecheck passed.
-
+- **Cleanup:** Audited and cleared three leftover local stashes (`stash@{0}` to `stash@{2}`) dating back to July 2026.
+- **Verification:** Confirmed the stashes contained obsolete implementations that were already finalized and merged into the current `main` branch.
+- **Result:** Deleted local experimentation branch and ensured the workspace is perfectly clean and up to date with `origin/main`.
 ### Prior Session (Same Day)
 
 **Date:** 2026-07-18
@@ -6823,3 +6821,5 @@ This earlier run added the six P0 blockers and `VERIFY-132..137`; its P1 command
 - **2026-08-23 — Lint and Compile Fixes**: Removed `scratch.ts` to fix CI TypeScript build errors and corrected an unnecessary escape in `src/components/chat/message-bubble.tsx` to fix a `no-useless-escape` ESLint violation.
 - **2026-08-23 — Chat Code Block Rendering Refactor & Traffic Inspector Update**: Extracted a unified canonical Markdown renderer into `src/components/chat/ChatMarkdown.tsx`, strictly differentiating the `pre` (block wrapper with copy logic) and `code` (inline vs block content) DOM roles. Migrated both user and assistant message branches in `message-bubble.tsx` to use the unified component, removing raw-plaintext divergence from `redTeamMode`. Updated the Traffic Inspector strings in `sidebar.tsx` to indicate it reveals diagnostic and safety context without overriding standard rendering. Added full regression test coverage for code-block styling, Traffic Inspector safety UI persistence, and user/assistant inline vs fenced cases. Reconciled i18n placeholders and successfully verified via `typecheck`, `lint:eslint`, `build:web`, `verify:i18n`, and all Vitest UI suites.
 - **2026-08-23** — Final Acceptance Release Config Hardening: Fixed CI node version reproducibility, ESLint typescript script coverage, vitest script coverage threshold isolation, disabled implicit node env in .env.example, hardened electron main permission requests, updated prerelease action logic, and removed duplicate duplicate release builds.
+
+- **2026-08-24 — Stash and Repository Hygiene Cleanup**: Audited three leftover local stashes (`stash@{0}` to `stash@{2}`) dating back to July 2026. Determined that they contained obsolete implementations (e.g. initial `BackgroundTaskStore`, early UI redesigns) which have already been finalized and merged into the current `main` branch. Safely dropped all three stashes (`git stash clear`) to prevent regressions and keep the workspace completely clean, per the user's instructions.
