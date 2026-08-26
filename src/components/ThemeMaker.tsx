@@ -766,11 +766,29 @@ export function ThemeMaker() {
   }
 
   function updateMode(mode: ThemeMode) {
+    if (draft.mode === mode) return;
     setDraft((prev: Theme) => {
       const next = cloneTheme(prev);
       next.mode = mode;
+      const base = mode === "light" ? BUILTIN_LIGHT : BUILTIN_VENICE;
+      next.tokens = { ...base.tokens };
       return next;
     });
+    // VERIFY: persist the mode switch so it survives reload, navigation, and
+    // theme re-selection. Without this the live preview would flip but the
+    // global `appearanceMode` (used by App.tsx to bootstrap the active theme
+    // on cold start) would stay at the previous mode, silently reverting the
+    // user's choice.
+    setAppearanceMode(mode);
+    // If the user is editing a built-in theme, jump the active selection to
+    // the matching canonical theme so the palette highlight and the
+    // persisted `selectedThemeId` reflect the new mode. Custom themes keep
+    // their own identity and only the global mode is updated.
+    if (!customThemesMap[selector]) {
+      const target = mode === "light" ? "builtin-light" : "builtin-dark";
+      setSelectedThemeId(target);
+      setSelector(target);
+    }
   }
 
   function updateName(name: string) {

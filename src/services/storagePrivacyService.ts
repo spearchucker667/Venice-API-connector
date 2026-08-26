@@ -1,5 +1,6 @@
 import { translateRuntime } from "../i18n/runtimeTranslator";
 import {
+  type ActiveApiKeyEntry,
   type StorageStoreInventoryItem,
   type StorageReferenceIssue,
   type StorageInventoryResult,
@@ -51,6 +52,19 @@ export interface BuildStorageInventoryInput {
     lastValidationStatus?: ApiKeyValidationStatus;
     lastValidationAt?: string | null;
   };
+  jinaKey?: {
+    configured: boolean;
+    storage: SafeApiKeyStorage;
+    lastValidationStatus?: ApiKeyValidationStatus;
+    lastValidationAt?: string | null;
+  };
+  configuredProviders?: Record<string, boolean>;
+  enabledProviders?: Record<string, boolean>;
+  /** Optional per-provider validation status map. Falls back to "configured-not-validated". */
+  providerValidation?: Record<string, {
+    lastValidationStatus?: ApiKeyValidationStatus;
+    lastValidationAt?: string | null;
+  }>;
   characterImageCache?: { count: number; totalBytes: number };
 }
 
@@ -168,6 +182,61 @@ export function buildStorageInventory(
     },
   );
   const hasVeniceKey = apiKeyMetadata.configured;
+
+  // Build the per-provider "Active API Keys" audit list. Each entry is
+  // surfaceable on the Privacy tab so the user can see exactly which
+  // credentials are configured, where they live, and when they were last
+  // validated, without ever exposing the raw key.
+  const activeApiKeys: ActiveApiKeyEntry[] = [];
+
+  activeApiKeys.push({
+    id: "venice",
+    providerId: "venice",
+    label: "Venice",
+    configured: apiKeyMetadata.configured,
+    storage: apiKeyMetadata.storage,
+    lastValidationStatus: apiKeyMetadata.lastValidationStatus,
+    lastValidationAt: apiKeyMetadata.lastValidationAt,
+    keyTail: null,
+    enabledAsProvider: true,
+  });
+
+  if (input.jinaKey) {
+    activeApiKeys.push({
+      id: "jina",
+      providerId: "jina",
+      label: "Jina",
+      configured: input.jinaKey.configured,
+      storage: input.jinaKey.storage,
+      lastValidationStatus:
+        input.jinaKey.lastValidationStatus ??
+        (input.jinaKey.configured ? "configured-not-validated" : "not-configured"),
+      lastValidationAt: input.jinaKey.lastValidationAt ?? null,
+      keyTail: null,
+      enabledAsProvider: false,
+    });
+  }
+
+  if (input.configuredProviders) {
+    for (const [providerId, configured] of Object.entries(input.configuredProviders)) {
+      if (providerId === "venice") continue;
+      if (!configured) continue;
+      const validation = input.providerValidation?.[providerId];
+      activeApiKeys.push({
+        id: providerId,
+        providerId,
+        label: providerId,
+        configured: true,
+        storage: "secure-storage",
+        lastValidationStatus:
+          validation?.lastValidationStatus ?? "configured-not-validated",
+        lastValidationAt: validation?.lastValidationAt ?? null,
+        keyTail: null,
+        enabledAsProvider: input.enabledProviders?.[providerId] === true,
+      });
+    }
+  }
+
   stores.push({
     id: "api_keys",
     label: translateRuntime(
@@ -180,10 +249,19 @@ export function buildStorageInventory(
     containsUserContent: false,
     exportableInSafeSummary: false,
     severity: hasVeniceKey ? "ok" : "info",
-    summary: hasVeniceKey
-      ? `Venice API key configured (${apiKeyMetadata.storage}); raw key hidden`
-      : "No Venice API key configured",
-    metadata: { apiKey: apiKeyMetadata },
+    summary: (() => {
+      const parts = [
+        hasVeniceKey ? `Venice API key configured (${apiKeyMetadata.storage}); raw key hidden` : "No Venice API key configured"
+      ];
+      if (input.configuredProviders) {
+        const fallbacks = Object.entries(input.configuredProviders).filter(([id, configured]) => id !== "venice" && configured).map(([id]) => id);
+        if (fallbacks.length > 0) {
+          parts.push(`Fallback providers configured: ${fallbacks.join(", ")}`);
+        }
+      }
+      return parts.join(". ");
+    })(),
+    metadata: { apiKey: apiKeyMetadata, activeApiKeys },
   });
 
   // Character Image Cache (transient, non-encrypted, no user content)
@@ -239,7 +317,7 @@ export function buildStorageInventory(
   checkOrphanProject(input.workflows, "workflows");
   checkOrphanProject(input.media, "media");
 
-  return { stores, issues, generatedAt };
+  return { stores, issues, generatedAt, activeApiKeys };
 }
 
 function sanitizeIssueForSafeSummary(
@@ -302,5 +380,11 @@ export function buildSafePrivacySummary(
         buildSafeApiKeyMetadata({ configured: false, storage: "unavailable" })
       );
     })(),
+    // Carry the per-provider audit trail into the safe summary so the
+    // exported JSON includes a structured "Active API keys" section.
+    // The safe summary strips free-text user content (per VERIFY-168) but
+    // provider ids, storage location, and last-validation status are
+    // intentionally non-sensitive metadata.
+    activeApiKeys: inventory.activeApiKeys,
   };
 }

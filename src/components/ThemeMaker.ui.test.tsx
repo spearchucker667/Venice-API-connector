@@ -150,3 +150,49 @@ describe("ThemeMaker built-in theme selection", () => {
     expect(useSettingsStore.getState().appearanceMode).toBe("dark");
   });
 });
+
+describe("ThemeMaker dark/light mode toggle persistence", () => {
+  beforeEach(() => {
+    useSettingsStore.setState({
+      selectedThemeId: "builtin-dark",
+      customTheme: null,
+      appearanceMode: "dark",
+    });
+    useConfigStore.setState({ yamlThemes: {} });
+    document.documentElement.removeAttribute("data-theme-mode");
+  });
+
+  it("persists the global appearanceMode when Light is clicked on a built-in", () => {
+    render(<ThemeMaker />);
+    fireEvent.click(screen.getByText("Light Mode"));
+    // Regression: prior to the fix, updateMode mutated the local draft only.
+    // The bootstrap path in App.tsx reads `appearanceMode` on cold start, so
+    // leaving it at "dark" silently reverted the user's choice on reload.
+    expect(useSettingsStore.getState().appearanceMode).toBe("light");
+  });
+
+  it("promotes the selectedThemeId to the matching canonical light theme", () => {
+    render(<ThemeMaker />);
+    fireEvent.click(screen.getByText("Light Mode"));
+    expect(useSettingsStore.getState().selectedThemeId).toBe("builtin-light");
+  });
+
+  it("updates the live CSS theme-mode attribute", () => {
+    render(<ThemeMaker />);
+    fireEvent.click(screen.getByText("Light Mode"));
+    expect(document.documentElement.dataset.themeMode).toBe("light");
+  });
+
+  it("flips back to dark mode when Dark Mode is clicked", () => {
+    useSettingsStore.setState({
+      selectedThemeId: "builtin-light",
+      customTheme: null,
+      appearanceMode: "light",
+    });
+    render(<ThemeMaker />);
+    fireEvent.click(screen.getByText("Dark Mode"));
+    expect(useSettingsStore.getState().appearanceMode).toBe("dark");
+    expect(useSettingsStore.getState().selectedThemeId).toBe("builtin-dark");
+    expect(document.documentElement.dataset.themeMode).toBe("dark");
+  });
+});

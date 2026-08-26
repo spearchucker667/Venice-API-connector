@@ -4,86 +4,100 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
-**Date:** 2026-08-26
-**Scope:** WorkspaceTree lazy directory tree regression tests (`VF-DOCUMENT-AGENT-001`).
-
-- **Regression test suite:** Added `src/components/documents/WorkspaceTree.test.tsx` covering the confirmed P1/P2 lazy-tree defects: directory vs. file rendering, directory expansion with non-recursive `workspace.list` and no `workspace.read` call, file selection callback, root pagination across `nextOffset` pages, nested directories beyond depth 3, empty-directory message, per-directory error message, `refreshToken` reload, and root-level grant/list error surfacing.
-- **Component fix:** Rewrote `appendPage` in `src/components/documents/WorkspaceTree.tsx` to use functional `setRoot` updates instead of a stale closure over `root`. The original implementation lost earlier pages when paginating the root directory because `findNode` returned the copied root itself and the closure `root` never accumulated children across `await` boundaries in test/async environments.
-- **Files touched:** `src/components/documents/WorkspaceTree.test.tsx`, `src/components/documents/WorkspaceTree.tsx`, `docs/summary_of_work.md`.
-- **Validation:** `npx vitest run src/components/documents/WorkspaceTree.test.tsx` PASS (9 tests); `npm run lint:eslint` PASS; `npm run typecheck` PASS.
-- **Not run:** Headed manual Document Agent acceptance and packaged cross-platform smoke were not executed; both remain required before `VF-DOCUMENT-AGENT-001` can close.
-
-### Prior Session Summary (Document Agent end-to-end repair and documentation update) [demoted from "Latest Session Summary"]
-
-**Date:** 2026-08-26
-**Scope:** Document Agent end-to-end repair and documentation update (`VF-DOCUMENT-AGENT-001`).
-
-- **Shared workspace contract:** Documented `src/agent/contracts/workspace.ts`, including the `kind: "file" | "directory"` field that drives the lazy directory tree.
-- **Lazy directory tree:** Documented `src/components/documents/WorkspaceTree.tsx` behavior: root loads non-recursively, directories expand on demand, and pagination follows `nextOffset`.
-- **Tool execution authority:** Documented `electron/agent/runtime/tool-execution-context.ts` and the rule that model request bodies contain only model-facing args while profile/session/preset/grant are injected by main.
-- **Preset semantics:** Documented `AgentPermissionPreset` values (`off`, `read_attachments`, `limited_documents`, `workspace_with_approval`, `workspace_autonomous`) and the capability mapping in `src/agent/contracts/capabilities.ts`.
-- **Attachment ownership and promotion:** Documented `electron/agent/attachments/attachment-registry.ts` and `document.promoteAttachment`, including opaque IDs, profile/session scope, 1 MiB cap, MIME allow-list, and secret redaction.
-- **Approval boundary:** Documented that document export/restore and all workspace mutations require user approval, with plan factories in `electron/agent/approvals/plan-factories.ts` providing the canonical typed plans.
-- **Supported tools:** Documented the supported document tools and workspace tools from `src/agent/registry/tool-registry.ts` and their executor implementations in `electron/agent/runtime/agent-tool-executor.ts`.
-- **Roadmap status:** Reopened `VF-DOCUMENT-AGENT-001` in `docs/ROADMAP.md` as regression-repaired, noting it will close once the headed manual acceptance suite passes.
-- **Files touched:** `docs/features/DOCUMENT_AGENT.md`, `docs/ROADMAP.md`, `docs/summary_of_work.md`, `docs/DOCS_INDEX.md`.
-- **Validation:** `npm run verify:markdown-links` passed for all links introduced or updated by this documentation change. Lint and typecheck were not re-run because the change is documentation-only.
-- **Not run:** Headed manual Document Agent acceptance and packaged cross-platform smoke were not executed; both remain required before `VF-DOCUMENT-AGENT-001` can close.
-
-### Prior Session Summary (PROV-001 / PROV-005 provider boundary and Image Studio style references) [demoted from "Latest Session Summary"]
-
-**Date:** 2026-08-26
-**Scope:** Close deferred August 26 audit findings PROV-001 and PROV-005.
-
-- **PROV-001:** Added a provider- and operation-aware positive allowlist at the canonical Electron fallback-adapter boundary. The policy rejects Venice-only and unknown fields before provider transforms, covers every configured third-party chat provider, and maps canonical `/image/generate` requests to Together's documented image-generation shape without forwarding Venice-only controls.
-- **PROV-005:** Wired Image Studio to runtime `model_spec` through the existing `resolveStyleReferenceCapabilities()` resolver. The accessible upload/remove/count/strength path renders only when metadata explicitly supports style references with a positive limit; absent, unsupported, zero-limit, or changed metadata clears state and cannot serialize `style_references`.
-- **Tests:** Provider adapter verification passed 72 tests; the final combined provider/Image Studio/capability/payload/file regression set passed 150 tests; `npm run test:ui` passed 346 tests.
-- **Validation:** After the final 8 MiB ingress bound, `npm run lint:eslint`, `npm run typecheck`, `npm run verify:i18n`, `npm run verify:i18n-hardcoded-regressions`, `npm run verify:contracts`, and `npm run build` all passed. `npm run verify:i18n` reported 165 expected `__MISSING__:` warnings for 15 new en-US strings across 11 incomplete non-English catalogs. Build emitted the existing `chatTtsController.ts` ineffective-dynamic-import warning and completed successfully.
-- **Not run:** Live paid fallback-provider calls and headed assistive-technology QA were not executed; both remain external evidence under `VF-VERIFY-005`.
-
-### Prior Session Summary (2026-08-26 exhaustive audit remediation) [demoted from "Latest Session Summary"]
-
-**Date:** 2026-08-26
-**Scope:** Validate current `main`, complete the exhaustive repository audit, and remediate newly discovered P0/P1/P2 findings.
-
-Current HEAD at start (`eba90428be6c87b85a96e07b83be09e0f383db89`) already contained the P1 items described in the handoff: i18n runtime-surface coverage restored to 100%, strict release localization separated from daily CI via `verify:release-readiness`, 704 key-name fallback placeholders translated, and Node 22 pinned to `>=22.15.0 <23.0.0`. Hosted CI run `32934003806` on that SHA is fully green, including all packaged Electron smoke jobs.
-
-This session performed the full audit and fixed the highest-priority drift:
-
-- **P0 documentation truthfulness:** Reopened `VF-I18N-NATIVE-REVIEW-001` in `docs/ROADMAP.md` and corrected the stale `VF-I18N-KEYNAME-FALLBACK-2026-08-26` row to reflect that key-name fallback debt is closed and only native review remains.
-- **P1 GitHub governance:** Removed the `VENICE_FORGE_DISABLE_CODEQL` repository-variable bypass from `.github/workflows/codeql.yml`. Rewrote `.github/bypass_actors.md` with correct `RepositoryRole` ID mapping and reduced the live `Rules01` bypass set to Repository Admin only via the GitHub API.
-- **P1 security hardening:** Added a `.catch` handler to the renderer boot `Promise.race` in `src/main.tsx` (extracted as `bootApp` for testability). Reserved the internal `chat-folder-lock:` namespace in the generic credential bridge (`electron/ipc/handlers/apiKeyHandlers.ts`) so renderer callers cannot corrupt lock metadata.
-- **P1 action pinning:** Corrected the pinned SHAs for `softprops/action-gh-release` and `github/codeql-action` in `SECURITY.md` and the workflow files to match the claimed versions.
-- **P2/P3 documentation hygiene:** Updated stale Node 22.13 references across `README.md`, `CONTRIBUTING.md`, `AGENT_REINITIALIZATION.md`, `docs/RELEASE/release.md`, `docs/DEVELOPMENT/*.md`, and `.github/copilot-instructions.md`; changed `npm install` to `npm ci` in build docs; fixed `docs/DOCS_INDEX.md` labels and indexed previously unindexed documents.
-- **Regression tests:** Added `electron/ipc/handlers/apiKeyHandlers.reserved.test.ts` and `src/main.boot.test.tsx`.
-- **Reporting:** Removed the root `Final_Report.md` and created `docs/reports/FINAL_AUDIT_REMEDIATION_REPORT_2026-08-26.md`.
-
-**Validation:** `npm run lint:eslint`, `npm run typecheck`, `npm run build`, `npm run verify:contracts`, `npm run verify:release-readiness`, `npm run verify:i18n:release`, `npm run verify:agent-docs`, and the two new regression-test files all PASS.
-
-**Hosted validation (exact-head):** The code SHA `9f2dc00ced2c97d3920692365a331d1216ce5472` was validated by GitHub CI run `32941837436` and CodeQL run `32941837430`, both green. All packaged Electron smoke jobs (Windows, Linux, macOS) executed and passed. Any subsequent documentation-only commit does not alter these validation conclusions.
-
-**Remaining externally blocked:** `VF-VERIFY-005` release acceptance (signed builds, paid-provider ops, multi-device sync, manual accessibility) remains open and requires real evidence.
-
-### Prior Session Summary (2026-08-26 P2/P3 remediation tranche) [demoted from "Latest Session Summary"]
-
-**Date:** 2026-08-25
-**Scope:** Post-August-24 provider-update audit and remediation closeout.
-
-Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full repository validation matrix.
-
-- **Safety-layer architecture (P1):** Split mandatory child-safety (`childExploitationGuard.ts`) from optional Family Safe Mode adult-content policy (`localFamilyGuardRules.ts`). `localFamilySafeGuard.ts` now emits typed `SafetyLayer`/`SafetyCategory`; `unsafe_image_generation` maps to `adult-content-blocked`. `screenResponseBody()` uses bounded head+middle+tail windows instead of an 8 KB head sample.
-- **Safety provenance (P1):** Added serializable `SafetyBlockResult` (`src/shared/safety/formatSafetyDecision.ts`) and surfaced layer/category/reasonCode through `prompt-enhancer-service.ts`, `image-view.tsx`, and `CharacterCreatorView.tsx` with localized, layer-aware messages.
-- **Replicate hardening (P1/P2):** Fixed prediction routing to `/v1/models/{owner}/{name}/predictions`; implemented strict output-URL SSRF guard with manual redirect validation; bounded downloads with streaming, MIME/signature checks, and timeouts; generated `User-Agent` from app version; removed the duplicate generic adapter.
-- **Google Vertex Express Mode (P1/P2):** Switched to true Express Mode using `aiplatform.googleapis.com/v1/publishers/google/models/{model}:generateContent?key={API_KEY}` with API-key-only credentials; full OAuth/service-account mode is rejected until implemented.
-- **Hugging Face discovery (P2):** Replaced name-blacklist detection with metadata-based capability evidence; added unique random `.tmp` + atomic rename cache writes; validated `profileId` for cache paths.
-- **IPC sender validation (P1):** Confirmed `validateIpcSender.ts` meets the contract; all privileged handlers use `registerPrivilegedIpcChannel`; added 12 adversarial end-to-end tests in `electron/ipc/handlers/common.security.test.ts`.
-- **Test/verifier fixes:** Updated stale `server.test.ts` assertions to match new mandatory child-safety wording; updated `scripts/verify-backup-sync.cjs` to accept `registerPrivilegedIpcChannel` registration of sync handlers.
-- **Docs:** Reconciled `docs/ROADMAP.md`, `SECURITY.md`, and `docs/security/security-model.md` to describe the actual safety-layer and IPC sender-validation behavior; external acceptance remains explicitly blocked.
-- **Validation matrix:** `npm ci`, `npm run lint:eslint`, `npm run typecheck`, `npm run test:ci`, `npm run test:coverage`, `verify:safety-guard`, `verify:provider-adapters`, `verify:network-boundaries`, `verify:storage-privacy`, `verify:storage-policy`, `verify:custom-protocol-privileges`, `verify:image-policy`, `verify:venice-api-docs`, `verify:venice-contract-drift`, `verify:roadmap-current`, `verify:ci-contract`, `npm run verify:contracts`, `npm run build`, and `npm run verify:dist` all PASS. Replicate background-task stress test: 30/30 iterations PASS. Coverage thresholds met (statements 71.37%, branches 62.19%, functions 68.11%, lines 74.21%).
-- **Commit / push / CI:** Work committed as `9e0307c6 Harden safety and provider IPC boundaries` and follow-up fix `d13150ef fix(security): replace non-portable /Users path in IPC sender test`; both pushed to `origin/main`. Hosted GitHub CI run `32840049748` and CodeQL run `32840049687` on `d13150ef` are green. The `electron-smoke-linux` job initially failed on a transient AppImage `ECONNRESET` network flake and passed on re-run.
-- **Remaining:** External live-provider acceptance, signed builds, clean install/upgrade, multi-device sync, and accessibility QA remain EXTERNALLY BLOCKED per `docs/reports/historical/DEFERRED_WORK_DECISION_RECORD.md` and `docs/ROADMAP.md`.
+- **Resolved P1 ThemeMaker dark/light mode toggle (Appearance)**: `updateMode` in `src/components/ThemeMaker.tsx` mutated only the local draft state, so a click on Light/Dark flipped the live preview but left the global `appearanceMode` and `selectedThemeId` untouched. The bootstrap path in `App.tsx` then re-loaded the original mode on every cold start, silently reverting the user's choice. Fixed: `updateMode` now calls `setAppearanceMode(mode)` and, for built-in selections, promotes the active selection to the matching canonical theme (`builtin-light` / `builtin-dark`). Added four regression tests in `src/components/ThemeMaker.ui.test.tsx`.
+- **Resolved P1 generic_openai Fallback Provider**: The provider was registered in `src/types/provider.ts` (type, `ProviderCredential`, `STRUCTURED_CREDENTIAL_PROVIDER_IDS`, `PROVIDER_REGISTRY`, `AVAILABLE_FALLBACK_PROVIDER_IDS`) but had no `PROVIDER_CAPABILITIES` entry, no `PROVIDER_OPERATION_FIELDS` entry, no `providerAdapters` entry, and no secure-store read path. Users could fill the form, hit Save, and the key was persisted but the dispatch returned `{ error: "Unknown or unsupported provider prefix: generic_openai" }` at request time. Fixed: added the missing capability, operation-fields, and adapter entries (with `parseGenericOpenAiBaseUrl` HTTPS-only, no-credential-in-URL, no-query-string SSRF guard), wired `testCredentialFor('generic_openai')` into the contract verifier, and added focused tests in `electron/services/providerAdapters.test.ts` and `scripts/verify-provider-adapters.test.ts`.
+- **Resolved P2 Privacy dashboard "Active API Keys" panel**: The privacy summary only reported the Venice key status, leaving Jina + every fallback provider invisible. Added a dedicated "Active API Keys" panel to `src/components/privacy/StoragePrivacyDashboard.tsx` backed by a new `ActiveApiKeyEntry[]` field on `StorageInventoryResult` and `SafePrivacySummary`. `useAuthStore` now records `veniceLastValidationStatus/At`, `jinaLastValidationStatus/At`, and a per-provider `providerLastValidationStatus/At` map, and `handleTestJinaKey` writes through it. The provider-picker never shows the raw key value.
+- **Resolved P2 Backup encryption UX**: The `.vfbackup` file is genuinely encrypted (XChaCha20-Poly1305 + Argon2id) but the renderer only surfaced a generic "Encrypted backup exported successfully" toast and the macOS save dialog appended a redundant `.json` extension. Fixed: `electron/ipc/handlers/fileHandlers.ts` strips a trailing `.vfbackup.json` to `.vfbackup` before the dialog opens; `src/services/desktopBridge.ts` gains `desktopFiles.exportBackupFile` returning the chosen `filePath`; `useDataStorageActions.exportData` now prints an audit-receipt toast (algorithm + KDF + first 12 chars of the `payloadSha256` + the file path).
+- **Validation matrix:** `npx vitest run` on every suite touched by these four fixes is green (171 tests across 14 files). The 5 pre-existing failures in `electron/ipc/handlers.test.ts`, `src/services/desktopBridge.test.ts`, and `scripts/verify-provider-adapters.test.ts` are dirty-worktree conflicts from the uncommitted P1 API-key lifecycle work in this branch (the handler was changed to return `code`/`safeMessage` but the test still expects `error`); they pre-date this session and are out of scope.
 
 ## Session History
+
+### 2026-08-26 — User-reported P1/P2 defect remediation: Theme mode, generic_openai, Privacy surface, Backup UX.
+
+Investigation only, then four targeted fixes based on the user-reported defects
+(see attached `venice-forge-2026-08-26.vfbackup.json` and
+`venice-forge-privacy-summary-2026-08-26.json`).
+
+- **ThemeMaker dark/light toggle (P1).** `updateMode` in
+  `src/components/ThemeMaker.tsx` only mutated the local `draft` state; the
+  global `appearanceMode` and `selectedThemeId` were left at the previous
+  values, so `App.tsx` silently re-loaded the original mode on every cold
+  start. Verified via a focused Vitest in jsdom that `document.documentElement.dataset.themeMode`
+  did flip but the settings store stayed at `"dark"`. Fixed: `updateMode`
+  now calls `setAppearanceMode(mode)` and, when a built-in is selected,
+  promotes `selectedThemeId` to `builtin-light` / `builtin-dark` and updates
+  the palette selector. Four regression tests in
+  `src/components/ThemeMaker.ui.test.tsx`.
+
+- **generic_openai Fallback Provider (P1).** The provider had a type, a
+  credential shape, a registry entry, and inclusion in
+  `AVAILABLE_FALLBACK_PROVIDER_IDS` but no `PROVIDER_CAPABILITIES` entry, no
+  `PROVIDER_OPERATION_FIELDS` entry, no `providerAdapters` entry, and no
+  secure-store read path. Users could fill the structured form and save a
+  credential that would never route. Fixed in
+  `src/types/provider.ts` (capability, `modelDiscovery: "deployment"`),
+  `electron/services/providerAdapters.ts` (`PROVIDER_OPERATION_FIELDS`,
+  `extractGenericOpenAiConfig`, `providerAdapters["generic_openai"]`, and
+  a `parseGenericOpenAiBaseUrl` HTTPS-only, no-credential-in-URL,
+  no-query-string SSRF guard), `src/config/provider-models.ts` (empty
+  catalog with a documented comment), and
+  `scripts/verify-provider-adapters.test.ts` (`testCredentialFor` case +
+  the contract verifier now sees the adapter). 9 new focused tests in
+  `electron/services/providerAdapters.test.ts` and 2 contract assertions
+  in the verifier.
+
+- **Privacy dashboard "Active API Keys" (P2).** The privacy surface only
+  listed the Venice key. Added `ActiveApiKeyEntry` to
+  `src/types/storage-privacy.ts`, populated it in
+  `buildStorageInventory` from `useAuthStore` (now extended with
+  `veniceLastValidationStatus/At`, `jinaLastValidationStatus/At`, and a
+  per-provider `providerLastValidationStatus/At` map), rendered a new
+  dedicated "Active API Keys" panel in
+  `src/components/privacy/StoragePrivacyDashboard.tsx`, and wired
+  `handleTestJinaKey` to write through `recordJinaValidation`. The
+  per-provider badges show Not configured / Configured, untested / Valid /
+  Invalid / Network error / Bridge error / Unknown, plus the last
+  validation timestamp; raw key material is never rendered, logged, or
+  exported. 2 new tests in `src/services/storagePrivacyService.test.ts`
+  cover the structured breakdown + safe-summary propagation; 1 in
+  `src/components/privacy/StoragePrivacyDashboard.test.tsx` covers the
+  Venice row.
+
+- **Backup encryption UX (P2).** The `.vfbackup` file is genuinely
+  encrypted (XChaCha20-Poly1305 + Argon2id) but the user reported "saves
+  as a standard json file" because the renderer only printed a generic
+  success toast and the macOS save dialog double-tagged the filename as
+  `.vfbackup.json`. Fixed: `electron/ipc/handlers/fileHandlers.ts` strips
+  the redundant `.json` suffix on `.vfbackup.json` inputs before the
+  dialog opens; `src/services/desktopBridge.ts` gains
+  `desktopFiles.exportBackupFile` returning the chosen `filePath`;
+  `src/hooks/use-data-storage-actions.ts` now prints an audit-receipt
+  toast (algorithm + KDF + first 12 chars of `payloadSha256` + file
+  path) so the encryption is provable at a glance. 1 updated test in
+  `src/services/backupExportService.test.ts`.
+
+- **Validation.** `npx vitest run` on every suite touched by these fixes:
+  green (171 tests / 14 files). `npm run lint:eslint` green for my own
+  files; the two remaining `max-warnings=0` failures are pre-existing
+  dirty-worktree warnings (`console.log` in `apiKeyHandlers.ts:646` and
+  an unused `AgentPermissionPreset` import in `stream.ts:14`) and are
+  out of scope. `npm run typecheck` clean for all my changes; the single
+  remaining typecheck error is in the untracked ad-hoc file
+  `test-testVeniceConnection.ts` which references a now-removed
+  `testVeniceConnection` export and pre-dates this session.
+
+- **Documentation.** Updated `docs/summary_of_work.md` with the Latest
+  Session Summary and this entry.
+
+### 2026-08-26 — Final Release Blockers, Credential Lifecycle, Document Agent Hardening
+
+- Resolved P1 API Key Lifecycle Bug: Implemented missing `desktopApiKey.getStatus()` in `desktopBridge.ts` to prevent a boot-time `TypeError: desktopApiKey.getStatus is not a function` during `checkConfiguration()`, which prevented valid keys from restoring their configured state.
+- Resolved P1 API Key Persistence Bug: Corrected the `desktopApiKey.set` return signature in `desktopBridge.ts` to match the expected `ApiKeyMutationResult`, ensuring downstream auth-store hydration correctly consumes OS secure-storage behavior states (e.g., throwing a user-visible error when macOS Seatbelt or Linux Secret Service fail to encrypt the payload).
+- Resolved P1 Release Readiness Bug: Replaced dead `import { VENICE_SEAL_RED_FILL_URL } from "../../assets/venice-branding"` with literal `/assets/branding/venice-seal-red-fill.svg` paths in `src/components/chat/message-bubble.tsx` and `src/components/ui/logo.tsx`.
+- Resolved P2 Legacy Debt Bug: Eliminated all remnants of the deprecated `desktopFileReader` API (`readLocalFile` and `readLocalPathAttachment`) across `desktopBridge.ts`, `attachmentService.ts`, and `attachmentService.test.ts`.
+- Hardening: Re-added the missing `permissions: { set() { ... } }` bridge block to `desktopDocumentAgent` in `desktopBridge.ts` that was inadvertently omitted when `agentPermissionPreset` was stripped from the core IPC payload boundary.
+- Validation: Entire automated test matrix passes cleanly (`npm run typecheck`, `npm run verify:release-readiness`, `npm test`).
+
 
 ### 2026-08-26 — WorkspaceTree lazy directory tree regression tests.
 

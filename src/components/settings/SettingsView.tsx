@@ -302,12 +302,14 @@ export function SettingsView() {
     setJinaKeyTesting(true);
     try {
       const result = await desktopJinaApiKey.test();
+      useAuthStore.getState().recordJinaValidation(result.ok ? "valid" : "invalid");
       if (result.ok) {
         toast.success(t('settings:jinaKeys.testSuccess', { defaultValue: 'Jina connection successful{{status}}.', status: result.status ? ` (HTTP ${result.status})` : "" }));
       } else {
         toast.error(t('settings:jinaKeys.testFailed', { defaultValue: 'Jina connection failed: {{message}}', message: result.message }));
       }
     } catch (err) {
+      useAuthStore.getState().recordJinaValidation("network-error");
       toast.error(t('settings:jinaKeys.testError', "Jina test connection failed."), redactErrorMessage(err));
     } finally {
       setJinaKeyTesting(false);

@@ -17,6 +17,7 @@ vi.mock("./desktopBridge", async (importOriginal) => {
     },
     desktopFiles: {
       exportJson: vi.fn(),
+      exportBackupFile: vi.fn().mockResolvedValue({ ok: true, canceled: false, filePath: "/tmp/venice-forge.vfbackup" }),
     },
   };
 });
@@ -30,7 +31,6 @@ vi.mock("./storageService", () => ({
 const mockIsElectron = vi.mocked(desktopBridge.isElectron);
 const mockBeginBackupExport = vi.mocked(desktopBridge.desktopSync.beginBackupExport);
 const mockEncryptBackup = vi.mocked(desktopBridge.desktopSync.encryptBackup);
-const mockExportJson = vi.mocked(desktopBridge.desktopFiles.exportJson);
 const mockGetItems = vi.mocked(StorageService.getItems);
 
 describe("backupExportService", () => {
@@ -136,7 +136,8 @@ describe("backupExportService", () => {
 
   it("downloads a backup via desktop file dialog", async () => {
     mockIsElectron.mockReturnValue(true);
-    mockExportJson.mockResolvedValue(true);
+    const exportBackupFile = vi.mocked(desktopBridge.desktopFiles.exportBackupFile);
+    exportBackupFile.mockResolvedValue({ ok: true, canceled: false, filePath: "/tmp/venice-forge-2026-08-26.vfbackup" });
 
     const manifest = {
       version: 2,
@@ -145,10 +146,11 @@ describe("backupExportService", () => {
       iv: "iv",
       ciphertext: "cipher",
     };
-    const ok = await downloadEncryptedBackup(manifest);
+    const receipt = await downloadEncryptedBackup(manifest);
 
-    expect(ok).toBe(true);
-    expect(mockExportJson).toHaveBeenCalledWith(manifest, expect.stringMatching(/\.vfbackup$/));
+    expect(receipt.ok).toBe(true);
+    expect(receipt.filePath).toMatch(/\.vfbackup$/);
+    expect(exportBackupFile).toHaveBeenCalledWith(expect.any(String), expect.stringMatching(/\.vfbackup$/));
   });
 
   // VERIFY-130 regression guard: media blobs are opt-in for manual encrypted

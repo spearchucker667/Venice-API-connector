@@ -113,7 +113,7 @@ export const desktopVenice = {
         signalId,
         profileId: getActiveProfileId(),
         agentSessionId: input.agentSessionId,
-        agentPermissionPreset: input.agentPermissionPreset,
+        
       });
     } finally {
       cleanup?.();
@@ -145,7 +145,7 @@ export const desktopVenice = {
           signalId,
           profileId: getActiveProfileId(),
           agentSessionId: input.agentSessionId,
-          agentPermissionPreset: input.agentPermissionPreset,
+          
         },
         onDelta,
       );
@@ -218,12 +218,24 @@ export const desktopApiKey = {
     }
   },
 
+  async getStatus(): Promise<import("../types/api-connectivity").ApiKeyConfigurationStatus> {
+    if (isElectron())
+      return window.veniceForge!.apiKey.getStatus(getActiveProfileId());
+    try {
+      const isConf = await this.isConfigured();
+      if (!isConf) return { configured: false, state: "not-configured", storageMode: "unavailable" };
+      return { configured: true, state: "configured", storageMode: "plaintext-fallback" };
+    } catch {
+      return { configured: false, state: "not-configured", storageMode: "unavailable" };
+    }
+  },
+
   /**
    * Stores the Venice API key securely.
    * @param key The API key string to persist.
    * @returns A promise resolving to an ok flag.
    */
-  async set(key: string): Promise<{ ok: boolean }> {
+  async set(key: string): Promise<import("../types/api-connectivity").ApiKeyMutationResult> {
     if (isElectron())
       return window.veniceForge!.apiKey.set(key, getActiveProfileId());
     const response = await fetchWithTimeout("/api/session-key", {
@@ -231,27 +243,23 @@ export const desktopApiKey = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ key }),
     });
-    if (!response.ok) return { ok: false };
+    if (!response.ok) return { ok: false, code: "UNKNOWN_ERROR", safeMessage: "Web session persistence failed." };
     _webSessionVeniceApiKey.set(key);
-    return { ok: true };
+    return { ok: true, storageMode: "plaintext-fallback" };
   },
 
   /**
-   * Removes the stored Venice API key.
-   * @param profileId Optional profile id to delete the key for.
-   * @returns A promise resolving to an ok flag.
+   * Deletes the stored API key.
    */
-  async delete(profileId?: string): Promise<{ ok: boolean }> {
+  async delete(profileId?: string): Promise<import("../types/api-connectivity").ApiKeyMutationResult> {
     if (isElectron())
-      return window.veniceForge!.apiKey.delete(
-        profileId ?? getActiveProfileId(),
-      );
+      return window.veniceForge!.apiKey.delete(profileId ?? getActiveProfileId());
     const response = await fetchWithTimeout("/api/session-key", {
       method: "DELETE",
     });
-    if (!response.ok) return { ok: false };
+    if (!response.ok) return { ok: false, code: "UNKNOWN_ERROR", safeMessage: "Web session deletion failed." };
     _webSessionVeniceApiKey.clear();
-    return { ok: true };
+    return { ok: true, storageMode: "plaintext-fallback" };
   },
 
   /**
@@ -710,6 +718,32 @@ export const desktopFiles = {
   },
 
   /**
+   * Exports data as a `.vfbackup` (or any other named extension) encrypted
+   * backup. The caller passes the *encrypted* JSON string (already produced
+   * by `createEncryptedBackup`) and the suggested filename. The desktop
+   * bridge strips any redundant `.json` suffix on the filename so the save
+   * dialog does not double-extend the file on macOS. The returned
+   * `filePath` is the absolute path the user chose, so the renderer can
+   * show a "Backup saved to …" confirmation.
+   */
+  async exportBackupFile(
+    encryptedJson: string,
+    defaultPath = `venice-forge-${new Date().toISOString().slice(0, 10)}.vfbackup`,
+  ): Promise<{ ok: boolean; canceled: boolean; filePath?: string; error?: string }> {
+    if (!isElectron()) {
+      const blob = new Blob([encryptedJson], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = defaultPath;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
+      return { ok: true, canceled: false };
+    }
+    return await window.veniceForge!.files.saveJsonFile(encryptedJson, defaultPath);
+  },
+
+  /**
    * Imports a JSON string via native file dialog (desktop) or browser file picker (web).
    * @returns A promise resolving to the file contents, or null if cancelled.
    */
@@ -718,7 +752,7 @@ export const desktopFiles = {
       return new Promise((resolve) => {
         const input = document.createElement("input");
         input.type = "file";
-        input.accept = ".json,application/json";
+        input.accept = ".json,application/json,.vfbackup";
         input.style.display = "none";
 
         function cleanup() {
@@ -831,18 +865,6 @@ export const desktopFiles = {
 };
 
 /** Reads a local file via the main process (desktop only). */
-export const desktopFileReader = {
-  async readLocalFile(): Promise<{
-    ok: boolean;
-    canceled?: boolean;
-    content?: string;
-    filename?: string;
-    error?: string;
-  }> {
-    if (!isElectron()) return { ok: false, error: "Not running in Electron" };
-    return window.veniceForge!.files.readLocalFile();
-  },
-};
 
 /** Proxies sync folder commands. */
 export const desktopSync = {
@@ -2464,6 +2486,13 @@ const documentAgentUnavailable = {
 };
 
 export const desktopDocumentAgent = {
+  permissions: {
+    set(input: Parameters<import("../types/desktop").VeniceForgeDocumentAgent["permissions"]["set"]>[0]) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.permissions.set(input)
+        : Promise.resolve(documentAgentUnavailable as any);
+    }
+  },
   documents: {
     create(
       input: Parameters<

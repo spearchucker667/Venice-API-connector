@@ -14,6 +14,7 @@ vi.mock("../stores/media-send-to", () => ({
 vi.mock("../services/storagePrivacyService", () => ({
   buildStorageInventory: vi.fn().mockReturnValue({
     stores: [{ id: "prompts", label: "Prompts", category: "prompts", count: 5, encrypted: true, containsSecrets: false, containsUserContent: true, exportableInSafeSummary: true, severity: "ok", summary: "5 items" }],
+    activeApiKeys: [],
     issues: [],
     generatedAt: new Date().toISOString(),
   }),
@@ -77,12 +78,20 @@ vi.mock("./lorebook-store", () => ({
   useLorebookStore: { getState: () => ({ lorebooks: [] }) },
 }));
 vi.mock("./settings-store", () => ({
-  useSettingsStore: { getState: () => ({}) },
+  useSettingsStore: { getState: () => ({ enabledProviders: {} }) },
 }));
 vi.mock("./auth-store", () => ({
   useAuthStore: {
     getState: () => ({
       isConfigured: true,
+      jinaIsConfigured: false,
+      veniceLastValidationStatus: "configured-not-validated",
+      veniceLastValidationAt: null,
+      jinaLastValidationStatus: "not-configured",
+      jinaLastValidationAt: null,
+      providerLastValidationStatus: {},
+      providerLastValidationAt: {},
+      configuredProviders: {},
       checkConfiguration: vi.fn().mockResolvedValue(undefined),
     }),
   },

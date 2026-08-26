@@ -415,7 +415,13 @@ export const FALLBACK_MODELS: Record<ProviderId, FallbackModelDef[]> = {
         capabilities: { supportsVision: false, supportsFunctionCalling: false },
       }
     }
-  ]
+  ],
+  // Generic OpenAI-compatible endpoints accept user-entered model ids
+  // (OpenRouter, vLLM, LocalAI, etc.) — the catalog stays empty by design so
+  // the picker falls through to the user-supplied `provider:<id>:<model>`
+  // prefix. Model discovery for this provider is "static" per its registry
+  // entry; users are expected to know the model id their endpoint exposes.
+  generic_openai: [],
 }
 
 /**

@@ -103,4 +103,57 @@ describe("storagePrivacyService", () => {
     expect(cacheStore?.containsUserContent).toBe(false);
     expect(cacheStore?.summary).toContain("2.0 MiB");
   });
+
+  it("emits an Active API keys list with one row per configured provider", () => {
+    const inventory = buildStorageInventory({
+      apiKey: {
+        configured: true,
+        storage: "secure-storage",
+        lastValidationStatus: "valid",
+        lastValidationAt: "2026-08-26T20:00:00.000Z",
+      },
+      jinaKey: {
+        configured: true,
+        storage: "secure-storage",
+        lastValidationStatus: "configured-not-validated",
+        lastValidationAt: null,
+      },
+      configuredProviders: {
+        venice: true,
+        together: true,
+        groq: false,
+        generic_openai: true,
+      },
+      enabledProviders: { together: true, generic_openai: false },
+      providerValidation: {
+        together: { lastValidationStatus: "valid", lastValidationAt: "2026-08-25T10:00:00.000Z" },
+        generic_openai: { lastValidationStatus: "network-error", lastValidationAt: null },
+      },
+    });
+    const byId = Object.fromEntries(inventory.activeApiKeys.map((k) => [k.id, k]));
+    expect(byId.venice.configured).toBe(true);
+    expect(byId.venice.lastValidationStatus).toBe("valid");
+    expect(byId.jina.configured).toBe(true);
+    expect(byId.jina.lastValidationStatus).toBe("configured-not-validated");
+    // groq is configured:false so it must not appear.
+    expect(byId.groq).toBeUndefined();
+    expect(byId.together.configured).toBe(true);
+    expect(byId.together.enabledAsProvider).toBe(true);
+    expect(byId.together.lastValidationStatus).toBe("valid");
+    expect(byId.generic_openai.enabledAsProvider).toBe(false);
+    expect(byId.generic_openai.lastValidationStatus).toBe("network-error");
+  });
+
+  it("carries active API keys through to the safe summary (non-secret fields only)", () => {
+    const inventory = buildStorageInventory({
+      apiKey: { configured: true, storage: "secure-storage", lastValidationStatus: "valid" },
+      configuredProviders: { together: true },
+    });
+    const summary = buildSafePrivacySummary(inventory);
+    expect(summary.activeApiKeys).toBeDefined();
+    const venice = summary.activeApiKeys!.find((k) => k.id === "venice");
+    expect(venice?.configured).toBe(true);
+    // Raw key value must never be in the export.
+    expect(JSON.stringify(summary)).not.toMatch(/sk-[A-Za-z0-9]{20,}/);
+  });
 });

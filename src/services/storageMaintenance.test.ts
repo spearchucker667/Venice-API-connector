@@ -28,6 +28,7 @@ const localStorageMock = {
 describe("storageMaintenance", () => {
   const mockInventory = {
     stores: [],
+    activeApiKeys: [],
     issues: [],
     generatedAt: new Date().toISOString(),
   };
@@ -86,6 +87,7 @@ describe("storageMaintenance", () => {
   it("rejects archive-orphans as a typed dry-run-only result", async () => {
     const inventoryWithIssues: StorageInventoryResult ={
       stores: [],
+      activeApiKeys: [],
       issues: [{ id: "issue-1", severity: "warn", sourceCategory: "prompts", message: "missing project", repairable: true }],
       generatedAt: new Date().toISOString(),
     };

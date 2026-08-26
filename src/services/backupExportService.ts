@@ -221,27 +221,16 @@ function sortedStoreList(names: readonly string[]): string[] {
   return [...names].sort((a, b) => a.localeCompare(b));
 }
 
-export async function downloadEncryptedBackup(manifest: EncryptedBackupManifest): Promise<boolean> {
+export async function downloadEncryptedBackup(manifest: EncryptedBackupManifest): Promise<{ ok: boolean; canceled: boolean; filePath?: string }> {
   const jsonManifest = JSON.stringify(manifest, null, 2);
   const filename = `venice-forge-${new Date().toISOString().slice(0, 10)}.vfbackup`;
 
-  if (isElectron()) {
-    return await desktopFiles.exportJson(manifest, filename);
-  } else {
-    if (typeof document !== "undefined") {
-      const blob = new Blob([jsonManifest], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => {
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }, 100);
-      return true;
-    }
-    return false;
-  }
+  // The desktop bridge strips a redundant `.json` suffix so the save dialog
+  // does not produce a `.vfbackup.json` filename on macOS. The receipt
+  // (file path + algorithm + payload fingerprint) is surfaced in the UI
+  // immediately after this resolves — the user can confirm the file is
+  // encrypted at a glance instead of staring at what looks like a plain
+  // JSON file.
+  const result = await desktopFiles.exportBackupFile(jsonManifest, filename);
+  return { ok: result.ok, canceled: !result.ok && (result.canceled ?? false), filePath: result.filePath };
 }

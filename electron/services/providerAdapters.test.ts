@@ -42,6 +42,13 @@ vi.mock('./secureStore', () => ({
         apiKey: 'fake-vertex-key',
       }
     }
+    if (providerId === 'generic_openai') {
+      return {
+        providerId: 'generic_openai',
+        baseUrl: 'https://openrouter.ai/api/v1',
+        apiKey: 'fake-generic-openai-key',
+      }
+    }
     return null
   }),
 }))
@@ -59,6 +66,7 @@ vi.mock('./providerSettingsStore', () => ({
       aws_bedrock: true,
       google_vertex: true,
       replicate: true,
+      generic_openai: true,
     },
     autoFallbackEnabled: false,
     fallbackOrdering: [],
@@ -85,6 +93,7 @@ describe('providerAdapters', () => {
       ['google_gemini', 'top_p'],
       ['google_vertex', 'top_p'],
       ['cohere', 'documents'],
+      ['generic_openai', 'parallel_tool_calls'],
     ] as const)(
       'keeps documented %s chat fields while rejecting Venice and image-only fields',
       (providerId, documentedField) => {
@@ -577,5 +586,111 @@ describe('cohere adapter', () => {
     const delta = route!.extractStreamDelta!('{invalid')
     expect(delta.parsed).toBe(false)
     expect(delta.malformed).toBe(true)
+  })
+})
+
+describe('generic_openai adapter', () => {
+  const buildCredential = (overrides: Partial<{ baseUrl: string; apiKey: string }> = {}) => ({
+    providerId: 'generic_openai' as const,
+    baseUrl: overrides.baseUrl ?? 'https://openrouter.ai/api/v1',
+    apiKey: overrides.apiKey ?? 'sk-test',
+  })
+
+  it('routes chat completions to the configured base URL with bearer auth', () => {
+    const route = providerAdapters.generic_openai(
+      'qwen/qwen-2.5-72b-instruct',
+      buildCredential(),
+      '/chat/completions',
+      { model: 'generic_openai:qwen/qwen-2.5-72b-instruct', messages: [] },
+    )
+    expect(route).not.toBeNull()
+    expect(route!.host).toBe('openrouter.ai')
+    expect(route!.path).toBe('/api/v1/chat/completions')
+    expect(route!.headers.Authorization).toBe('Bearer sk-test')
+    expect(route!.headers['Content-Type']).toBe('application/json')
+  })
+
+  it('rewrites the body model to the user-supplied model id', () => {
+    const route = providerAdapters.generic_openai(
+      'qwen/qwen-2.5-72b-instruct',
+      buildCredential(),
+      '/chat/completions',
+      { model: 'generic_openai:qwen/qwen-2.5-72b-instruct', messages: [] },
+    )
+    const body = route!.transformBody!({ messages: [] }, 'qwen/qwen-2.5-72b-instruct')
+    expect(body.model).toBe('qwen/qwen-2.5-72b-instruct')
+  })
+
+  it('routes embeddings to the configured base URL', () => {
+    const route = providerAdapters.generic_openai(
+      'text-embedding-3-small',
+      buildCredential(),
+      '/embeddings',
+      { model: 'generic_openai:text-embedding-3-small', input: 'hello' },
+    )
+    expect(route).not.toBeNull()
+    expect(route!.path).toBe('/api/v1/embeddings')
+  })
+
+  it('rejects unknown endpoints (fails closed)', () => {
+    const route = providerAdapters.generic_openai(
+      'qwen/qwen-2.5-72b-instruct',
+      buildCredential(),
+      '/audio/speech',
+      { model: 'generic_openai:qwen/qwen-2.5-72b-instruct' },
+    )
+    expect(route).toBeNull()
+  })
+
+  it.each([
+    ['http://example.com/v1', /https:\/\//],
+    ['', /required/],
+    ['not-a-url', /not a valid URL/],
+    ['https://user:pass@example.com/v1', /must not embed credentials/],
+    ['https://example.com/v1?key=secret', /must not contain query strings/],
+  ])('rejects unsafe base URL %s', (rawUrl, expectedErrorPattern) => {
+    expect(() =>
+      providerAdapters.generic_openai(
+        'qwen',
+        buildCredential({ baseUrl: rawUrl }),
+        '/chat/completions',
+        { messages: [] },
+      ),
+    ).toThrow(expectedErrorPattern)
+  })
+
+  it('does not silently fall back to a default base URL when credential is missing fields', () => {
+    expect(() =>
+      providerAdapters.generic_openai(
+        'qwen',
+        { providerId: 'generic_openai', baseUrl: '', apiKey: 'sk-test' } as never,
+        '/chat/completions',
+        { messages: [] },
+      ),
+    ).toThrow(/missing required fields/)
+  })
+
+  it('resolves a route through the public dispatch when enabled and credentialed', () => {
+    const result = resolveProviderRoute({
+      endpoint: '/chat/completions',
+      body: { model: 'generic_openai:qwen/qwen-2.5-72b-instruct', messages: [] },
+    })
+    expect(result?.error).toBeUndefined()
+    expect(result?.route?.host).toBe('openrouter.ai')
+    expect(result?.route?.path).toBe('/api/v1/chat/completions')
+  })
+
+  it('returns an error when the generic_openai prefix is used but the provider is disabled', () => {
+    vi.mocked(getProviderSettings).mockReturnValueOnce({
+      enabledProviders: { generic_openai: false } as never,
+      autoFallbackEnabled: false,
+      fallbackOrdering: [],
+      nativeFallbackModels: {},
+    } as never)
+    const result = resolveProviderRoute({
+      endpoint: '/chat/completions',
+      body: { model: 'generic_openai:qwen', messages: [] },
+    })
+    expect(result?.error).toMatch(/disabled/i)
   })
 })

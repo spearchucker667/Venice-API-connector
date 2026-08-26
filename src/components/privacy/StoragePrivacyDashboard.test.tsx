@@ -41,6 +41,9 @@ describe("StoragePrivacyDashboard", () => {
       { id: "projects", label: "Projects", category: "projects" as StoragePrivacyCategory, count: 2, encrypted: true, severity: "ok" as const, summary: "2 items", storeName: "projects", exportableInSafeSummary: true, containsUserContent: true, containsSecrets: false },
       { id: "api_keys", label: "API Keys", category: "api_keys" as StoragePrivacyCategory, count: 1, encrypted: true, severity: "ok" as const, summary: "Keys present", storeName: "settings", exportableInSafeSummary: false, containsUserContent: false, containsSecrets: true },
     ],
+    activeApiKeys: [
+      { id: "venice", providerId: "venice", label: "Venice", configured: true, storage: "secure-storage", lastValidationStatus: "valid", lastValidationAt: "2026-08-26T21:00:00.000Z", keyTail: null, enabledAsProvider: true },
+    ],
     issues: [],
     generatedAt: new Date().toISOString(),
   } satisfies StorageInventoryResult;
@@ -139,6 +142,7 @@ describe("StoragePrivacyDashboard VERIFY-131 privacy exclusions truth table", ()
     mockStore({
       inventory: {
         stores: [],
+        activeApiKeys: [],
         issues: [],
         generatedAt: new Date().toISOString(),
       } satisfies StorageInventoryResult,

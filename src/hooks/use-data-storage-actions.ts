@@ -150,14 +150,25 @@ export function useDataStorageActions(
           includeCharacterCardDrafts,
           includeMedia,
         });
-        const ok = await downloadEncryptedBackup(manifest);
-        if (ok)
+        const receipt = await downloadEncryptedBackup(manifest);
+        if (receipt.ok) {
+          // Surface a short audit receipt alongside the success toast so the
+          // user can confirm the file is genuinely encrypted (the
+          // metadata.crypto fields and the payload fingerprint are already
+          // part of the manifest the user just saved).
+          const algo = manifest.metadata?.crypto?.algorithm ?? "XChaCha20-Poly1305";
+          const kdf = manifest.metadata?.crypto?.kdf ?? "Argon2id";
+          const fingerprint = manifest.metadata?.contents?.payloadSha256 ?? "";
+          const fingerprintTail = fingerprint ? fingerprint.slice(0, 12) : "n/a";
+          const where = receipt.filePath ? ` → ${receipt.filePath}` : "";
           toast.success(
             translateRuntime(
-              "runtimeGenerated.hooks.useDataStorageActions.notification.encryptedBackupExportedSuccessfully",
-              "Encrypted backup exported successfully.",
+              "runtimeGenerated.hooks.useDataStorageActions.notification.encryptedBackupExportedWithReceipt",
+              "Encrypted backup exported ({{algo}}/{{kdf}}, payload sha256 {{fingerprint}}…{{where}})",
+              { algo, kdf, fingerprint: fingerprintTail, where },
             ),
           );
+        }
       } catch {
         toast.error(
           translateRuntime(

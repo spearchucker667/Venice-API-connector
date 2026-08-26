@@ -26,6 +26,7 @@ import * as logger from "../shared/logger";
 import { useLorebookStore } from "./lorebook-store";
 import { useAuthStore } from "./auth-store";
 import { useChatStore } from "./chat-store";
+import { useSettingsStore } from "./settings-store";
 import { toast } from "./toast-store";
 import { desktopCharacterImage, isElectron } from "../services/desktopBridge";
 import { copyText } from "../stores/media-send-to";
@@ -163,7 +164,16 @@ export const useStoragePrivacyStore = create<StoragePrivacyState>(
         // (desktop safeStorage or web server-side session) rather than trusting
         // a non-existent settings field.
         await useAuthStore.getState().checkConfiguration();
-        const veniceConfigured = useAuthStore.getState().isConfigured;
+        const authState = useAuthStore.getState();
+        const veniceConfigured = authState.isConfigured;
+        const jinaConfigured = authState.jinaIsConfigured;
+
+        // Try to read the Jina secure-storage status directly when running
+        // in Electron; in web builds the bridge surfaces a session-local flag.
+        let jinaStorage: "secure-storage" | "web-environment" | "unavailable" = isElectron()
+          ? "secure-storage"
+          : "web-environment";
+        if (!jinaConfigured) jinaStorage = "unavailable";
 
         const conversations = useChatStore
           .getState()
@@ -209,10 +219,26 @@ export const useStoragePrivacyStore = create<StoragePrivacyState>(
           apiKey: {
             configured: veniceConfigured,
             storage: isElectron() ? "secure-storage" : "web-environment",
-            lastValidationStatus: veniceConfigured
-              ? "configured-not-validated"
-              : "not-configured",
+            lastValidationStatus: authState.veniceLastValidationStatus,
+            lastValidationAt: authState.veniceLastValidationAt,
           },
+          jinaKey: {
+            configured: jinaConfigured,
+            storage: jinaStorage,
+            lastValidationStatus: authState.jinaLastValidationStatus,
+            lastValidationAt: authState.jinaLastValidationAt,
+          },
+          configuredProviders: useAuthStore.getState().configuredProviders,
+          enabledProviders: useSettingsStore.getState().enabledProviders,
+          providerValidation: Object.fromEntries(
+            Object.entries(authState.providerLastValidationStatus).map(([id, status]) => [
+              id,
+              {
+                lastValidationStatus: status,
+                lastValidationAt: authState.providerLastValidationAt[id] ?? null,
+              },
+            ]),
+          ),
           characterImageCache: cacheInventory.ok
             ? {
                 count: cacheInventory.count ?? 0,

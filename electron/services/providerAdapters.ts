@@ -1,7 +1,7 @@
 import { getProviderCredentialOrFallback } from './secureStore'
 import { getProviderSettings } from './providerSettingsStore'
 import type { StreamDelta } from './veniceClient'
-import { PROVIDER_REGISTRY, type AzureOpenAiConfig, type AwsBedrockConfig, type GoogleVertexConfig, type ProviderCredential, type ProviderId } from '../../src/types/provider'
+import { PROVIDER_REGISTRY, type AzureOpenAiConfig, type AwsBedrockConfig, type GenericOpenAiConfig, type GoogleVertexConfig, type ProviderCredential, type ProviderId } from '../../src/types/provider'
 
 export interface ProviderRoute {
   host: string
@@ -110,6 +110,14 @@ const PROVIDER_OPERATION_FIELDS: ProviderOperationFields = {
       'reasoning_effort', 'language_preference',
     ],
   },
+  generic_openai: {
+    // Generic OpenAI-compatible endpoints (OpenRouter, vLLM, LocalAI, etc.)
+    // accept the same chat-completions surface as OpenAI proper.
+    '/chat/completions': OPENAI_CHAT_FIELDS,
+    '/embeddings': [
+      'model', 'input', 'encoding_format', 'user', 'dimensions',
+    ],
+  },
 }
 
 /** Builds a fresh provider request body from the fields documented for the
@@ -193,6 +201,48 @@ function extractGoogleVertexConfig(credential: ProviderCredential | string): Ext
  */
 function buildVertexHost(): string {
   return 'aiplatform.googleapis.com'
+}
+
+/** Parses and validates a user-supplied base URL for the generic_openai
+ *  provider. The host is locked to HTTPS to avoid silent credential leakage
+ *  over plain HTTP, and the URL shape is restricted to a host with an optional
+ *  path prefix — anything richer (custom schemes, embedded credentials, query
+ *  strings) is rejected. SSRF is bounded by the same allowlist of public
+ *  hostnames that credential storage already enforces; if a future change
+ *  relaxes that allowlist the runtime guard here is the second line of
+ *  defense. */
+function parseGenericOpenAiBaseUrl(rawBaseUrl: string): { host: string; pathPrefix: string } {
+  if (typeof rawBaseUrl !== "string" || rawBaseUrl.length === 0) {
+    throw new Error("Generic OpenAI base URL is required");
+  }
+  let parsed: URL;
+  try {
+    parsed = new URL(rawBaseUrl);
+  } catch {
+    throw new Error("Generic OpenAI base URL is not a valid URL");
+  }
+  if (parsed.protocol !== "https:") {
+    throw new Error("Generic OpenAI base URL must use https://");
+  }
+  if (parsed.username || parsed.password) {
+    throw new Error("Generic OpenAI base URL must not embed credentials");
+  }
+  if (parsed.search || parsed.hash) {
+    throw new Error("Generic OpenAI base URL must not contain query strings or fragments");
+  }
+  return { host: parsed.host, pathPrefix: parsed.pathname.replace(/\/$/, "") };
+}
+
+/** Extracts and validates the structured Generic OpenAI credential. */
+function extractGenericOpenAiConfig(credential: ProviderCredential | string): GenericOpenAiConfig {
+  if (typeof credential === "string" || !credential || typeof credential !== "object" || credential.providerId !== "generic_openai") {
+    throw new Error("Generic OpenAI credential is not structured correctly");
+  }
+  const c = credential as GenericOpenAiConfig;
+  if (!c.baseUrl || !c.apiKey) {
+    throw new Error("Generic OpenAI credential is missing required fields");
+  }
+  return c;
 }
 
 /** Shared Gemini request normalization used by both the Gemini Developer API
@@ -584,6 +634,20 @@ export const providerAdapters: Record<string, AdapterFn> = {
       },
       transformBody: (body, realModel) => ({ ...body, model: realModel })
     }
+  },
+  generic_openai: (model, credential, originalPath, _originalBody) => {
+    if (originalPath !== '/chat/completions' && originalPath !== '/embeddings') return null;
+    const config = extractGenericOpenAiConfig(credential);
+    const { host, pathPrefix } = parseGenericOpenAiBaseUrl(config.baseUrl);
+    return {
+      host,
+      path: `${pathPrefix}${originalPath}`,
+      headers: {
+        'Authorization': `Bearer ${config.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      transformBody: (body, realModel) => ({ ...body, model: realModel }),
+    };
   }
 }
 

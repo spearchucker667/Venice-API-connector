@@ -6,9 +6,11 @@ import {
   type StoragePrivacyCategory,
   type StorageStoreInventoryItem,
   type StorageReferenceIssue,
+  type ActiveApiKeyEntry,
 } from "../../types/storage-privacy";
 import { askDecision } from "../ui/modal-requests";
 import { Trans, useTranslation } from "react-i18next";
+import { PROVIDER_REGISTRY } from "../../types/provider";
 
 /** Map a storage-privacy category to the canonical tab id for manual review. */
 export function mapPrivacyCategoryToTab(category: StoragePrivacyCategory): Tab {
@@ -50,6 +52,47 @@ const SEVERITY_BG: Record<StoragePrivacySeverity, string> = {
   info: "bg-info/10 border-info/20",
   warn: "bg-warning/10 border-warning/20",
   error: "bg-danger/10 border-danger/20",
+};
+
+/** Returns a friendly provider label, preferring the registry definition
+ *  when the provider is recognised; falls back to the raw id otherwise. */
+function providerLabel(providerId: string): string {
+  const def = PROVIDER_REGISTRY[providerId as keyof typeof PROVIDER_REGISTRY];
+  return def?.label ?? providerId;
+}
+
+const VALIDATION_BADGE: Record<ActiveApiKeyEntry["lastValidationStatus"], {
+  label: string;
+  className: string;
+}> = {
+  "not-configured": {
+    label: "Not configured",
+    className: "bg-surface-muted text-text-muted border-border",
+  },
+  "configured-not-validated": {
+    label: "Configured, untested",
+    className: "bg-info/10 text-info border-info/20",
+  },
+  valid: {
+    label: "Valid",
+    className: "bg-success/10 text-success border-success/20",
+  },
+  invalid: {
+    label: "Invalid",
+    className: "bg-danger/10 text-danger border-danger/20",
+  },
+  "network-error": {
+    label: "Network error",
+    className: "bg-warning/10 text-warning border-warning/20",
+  },
+  "bridge-error": {
+    label: "Bridge error",
+    className: "bg-warning/10 text-warning border-warning/20",
+  },
+  unknown: {
+    label: "Unknown",
+    className: "bg-surface-muted text-text-muted border-border",
+  },
 };
 
 export function StoragePrivacyDashboard() {
@@ -196,6 +239,101 @@ export function StoragePrivacyDashboard() {
               </div>
             </div>
           ))}
+        </section>
+
+        {/* Active API Keys — dedicated per-provider audit surface. */}
+        <section
+          className="space-y-3"
+          data-testid="privacy-active-api-keys"
+        >
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-widest">
+              <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.heading.activeApiKeys" />
+            </h2>
+            <span className="text-[11px] text-text-muted">
+              {inventory.activeApiKeys.length} configured
+            </span>
+          </div>
+          <div className="rounded-lg border border-border overflow-hidden">
+            <table className="w-full text-left text-sm text-text-secondary">
+              <thead className="bg-surface-muted text-text-muted text-xs uppercase">
+                <tr>
+                  <th className="px-4 py-3 font-medium">Provider</th>
+                  <th className="px-4 py-3 font-medium">Storage</th>
+                  <th className="px-4 py-3 font-medium">Last validation</th>
+                  <th className="px-4 py-3 font-medium text-right">Manage</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {inventory.activeApiKeys.map((entry) => {
+                  const badge = VALIDATION_BADGE[entry.lastValidationStatus];
+                  return (
+                    <tr key={entry.id} className="hover:bg-surface-muted">
+                      <td className="px-4 py-3">
+                        <div className="font-medium text-text-primary">
+                          {entry.providerId === "venice"
+                            ? "Venice"
+                            : entry.providerId === "jina"
+                              ? "Jina"
+                              : providerLabel(entry.providerId)}
+                        </div>
+                        <div className="text-[12px] text-text-muted font-mono">
+                          {entry.providerId}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-[12px] text-text-secondary">
+                          {entry.storage === "secure-storage"
+                            ? "OS secure storage"
+                            : entry.storage === "web-environment"
+                              ? "In-memory (web)"
+                              : entry.storage === "env"
+                                ? "Environment"
+                                : entry.storage === "memory"
+                                  ? "Memory"
+                                  : "Unavailable"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex flex-col gap-1">
+                          <span
+                            className={`self-start inline-block text-[11px] px-2 py-0.5 rounded border font-bold uppercase ${badge.className}`}
+                          >
+                            {badge.label}
+                          </span>
+                          {entry.lastValidationAt && (
+                            <span className="text-[11px] text-text-muted">
+                              {new Date(entry.lastValidationAt).toLocaleString()}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setActiveTab(
+                              entry.providerId === "venice" || entry.providerId === "jina"
+                                ? "settings"
+                                : "settings",
+                            )
+                          }
+                          className="text-[12px] px-3 py-1 rounded border border-border bg-surface hover:bg-surface-muted text-text-primary"
+                        >
+                          Open settings
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-[11px] text-text-muted">
+            Raw API key material is never sent to the renderer, never written
+            to logs, and never exported. The rows above report only storage
+            location and last validation outcome.
+          </p>
         </section>
 
         {/* Store Inventory Table */}

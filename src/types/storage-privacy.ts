@@ -1,4 +1,4 @@
-import type { SafeApiKeyMetadata } from "./api-connectivity";
+import type { ApiKeyValidationStatus, SafeApiKeyMetadata, SafeApiKeyStorage } from "./api-connectivity";
 
 export type StoragePrivacySeverity = "ok" | "info" | "warn" | "error";
 
@@ -15,6 +15,25 @@ export type StoragePrivacyCategory =
   | "diagnostics"
   | "cache"
   | "unknown";
+
+/** Per-provider API key entry. The `keyPreview` and `keyTail` are short,
+ *  non-secret display fragments (e.g. `sk-…abcd`) intended for at-a-glance
+ *  identity confirmation only. The actual key never leaves secure storage. */
+export interface ActiveApiKeyEntry {
+  id: string;
+  providerId: string;
+  label: string;
+  configured: boolean;
+  storage: SafeApiKeyStorage;
+  /** Last validation outcome, if any. `null` means "never tested in this session". */
+  lastValidationStatus: ApiKeyValidationStatus;
+  /** ISO timestamp of the last successful validation, or null if never validated. */
+  lastValidationAt: string | null;
+  /** Short display tail like `…abcd` (last 4 chars of the key fingerprint). */
+  keyTail: string | null;
+  /** Whether the provider is also enabled as a routing target. */
+  enabledAsProvider: boolean;
+}
 
 export interface StorageStoreInventoryItem {
   id: string;
@@ -48,6 +67,11 @@ export interface StorageReferenceIssue {
 
 export interface StorageInventoryResult {
   stores: StorageStoreInventoryItem[];
+  /** Per-provider API key audit trail. Surfaced on the Privacy tab so the
+   *  user can see exactly which credentials are configured, where they live,
+   *  and the last validation result — without the raw key value being
+   *  exposed. */
+  activeApiKeys: ActiveApiKeyEntry[];
   issues: StorageReferenceIssue[];
   generatedAt: string;
 }
@@ -83,4 +107,8 @@ export interface SafePrivacySummary {
   issues: StorageReferenceIssue[];
   exclusions: string[];
   apiKey: SafeApiKeyMetadata;
+  /** Optional breakdown of every configured provider key. Mirrors
+   *  `StorageInventoryResult.activeApiKeys` and is omitted from older
+   *  summaries that predate the dedicated panel. */
+  activeApiKeys?: ActiveApiKeyEntry[];
 }

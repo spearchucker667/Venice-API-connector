@@ -246,18 +246,28 @@ export function registerFileHandlers(): void {
       if (Buffer.byteLength(data, "utf-8") > MAX_JSON_FILE_BYTES) {
         throw new Error("Export data is too large.");
       }
-      const sanitizedFilename = path.basename(
-        typeof defaultPath === "string" ? defaultPath : "venice-forge-export.json"
-      );
+      // Strip any redundant trailing extension so macOS doesn't double-tag the
+      // file in the save dialog (e.g. `venice-forge-2026-08-26.vfbackup.json`
+      // → `venice-forge-2026-08-26.vfbackup`). The dialog also enforces a
+      // single canonical extension below, so this is purely cosmetic — the
+      // file's contents are unaffected.
+      const requested =
+        typeof defaultPath === "string" ? defaultPath : "venice-forge-export.json";
+      let sanitizedFilename = path.basename(requested);
+      if (sanitizedFilename.toLowerCase().endsWith(".vfbackup.json")) {
+        sanitizedFilename = sanitizedFilename.slice(0, -".json".length);
+      }
+      const ext = path.extname(sanitizedFilename).slice(1) || "json";
+      const filterName = ext === "vfbackup" ? "Venice Forge Backup" : "JSON";
       // verify-no-native-dialogs: allow — intentional save dialog for export
       const result = await dialog.showSaveDialog({
         title: "Export Venice Forge data",
         defaultPath: sanitizedFilename,
-        filters: [{ name: "JSON", extensions: ["json"] }],
+        filters: [{ name: filterName, extensions: [ext] }],
       });
       if (result.canceled || !result.filePath) return { ok: false, canceled: true };
       await fs.writeFile(result.filePath, data, { encoding: "utf-8", mode: 0o600 });
-      return { ok: true, canceled: false };
+      return { ok: true, canceled: false, filePath: result.filePath };
     } catch (err) {
       return { ok: false, error: redactErrorMessage(err) };
     }
@@ -316,7 +326,9 @@ export function registerFileHandlers(): void {
       // verify-no-native-dialogs: allow — intentional open dialog for data import
       const result = await dialog.showOpenDialog({
         title: "Import Venice Forge data",
-        filters: [{ name: "JSON", extensions: ["json"] }],
+        filters: [
+          { name: "Venice Forge Data", extensions: ["json", "vfbackup"] }
+        ],
         properties: ["openFile"],
       });
       if (result.canceled || !result.filePaths[0]) return { ok: true, canceled: true };
@@ -336,49 +348,6 @@ export function registerFileHandlers(): void {
     }
   });
 
-  registerPrivilegedIpcChannel("app:readLocalFile", async () => {
-    try {
-      // verify-no-native-dialogs: allow — intentional open dialog for text attachment
-      const result = await dialog.showOpenDialog({
-        title: "Import text attachment",
-        properties: ["openFile"],
-        filters: [
-          { name: "Text attachments", extensions: ["txt", "md", "json", "csv", "yaml", "yml"] },
-        ],
-      });
-      if (result.canceled || !result.filePaths[0]) return { ok: true, canceled: true };
-
-      const selected = result.filePaths[0];
-      const base = path.basename(selected);
-      if (base.startsWith(".")) return { ok: false, error: "Hidden files are not importable." };
-
-      const ext = path.extname(base).toLowerCase();
-      if (!new Set([".txt", ".md", ".json", ".csv", ".yaml", ".yml"]).has(ext)) {
-        return { ok: false, error: "Unsupported attachment type." };
-      }
-
-      // Open first, then fstat the same file descriptor to prevent TOCTOU between
-      // the stat and read calls (a symlink or file swap between those steps is blocked).
-      const MAX_TEXT_ATTACHMENT_BYTES = 256 * 1024;
-      let fh: Awaited<ReturnType<typeof fs.open>> | null = null;
-      try {
-        fh = await fs.open(selected, "r");
-        const stat = await fh.stat();
-        if (!stat.isFile()) {
-          return { ok: false, error: "Not a regular file." };
-        }
-        if (stat.size > MAX_TEXT_ATTACHMENT_BYTES) {
-          return { ok: false, error: `File too large (${stat.size} bytes). Max: ${MAX_TEXT_ATTACHMENT_BYTES} bytes.` };
-        }
-        const content = await fh.readFile({ encoding: "utf-8" });
-        return { ok: true, content, filename: base };
-      } finally {
-        await fh?.close().catch(() => undefined);
-      }
-    } catch (err) {
-      return { ok: false, error: redactErrorMessage(err) };
-    }
-  });
 
   // Media Studio: read a file from an allowlisted directory (Downloads,
   // Documents, Desktop, or Pictures/Venice Forge) and return it as a

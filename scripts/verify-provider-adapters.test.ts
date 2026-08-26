@@ -34,6 +34,12 @@ function testCredentialFor(providerId: string): ProviderCredential | string {
         authMode: 'express',
         apiKey: 'test-key',
       }
+    case 'generic_openai':
+      return {
+        providerId: 'generic_openai',
+        baseUrl: 'https://openrouter.ai/api/v1',
+        apiKey: 'test-key',
+      }
     case 'replicate':
       // Replicate is registered but routed through a dedicated async prediction
       // lifecycle rather than the generic chat/image adapter.

@@ -13,7 +13,8 @@ export type ProviderId =
   | "mistral"
   | "anthropic"
   | "perplexity"
-  | "cohere";
+  | "cohere"
+  | "generic_openai";
 
 export interface ProviderConfig {
   id: ProviderId;
@@ -54,16 +55,23 @@ export type GoogleVertexConfig =
   | { authMode: "express"; apiKey: string }
   | { authMode: "full"; projectId: string; location: string; credentialsJson: string };
 
+export interface GenericOpenAiConfig {
+  baseUrl: string;
+  apiKey: string;
+}
+
 export type ProviderCredential =
   | ({ providerId: "azure_openai" } & AzureOpenAiConfig)
   | ({ providerId: "aws_bedrock" } & AwsBedrockConfig)
-  | ({ providerId: "google_vertex" } & GoogleVertexConfig);
+  | ({ providerId: "google_vertex" } & GoogleVertexConfig)
+  | ({ providerId: "generic_openai" } & GenericOpenAiConfig);
 
 /** Providers whose credential storage is structured rather than a single API key. */
 export const STRUCTURED_CREDENTIAL_PROVIDER_IDS = [
   "azure_openai",
   "aws_bedrock",
   "google_vertex",
+  "generic_openai",
 ] as const satisfies readonly ProviderId[];
 
 export function requiresStructuredCredential(providerId: ProviderId): boolean {
@@ -276,6 +284,25 @@ export const PROVIDER_CAPABILITIES: Record<
       modelDiscovery: "static",
     },
   ],
+  generic_openai: [
+    {
+      feature: "chat",
+      route: "/chat/completions",
+      implemented: true,
+      // Model discovery is intentionally "deployment" — generic
+      // OpenAI-compatible endpoints can return any custom model id
+      // (OpenRouter, vLLM, LocalAI, etc.), so users provide the model id at
+      // request time via the `provider:<id>:<model>` prefix. There is no
+      // static catalog to ship; the deployment is whatever the user types.
+      modelDiscovery: "deployment",
+    },
+    {
+      feature: "embeddings",
+      route: "/embeddings",
+      implemented: true,
+      modelDiscovery: "deployment",
+    },
+  ],
 };
 
 function implementedFeatures(providerId: ProviderId): ProviderFeature[] {
@@ -452,6 +479,18 @@ export const PROVIDER_REGISTRY: Record<ProviderId, ProviderDefinition> = {
       );
     },
     supportedTypes: implementedFeatures("cohere"),
+  },
+  generic_openai: {
+    id: "generic_openai",
+    // i18n-allow-next-line: provider-defined proper name
+    label: "Generic OpenAI Compatible",
+    get description() {
+      return translateRuntime(
+        "runtimeGenerated.types.provider.metadata.genericOpenaiCompatible",
+        "Any OpenAI-compatible API endpoint.",
+      );
+    },
+    supportedTypes: ["chat", "embeddings"],
   },
 };
 
