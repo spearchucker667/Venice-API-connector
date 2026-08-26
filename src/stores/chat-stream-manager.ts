@@ -272,7 +272,8 @@ export async function startStream(
         const retryable = isRetryableError(err);
         if (retryable && attempts < MAX_STREAM_RETRIES && !hasCommittedStreamState) {
           attempts++;
-          logger.warn({ category: "stream_retry", attempt: attempts, message: "Stream dropped. Retrying from checkpoint", status: (err as { status?: number, statusCode?: number })?.status || (err as { status?: number, statusCode?: number })?.statusCode || "unknown" });
+          // i18n-ignore
+          logger.warn({ category: "stream_retry", attempt: attempts, message: /* i18n-ignore */ "Stream dropped. Retrying from checkpoint", status: (err as { status?: number, statusCode?: number })?.status || (err as { status?: number, statusCode?: number })?.statusCode || "unknown" });
           // Exponential backoff before retry (1s, 2s)
           await new Promise((resolve) => setTimeout(resolve, 1000 * Math.pow(2, attempts - 1)));
           continue;
