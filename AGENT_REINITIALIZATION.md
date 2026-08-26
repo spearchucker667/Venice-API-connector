@@ -3,7 +3,7 @@
 > **Canonical Repository Root:** `/Users/super_user/Projects/Venice_Forge`  
 > **GitHub:** `spearchucker667/Venice_Forge`  
 > **Version:** `3.0.0-beta.2`  
-> **Last Re-Initialization:** 2026-07-21 (Anchored to git commit `27aca76`)  
+> **Last Re-Initialization:** 2026-08-26 (Anchored to git commit `eba90428be6c87b85a96e07b83be09e0f383db89`)  
 > **Audience:** Senior Engineers & AI Coding Agents joining the project.
 
 ---
@@ -141,7 +141,7 @@ All entries sourced from repository git commit history (July 2026):
 ## 6. Important Abstractions & Tech Stack `[VERIFIED]`
 
 Versions verified from `package.json` and lockfile:
-- **Runtime:** Node.js `>=22.13.0 <23.0.0`, npm `>=10.0.0`
+- **Runtime:** Node.js `>=22.15.0 <23.0.0`, npm `>=10.0.0`
 - **Core Desktop & Web Frameworks:** React 19.0.1 (`react`, `react-dom`), Vite 8.1.5 (`vite`, `@vitejs/plugin-react`), Electron 43.1.1 (`electron`), Express 5.2.1 (`express`).
 - **State Management & Data Fetching:** Zustand 5.0.14 (`zustand`), TanStack React Query 5.101.0 (`@tanstack/react-query`).
 - **Styling & UI Components:** Tailwind CSS 4.1.14 (`tailwindcss`, `@tailwindcss/vite`), Lucide React 1.17.0 (`lucide-react`), ReactFlow 12.11.0 (`@xyflow/react`).

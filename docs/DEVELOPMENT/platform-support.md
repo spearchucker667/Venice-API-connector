@@ -10,7 +10,7 @@
 
 ### Release / packaging hardening (VERIFY-052)
 
-Every cross-platform packaging command (`dist:win`, `dist:portable`, `dist:mac`, `dist:mac:arm64`, `dist:mac:x64`, and the Linux job in `.github/workflows/release.yml`) runs `npm run clean`, `npm run verify:icon`, `npm run build`, electron-builder, and `npm run checksum:release`; the workflows also run the audit/typecheck/test/verifier matrix before packaging and the platform-specific `verify:dist:*` checks afterward. The canonical Node version is **22.x** (>=22.13.0 <23) and is pinned in `engines.node`, `ci.yml`, and `release.yml`.
+Every cross-platform packaging command (`dist:win`, `dist:portable`, `dist:mac`, `dist:mac:arm64`, `dist:mac:x64`, and the Linux job in `.github/workflows/release.yml`) runs `npm run clean`, `npm run verify:icon`, `npm run build`, electron-builder, and `npm run checksum:release`; the workflows also run the audit/typecheck/test/verifier matrix before packaging and the platform-specific `verify:dist:*` checks afterward. The canonical Node version is **22.x** (>=22.15.0 <23.0.0) and is pinned in `engines.node` and `.nvmrc`; workflows read the exact version from `.nvmrc` via `actions/setup-node`.
 
 ### Known Limitations
 - Windows ARM64 is not currently packaged by default.

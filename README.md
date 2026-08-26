@@ -29,7 +29,7 @@
     <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-green.svg" />
   </a>
   <a href="package.json">
-    <img alt="Node 22" src="https://img.shields.io/badge/node-22.13%2B-339933.svg" />
+    <img alt="Node 22" src="https://img.shields.io/badge/node-22.15%2B-339933.svg" />
   </a>
   <a href="tsconfig.json">
     <img alt="TypeScript strict" src="https://img.shields.io/badge/typescript-strict-3178c6.svg" />
@@ -194,7 +194,7 @@ Privacy is the core design pillar of Venice Forge:
 
 The user interface uses a token-based styling model matching dynamic glassmorphism aesthetics.
 - **YAML Themes:** Built-in and user-supplied themes live under `config/themes/` using standard CSS variable key-value maps.
-- **Built-in Catalog (39 Themes):**
+- **Built-in Catalog (44 Themes):**
   - *Pastel Aqua/Pink Theme Pack:* cotton-candy-console, sweet-nightmare, dual-persona, polaroid-board.
   - *Dracula & Dark Palettes:* Basalt Noir, catppuccin, dracula, gruvbox_dark, midnight-velvet, monokai, nord, obsidian-bloom, one_dark, rosepine, solarized_dark, synthwave-harbor, tokyo_night, venice.
   - *Light & High Contrast:* amber-archive, arctic-glass, aurora-boreal, circuit-mint, copper, cyber-orchid, dark, desert-copperfield, ember-monastery, github_light, glacial-ink, harbor-fog, light, moss-circuit, neon-dusk, porcelain-daybreak, sakura-terminal, solar-ash, solarized_light, toxic-limewire, ultraviolet-rain.

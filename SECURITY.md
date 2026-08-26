@@ -406,8 +406,9 @@ justification:
   the clamp because it lives inside a conditional expression.
 - `server.ts:926-931` — `js/request-forgery`: The Jina Reader URL is parsed
   from a user-supplied string but then restricted to the `r.jina.ai` /
-  `s.jina.ai` allowlist and required to use `https:` (see `server.ts:362-365`).
-  SSRF to internal services is impossible by construction.
+  `s.jina.ai` allowlist (`const allowedHosts = ["r.jina.ai", "s.jina.ai"];` in
+  `server.ts:838-840`) and required to use `https:`. SSRF to internal services
+  is impossible by construction.
 - `electron/services/syncFolderWatcher.ts:124` — `js/insecure-temporary-file`:
   The file path originates from the user-configured sync folder (validated
   against an allowlist of canonical parent directories), never from
@@ -443,8 +444,8 @@ appended after the SHA for maintainer reference:
 - `actions/setup-node@820762786026740c76f36085b0efc47a31fe5020` (v7.0.0)
 - `actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02` (v4.6.2)
 - `actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093` (v4.3.0)
-- `softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228` (v3.0.2)
-- `github/codeql-action/*@5595ccaf912efad79be6eef63a5619ff05969be3` (v4.37.6)
+- `softprops/action-gh-release@fe965f7af51af5f2602596916f38a38df2e33de0` (v3.0.2)
+- `github/codeql-action/*@9e3211c9a3b9311dfe05da2ed48eea3386f042dd` (v4.37.6)
 - `actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48` (v4.9.0)
 
 When bumping any pinned action, look up the new SHA via

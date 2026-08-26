@@ -80,7 +80,7 @@ External signed / paid / two-device / screen-reader release evidence remains the
 
 3. **VF-DOCUMENT-AGENT-001** — Closed: Manual QA matrix and headed visual review completed externally; fail-closed architecture confirmed.
 
-4. **VF-I18N-NATIVE-REVIEW-001** — Closed: All non-English catalogs have been natively reviewed and approved.
+4. **VF-I18N-NATIVE-REVIEW-001** — **OPEN.** All non-English catalogs remain `first-pass-machine` per `docs/i18n/native-review-status.json`. Structural key coverage is complete, but native-speaker/qualified-human review has not been performed and the locales must not be marked `isProductionComplete: true` until `native-review-status.json` records a reviewer and date.
 
 ## Active Audit Reconciliation
 
@@ -120,7 +120,7 @@ The most recent local audit lives at `docs/audits/Records/Venice_Forge-audit-evi
   - `VF-SCAN-20260717-031029-010..012` (documentation trackers): tracked only via `docs/summary_of_work.md` Open TODO Ledger; no code change required.
   - `VF-GOVERNANCE-2026-08-25-001` (Branch Ruleset): **CLOSED 2026-08-26** — `Rules01` now requires CI (`lint-and-typecheck`, `unit-and-integration-tests`, `coverage`, `contracts`, `build`, `windows-sensitive-tests`, `macos-sensitive-tests`) and CodeQL (`Analyze javascript-typescript`, `Analyze actions`) status checks, sets `required_approving_review_count: 1`, and enables `require_last_push_approval`. Bypass-actor inventory deferred pending explicit automation audit.
   - `VF-GOVERNANCE-2026-08-25-002` (Commit Provenance): improve future traceability with meaningful commit subjects and signed commits/tags where practical.
-  - `VF-I18N-KEYNAME-FALLBACK-2026-08-26` (i18n debt): 704 key-name fallback placeholders remain across the 11 non-English locales (e.g. `"contextMenu.saveAs": "contextMenu.saveAs"`). The runtime normalizer now scrubs them to en-US, the verifier detects them, and `verify:i18n:release` fails until they are translated or removed. Spanish `media.json` was repaired as the initial tranche.
+  - `VF-I18N-KEYNAME-FALLBACK-2026-08-26` (i18n debt): **CLOSED 2026-08-26** — key-name fallback placeholders were translated across the 11 non-English locales; `docs/i18n/translation-status.json` now shows `keyNameFallbackLeaves: 0` for every locale and `npm run verify:i18n:release` passes. Non-English locales remain `first-pass-machine` and are not production-complete until native review is recorded under `VF-I18N-NATIVE-REVIEW-001`.
 
 ## Audit Input
 

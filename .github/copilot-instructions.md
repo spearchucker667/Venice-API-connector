@@ -9,7 +9,7 @@
 - GitHub: `spearchucker667/Venice_Forge`
 - Application: Venice Forge Electron desktop app
 - Stack: Electron 43, React 19, TypeScript strict, Zustand, Vitest
-- Node: `>=22.13.0 <23.0.0`
+- Node: `>=22.15.0 <23.0.0` (pinned in `.nvmrc` and `package.json#engines`)
 
 Do not use historical repository names such as
 `Windows-Venice-API-connector`. Before editing,
@@ -34,14 +34,14 @@ test -d electron
 
 Venice Forge is a **dual-platform (Windows + macOS) Electron desktop app** (also runnable as a Vite/Express web app) for the [Venice API](https://venice.ai). It provides chat, image generation, media workflows, research, characters, RP Studio, prompts, scenes, workflows, projects, and local creative asset management — all privacy-focused with no telemetry.
 
-Stack: React 19 + TypeScript strict + Tailwind CSS v4 (Premium Dark Glass Theme) + Vite 8 (renderer), Electron 43 (desktop), Express 4 (web proxy), Vitest 4 (tests), tsc (Electron main build), esbuild (Express server bundle).
+Stack: React 19 + TypeScript strict + Tailwind CSS v4 (Premium Dark Glass Theme) + Vite 8 (renderer), Electron 43 (desktop), Express 5 (web proxy), Vitest 4 (tests), tsc (Electron main build), esbuild (Express server bundle).
 
 ---
 
 ## Quick Start (do these before any edit)
 
 1. Run the bootstrap check below. It is local-only — never added to CI.
-2. Read `AGENTS.md` first. It is the canonical source of truth for architecture, commands, security rules, and convention. Pointer files (`CLAUDE.md`, `GEMINI.md`, `.cursorrules`, `.windsurfrules`) link to it.
+2. Read `AGENTS.md` first. It is the canonical source of truth for architecture, commands, security rules, and convention. `.cursorrules` is a thin pointer to `AGENTS.md`; `CLAUDE.md`, `GEMINI.md`, and `.windsurfrules` were removed during the 2026-08-22 hygiene pass.
 3. Read `docs/summary_of_work.md` — Latest Session Summary, Open TODO Ledger, and Validation Matrix.
 4. Do **not** commit or push on your own. Wait for an explicit user instruction. Stay on `main` unless told otherwise.
 5. End every session by updating `docs/summary_of_work.md` (see § Mandatory Session Handoff).
@@ -52,7 +52,7 @@ Stack: React 19 + TypeScript strict + Tailwind CSS v4 (Premium Dark Glass Theme)
 
 ### Node engine pin
 
-`package.json` declares `engines.node` as `>=22.13.0 <23.0.0`. Brew's default on host machines is Node 26 which violates the pin and breaks `vitest`/`vite`. Prefix every shell command with `PATH="/opt/homebrew/opt/node@22/bin:$PATH"`, use `nvm use 22`, or run via a `.nvmrc`-aware shell. CI workflows pin `node-version: 22` in `.github/workflows/*.yml`.
+`package.json` declares `engines.node` as `>=22.15.0 <23.0.0` and `.nvmrc` pins the exact Node 22 release. Brew's default on host machines may be Node 26, which violates the pin. Use `nvm use` (reads `.nvmrc`), or run via a `.nvmrc`-aware shell. CI workflows read Node from `.nvmrc` via `actions/setup-node`.
 
 ### Validation order (required before PR)
 
@@ -153,8 +153,7 @@ Required updates:
 
 A session is not complete until `docs/summary_of_work.md` has been
 updated or the agent explicitly explains why no update was needed.
-Equivalent instructions live in `AGENTS.md`, `CLAUDE.md`, and
-`GEMINI.md`.
+Equivalent instructions live in `AGENTS.md`.
 
 ---
 

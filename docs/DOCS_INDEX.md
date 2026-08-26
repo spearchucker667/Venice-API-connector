@@ -151,6 +151,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 
 - [discovery/DISCOVERY_DOCUMENT_AGENT.md](discovery/DISCOVERY_DOCUMENT_AGENT.md) — Repository reconciliation and Phase 0 architecture evidence.
 - [superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md](superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md) — Implemented semantic grounding, trust-layer, model-context, configuration-migration, and validation contract for Image Studio prompt enhancement/remix.
+- [superpowers/specs/2026-08-24-deferred-provider-integration-design.md](superpowers/specs/2026-08-24-deferred-provider-integration-design.md) — Design specification for deferred provider integrations (Replicate, Bedrock, Vertex, Azure OpenAI, Hugging Face, Cohere).
 
 ---
 
@@ -174,8 +175,10 @@ This is the canonical source-of-truth navigation map for all documentation in th
 
 ### Audit Evidence
 
-- [../VENICE_FORGE_COMPLETE_AUDIT.md](../VENICE_FORGE_COMPLETE_AUDIT.md) — Current exhaustive repository audit and remediation plan.
+- [../VENICE_FORGE_COMPLETE_AUDIT.md](../VENICE_FORGE_COMPLETE_AUDIT.md) — Historical exhaustive repository audit snapshot (2026-08-22); see `docs/ROADMAP.md` and `docs/summary_of_work.md` for current state.
 - [audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md](audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md) — Historical exhaustive repository audit verdict and remediation plan.
+- [audits/browser-reactivation-work-order.md](audits/browser-reactivation-work-order.md) — Historical work order for the inactive research-browser feature.
+- [audits/Records/Function_calling_todo.md](audits/Records/Function_calling_todo.md) — Implementation/acceptance specification referenced by roadmap; not a checkbox ledger.
 - [audits/repository-hygiene-audit.md](audits/repository-hygiene-audit.md) — 2026-08-22 repository hygiene audit and reorganization plan.
 - [audits/repository-hygiene-final-report.md](audits/repository-hygiene-final-report.md) — 2026-08-22 hygiene execution report.
 - [audits/repo-management/](audits/repo-management/) — Historical repository hygiene and reorganization handoffs.
@@ -185,6 +188,8 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [reports/historical/README.md](reports/historical/README.md) — Guideline for audit history and historical report rules.
 - [reports/historical/CANONICAL_REPORT_INDEX.md](reports/historical/CANONICAL_REPORT_INDEX.md) — Navigator for past validation audits.
 - [reports/VENICE_FORGE_POST_AUGUST_24_AUDIT_REPORT.md](reports/VENICE_FORGE_POST_AUGUST_24_AUDIT_REPORT.md) — 2026-08-25 Post-August-24 provider-update audit and remediation report.
+- [reports/MEDIA_PREVIEW_TRAFFIC_INSPECTOR_REMEDIATION_REPORT_2026-07-26.md](reports/MEDIA_PREVIEW_TRAFFIC_INSPECTOR_REMEDIATION_REPORT_2026-07-26.md) — 2026-07-26 Traffic Inspector emitter wiring remediation report.
+- [reports/MEDIA_SAVE_PIPELINE_AUDIT_2026-07-28.md](reports/MEDIA_SAVE_PIPELINE_AUDIT_2026-07-28.md) — 2026-07-28 Media Studio Save As pipeline audit report.
 - [reports/historical/FINAL_ACCEPTANCE_REPORT.md](reports/historical/FINAL_ACCEPTANCE_REPORT.md) — 2026-08-23 Final acceptance and release readiness report.
 - [reports/historical/DEFERRED_WORK_DECISION_RECORD.md](reports/historical/DEFERRED_WORK_DECISION_RECORD.md) — 2026-08-23 Engineering decisions for deferred roadmap items.
 - [archives/README.md](archives/README.md) — Archive policy and non-authoritative historical-material boundary.

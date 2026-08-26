@@ -140,7 +140,7 @@ The release pipeline is protected by a single-source-of-truth audit at `scripts/
 |---|---|
 | Package scripts | `verify:release-packaging-hardening`, `verify:archive-clean`, `verify:dist`, `verify:research-workspace`, `verify:workspace-contracts`, `checksum:release`, `lint:eslint`, `typecheck` are all present and equal to expected strings |
 | `ci` chain | Includes `verify:release-packaging-hardening` and every prior phase gate |
-| Node version | `engines.node` pins Node 22 (>=22.13.0 <23); both `.github/workflows/{ci,release}.yml` pin `node-version: 22` |
+| Node version | `engines.node` pins Node 22 (>=22.15.0 <23.0.0); workflows read the exact version from `.nvmrc` via `actions/setup-node` |
 | CI workflow | Runs `verify:dist` + `npm run typecheck` + `npm test` + `npm run build` before packaging |
 | Release workflow | Runs `verify:dist:*` + `checksum:release` + archive hygiene after every platform packaging job; the publish job runs `verify:dist:release` and creates a draft release for maintainer review |
 | Electron builder | `electron-builder.config.cjs` declares `appId`, `directories`, `asar: true`, excludes `.map` source maps, and enables `mac.notarize` only when Apple signing credentials are present |

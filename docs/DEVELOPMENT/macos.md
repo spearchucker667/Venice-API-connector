@@ -9,7 +9,7 @@ macOS packaging requires `build/icon.icns` (and `verify:icon` additionally check
 To build locally:
 ```bash
 npm run clean
-npm install
+npm ci
 npm run typecheck
 npm test
 npm run build

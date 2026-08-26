@@ -150,10 +150,13 @@ async function testVeniceConnection(profileId?: string): Promise<{ ok: boolean; 
 }
 
 /** Reserved credential names that must never be read/written through the
- *  generic credential bridge. Passwords, profile secrets, and unlock-secrets
- *  must use their typed IPC channels so the main process can enforce
- *  lockout, verifier-only storage, and plaintext-fallback refusal. */
-function isReservedCredentialName(name: unknown): boolean {
+ *  generic credential bridge. Passwords, profile secrets, unlock-secrets,
+ *  and internal application namespaces must use their typed IPC channels
+ *  or separate storage scopes so the main process can enforce lockout,
+ *  verifier-only storage, and plaintext-fallback refusal.
+ *
+ *  Exported for unit-test verification of the reservation policy. */
+export function isReservedCredentialName(name: unknown): boolean {
   if (typeof name !== "string" || name.length === 0) return true;
   const lower = name.toLowerCase();
   if (["password", "master_password", "profile_password"].includes(lower)) return true;
@@ -161,6 +164,9 @@ function isReservedCredentialName(name: unknown): boolean {
   if (/_password$/.test(lower)) return true;
   if (lower.includes("password")) return true;
   if (/unlock[_-]?secret|secret[_-]?unlock|unlocksecret|secretunlock/.test(lower)) return true;
+  // Internal chat-folder lock metadata lives in the generic credential
+  // namespace; prevent a renderer caller from corrupting lock state.
+  if (lower.startsWith("chat-folder-lock:")) return true;
   return false;
 }
 

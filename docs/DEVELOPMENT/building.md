@@ -5,7 +5,7 @@ This document covers all commands for local development, packaging, and validati
 ## Quick Start (Development)
 
 ```bash
-npm install
+npm ci
 npm run dev:electron   # Start the desktop app in development mode
 # or
 npm run dev            # Start Express proxy + Vite web renderer

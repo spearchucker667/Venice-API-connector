@@ -20,9 +20,6 @@ jobs:
     name: Analyze ${{ matrix.language }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
-    # Emergency bypass to disable CodeQL if infrastructure issues block releases.
-    # To use, set repository variable VENICE_FORGE_DISABLE_CODEQL="true".
-    if: vars.VENICE_FORGE_DISABLE_CODEQL != 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -42,14 +39,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Initialize CodeQL (${{ matrix.language }})
-        uses: github/codeql-action/init@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
+        uses: github/codeql-action/init@9e3211c9a3b9311dfe05da2ed48eea3386f042dd # v4.37.6
         with:
           languages: ${{ matrix.language }}
           queries: security-extended,security-and-quality
           build-mode: ${{ matrix.build-mode }}
 
       - name: Perform CodeQL Analysis (${{ matrix.language }})
-        uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
+        uses: github/codeql-action/analyze@9e3211c9a3b9311dfe05da2ed48eea3386f042dd # v4.37.6
         with:
           # Deterministic per-language category so the two analyses cannot
           # overwrite or masquerade as each other in Code Scanning.

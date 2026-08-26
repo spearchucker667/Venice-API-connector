@@ -2,7 +2,9 @@
 
 `npm run test:ci` is the aggregate correctness command. It runs named server, Electron, ingestion, unit-domain, UI-domain, and contract shards and must end with a conclusive exit status. Shared IndexedDB/global-state suites remain serial; isolation-sensitive execution order must not be relaxed merely for speed.
 
-## 2026-07-16 local baseline
+## Historical 2026-07-16 local baseline
+
+> This baseline is retained for historical reference only. Current validation uses Node 22 per `.nvmrc` and `package.json#engines`.
 
 Runtime: Node `v26.5.0` / npm `11.17.0` (use supported Node 22 for release authority).
 

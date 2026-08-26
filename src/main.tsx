@@ -75,6 +75,60 @@ function clearElement(target: HTMLElement): void {
   }
 }
 
+const HYDRATION_TIMEOUT_MS = 2500;
+
+/** Boot the React app after pre-flight hydration. Exported for regression
+ *  testing of the rejection handler that prevents an unhandled promise from
+ *  crashing the renderer boot path. */
+export async function bootApp(
+  target: HTMLElement,
+  hydrationReady: Promise<void>,
+): Promise<void> {
+  const hydrationTimeout = new Promise<void>((resolve) => {
+    setTimeout(resolve, HYDRATION_TIMEOUT_MS);
+  });
+  try {
+    await Promise.race([hydrationReady, hydrationTimeout]);
+  } catch (err) {
+    const safeError = err instanceof Error
+      ? redactErrorDetails(err)
+      : { message: sanitizeErrorText(String(err)) };
+    console.error("[venice-forge] Hydration race failed", safeError);
+    clearElement(target);
+    appendFatalText(
+      target,
+      "Fatal Application Error",
+      "The application failed to initialize during pre-flight setup. Please check the console or reinstall the application.",
+      safeError.message,
+    );
+    return;
+  }
+
+  try {
+    createRoot(target).render(
+      <StrictMode>
+        <ErrorBoundary>
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
+        </ErrorBoundary>
+      </StrictMode>
+    );
+  } catch (err) {
+    const safeError = err instanceof Error
+      ? redactErrorDetails(err)
+      : { message: sanitizeErrorText(String(err)) };
+    console.error("Failed to mount React root", safeError);
+    clearElement(target);
+    appendFatalText(
+      target,
+      "Fatal Application Error",
+      "The application failed to initialize. Please check the console or reinstall the application.",
+      safeError.message,
+    );
+  }
+}
+
 const rootEl = document.getElementById("root");
 if (!rootEl) {
   appendFatalText(
@@ -89,10 +143,6 @@ if (!rootEl) {
   // config file rather than the renderer fallback defaults. Failures
   // fall through to defaults after a short timeout so the app still
   // boots in web mode or when the bridge is unavailable.
-  const HYDRATION_TIMEOUT_MS = 2500;
-  const hydrationTimeout = new Promise<void>((resolve) => {
-    setTimeout(resolve, HYDRATION_TIMEOUT_MS);
-  });
   const hydrationReady = (async () => {
     try {
       await initDesktopBridge();
@@ -104,29 +154,5 @@ if (!rootEl) {
         : sanitizeErrorText(String(err)));
     }
   })();
-  void Promise.race([hydrationReady, hydrationTimeout]).then(() => {
-    try {
-      createRoot(rootEl).render(
-        <StrictMode>
-          <ErrorBoundary>
-            <QueryClientProvider client={queryClient}>
-              <App />
-            </QueryClientProvider>
-          </ErrorBoundary>
-        </StrictMode>
-      );
-    } catch (err) {
-      const safeError = err instanceof Error
-        ? redactErrorDetails(err)
-        : { message: sanitizeErrorText(String(err)) };
-      console.error("Failed to mount React root", safeError);
-      clearElement(rootEl);
-      appendFatalText(
-        rootEl,
-        "Fatal Application Error",
-        "The application failed to initialize. Please check the console or reinstall the application.",
-        safeError.message,
-      );
-    }
-  });
+  void bootApp(rootEl, hydrationReady);
 }
