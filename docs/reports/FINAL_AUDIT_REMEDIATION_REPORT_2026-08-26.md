@@ -89,17 +89,38 @@ Rationale: no integration or role other than repository administration legitimat
 
 ## 6. Validation Report
 
-Commands executed in the current worktree:
+### Local validation (current worktree)
 
 | Command | Result |
 |---|---|
-| `npm run verify:i18n:release` | PASS |
+| `npm run lint:eslint` | PASS |
+| `npm run typecheck` | PASS |
+| `npm run build` | PASS |
 | `npm run verify:contracts` | PASS (104 checks) |
 | `npm run verify:release-readiness` | PASS |
+| `npm run verify:i18n:release` | PASS |
+| `npm run verify:agent-docs` | PASS |
 | `npx vitest run electron/ipc/handlers/apiKeyHandlers.reserved.test.ts src/main.boot.test.tsx --no-file-parallelism` | PASS (6 tests) |
 | `npx vitest run src/i18n/locale-completion-status.test.ts` | PASS (en-US `runtimeSurfaceCoverage === 100`) |
 
-Full `npm run test:ci` was started in the local environment but exceeded the background-task timeout; authoritative green results are provided by the hosted GitHub Actions run `32934003806` on the starting SHA. After the changes in this session, a new CI run must be triggered by the push to validate the edited workflow files.
+### Hosted validation (exact-head)
+
+After the remediation commit was pushed, the exact-head runs completed green:
+
+- **GitHub CI run `32937530224`** for `d904f67a8c9dcd010715ed4f182391d326ea095b`: **all jobs green**
+  - lint-and-typecheck
+  - unit-and-integration-tests
+  - coverage
+  - contracts
+  - build
+  - windows-sensitive-tests
+  - macos-sensitive-tests
+  - electron-smoke-windows
+  - electron-smoke-linux
+  - electron-smoke-macos
+- **GitHub CodeQL run `32937530265`** for `d904f67a8c9dcd010715ed4f182391d326ea095b`: **green**
+  - Analyze actions
+  - Analyze javascript-typescript
 
 ---
 
@@ -120,9 +141,10 @@ No local validation can substitute for these. They remain open on `docs/ROADMAP.
 ## 8. Git State
 
 - **Starting SHA:** `eba90428be6c87b85a96e07b83be09e0f383db89`
+- **Final SHA:** `d904f67a8c9dcd010715ed4f182391d326ea095b`
 - **Branch:** `main`
-- **Worktree state:** changes pending (docs, workflows, code, tests)
-- **origin/main SHA:** `eba90428be6c87b85a96e07b83be09e0f383db89` at start
+- **Worktree state:** clean
+- **origin/main SHA:** `d904f67a8c9dcd010715ed4f182391d326ea095b`
 
 ---
 

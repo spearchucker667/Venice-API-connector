@@ -22,6 +22,8 @@ This session performed the full audit and fixed the highest-priority drift:
 
 **Validation:** `npm run lint:eslint`, `npm run typecheck`, `npm run build`, `npm run verify:contracts`, `npm run verify:release-readiness`, `npm run verify:i18n:release`, `npm run verify:agent-docs`, and the two new regression-test files all PASS.
 
+**Hosted validation (exact-head):** After pushing `d904f67a8c9dcd010715ed4f182391d326ea095b`, GitHub CI run `32937530224` and CodeQL run `32937530265` are both green. All packaged Electron smoke jobs (Windows, Linux, macOS) executed and passed.
+
 **Remaining externally blocked:** `VF-VERIFY-005` release acceptance (signed builds, paid-provider ops, multi-device sync, manual accessibility) remains open and requires real evidence.
 
 ### Prior Session Summary (2026-08-26 P2/P3 remediation tranche) [demoted from "Latest Session Summary"]
@@ -57,6 +59,7 @@ Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full 
 - **Tests:** Added `electron/ipc/handlers/apiKeyHandlers.reserved.test.ts` and `src/main.boot.test.tsx`.
 - **Report:** Created `docs/reports/FINAL_AUDIT_REMEDIATION_REPORT_2026-08-26.md` and removed root `Final_Report.md`.
 - Validation: `npm run lint:eslint` PASS, `npm run typecheck` PASS, `npm run build` PASS, `npm run verify:contracts` PASS (104 checks), `npm run verify:release-readiness` PASS, `npm run verify:i18n:release` PASS, `npm run verify:agent-docs` PASS, new regression tests PASS (6 tests).
+- Committed and pushed as `d904f67a8c9dcd010715ed4f182391d326ea095b`. Hosted GitHub CI run `32937530224` and CodeQL run `32937530265` for the exact head are green.
 
 ### 2026-08-26 — Remediate audit findings: GitHub ruleset hardening and i18n truthfulness.
 
