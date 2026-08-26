@@ -331,3 +331,10 @@ patch_summary.sh
 update-summary.cjs
 update-summary2.cjs
 update-summary3.cjs
+test-apiKeySet.cjs
+test-safeStorage.cjs
+test-safeStorage2.cjs
+test-save-key.cjs
+test-testVeniceConnection.ts
+update_latest.cjs
+update_summary.cjs

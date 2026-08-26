@@ -28,16 +28,16 @@ import { Trans, useTranslation } from "react-i18next";
 import { safeVeniceMediaUrl } from "../../utils/mediaItem";
 import { ContextMenu, useContextMenu } from "../ui/ContextMenu";
 import type { ContextMenuItem } from "../ui/ContextMenu";
+;
 
 const ChatTtsPlayer = lazy(async () => {
   const module = await import("./ChatTtsPlayer");
   return { default: module.ChatTtsPlayer };
 });
 
-// Relative path so the default avatar resolves correctly both in Vite dev
-// (where index.html is served from project root) and in the packaged Electron
-// app (where loadFile points at dist/index.html beside ./assets/branding).
-export const DEFAULT_AI_AVATAR_SRC = "assets/branding/venice-seal-red-fill.svg";
+// Vite owns the emitted URL so it remains valid for both HTTP development and
+// packaged file:// execution.
+export const DEFAULT_AI_AVATAR_SRC = "/assets/branding/venice-seal-red-fill.svg";
 import { ChatMarkdown } from "./ChatMarkdown";
 
 type InjectedContextSource = NonNullable<

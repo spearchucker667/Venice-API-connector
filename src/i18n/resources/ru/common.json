@@ -571,7 +571,7 @@
         "searchMatches": "Поиск совпадений (",
         "read": "Чтение",
         "createGroup": "Создать группу",
-        "refreshWorkspace": "__MISSING__:surface.componentsDocumentsDocumentagentview.text.refreshWorkspace"
+        "refreshWorkspace": "Обновить"
       },
       "heading": {
         "agentAccessGrantControls": "Доступ агента и контроль предоставления",
@@ -593,7 +593,7 @@
         "noWorkspaceGranted": "Рабочее пространство не предоставлено",
         "selectAWorkspaceDirectoryUnderAgentAccess": "Для просмотра выберите каталог рабочего пространства в разделе «Доступ агента» выше. файлы",
         "selectAFileFromTheWorkspaceList": "Выберите файл из списка рабочей области, чтобы просмотреть его содержимое.",
-        "emptyDirectory": "__MISSING__:surface.componentsDocumentsDocumentagentview.description.emptyDirectory"
+        "emptyDirectory": "Пустой каталог."
       },
       "label": {
         "accessPreset": "Предустановка доступа",
@@ -2615,8 +2615,8 @@
             "proposalRejectedWithoutChanges": "Предложение отклонено без изменений",
             "documentDeleted": "Документ удалён",
             "documentDeleteFailed": "Не удалось удалить документ",
-            "loadingWorkspace": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingWorkspace",
-            "loadingDirectory": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingDirectory"
+            "loadingWorkspace": "Загрузка рабочего пространства…",
+            "loadingDirectory": "Загрузка каталога…"
           },
           "attribute": {
             "searchDocuments": "Поиск документов…",

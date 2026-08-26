@@ -36,10 +36,10 @@
     "attachFile": "ファイルを添付する",
     "stopGenerating": "生成を停止する",
     "sendMessage": "メッセージを送信する",
-    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
-    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
-    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
-    "promotionFailed": "__MISSING__:composer.promotionFailed"
+    "saveToDocuments": "{{name}} をドキュメントに保存",
+    "promotedToDocuments": "ドキュメントに保存しました",
+    "attachmentNotRegistered": "添付ファイルは昇格用に登録されていません。",
+    "promotionFailed": "昇格に失敗しました。"
   },
   "memory": {
     "disabledLabel": "メモリオフ",

@@ -35,8 +35,7 @@ export async function veniceStreamChat(
     dispatch,
     onDelta,
     agentSessionId,
-    agentPermissionPreset,
-  }: { signal?: AbortSignal; dispatch?: AppDispatch; onDelta: (chunk: VeniceStreamDelta) => void; agentSessionId?: string; agentPermissionPreset?: AgentPermissionPreset }
+  }: { signal?: AbortSignal; dispatch?: AppDispatch; onDelta: (chunk: VeniceStreamDelta) => void; agentSessionId?: string; }
 ) {
   const startedAtTime = Date.now();
   const requestHeaders = { "Content-Type": "application/json" };
@@ -114,7 +113,6 @@ export async function veniceStreamChat(
           body: requestPayload,
           headers: { "Content-Type": "application/json" },
           agentSessionId,
-          agentPermissionPreset,
         },
         wrappedOnDelta,
         signal

@@ -571,7 +571,7 @@
         "searchMatches": "検索一致 (",
         "read": "読み取り",
         "createGroup": "グループの作成",
-        "refreshWorkspace": "__MISSING__:surface.componentsDocumentsDocumentagentview.text.refreshWorkspace"
+        "refreshWorkspace": "更新"
       },
       "heading": {
         "agentAccessGrantControls": "エージェント アクセスと許可制御",
@@ -593,7 +593,7 @@
         "noWorkspaceGranted": "ワークスペースが付与されません",
         "selectAWorkspaceDirectoryUnderAgentAccess": "ファイルを参照するには、上記のエージェント アクセスでワークスペース ディレクトリを選択します。",
         "selectAFileFromTheWorkspaceList": "ワークスペース リストからファイルを選択して、その内容を表示します。",
-        "emptyDirectory": "__MISSING__:surface.componentsDocumentsDocumentagentview.description.emptyDirectory"
+        "emptyDirectory": "空のディレクトリです。"
       },
       "label": {
         "accessPreset": "プリセットへのアクセス",
@@ -2615,8 +2615,8 @@
             "proposalRejectedWithoutChanges": "提案は変更せずに却下されました",
             "documentDeleted": "ドキュメントが削除されました",
             "documentDeleteFailed": "ドキュメントを削除できませんでした",
-            "loadingWorkspace": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingWorkspace",
-            "loadingDirectory": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingDirectory"
+            "loadingWorkspace": "ワークスペースを読み込み中…",
+            "loadingDirectory": "ディレクトリを読み込み中…"
           },
           "attribute": {
             "searchDocuments": "ドキュメントを検索…",

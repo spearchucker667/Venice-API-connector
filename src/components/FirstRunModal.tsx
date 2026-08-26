@@ -25,9 +25,6 @@ export function FirstRunModal({ open, onAcknowledge, onDismiss }: FirstRunModalP
     return () => {
       clearTimeout(focusTimeout);
       document.body.style.overflow = originalOverflow;
-      if (returnFocusRef.current instanceof HTMLElement) {
-        returnFocusRef.current.focus();
-      }
     };
   }, [open]);
 

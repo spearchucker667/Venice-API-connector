@@ -36,10 +36,10 @@
     "attachFile": "Datei anhängen",
     "stopGenerating": "Hören Sie auf zu generieren",
     "sendMessage": "Nachricht senden",
-    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
-    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
-    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
-    "promotionFailed": "__MISSING__:composer.promotionFailed"
+    "saveToDocuments": "{{name}} in Dokumente speichern",
+    "promotedToDocuments": "In Dokumente gespeichert",
+    "attachmentNotRegistered": "Der Anhang ist nicht für die Übernahme registriert.",
+    "promotionFailed": "Übernahme fehlgeschlagen."
   },
   "memory": {
     "disabledLabel": "Speicher aus",

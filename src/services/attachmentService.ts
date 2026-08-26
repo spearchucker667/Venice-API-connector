@@ -1,3 +1,4 @@
+import { desktopDocumentAgent } from "./desktopBridge";
 /** @fileoverview Attachment reading, validation, and assembly for chat messages. */
 
 // Code Owner: fayeblade (@spearchucker667)
@@ -8,7 +9,6 @@ import {
   MAX_ATTACHMENTS_PER_MESSAGE,
 } from "../constants/venice";
 import { veniceResearchProvider } from "../research/providers/veniceResearchProvider";
-import { desktopFileReader, desktopDocumentAgent } from "./desktopBridge";
 import type { Attachment, AssembledAttachmentContext } from "../types/attachment";
 
 
@@ -102,20 +102,6 @@ export async function readTextFileAttachment(file: File): Promise<Attachment> {
 }
 
 /** Reads a local file path (desktop only) as a text attachment. */
-export async function readLocalPathAttachment(): Promise<Attachment | null> {
-  const result = await desktopFileReader.readLocalFile();
-  if (result.canceled) return null;
-  if (!result.ok || result.content === undefined) {
-    throw new Error(result.error || "Failed to read local file.");
-  }
-  return {
-    id: crypto.randomUUID(),
-    type: "file",
-    name: result.filename || "file",
-    content: result.content,
-    size: new TextEncoder().encode(result.content).length,
-  };
-}
 
 /** Scrapes a URL and returns a text attachment. */
 export async function scrapeUrlAttachment(url: string, signal?: AbortSignal): Promise<Attachment> {

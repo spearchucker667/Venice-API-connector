@@ -6,10 +6,8 @@ import {
   isSupportedImageFile,
   assembleAttachmentContext,
   processFileAttachment,
-  readLocalPathAttachment,
   readTextFileAttachment,
 } from "./attachmentService";
-import { desktopFileReader } from "./desktopBridge";
 import type { Attachment } from "../types/attachment";
 
 // Mock the research provider to avoid network calls.
@@ -22,7 +20,6 @@ vi.mock("../research/providers/veniceResearchProvider", () => ({
 
 // Mock desktopFileReader
 vi.mock("./desktopBridge", () => ({
-  desktopFileReader: { readLocalFile: vi.fn() },
   isElectron: () => false,
 }));
 
@@ -136,26 +133,6 @@ describe("processFileAttachment", () => {
   });
 });
 
-describe("readLocalPathAttachment", () => {
-  const readLocalFile = vi.mocked(desktopFileReader.readLocalFile);
-
-  beforeEach(() => readLocalFile.mockReset());
-
-  it("uses the main-process selected filename", async () => {
-    readLocalFile.mockResolvedValueOnce({ ok: true, content: "hello", filename: "selected.md" });
-    await expect(readLocalPathAttachment()).resolves.toMatchObject({
-      type: "file",
-      name: "selected.md",
-      content: "hello",
-    });
-    expect(readLocalFile).toHaveBeenCalledWith();
-  });
-
-  it("returns null when the main-process dialog is canceled", async () => {
-    readLocalFile.mockResolvedValueOnce({ ok: true, canceled: true });
-    await expect(readLocalPathAttachment()).resolves.toBeNull();
-  });
-});
 
 describe("readImageAttachment dimensions validation", () => {
   let originalCreateObjectURL: any;

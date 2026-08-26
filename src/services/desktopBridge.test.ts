@@ -143,7 +143,7 @@ describe("desktopBridge web fallback", () => {
   /** UIAUTH-001: web Venice keys stay in memory and are registered with the dev proxy. */
   it("keeps web-mode Venice keys ephemeral and out of browser storage", async () => {
     const preKeys = Object.keys(localStorageStore);
-    await expect(desktopApiKey.set("vn-test-key")).resolves.toEqual({ ok: true });
+    await expect(desktopApiKey.set("vn-test-key")).resolves.toEqual({ ok: true, storageMode: "plaintext-fallback" });
     await expect(desktopApiKey.isConfigured()).resolves.toBe(true);
     expect(fetch).toHaveBeenCalledWith("/api/session-key", expect.objectContaining({ method: "POST" }));
     expect(Object.keys(localStorageStore)).toEqual(preKeys);
@@ -153,7 +153,7 @@ describe("desktopBridge web fallback", () => {
   });
 
   it("uses server session state as authoritative for web Venice configured checks", async () => {
-    await expect(desktopApiKey.set("vn-test-key")).resolves.toEqual({ ok: true });
+    await expect(desktopApiKey.set("vn-test-key")).resolves.toEqual({ ok: true, storageMode: "plaintext-fallback" });
     // Simulate a renderer reload by clearing only the module-local optimization.
     await expect(desktopApiKey.isConfigured()).resolves.toBe(true);
     expect(fetch).toHaveBeenCalledWith("/api/session-key", expect.objectContaining({ signal: expect.any(AbortSignal) }));

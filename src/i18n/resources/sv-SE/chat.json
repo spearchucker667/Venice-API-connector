@@ -36,10 +36,10 @@
     "attachFile": "Bifoga fil",
     "stopGenerating": "Sluta generera",
     "sendMessage": "Skicka meddelande",
-    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
-    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
-    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
-    "promotionFailed": "__MISSING__:composer.promotionFailed"
+    "saveToDocuments": "Spara {{name}} i Dokument",
+    "promotedToDocuments": "Sparad i Dokument",
+    "attachmentNotRegistered": "Bilagan är inte registrerad för befordran.",
+    "promotionFailed": "Befordran misslyckades."
   },
   "memory": {
     "disabledLabel": "Minnet av",

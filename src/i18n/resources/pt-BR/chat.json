@@ -36,10 +36,10 @@
     "attachFile": "Anexar arquivo",
     "stopGenerating": "Pare de gerar",
     "sendMessage": "Enviar mensagem",
-    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
-    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
-    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
-    "promotionFailed": "__MISSING__:composer.promotionFailed"
+    "saveToDocuments": "Salvar {{name}} em Documentos",
+    "promotedToDocuments": "Salvo em Documentos",
+    "attachmentNotRegistered": "O anexo não está registrado para promoção.",
+    "promotionFailed": "Falha na promoção."
   },
   "memory": {
     "disabledLabel": "Memória desligada",

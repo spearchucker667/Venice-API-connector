@@ -36,10 +36,10 @@
     "attachFile": "फ़ाइल जोड़ें",
     "stopGenerating": "उत्पादन बंद करो",
     "sendMessage": "मेसेज भेजें",
-    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
-    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
-    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
-    "promotionFailed": "__MISSING__:composer.promotionFailed"
+    "saveToDocuments": "{{name}} को दस्तावेज़ों में सहेजें",
+    "promotedToDocuments": "दस्तावेज़ों में सहेजा गया",
+    "attachmentNotRegistered": "संलग्नक प्रमोशन के लिए पंजीकृत नहीं है।",
+    "promotionFailed": "प्रमोशन विफल रहा।"
   },
   "memory": {
     "disabledLabel": "मेमोरी बंद",

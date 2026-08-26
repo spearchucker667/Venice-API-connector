@@ -36,10 +36,10 @@
     "attachFile": "파일첨부",
     "stopGenerating": "생성 중지",
     "sendMessage": "메시지 보내기",
-    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
-    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
-    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
-    "promotionFailed": "__MISSING__:composer.promotionFailed"
+    "saveToDocuments": "{{name}}을(를) 문서에 저장",
+    "promotedToDocuments": "문서에 저장됨",
+    "attachmentNotRegistered": "첨부 파일이 승격용으로 등록되지 않았습니다.",
+    "promotionFailed": "승격에 실패했습니다."
   },
   "memory": {
     "disabledLabel": "메모리 꺼짐",

@@ -14,6 +14,8 @@ const bridgeMocks = vi.hoisted(() => ({
     fallbackOrdering: [],
     nativeFallbackModels: {},
   })),
+  getApiKeyStatus: vi.fn(async () => ({ configured: false, state: "not-configured" as const, storageMode: "encrypted" as const })),
+  testApiKey: vi.fn(async (): Promise<any> => ({ ok: true, status: 200, message: "Connection successful", connectivity: { ok: true, kind: "verified" as const, checkedAt: "2026-08-26T00:00:00.000Z", statusCode: 200, endpoint: "models" as const } })),
 }));
 
 vi.mock("../services/desktopBridge", () => ({
@@ -21,6 +23,8 @@ vi.mock("../services/desktopBridge", () => ({
     set: bridgeMocks.setApiKey,
     delete: vi.fn(),
     isConfigured: vi.fn(async () => false),
+    getStatus: bridgeMocks.getApiKeyStatus,
+    test: bridgeMocks.testApiKey,
   },
   desktopJinaApiKey: {
     set: bridgeMocks.setJinaApiKey,
@@ -54,6 +58,11 @@ describe("configured Venice key gating", () => {
   beforeEach(() => {
     bridgeMocks.setApiKey.mockReset();
     bridgeMocks.setJinaApiKey.mockReset();
+    bridgeMocks.getApiKeyStatus.mockReset();
+    bridgeMocks.getApiKeyStatus.mockResolvedValue({ configured: false, state: "not-configured", storageMode: "encrypted" });
+    bridgeMocks.testApiKey.mockReset();
+    bridgeMocks.testApiKey.mockResolvedValue({ ok: true, status: 200, message: "Connection successful", connectivity: { ok: true, kind: "verified", checkedAt: "2026-08-26T00:00:00.000Z", statusCode: 200, endpoint: "models" } });
+    vi.mocked(desktopApiKey.delete).mockReset();
     invalidateQueries.mockClear();
     useAuthStore.setState({
       apiKey: null,
@@ -94,15 +103,44 @@ describe("configured Venice key gating", () => {
   });
 
   it("does not retain a Venice key after a successful secure-store write", async () => {
-    bridgeMocks.setApiKey.mockResolvedValueOnce({ ok: true });
+    bridgeMocks.setApiKey.mockResolvedValueOnce({ ok: true, storageMode: "encrypted" });
     await useAuthStore.getState().setApiKey("venice_secret_fixture");
     expect(useAuthStore.getState()).toMatchObject({ apiKey: null, isConfigured: true });
   });
 
   it("keeps Venice configured state unchanged when secure-store write fails", async () => {
-    bridgeMocks.setApiKey.mockResolvedValueOnce({ ok: false, error: "/Users/private/key" });
-    await expect(useAuthStore.getState().setApiKey("venice_secret_fixture")).rejects.toThrow("Failed to save API key.");
+    bridgeMocks.setApiKey.mockResolvedValueOnce({ ok: false, code: "SECRET_STORAGE_WRITE_FAILED", safeMessage: "The key could not be stored securely." });
+    await expect(useAuthStore.getState().setApiKey("venice_secret_fixture")).rejects.toThrow("The key could not be stored securely.");
     expect(useAuthStore.getState()).toMatchObject({ apiKey: null, isConfigured: false });
+  });
+
+  it("removes a newly stored key when Venice rejects it", async () => {
+    bridgeMocks.setApiKey.mockResolvedValueOnce({ ok: true, storageMode: "encrypted" });
+    bridgeMocks.testApiKey.mockResolvedValueOnce({
+      ok: false,
+      status: 401,
+      message: "Unauthorized",
+      connectivity: { ok: false, kind: "invalid-api-key", checkedAt: "2026-08-26T00:00:00.000Z", statusCode: 401, safeMessage: "API key was found, but Venice rejected it. Re-enter the key in Config.", retryable: false },
+    });
+    vi.mocked(desktopApiKey.delete).mockResolvedValueOnce({ ok: true, storageMode: "encrypted" } as never);
+
+    await expect(useAuthStore.getState().setApiKey("venice_secret_fixture")).rejects.toMatchObject({ code: "PROVIDER_AUTH_REJECTED" });
+    expect(desktopApiKey.delete).toHaveBeenCalledTimes(1);
+    expect(useAuthStore.getState()).toMatchObject({ isConfigured: false, credentialFailureCode: "PROVIDER_AUTH_REJECTED" });
+  });
+
+  it("retains a securely stored key while reporting a network verification failure", async () => {
+    bridgeMocks.setApiKey.mockResolvedValueOnce({ ok: true, storageMode: "encrypted" });
+    bridgeMocks.testApiKey.mockResolvedValueOnce({
+      ok: false,
+      status: 0,
+      message: "Network request failed",
+      connectivity: { ok: false, kind: "network-failure", checkedAt: "2026-08-26T00:00:00.000Z", statusCode: 0, safeMessage: "Network request failed before Venice responded.", retryable: true },
+    });
+
+    await expect(useAuthStore.getState().setApiKey("venice_secret_fixture")).rejects.toMatchObject({ code: "NETWORK_ERROR" });
+    expect(desktopApiKey.delete).not.toHaveBeenCalled();
+    expect(useAuthStore.getState()).toMatchObject({ isConfigured: true, credentialFailureCode: "NETWORK_ERROR" });
   });
 
   it("does not retain a Jina key and rejects failed secure-store writes", async () => {
@@ -116,19 +154,19 @@ describe("configured Venice key gating", () => {
     expect(useAuthStore.getState()).toMatchObject({ jinaApiKey: null, jinaIsConfigured: false });
   });
   it("checkConfiguration fetches and updates isConfigured for both Venice and Jina", async () => {
-    vi.mocked(desktopApiKey.isConfigured).mockResolvedValueOnce(true);
+    bridgeMocks.getApiKeyStatus.mockResolvedValueOnce({ configured: true, state: "configured", storageMode: "encrypted" } as any);
     vi.mocked(desktopJinaApiKey.isConfigured).mockResolvedValueOnce(false);
 
     await useAuthStore.getState().checkConfiguration();
 
-    expect(desktopApiKey.isConfigured).toHaveBeenCalled();
+    expect(desktopApiKey.getStatus).toHaveBeenCalled();
     expect(desktopJinaApiKey.isConfigured).toHaveBeenCalled();
     expect(useAuthStore.getState()).toMatchObject({ isConfigured: true, jinaIsConfigured: false, hydrationStatus: "ready" });
   });
 
   it("publishes Venice readiness before slower fallback-provider checks finish", async () => {
     let resolveJina!: (value: boolean) => void;
-    vi.mocked(desktopApiKey.isConfigured).mockResolvedValueOnce(true);
+    bridgeMocks.getApiKeyStatus.mockResolvedValueOnce({ configured: true, state: "configured", storageMode: "encrypted" } as any);
     vi.mocked(desktopJinaApiKey.isConfigured).mockReturnValueOnce(new Promise((resolve) => {
       resolveJina = resolve;
     }));
@@ -144,8 +182,8 @@ describe("configured Venice key gating", () => {
   });
 
   it("invalidates the model query after setting and clearing the Venice key", async () => {
-    bridgeMocks.setApiKey.mockResolvedValue({ ok: true });
-    vi.mocked(desktopApiKey.delete).mockResolvedValue({ ok: true } as never);
+    bridgeMocks.setApiKey.mockResolvedValue({ ok: true, storageMode: "encrypted" });
+    vi.mocked(desktopApiKey.delete).mockResolvedValue({ ok: true, storageMode: "encrypted" } as never);
     await useAuthStore.getState().setApiKey("venice_secret_fixture");
     await useAuthStore.getState().clearApiKey();
     expect(invalidateQueries).toHaveBeenCalledTimes(2);
@@ -153,7 +191,7 @@ describe("configured Venice key gating", () => {
   });
 
   it("clearApiKey calls delete on desktopBridge and updates state", async () => {
-    vi.mocked(desktopApiKey.delete).mockResolvedValueOnce({ ok: true } as any);
+    vi.mocked(desktopApiKey.delete).mockResolvedValueOnce({ ok: true, storageMode: "encrypted" } as any);
     useAuthStore.setState({ isConfigured: true, apiKey: "some-key" });
 
     await useAuthStore.getState().clearApiKey();

@@ -2,6 +2,8 @@
 
 import {
   deleteApiKey,
+  getApiKeyConfigurationStatus,
+  getStorageMode,
   isApiKeyConfigured,
   setApiKey,
   deleteProviderApiKey,
@@ -627,24 +629,45 @@ export function registerApiKeyHandlers(): void {
     }
   });
 
+  registerPrivilegedIpcChannel("apiKey:getStatus", (event, _profileId?: unknown) => {
+    return getApiKeyConfigurationStatus(getProfileSessionId(event.sender));
+  });
+
   registerPrivilegedIpcChannel("apiKey:set", (event, payload: unknown) => {
     const { key } = typeof payload === "object" && payload !== null && "key" in payload ? payload as { key: unknown, profileId?: unknown } : { key: payload };
+    let trimmed: string;
+    try {
+      trimmed = validateApiKeyInput(key);
+    } catch {
+      return { ok: false, code: "INVALID_KEY", safeMessage: "Enter a non-empty Venice API key." };
+    }
     try {
       const validId = getProfileSessionId(event.sender);
-      const trimmed = validateApiKeyInput(key);
-      setApiKey(trimmed, validId);
-      return { ok: true };
+      console.log("Setting API key for", validId, "key length:", trimmed.length); setApiKey(trimmed, validId);
+      return { ok: true, storageMode: getStorageMode() };
     } catch (err) {
-      return { ok: false, error: redactErrorMessage(err) };
+      const message = redactErrorMessage(err);
+      if (/secure storage is unavailable|keychain|credential manager/i.test(message)) {
+        return {
+          ok: false,
+          code: "SECRET_STORAGE_UNAVAILABLE",
+          safeMessage: "The key could not be stored securely. Restore the system keychain or credential manager, then retry.",
+        };
+      }
+      return {
+        ok: false,
+        code: "SECRET_STORAGE_WRITE_FAILED",
+        safeMessage: "The key could not be stored securely. Check the app diagnostics and try again.",
+      };
     }
   });
 
   registerPrivilegedIpcChannel("apiKey:delete", (event, _profileId?: unknown) => {
     try {
       deleteApiKey(getProfileSessionId(event.sender));
-      return { ok: true };
-    } catch (err) {
-      return { ok: false, error: redactErrorMessage(err) };
+      return { ok: true, storageMode: getStorageMode() };
+    } catch {
+      return { ok: false, code: "SECRET_STORAGE_WRITE_FAILED", safeMessage: "The saved Venice credential could not be removed." };
     }
   });
 

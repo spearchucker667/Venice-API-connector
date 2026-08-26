@@ -11,7 +11,7 @@ import type {
   ScenarioV1,
   UserPersonaV1,
 } from "./rp";
-import type { ApiConnectivityStatus } from "./api-connectivity";
+import type { ApiConnectivityStatus, ApiKeyConfigurationStatus, ApiKeyMutationResult } from "./api-connectivity";
 import type { MutationOrigin } from "./sync";
 import type { BackgroundTask, BackgroundTaskCreateInput, BackgroundTaskIpcEnvelope } from "./background-task";
 import type { ProviderId } from "./provider";
@@ -20,8 +20,9 @@ import type { BackupManifestMetadata } from "../services/backupManifest";
 /** Manages the Venice API key in secure OS-level storage. */
 export interface VeniceForgeApiKey {
   isConfigured: (profileId?: string) => Promise<boolean>;
-  set: (key: string, profileId?: string) => Promise<{ ok: boolean; error?: string }>;
-  delete: (profileId?: string) => Promise<{ ok: boolean; error?: string }>;
+  getStatus: (profileId?: string) => Promise<ApiKeyConfigurationStatus>;
+  set: (key: string, profileId?: string) => Promise<ApiKeyMutationResult>;
+  delete: (profileId?: string) => Promise<ApiKeyMutationResult>;
   test: (profileId?: string) => Promise<{ ok: boolean; status?: number; message: string; connectivity: ApiConnectivityStatus }>;
 }
 
@@ -82,7 +83,6 @@ export interface VeniceForgeRequest {
   localFamilySafeModeEnabled?: boolean;
   profileId?: string;
   agentSessionId?: string;
-  agentPermissionPreset?: import("../agent/contracts/capabilities").AgentPermissionPreset;
   fallbackConfig?: {
     enabled?: boolean;
     ordering?: string[];
@@ -198,7 +198,6 @@ export interface VeniceForgeFiles {
   /** Opens a dialog to select and read a text file (for attachment import).
    *  @returns A promise resolving with the file contents and filename.
    */
-  readLocalFile(): Promise<{ ok: boolean; canceled?: boolean; content?: string; filename?: string; error?: string }>;
   importMedia(input: { filePath: string }): Promise<{
     ok: boolean; canceled?: boolean; dataUrl?: string; filePath?: string;
     filename?: string; bytes?: number; contentType?: string; error?: string;
@@ -418,6 +417,13 @@ export interface VeniceForgeBackgroundTask {
 }
 
 export interface VeniceForgeDocumentAgent {
+  permissions: {
+    set(input: { agentSessionId: string; preset: import("../agent/contracts/capabilities").AgentPermissionPreset }): Promise<{
+      ok: boolean;
+      preset?: import("../agent/contracts/capabilities").AgentPermissionPreset;
+      error?: string;
+    }>;
+  };
   documents: {
     create(input: { projectId: string; relativePath: string; format: import("../agent/contracts/documents").DocumentFormat; blocks: import("../agent/contracts/documents").DocumentBlock[]; displayName?: string; overwrite: false }): Promise<{ ok: boolean; result?: unknown; error?: string }>;
     list(projectId: string): Promise<{ ok: boolean; documents?: import("../agent/contracts/documents").ManagedDocument[]; error?: string }>;
@@ -435,7 +441,7 @@ export interface VeniceForgeDocumentAgent {
       sizeBytes?: number;
       error?: string;
     }>;
-    promote(input: { attachmentId: string; projectId: string; relativePath: string; displayName?: string; mimeType?: string; bodyB64?: string }): Promise<{
+    promote(input: { attachmentId: string; projectId: string; relativePath: string; displayName?: string; mimeType?: string }): Promise<{
       ok: boolean;
       document?: import("../agent/contracts/documents").ManagedDocument;
       revision?: import("../agent/contracts/documents").DocumentRevision;

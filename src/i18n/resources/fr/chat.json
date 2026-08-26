@@ -36,10 +36,10 @@
     "attachFile": "Joindre un fichier",
     "stopGenerating": "Arrêter de générer",
     "sendMessage": "Envoyer un message",
-    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
-    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
-    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
-    "promotionFailed": "__MISSING__:composer.promotionFailed"
+    "saveToDocuments": "Enregistrer {{name}} dans Documents",
+    "promotedToDocuments": "Enregistré dans Documents",
+    "attachmentNotRegistered": "La pièce jointe n’est pas enregistrée pour la promotion.",
+    "promotionFailed": "Échec de la promotion."
   },
   "memory": {
     "disabledLabel": "Mémoire désactivée",

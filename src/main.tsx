@@ -8,6 +8,7 @@ import "./i18n";
 import { initDesktopBridge } from "./services/desktopBridge";
 import { refreshConfig } from "./stores/config-store";
 import { useAuthStore } from "./stores/auth-store";
+import { activateRestoredProfileSession } from "./stores/profile-store";
 import { syncPrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
 import { redactErrorDetails, sanitizeErrorText } from "./shared/redaction";
 import { registerModelQueryClient } from "./services/modelQueryCoordinator";
@@ -146,6 +147,7 @@ if (!rootEl) {
   const hydrationReady = (async () => {
     try {
       await initDesktopBridge();
+      await activateRestoredProfileSession();
       await refreshConfig();
       await useAuthStore.getState().checkConfiguration();
     } catch (err) {

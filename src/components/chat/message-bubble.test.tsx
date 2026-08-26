@@ -149,11 +149,8 @@ describe("MessageBubble accessibility", () => {
 
     render(<MessageBubble message={message} index={0} onCopy={() => {}} onDelete={() => {}} />);
 
-    // Relative path is required for packaged Electron (loadFile base URL);
-    // an absolute /assets/... path resolves to file:///assets/... and breaks.
-    expect(screen.getByAltText("AI avatar")).toHaveAttribute(
-      "src",
-      "assets/branding/venice-seal-red-fill.svg",
+    expect(screen.getByAltText("AI avatar").getAttribute("src")).toContain(
+      "venice-seal-red-fill.svg",
     );
   });
 

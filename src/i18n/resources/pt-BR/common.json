@@ -536,7 +536,7 @@
         "searchMatches": "Pesquisar correspondências (",
         "read": "Ler",
         "createGroup": "Criar Grupo",
-        "refreshWorkspace": "__MISSING__:surface.componentsDocumentsDocumentagentview.text.refreshWorkspace"
+        "refreshWorkspace": "Atualizar"
       },
       "heading": {
         "agentAccessGrantControls": "Agente Controles de acesso e concessão",
@@ -558,7 +558,7 @@
         "noWorkspaceGranted": "Nenhum espaço de trabalho concedido",
         "selectAWorkspaceDirectoryUnderAgentAccess": "Selecione um diretório de espaço de trabalho em Acesso do agente acima para procurar arquivos.",
         "selectAFileFromTheWorkspaceList": "Selecione um arquivo na lista de espaços de trabalho para visualizar seu conteúdo.",
-        "emptyDirectory": "__MISSING__:surface.componentsDocumentsDocumentagentview.description.emptyDirectory"
+        "emptyDirectory": "Diretório vazio."
       },
       "label": {
         "accessPreset": "Predefinição de acesso",
@@ -2615,8 +2615,8 @@
             "proposalRejectedWithoutChanges": "Proposta rejeitada sem alterações",
             "documentDeleted": "Documento excluído",
             "documentDeleteFailed": "Não foi possível excluir o documento",
-            "loadingWorkspace": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingWorkspace",
-            "loadingDirectory": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingDirectory"
+            "loadingWorkspace": "Carregando espaço de trabalho…",
+            "loadingDirectory": "Carregando diretório…"
           },
           "attribute": {
             "searchDocuments": "Pesquisar documentos…",

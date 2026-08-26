@@ -256,7 +256,6 @@ export async function startStream(
         await veniceStreamChat(body, {
           signal: controller.signal,
           agentSessionId: docAgentState.agentSessionId,
-          agentPermissionPreset: docAgentState.preset,
           onDelta: (chunk: StreamChunk) => {
             const hasContent = chunk.content && chunk.content.length > 0;
             const hasReasoning = chunk.reasoning && chunk.reasoning.length > 0;

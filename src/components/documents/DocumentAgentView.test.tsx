@@ -18,6 +18,7 @@ vi.mock("../../services/desktopBridge", async (importOriginal) => {
     ...actual,
     isElectron: () => true,
     desktopDocumentAgent: {
+    permissions: { set: vi.fn(async ({ preset }) => ({ ok: true, preset })) },
     documents: {
       list: listDocuments,
       read: readDocument,

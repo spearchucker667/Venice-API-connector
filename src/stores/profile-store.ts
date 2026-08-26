@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import { createSafeStorage } from '../lib/safe-storage'
 import { DEFAULT_PROFILE_ID, setActiveProfileId } from '../services/activeProfile'
 import { purgeProfileData } from '../services/profilePurge'
-import { isElectron, desktopProfilePassword } from '../services/desktopBridge'
+import { isElectron, desktopMasterPassword, desktopProfilePassword } from '../services/desktopBridge'
 import {
   assertUserCreatableProfileId,
   generateProfileId,
@@ -171,7 +171,10 @@ export const useProfileStore = create<ProfileState>()(
   )
 )
 
-if (typeof window !== 'undefined') {
+/** Binds the restored renderer profile to trusted main-process state before
+ * credential hydration or any profile-scoped request is allowed to run. */
+export async function activateRestoredProfileSession(): Promise<void> {
+  if (typeof window === 'undefined') return
   // Sync the localStorage active-profile flag with the persisted store state.
   // If the persisted active profile is password-protected we cannot verify the
   // password automatically at startup, so we fall back to the default profile
@@ -185,21 +188,23 @@ if (typeof window !== 'undefined') {
   }
   setActiveProfileId(profileId)
   if (isElectron()) {
-    // Queue main-process activation during module initialization so later IPC
-    // calls from this renderer are ordered after the restored profile binding.
-    void desktopProfilePassword.activate(profileId).then((result) => {
-      if (result.ok && result.verified) return
-      if (profileId === DEFAULT_PROFILE_ID) return
-      useProfileStore.setState({ activeProfileId: DEFAULT_PROFILE_ID })
-      setActiveProfileId(DEFAULT_PROFILE_ID)
-      window.location.reload()
-    })
-    
-    // Hydrate authoritative master password state from main
-    import('../services/desktopBridge').then(({ desktopMasterPassword }) => {
-      desktopMasterPassword.isSet().then((isSet) => {
-        useProfileStore.setState({ masterPasswordSet: isSet })
-      })
-    })
+    const [activation, masterPasswordSet] = await Promise.all([
+      desktopProfilePassword.activate(profileId),
+      desktopMasterPassword.isSet(),
+    ])
+    useProfileStore.setState({ masterPasswordSet })
+    if (!activation.ok || !activation.verified) {
+      if (profileId !== DEFAULT_PROFILE_ID) {
+        profileId = DEFAULT_PROFILE_ID
+        useProfileStore.setState({ activeProfileId: DEFAULT_PROFILE_ID })
+        setActiveProfileId(DEFAULT_PROFILE_ID)
+        const fallback = await desktopProfilePassword.activate(DEFAULT_PROFILE_ID)
+        if (!fallback.ok || !fallback.verified) {
+          throw new Error('The default profile session could not be activated.')
+        }
+      } else {
+        throw new Error('The default profile session could not be activated.')
+      }
+    }
   }
 }

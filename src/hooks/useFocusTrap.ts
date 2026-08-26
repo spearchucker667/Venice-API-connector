@@ -80,7 +80,13 @@ export function useFocusTrap(
     el.addEventListener('keydown', handleKeyDown);
     return () => {
       el.removeEventListener('keydown', handleKeyDown);
-      if (previouslyFocused instanceof HTMLElement && previouslyFocused.isConnected) {
+      // Only restore focus if we currently own the focus. If another dialog mounted
+      // and stole focus, we should not yank it back to the old previouslyFocused element.
+      if (
+        previouslyFocused instanceof HTMLElement && 
+        previouslyFocused.isConnected && 
+        (document.activeElement === el || el.contains(document.activeElement) || document.activeElement === document.body)
+      ) {
         previouslyFocused.focus();
       }
     };

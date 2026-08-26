@@ -13,7 +13,7 @@ export function ApiKeyDialog({
   onClose: () => void;
 }) {
   const { t: tRuntime } = useTranslation("common");
-  const { apiKey, isConfigured, setApiKey, clearApiKey } = useAuthStore();
+  const { apiKey, isConfigured, credentialSafeMessage, setApiKey, clearApiKey } = useAuthStore();
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,8 +41,12 @@ export function ApiKeyDialog({
         ),
       );
       onClose();
-    } catch {
-      setError("Failed to save key. Please check the value and try again.");
+    } catch (cause) {
+      setError(
+        cause instanceof Error && "code" in cause && typeof cause.code === "string"
+          ? cause.message
+          : "The Venice API key could not be saved.",
+      );
     } finally {
       setBusy(false);
     }
@@ -93,7 +97,7 @@ export function ApiKeyDialog({
             </h2>
             <p className="text-[13px] text-text-secondary">
               {isElectron()
-                ? "Stored securely in OS Keychain/Credential Manager."
+                ? credentialSafeMessage ?? "Stored securely in OS Keychain/Credential Manager."
                 : tRuntime(
                     "runtimeGenerated.components.layout.apiKeyDialog.text.heldInMemoryForThisLocalDevelopmentSessionOnly",
                   )}

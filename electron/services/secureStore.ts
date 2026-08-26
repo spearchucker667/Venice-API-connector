@@ -12,6 +12,7 @@ import {
   deleteWindowsCredential,
 } from "./windowsCredentialStore";
 import { requiresStructuredCredential } from "../../src/types/provider";
+import type { ApiKeyConfigurationStatus } from "../../src/types/api-connectivity";
 
 /** Name of the JSON file used for secure preferences storage. */
 const STORE_FILE = "secure-prefs.json";
@@ -146,6 +147,7 @@ export function setApiKey(key: string, profileId: string = "default"): void {
  *  @returns The decrypted key, or null if missing or corrupted.
  */
 export function getApiKey(profileId: string = "default"): string | null {
+  lastReadErrors.apiKey = null;
   const store = readStore("apiKey");
   const k = profileId === "default" ? "apiKey" : `apiKey_${profileId}`;
   const ke = profileId === "default" ? "apiKeyEncrypted" : `apiKeyEncrypted_${profileId}`;
@@ -182,6 +184,36 @@ export function getApiKey(profileId: string = "default"): string | null {
   }
 
   return raw;
+}
+
+/** Returns non-secret, profile-scoped credential state without exposing key material. */
+export function getApiKeyConfigurationStatus(profileId: string = "default"): ApiKeyConfigurationStatus {
+  const configured = getApiKey(profileId) !== null;
+  const storageMode = getStorageMode();
+  const readError = lastReadErrors.apiKey;
+  if (configured) return { configured: true, state: "configured", storageMode };
+  if (readError) {
+    return {
+      configured: false,
+      state: "load-failed",
+      storageMode,
+      failureCode: /decrypt/i.test(readError) ? "SECRET_DECRYPT_FAILED" : "SECRET_STORAGE_READ_FAILED",
+      safeMessage: /decrypt/i.test(readError)
+        ? "The saved Venice credential could not be decrypted. Re-enter it in Config."
+        : "The saved Venice credential could not be loaded. Re-enter it in Config.",
+    };
+  }
+  return {
+    configured: false,
+    state: "not-configured",
+    storageMode,
+    ...(storageMode === "unavailable"
+      ? {
+          failureCode: "SECRET_STORAGE_UNAVAILABLE" as const,
+          safeMessage: "OS secure storage is unavailable. Restore the system keychain or credential manager, then retry.",
+        }
+      : {}),
+  };
 }
 
 /** Removes the stored Venice API key from secure preferences. */

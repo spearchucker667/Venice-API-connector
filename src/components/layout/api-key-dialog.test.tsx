@@ -25,7 +25,7 @@ describe('ApiKeyDialog', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Connect' }))
 
     const alert = await screen.findByRole('alert')
-    expect(alert).toHaveTextContent('Failed to save key. Please check the value and try again.')
+    expect(alert).toHaveTextContent('The Venice API key could not be saved.')
     expect(alert.textContent).not.toContain('Bearer secret')
     expect(alert.textContent).not.toContain('/Users/private')
   })

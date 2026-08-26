@@ -536,7 +536,7 @@
         "searchMatches": "Sök matchningar (",
         "read": "Läs",
         "createGroup": "Skapa grupp",
-        "refreshWorkspace": "__MISSING__:surface.componentsDocumentsDocumentagentview.text.refreshWorkspace"
+        "refreshWorkspace": "Uppdatera"
       },
       "heading": {
         "agentAccessGrantControls": "Agentåtkomst och Grant Controls",
@@ -558,7 +558,7 @@
         "noWorkspaceGranted": "Ingen arbetsyta beviljad",
         "selectAWorkspaceDirectoryUnderAgentAccess": "Välj en arbetsytakatalog under Agent Access ovan för att bläddra i filer.",
         "selectAFileFromTheWorkspaceList": "Välj en fil från arbetsytelistan för att se dess innehåll.",
-        "emptyDirectory": "__MISSING__:surface.componentsDocumentsDocumentagentview.description.emptyDirectory"
+        "emptyDirectory": "Tom katalog."
       },
       "label": {
         "accessPreset": "Åtkomstförinställning",
@@ -2615,8 +2615,8 @@
             "proposalRejectedWithoutChanges": "Förslaget avslogs utan ändringar",
             "documentDeleted": "Dokument raderat",
             "documentDeleteFailed": "Dokumentet kunde inte raderas",
-            "loadingWorkspace": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingWorkspace",
-            "loadingDirectory": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingDirectory"
+            "loadingWorkspace": "Läser in arbetsyta…",
+            "loadingDirectory": "Läser in katalog…"
           },
           "attribute": {
             "searchDocuments": "Sök i dokument...",

@@ -74,6 +74,38 @@ export type SafeApiKeyStorage =
   | "web-environment"
   | "unavailable";
 
+export type CredentialFailureCode =
+  | "INVALID_KEY"
+  | "PROVIDER_AUTH_REJECTED"
+  | "SECRET_STORAGE_UNAVAILABLE"
+  | "SECRET_STORAGE_WRITE_FAILED"
+  | "SECRET_STORAGE_READ_FAILED"
+  | "SECRET_DECRYPT_FAILED"
+  | "CREDENTIAL_NOT_CONFIGURED"
+  | "CREDENTIAL_STATE_INCONSISTENT"
+  | "PROFILE_NOT_FOUND"
+  | "IPC_REJECTED"
+  | "NETWORK_ERROR"
+  | "UNKNOWN_ERROR";
+
+export type CredentialStorageMode = "encrypted" | "plaintext-fallback" | "unavailable";
+
+export type ApiKeyConfigurationStatus = {
+  configured: boolean;
+  state: "configured" | "not-configured" | "load-failed";
+  storageMode: CredentialStorageMode;
+  failureCode?: CredentialFailureCode;
+  safeMessage?: string;
+};
+
+export type ApiKeyMutationResult =
+  | { ok: true; storageMode: CredentialStorageMode }
+  | {
+      ok: false;
+      code: CredentialFailureCode;
+      safeMessage: string;
+    };
+
 export interface SafeApiKeyMetadata {
   configured: boolean;
   storage: SafeApiKeyStorage;

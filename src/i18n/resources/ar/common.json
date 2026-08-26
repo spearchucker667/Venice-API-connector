@@ -571,7 +571,7 @@
         "searchMatches": "بحث مطابق (",
         "read": "اقرأ",
         "createGroup": "إنشاء مجموعة",
-        "refreshWorkspace": "__MISSING__:surface.componentsDocumentsDocumentagentview.text.refreshWorkspace"
+        "refreshWorkspace": "تحديث"
       },
       "heading": {
         "agentAccessGrantControls": "وصول الوكيل وعناصر التحكم في المنح",
@@ -593,7 +593,7 @@
         "noWorkspaceGranted": "لم يتم منح مساحة عمل",
         "selectAWorkspaceDirectoryUnderAgentAccess": "حدد أ دليل مساحة العمل ضمن Agent Access أعلاه لتصفح الملفات.",
         "selectAFileFromTheWorkspaceList": "حدد ملفًا من قائمة مساحات العمل لعرض محتوياته",
-        "emptyDirectory": "__MISSING__:surface.componentsDocumentsDocumentagentview.description.emptyDirectory"
+        "emptyDirectory": "المجلد فارغ."
       },
       "label": {
         "accessPreset": "الوصول إلى الإعداد المسبق",
@@ -2615,8 +2615,8 @@
             "proposalRejectedWithoutChanges": "تم رفض الاقتراح دون تغييرات",
             "documentDeleted": "تم حذف المستند",
             "documentDeleteFailed": "تعذر حذف المستند",
-            "loadingWorkspace": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingWorkspace",
-            "loadingDirectory": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingDirectory"
+            "loadingWorkspace": "جارٍ تحميل مساحة العمل…",
+            "loadingDirectory": "جارٍ تحميل المجلد…"
           },
           "attribute": {
             "searchDocuments": "بحث في المستندات...",

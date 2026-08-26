@@ -36,10 +36,10 @@
     "attachFile": "附加文件",
     "stopGenerating": "停止生成",
     "sendMessage": "发送消息",
-    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
-    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
-    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
-    "promotionFailed": "__MISSING__:composer.promotionFailed"
+    "saveToDocuments": "将 {{name}} 保存到“文档”",
+    "promotedToDocuments": "已保存到“文档”",
+    "attachmentNotRegistered": "附件尚未注册，无法提升。",
+    "promotionFailed": "提升失败。"
   },
   "memory": {
     "disabledLabel": "内存关闭",

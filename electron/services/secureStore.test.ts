@@ -44,6 +44,7 @@ import {
   __clearCacheForTests,
   getJinaApiKey,
   getSecureStoreStatus,
+  getApiKeyConfigurationStatus,
   setCredential,
   getCredential,
   deleteCredential,
@@ -110,6 +111,19 @@ describe("secureStore", () => {
     setApiKey("vn-secret-key");
     expect(getApiKey()).toBe("vn-secret-key");
     expect(isApiKeyConfigured()).toBe(true);
+    expect(getApiKeyConfigurationStatus()).toEqual({ configured: true, state: "configured", storageMode: "encrypted" });
+  });
+
+  it("distinguishes a stored credential decrypt failure from no configured credential", () => {
+    fs.writeFileSync(STORE_PATH, JSON.stringify({ apiKey: Buffer.from("broken").toString("base64"), apiKeyEncrypted: "true" }), "utf-8");
+    __clearCacheForTests();
+    vi.mocked(mockedSafeStorage.decryptString).mockImplementationOnce(() => { throw new Error("decrypt failed"); });
+    expect(getApiKeyConfigurationStatus()).toMatchObject({
+      configured: false,
+      state: "load-failed",
+      storageMode: "encrypted",
+      failureCode: "SECRET_DECRYPT_FAILED",
+    });
   });
 
   it("returns null after deletion", () => {
@@ -117,6 +131,19 @@ describe("secureStore", () => {
     deleteApiKey();
     expect(getApiKey()).toBeNull();
     expect(isApiKeyConfigured()).toBe(false);
+  });
+
+  it("keeps profile credentials isolated across replacement and removal", () => {
+    setApiKey("profile-a-original", "profile-a");
+    setApiKey("profile-b-key", "profile-b");
+
+    setApiKey("profile-a-replacement", "profile-a");
+    expect(getApiKey("profile-a")).toBe("profile-a-replacement");
+    expect(getApiKey("profile-b")).toBe("profile-b-key");
+
+    deleteApiKey("profile-a");
+    expect(getApiKey("profile-a")).toBeNull();
+    expect(getApiKey("profile-b")).toBe("profile-b-key");
   });
 
   it("rejects non-string or empty raw values (H-005 / H-009)", () => {

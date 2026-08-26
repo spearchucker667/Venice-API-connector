@@ -564,6 +564,11 @@ export function DocumentAgentView() {
   };
 
   const changePreset = async (next: AgentPermissionPreset) => {
+    const authority = await bridge.permissions.set({ agentSessionId, preset: next });
+    if (!authority.ok || authority.preset !== next) {
+      setError(authority.error || "Document Agent access could not be changed.");
+      return;
+    }
     if (workspaceGrant && next !== "workspace_with_approval")
       await bridge.workspace.revoke({
         grantId: workspaceGrant.id,

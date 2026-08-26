@@ -92,6 +92,21 @@ function resetMocks(): void {
   clearRegisteredChannelsForTesting();
 }
 
+async function registerAttachment(
+  event: Electron.IpcMainInvokeEvent,
+  mimeType = "text/plain",
+  body = "hello world",
+): Promise<string> {
+  const envelope = await handlers.get("documentAgent:attachments:register")!(event, {
+    mimeType,
+    displayName: "notes.txt",
+    bodyB64: Buffer.from(body, "utf8").toString("base64"),
+  }) as { ok: boolean; attachmentId?: string };
+  expect(envelope.ok).toBe(true);
+  expect(envelope.attachmentId).toBeTypeOf("string");
+  return envelope.attachmentId!;
+}
+
 describe("documentAgent:attachments:promote channel", () => {
   it("VERIFY-154 returns ok envelope, forwards profile authority, and audits execution with resourceId + metadata", async () => {
     resetMocks();
@@ -100,12 +115,11 @@ describe("documentAgent:attachments:promote channel", () => {
     expect(handler).toBeTypeOf("function");
 
     const event = { sender: { id: 42 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent;
+    const attachmentId = await registerAttachment(event);
     const envelope = await handler!(event, {
-      attachmentId: "att_001",
+      attachmentId,
       projectId: "project_alpha",
       relativePath: "promoted/notes.txt",
-      mimeType: "text/plain",
-      bodyB64: Buffer.from("hello world", "utf8").toString("base64"),
     });
 
     expect(getProfileSessionId).toHaveBeenCalledWith(event.sender);
@@ -113,7 +127,7 @@ describe("documentAgent:attachments:promote channel", () => {
     const callArgs = attachmentsPromote.mock.calls[0];
     expect(callArgs[0]).toBe("profile_default");
     expect(callArgs[1]).toMatchObject({
-      attachmentId: "att_001",
+      attachmentId,
       projectId: "project_alpha",
       relativePath: "promoted/notes.txt",
       mimeType: "text/plain",
@@ -130,7 +144,7 @@ describe("documentAgent:attachments:promote channel", () => {
     expect(auditInput.outcome).toBe("execution");
     expect(auditInput.resourceIds).toEqual(["doc_1"]);
     expect(auditInput.metadata).toMatchObject({
-      attachmentId: "att_001",
+      attachmentId,
       mimeType: "text/plain",
       sizeBytes: 11,
       format: "txt",
@@ -146,12 +160,12 @@ describe("documentAgent:attachments:promote channel", () => {
     registerDocumentAgentHandlers();
 
     const handler = handlers.get("documentAgent:attachments:promote")!;
-    const envelope = await handler({ sender: { id: 7 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent, {
-      attachmentId: "att_big",
+    const event = { sender: { id: 7 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent;
+    const attachmentId = await registerAttachment(event);
+    const envelope = await handler(event, {
+      attachmentId,
       projectId: "project_alpha",
       relativePath: "promoted/big.bin",
-      mimeType: "application/octet-stream",
-      bodyB64: Buffer.alloc(2_000_000, "x").toString("base64"),
     });
 
     expect(envelope.ok).toBe(false);
@@ -167,23 +181,21 @@ describe("documentAgent:attachments:promote channel", () => {
     resetMocks();
     registerDocumentAgentHandlers();
     const handler = handlers.get("documentAgent:attachments:promote")!;
+    const event = { sender: { id: 7 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent;
+    const unsupportedId = await registerAttachment(event, "application/x-bogus", "data");
 
-    const unsupported = await handler({ sender: { id: 7 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent, {
-      attachmentId: "att_x",
+    const unsupported = await handler(event, {
+      attachmentId: unsupportedId,
       projectId: "project_alpha",
       relativePath: "promoted/file.bin",
-      mimeType: "application/x-bogus",
-      bodyB64: Buffer.from("data", "utf8").toString("base64"),
     });
     expect(unsupported.ok).toBe(false);
     expect(attachmentsPromote).toHaveBeenCalledTimes(0);
     expect(unsupported.error).not.toContain("Error:");
 
-    const missing = await handler({ sender: { id: 7 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent, {
+    const missing = await handler(event, {
       projectId: "project_alpha",
       relativePath: "promoted/file.txt",
-      mimeType: "text/plain",
-      bodyB64: Buffer.from("data", "utf8").toString("base64"),
     });
     expect(missing.ok).toBe(false);
   });

@@ -571,7 +571,7 @@
         "searchMatches": "खोज मिलान (",
         "read": "पढ़ें",
         "createGroup": "समूह बनाएं",
-        "refreshWorkspace": "__MISSING__:surface.componentsDocumentsDocumentagentview.text.refreshWorkspace"
+        "refreshWorkspace": "रीफ़्रेश करें"
       },
       "heading": {
         "agentAccessGrantControls": "एजेंट एक्सेस और अनुदान नियंत्रण",
@@ -593,7 +593,7 @@
         "noWorkspaceGranted": "कोई कार्यस्थान स्वीकृत नहीं है",
         "selectAWorkspaceDirectoryUnderAgentAccess": "फ़ाइलों को ब्राउज़ करने के लिए ऊपर एजेंट एक्सेस के अंतर्गत एक कार्यस्थान निर्देशिका का चयन करें।",
         "selectAFileFromTheWorkspaceList": "कार्यस्थान सूची से एक फ़ाइल को देखने के लिए उसका चयन करें सामग्री।",
-        "emptyDirectory": "__MISSING__:surface.componentsDocumentsDocumentagentview.description.emptyDirectory"
+        "emptyDirectory": "निर्देशिका खाली है।"
       },
       "label": {
         "accessPreset": "एक्सेस प्रीसेट",
@@ -2615,8 +2615,8 @@
             "proposalRejectedWithoutChanges": "बिना किसी बदलाव के प्रस्ताव खारिज कर दिया गया",
             "documentDeleted": "दस्तावेज़ हटाया गया",
             "documentDeleteFailed": "दस्तावेज़ हटाया नहीं जा सका",
-            "loadingWorkspace": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingWorkspace",
-            "loadingDirectory": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingDirectory"
+            "loadingWorkspace": "कार्यस्थान लोड हो रहा है…",
+            "loadingDirectory": "निर्देशिका लोड हो रही है…"
           },
           "attribute": {
             "searchDocuments": "दस्तावेज़ खोजें...",

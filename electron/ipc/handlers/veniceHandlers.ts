@@ -14,6 +14,7 @@ import { runChatAgentLoop } from "../../agent/runtime/chat-agent-runner";
 import { createToolExecutionContext } from "../../agent/runtime/tool-execution-context";
 import { getAgentServices, RUNTIME_SESSION_ID } from "../../agent/runtime/agent-services";
 import type { AgentPermissionPreset } from "../../../src/agent/contracts/capabilities";
+import { getEffectiveAgentPermissionPreset } from "../../agent/runtime/agent-permission-state";
 import type { VeniceStreamDeltaEnvelope } from "../../../src/shared/veniceStreamDelta";
 
 function safetyBlockedResponse(err: SafetyGuardBlockedError) {
@@ -88,9 +89,13 @@ export function registerVeniceHandlers(): void {
 
       const profileId = getProfileSessionId(event.sender);
       const agentSessionId = typeof request.agentSessionId === "string" ? request.agentSessionId : undefined;
-      const preset: AgentPermissionPreset =
-        (typeof request.agentPermissionPreset === "string" ? request.agentPermissionPreset : undefined) ??
-        (agentSessionId ? "workspace_with_approval" : "limited_documents");
+      // The legacy renderer field is accepted by validation for wire
+      // compatibility but never participates in authorization.
+      const preset: AgentPermissionPreset = getEffectiveAgentPermissionPreset(
+        event.sender,
+        profileId,
+        agentSessionId,
+      );
       const rendererSessionId = `${RUNTIME_SESSION_ID}:renderer_${event.sender.id}${agentSessionId ? `:agent_${agentSessionId}` : ""}`;
       const workspaceGrant = getAgentServices().workspaceGrants.getBySession(rendererSessionId);
 

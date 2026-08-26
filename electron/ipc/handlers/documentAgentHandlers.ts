@@ -3,12 +3,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import type { DocumentBlock, DocumentEditOperation, DocumentFormat } from "../../../src/agent/contracts/documents";
-import type { WorkspaceGrant } from "../../../src/agent/contracts/capabilities";
+import type { AgentPermissionPreset, WorkspaceGrant } from "../../../src/agent/contracts/capabilities";
 import { redactErrorMessage } from "../../../src/shared/redaction";
 import { serializeDocument } from "../../agent/documents/document-serializer-service";
 import { getProfileSessionId } from "../../services/profileSession";
 import { classifyMime } from "../../agent/documents/attachment-import-service";
 import { registerPrivilegedIpcChannel } from "./common";
+import { setEffectiveAgentPermissionPreset } from "../../agent/runtime/agent-permission-state";
 
 import { getAgentServices, RUNTIME_SESSION_ID } from "../../agent/runtime/agent-services";
 import {
@@ -86,6 +87,25 @@ async function atomicExternalWrite(target: string, bytes: Uint8Array): Promise<v
 
 export function registerDocumentAgentHandlers(): void {
   const { documents, attachments, attachmentRegistry, approvals, audit, workspaceGrants, workspaceFiles, workspaceMutations } = getAgentServices();
+
+  registerPrivilegedIpcChannel("documentAgent:permissions:set", (event, input: unknown) => {
+    try {
+      const value = record(input);
+      const agentSessionId = stringField(value, "agentSessionId", 128);
+      const preset = stringField(value, "preset", 64) as AgentPermissionPreset;
+      return {
+        ok: true,
+        preset: setEffectiveAgentPermissionPreset(
+          event.sender,
+          getProfileSessionId(event.sender),
+          agentSessionId,
+          preset,
+        ),
+      };
+    } catch (error) {
+      return { ok: false, error: redactErrorMessage(error) };
+    }
+  });
 
   async function executeDocumentExport(
     sender: Electron.WebContents,
@@ -276,15 +296,14 @@ export function registerDocumentAgentHandlers(): void {
     try {
       const value = record(input);
       const attachmentId = stringField(value, "attachmentId", 128);
-      let mimeType = stringField(value, "mimeType", 255).toLowerCase();
-      let bodyB64: string | undefined = typeof value.bodyB64 === "string" ? value.bodyB64 : undefined;
-      if (bodyB64 === undefined) {
-        const resolved = attachmentRegistry.resolve(getProfileSessionId(event.sender), attachmentId, rendererSession(event.sender.id));
-        if (!resolved) throw new Error("Attachment not found.");
-        bodyB64 = resolved.bodyB64;
-        mimeType = resolved.mimeType;
-      }
-      if (!bodyB64) throw new Error("Attachment body is missing.");
+      const resolved = attachmentRegistry.resolve(
+        getProfileSessionId(event.sender),
+        attachmentId,
+        rendererSession(event.sender.id),
+      );
+      if (!resolved) throw new Error("Attachment not found.");
+      const bodyB64 = resolved.bodyB64;
+      const mimeType = resolved.mimeType.toLowerCase();
       if (classifyMime(mimeType) === "reject") {
         throw new Error(`Attachment mimeType ${JSON.stringify(mimeType)} is not supported.`);
       }

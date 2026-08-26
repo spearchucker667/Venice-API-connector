@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
-import { useProfileStore } from "./profile-store";
+import { activateRestoredProfileSession, useProfileStore } from "./profile-store";
 
 vi.mock("../services/desktopBridge", () => ({
   isElectron: vi.fn(() => false),
@@ -30,7 +30,7 @@ vi.mock("../services/profilePurge", () => ({
   })),
 }));
 
-import { isElectron, desktopProfilePassword } from "../services/desktopBridge";
+import { isElectron, desktopMasterPassword, desktopProfilePassword } from "../services/desktopBridge";
 import { purgeProfileData } from "../services/profilePurge";
 
 describe("useProfileStore", () => {
@@ -97,6 +97,44 @@ describe("useProfileStore", () => {
     expect(result.ok).toBe(true);
     expect(desktopProfilePassword.activate).toHaveBeenCalledWith("work", undefined);
     expect(reloadFn).not.toHaveBeenCalled();
+  });
+
+  it("activates the restored profile before credential hydration can proceed", async () => {
+    vi.mocked(isElectron).mockReturnValue(true);
+    vi.mocked(desktopProfilePassword.activate).mockResolvedValue({ ok: true, verified: true, profileId: "work" });
+    vi.mocked(desktopMasterPassword.isSet).mockResolvedValue(true);
+    useProfileStore.setState({
+      profiles: [
+        { id: "default", name: "Default", onboardingCompleted: true },
+        { id: "work", name: "Work", onboardingCompleted: true },
+      ],
+      activeProfileId: "work",
+    });
+
+    await activateRestoredProfileSession();
+
+    expect(desktopProfilePassword.activate).toHaveBeenCalledWith("work");
+    expect(desktopMasterPassword.isSet).toHaveBeenCalledTimes(1);
+    expect(useProfileStore.getState().masterPasswordSet).toBe(true);
+  });
+
+  it("falls back to the default profile instead of auto-unlocking a protected restored profile", async () => {
+    vi.mocked(isElectron).mockReturnValue(true);
+    vi.mocked(desktopProfilePassword.activate).mockResolvedValue({ ok: true, verified: true, profileId: "default" });
+    vi.mocked(desktopMasterPassword.isSet).mockResolvedValue(false);
+    useProfileStore.setState({
+      profiles: [
+        { id: "default", name: "Default", onboardingCompleted: true },
+        { id: "work", name: "Work", onboardingCompleted: true, hasPassword: true },
+      ],
+      activeProfileId: "work",
+    });
+
+    await activateRestoredProfileSession();
+
+    expect(desktopProfilePassword.activate).toHaveBeenCalledWith("default");
+    expect(desktopProfilePassword.activate).not.toHaveBeenCalledWith("work");
+    expect(useProfileStore.getState().activeProfileId).toBe("default");
   });
 
   it("does not switch to a password-protected profile without verification", async () => {

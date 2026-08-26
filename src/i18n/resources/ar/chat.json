@@ -36,10 +36,10 @@
     "attachFile": "إرفاق الملف",
     "stopGenerating": "توقف عن التوليد",
     "sendMessage": "أرسل رسالة",
-    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
-    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
-    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
-    "promotionFailed": "__MISSING__:composer.promotionFailed"
+    "saveToDocuments": "حفظ {{name}} في المستندات",
+    "promotedToDocuments": "تم الحفظ في المستندات",
+    "attachmentNotRegistered": "المرفق غير مسجل للترقية.",
+    "promotionFailed": "فشلت الترقية."
   },
   "memory": {
     "disabledLabel": "الذاكرة معطلة",

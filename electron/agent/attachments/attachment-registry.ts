@@ -8,6 +8,7 @@
 import { randomUUID } from "node:crypto";
 
 const ID_RE = /^[a-zA-Z0-9_.-]{1,128}$/;
+const SESSION_ID_RE = /^[a-zA-Z0-9_.:-]{1,512}$/;
 
 export interface AttachmentRecord {
   id: string;
@@ -38,7 +39,7 @@ export class AttachmentRegistry {
 
   register(input: RegisterAttachmentInput): AttachmentRecord {
     if (!ID_RE.test(input.profileId)) throw new Error("Invalid profile id.");
-    if (!ID_RE.test(input.sessionId)) throw new Error("Invalid session id.");
+    if (!SESSION_ID_RE.test(input.sessionId)) throw new Error("Invalid session id.");
     if (typeof input.mimeType !== "string" || input.mimeType.length === 0 || input.mimeType.length > 255) {
       throw new Error("Invalid mimeType.");
     }

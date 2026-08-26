@@ -36,10 +36,10 @@
     "attachFile": "Прикрепить файл",
     "stopGenerating": "Прекратить генерировать",
     "sendMessage": "Отправить сообщение",
-    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
-    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
-    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
-    "promotionFailed": "__MISSING__:composer.promotionFailed"
+    "saveToDocuments": "Сохранить {{name}} в Документы",
+    "promotedToDocuments": "Сохранено в Документы",
+    "attachmentNotRegistered": "Вложение не зарегистрировано для переноса.",
+    "promotionFailed": "Не удалось выполнить перенос."
   },
   "memory": {
     "disabledLabel": "Память отключена",

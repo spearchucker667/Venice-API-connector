@@ -149,6 +149,9 @@ const veniceForge = {
     isConfigured: (profileId?: string) => {
       return ipcRenderer.invoke("apiKey:isConfigured", profileId);
     },
+    getStatus: (profileId?: string) => {
+      return ipcRenderer.invoke("apiKey:getStatus", profileId);
+    },
     set: (key: string, profileId?: string) => {
       return ipcRenderer.invoke("apiKey:set", { key, profileId });
     },
@@ -808,6 +811,11 @@ const veniceForge = {
   },
 
   documentAgent: {
+    permissions: {
+      set(input: Parameters<import("../src/types/desktop").VeniceForgeDocumentAgent["permissions"]["set"]>[0]) {
+        return ipcRenderer.invoke("documentAgent:permissions:set", input);
+      },
+    },
     documents: {
       create(input: Parameters<import("../src/types/desktop").VeniceForgeDocumentAgent["documents"]["create"]>[0]) {
         return ipcRenderer.invoke("documentAgent:documents:create", input);
