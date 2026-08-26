@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// 
 // @vitest-environment node
 // T-189 / T-199 regression guard
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";

@@ -65,13 +65,17 @@ function deriveCompletion(status) {
     const linguisticReviewStatus = row?.linguisticReviewStatus ?? review;
     const pctComplete = canonical > 0 ? translated / canonical : 1;
 
+    const keyNameFallbacks = row?.keyNameFallbackLeaves ?? 0;
+
     const isProductionComplete =
-      (locale === 'en-US' || review === 'complete') &&
-      (locale === 'en-US' || catalogStatus === 'complete') &&
-      runtimeSurfaceCoverage === 100 &&
-      sentinels === 0 &&
-      missing === 0 &&
-      identicalUnapproved === 0;
+      locale === 'en-US' ||
+      (review === 'complete' &&
+        catalogStatus === 'complete' &&
+        runtimeSurfaceCoverage === 100 &&
+        sentinels === 0 &&
+        missing === 0 &&
+        keyNameFallbacks === 0 &&
+        identicalUnapproved === 0);
 
     result[locale] = {
       languageTag: locale,
@@ -80,6 +84,7 @@ function deriveCompletion(status) {
       translatedKeyTotal: translated,
       sentinelLeaves: sentinels,
       missingMarkerLeaves: missing,
+      keyNameFallbackLeaves: keyNameFallbacks,
       identicalUnapprovedLeaves: identicalUnapproved,
       reviewStatus: review,
       catalogStatus,
@@ -112,6 +117,7 @@ function renderModule(completion) {
   lines.push('  translatedKeyTotal: number;');
   lines.push('  sentinelLeaves: number;');
   lines.push('  missingMarkerLeaves: number;');
+  lines.push('  keyNameFallbackLeaves: number;');
   lines.push('  identicalUnapprovedLeaves: number;');
   lines.push('  reviewStatus: \'source-language\' | \'complete\' | \'in-progress\' | \'first-pass-machine\' | \'not-started\' | \'unknown\';');
   lines.push('  catalogStatus: \'complete\' | \'in-progress\' | \'pending-translation\' | \'unknown\';');

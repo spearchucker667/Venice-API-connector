@@ -5,14 +5,17 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
-**Date:** 2026-08-25
-**Scope:** Finalize Post-August-24 provider-update audit governance and validation.
+**Date:** 2026-08-26
+**Scope:** Remediate P2/P3 findings from the repository-wide audit against current `main` (commit `029467440f7a4ac7f3611a1a26f8e655bf659070`).
 
-Completed the remaining governance tasks from the audit handoff and verified all prior code changes.
+Acted on the highest-value remediation tranche identified in the audit. Several reported findings were already resolved in `main`: the August 24 audit report is marked immutable historical, the duplicate `electron/utils/externalLinks.ts` helper no longer exists, and no `@ts-nocheck` directives remain in production test files.
 
-- **Governance (P3):** Pinned CodeQL workflow to `ubuntu-24.04` and added explicit documentation for the `VENICE_FORGE_DISABLE_CODEQL` bypass variable.
-- **Roadmap Updates:** Logged `VF-GOVERNANCE-2026-08-25-001` (Branch Ruleset updates to require CI/CodeQL) and `VF-GOVERNANCE-2026-08-25-002` (Commit Provenance standards) into `docs/ROADMAP.md` as externally blocked tasks requiring repository admin privileges.
-- **Verification:** Ran `npm run lint:eslint && npm run typecheck && npm run verify:contracts` successfully to confirm no regressions were introduced.
+- **GitHub governance (P2):** Updated active `Rules01` ruleset to require status checks for `lint-and-typecheck`, `unit-and-integration-tests`, `coverage`, `contracts`, `build`, `windows-sensitive-tests`, `macos-sensitive-tests`, `Analyze javascript-typescript`, and `Analyze actions`. Raised `required_approving_review_count` to `1` and enabled `require_last_push_approval`. Bypass actors remain unchanged pending explicit automation inventory.
+- **i18n truthfulness (P2):** Extended `scripts/verify-i18n.cjs` and `src/i18n/resourceNormalizer.ts` to detect and scrub key-name fallback placeholders (e.g. `"contextMenu.saveAs": "contextMenu.saveAs"`) that evaded the legacy `__MISSING__:`/`[XX]` checks. Repaired the Spanish `media.json` catalog: translated context-menu items, fixed semantically incorrect `upscaleAdherence`, corrected `close`, and added layer-aware safety messages. Changed `docs/i18n/native-review-status.json` to record all non-English locales as `first-pass-machine` and removed the inaccurate "Antigravity AI (Qualified Native Reviewer)" claim.
+- **Release gate (P2):** Updated `package.json` so `verify:i18n` tolerates missing markers and key-name fallbacks as warnings during development, while `verify:i18n:release` now runs `--strict` and fails on any untranslated placeholder. Regenerated `docs/i18n/translation-status.json` and `src/i18n/locale-completion-status.ts`; en-US is now correctly `isProductionComplete`, all non-English locales are explicitly incomplete.
+- **Documentation:** Updated `docs/ROADMAP.md` to close `VF-GOVERNANCE-2026-08-25-001` and record the remaining i18n key-name-fallback debt.
+- **Test cleanup (P3):** Removed stale `/* eslint-disable @typescript-eslint/ban-ts-comment */` directives from the eight test files previously flagged in the audit; the underlying `@ts-nocheck`/`@ts-ignore` suppressions were already gone.
+- **Verification:** `npm run lint:eslint`, `npm run typecheck`, `npm run verify:i18n`, and the affected unit-test suites all PASS. `npm run verify:i18n:release` correctly FAILS with 704 key-name-fallback errors, reflecting the truthful state of the non-English catalogs.
 
 ### Prior Session Summary (Post-August-24 Remediation Closeout) [demoted from "Latest Session Summary"]
 
@@ -34,6 +37,19 @@ Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full 
 - **Remaining:** External live-provider acceptance, signed builds, clean install/upgrade, multi-device sync, and accessibility QA remain EXTERNALLY BLOCKED per `docs/reports/historical/DEFERRED_WORK_DECISION_RECORD.md` and `docs/ROADMAP.md`.
 
 ## Session History
+
+### 2026-08-26 — Remediate audit findings: GitHub ruleset hardening and i18n truthfulness.
+
+- Updated GitHub `Rules01` ruleset via API to require CI and CodeQL status checks, one approving review, and last-push approval.
+- Extended `scripts/verify-i18n.cjs` with key-name fallback placeholder detection and `--allow-key-name-fallbacks` / `--strict` support.
+- Extended `src/i18n/resourceNormalizer.ts` to scrub key-name fallback values at runtime so they fall back to en-US instead of rendering raw key names.
+- Repaired Spanish `src/i18n/resources/es/media.json` translations for context-menu items, `upscaleAdherence`, `close`, and layer-aware safety messages.
+- Updated `docs/i18n/native-review-status.json` to mark all non-English locales as `first-pass-machine` with no reviewer claim.
+- Regenerated `docs/i18n/translation-status.json` and `src/i18n/locale-completion-status.ts`; en-US is now `isProductionComplete: true`, all others are incomplete.
+- Tightened `package.json` `verify:i18n:release` to run `--strict`.
+- Removed stale `/* eslint-disable @typescript-eslint/ban-ts-comment */` directives from eight test files where the suppressed `@ts-nocheck`/`@ts-ignore` comments were already absent.
+- Updated `docs/ROADMAP.md` and this file.
+- Validation: `npm run lint:eslint` PASS, `npm run typecheck` PASS, `npm run verify:i18n` PASS (704 warnings), affected unit-test suites PASS (197 tests), `verify:i18n:release` FAILS truthfully on 704 key-name fallbacks.
 
 ### 2026-08-25 — Commit, push, and confirm hosted workflows green.
 
@@ -173,7 +189,10 @@ Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full 
 
 ## Validation Matrix
 
-- `npm run typecheck`
-- `npm run lint:eslint`
-- `npm run verify:contracts`
+- `npm run typecheck` — PASS
+- `npm run lint:eslint` — PASS (zero warnings after removing stale `eslint-disable @typescript-eslint/ban-ts-comment` directives from 8 test files)
+- `npm run verify:i18n` — PASS (704 key-name-fallback warnings; daily dev gate allows them)
+- `npx vitest run scripts/i18n-tooling.test.ts src/i18n/resourceNormalizer.test.ts src/services/rp/rpChatService.test.ts src/services/rp/assetService.test.ts src/stores/chat-store.test.ts src/stores/character-card-store.test.ts src/stores/asset-store.test.ts src/stores/chat-media-reference.test.ts src/stores/rp-chat-store.test.ts src/utils/imageProcessor.test.ts` — PASS (197 tests)
+- `npm run verify:i18n:release` — FAILS (expected; 704 key-name fallback placeholders remain in non-English catalogs)
+- `npm run verify:contracts` — not re-run in this session (would fail at `verify:i18n:release` by design)
 

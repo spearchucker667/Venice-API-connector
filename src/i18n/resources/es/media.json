@@ -62,7 +62,7 @@
     "dropUpload": "Suelta o haz clic para subir la imagen",
     "editPlaceholder": "Cambia el fondo a una playa al atardecer...",
     "editModel": "Editar modelo",
-    "upscaleAdherence": "Cumplimiento de fuentes exclusivas",
+    "upscaleAdherence": "Fidelidad a la fuente original",
     "actions": {
       "edit": "Editar imagen",
       "upscale": "Mejorar resolución",
@@ -121,7 +121,7 @@
     "imagePreview": "Vista previa de la imagen",
     "generated": "Generado",
     "download": "Descargar",
-    "close": "Cerca",
+    "close": "Cerrar",
     "generatingImage": "Generando imagen…",
     "generatingImageDetail": "Su imagen generada aparecerá aquí cuando esté lista.",
     "openGeneratedImage": "Abrir imagen generada {{number}}",
@@ -132,18 +132,18 @@
     "enhancementProviderError": "El potenciador interno no pudo alcanzar o completar la solicitud de Venice. Se conservó su mensaje original.",
     "enhancementInvalidOutput": "El potenciador interno no devolvió un mensaje de imagen utilizable. Se conservó su mensaje original.",
     "enhancementSafetyBlocked": "La mejora del prompt fue detenida por las protecciones obligatorias de seguridad infantil, que son independientes de la configuración opcional del modo seguro. Se conservó el prompt original.",
-    "enhancementSafetyBlockedMandatory": "imageStudioRuntime.enhancementSafetyBlockedMandatory",
-    "enhancementSafetyBlockedFamily": "imageStudioRuntime.enhancementSafetyBlockedFamily",
-    "enhancementSafetyBlockedProvider": "imageStudioRuntime.enhancementSafetyBlockedProvider"
+    "enhancementSafetyBlockedMandatory": "La mejora del prompt fue detenida por las protecciones obligatorias de seguridad infantil, que son independientes de la configuración opcional del modo seguro. Se conservó el prompt original.",
+    "enhancementSafetyBlockedFamily": "La mejora del prompt fue detenida por el modo seguro familiar opcional. Se conservó el prompt original.",
+    "enhancementSafetyBlockedProvider": "La mejora del prompt fue detenida por la política del proveedor. Se conservó el prompt original."
   },
   "contextMenu": {
-    "saveAs": "contextMenu.saveAs",
-    "copyImage": "contextMenu.copyImage",
-    "openInInspector": "contextMenu.openInInspector",
-    "sendToImageTools": "contextMenu.sendToImageTools",
-    "sendToCharacterCreator": "contextMenu.sendToCharacterCreator",
-    "saveToMediaStudio": "contextMenu.saveToMediaStudio",
-    "revealInFinder": "contextMenu.revealInFinder",
-    "removeFromChat": "contextMenu.removeFromChat"
+    "saveAs": "Guardar como…",
+    "copyImage": "Copiar imagen",
+    "openInInspector": "Abrir en Inspector",
+    "sendToImageTools": "Enviar a herramientas de imagen",
+    "sendToCharacterCreator": "Enviar a Creador de personajes",
+    "saveToMediaStudio": "Guardar en Media Studio",
+    "revealInFinder": "Mostrar en Finder",
+    "removeFromChat": "Eliminar del chat"
   }
 }

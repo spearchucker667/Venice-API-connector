@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /** @fileoverview Unit tests for the renderer-side RP asset service. */
 

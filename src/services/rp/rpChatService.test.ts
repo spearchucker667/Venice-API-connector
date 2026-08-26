@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// 
 /** @fileoverview Unit tests for the renderer-side RP chat service. */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */

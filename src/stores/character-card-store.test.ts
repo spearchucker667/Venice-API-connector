@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// 
 /** @fileoverview Phase 2F — character-card-store unit tests.
  *
  *  Verifies the store's createBlank / upsert / remove flow and the

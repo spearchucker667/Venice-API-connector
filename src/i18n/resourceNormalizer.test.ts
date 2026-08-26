@@ -28,6 +28,20 @@ describe('isUntranslatedCatalogValue', () => {
     expect(isUntranslatedCatalogValue('[ZH] 保存')).toBe(true);
   });
 
+  it('flags key-name fallback placeholders when keyPath is provided', () => {
+    expect(isUntranslatedCatalogValue('contextMenu.saveAs', 'contextMenu.saveAs')).toBe(true);
+    expect(
+      isUntranslatedCatalogValue(
+        'imageStudioRuntime.enhancementSafetyBlockedMandatory',
+        'imageStudioRuntime.enhancementSafetyBlockedMandatory',
+      ),
+    ).toBe(true);
+  });
+
+  it('does NOT flag a value that merely contains its leaf key without the full path', () => {
+    expect(isUntranslatedCatalogValue('saveAs', 'contextMenu.saveAs')).toBe(false);
+  });
+
   it('does NOT misclassify legitimate strings containing underscores or colons', () => {
     expect(isUntranslatedCatalogValue('Save_Key')).toBe(false);
     expect(isUntranslatedCatalogValue('api:keys')).toBe(false);
@@ -60,6 +74,21 @@ describe('normalizeLocaleResource', () => {
     expect(cSubtree.normal).toBe('Cancel');
     expect(missing.length).toBeGreaterThan(0);
     expect(missing[0]).toMatchObject({ locale: 'ru' });
+  });
+
+  it('replaces key-name fallback placeholders with empty string', () => {
+    const source = {
+      contextMenu: {
+        saveAs: 'contextMenu.saveAs',
+        copyImage: 'Copiar imagen',
+      },
+    };
+    const missing: MissingCatalogEntry[] = [];
+    const cleaned = normalizeLocaleResource(source, 'es', 'media', missing);
+    const contextMenu = cleaned.contextMenu as Record<string, unknown>;
+    expect(contextMenu.saveAs).toBe('');
+    expect(contextMenu.copyImage).toBe('Copiar imagen');
+    expect(missing.some((m) => m.key === 'media.contextMenu.saveAs')).toBe(true);
   });
 
   it('does not mutate source tree', () => {

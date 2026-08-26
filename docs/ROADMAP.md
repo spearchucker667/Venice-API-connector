@@ -118,8 +118,9 @@ The most recent local audit lives at `docs/audits/Records/Venice_Forge-audit-evi
   - `VF-SCAN-20260717-031029-008` (verify-provider-adapters portability): closed — `vi.mock('electron')` relocated to `tests/setup.ts`.
   - `VF-SCAN-20260717-031029-009` (`enhancePrompt` extraction): closed — legacy field fallback removed from `promptPayloadExtractor` as the outbound upscale payload dropped it.
   - `VF-SCAN-20260717-031029-010..012` (documentation trackers): tracked only via `docs/summary_of_work.md` Open TODO Ledger; no code change required.
-  - `VF-GOVERNANCE-2026-08-25-001` (Branch Ruleset): update GitHub branch ruleset to explicitly require CI and CodeQL status checks (externally blocked/requires repository admin).
+  - `VF-GOVERNANCE-2026-08-25-001` (Branch Ruleset): **CLOSED 2026-08-26** — `Rules01` now requires CI (`lint-and-typecheck`, `unit-and-integration-tests`, `coverage`, `contracts`, `build`, `windows-sensitive-tests`, `macos-sensitive-tests`) and CodeQL (`Analyze javascript-typescript`, `Analyze actions`) status checks, sets `required_approving_review_count: 1`, and enables `require_last_push_approval`. Bypass-actor inventory deferred pending explicit automation audit.
   - `VF-GOVERNANCE-2026-08-25-002` (Commit Provenance): improve future traceability with meaningful commit subjects and signed commits/tags where practical.
+  - `VF-I18N-KEYNAME-FALLBACK-2026-08-26` (i18n debt): 704 key-name fallback placeholders remain across the 11 non-English locales (e.g. `"contextMenu.saveAs": "contextMenu.saveAs"`). The runtime normalizer now scrubs them to en-US, the verifier detects them, and `verify:i18n:release` fails until they are translated or removed. Spanish `media.json` was repaired as the initial tranche.
 
 ## Audit Input
 

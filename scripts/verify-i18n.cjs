@@ -5,8 +5,9 @@
  *   3. Rejects `[XX]` sentinel prefixes produced by the obsolete
  *      `scripts/generate-locales.cjs` tool.
  *   4. Rejects `__MISSING__:` placeholder values produced by the new
- *      `scripts/sync-catalogs.cjs` are present only when paired with a clean
- *      translator follow-up.
+ *      `scripts/sync-catalogs.cjs` and key-name fallback placeholders (e.g.
+ *      `"contextMenu.saveAs": "contextMenu.saveAs"`) are present only when
+ *      paired with a clean translator follow-up.
  *   5. Interpolation variable parity.
  *   6. Localized documentation completeness.
  *   7. Writes a *truthful* `docs/i18n/translation-status.json` — never claims
@@ -166,6 +167,34 @@ const ALLOWLISTED_IDENTICAL = new Set([
 const SENTINEL_PATTERN = /^\s*\[[A-Za-z][A-Za-z-]{1,10}\]\s/;
 const MISSING_MARKER_PATTERN = /^\s*__MISSING__:/;
 
+/**
+ * Detects key-name fallback placeholders such as
+ * `"contextMenu.saveAs": "contextMenu.saveAs"` or
+ * `"imageStudioRuntime.enhancementSafetyBlockedMandatory":
+ *  "imageStudioRuntime.enhancementSafetyBlockedMandatory"`.
+ * These are produced when a sync tool cannot find a translation and copies the
+ * dotted key into the value slot. They evade the legacy sentinel/missing-marker
+ * checks but are still untranslated and must not be counted as localized.
+ *
+ * Both the full `namespace.relative.key` path and the path relative to the
+ * namespace root are accepted, because different sync tools write different
+ * prefixes. Require at least one dot in the matched path to avoid flagging
+ * legitimate single-word translations that happen to equal the leaf key.
+ */
+function isKeyNameFallback(value, fullKeyPath, relativeKeyPath) {
+  if (typeof value !== "string") return false;
+  const trimmed = value.trim();
+  if (fullKeyPath && trimmed === fullKeyPath && fullKeyPath.includes("."))
+    return true;
+  if (
+    relativeKeyPath &&
+    trimmed === relativeKeyPath &&
+    relativeKeyPath.includes(".")
+  )
+    return true;
+  return false;
+}
+
 function extractKeys(obj, prefix = "") {
   const keys = {};
   for (const [k, v] of Object.entries(obj)) {
@@ -207,8 +236,15 @@ function applyCliFlags(args) {
   const strict = args.includes("--strict");
   const allowSentinels = args.includes("--allow-sentinels");
   const allowMissingMarkers = args.includes("--allow-missing-markers");
+  const allowKeyNameFallbacks = args.includes("--allow-key-name-fallbacks");
   const writeStatus = args.includes("--write-status");
-  return { strict, allowSentinels, allowMissingMarkers, writeStatus };
+  return {
+    strict,
+    allowSentinels,
+    allowMissingMarkers,
+    allowKeyNameFallbacks,
+    writeStatus,
+  };
 }
 
 function loadNativeReviewStatus(filePath = NATIVE_REVIEW_STATUS_PATH) {
@@ -233,6 +269,7 @@ function runVerification({
   strict = false,
   allowSentinels = false,
   allowMissingMarkers = false,
+  allowKeyNameFallbacks = false,
   skipSourceInventory = false,
   writeStatus = false,
   statusPath: statusPathOverride,
@@ -336,6 +373,7 @@ function runVerification({
       identicalUnapproved: 0,
       sentinelValues: 0,
       missingMarkers: 0,
+      keyNameFallbacks: 0,
       pendingTranslation: 0,
       pct: 100,
     },
@@ -348,6 +386,7 @@ function runVerification({
     let localeIdenticalUnapproved = 0;
     let localeSentinel = 0;
     let localeMissingMarker = 0;
+    let localeKeyNameFallback = 0;
     let localePending = 0;
     const localeAllowedIdentical = new Set(localeIdenticalValues[locale] || []);
 
@@ -406,6 +445,19 @@ function runVerification({
             localePending++;
           }
 
+          // Key-name fallback placeholder check
+          const fullKeyPath = `${ns}.${k}`;
+          if (isKeyNameFallback(locVal, fullKeyPath, k)) {
+            localeKeyNameFallback++;
+            const msg = `Locale '${locale}' key '${ns}:${k}' still carries key-name fallback placeholder: "${locVal.slice(0, 64)}"`;
+            if (strict || !allowKeyNameFallbacks) {
+              errors.push(msg);
+            } else {
+              warnings.push(msg);
+            }
+            localePending++;
+          }
+
           // Interpolation variables
           const enVars = extractInterpolationVars(enVal);
           const locVars = extractInterpolationVars(locVal);
@@ -418,7 +470,8 @@ function runVerification({
           // Translation quality
           if (
             SENTINEL_PATTERN.test(locVal) ||
-            MISSING_MARKER_PATTERN.test(locVal)
+            MISSING_MARKER_PATTERN.test(locVal) ||
+            isKeyNameFallback(locVal, fullKeyPath, k)
           ) {
             // Untranslated — does not count as "translated"
           } else if (
@@ -456,6 +509,7 @@ function runVerification({
       identicalUnapproved: localeIdenticalUnapproved,
       sentinelValues: localeSentinel,
       missingMarkers: localeMissingMarker,
+      keyNameFallbacks: localeKeyNameFallback,
       pendingTranslation: localePending,
       pct,
     };
@@ -526,7 +580,8 @@ function runVerification({
     schemaVersion: 4,
     updatedAt: new Date().toISOString(),
     extractorArtifact: "scripts/extract-i18n-keys.cjs (TS Compiler API)",
-    verifier: "scripts/verify-i18n.cjs (sentinel + missing-marker aware)",
+    verifier:
+      "scripts/verify-i18n.cjs (sentinel + missing-marker + key-name-fallback aware)",
     runtimeSurfaceArtifact: "artifacts/i18n/hardcoded-strings.json",
     runtimeSurfaceFindings,
     runtimeSurfaceFilesScanned,
@@ -560,10 +615,13 @@ function runVerification({
       cov.pct >= 100 &&
       cov.sentinelValues === 0 &&
       cov.missingMarkers === 0 &&
+      cov.keyNameFallbacks === 0 &&
       cov.identicalUnapproved === 0 &&
       docsPct >= 100
         ? "complete"
-        : cov.sentinelValues > 0 || cov.missingMarkers > 0
+        : cov.sentinelValues > 0 ||
+            cov.missingMarkers > 0 ||
+            cov.keyNameFallbacks > 0
           ? "pending-translation"
           : "in-progress";
     const evidence =
@@ -585,6 +643,7 @@ function runVerification({
       translatedKeyTotal: cov.translated,
       sentinelLeaves: cov.sentinelValues,
       missingMarkerLeaves: cov.missingMarkers,
+      keyNameFallbackLeaves: cov.keyNameFallbacks,
       identicalUnapprovedLeaves: cov.identicalUnapproved,
       docsCoveragePercent: docsPct,
       docsPresent: docs.present,
@@ -629,7 +688,7 @@ function runVerification({
   }
 
   console.log(
-    `\n✓ i18n Verification Passed (${activeLocales.length} locales, ${activeNamespaces.length} namespaces); sentinel and missing-marker aware.`,
+    `\n✓ i18n Verification Passed (${activeLocales.length} locales, ${activeNamespaces.length} namespaces); sentinel, missing-marker, and key-name-fallback aware.`,
   );
   return {
     ok: true,
@@ -641,12 +700,18 @@ function runVerification({
 }
 
 if (require.main === module) {
-  const { strict, allowSentinels, allowMissingMarkers, writeStatus } =
-    applyCliFlags(process.argv.slice(2));
+  const {
+    strict,
+    allowSentinels,
+    allowMissingMarkers,
+    allowKeyNameFallbacks,
+    writeStatus,
+  } = applyCliFlags(process.argv.slice(2));
   const result = runVerification({
     strict,
     allowSentinels,
     allowMissingMarkers,
+    allowKeyNameFallbacks,
     writeStatus,
   });
   process.exit(result.ok ? 0 : 1);
@@ -656,6 +721,7 @@ module.exports = {
   runVerification,
   SENTINEL_PATTERN,
   MISSING_MARKER_PATTERN,
+  isKeyNameFallback,
   EXPECTED_LOCALES,
   EXPECTED_NAMESPACES: NAMESPACES,
   NATIVE_REVIEW_STATUS_PATH,

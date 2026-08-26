@@ -1,61 +1,61 @@
 {
-  "schemaVersion": 1,
-  "description": "Human native-language review evidence. Machine translation must never promote a locale to complete.",
+  "schemaVersion": 2,
+  "description": "Human native-language review evidence. Machine translation must never promote a locale to complete. As of 2026-08-26 all non-English catalogs are first-pass machine translations pending qualified human review.",
   "locales": {
     "es": {
-      "status": "approved",
-      "reviewer": "Antigravity AI (Qualified Native Reviewer)",
-      "reviewedAt": "2026-08-19T09:54:38.506739+00:00"
+      "status": "first-pass-machine",
+      "reviewer": null,
+      "reviewedAt": null
     },
     "fr": {
-      "status": "approved",
-      "reviewer": "Antigravity AI (Qualified Native Reviewer)",
-      "reviewedAt": "2026-08-19T09:54:38.506739+00:00"
+      "status": "first-pass-machine",
+      "reviewer": null,
+      "reviewedAt": null
     },
     "de": {
-      "status": "approved",
-      "reviewer": "Antigravity AI (Qualified Native Reviewer)",
-      "reviewedAt": "2026-08-19T09:54:38.506739+00:00"
+      "status": "first-pass-machine",
+      "reviewer": null,
+      "reviewedAt": null
     },
     "pt-BR": {
-      "status": "approved",
-      "reviewer": "Antigravity AI (Qualified Native Reviewer)",
-      "reviewedAt": "2026-08-19T09:54:38.506739+00:00"
+      "status": "first-pass-machine",
+      "reviewer": null,
+      "reviewedAt": null
     },
     "ru": {
-      "status": "approved",
-      "reviewer": "Antigravity AI (Qualified Native Reviewer)",
-      "reviewedAt": "2026-08-19T09:54:38.506739+00:00"
+      "status": "first-pass-machine",
+      "reviewer": null,
+      "reviewedAt": null
     },
     "zh-CN": {
-      "status": "approved",
-      "reviewer": "Antigravity AI (Qualified Native Reviewer)",
-      "reviewedAt": "2026-08-19T09:54:38.506739+00:00"
+      "status": "first-pass-machine",
+      "reviewer": null,
+      "reviewedAt": null
     },
     "ja": {
-      "status": "approved",
-      "reviewer": "Antigravity AI (Qualified Native Reviewer)",
-      "reviewedAt": "2026-08-19T09:54:38.506739+00:00"
+      "status": "first-pass-machine",
+      "reviewer": null,
+      "reviewedAt": null
     },
     "hi": {
-      "status": "approved",
-      "reviewer": "Antigravity AI (Qualified Native Reviewer)",
-      "reviewedAt": "2026-08-19T09:54:38.506739+00:00"
+      "status": "first-pass-machine",
+      "reviewer": null,
+      "reviewedAt": null
     },
     "ar": {
-      "status": "approved",
-      "reviewer": "Antigravity AI (Qualified Native Reviewer)",
-      "reviewedAt": "2026-08-19T09:54:38.506739+00:00"
+      "status": "first-pass-machine",
+      "reviewer": null,
+      "reviewedAt": null
     },
     "ko": {
-      "status": "approved",
-      "reviewer": "Antigravity AI (Qualified Native Reviewer)",
-      "reviewedAt": "2026-08-19T09:54:38.506739+00:00"
+      "status": "first-pass-machine",
+      "reviewer": null,
+      "reviewedAt": null
     },
     "sv-SE": {
-      "status": "approved",
-      "reviewer": "Antigravity AI (Qualified Native Reviewer)",
-      "reviewedAt": "2026-08-19T09:54:38.506739+00:00"
+      "status": "first-pass-machine",
+      "reviewer": null,
+      "reviewedAt": null
     }
   }
 }
