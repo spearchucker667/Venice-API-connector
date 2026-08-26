@@ -2,20 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { constants as fsConstants } from "node:fs";
 import type { WorkspaceGrant, WorkspaceOperation } from "../../../src/agent/contracts/capabilities";
+import type { WorkspaceEntry, WorkspaceListResult, WorkspaceSearchResult } from "../../../src/agent/contracts/workspace";
 import { resolveExistingWorkspacePath, resolveNewWorkspacePath } from "./path-policy";
-
-export interface WorkspaceEntry {
-  relativePath: string;
-  kind: "file" | "directory";
-  sizeBytes: number;
-  modifiedAt: string;
-}
-
-export interface WorkspaceSearchResult {
-  relativePath: string;
-  line: number;
-  snippet: string;
-}
 
 function assertGrant(grant: WorkspaceGrant, sessionId: string, workspaceId: string, operation: WorkspaceOperation): void {
   if (grant.sessionId !== sessionId || grant.workspaceId !== workspaceId || !grant.allowedOperations.includes(operation)
@@ -58,7 +46,7 @@ export class WorkspaceFilesystemService {
     maxDepth: number;
     offset?: number;
     limit?: number;
-  }): Promise<{ entries: WorkspaceEntry[]; nextOffset: number | null }> {
+  }): Promise<WorkspaceListResult> {
     assertGrant(input.grant, input.sessionId, input.workspaceId, "list");
     const directory = await resolveExistingWorkspacePath(input.grant.rootPath, input.relativeDirectory, true);
     const rootReal = await fs.promises.realpath(input.grant.rootPath);

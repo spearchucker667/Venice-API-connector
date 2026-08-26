@@ -8,7 +8,7 @@ import {
   MAX_ATTACHMENTS_PER_MESSAGE,
 } from "../constants/venice";
 import { veniceResearchProvider } from "../research/providers/veniceResearchProvider";
-import { desktopFileReader } from "./desktopBridge";
+import { desktopFileReader, desktopDocumentAgent } from "./desktopBridge";
 import type { Attachment, AssembledAttachmentContext } from "../types/attachment";
 
 
@@ -49,6 +49,28 @@ export function isSupportedPdfFile(file: File): boolean {
 export function isSupportedTextFile(file: File): boolean {
   if (SUPPORTED_TEXT_TYPES.has(file.type)) return true;
   return SUPPORTED_TEXT_EXTENSIONS.test(file.name);
+}
+
+/** Registers a raw file in the main-process attachment registry so the
+ *  Document Agent can later promote it. Returns the opaque attachment id
+ *  or undefined if the app is not in desktop mode or registration fails. */
+export async function registerAttachment(file: File, conversationId?: string): Promise<string | undefined> {
+  if (file.size > MAX_ATTACHMENT_FILE_BYTES) return undefined;
+  const buffer = await file.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.byteLength; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+  const bodyB64 = btoa(binary);
+  const result = await desktopDocumentAgent.attachments.register({
+    mimeType: file.type || "application/octet-stream",
+    displayName: file.name,
+    bodyB64,
+    conversationId,
+  });
+  return result.ok ? result.attachmentId : undefined;
 }
 
 /** Checks whether a File object is a supported image. */

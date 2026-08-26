@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 const fs = require('node:fs')
+const path = require('node:path')
+const { spawnSync } = require('node:child_process')
 
 const failures = []
 const read = (file) => fs.readFileSync(file, 'utf8')
@@ -19,6 +21,13 @@ requireText('electron/ipc/handlers/documentAgentHandlers.ts', 'atomicExternalWri
 requireText('electron/agent/audit/document-agent-audit-service.ts', 'previousHash', 'VERIFY-152 hash-chained audit')
 requireText('electron/agent/audit/document-agent-audit-service.ts', '[REDACTED_PATH]', 'VERIFY-153 audit path redaction')
 requireText('electron/preload.ts', 'documentAgent:', 'VERIFY-150 narrow preload')
+requireText('src/agent/contracts/workspace.ts', 'export interface WorkspaceEntry', 'VERIFY-154 workspace entry contract')
+requireText('src/agent/contracts/workspace.ts', 'export interface WorkspaceListResult', 'VERIFY-155 workspace list result contract')
+requireText('electron/agent/workspace/workspace-filesystem-service.ts', 'WorkspaceListResult', 'VERIFY-156 workspace filesystem uses list result')
+requireText('src/components/documents/WorkspaceTree.tsx', 'kind === "directory"', 'VERIFY-157 workspace tree uses kind directory')
+requireText('electron/agent/runtime/agent-tool-executor.ts', 'buildWorkspaceChangesetPlan', 'VERIFY-158 changeset plan factory')
+requireText('electron/agent/runtime/agent-tool-executor.ts', 'buildWorkspaceMovePlan', 'VERIFY-158 move plan factory')
+requireText('electron/agent/runtime/agent-tool-executor.ts', 'buildWorkspaceTrashPlan', 'VERIFY-158 trash plan factory')
 
 const handlers = read('electron/ipc/handlers/documentAgentHandlers.ts')
 if (/return \{[^}]*filePath:/s.test(handlers)) failures.push('VERIFY-151 document export must not return the selected absolute filePath')
@@ -27,6 +36,26 @@ if (!handlers.includes('displayName: path.basename(selected.filePath)')) failure
 if (failures.length) {
   console.error('[verify:document-agent] FAIL')
   failures.forEach((failure) => console.error(`- ${failure}`))
+  process.exit(1)
+}
+
+const repoRoot = path.resolve(__dirname, '..')
+const runtime = spawnSync(
+  'npx',
+  [
+    'vitest', 'run',
+    'electron/agent/runtime/document-agent-contracts.test.ts',
+    'electron/agent/attachments/attachment-registry.test.ts',
+    'src/components/documents/WorkspaceTree.test.tsx',
+    '--reporter=dot',
+  ],
+  { cwd: repoRoot, encoding: 'utf8' }
+)
+
+if (runtime.status !== 0) {
+  console.error('[verify:document-agent] FAIL — runtime contract tests failed')
+  if (runtime.stdout) console.error(runtime.stdout)
+  if (runtime.stderr) console.error(runtime.stderr)
   process.exit(1)
 }
 

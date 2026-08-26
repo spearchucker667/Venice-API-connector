@@ -30,6 +30,7 @@ import {
   TextArea,
 } from "../ui/shared";
 import { DocumentRenderer } from "./DocumentRenderer";
+import { WorkspaceTree } from "./WorkspaceTree";
 import {
   documentSourceToBlocks,
   blocksToDocumentSource,
@@ -215,9 +216,7 @@ export function DocumentAgentView() {
   const [error, setError] = useState<string | null>(null);
   const [deletingDocumentId, setDeletingDocumentId] = useState<string | null>(null);
 
-  const [workspaceFiles, setWorkspaceFiles] = useState<
-    Array<{ relativePath: string; type: string }>
-  >([]);
+  const [workspaceRefreshToken, setWorkspaceRefreshToken] = useState(0);
   const [workspaceQuery, setWorkspaceQuery] = useState("");
   const [workspaceSearchResults, setWorkspaceSearchResults] = useState<
     Array<{ relativePath: string; line: number; snippet: string }>
@@ -237,36 +236,11 @@ export function DocumentAgentView() {
   );
   const projectId = activeProject?.id ?? null;
 
-  const refreshWorkspace = useCallback(async () => {
-    if (!workspaceGrant) {
-      setWorkspaceFiles([]);
-      setWorkspaceSearchResults([]);
-      setWorkspaceFileContent(null);
-      return;
-    }
-    const result = await bridge.workspace.list({
-      grantId: workspaceGrant.id,
-      agentSessionId,
-      relativeDirectory: "",
-      recursive: true,
-      maxDepth: 3,
-      offset: 0,
-    });
-    if (
-      result.ok &&
-      result.result &&
-      typeof result.result === "object" &&
-      "entries" in result.result
-    ) {
-      setWorkspaceFiles(
-        (
-          result.result as {
-            entries: Array<{ relativePath: string; type: string }>;
-          }
-        ).entries,
-      );
-    }
-  }, [workspaceGrant, agentSessionId, bridge.workspace]);
+  const refreshWorkspace = useCallback(() => {
+    setWorkspaceSearchResults([]);
+    setWorkspaceFileContent(null);
+    setWorkspaceRefreshToken((token) => token + 1);
+  }, []);
 
   const searchWorkspace = async () => {
     if (!workspaceGrant || !workspaceQuery.trim()) return;
@@ -300,10 +274,6 @@ export function DocumentAgentView() {
       setError(result.error || "Could not read workspace file.");
     }
   };
-
-  useEffect(() => {
-    void refreshWorkspace();
-  }, [refreshWorkspace]);
 
   const refreshDocuments = useCallback(async () => {
     if (!projectId) return;
@@ -960,10 +930,13 @@ export function DocumentAgentView() {
               <h2 className="text-[14px] font-semibold text-foreground">
                 <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.heading.grantedWorkspaceDirectory" />
               </h2>
-              <span className="text-[11px] text-foreground-muted">
-                {workspaceFiles.length}{" "}
-                <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.itemS" />
-              </span>
+              <GhostButton
+                onClick={() => {
+                  refreshWorkspace();
+                }}
+              >
+                <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.refreshWorkspace" />
+              </GhostButton>
             </div>
 
             {workspaceGrant ? (
@@ -1023,36 +996,15 @@ export function DocumentAgentView() {
                   </div>
                 )}
 
-                <div className="flex-1 overflow-y-auto space-y-1 pr-1">
-                  {workspaceFiles.map(
-                    (file: { relativePath: string; type: string }) => (
-                      <button
-                        key={file.relativePath}
-                        type="button"
-                        onClick={() => {
-                          if (file.type !== "directory")
-                            void readWorkspaceFile(file.relativePath);
-                        }}
-                        className="w-full text-left text-[12px] text-foreground py-1.5 px-2 rounded hover:bg-surface-muted flex items-center justify-between transition-colors"
-                      >
-                        <span className="truncate">
-                          {file.type === "directory" ? "📁 " : "📄 "}
-                          {file.relativePath}
-                        </span>
-                        {file.type !== "directory" && (
-                          <span className="text-[10px] text-foreground-muted">
-                            <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.text.read" />
-                          </span>
-                        )}
-                      </button>
-                    ),
-                  )}
-                  {workspaceFiles.length === 0 && (
-                    <p className="text-[12px] text-foreground-muted">
-                      <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.description.noWorkspaceFilesFound" />
-                    </p>
-                  )}
-                </div>
+                <WorkspaceTree
+                  workspaceGrant={workspaceGrant}
+                  agentSessionId={agentSessionId}
+                  onSelectFile={(relativePath) => {
+                    void readWorkspaceFile(relativePath);
+                  }}
+                  selectedFile={workspaceFileContent?.path ?? null}
+                  refreshToken={workspaceRefreshToken}
+                />
               </>
             ) : (
               <div className="flex-1 flex items-center justify-center text-center p-6 text-foreground-muted">

@@ -35,7 +35,11 @@
     "messageInput": "Ввод сообщения",
     "attachFile": "Прикрепить файл",
     "stopGenerating": "Прекратить генерировать",
-    "sendMessage": "Отправить сообщение"
+    "sendMessage": "Отправить сообщение",
+    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
+    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
+    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
+    "promotionFailed": "__MISSING__:composer.promotionFailed"
   },
   "memory": {
     "disabledLabel": "Память отключена",

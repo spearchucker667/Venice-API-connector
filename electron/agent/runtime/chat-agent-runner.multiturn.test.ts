@@ -37,6 +37,14 @@ vi.mock("../../services/guardPipeline", () => ({
 }));
 
 import { runChatAgentLoop } from "./chat-agent-runner";
+import { createToolExecutionContext } from "./tool-execution-context";
+
+const ctx = createToolExecutionContext({
+  profileId: "default",
+  runtimeSessionId: "runtime_default",
+  senderId: 0,
+  preset: "workspace_with_approval",
+});
 
 type SseChunk = {
   content?: string;
@@ -90,6 +98,7 @@ describe("runChatAgentLoop — multi-turn bounded loop (Phase 3 §3.7)", () => {
     const deltas: SseChunk[] = [];
     await runChatAgentLoop(
       { profileId: "default", body: { messages: [{ role: "user", content: "list files" }] } },
+      ctx,
       (chunk: SseChunk) => {
         deltas.push(chunk);
       },
@@ -120,6 +129,7 @@ describe("runChatAgentLoop — multi-turn bounded loop (Phase 3 §3.7)", () => {
 
     await runChatAgentLoop(
       { profileId: "default", body: { messages: [{ role: "user", content: "loop" }] } },
+      ctx,
       () => undefined,
     );
 
@@ -154,6 +164,7 @@ describe("runChatAgentLoop — multi-turn bounded loop (Phase 3 §3.7)", () => {
 
     await runChatAgentLoop(
       { profileId: "default", body: { messages: [{ role: "user", content: "list" }] } },
+      ctx,
       () => undefined,
     );
 
@@ -205,6 +216,7 @@ describe("runChatAgentLoop — multi-turn bounded loop (Phase 3 §3.7)", () => {
         signal: controller.signal,
         body: { messages: [{ role: "user", content: "abort me" }] },
       },
+      ctx,
       () => undefined,
     );
 
@@ -220,6 +232,7 @@ describe("runChatAgentLoop — multi-turn bounded loop (Phase 3 §3.7)", () => {
 
     const result = await runChatAgentLoop(
       { profileId: "default", body: { messages: [{ role: "user", content: "p" }] } },
+      ctx,
       () => undefined,
     );
 

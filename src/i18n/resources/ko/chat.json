@@ -35,7 +35,11 @@
     "messageInput": "메시지 입력",
     "attachFile": "파일첨부",
     "stopGenerating": "생성 중지",
-    "sendMessage": "메시지 보내기"
+    "sendMessage": "메시지 보내기",
+    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
+    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
+    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
+    "promotionFailed": "__MISSING__:composer.promotionFailed"
   },
   "memory": {
     "disabledLabel": "메모리 꺼짐",

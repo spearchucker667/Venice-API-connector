@@ -835,6 +835,9 @@ const veniceForge = {
       },
     },
     attachments: {
+      register(input: Parameters<import("../src/types/desktop").VeniceForgeDocumentAgent["attachments"]["register"]>[0]) {
+        return ipcRenderer.invoke("documentAgent:attachments:register", input);
+      },
       promote(input: Parameters<import("../src/types/desktop").VeniceForgeDocumentAgent["attachments"]["promote"]>[0]) {
         return ipcRenderer.invoke("documentAgent:attachments:promote", input);
       },

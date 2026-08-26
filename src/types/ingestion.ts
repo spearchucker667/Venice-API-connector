@@ -23,6 +23,8 @@ export type IngestionExtractionRoute =
 
 export interface IngestedAttachment {
   id: string;
+  /** Optional main-process registry id enabling Document Agent promotion. */
+  attachmentId?: string;
   kind: IngestedAttachmentKind;
   name: string;
   extension: string;

@@ -332,7 +332,7 @@ const DEFINITIONS: Array<{
     properties: {
       workspaceId: stringId,
       relativePath,
-      mode: { enum: ["text", "document_blocks", "metadata"] },
+      mode: { const: "text" },
     },
     relativePathKeys: ["relativePath"],
   },
@@ -522,42 +522,32 @@ export class ToolRegistry {
 }
 
 import { supportsFunctionCalling, type FunctionCallingCapableModel } from "../../shared/modelCapabilities";
-import type { VeniceParameters } from "../../types/venice";
+import { capabilitiesForPreset, type AgentPermissionPreset } from "../contracts/capabilities";
 
-/** 
+/**
  * Resolves the final set of available tools for a chat stream request,
  * acting as the single authoritative choke point for capability enforcement.
+ *
+ * Tool visibility follows the active AgentPermissionPreset. The main-process
+ * executor independently re-enforces the same preset, so visibility alone is
+ * never authorization.
  */
 export function resolveAvailableTools(
   modelInfo: FunctionCallingCapableModel | undefined,
-  veniceParams: Partial<VeniceParameters>,
-  hasWorkspaceGrant: boolean
+  preset: AgentPermissionPreset
 ): ProviderToolSchema[] {
   if (!supportsFunctionCalling(modelInfo)) {
     return [];
   }
 
   const allDefinitions = createCanonicalToolDefinitions();
-  const allowedTools: ProviderToolSchema[] = [];
+  const allowedCapabilities = new Set(capabilitiesForPreset(preset));
 
-  // Media tools are universally exposed when function calling is supported.
-  allowedTools.push(
-    ...allDefinitions.filter(d => d.internalName.startsWith('media.')).map(t => t.schema)
-  );
-
-  // Document tools require explicit parameter opt-in.
-  if (veniceParams.enable_document_tools) {
-    allowedTools.push(
-      ...allDefinitions.filter(d => d.internalName.startsWith('document.')).map(t => t.schema)
-    );
-  }
-
-  // Workspace tools require an explicit workspace grant from the active tab.
-  if (hasWorkspaceGrant) {
-    allowedTools.push(
-      ...allDefinitions.filter(d => d.internalName.startsWith('workspace.')).map(t => t.schema)
-    );
-  }
-
-  return allowedTools;
+  return allDefinitions
+    .filter((tool) => {
+      // Media tools are universally exposed when function calling is supported.
+      if (tool.internalName.startsWith("media.")) return true;
+      return tool.requiredCapabilities.every((capability) => allowedCapabilities.has(capability));
+    })
+    .map((tool) => structuredClone(tool.schema));
 }

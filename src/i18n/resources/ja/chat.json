@@ -35,7 +35,11 @@
     "messageInput": "メッセージ入力",
     "attachFile": "ファイルを添付する",
     "stopGenerating": "生成を停止する",
-    "sendMessage": "メッセージを送信する"
+    "sendMessage": "メッセージを送信する",
+    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
+    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
+    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
+    "promotionFailed": "__MISSING__:composer.promotionFailed"
   },
   "memory": {
     "disabledLabel": "メモリオフ",

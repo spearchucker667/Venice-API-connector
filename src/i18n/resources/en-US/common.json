@@ -633,6 +633,7 @@
         "noDocumentSelected": "No Document Selected",
         "selectADocumentFromTheLeftPanel": "Select a document from the left panel or create a new one to begin editing.",
         "noWorkspaceFilesFound": "No workspace files found.",
+        "emptyDirectory": "Empty directory.",
         "noWorkspaceGranted": "No Workspace Granted",
         "selectAWorkspaceDirectoryUnderAgentAccess": "Select a workspace directory under Agent Access above to browse files.",
         "selectAFileFromTheWorkspaceList": "Select a file from the workspace list to view its contents."
@@ -677,6 +678,7 @@
         "search": "Search",
         "searchMatches": "Search matches (",
         "read": "Read",
+        "refreshWorkspace": "Refresh",
         "cancel": "Cancel",
         "createDocument": "Create Document",
         "createGroup": "Create Group"
@@ -2630,7 +2632,9 @@
             "approvedEditAppliedAsANewRevision": "Approved edit applied as a new revision",
             "proposalRejectedWithoutChanges": "Proposal rejected without changes",
             "documentDeleted": "Document deleted",
-            "documentDeleteFailed": "Document could not be deleted"
+            "documentDeleteFailed": "Document could not be deleted",
+            "loadingWorkspace": "Loading workspace…",
+            "loadingDirectory": "Loading directory…"
           },
           "metadata": {
             "deleteDocument": "Delete document?"

@@ -11,6 +11,7 @@ import {
 import { desktopVenice, isElectron } from "../desktopBridge";
 import type { VeniceStreamDelta } from "../../shared/veniceStreamDelta";
 import type { AppDispatch } from "../../types/app";
+import type { AgentPermissionPreset } from "../../agent/contracts/capabilities";
 import { maybeRunLocalFamilyGuard, SafetyGuardBlockedError } from "../../shared/safety";
 import {
   buildInspectorTelemetryPatch,
@@ -33,8 +34,9 @@ export async function veniceStreamChat(
     signal,
     dispatch,
     onDelta,
-  }:  { signal?: AbortSignal; dispatch?: AppDispatch;    onDelta: (chunk: VeniceStreamDelta) => void }
-
+    agentSessionId,
+    agentPermissionPreset,
+  }: { signal?: AbortSignal; dispatch?: AppDispatch; onDelta: (chunk: VeniceStreamDelta) => void; agentSessionId?: string; agentPermissionPreset?: AgentPermissionPreset }
 ) {
   const startedAtTime = Date.now();
   const requestHeaders = { "Content-Type": "application/json" };
@@ -111,6 +113,8 @@ export async function veniceStreamChat(
           method: "POST",
           body: requestPayload,
           headers: { "Content-Type": "application/json" },
+          agentSessionId,
+          agentPermissionPreset,
         },
         wrappedOnDelta,
         signal

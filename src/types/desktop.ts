@@ -81,6 +81,8 @@ export interface VeniceForgeRequest {
   signalId?: string;
   localFamilySafeModeEnabled?: boolean;
   profileId?: string;
+  agentSessionId?: string;
+  agentPermissionPreset?: import("../agent/contracts/capabilities").AgentPermissionPreset;
   fallbackConfig?: {
     enabled?: boolean;
     ordering?: string[];
@@ -427,7 +429,13 @@ export interface VeniceForgeDocumentAgent {
     export(input: { documentId: string; revisionId?: string | null; format: import("../agent/contracts/documents").DocumentFormat; suggestedFileName: string }): Promise<{ ok: boolean; canceled?: boolean; exported?: boolean; displayName?: string; sizeBytes?: number; error?: string }>;
   };
   attachments: {
-    promote(input: { attachmentId: string; projectId: string; relativePath: string; displayName?: string; mimeType: string; bodyB64: string }): Promise<{
+    register(input: { mimeType: string; displayName: string; bodyB64: string; conversationId?: string }): Promise<{
+      ok: boolean;
+      attachmentId?: string;
+      sizeBytes?: number;
+      error?: string;
+    }>;
+    promote(input: { attachmentId: string; projectId: string; relativePath: string; displayName?: string; mimeType?: string; bodyB64?: string }): Promise<{
       ok: boolean;
       document?: import("../agent/contracts/documents").ManagedDocument;
       revision?: import("../agent/contracts/documents").DocumentRevision;
@@ -445,9 +453,9 @@ export interface VeniceForgeDocumentAgent {
   workspace: {
     choose(input: { agentSessionId: string }): Promise<{ ok: boolean; canceled?: boolean; grant?: { id: string; workspaceId: string; displayName: string; allowedOperations: string[]; allowedExtensions: string[]; limits: Record<string, number>; expiresAt?: string }; error?: string }>;
     revoke(input: { grantId: string; agentSessionId: string }): Promise<{ ok: boolean }>;
-    list(input: { grantId: string; agentSessionId: string; relativeDirectory: string; recursive?: boolean; maxDepth?: number; offset?: number }): Promise<{ ok: boolean; result?: unknown; error?: string }>;
+    list(input: { grantId: string; agentSessionId: string; relativeDirectory: string; recursive?: boolean; maxDepth?: number; offset?: number }): Promise<{ ok: boolean; result?: import("../agent/contracts/workspace").WorkspaceListResult; error?: string }>;
     read(input: { grantId: string; agentSessionId: string; relativePath: string }): Promise<{ ok: boolean; result?: { content: string; sizeBytes: number }; error?: string }>;
-    search(input: { grantId: string; agentSessionId: string; query: string; maxResults?: number }): Promise<{ ok: boolean; result?: Array<{ relativePath: string; line: number; snippet: string }>; error?: string }>;
+    search(input: { grantId: string; agentSessionId: string; query: string; maxResults?: number }): Promise<{ ok: boolean; result?: import("../agent/contracts/workspace").WorkspaceSearchResult[]; error?: string }>;
   };
 }
 

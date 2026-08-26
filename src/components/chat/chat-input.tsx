@@ -10,7 +10,10 @@ import { toast } from "../../stores/toast-store";
 import { redactErrorMessage } from "../../shared/redaction";
 import { IngestedAttachment } from "../../types/ingestion";
 import { processFileAttachment } from "../../services/ingestion/attachmentAssembler";
+import { registerAttachment } from "../../services/attachmentService";
 import { MAX_ATTACHMENTS_PER_MESSAGE } from "../../services/ingestion/ingestionLimits";
+import { desktopDocumentAgent } from "../../services/desktopBridge";
+import { useProjectStore } from "../../stores/project-store";
 import type { ChatMemoryStatus } from "../../hooks/use-chat";
 import { Trans, useTranslation } from "react-i18next";
 
@@ -124,6 +127,27 @@ export function ChatInput({
     );
   }, [t, visionUnsupportedModelId]);
 
+  const handlePromoteAttachment = useCallback(async (att: IngestedAttachment) => {
+    if (!att.attachmentId) {
+      toast.error(t("composer.attachmentFailed"), t("composer.attachmentNotRegistered"));
+      return;
+    }
+    const projectId = useProjectStore.getState().getActiveProjectId() ?? "default";
+    const relativePath = att.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const result = await desktopDocumentAgent.attachments.promote({
+      attachmentId: att.attachmentId,
+      projectId,
+      relativePath,
+      displayName: att.name,
+      mimeType: att.mimeType,
+    });
+    if (result.ok) {
+      toast.success(t("composer.promotedToDocuments"), att.name);
+    } else {
+      toast.error(t("composer.attachmentFailed"), result.error || t("composer.promotionFailed"));
+    }
+  }, [t]);
+
   useEffect(() => {
     const switchedToNonVision =
       !previousDisableImageAttach.current && disableImageAttach;
@@ -184,6 +208,15 @@ export function ChatInput({
         const attachment = await processFileAttachment(file, {
           providerSupportsVision: !disableImageAttach,
         });
+        // Register the raw file with the main-process attachment registry so
+        // the Document Agent can promote it later. Failures are non-fatal for
+        // chat use; promotion simply won't be offered.
+        try {
+          const attachmentId = await registerAttachment(file);
+          if (attachmentId) attachment.attachmentId = attachmentId;
+        } catch {
+          // Non-fatal: chat ingestion still works without main registration.
+        }
         if (disableImageAttach && attachment.modelRequirements.requiresVision) {
           warnVisionUnsupported();
         }
@@ -255,7 +288,7 @@ export function ChatInput({
               return (
                 <div
                   key={att.id}
-                  className="relative group shrink-0 flex items-center gap-2 h-16 px-3 bg-surface border border-border rounded-lg max-w-[200px]"
+                  className="relative group shrink-0 flex items-center gap-2 h-16 px-3 bg-surface border border-border rounded-lg max-w-[240px]"
                   title={att.name}
                 >
                   <div className="flex flex-col flex-1 min-w-0">
@@ -266,6 +299,28 @@ export function ChatInput({
                       {att.kind}
                     </span>
                   </div>
+                  {att.attachmentId && (
+                    <button
+                      onClick={() => handlePromoteAttachment(att)}
+                      aria-label={t("composer.saveToDocuments", { name: att.name })}
+                      className="shrink-0 p-1 text-text-muted hover:text-accent transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                      title={t("composer.saveToDocuments", { name: att.name })}
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      >
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                        <polyline points="17 21 17 13 7 13 7 21" />
+                        <polyline points="7 3 7 8 15 8" />
+                      </svg>
+                    </button>
+                  )}
                   <button
                     onClick={() =>
                       setAttachments((prev) => prev.filter((_, j) => j !== i))
@@ -273,15 +328,15 @@ export function ChatInput({
                     aria-label={t("composer.removeAttachment", {
                       name: att.name,
                     })}
-                    className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-danger hover:bg-danger/90 text-danger-fg border border-danger rounded-full flex items-center justify-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                    className="shrink-0 -mr-1 p-1 text-text-muted hover:text-danger transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
                   >
                     <svg
-                      width="9"
-                      height="9"
+                      width="14"
+                      height="14"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="3"
+                      strokeWidth="2"
                       strokeLinecap="round"
                     >
                       <line x1="18" y1="6" x2="6" y2="18" />

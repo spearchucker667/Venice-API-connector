@@ -49,6 +49,11 @@ export class WorkspaceGrantService {
     return grant ? this.get(grant.id, sessionId) : null;
   }
 
+  getBySession(sessionId: string): WorkspaceGrant | null {
+    const grant = [...this.grants.values()].find((entry) => entry.sessionId === sessionId);
+    return grant ? structuredClone(grant) : null;
+  }
+
   revoke(grantId: string, sessionId: string): boolean {
     const grant = this.grants.get(grantId);
     return Boolean(grant && grant.sessionId === sessionId && this.grants.delete(grantId));

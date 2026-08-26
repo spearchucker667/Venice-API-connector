@@ -37,6 +37,8 @@ export interface VeniceIpcRequest {
   headers?: Record<string, string>;
   signalId?: string;
   profileId?: string;
+  agentSessionId?: string;
+  agentPermissionPreset?: import("../../src/agent/contracts/capabilities").AgentPermissionPreset;
   fallbackConfig?: { enabled: boolean; ordering: string[] };
 }
 
@@ -281,6 +283,22 @@ export function validateVeniceIpcRequest(input: unknown): VeniceIpcRequest {
     profileId = request.profileId;
   }
 
+  let agentSessionId: string | undefined;
+  if (request.agentSessionId !== undefined) {
+    if (typeof request.agentSessionId !== "string") throw new Error("Venice agentSessionId must be a string.");
+    if (request.agentSessionId.length > 128) throw new Error("Venice agentSessionId is too long.");
+    agentSessionId = request.agentSessionId;
+  }
+
+  const VALID_PRESETS = new Set<string>(["off", "read_attachments", "limited_documents", "workspace_with_approval", "workspace_autonomous"]);
+  let agentPermissionPreset: import("../../src/agent/contracts/capabilities").AgentPermissionPreset | undefined;
+  if (request.agentPermissionPreset !== undefined) {
+    if (typeof request.agentPermissionPreset !== "string" || !VALID_PRESETS.has(request.agentPermissionPreset)) {
+      throw new Error("Venice agentPermissionPreset is invalid.");
+    }
+    agentPermissionPreset = request.agentPermissionPreset as import("../../src/agent/contracts/capabilities").AgentPermissionPreset;
+  }
+
   // Enforce system prompt limits at the request boundary.
   if (endpoint.pathname === "/chat/completions" && request.body && typeof request.body === "object") {
     const body = request.body as Record<string, unknown>;
@@ -303,6 +321,8 @@ export function validateVeniceIpcRequest(input: unknown): VeniceIpcRequest {
     headers,
     signalId: request.signalId,
     profileId,
+    agentSessionId,
+    agentPermissionPreset,
     fallbackConfig: typeof request.fallbackConfig === "object" ? (request.fallbackConfig as { enabled: boolean; ordering: string[] }) : undefined,
   };
 }

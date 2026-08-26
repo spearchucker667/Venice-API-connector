@@ -28,9 +28,16 @@ vi.mock("../../services/guardPipeline", () => ({
 }));
 
 import { runChatAgentLoop } from "./chat-agent-runner";
+import { createToolExecutionContext } from "./tool-execution-context";
 import { isChatMediaReferenceArrayContract, type ChatMediaReferenceContract } from "../../../src/shared/chatMediaReferenceContracts";
 
 describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", () => {
+  const ctx = createToolExecutionContext({
+    profileId: "default",
+    runtimeSessionId: "runtime_default",
+    senderId: 0,
+    preset: "workspace_with_approval",
+  });
   /**
    * Helper mock installer that returns a `tool_calls`-terminating response
    * the first time it is invoked and a plain `stop`-terminating response on
@@ -95,6 +102,7 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
     const appendedMessages: unknown[] = [];
     await runChatAgentLoop(
       { profileId: "default", agentSessionId: "session-x" },
+      ctx,
       (chunk: { appendedMessages?: unknown[] }) => {
         if (chunk.appendedMessages) appendedMessages.push(...chunk.appendedMessages);
       },
@@ -148,6 +156,7 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
     const appendedMessages: unknown[] = [];
     await runChatAgentLoop(
       { profileId: "default" },
+      ctx,
       (chunk: { appendedMessages?: unknown[] }) => {
         if (chunk.appendedMessages) appendedMessages.push(...chunk.appendedMessages);
       },
@@ -197,6 +206,7 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
     const appendedMessages: unknown[] = [];
     await runChatAgentLoop(
       { profileId: "default" },
+      ctx,
       (chunk: { appendedMessages?: unknown[] }) => {
         if (chunk.appendedMessages) appendedMessages.push(...chunk.appendedMessages);
       },
@@ -235,6 +245,7 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
     const appendedMessages: unknown[] = [];
     await runChatAgentLoop(
       { profileId: "default" },
+      ctx,
       (chunk: { appendedMessages?: unknown[] }) => {
         if (chunk.appendedMessages) appendedMessages.push(...chunk.appendedMessages);
       },
@@ -259,6 +270,7 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
         profileId: "default",
         body: { model: "zai-org-glm-5", messages: [] },
       },
+      ctx,
       () => {},
     );
 

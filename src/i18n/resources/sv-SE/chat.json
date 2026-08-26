@@ -35,7 +35,11 @@
     "messageInput": "Meddelandeinmatning",
     "attachFile": "Bifoga fil",
     "stopGenerating": "Sluta generera",
-    "sendMessage": "Skicka meddelande"
+    "sendMessage": "Skicka meddelande",
+    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
+    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
+    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
+    "promotionFailed": "__MISSING__:composer.promotionFailed"
   },
   "memory": {
     "disabledLabel": "Minnet av",

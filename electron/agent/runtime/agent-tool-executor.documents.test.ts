@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { executeAgentTool } from "./agent-tool-executor";
+import { createToolExecutionContext } from "./tool-execution-context";
 import type { AssistantToolCall } from "../../../src/types/venice";
 
 vi.mock("./agent-services", () => {
@@ -27,6 +28,13 @@ vi.mock("./agent-services", () => {
 });
 
 describe("agent-tool-executor documents", () => {
+  const ctx = createToolExecutionContext({
+    profileId: "profile_1",
+    runtimeSessionId: "runtime_test",
+    senderId: 1,
+    preset: "limited_documents",
+  });
+
   it("executes document.create with canonical document property and returns chatDocumentRef", async () => {
     const toolCall: AssistantToolCall = {
       id: "call_1",
@@ -43,7 +51,7 @@ describe("agent-tool-executor documents", () => {
       },
     };
 
-    const result = await executeAgentTool("profile_1", toolCall);
+    const result = await executeAgentTool(ctx, toolCall);
     expect(result.ok).toBe(true);
     if (result.ok) {
       const data = result.data as Record<string, unknown>;
@@ -75,7 +83,7 @@ describe("agent-tool-executor documents", () => {
       },
     };
 
-    const result = await executeAgentTool("profile_1", toolCall);
+    const result = await executeAgentTool(ctx, toolCall);
     expect(result.ok).toBe(false);
   });
 });

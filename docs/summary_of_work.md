@@ -2,8 +2,35 @@
 
 This is the active handoff and validation ledger. The canonical current-work ledger is `docs/ROADMAP.md`; historical reports belong under `docs/reports/historical/`.
 
-
 ## Latest Session Summary
+
+**Date:** 2026-08-26
+**Scope:** WorkspaceTree lazy directory tree regression tests (`VF-DOCUMENT-AGENT-001`).
+
+- **Regression test suite:** Added `src/components/documents/WorkspaceTree.test.tsx` covering the confirmed P1/P2 lazy-tree defects: directory vs. file rendering, directory expansion with non-recursive `workspace.list` and no `workspace.read` call, file selection callback, root pagination across `nextOffset` pages, nested directories beyond depth 3, empty-directory message, per-directory error message, `refreshToken` reload, and root-level grant/list error surfacing.
+- **Component fix:** Rewrote `appendPage` in `src/components/documents/WorkspaceTree.tsx` to use functional `setRoot` updates instead of a stale closure over `root`. The original implementation lost earlier pages when paginating the root directory because `findNode` returned the copied root itself and the closure `root` never accumulated children across `await` boundaries in test/async environments.
+- **Files touched:** `src/components/documents/WorkspaceTree.test.tsx`, `src/components/documents/WorkspaceTree.tsx`, `docs/summary_of_work.md`.
+- **Validation:** `npx vitest run src/components/documents/WorkspaceTree.test.tsx` PASS (9 tests); `npm run lint:eslint` PASS; `npm run typecheck` PASS.
+- **Not run:** Headed manual Document Agent acceptance and packaged cross-platform smoke were not executed; both remain required before `VF-DOCUMENT-AGENT-001` can close.
+
+### Prior Session Summary (Document Agent end-to-end repair and documentation update) [demoted from "Latest Session Summary"]
+
+**Date:** 2026-08-26
+**Scope:** Document Agent end-to-end repair and documentation update (`VF-DOCUMENT-AGENT-001`).
+
+- **Shared workspace contract:** Documented `src/agent/contracts/workspace.ts`, including the `kind: "file" | "directory"` field that drives the lazy directory tree.
+- **Lazy directory tree:** Documented `src/components/documents/WorkspaceTree.tsx` behavior: root loads non-recursively, directories expand on demand, and pagination follows `nextOffset`.
+- **Tool execution authority:** Documented `electron/agent/runtime/tool-execution-context.ts` and the rule that model request bodies contain only model-facing args while profile/session/preset/grant are injected by main.
+- **Preset semantics:** Documented `AgentPermissionPreset` values (`off`, `read_attachments`, `limited_documents`, `workspace_with_approval`, `workspace_autonomous`) and the capability mapping in `src/agent/contracts/capabilities.ts`.
+- **Attachment ownership and promotion:** Documented `electron/agent/attachments/attachment-registry.ts` and `document.promoteAttachment`, including opaque IDs, profile/session scope, 1 MiB cap, MIME allow-list, and secret redaction.
+- **Approval boundary:** Documented that document export/restore and all workspace mutations require user approval, with plan factories in `electron/agent/approvals/plan-factories.ts` providing the canonical typed plans.
+- **Supported tools:** Documented the supported document tools and workspace tools from `src/agent/registry/tool-registry.ts` and their executor implementations in `electron/agent/runtime/agent-tool-executor.ts`.
+- **Roadmap status:** Reopened `VF-DOCUMENT-AGENT-001` in `docs/ROADMAP.md` as regression-repaired, noting it will close once the headed manual acceptance suite passes.
+- **Files touched:** `docs/features/DOCUMENT_AGENT.md`, `docs/ROADMAP.md`, `docs/summary_of_work.md`, `docs/DOCS_INDEX.md`.
+- **Validation:** `npm run verify:markdown-links` passed for all links introduced or updated by this documentation change. Lint and typecheck were not re-run because the change is documentation-only.
+- **Not run:** Headed manual Document Agent acceptance and packaged cross-platform smoke were not executed; both remain required before `VF-DOCUMENT-AGENT-001` can close.
+
+### Prior Session Summary (PROV-001 / PROV-005 provider boundary and Image Studio style references) [demoted from "Latest Session Summary"]
 
 **Date:** 2026-08-26
 **Scope:** Close deferred August 26 audit findings PROV-001 and PROV-005.
@@ -57,6 +84,23 @@ Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full 
 - **Remaining:** External live-provider acceptance, signed builds, clean install/upgrade, multi-device sync, and accessibility QA remain EXTERNALLY BLOCKED per `docs/reports/historical/DEFERRED_WORK_DECISION_RECORD.md` and `docs/ROADMAP.md`.
 
 ## Session History
+
+### 2026-08-26 — WorkspaceTree lazy directory tree regression tests.
+
+- Added `src/components/documents/WorkspaceTree.test.tsx` covering the confirmed P1/P2 defects: directory vs. file rendering, directory expansion with non-recursive `workspace.list` and no `workspace.read` call, file selection callback, root pagination across `nextOffset` pages, nested directories beyond depth 3, empty-directory message, per-directory error message, `refreshToken` reload, and root-level grant/list error surfacing.
+- Mocked `desktopDocumentAgent.workspace.list` with the same `vi.mock("../../services/desktopBridge", async (importOriginal) => ...)` pattern used in `DocumentAgentView.test.tsx`; relied on the existing global i18n setup, no wrapper needed.
+- Fixed `src/components/documents/WorkspaceTree.tsx`: rewrote `appendPage` to use functional `setRoot` updates, eliminating the stale closure that caused root-directory pagination to drop earlier pages.
+- Updated `docs/summary_of_work.md` Latest Session Summary, appended this Session History entry, and refreshed the Validation Matrix.
+- Validation: `npx vitest run src/components/documents/WorkspaceTree.test.tsx` PASS (9 tests); `npm run lint:eslint` PASS; `npm run typecheck` PASS.
+
+### 2026-08-26 — Document Agent end-to-end repair documentation and roadmap update.
+
+- Updated `docs/features/DOCUMENT_AGENT.md` with sections covering the shared workspace contract (`src/agent/contracts/workspace.ts`), lazy paginated directory tree (`src/components/documents/WorkspaceTree.tsx`), `ToolExecutionContext` authority (`electron/agent/runtime/tool-execution-context.ts`), `AgentPermissionPreset` semantics (`src/agent/contracts/capabilities.ts`), attachment ownership and promotion (`electron/agent/attachments/attachment-registry.ts`, `document.promoteAttachment`), the approval boundary for document export/restore and all workspace mutations, and the supported document/workspace tools.
+- Documented honestly which Document Agent surfaces are implemented and regression-tested locally versus which still require headed manual acceptance before closing.
+- Reopened `VF-DOCUMENT-AGENT-001` in `docs/ROADMAP.md` as regression-repaired, preserving the historical fail-closed architecture note and stating that closure awaits the manual acceptance suite.
+- Updated `docs/summary_of_work.md` Latest Session Summary, appended this Session History entry, refreshed the Open TODO Ledger, and updated the Validation Matrix.
+- Confirmed `docs/DOCS_INDEX.md` already indexes `features/DOCUMENT_AGENT.md`; no new authoritative documents were added.
+- Validation: `npm run verify:markdown-links` passed for the documentation changes introduced.
 
 ### 2026-08-26 — Close PROV-001 provider leakage and PROV-005 Image Studio style references.
 
@@ -233,9 +277,14 @@ Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full 
 
 * See `docs/ROADMAP.md` for the canonical list of open tasks.
 * `PROV-001` and `PROV-005` are locally closed. Live credentialed provider acceptance and headed accessibility acceptance remain under `VF-VERIFY-005`.
+* `VF-DOCUMENT-AGENT-001` is regression-repaired in this session. The shared workspace contract, lazy directory tree, `ToolExecutionContext` authority, preset semantics, attachment registry/promotion, approval boundary, and supported tool matrix are documented and locally implemented. Closure awaits the headed manual acceptance suite and packaged cross-platform smoke.
 
 ## Validation Matrix
 
+- `npx vitest run src/components/documents/WorkspaceTree.test.tsx` — PASS (9 tests)
+- `npm run lint:eslint` — PASS (zero warnings)
+- `npm run typecheck` — PASS
+- `npm run verify:markdown-links` — PASS (no broken links introduced by this documentation change)
 - `npx vitest run electron/services/providerAdapters.test.ts scripts/verify-provider-adapters.test.ts --no-file-parallelism` — PASS (48 tests)
 - `npm run verify:provider-adapters` — PASS (72 tests)
 - `npx vitest run src/components/image/image-view.test.tsx src/config/image-model-capabilities.test.ts src/utils/payloadBuilders.modelAware.test.ts src/utils/styleReferenceFiles.test.ts --no-file-parallelism` — PASS (101 tests before the final 8 MiB rejection case)

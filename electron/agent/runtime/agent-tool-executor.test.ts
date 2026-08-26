@@ -50,7 +50,18 @@ vi.stubGlobal("fetch", fakeFetch);
 vi.mock("../../services/secureStore", () => ({ getApiKey: vi.fn(() => "should-not-be-used") }));
 
 import { executeMediaTool } from "./agent-tool-executor";
+import { createToolExecutionContext } from "./tool-execution-context";
 import { isChatMediaReferenceArrayContract } from "../../../src/shared/chatMediaReferenceContracts";
+
+function makeMediaCtx(profileId: string, agentSessionId?: string) {
+  return createToolExecutionContext({
+    profileId,
+    runtimeSessionId: `runtime_${profileId}`,
+    senderId: 0,
+    agentSessionId,
+    preset: "workspace_with_approval",
+  });
+}
 
 const PNG_PIXEL_BASE64 = "iVBORw0KGgo"; // 1×1 transparent PNG header
 const JPEG_PIXEL_BASE64 = "/9j/"; // JPEG escape marker
@@ -88,11 +99,10 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
     });
 
     const result = await executeMediaTool(
-      "default",
+      makeMediaCtx("default", "agent-session-xyz"),
       "media.generateImage",
       "call-1",
       { prompt: "a serene landscape", model: "nano-banana" },
-      "agent-session-xyz",
     );
 
     expect(fakeFetch).not.toHaveBeenCalled();
@@ -114,7 +124,7 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
         toolName: "media.generateImage",
         outcome: "execution",
         resourceIds: ["media-123"],
-        sessionId: "runtime_default:agent_agent-session-xyz",
+        sessionId: "runtime_default:renderer_0:agent_agent-session-xyz",
       }),
     );
   });
@@ -133,7 +143,7 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
     });
 
     const result = await executeMediaTool(
-      "work",
+      makeMediaCtx("work"),
       "media.generateImage",
       "call-2",
       { prompt: "studio lighting still-life", model: "flux-1.1-pro" },
@@ -161,7 +171,7 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
     });
 
     const result = await executeMediaTool(
-      "default",
+      makeMediaCtx("default"),
       "media.generateImage",
       "call-3",
       { prompt: "anything", model: "nano-banana" },
@@ -174,19 +184,19 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
   });
 
   it("rejects non-string model id", async () => {
-    const result = await executeMediaTool("default", "media.generateImage", "call-4", { prompt: "x", model: 123 });
+    const result = await executeMediaTool(makeMediaCtx("default"), "media.generateImage", "call-4", { prompt: "x", model: 123 });
     expect(result.ok).toBe(false);
     expect((result.error as any).code).toBe("INVALID_ARGUMENTS");
     expect(performGuardedVeniceRequest).not.toHaveBeenCalled();
   });
 
   it("rejects empty / oversized prompt", async () => {
-    const empty = await executeMediaTool("default", "media.generateImage", "call-5", { prompt: "  ", model: "x" });
+    const empty = await executeMediaTool(makeMediaCtx("default"), "media.generateImage", "call-5", { prompt: "  ", model: "x" });
     expect(empty.ok).toBe(false);
     expect((empty.error as any).code).toBe("INVALID_ARGUMENTS");
 
     const oversized = await executeMediaTool(
-      "default",
+      makeMediaCtx("default"),
       "media.generateImage",
       "call-6",
       { prompt: "a".repeat(5000), model: "x" },
@@ -209,7 +219,7 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
     });
 
     const result = await executeMediaTool(
-      "default",
+      makeMediaCtx("default"),
       "media.generateImage",
       "call-7",
       { prompt: "anything", model: "x" },
@@ -250,7 +260,7 @@ describe("executeMediaTool — Phase C inspector telemetry (VERIFY-156)", () => 
         contentType: "application/json",
       },
     });
-    await executeMediaTool("default", "media.generateImage", "call-A", {
+    await executeMediaTool(makeMediaCtx("default"), "media.generateImage", "call-A", {
       prompt: "p", model: "nano-banana",
     });
     expect(publishInspectorRequest).toHaveBeenCalledTimes(1);
@@ -278,7 +288,7 @@ describe("executeMediaTool — Phase C inspector telemetry (VERIFY-156)", () => 
         contentType: "application/json",
       },
     });
-    const result = await executeMediaTool("default", "media.generateImage", "call-B", {
+    const result = await executeMediaTool(makeMediaCtx("default"), "media.generateImage", "call-B", {
       prompt: "p", model: "m",
     });
     expect(result.ok).toBe(false);
@@ -293,7 +303,7 @@ describe("executeMediaTool — Phase C inspector telemetry (VERIFY-156)", () => 
     performGuardedVeniceRequest.mockImplementationOnce(() => {
       throw err;
     });
-    await executeMediaTool("default", "media.generateImage", "call-C", {
+    await executeMediaTool(makeMediaCtx("default"), "media.generateImage", "call-C", {
       prompt: "p", model: "m",
     });
     expect(publishInspectorRequest).toHaveBeenCalledTimes(1);
@@ -316,14 +326,14 @@ describe("executeMediaTool — Phase C inspector telemetry (VERIFY-156)", () => 
         contentType: "application/json",
       },
     });
-    const result = await executeMediaTool("default", "media.generateImage", "call-D", {
+    const result = await executeMediaTool(makeMediaCtx("default"), "media.generateImage", "call-D", {
       prompt: "p", model: "m",
     });
     expect(result.ok).toBe(true);
   });
 
   it("non-image media tools fail closed with CAPABILITY_DENIED", async () => {
-    const result = await executeMediaTool("default", "media.generateVideo", "call-8", { prompt: "x" });
+    const result = await executeMediaTool(makeMediaCtx("default"), "media.generateVideo", "call-8", { prompt: "x" });
     expect(result.ok).toBe(false);
     expect((result.error as any).code).toBe("CAPABILITY_DENIED");
     expect(performGuardedVeniceRequest).not.toHaveBeenCalled();

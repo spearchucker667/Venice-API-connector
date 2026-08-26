@@ -8,11 +8,13 @@ import { DocumentAgentAuditService } from "../audit/document-agent-audit-service
 import { WorkspaceGrantService } from "../policy/workspace-grant-service";
 import { WorkspaceFilesystemService } from "../workspace/workspace-filesystem-service";
 import { WorkspaceMutationService } from "../workspace/workspace-mutation-service";
+import { AttachmentRegistry } from "../attachments/attachment-registry";
 
 export const RUNTIME_SESSION_ID = `runtime_${randomUUID()}`;
 
 let documents: ManagedDocumentService;
 let attachments: AttachmentImportService;
+let attachmentRegistry: AttachmentRegistry;
 let approvals: ApprovalCoordinator;
 let audit: DocumentAgentAuditService;
 let workspaceGrants: WorkspaceGrantService;
@@ -29,9 +31,10 @@ export function initAgentServices(): void {
   workspaceGrants = new WorkspaceGrantService();
   workspaceFiles = new WorkspaceFilesystemService();
   workspaceMutations = new WorkspaceMutationService(path.join(app.getPath("userData"), "document-agent", "workspace-recovery"));
+  attachmentRegistry = new AttachmentRegistry();
 }
 
 export function getAgentServices() {
   if (!documents) initAgentServices();
-  return { documents, attachments, approvals, audit, workspaceGrants, workspaceFiles, workspaceMutations };
+  return { documents, attachments, attachmentRegistry, approvals, audit, workspaceGrants, workspaceFiles, workspaceMutations };
 }

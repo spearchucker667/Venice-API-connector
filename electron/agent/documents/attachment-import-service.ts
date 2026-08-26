@@ -135,7 +135,7 @@ function decodeBase64(value: string): Buffer {
   return Buffer.from(cleaned, "base64");
 }
 
-function classifyMime(mime: string): "text" | "binary" | "reject" {
+export function classifyMime(mime: string): "text" | "binary" | "reject" {
   if (typeof mime !== "string" || mime.length === 0 || mime.length > 255) return "reject";
   if (TEXT_MIME_BLOCKLIST.some((pattern) => pattern.test(mime))) return "reject";
   if (mime === "application/json" || mime === "application/xml" || mime === "application/x-yaml") return "text";

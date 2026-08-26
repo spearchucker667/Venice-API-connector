@@ -7,72 +7,28 @@ import type { WorkspaceGrant } from "../../../src/agent/contracts/capabilities";
 import { redactErrorMessage } from "../../../src/shared/redaction";
 import { serializeDocument } from "../../agent/documents/document-serializer-service";
 import { getProfileSessionId } from "../../services/profileSession";
+import { classifyMime } from "../../agent/documents/attachment-import-service";
 import { registerPrivilegedIpcChannel } from "./common";
 
 import { getAgentServices, RUNTIME_SESSION_ID } from "../../agent/runtime/agent-services";
+import {
+  buildDocumentEditPlan,
+  buildDocumentExportPlan,
+  buildDocumentRestorePlan,
+  buildWorkspaceChangesetPlan,
+  buildWorkspaceMovePlan,
+  buildWorkspaceTrashPlan,
+  isDocumentEditPlan,
+  isDocumentExportPlan,
+  isDocumentRestorePlan,
+  isWorkspaceChangesetPlan,
+  isWorkspaceMovePlan,
+  isWorkspaceTrashPlan,
+  type DocumentExportPlan,
+} from "../../agent/approvals/plan-factories";
 
 const DOCUMENT_FORMATS = new Set<DocumentFormat>(["txt", "md", "json", "csv", "html", "docx", "pdf"]);
 
-type DocumentEditPlan = {
-  kind: "document_edit";
-  profileId: string;
-  documentId: string;
-  baseRevisionId: string;
-  summary: string;
-  operations: DocumentEditOperation[];
-};
-
-type WorkspaceChangesetPlan = {
-  kind: "workspace_changeset";
-  profileId: string;
-  grantId: string;
-  agentSessionId?: string;
-  workspaceId: string;
-  summary: string;
-  changes: import("../../../src/agent/contracts/workspace").WorkspaceChange[];
-};
-type WorkspaceMovePlan = {
-  kind: "workspace_move";
-  profileId: string;
-  grantId: string;
-  agentSessionId?: string;
-  workspaceId: string;
-  sourcePath: string;
-  destinationPath: string;
-};
-type WorkspaceTrashPlan = {
-  kind: "workspace_trash";
-  profileId: string;
-  grantId: string;
-  agentSessionId?: string;
-  workspaceId: string;
-  relativePath: string;
-};
-
-function isWorkspaceChangesetPlan(value: unknown): value is WorkspaceChangesetPlan {
-  if (!value || typeof value !== "object") return false;
-  const plan = value as Partial<WorkspaceChangesetPlan>;
-  return plan.kind === "workspace_changeset" && typeof plan.profileId === "string" && typeof plan.grantId === "string" && typeof plan.workspaceId === "string" && typeof plan.summary === "string" && Array.isArray(plan.changes);
-}
-function isWorkspaceMovePlan(value: unknown): value is WorkspaceMovePlan {
-  if (!value || typeof value !== "object") return false;
-  const plan = value as Partial<WorkspaceMovePlan>;
-  return plan.kind === "workspace_move" && typeof plan.profileId === "string" && typeof plan.grantId === "string" && typeof plan.workspaceId === "string" && typeof plan.sourcePath === "string" && typeof plan.destinationPath === "string";
-}
-function isWorkspaceTrashPlan(value: unknown): value is WorkspaceTrashPlan {
-  if (!value || typeof value !== "object") return false;
-  const plan = value as Partial<WorkspaceTrashPlan>;
-  return plan.kind === "workspace_trash" && typeof plan.profileId === "string" && typeof plan.grantId === "string" && typeof plan.workspaceId === "string" && typeof plan.relativePath === "string";
-}
-
-type DocumentRestorePlan = {
-  kind: "document_restore";
-  profileId: string;
-  documentId: string;
-  currentRevisionId: string;
-  restoreRevisionId: string;
-  reason: string;
-};
 
 function rendererSession(senderId: number, agentSessionId?: string): string {
   if (agentSessionId && !/^[a-zA-Z0-9_.-]{1,128}$/.test(agentSessionId)) throw new Error("Invalid agent session id.");
@@ -117,20 +73,6 @@ function publicGrant(grant: WorkspaceGrant) {
   };
 }
 
-function isDocumentEditPlan(value: unknown): value is DocumentEditPlan {
-  if (!value || typeof value !== "object") return false;
-  const plan = value as Partial<DocumentEditPlan>;
-  return plan.kind === "document_edit" && typeof plan.profileId === "string" && typeof plan.documentId === "string"
-    && typeof plan.baseRevisionId === "string" && typeof plan.summary === "string" && Array.isArray(plan.operations);
-}
-
-function isDocumentRestorePlan(value: unknown): value is DocumentRestorePlan {
-  if (!value || typeof value !== "object") return false;
-  const plan = value as Partial<DocumentRestorePlan>;
-  return plan.kind === "document_restore" && typeof plan.profileId === "string" && typeof plan.documentId === "string"
-    && typeof plan.currentRevisionId === "string" && typeof plan.restoreRevisionId === "string" && typeof plan.reason === "string";
-}
-
 async function atomicExternalWrite(target: string, bytes: Uint8Array): Promise<void> {
   const temporary = path.join(path.dirname(target), `.${path.basename(target)}.vf-tmp-${randomUUID()}`);
   try {
@@ -143,7 +85,26 @@ async function atomicExternalWrite(target: string, bytes: Uint8Array): Promise<v
 }
 
 export function registerDocumentAgentHandlers(): void {
-  const { documents, attachments, approvals, audit, workspaceGrants, workspaceFiles, workspaceMutations } = getAgentServices();
+  const { documents, attachments, attachmentRegistry, approvals, audit, workspaceGrants, workspaceFiles, workspaceMutations } = getAgentServices();
+
+  async function executeDocumentExport(
+    sender: Electron.WebContents,
+    senderFrame: Electron.WebFrameMain | null | undefined,
+    plan: DocumentExportPlan,
+  ): Promise<{ ok: true; canceled?: boolean; exported?: boolean; displayName?: string; format?: import("../../../src/agent/contracts/documents").DocumentFormat; sizeBytes?: number; warnings?: import("../../../src/agent/contracts/documents").DocumentWarning[] }> {
+    const owner = BrowserWindow.fromWebContents(sender);
+    if (!owner || !senderFrame || senderFrame !== sender.mainFrame) throw new Error("Export sender was rejected.");
+    const source = await documents.getRevisionForSerialization(plan.profileId, plan.documentId, plan.revisionId ?? null);
+    const output = await serializeDocument(plan.format, { kind: "blocks", title: source.document.displayName, blocks: source.revision.blocks });
+    if (!output.validation.valid) throw new Error("Serialized output failed validation.");
+    const suggested = path.basename(plan.suggestedFileName || `${source.document.displayName}.${plan.format}`);
+    // verify-no-native-dialogs: allow — Document Agent export is explicitly user-mediated.
+    const selected = await dialog.showSaveDialog(owner, { title: "Export managed document", defaultPath: suggested, filters: [{ name: plan.format.toUpperCase(), extensions: [plan.format] }] });
+    if (selected.canceled || !selected.filePath) return { ok: true, canceled: true };
+    await atomicExternalWrite(selected.filePath, output.bytes);
+    await audit.record({ sessionId: rendererSession(sender.id), toolName: "document.export", outcome: "execution", resourceIds: [source.document.id], metadata: { format: plan.format, sizeBytes: output.bytes.byteLength } });
+    return { ok: true, exported: true, displayName: path.basename(selected.filePath), format: plan.format, sizeBytes: output.bytes.byteLength, warnings: output.warnings };
+  }
 
   registerPrivilegedIpcChannel("documentAgent:documents:create", async (event, input: unknown) => {
     try {
@@ -215,7 +176,7 @@ export function registerDocumentAgentHandlers(): void {
         baseRevisionIds: [baseRevisionId],
         affectedResources: [documentId],
         publicSummary: { summary, before: preview.before, after: preview.after, resultingContentHash: preview.resultingContentHash },
-        privateExecutionPlan: { kind: "document_edit", profileId, documentId, baseRevisionId, summary, operations } satisfies DocumentEditPlan,
+        privateExecutionPlan: buildDocumentEditPlan({ profileId, documentId, baseRevisionId, summary, operations }),
       });
       await audit.record({ sessionId: rendererSession(event.sender.id), toolName: "document.proposeEdits", outcome: "proposal", resourceIds: [documentId] });
       return { ok: true, pendingApproval: pending, preview };
@@ -230,9 +191,9 @@ export function registerDocumentAgentHandlers(): void {
       const decided = await approvals.decide({ pendingApprovalId: stringField(value, "pendingApprovalId", 128), proposalHash: stringField(value, "proposalHash", 128), decision });
       if (decision === "reject") return { ok: true, rejected: true };
       const plan = decided.privateExecutionPlan;
-      if (!isDocumentEditPlan(plan) && !isDocumentRestorePlan(plan) && !isWorkspaceChangesetPlan(plan) && !isWorkspaceMovePlan(plan) && !isWorkspaceTrashPlan(plan)) throw new Error("Invalid stored execution plan.");
+      if (!isDocumentEditPlan(plan) && !isDocumentRestorePlan(plan) && !isDocumentExportPlan(plan) && !isWorkspaceChangesetPlan(plan) && !isWorkspaceMovePlan(plan) && !isWorkspaceTrashPlan(plan)) throw new Error("Invalid stored execution plan.");
       if (plan.profileId !== getProfileSessionId(event.sender)) throw new Error("APPROVAL_MISMATCH");
-      
+
       if (isDocumentEditPlan(plan) || isDocumentRestorePlan(plan)) {
         const revision = await approvals.withResourceLocks([plan.documentId], () => isDocumentEditPlan(plan)
           ? documents.applyEdits(plan.profileId, plan)
@@ -240,11 +201,15 @@ export function registerDocumentAgentHandlers(): void {
         await audit.record({ sessionId: rendererSession(event.sender.id), toolName: isDocumentEditPlan(plan) ? "document.applyApprovedEdits" : "document.restoreRevision", outcome: "execution", resourceIds: [plan.documentId] });
         return { ok: true, revision };
       }
-      
+
+      if (isDocumentExportPlan(plan)) {
+        return executeDocumentExport(event.sender, event.senderFrame, plan);
+      }
+
       const session = rendererSession(event.sender.id, plan.agentSessionId);
       const grant = workspaceGrants.get(plan.grantId, session);
       if (!grant || grant.workspaceId !== plan.workspaceId) throw new Error("CAPABILITY_DENIED");
-      
+
       if (isWorkspaceChangesetPlan(plan)) {
         const result = await workspaceMutations.applyChangeset({ grant, sessionId: session, changes: plan.changes, proposalId: decided.approval.id });
         await audit.record({ sessionId: session, toolName: "workspace.applyApprovedChangeset", outcome: "execution", resourceIds: result.committed });
@@ -279,7 +244,7 @@ export function registerDocumentAgentHandlers(): void {
         baseRevisionIds: [currentRevisionId, restoreRevisionId],
         affectedResources: [documentId],
         publicSummary: { reason, restoreRevisionId, blocks: source.revision.blocks, warnings: source.revision.warnings },
-        privateExecutionPlan: { kind: "document_restore", profileId, documentId, currentRevisionId, restoreRevisionId, reason } satisfies DocumentRestorePlan,
+        privateExecutionPlan: buildDocumentRestorePlan({ profileId, documentId, currentRevisionId, restoreRevisionId, reason }),
       });
       return { ok: true, pendingApproval: pending, preview: { blocks: source.revision.blocks, warnings: source.revision.warnings } };
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
@@ -295,20 +260,15 @@ export function registerDocumentAgentHandlers(): void {
 
   registerPrivilegedIpcChannel("documentAgent:documents:export", async (event, input: unknown) => {
     try {
-      const owner = BrowserWindow.fromWebContents(event.sender);
-      if (!owner || event.senderFrame !== event.sender.mainFrame) throw new Error("Export sender was rejected.");
       const value = record(input);
-      const format = documentFormat(value);
-      const source = await documents.getRevisionForSerialization(getProfileSessionId(event.sender), stringField(value, "documentId", 128), optionalString(value, "revisionId"));
-      const output = await serializeDocument(format, { kind: "blocks", title: source.document.displayName, blocks: source.revision.blocks });
-      if (!output.validation.valid) throw new Error("Serialized output failed validation.");
-      const suggested = path.basename(stringField(value, "suggestedFileName", 255));
-      // verify-no-native-dialogs: allow — Document Agent export is explicitly user-mediated.
-      const selected = await dialog.showSaveDialog(owner, { title: "Export managed document", defaultPath: suggested, filters: [{ name: format.toUpperCase(), extensions: [format] }] });
-      if (selected.canceled || !selected.filePath) return { ok: true, canceled: true };
-      await atomicExternalWrite(selected.filePath, output.bytes);
-      await audit.record({ sessionId: rendererSession(event.sender.id), toolName: "document.export", outcome: "execution", resourceIds: [source.document.id], metadata: { format, sizeBytes: output.bytes.byteLength } });
-      return { ok: true, exported: true, displayName: path.basename(selected.filePath), format, sizeBytes: output.bytes.byteLength, warnings: output.warnings };
+      const plan = buildDocumentExportPlan({
+        profileId: getProfileSessionId(event.sender),
+        documentId: stringField(value, "documentId", 128),
+        revisionId: optionalString(value, "revisionId") ?? undefined,
+        format: documentFormat(value),
+        suggestedFileName: stringField(value, "suggestedFileName", 255),
+      });
+      return executeDocumentExport(event.sender, event.senderFrame, plan);
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
@@ -316,14 +276,25 @@ export function registerDocumentAgentHandlers(): void {
     try {
       const value = record(input);
       const attachmentId = stringField(value, "attachmentId", 128);
-      const mimeType = stringField(value, "mimeType", 255).toLowerCase();
+      let mimeType = stringField(value, "mimeType", 255).toLowerCase();
+      let bodyB64: string | undefined = typeof value.bodyB64 === "string" ? value.bodyB64 : undefined;
+      if (bodyB64 === undefined) {
+        const resolved = attachmentRegistry.resolve(getProfileSessionId(event.sender), attachmentId, rendererSession(event.sender.id));
+        if (!resolved) throw new Error("Attachment not found.");
+        bodyB64 = resolved.bodyB64;
+        mimeType = resolved.mimeType;
+      }
+      if (!bodyB64) throw new Error("Attachment body is missing.");
+      if (classifyMime(mimeType) === "reject") {
+        throw new Error(`Attachment mimeType ${JSON.stringify(mimeType)} is not supported.`);
+      }
       const result = await attachments.promote(getProfileSessionId(event.sender), {
         attachmentId,
         projectId: stringField(value, "projectId", 128),
         relativePath: stringField(value, "relativePath"),
         displayName: typeof value.displayName === "string" ? value.displayName : undefined,
         mimeType,
-        bodyB64: stringField(value, "bodyB64", 2_000_000),
+        bodyB64,
       });
       await audit.record({
         sessionId: rendererSession(event.sender.id),
@@ -348,6 +319,21 @@ export function registerDocumentAgentHandlers(): void {
         bytesReceived: result.bytesReceived,
         bytesRedacted: result.bytesRedacted,
       };
+    } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
+  });
+
+  registerPrivilegedIpcChannel("documentAgent:attachments:register", async (event, input: unknown) => {
+    try {
+      const value = record(input);
+      const attachmentRecord = attachmentRegistry.register({
+        profileId: getProfileSessionId(event.sender),
+        sessionId: rendererSession(event.sender.id),
+        conversationId: typeof value.conversationId === "string" ? value.conversationId : undefined,
+        mimeType: stringField(value, "mimeType", 255),
+        displayName: stringField(value, "displayName", 255),
+        bodyB64: stringField(value, "bodyB64", 2_000_000),
+      });
+      return { ok: true, attachmentId: attachmentRecord.id, sizeBytes: attachmentRecord.sizeBytes };
     } catch (error) { return { ok: false, error: redactErrorMessage(error) }; }
   });
 
@@ -387,7 +373,7 @@ export function registerDocumentAgentHandlers(): void {
         baseRevisionIds: [],
         affectedResources: preview.affectedPaths,
         publicSummary: { summary, affectedPaths: preview.affectedPaths, totalBytes: preview.totalBytes },
-        privateExecutionPlan: { kind: "workspace_changeset", profileId: getProfileSessionId(event.sender), grantId, agentSessionId, workspaceId: grant.workspaceId, summary, changes } satisfies WorkspaceChangesetPlan,
+        privateExecutionPlan: buildWorkspaceChangesetPlan({ profileId: getProfileSessionId(event.sender), grantId, agentSessionId, workspaceId: grant.workspaceId, summary, changes }),
       });
       await audit.record({ sessionId: session, toolName: "workspace.proposeChangeset", outcome: "proposal", resourceIds: preview.affectedPaths });
       return { ok: true, pendingApproval: pending, preview: { affectedPaths: preview.affectedPaths, totalBytes: preview.totalBytes } };
@@ -414,7 +400,7 @@ export function registerDocumentAgentHandlers(): void {
         baseRevisionIds: [],
         affectedResources: [sourcePath, destinationPath],
         publicSummary: { sourcePath, destinationPath },
-        privateExecutionPlan: { kind: "workspace_move", profileId: getProfileSessionId(event.sender), grantId, agentSessionId, workspaceId: grant.workspaceId, sourcePath, destinationPath } satisfies WorkspaceMovePlan,
+        privateExecutionPlan: buildWorkspaceMovePlan({ profileId: getProfileSessionId(event.sender), grantId, agentSessionId, workspaceId: grant.workspaceId, sourcePath, destinationPath }),
       });
       await audit.record({ sessionId: session, toolName: "workspace.move", outcome: "proposal", resourceIds: [sourcePath, destinationPath] });
       return { ok: true, pendingApproval: pending };
@@ -440,7 +426,7 @@ export function registerDocumentAgentHandlers(): void {
         baseRevisionIds: [],
         affectedResources: [relativePath],
         publicSummary: { relativePath },
-        privateExecutionPlan: { kind: "workspace_trash", profileId: getProfileSessionId(event.sender), grantId, agentSessionId, workspaceId: grant.workspaceId, relativePath } satisfies WorkspaceTrashPlan,
+        privateExecutionPlan: buildWorkspaceTrashPlan({ profileId: getProfileSessionId(event.sender), grantId, agentSessionId, workspaceId: grant.workspaceId, relativePath }),
       });
       await audit.record({ sessionId: session, toolName: "workspace.trash", outcome: "proposal", resourceIds: [relativePath] });
       return { ok: true, pendingApproval: pending };

@@ -35,7 +35,11 @@
     "messageInput": "إدخال الرسالة",
     "attachFile": "إرفاق الملف",
     "stopGenerating": "توقف عن التوليد",
-    "sendMessage": "أرسل رسالة"
+    "sendMessage": "أرسل رسالة",
+    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
+    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
+    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
+    "promotionFailed": "__MISSING__:composer.promotionFailed"
   },
   "memory": {
     "disabledLabel": "الذاكرة معطلة",

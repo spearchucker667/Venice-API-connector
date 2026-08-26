@@ -570,7 +570,8 @@
         "itemS": "项目",
         "searchMatches": "搜索匹配项 (",
         "read": "读取",
-        "createGroup": "创建组"
+        "createGroup": "创建组",
+        "refreshWorkspace": "__MISSING__:surface.componentsDocumentsDocumentagentview.text.refreshWorkspace"
       },
       "heading": {
         "agentAccessGrantControls": "代理访问和授予控制",
@@ -591,7 +592,8 @@
         "noWorkspaceFilesFound": "未找到工作空间文件。",
         "noWorkspaceGranted": "未授予工作空间",
         "selectAWorkspaceDirectoryUnderAgentAccess": "在上面的“代理访问”下选择一个工作空间目录以浏览文件。",
-        "selectAFileFromTheWorkspaceList": "从工作空间列表中选择一个文件以查看其内容。"
+        "selectAFileFromTheWorkspaceList": "从工作空间列表中选择一个文件以查看其内容。",
+        "emptyDirectory": "__MISSING__:surface.componentsDocumentsDocumentagentview.description.emptyDirectory"
       },
       "label": {
         "accessPreset": "访问预设",
@@ -2612,7 +2614,9 @@
             "approvedEditAppliedAsANewRevision": "已批准的编辑作为新修订应用",
             "proposalRejectedWithoutChanges": "提案未经修改被拒绝",
             "documentDeleted": "文档已删除",
-            "documentDeleteFailed": "无法删除文档"
+            "documentDeleteFailed": "无法删除文档",
+            "loadingWorkspace": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingWorkspace",
+            "loadingDirectory": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingDirectory"
           },
           "attribute": {
             "searchDocuments": "搜索文档...",

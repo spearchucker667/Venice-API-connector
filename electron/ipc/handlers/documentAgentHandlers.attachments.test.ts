@@ -61,11 +61,17 @@ vi.mock("../../agent/audit/document-agent-audit-service", () => ({
     record = auditRecord;
   },
 }));
-vi.mock("../../agent/documents/attachment-import-service", () => ({
-  AttachmentImportService: class {
-    promote = attachmentsPromote;
-  },
-}));
+vi.mock("../../agent/documents/attachment-import-service", async () => {
+  const actual = await vi.importActual<typeof import("../../agent/documents/attachment-import-service")>(
+    "../../agent/documents/attachment-import-service",
+  );
+  return {
+    ...actual,
+    AttachmentImportService: class {
+      promote = attachmentsPromote;
+    },
+  };
+});
 
 import { registerDocumentAgentHandlers } from "./documentAgentHandlers";
 import { clearRegisteredChannelsForTesting } from "./common";
@@ -170,7 +176,7 @@ describe("documentAgent:attachments:promote channel", () => {
       bodyB64: Buffer.from("data", "utf8").toString("base64"),
     });
     expect(unsupported.ok).toBe(false);
-    expect(attachmentsPromote).toHaveBeenCalledTimes(1);
+    expect(attachmentsPromote).toHaveBeenCalledTimes(0);
     expect(unsupported.error).not.toContain("Error:");
 
     const missing = await handler({ sender: { id: 7 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent, {

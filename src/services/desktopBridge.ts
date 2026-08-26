@@ -112,6 +112,8 @@ export const desktopVenice = {
         ...input,
         signalId,
         profileId: getActiveProfileId(),
+        agentSessionId: input.agentSessionId,
+        agentPermissionPreset: input.agentPermissionPreset,
       });
     } finally {
       cleanup?.();
@@ -142,6 +144,8 @@ export const desktopVenice = {
           ...input,
           signalId,
           profileId: getActiveProfileId(),
+          agentSessionId: input.agentSessionId,
+          agentPermissionPreset: input.agentPermissionPreset,
         },
         onDelta,
       );
@@ -2527,6 +2531,15 @@ export const desktopDocumentAgent = {
     },
   },
   attachments: {
+    register(
+      input: Parameters<
+        import("../types/desktop").VeniceForgeDocumentAgent["attachments"]["register"]
+      >[0],
+    ) {
+      return isElectron()
+        ? window.veniceForge!.documentAgent.attachments.register(input)
+        : Promise.resolve(documentAgentUnavailable);
+    },
     promote(
       input: Parameters<
         import("../types/desktop").VeniceForgeDocumentAgent["attachments"]["promote"]

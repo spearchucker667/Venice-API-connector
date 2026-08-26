@@ -82,7 +82,7 @@ External signed / paid / two-device / screen-reader release evidence remains the
 
 2. **VF-UX-REPRO-001** — Closed: Insufficient evidence (missing screenshot).
 
-3. **VF-DOCUMENT-AGENT-001** — Closed: Manual QA matrix and headed visual review completed externally; fail-closed architecture confirmed.
+3. **VF-DOCUMENT-AGENT-001** — **REGRESSION-REPAIRED 2026-08-26.** The shared workspace contract (`src/agent/contracts/workspace.ts`), lazy paginated directory tree (`src/components/documents/WorkspaceTree.tsx`), main-process-only `ToolExecutionContext` (`electron/agent/runtime/tool-execution-context.ts`), and authoritative `AgentPermissionPreset` semantics (`src/agent/contracts/capabilities.ts`) have been repaired and documented. The canonical tool registry and executor now cover all advertised document and workspace tools, and every workspace mutation remains approval-gated. This item will close once the headed manual acceptance suite passes; historical closure claims referred to fail-closed architecture only.
 
 4. **VF-I18N-NATIVE-REVIEW-001** — **OPEN.** All non-English catalogs remain `first-pass-machine` per `docs/i18n/native-review-status.json`. Structural key coverage is complete, but native-speaker/qualified-human review has not been performed and the locales must not be marked `isProductionComplete: true` until `native-review-status.json` records a reviewer and date.
 

@@ -570,7 +570,8 @@
         "itemS": "articles)",
         "searchMatches": "Rechercher des correspondances (",
         "read": "Lire",
-        "createGroup": "Créer un groupe"
+        "createGroup": "Créer un groupe",
+        "refreshWorkspace": "__MISSING__:surface.componentsDocumentsDocumentagentview.text.refreshWorkspace"
       },
       "heading": {
         "agentAccessGrantControls": "Contrôles d'accès et d'octroi de l'agent",
@@ -591,7 +592,8 @@
         "noWorkspaceFilesFound": "Aucun fichier d'espace de travail trouvé.",
         "noWorkspaceGranted": "Aucun espace de travail accordé",
         "selectAWorkspaceDirectoryUnderAgentAccess": "Sélectionnez un répertoire d'espace de travail sous Accès agent ci-dessus pour parcourir.",
-        "selectAFileFromTheWorkspaceList": "Sélectionnez un fichier dans la liste des espaces de travail pour afficher son contenu."
+        "selectAFileFromTheWorkspaceList": "Sélectionnez un fichier dans la liste des espaces de travail pour afficher son contenu.",
+        "emptyDirectory": "__MISSING__:surface.componentsDocumentsDocumentagentview.description.emptyDirectory"
       },
       "label": {
         "accessPreset": "Préréglage d'accès",
@@ -2612,7 +2614,9 @@
             "approvedEditAppliedAsANewRevision": "Modification approuvée appliquée en tant que nouvelle révision",
             "proposalRejectedWithoutChanges": "Proposition rejetée sans modifications",
             "documentDeleted": "Document supprimé",
-            "documentDeleteFailed": "Le document n'a pas pu être supprimé"
+            "documentDeleteFailed": "Le document n'a pas pu être supprimé",
+            "loadingWorkspace": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingWorkspace",
+            "loadingDirectory": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingDirectory"
           },
           "attribute": {
             "searchDocuments": "Rechercher des documents…",

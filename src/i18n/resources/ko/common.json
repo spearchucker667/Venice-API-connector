@@ -570,7 +570,8 @@
         "itemS": "항목",
         "searchMatches": "일치 항목 검색(",
         "read": "읽기",
-        "createGroup": "그룹 생성"
+        "createGroup": "그룹 생성",
+        "refreshWorkspace": "__MISSING__:surface.componentsDocumentsDocumentagentview.text.refreshWorkspace"
       },
       "heading": {
         "agentAccessGrantControls": "에이전트 액세스 및 권한 부여 제어",
@@ -591,7 +592,8 @@
         "noWorkspaceFilesFound": "작업 공간 파일을 찾을 수 없습니다.",
         "noWorkspaceGranted": "부여된 작업 공간 없음",
         "selectAWorkspaceDirectoryUnderAgentAccess": "파일을 찾아보려면 위의 에이전트 액세스에서 작업 공간 디렉터리를 선택하세요.",
-        "selectAFileFromTheWorkspaceList": "작업 영역 목록에서 파일을 선택하여 해당 내용을 봅니다."
+        "selectAFileFromTheWorkspaceList": "작업 영역 목록에서 파일을 선택하여 해당 내용을 봅니다.",
+        "emptyDirectory": "__MISSING__:surface.componentsDocumentsDocumentagentview.description.emptyDirectory"
       },
       "label": {
         "accessPreset": "액세스 사전 설정",
@@ -2612,7 +2614,9 @@
             "approvedEditAppliedAsANewRevision": "승인된 수정사항이 새 버전으로 적용되었습니다.",
             "proposalRejectedWithoutChanges": "변경사항 없이 제안이 거부됨",
             "documentDeleted": "문서가 삭제되었습니다",
-            "documentDeleteFailed": "문서를 삭제할 수 없었습니다"
+            "documentDeleteFailed": "문서를 삭제할 수 없었습니다",
+            "loadingWorkspace": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingWorkspace",
+            "loadingDirectory": "__MISSING__:runtimeGenerated.components.documents.documentagentview.notification.loadingDirectory"
           },
           "attribute": {
             "searchDocuments": "문서 검색…",

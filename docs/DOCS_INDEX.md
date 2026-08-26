@@ -139,7 +139,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [design/SCENE_GENERATION.md](design/SCENE_GENERATION.md) — Dynamic scene-generation rules and background asset maps.
 - [design/REPOSITORY_TREE.md](design/REPOSITORY_TREE.md) — Codebase layout and design rationale.
 - [DEVELOPMENT/rp-token-counting.md](DEVELOPMENT/rp-token-counting.md) — Compiled prompt estimates and over-budget save behavior.
-- [features/DOCUMENT_AGENT.md](features/DOCUMENT_AGENT.md) — Limited Documents, workspace grants, approval integrity, and path security.
+- [features/DOCUMENT_AGENT.md](features/DOCUMENT_AGENT.md) — Limited Documents, workspace grants, approval integrity, path security, lazy directory tree, tool execution context, preset semantics, attachment promotion, and supported document/workspace tools.
 
 ### Design History & Reports
 
@@ -153,6 +153,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md](superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md) — Implemented semantic grounding, trust-layer, model-context, configuration-migration, and validation contract for Image Studio prompt enhancement/remix.
 - [superpowers/specs/2026-08-24-deferred-provider-integration-design.md](superpowers/specs/2026-08-24-deferred-provider-integration-design.md) — Design specification for deferred provider integrations (Replicate, Bedrock, Vertex, Azure OpenAI, Hugging Face, Cohere).
 - [superpowers/specs/2026-08-26-provider-boundary-style-references-design.md](superpowers/specs/2026-08-26-provider-boundary-style-references-design.md) — Approved design for provider-operation request allowlists and runtime-gated Image Studio style references (`PROV-001`, `PROV-005`).
+- [superpowers/specs/2026-08-26-document-agent-end-to-end-repair-design.md](superpowers/specs/2026-08-26-document-agent-end-to-end-repair-design.md) — Approved design for Document Agent end-to-end repair: workspace contracts, lazy tree, tool execution context, preset authority, and attachment promotion.
 - [superpowers/plans/2026-08-26-provider-boundary-style-references.md](superpowers/plans/2026-08-26-provider-boundary-style-references.md) — Test-first implementation plan for the approved `PROV-001` and `PROV-005` remediation.
 
 ---

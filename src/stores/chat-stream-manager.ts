@@ -114,12 +114,15 @@ function buildStreamBody(convId: string, model: string): Record<string, unknown>
   const docAgentState = useDocumentAgentStore.getState();
   const availableTools = resolveAvailableTools(
     modelInfo,
-    veniceParamsForRequest,
-    !!docAgentState.workspaceGrant
+    docAgentState.preset,
   );
   if (availableTools.length > 0) {
     baseBody.tools = baseBody.tools ? [...(baseBody.tools as ProviderToolSchema[]), ...availableTools] : availableTools;
   }
+  baseBody.venice_parameters = {
+    ...veniceParamsForRequest,
+    enable_document_tools: docAgentState.preset !== "off" && docAgentState.preset !== "read_attachments",
+  };
 
   return applyVeniceApiSafeMode(
     "/chat/completions",
@@ -249,8 +252,11 @@ export async function startStream(
     while (attempts <= MAX_STREAM_RETRIES) {
       try {
         const body = buildStreamBody(convId, model);
+        const docAgentState = useDocumentAgentStore.getState();
         await veniceStreamChat(body, {
           signal: controller.signal,
+          agentSessionId: docAgentState.agentSessionId,
+          agentPermissionPreset: docAgentState.preset,
           onDelta: (chunk: StreamChunk) => {
             const hasContent = chunk.content && chunk.content.length > 0;
             const hasReasoning = chunk.reasoning && chunk.reasoning.length > 0;

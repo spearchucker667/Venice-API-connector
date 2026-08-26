@@ -35,7 +35,11 @@
     "messageInput": "Saisie des messages",
     "attachFile": "Joindre un fichier",
     "stopGenerating": "Arrêter de générer",
-    "sendMessage": "Envoyer un message"
+    "sendMessage": "Envoyer un message",
+    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
+    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
+    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
+    "promotionFailed": "__MISSING__:composer.promotionFailed"
   },
   "memory": {
     "disabledLabel": "Mémoire désactivée",

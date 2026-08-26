@@ -11,6 +11,9 @@ import { redactErrorMessage } from "../../../src/shared/redaction";
 import { SafetyGuardBlockedError } from "../../../src/shared/safety";
 import { registerPrivilegedIpcChannel, safeSendToRenderer } from "./common";
 import { runChatAgentLoop } from "../../agent/runtime/chat-agent-runner";
+import { createToolExecutionContext } from "../../agent/runtime/tool-execution-context";
+import { getAgentServices, RUNTIME_SESSION_ID } from "../../agent/runtime/agent-services";
+import type { AgentPermissionPreset } from "../../../src/agent/contracts/capabilities";
 import type { VeniceStreamDeltaEnvelope } from "../../../src/shared/veniceStreamDelta";
 
 function safetyBlockedResponse(err: SafetyGuardBlockedError) {
@@ -79,11 +82,28 @@ export function registerVeniceHandlers(): void {
       if (!request.signalId) {
         request.signalId = crypto.randomUUID();
       }
-      
+
       const guardResult = checkLocalFamilyGuard({ ...request, source: "ipc" });
       if (guardResult?.status === 451) return guardResult;
-      
-      const result = await runChatAgentLoop(request, (chunk) => {
+
+      const profileId = getProfileSessionId(event.sender);
+      const agentSessionId = typeof request.agentSessionId === "string" ? request.agentSessionId : undefined;
+      const preset: AgentPermissionPreset =
+        (typeof request.agentPermissionPreset === "string" ? request.agentPermissionPreset : undefined) ??
+        (agentSessionId ? "workspace_with_approval" : "limited_documents");
+      const rendererSessionId = `${RUNTIME_SESSION_ID}:renderer_${event.sender.id}${agentSessionId ? `:agent_${agentSessionId}` : ""}`;
+      const workspaceGrant = getAgentServices().workspaceGrants.getBySession(rendererSessionId);
+
+      const toolExecutionContext = createToolExecutionContext({
+        profileId,
+        runtimeSessionId: RUNTIME_SESSION_ID,
+        senderId: event.sender.id,
+        agentSessionId,
+        preset,
+        workspaceGrant,
+      });
+
+      const result = await runChatAgentLoop(request, toolExecutionContext, (chunk) => {
         // One shared, serializable envelope (P1-006): every agent-appended
         // message (tool results with generated-media/document metadata) is
         // forwarded explicitly; never reconstruct a subset of fields here.

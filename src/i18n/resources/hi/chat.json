@@ -35,7 +35,11 @@
     "messageInput": "संदेश इनपुट",
     "attachFile": "फ़ाइल जोड़ें",
     "stopGenerating": "उत्पादन बंद करो",
-    "sendMessage": "मेसेज भेजें"
+    "sendMessage": "मेसेज भेजें",
+    "saveToDocuments": "__MISSING__:composer.saveToDocuments {{name}}",
+    "promotedToDocuments": "__MISSING__:composer.promotedToDocuments",
+    "attachmentNotRegistered": "__MISSING__:composer.attachmentNotRegistered",
+    "promotionFailed": "__MISSING__:composer.promotionFailed"
   },
   "memory": {
     "disabledLabel": "मेमोरी बंद",

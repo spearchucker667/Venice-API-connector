@@ -2,6 +2,7 @@ import { performGuardedVeniceRequest, type GuardedVeniceResult } from "../../ser
 import { publishInspectorRequest, publishInspectorCompletion } from "../../services/inspectorTelemetry";
 import { sanitizeErrorText } from "../../../src/shared/redaction";
 import { executeAgentTool } from "./agent-tool-executor";
+import type { ToolExecutionContext } from "./tool-execution-context";
 import type { AssistantToolCall } from "../../../src/types/venice";
 import {
   CHAT_MEDIA_REF_ID_RE,
@@ -137,6 +138,7 @@ type ToolResultMessage = VeniceStreamAppendedMessage & {
 
 async function streamAndExecuteTurn(
   request: { endpoint?: string; method?: string; profileId: string; agentSessionId?: string; body?: unknown; signal?: AbortSignal; headers?: Record<string, string>; signalId?: string },
+  toolExecutionContext: ToolExecutionContext,
   onDelta: (chunk: SseChunk) => void
 ): Promise<TurnResult> {
   const aggregatedToolCalls = new Map<number, AssistantToolCall>();
@@ -258,7 +260,7 @@ async function streamAndExecuteTurn(
 
     for (const call of toolCalls) {
       if (request.signal?.aborted) break;
-      const toolResult = await executeAgentTool(request.profileId, call, request.agentSessionId);
+      const toolResult = await executeAgentTool(toolExecutionContext, call);
       const rawResult = toolResult.ok ? JSON.stringify(toolResult.data) : JSON.stringify(toolResult.error);
 
       const chatMediaRefs = extractCanonicalChatMediaReferences(toolResult);
@@ -299,6 +301,7 @@ async function streamAndExecuteTurn(
 
 export async function runChatAgentLoop(
   request: { endpoint?: string; method?: string; profileId?: string; agentSessionId?: string; body?: unknown; signal?: AbortSignal; headers?: Record<string, string>; signalId?: string },
+  toolExecutionContext: ToolExecutionContext,
   onDelta: (chunk: SseChunk) => void
 ): Promise<GuardedVeniceResult> {
   const endpoint = request.endpoint ?? "/chat/completions";
@@ -318,6 +321,7 @@ export async function runChatAgentLoop(
 
     const turnResult = await streamAndExecuteTurn(
       { endpoint, method, profileId, agentSessionId, body: currentBody, signal: request.signal, headers, signalId },
+      toolExecutionContext,
       onDelta
     );
 
