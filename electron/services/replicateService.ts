@@ -76,6 +76,11 @@ function getReplicateUserAgent(): string {
 }
 
 function bearerHeader(apiToken: string): Record<string, string> {
+  // Sanitize the token to prevent arbitrary file data injection in HTTP headers
+  // (CodeQL js/file-access-to-http mitigation)
+  if (typeof apiToken !== "string" || !/^[A-Za-z0-9_.=-]+$/.test(apiToken)) {
+    throw new Error("Invalid Replicate API token format.");
+  }
   return {
     Authorization: `Bearer ${apiToken}`,
     "Content-Type": "application/json",
