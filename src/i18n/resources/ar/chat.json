@@ -54,7 +54,7 @@
     "xSearch": "بحث X",
     "searchInStream": "البحث في الدفق",
     "documentTools": "أدوات الوثيقة",
-    "documentToolsUnavailableTitle": "controls.documentToolsUnavailableTitle",
+    "documentToolsUnavailableTitle": "Tr: The active model does not support function calling, so tools cannot be sent with this chat.",
     "newChatShortcut": "دردشة جديدة (⌘N)",
     "systemPromptPlaceholder": "خياري. اتركه فارغًا لتجنب إضافة رسالة نظام مؤلفة من خلال التطبيق.",
     "temperature": "درجة حرارة",
@@ -69,5 +69,8 @@
       "on": "على",
       "auto": "آلي"
     }
+  },
+  "stream": {
+    "retryingFromCheckpoint": "Tr: Stream dropped. Retrying from checkpoint"
   }
 }

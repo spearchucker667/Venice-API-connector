@@ -26,7 +26,7 @@
     "undici": "^7.29.0"
   },
   "engines": {
-    "node": ">=22.13.0 <23.0.0",
+    "node": ">=22.15.0 <23.0.0",
     "npm": ">=10.0.0"
   },
   "scripts": {
@@ -115,8 +115,9 @@
     "verify:contracts:features:settings": "echo '::group::verify:contracts:features:settings' && npm run verify:status-diagnostics && npm run verify:storage-privacy && npm run verify:storage-policy && npm run verify:backup-sync && echo '::endgroup::'",
     "verify:contracts:features": "npm run verify:contracts:features:chat && npm run verify:contracts:features:image && npm run verify:contracts:features:workflow && npm run verify:contracts:features:rp && npm run verify:contracts:features:settings",
     "verify:i18n:release": "node scripts/verify-i18n.cjs --strict --write-status && node scripts/i18n-locale-status.cjs --write && git diff -I '\"updatedAt\":' -I '\"lastUpdated\":' --exit-code docs/i18n/translation-status.json src/i18n/locale-completion-status.ts",
-    "verify:contracts:release": "npm run verify:release-packaging-hardening && npm run verify:i18n:release",
+    "verify:contracts:release": "npm run verify:release-packaging-hardening",
     "verify:contracts": "npm run verify:contracts:static && npm run verify:contracts:features && npm run verify:contracts:release",
+    "verify:release-readiness": "npm run verify:contracts && npm run verify:i18n:release",
     "checksum:release": "node scripts/checksum-release.cjs",
     "lint": "npm run lint:eslint && npm run typecheck",
     "lint:eslint": "eslint src electron server.ts scripts --max-warnings=0",

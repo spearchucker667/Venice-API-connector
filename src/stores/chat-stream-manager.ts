@@ -18,6 +18,7 @@ import type { VeniceStreamDelta } from "../shared/veniceStreamDelta";
 import { useDocumentAgentStore } from "./document-agent-store";
 import * as logger from "../shared/logger";
 import { getModelById } from "../services/modelService";
+import { translateRuntime } from "../i18n/runtimeTranslator";
 
 /** Safe, non-disclosing error text appended to assistant messages when a
  *  chat stream fails. Never include raw exception text, paths, or secrets. */
@@ -272,8 +273,7 @@ export async function startStream(
         const retryable = isRetryableError(err);
         if (retryable && attempts < MAX_STREAM_RETRIES && !hasCommittedStreamState) {
           attempts++;
-          // i18n-ignore
-          logger.warn({ category: "stream_retry", attempt: attempts, message: /* i18n-ignore */ "Stream dropped. Retrying from checkpoint", status: (err as { status?: number, statusCode?: number })?.status || (err as { status?: number, statusCode?: number })?.statusCode || "unknown" });
+          logger.warn({ category: "stream_retry", attempt: attempts, message: translateRuntime("chat:stream.retryingFromCheckpoint", "Stream dropped. Retrying from checkpoint"), status: (err as { status?: number, statusCode?: number })?.status || (err as { status?: number, statusCode?: number })?.statusCode || "unknown" });
           // Exponential backoff before retry (1s, 2s)
           await new Promise((resolve) => setTimeout(resolve, 1000 * Math.pow(2, attempts - 1)));
           continue;

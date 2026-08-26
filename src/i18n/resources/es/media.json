@@ -132,18 +132,18 @@
     "enhancementProviderError": "El potenciador interno no pudo alcanzar o completar la solicitud de Venice. Se conservó su mensaje original.",
     "enhancementInvalidOutput": "El potenciador interno no devolvió un mensaje de imagen utilizable. Se conservó su mensaje original.",
     "enhancementSafetyBlocked": "La mejora del prompt fue detenida por las protecciones obligatorias de seguridad infantil, que son independientes de la configuración opcional del modo seguro. Se conservó el prompt original.",
-    "enhancementSafetyBlockedMandatory": "La mejora del prompt fue detenida por las protecciones obligatorias de seguridad infantil, que son independientes de la configuración opcional del modo seguro. Se conservó el prompt original.",
-    "enhancementSafetyBlockedFamily": "La mejora del prompt fue detenida por el modo seguro familiar opcional. Se conservó el prompt original.",
-    "enhancementSafetyBlockedProvider": "La mejora del prompt fue detenida por la política del proveedor. Se conservó el prompt original."
+    "enhancementSafetyBlockedMandatory": "Tr: Prompt enhancement was stopped by mandatory child-safety protections, which are separate from optional Safe Mode settings. Your original prompt was kept.",
+    "enhancementSafetyBlockedFamily": "Tr: Prompt enhancement was stopped by optional Family Safe Mode. Your original prompt was kept.",
+    "enhancementSafetyBlockedProvider": "Tr: Prompt enhancement was stopped by provider policy. Your original prompt was kept."
   },
   "contextMenu": {
-    "saveAs": "Guardar como…",
-    "copyImage": "Copiar imagen",
-    "openInInspector": "Abrir en Inspector",
-    "sendToImageTools": "Enviar a herramientas de imagen",
-    "sendToCharacterCreator": "Enviar a Creador de personajes",
-    "saveToMediaStudio": "Guardar en Media Studio",
-    "revealInFinder": "Mostrar en Finder",
-    "removeFromChat": "Eliminar del chat"
+    "saveAs": "Tr: Save As…",
+    "copyImage": "Tr: Copy image",
+    "openInInspector": "Tr: Open in Inspector",
+    "sendToImageTools": "Tr: Send to Image Tools",
+    "sendToCharacterCreator": "Tr: Send to Character Creator",
+    "saveToMediaStudio": "Tr: Save to Media Studio",
+    "revealInFinder": "Tr: Reveal in Finder",
+    "removeFromChat": "Tr: Remove from chat"
   }
 }

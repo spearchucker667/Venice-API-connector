@@ -54,7 +54,7 @@
     "xSearch": "एक्स खोज",
     "searchInStream": "स्ट्रीम में खोजें",
     "documentTools": "दस्तावेज़ उपकरण",
-    "documentToolsUnavailableTitle": "controls.documentToolsUnavailableTitle",
+    "documentToolsUnavailableTitle": "Tr: The active model does not support function calling, so tools cannot be sent with this chat.",
     "newChatShortcut": "नई चैट (⌘N)",
     "systemPromptPlaceholder": "वैकल्पिक। ऐप-लिखित सिस्टम संदेश जोड़ने से बचने के लिए इसे खाली छोड़ दें।",
     "temperature": "तापमान",
@@ -69,5 +69,8 @@
       "on": "पर",
       "auto": "ऑटो"
     }
+  },
+  "stream": {
+    "retryingFromCheckpoint": "Tr: Stream dropped. Retrying from checkpoint"
   }
 }

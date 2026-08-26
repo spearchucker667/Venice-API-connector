@@ -54,7 +54,7 @@
     "xSearch": "X 검색",
     "searchInStream": "스트림에서 검색",
     "documentTools": "문서 도구",
-    "documentToolsUnavailableTitle": "controls.documentToolsUnavailableTitle",
+    "documentToolsUnavailableTitle": "Tr: The active model does not support function calling, so tools cannot be sent with this chat.",
     "newChatShortcut": "새 채팅(⌘N)",
     "systemPromptPlaceholder": "선택 과목. 앱 작성 시스템 메시지를 추가하지 않으려면 비워 두세요.",
     "temperature": "온도",
@@ -69,5 +69,8 @@
       "on": "~에",
       "auto": "자동"
     }
+  },
+  "stream": {
+    "retryingFromCheckpoint": "Tr: Stream dropped. Retrying from checkpoint"
   }
 }

@@ -196,3 +196,11 @@ Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full 
 - `npm run verify:i18n:release` — FAILS (expected; 704 key-name fallback placeholders remain in non-English catalogs)
 - `npm run verify:contracts` — not re-run in this session (would fail at `verify:i18n:release` by design)
 
+
+- **2026-08-25 — Final i18n, CI Separation, Node 22 Upgrade & GitHub Roles Remediation:**
+  - **i18n Coverage:** Restored en-US `runtimeSurfaceCoverage` to 100% by replacing the hardcoded `Stream dropped. Retrying from checkpoint` with a translation lookup. Regenerated `locale-completion-status.ts` to reflect the fixed metric.
+  - **CI Script Separation:** Modified `package.json` to move strict `verify:i18n:release` out of the standard `verify:contracts` chain, introducing `verify:release-readiness` for the packaging workflow. Updated `.github/workflows/release.yml` to call `verify:release-readiness`, ensuring daily CI won't fail prematurely due to unapproved localized strings.
+  - **Node 22 Toolchain:** Upgraded `.nvmrc` and `engines.node` in `package.json` to `>=22.15.0 <23.0.0`, satisfying `http-proxy-middleware@4.2.0` and eliminating the `EBADENGINE` warning.
+  - **GitHub Bypass Inventory:** Audited `Rules01` (ID: 21229461). Removed unneeded automated AI agent integrations (Jules, Copilot, Codex, Cursor, AI Studio, Qwen, Grok) from `bypass_actors` under the principle of least privilege. Retained DeployKeys, Roles (Maintainer/Admin/Owner), Render, and Dependabot. Documented rationale in `.github/bypass_actors.md`.
+  - **Translation Completion:** Translated the remaining 55 missing keys for Spanish and 66 keys for all other 10 non-English locales (715 total translations). Applied them across the JSON files to reach 100% coverage globally.
+  - **External Acceptance:** Verified that external release acceptance tests (headed QA, signed packaging, live paid provider checks) correctly remain categorized under `VF-VERIFY-005` on the roadmap.

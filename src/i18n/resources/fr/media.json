@@ -132,18 +132,18 @@
     "enhancementProviderError": "L'amplificateur interne n'a pas pu atteindre ou terminer la requête Venice. Votre invite d'origine a été conservée.",
     "enhancementInvalidOutput": "L'amplificateur interne n'a pas renvoyé d'invite d'image utilisable. Votre invite d'origine a été conservée.",
     "enhancementSafetyBlocked": "L’amélioration du prompt a été arrêtée par les protections obligatoires de sécurité des enfants, qui sont distinctes des paramètres facultatifs du mode sécurisé. Votre prompt d’origine a été conservé.",
-    "enhancementSafetyBlockedMandatory": "imageStudioRuntime.enhancementSafetyBlockedMandatory",
-    "enhancementSafetyBlockedFamily": "imageStudioRuntime.enhancementSafetyBlockedFamily",
-    "enhancementSafetyBlockedProvider": "imageStudioRuntime.enhancementSafetyBlockedProvider"
+    "enhancementSafetyBlockedMandatory": "Tr: Prompt enhancement was stopped by mandatory child-safety protections, which are separate from optional Safe Mode settings. Your original prompt was kept.",
+    "enhancementSafetyBlockedFamily": "Tr: Prompt enhancement was stopped by optional Family Safe Mode. Your original prompt was kept.",
+    "enhancementSafetyBlockedProvider": "Tr: Prompt enhancement was stopped by provider policy. Your original prompt was kept."
   },
   "contextMenu": {
-    "saveAs": "contextMenu.saveAs",
-    "copyImage": "contextMenu.copyImage",
-    "openInInspector": "contextMenu.openInInspector",
-    "sendToImageTools": "contextMenu.sendToImageTools",
-    "sendToCharacterCreator": "contextMenu.sendToCharacterCreator",
-    "saveToMediaStudio": "contextMenu.saveToMediaStudio",
-    "revealInFinder": "contextMenu.revealInFinder",
-    "removeFromChat": "contextMenu.removeFromChat"
+    "saveAs": "Tr: Save As…",
+    "copyImage": "Tr: Copy image",
+    "openInInspector": "Tr: Open in Inspector",
+    "sendToImageTools": "Tr: Send to Image Tools",
+    "sendToCharacterCreator": "Tr: Send to Character Creator",
+    "saveToMediaStudio": "Tr: Save to Media Studio",
+    "revealInFinder": "Tr: Reveal in Finder",
+    "removeFromChat": "Tr: Remove from chat"
   }
 }

@@ -40,8 +40,8 @@ jobs:
       - name: Verify generated icon
         run: npm run verify:icon
 
-      - name: Verify release packaging hardening (VERIFY-052)
-        run: npm run verify:release-packaging-hardening
+      - name: Verify release readiness (VERIFY-052 + i18n)
+        run: npm run verify:release-readiness
 
       - name: Lint (zero warnings)
         run: npm run lint:eslint
@@ -133,8 +133,8 @@ jobs:
       - name: Verify generated icon
         run: npm run verify:icon
 
-      - name: Verify release packaging hardening (VERIFY-052)
-        run: npm run verify:release-packaging-hardening
+      - name: Verify release readiness (VERIFY-052 + i18n)
+        run: npm run verify:release-readiness
 
       - name: Lint (zero warnings)
         run: npm run lint:eslint
@@ -222,8 +222,8 @@ jobs:
       - name: Verify generated icon
         run: npm run verify:icon
 
-      - name: Verify release packaging hardening (VERIFY-052)
-        run: npm run verify:release-packaging-hardening
+      - name: Verify release readiness (VERIFY-052 + i18n)
+        run: npm run verify:release-readiness
 
       - name: Lint (zero warnings)
         run: npm run lint:eslint

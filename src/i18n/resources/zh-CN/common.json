@@ -37,13 +37,13 @@
     "unlock": "解锁",
     "saving": "保存中...",
     "importAll": "全部导入",
-    "saveAs": "actions.saveAs",
-    "lock": "actions.lock",
-    "favorite": "actions.favorite",
-    "unfavorite": "actions.unfavorite",
-    "regenerate": "actions.regenerate",
-    "download": "actions.download",
-    "open": "actions.open"
+    "saveAs": "Tr: Save As…",
+    "lock": "Tr: Lock",
+    "favorite": "Tr: Favorite",
+    "unfavorite": "Tr: Unfavorite",
+    "regenerate": "Tr: Regenerate",
+    "download": "Tr: Download",
+    "open": "Tr: Open"
   },
   "status": {
     "active": "已激活",
@@ -2600,7 +2600,7 @@
             "thinking": "思维…",
             "removeFromChat": "从聊天中删除",
             "tokensUsedForThisMessage": "用于此消息的令牌",
-            "generatedMedia": "runtimeGenerated.components.chat.messageBubble.attribute.generatedMedia"
+            "generatedMedia": "Tr: Generated media"
           }
         }
       },
@@ -4078,7 +4078,7 @@
           "networkErrorTestingJinaApiKey": "网络错误测试 Jina API 密钥"
         },
         "error": {
-          "notSupportedInWebMode": "runtimeGenerated.services.desktopbridge.error.notSupportedInWebMode"
+          "notSupportedInWebMode": "Tr: Not supported in web mode"
         }
       },
       "imageinspectoranalysis": {
@@ -4384,11 +4384,11 @@
           "mistralAiModelsAndEndpoints": "Mistral AI 模型和端点。",
           "claudeAndOtherSafeFoundationModels": "克劳德和其他安全基础模型。",
           "searchGroundedAndFastLlmApis": "基于搜索的快速 LLM API。",
-          "cohereEnterpriseReadyMultilingualModels": "runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels",
-          "huggingFaceOpenSourceInferenceProviders": "runtimeGenerated.types.provider.metadata.huggingFaceOpenSourceInferenceProviders",
-          "azureOpenAiDeploymentBasedChatCompletions": "runtimeGenerated.types.provider.metadata.azureOpenAiDeploymentBasedChatCompletions",
-          "awsBedrockMantleOpenAiCompatibleInference": "runtimeGenerated.types.provider.metadata.awsBedrockMantleOpenAiCompatibleInference",
-          "googleVertexAiExpressModeApiKey": "runtimeGenerated.types.provider.metadata.googleVertexAiExpressModeApiKey"
+          "cohereEnterpriseReadyMultilingualModels": "Tr: Enterprise-ready multilingual models.",
+          "huggingFaceOpenSourceInferenceProviders": "Tr: Open-source model inference via Hugging Face Inference Providers.",
+          "azureOpenAiDeploymentBasedChatCompletions": "Tr: Azure OpenAI deployment-based chat completions.",
+          "awsBedrockMantleOpenAiCompatibleInference": "Tr: AWS Bedrock Mantle OpenAI-compatible inference.",
+          "googleVertexAiExpressModeApiKey": "Tr: Google Vertex AI Express Mode (API-key authentication)."
         }
       }
     },
@@ -4541,46 +4541,46 @@
     "characterPersonaReferences": "角色/角色参考"
   },
   "mediaSave": {
-    "success": "mediaSave.success",
-    "failed": "mediaSave.failed",
-    "noBytes": "mediaSave.noBytes",
-    "noItems": "mediaSave.noItems",
-    "exportFailed": "mediaSave.exportFailed",
-    "prepareFailed": "mediaSave.prepareFailed",
+    "success": "Tr: Media saved successfully",
+    "failed": "Tr: Media save failed",
+    "noBytes": "Tr: No media bytes could be read",
+    "noItems": "Tr: No exportable media items found.",
+    "exportFailed": "Tr: Media export failed. No files were saved.",
+    "prepareFailed": "Tr: Media export failed. No files could be prepared.",
     "exported": "mediaSave.exported {{count}}",
     "partiallyExported": "mediaSave.partiallyExported {{saved}} {{total}}",
     "failedWithDetail": "mediaSave.failedWithDetail {{detail}}"
   },
   "layout": {
     "sidebar": {
-      "resize": "layout.sidebar.resize",
-      "resetWidth": "layout.sidebar.resetWidth",
-      "width": "layout.sidebar.width"
+      "resize": "Tr: Resize sidebar",
+      "resetWidth": "Tr: Reset sidebar width",
+      "width": "Tr: Sidebar width"
     }
   },
   "safetyDecision": {
     "userMessage": {
-      "mandatory-child-safety": "safetyDecision.userMessage.mandatory-child-safety",
-      "optional-family-policy": "safetyDecision.userMessage.optional-family-policy",
-      "provider-policy": "safetyDecision.userMessage.provider-policy",
-      "request-validation": "safetyDecision.userMessage.request-validation"
+      "mandatory-child-safety": "Tr: Generation blocked: mandatory child-safety protection triggered.",
+      "optional-family-policy": "Tr: Generation blocked: optional Family Safe Mode triggered.",
+      "provider-policy": "Tr: Generation blocked: provider policy violation.",
+      "request-validation": "Tr: Generation blocked: request validation failed."
     },
     "layer": {
-      "mandatory-child-safety": "safetyDecision.layer.mandatory-child-safety",
-      "optional-family-policy": "safetyDecision.layer.optional-family-policy",
-      "provider-policy": "safetyDecision.layer.provider-policy",
-      "request-validation": "safetyDecision.layer.request-validation"
+      "mandatory-child-safety": "Tr: Mandatory child safety",
+      "optional-family-policy": "Tr: Optional family policy",
+      "provider-policy": "Tr: Provider policy",
+      "request-validation": "Tr: Request validation"
     },
     "category": {
-      "minor-sexualization": "safetyDecision.category.minor-sexualization",
-      "csam": "safetyDecision.category.csam",
-      "grooming": "safetyDecision.category.grooming",
-      "age-evasion": "safetyDecision.category.age-evasion",
-      "adult-explicit-image": "safetyDecision.category.adult-explicit-image",
-      "graphic-gore": "safetyDecision.category.graphic-gore",
-      "provider-restriction": "safetyDecision.category.provider-restriction",
-      "validation-error": "safetyDecision.category.validation-error",
-      "unknown": "safetyDecision.category.unknown"
+      "minor-sexualization": "Tr: Minor sexualization",
+      "csam": "Tr: CSAM or child exploitation",
+      "grooming": "Tr: Grooming or exploitation",
+      "age-evasion": "Tr: Age evasion",
+      "adult-explicit-image": "Tr: Adult explicit image",
+      "graphic-gore": "Tr: Graphic gore",
+      "provider-restriction": "Tr: Provider restriction",
+      "validation-error": "Tr: Validation error",
+      "unknown": "Tr: Unknown safety category"
     },
     "label": {
       "blockingLayer": "safetyDecision.label.blockingLayer {{layer}}",

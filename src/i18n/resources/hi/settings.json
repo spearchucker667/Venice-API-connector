@@ -462,25 +462,25 @@
     },
     "status": {
       "keyConfigured": "API कुंजी कॉन्फ़िगर की गई",
-      "credentialConfigured": "providers.status.credentialConfigured"
+      "credentialConfigured": "Tr: Credential Configured"
     },
     "actions": {
       "removeKey": "कुंजी हटाएं"
     },
     "inputs": {
       "keyPlaceholder": "API कुंजी दर्ज करें",
-      "azureResourceName": "providers.inputs.azureResourceName",
-      "azureDeploymentName": "providers.inputs.azureDeploymentName",
-      "azureApiVersion": "providers.inputs.azureApiVersion",
-      "azureApiKey": "providers.inputs.azureApiKey",
-      "awsRegion": "providers.inputs.awsRegion",
-      "awsApiKey": "providers.inputs.awsApiKey",
-      "vertexExpressMode": "providers.inputs.vertexExpressMode",
-      "vertexFullMode": "providers.inputs.vertexFullMode",
-      "vertexApiKey": "providers.inputs.vertexApiKey",
-      "vertexProjectId": "providers.inputs.vertexProjectId",
-      "vertexLocation": "providers.inputs.vertexLocation",
-      "vertexCredentialsJson": "providers.inputs.vertexCredentialsJson"
+      "azureResourceName": "Tr: Azure Resource Name",
+      "azureDeploymentName": "Tr: Azure Deployment Name",
+      "azureApiVersion": "Tr: API Version",
+      "azureApiKey": "Tr: Azure API Key",
+      "awsRegion": "Tr: AWS Region",
+      "awsApiKey": "Tr: AWS Bedrock API Key",
+      "vertexExpressMode": "Tr: Express Mode (API key)",
+      "vertexFullMode": "Tr: Full Vertex (project/location + OAuth/service account)",
+      "vertexApiKey": "Tr: Vertex API Key",
+      "vertexProjectId": "Tr: Google Cloud Project ID",
+      "vertexLocation": "Tr: Vertex Location",
+      "vertexCredentialsJson": "Tr: Service-Account / OAuth Credentials JSON"
     }
   },
   "errors": {

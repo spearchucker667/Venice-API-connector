@@ -69,5 +69,8 @@
       "on": "on",
       "auto": "auto"
     }
+  },
+  "stream": {
+    "retryingFromCheckpoint": "Stream dropped. Retrying from checkpoint"
   }
 }

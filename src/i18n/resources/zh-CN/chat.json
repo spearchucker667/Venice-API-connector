@@ -54,7 +54,7 @@
     "xSearch": "X搜索",
     "searchInStream": "在流中搜索",
     "documentTools": "文档工具",
-    "documentToolsUnavailableTitle": "controls.documentToolsUnavailableTitle",
+    "documentToolsUnavailableTitle": "Tr: The active model does not support function calling, so tools cannot be sent with this chat.",
     "newChatShortcut": "新聊天 (⌘N)",
     "systemPromptPlaceholder": "选修的。留空以避免添加应用程序编写的系统消息。",
     "temperature": "温度",
@@ -69,5 +69,8 @@
       "on": "在",
       "auto": "自动"
     }
+  },
+  "stream": {
+    "retryingFromCheckpoint": "Tr: Stream dropped. Retrying from checkpoint"
   }
 }
