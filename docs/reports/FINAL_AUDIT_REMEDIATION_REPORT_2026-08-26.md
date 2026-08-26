@@ -107,7 +107,7 @@ Rationale: no integration or role other than repository administration legitimat
 
 After the remediation commit was pushed, the exact-head runs completed green:
 
-- **GitHub CI run `32940589699`** for `8b98de24e9708492b526dff3b2b7eb3f686520f9`: **all jobs green**
+- **GitHub CI run `32941837436`** for code SHA `9f2dc00ced2c97d3920692365a331d1216ce5472`: **all jobs green**
   - lint-and-typecheck
   - unit-and-integration-tests
   - coverage
@@ -118,9 +118,11 @@ After the remediation commit was pushed, the exact-head runs completed green:
   - electron-smoke-windows
   - electron-smoke-linux
   - electron-smoke-macos
-- **GitHub CodeQL run `32940589713`** for `8b98de24e9708492b526dff3b2b7eb3f686520f9`: **green**
+- **GitHub CodeQL run `32941837430`** for code SHA `9f2dc00ced2c97d3920692365a331d1216ce5472`: **green**
   - Analyze actions
   - Analyze javascript-typescript
+
+Any later documentation-only commit updates this report without changing the validated code or its validation conclusions.
 
 ---
 
@@ -141,10 +143,10 @@ No local validation can substitute for these. They remain open on `docs/ROADMAP.
 ## 8. Git State
 
 - **Starting SHA:** `eba90428be6c87b85a96e07b83be09e0f383db89`
-- **Final SHA:** `8b98de24e9708492b526dff3b2b7eb3f686520f9`
+- **Final SHA:** `9f2dc00ced2c97d3920692365a331d1216ce5472`
 - **Branch:** `main`
 - **Worktree state:** clean
-- **origin/main SHA:** `8b98de24e9708492b526dff3b2b7eb3f686520f9`
+- **origin/main SHA:** `9f2dc00ced2c97d3920692365a331d1216ce5472`
 
 ---
 
