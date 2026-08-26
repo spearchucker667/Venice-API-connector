@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
+// 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useChatStore } from './chat-store'
 import { useMediaStore } from './media-store'

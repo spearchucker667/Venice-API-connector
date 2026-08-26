@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
+// 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /** @fileoverview Unit tests for the renderer-side RP asset service. */
 
@@ -84,7 +84,7 @@ describe("assetService", () => {
       vi.mocked(desktopBridge.isElectron).mockReturnValue(false);
       vi.spyOn(StorageService, "getItems").mockResolvedValue([baseAsset()]);
       vi.spyOn(StorageService, "getItem").mockResolvedValue(baseAsset());
-      vi.spyOn(StorageService, "saveItem").mockResolvedValue();
+      vi.spyOn(StorageService, "saveItem").mockResolvedValue(baseAsset() as any);
       vi.spyOn(StorageService, "deleteItem").mockResolvedValue(true);
     });
 

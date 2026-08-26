@@ -462,25 +462,25 @@
     },
     "status": {
       "keyConfigured": "تم تكوين مفتاح API",
-      "credentialConfigured": "__MISSING__:providers.status.credentialConfigured"
+      "credentialConfigured": "providers.status.credentialConfigured"
     },
     "actions": {
       "removeKey": "إزالة المفتاح"
     },
     "inputs": {
       "keyPlaceholder": "أدخل مفتاح API",
-      "azureResourceName": "__MISSING__:providers.inputs.azureResourceName",
-      "azureDeploymentName": "__MISSING__:providers.inputs.azureDeploymentName",
-      "azureApiVersion": "__MISSING__:providers.inputs.azureApiVersion",
-      "azureApiKey": "__MISSING__:providers.inputs.azureApiKey",
-      "awsRegion": "__MISSING__:providers.inputs.awsRegion",
-      "awsApiKey": "__MISSING__:providers.inputs.awsApiKey",
-      "vertexExpressMode": "__MISSING__:providers.inputs.vertexExpressMode",
-      "vertexFullMode": "__MISSING__:providers.inputs.vertexFullMode",
-      "vertexApiKey": "__MISSING__:providers.inputs.vertexApiKey",
-      "vertexProjectId": "__MISSING__:providers.inputs.vertexProjectId",
-      "vertexLocation": "__MISSING__:providers.inputs.vertexLocation",
-      "vertexCredentialsJson": "__MISSING__:providers.inputs.vertexCredentialsJson"
+      "azureResourceName": "providers.inputs.azureResourceName",
+      "azureDeploymentName": "providers.inputs.azureDeploymentName",
+      "azureApiVersion": "providers.inputs.azureApiVersion",
+      "azureApiKey": "providers.inputs.azureApiKey",
+      "awsRegion": "providers.inputs.awsRegion",
+      "awsApiKey": "providers.inputs.awsApiKey",
+      "vertexExpressMode": "providers.inputs.vertexExpressMode",
+      "vertexFullMode": "providers.inputs.vertexFullMode",
+      "vertexApiKey": "providers.inputs.vertexApiKey",
+      "vertexProjectId": "providers.inputs.vertexProjectId",
+      "vertexLocation": "providers.inputs.vertexLocation",
+      "vertexCredentialsJson": "providers.inputs.vertexCredentialsJson"
     }
   },
   "errors": {

@@ -1,10 +1,14 @@
 # Venice Forge — Post-August-24 Provider-Update Audit & Remediation Report
 
+> [!NOTE]  
+> **IMMUTABLE HISTORICAL RECORD**  
+> This report is a point-in-time snapshot of the repository state as of August 25, 2026 (commit `d13150ef...`). It is preserved for historical context and is not updated to track current `main`.
+
 **Date:** 2026-08-25  
 **Baseline commit:** `2c3bb7e1c9c53864f4758e25ff3ac84e60374593`  
-**Local HEAD:** `d13150efbd85afb9c9ad10708f6461e0f746633d`  
-**Remote `origin/main` HEAD:** `d13150efbd85afb9c9ad10708f6461e0f746633d`  
-**Status:** All locally actionable P0/P1 findings closed; validation matrix green; committed and pushed to `origin/main`; hosted CI and CodeQL green; external acceptance blocked.
+**Snapshot Local HEAD:** `d13150efbd85afb9c9ad10708f6461e0f746633d`  
+**Snapshot Remote `origin/main` HEAD:** `d13150efbd85afb9c9ad10708f6461e0f746633d`  
+**Status:** Historical.
 
 ---
 

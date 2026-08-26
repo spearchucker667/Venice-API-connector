@@ -37,13 +37,13 @@
     "unlock": "잠금 해제",
     "saving": "저장 중...",
     "importAll": "모두 가져오기",
-    "saveAs": "__MISSING__:actions.saveAs",
-    "lock": "__MISSING__:actions.lock",
-    "favorite": "__MISSING__:actions.favorite",
-    "unfavorite": "__MISSING__:actions.unfavorite",
-    "regenerate": "__MISSING__:actions.regenerate",
-    "download": "__MISSING__:actions.download",
-    "open": "__MISSING__:actions.open"
+    "saveAs": "actions.saveAs",
+    "lock": "actions.lock",
+    "favorite": "actions.favorite",
+    "unfavorite": "actions.unfavorite",
+    "regenerate": "actions.regenerate",
+    "download": "actions.download",
+    "open": "actions.open"
   },
   "status": {
     "active": "활성",
@@ -2600,7 +2600,7 @@
             "thinking": "생각…",
             "removeFromChat": "채팅에서 삭제",
             "tokensUsedForThisMessage": "이 메시지에 사용된 토큰",
-            "generatedMedia": "__MISSING__:runtimeGenerated.components.chat.messageBubble.attribute.generatedMedia"
+            "generatedMedia": "runtimeGenerated.components.chat.messageBubble.attribute.generatedMedia"
           }
         }
       },
@@ -3268,7 +3268,7 @@
             "summarizeTheFinding": "결과 요약",
             "addSupportingDetailsAndCitations": "지원 세부정보 및 인용 추가",
             "removeFindingValue1": "{{value1}} 발견 항목 삭제",
-            "deleteSessionValue1": "__MISSING__:runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1 {{value1}}"
+            "deleteSessionValue1": "runtimeGenerated.components.research.researchworkspaceview.attribute.deleteSessionValue1 {{value1}}"
           },
           "text": {
             "processing": "처리 중...",
@@ -4078,7 +4078,7 @@
           "networkErrorTestingJinaApiKey": "네트워크 오류 테스트 Jina API 키"
         },
         "error": {
-          "notSupportedInWebMode": "__MISSING__:runtimeGenerated.services.desktopbridge.error.notSupportedInWebMode"
+          "notSupportedInWebMode": "runtimeGenerated.services.desktopbridge.error.notSupportedInWebMode"
         }
       },
       "imageinspectoranalysis": {
@@ -4384,11 +4384,11 @@
           "mistralAiModelsAndEndpoints": "Mistral AI 모델 및 엔드포인트.",
           "claudeAndOtherSafeFoundationModels": "Claude 및 기타 안전한 기초 모델.",
           "searchGroundedAndFastLlmApis": "검색 기반의 빠른 LLM API.",
-          "cohereEnterpriseReadyMultilingualModels": "__MISSING__:runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels",
-          "huggingFaceOpenSourceInferenceProviders": "__MISSING__:runtimeGenerated.types.provider.metadata.huggingFaceOpenSourceInferenceProviders",
-          "azureOpenAiDeploymentBasedChatCompletions": "__MISSING__:runtimeGenerated.types.provider.metadata.azureOpenAiDeploymentBasedChatCompletions",
-          "awsBedrockMantleOpenAiCompatibleInference": "__MISSING__:runtimeGenerated.types.provider.metadata.awsBedrockMantleOpenAiCompatibleInference",
-          "googleVertexAiExpressModeApiKey": "__MISSING__:runtimeGenerated.types.provider.metadata.googleVertexAiExpressModeApiKey"
+          "cohereEnterpriseReadyMultilingualModels": "runtimeGenerated.types.provider.metadata.cohereEnterpriseReadyMultilingualModels",
+          "huggingFaceOpenSourceInferenceProviders": "runtimeGenerated.types.provider.metadata.huggingFaceOpenSourceInferenceProviders",
+          "azureOpenAiDeploymentBasedChatCompletions": "runtimeGenerated.types.provider.metadata.azureOpenAiDeploymentBasedChatCompletions",
+          "awsBedrockMantleOpenAiCompatibleInference": "runtimeGenerated.types.provider.metadata.awsBedrockMantleOpenAiCompatibleInference",
+          "googleVertexAiExpressModeApiKey": "runtimeGenerated.types.provider.metadata.googleVertexAiExpressModeApiKey"
         }
       }
     },
@@ -4541,51 +4541,51 @@
     "characterPersonaReferences": "캐릭터/페르소나 참고자료"
   },
   "mediaSave": {
-    "success": "__MISSING__:mediaSave.success",
-    "failed": "__MISSING__:mediaSave.failed",
-    "noBytes": "__MISSING__:mediaSave.noBytes",
-    "noItems": "__MISSING__:mediaSave.noItems",
-    "exportFailed": "__MISSING__:mediaSave.exportFailed",
-    "prepareFailed": "__MISSING__:mediaSave.prepareFailed",
-    "exported": "__MISSING__:mediaSave.exported {{count}}",
-    "partiallyExported": "__MISSING__:mediaSave.partiallyExported {{saved}} {{total}}",
-    "failedWithDetail": "__MISSING__:mediaSave.failedWithDetail {{detail}}"
+    "success": "mediaSave.success",
+    "failed": "mediaSave.failed",
+    "noBytes": "mediaSave.noBytes",
+    "noItems": "mediaSave.noItems",
+    "exportFailed": "mediaSave.exportFailed",
+    "prepareFailed": "mediaSave.prepareFailed",
+    "exported": "mediaSave.exported {{count}}",
+    "partiallyExported": "mediaSave.partiallyExported {{saved}} {{total}}",
+    "failedWithDetail": "mediaSave.failedWithDetail {{detail}}"
   },
   "layout": {
     "sidebar": {
-      "resize": "__MISSING__:layout.sidebar.resize",
-      "resetWidth": "__MISSING__:layout.sidebar.resetWidth",
-      "width": "__MISSING__:layout.sidebar.width"
+      "resize": "layout.sidebar.resize",
+      "resetWidth": "layout.sidebar.resetWidth",
+      "width": "layout.sidebar.width"
     }
   },
   "safetyDecision": {
     "userMessage": {
-      "mandatory-child-safety": "__MISSING__:safetyDecision.userMessage.mandatory-child-safety",
-      "optional-family-policy": "__MISSING__:safetyDecision.userMessage.optional-family-policy",
-      "provider-policy": "__MISSING__:safetyDecision.userMessage.provider-policy",
-      "request-validation": "__MISSING__:safetyDecision.userMessage.request-validation"
+      "mandatory-child-safety": "safetyDecision.userMessage.mandatory-child-safety",
+      "optional-family-policy": "safetyDecision.userMessage.optional-family-policy",
+      "provider-policy": "safetyDecision.userMessage.provider-policy",
+      "request-validation": "safetyDecision.userMessage.request-validation"
     },
     "layer": {
-      "mandatory-child-safety": "__MISSING__:safetyDecision.layer.mandatory-child-safety",
-      "optional-family-policy": "__MISSING__:safetyDecision.layer.optional-family-policy",
-      "provider-policy": "__MISSING__:safetyDecision.layer.provider-policy",
-      "request-validation": "__MISSING__:safetyDecision.layer.request-validation"
+      "mandatory-child-safety": "safetyDecision.layer.mandatory-child-safety",
+      "optional-family-policy": "safetyDecision.layer.optional-family-policy",
+      "provider-policy": "safetyDecision.layer.provider-policy",
+      "request-validation": "safetyDecision.layer.request-validation"
     },
     "category": {
-      "minor-sexualization": "__MISSING__:safetyDecision.category.minor-sexualization",
-      "csam": "__MISSING__:safetyDecision.category.csam",
-      "grooming": "__MISSING__:safetyDecision.category.grooming",
-      "age-evasion": "__MISSING__:safetyDecision.category.age-evasion",
-      "adult-explicit-image": "__MISSING__:safetyDecision.category.adult-explicit-image",
-      "graphic-gore": "__MISSING__:safetyDecision.category.graphic-gore",
-      "provider-restriction": "__MISSING__:safetyDecision.category.provider-restriction",
-      "validation-error": "__MISSING__:safetyDecision.category.validation-error",
-      "unknown": "__MISSING__:safetyDecision.category.unknown"
+      "minor-sexualization": "safetyDecision.category.minor-sexualization",
+      "csam": "safetyDecision.category.csam",
+      "grooming": "safetyDecision.category.grooming",
+      "age-evasion": "safetyDecision.category.age-evasion",
+      "adult-explicit-image": "safetyDecision.category.adult-explicit-image",
+      "graphic-gore": "safetyDecision.category.graphic-gore",
+      "provider-restriction": "safetyDecision.category.provider-restriction",
+      "validation-error": "safetyDecision.category.validation-error",
+      "unknown": "safetyDecision.category.unknown"
     },
     "label": {
-      "blockingLayer": "__MISSING__:safetyDecision.label.blockingLayer {{layer}}",
-      "category": "__MISSING__:safetyDecision.label.category {{category}}",
-      "reasonCode": "__MISSING__:safetyDecision.label.reasonCode {{reasonCode}}"
+      "blockingLayer": "safetyDecision.label.blockingLayer {{layer}}",
+      "category": "safetyDecision.label.category {{category}}",
+      "reasonCode": "safetyDecision.label.reasonCode {{reasonCode}}"
     }
   }
 }

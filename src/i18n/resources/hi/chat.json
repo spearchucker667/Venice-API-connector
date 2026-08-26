@@ -54,7 +54,7 @@
     "xSearch": "एक्स खोज",
     "searchInStream": "स्ट्रीम में खोजें",
     "documentTools": "दस्तावेज़ उपकरण",
-    "documentToolsUnavailableTitle": "__MISSING__:controls.documentToolsUnavailableTitle",
+    "documentToolsUnavailableTitle": "controls.documentToolsUnavailableTitle",
     "newChatShortcut": "नई चैट (⌘N)",
     "systemPromptPlaceholder": "वैकल्पिक। ऐप-लिखित सिस्टम संदेश जोड़ने से बचने के लिए इसे खाली छोड़ दें।",
     "temperature": "तापमान",

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
+// 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { describe, it, expect, vi, beforeAll, afterAll, beforeEach } from 'vitest'
 import type { VeniceCharacter } from '../types/characters'
@@ -160,7 +160,7 @@ describe('chat-store desktopBridge routing', () => {
     expect(state.activeConversationId).toBe(id)
     expect(state.conversations.length).toBe(1)
     expect(state.conversations[0].model).toBe('llama-3')
-    expect(state.conversations[0].memory.projectRefs).toEqual(['mock-proj-123'])
+    expect(state.conversations[0].memory?.projectRefs).toEqual(['mock-proj-123'])
     
     // Test dirty map tracking
     await vi.advanceTimersByTimeAsync(500)
@@ -177,7 +177,7 @@ describe('chat-store desktopBridge routing', () => {
     expect(conv?.id).toBe(id)
     expect(conv?.title).toBe('Chat with Test Char')
     expect(conv?.model).toBe('specific-model')
-    expect(conv?.metadata.character?.slug).toBe('test-slug')
+    expect(conv?.metadata?.character?.slug).toBe('test-slug')
   })
 
   it('creates local character conversation', async () => {
@@ -190,7 +190,7 @@ describe('chat-store desktopBridge routing', () => {
     expect(conv?.id).toBe(id)
     expect(conv?.model).toBe('fallback-model')
     expect(conv?.systemPrompt).toBe('Sys prompt')
-    expect(conv?.metadata.character?.localCharacterId).toBe('local-1')
+    expect(conv?.metadata?.character?.localCharacterId).toBe('local-1')
   })
 
   it('deletes conversation and calls IPC', async () => {

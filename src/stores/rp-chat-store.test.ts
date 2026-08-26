@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
+// 
 // @vitest-environment node
 // T-189 / T-199 regression guard
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -65,7 +65,7 @@ describe("rp-chat-store Success Paths", () => {
   });
 
   it("loads chats successfully", async () => {
-    mocks.listRpChats.mockResolvedValueOnce([fixtures.chat]);
+    mocks.listRpChats.mockResolvedValueOnce([fixtures.chat] as any);
     await useRpChatStore.getState().load();
     expect(useRpChatStore.getState().hasLoaded).toBe(true);
     expect(useRpChatStore.getState().chats.length).toBe(1);

@@ -132,18 +132,18 @@
     "enhancementProviderError": "内部エンハンサーがVeniceリクエストに到達または完了できませんでした。元のプロンプトは保持されました。",
     "enhancementInvalidOutput": "内部エンハンサーは使用可能な画像プロンプトを1つも返しませんでした。元のプロンプトは保持されました。",
     "enhancementSafetyBlocked": "プロンプトの強化は、任意のセーフモード設定とは別の必須の児童安全保護によって停止されました。元のプロンプトは保持されました。",
-    "enhancementSafetyBlockedMandatory": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedMandatory",
-    "enhancementSafetyBlockedFamily": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedFamily",
-    "enhancementSafetyBlockedProvider": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedProvider"
+    "enhancementSafetyBlockedMandatory": "imageStudioRuntime.enhancementSafetyBlockedMandatory",
+    "enhancementSafetyBlockedFamily": "imageStudioRuntime.enhancementSafetyBlockedFamily",
+    "enhancementSafetyBlockedProvider": "imageStudioRuntime.enhancementSafetyBlockedProvider"
   },
   "contextMenu": {
-    "saveAs": "__MISSING__:contextMenu.saveAs",
-    "copyImage": "__MISSING__:contextMenu.copyImage",
-    "openInInspector": "__MISSING__:contextMenu.openInInspector",
-    "sendToImageTools": "__MISSING__:contextMenu.sendToImageTools",
-    "sendToCharacterCreator": "__MISSING__:contextMenu.sendToCharacterCreator",
-    "saveToMediaStudio": "__MISSING__:contextMenu.saveToMediaStudio",
-    "revealInFinder": "__MISSING__:contextMenu.revealInFinder",
-    "removeFromChat": "__MISSING__:contextMenu.removeFromChat"
+    "saveAs": "contextMenu.saveAs",
+    "copyImage": "contextMenu.copyImage",
+    "openInInspector": "contextMenu.openInInspector",
+    "sendToImageTools": "contextMenu.sendToImageTools",
+    "sendToCharacterCreator": "contextMenu.sendToCharacterCreator",
+    "saveToMediaStudio": "contextMenu.saveToMediaStudio",
+    "revealInFinder": "contextMenu.revealInFinder",
+    "removeFromChat": "contextMenu.removeFromChat"
   }
 }

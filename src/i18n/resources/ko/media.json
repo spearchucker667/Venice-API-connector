@@ -132,18 +132,18 @@
     "enhancementProviderError": "내부 강화기가 Venice 요청에 도달하거나 완료할 수 없었습니다. 원래 프롬프트가 유지되었습니다.",
     "enhancementInvalidOutput": "내부 강화기가 사용 가능한 이미지 프롬프트를 하나도 반환하지 않았습니다. 원래 프롬프트가 유지되었습니다.",
     "enhancementSafetyBlocked": "프롬프트 강화가 선택적 안전 모드 설정과 별개인 필수 아동 안전 보호 조치에 의해 중단되었습니다. 원래 프롬프트는 유지되었습니다.",
-    "enhancementSafetyBlockedMandatory": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedMandatory",
-    "enhancementSafetyBlockedFamily": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedFamily",
-    "enhancementSafetyBlockedProvider": "__MISSING__:imageStudioRuntime.enhancementSafetyBlockedProvider"
+    "enhancementSafetyBlockedMandatory": "imageStudioRuntime.enhancementSafetyBlockedMandatory",
+    "enhancementSafetyBlockedFamily": "imageStudioRuntime.enhancementSafetyBlockedFamily",
+    "enhancementSafetyBlockedProvider": "imageStudioRuntime.enhancementSafetyBlockedProvider"
   },
   "contextMenu": {
-    "saveAs": "__MISSING__:contextMenu.saveAs",
-    "copyImage": "__MISSING__:contextMenu.copyImage",
-    "openInInspector": "__MISSING__:contextMenu.openInInspector",
-    "sendToImageTools": "__MISSING__:contextMenu.sendToImageTools",
-    "sendToCharacterCreator": "__MISSING__:contextMenu.sendToCharacterCreator",
-    "saveToMediaStudio": "__MISSING__:contextMenu.saveToMediaStudio",
-    "revealInFinder": "__MISSING__:contextMenu.revealInFinder",
-    "removeFromChat": "__MISSING__:contextMenu.removeFromChat"
+    "saveAs": "contextMenu.saveAs",
+    "copyImage": "contextMenu.copyImage",
+    "openInInspector": "contextMenu.openInInspector",
+    "sendToImageTools": "contextMenu.sendToImageTools",
+    "sendToCharacterCreator": "contextMenu.sendToCharacterCreator",
+    "saveToMediaStudio": "contextMenu.saveToMediaStudio",
+    "revealInFinder": "contextMenu.revealInFinder",
+    "removeFromChat": "contextMenu.removeFromChat"
   }
 }

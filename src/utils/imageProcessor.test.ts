@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
+// 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import {
   base64ToUint8Array,
   uint8ArrayToBase64,
@@ -304,25 +304,23 @@ describe('imageProcessor', () => {
   describe('Buffer fallbacks', () => {
     let originalBuffer: any;
 
-    global.beforeAll(() => {
-      originalBuffer = global.Buffer;
+    beforeAll(() => {
+      originalBuffer = (globalThis as any).Buffer;
     });
 
-    global.afterAll(() => {
-      global.Buffer = originalBuffer;
+    afterAll(() => {
+      (globalThis as any).Buffer = originalBuffer;
     });
 
     it('base64ToUint8Array without Buffer', () => {
-      // @ts-expect-error fix
-      global.Buffer = undefined;
+      (globalThis as any).Buffer = undefined;
       const base64 = 'SGVsbG8gV29ybGQ='; // "Hello World"
       const result = base64ToUint8Array(base64);
       expect(String.fromCharCode(...result)).toBe('Hello World');
     });
 
     it('uint8ArrayToBase64 without Buffer', () => {
-      // @ts-expect-error fix
-      global.Buffer = undefined;
+      (globalThis as any).Buffer = undefined;
       const bytes = new Uint8Array([72, 101, 108, 108, 111]); // "Hello"
       const result = uint8ArrayToBase64(bytes, 'image/jpeg');
       expect(result).toBe('data:image/jpeg;base64,SGVsbG8=');

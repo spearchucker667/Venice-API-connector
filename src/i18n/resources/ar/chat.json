@@ -54,7 +54,7 @@
     "xSearch": "بحث X",
     "searchInStream": "البحث في الدفق",
     "documentTools": "أدوات الوثيقة",
-    "documentToolsUnavailableTitle": "__MISSING__:controls.documentToolsUnavailableTitle",
+    "documentToolsUnavailableTitle": "controls.documentToolsUnavailableTitle",
     "newChatShortcut": "دردشة جديدة (⌘N)",
     "systemPromptPlaceholder": "خياري. اتركه فارغًا لتجنب إضافة رسالة نظام مؤلفة من خلال التطبيق.",
     "temperature": "درجة حرارة",

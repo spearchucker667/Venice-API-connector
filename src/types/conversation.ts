@@ -18,7 +18,7 @@ export {
   isChatMediaReference,
   isChatMediaReferenceArray,
 } from "./conversationVault";
-export type { CreateChatMediaReferenceInput } from "./conversationVault";
+export type { CreateChatMediaReferenceInput, ChatMediaReference } from "./conversationVault";
 
 // The renderer alias uses the canonical vault type so any drift is caught at
 // compile time, not at runtime when reading legacy IndexDB rows.

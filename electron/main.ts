@@ -89,7 +89,10 @@ const MAX_DISPLAY_URL_LENGTH = 60;
 
 /** Prompts the user with a native dialog before opening an external URL.
  *  SEC-001: Prevents AI-generated or attacker-controlled links from silently
- *  navigating the user to phishing sites or local-network admin pages.
+ *  navigating the user to phishing sites or explicit local-network admin pages.
+ *  NOTE: This relies on `isTrustedExternalUrl` which blocks literal private/loopback 
+ *  hostnames, but explicitly performs no DNS resolution and thus cannot perfectly 
+ *  prevent private-IP routing via DNS tricks (e.g. DNS rebinding).
  *  @param win The parent BrowserWindow.
  *  @param url The external URL to potentially open.
  */

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
+// 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
@@ -103,7 +103,7 @@ describe("Asset Store (scene-asset-store.ts)", () => {
 
   describe("upsert", () => {
     it("returns null if normalizeAsset fails", async () => {
-      mocks.normalizeAsset.mockReturnValue(null);
+      mocks.normalizeAsset.mockReturnValue(null as any);
       const result = await useSceneAssetStore.getState().upsert(baseAsset());
       
       expect(result).toBeNull();

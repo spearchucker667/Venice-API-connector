@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
+// 
 /** @fileoverview Unit tests for the renderer-side RP chat service. */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -114,7 +114,7 @@ describe("rpChatService", () => {
       vi.mocked(desktopBridge.isElectron).mockReturnValue(false);
       vi.spyOn(StorageService, "getItems").mockResolvedValue([baseChat()]);
       vi.spyOn(StorageService, "getItem").mockResolvedValue(baseChat());
-      vi.spyOn(StorageService, "saveItem").mockResolvedValue();
+      vi.spyOn(StorageService, "saveItem").mockResolvedValue(baseChat() as any);
       vi.spyOn(StorageService, "deleteItem").mockResolvedValue(true);
     });
 
@@ -192,9 +192,9 @@ describe("rpChatService", () => {
       vi.mocked(safetyImport.assessRpContext).mockReturnValue({
         allow: false,
         action: "block",
-        reason: "ADULT_CONTENT",
+        reasonCode: "ADULT_CONTENT",
         layer: "local-family-safe-mode",
-      });
+      } as any);
       await expect(saveRpChat(baseChat())).rejects.toThrow(SafetyGuardBlockedError);
     });
 
@@ -202,9 +202,9 @@ describe("rpChatService", () => {
       vi.mocked(safetyImport.assessRpContext).mockReturnValue({
         allow: false,
         action: "block",
-        reason: "ADULT_CONTENT",
+        reasonCode: "ADULT_CONTENT",
         layer: "local-family-safe-mode",
-      });
+      } as any);
       const msg: RpMessageV1 = { role: "user", content: "Blocked", id: "m_1", createdAt: 123 } as any;
       await expect(appendMessage(baseChat(), msg)).rejects.toThrow(SafetyGuardBlockedError);
     });
