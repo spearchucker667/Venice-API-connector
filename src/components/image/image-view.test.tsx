@@ -12,7 +12,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const mutate = vi.fn();
 const mediaUpsert = vi.fn();
 const mediaUpsertDerivative = vi.fn();
-const { enhancePromptMock } = vi.hoisted(() => ({ enhancePromptMock: vi.fn() }));
+const { enhancePromptMock, modelsDataMock } = vi.hoisted(() => ({
+  enhancePromptMock: vi.fn(),
+  modelsDataMock: vi.fn(),
+}));
 const {
   isElectronMock,
   persistGeneratedImage,
@@ -33,20 +36,7 @@ vi.mock("../../hooks/use-image", () => ({
 
 vi.mock("../../hooks/use-models", () => ({
   useModels: () => ({
-    data: [
-      {
-        id: "nano-banana-v1",
-        model_spec: {
-          constraints: {
-            aspect_ratios: ["1:1", "16:9"],
-            default_aspect_ratio: "16:9",
-            resolutions: ["1k", "2k"],
-            default_resolution: "2k",
-            steps: { min: 1, max: 50, default: 20 },
-          },
-        },
-      },
-    ],
+    data: modelsDataMock(),
   }),
 }));
 
@@ -97,6 +87,20 @@ import { useToastStore } from "../../stores/toast-store";
 
 describe("ImageView model-aware payloads", () => {
   beforeEach(() => {
+    modelsDataMock.mockReset().mockReturnValue([
+      {
+        id: "nano-banana-v1",
+        model_spec: {
+          constraints: {
+            aspect_ratios: ["1:1", "16:9"],
+            default_aspect_ratio: "16:9",
+            resolutions: ["1k", "2k"],
+            default_resolution: "2k",
+            steps: { min: 1, max: 50, default: 20 },
+          },
+        },
+      },
+    ]);
     mutate.mockReset();
     mediaUpsert.mockReset().mockResolvedValue(undefined);
     mediaUpsertDerivative.mockReset().mockResolvedValue(undefined);
@@ -162,6 +166,156 @@ describe("ImageView model-aware payloads", () => {
     expect(request.height).toBeUndefined();
     expect(request.format).toBe("png");
     expect(request).not.toHaveProperty("output_format");
+  });
+
+  it("shows runtime-supported style references and serializes the selected image", async () => {
+    modelsDataMock.mockReturnValue([
+      {
+        id: "nano-banana-v1",
+        model_spec: {
+          supportsStyleReferences: true,
+          constraints: {
+            aspect_ratios: ["1:1"],
+            resolutions: ["2k"],
+            maxStyleReferences: 2,
+            supportsStyleReferenceStrength: true,
+          },
+        },
+      },
+    ]);
+    render(<ImageView />);
+
+    const input = screen.getByLabelText("Add style reference images");
+    fireEvent.change(input, {
+      target: {
+        files: [
+          new File([new Uint8Array([1, 2, 3, 4])], "palette.png", {
+            type: "image/png",
+          }),
+        ],
+      },
+    });
+
+    expect(await screen.findByText("palette.png")).toBeInTheDocument();
+    expect(screen.getByRole("slider", { name: "Strength for palette.png" })).toBeInTheDocument();
+    fireEvent.change(screen.getByPlaceholderText(/serene mountain landscape/i), {
+      target: { value: "A copper city at dusk" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Generate" }));
+
+    expect(mutate.mock.calls[0][0]).toMatchObject({
+      style_references: [
+        {
+          image: "data:image/png;base64,AQIDBA==",
+          strength: 0.5,
+        },
+      ],
+    });
+  });
+
+  it("omits reference strength when runtime metadata disables it", async () => {
+    modelsDataMock.mockReturnValue([
+      {
+        id: "nano-banana-v1",
+        model_spec: {
+          supportsStyleReferences: true,
+          constraints: {
+            aspect_ratios: ["1:1"],
+            resolutions: ["2k"],
+            maxStyleReferences: 1,
+            supportsStyleReferenceStrength: false,
+          },
+        },
+      },
+    ]);
+    render(<ImageView />);
+    fireEvent.change(screen.getByLabelText("Add style reference images"), {
+      target: {
+        files: [new File([new Uint8Array([5])], "linework.webp", { type: "image/webp" })],
+      },
+    });
+    expect(await screen.findByText("linework.webp")).toBeInTheDocument();
+    expect(screen.queryByRole("slider", { name: /Strength for/ })).not.toBeInTheDocument();
+    fireEvent.change(screen.getByPlaceholderText(/serene mountain landscape/i), {
+      target: { value: "A copper city at dusk" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Generate" }));
+
+    const references = (mutate.mock.calls[0][0] as { style_references: Array<Record<string, unknown>> }).style_references;
+    expect(references).toHaveLength(1);
+    expect(references[0]).not.toHaveProperty("strength");
+  });
+
+  it("enforces the runtime reference limit and supports accessible removal", async () => {
+    modelsDataMock.mockReturnValue([
+      {
+        id: "nano-banana-v1",
+        model_spec: {
+          supportsStyleReferences: true,
+          constraints: { maxStyleReferences: 1 },
+        },
+      },
+    ]);
+    render(<ImageView />);
+    const input = screen.getByLabelText("Add style reference images");
+    fireEvent.change(input, {
+      target: {
+        files: [
+          new File([new Uint8Array([1])], "first.png", { type: "image/png" }),
+          new File([new Uint8Array([2])], "second.png", { type: "image/png" }),
+        ],
+      },
+    });
+
+    expect(await screen.findByText("first.png")).toBeInTheDocument();
+    expect(screen.queryByText("second.png")).not.toBeInTheDocument();
+    expect(input).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Remove first.png" }));
+    expect(screen.queryByText("first.png")).not.toBeInTheDocument();
+    expect(input).not.toBeDisabled();
+  });
+
+  it.each([
+    [{ supportsStyleReferences: false, constraints: { maxStyleReferences: 3 } }, "disabled"],
+    [{ constraints: { maxStyleReferences: 3 } }, "missing"],
+    [{ supportsStyleReferences: true, constraints: { maxStyleReferences: 0 } }, "zero-limit"],
+  ])("fails closed when runtime style-reference metadata is %s", (modelSpec, _label) => {
+    modelsDataMock.mockReturnValue([{ id: "nano-banana-v1", model_spec: modelSpec }]);
+    render(<ImageView />);
+    expect(screen.queryByLabelText("Add style reference images")).not.toBeInTheDocument();
+  });
+
+  it("clears selected references after switching through an unsupported model", async () => {
+    modelsDataMock.mockReturnValue([
+      {
+        id: "nano-banana-v1",
+        model_spec: {
+          supportsStyleReferences: true,
+          constraints: { maxStyleReferences: 1 },
+        },
+      },
+      {
+        id: "unknown-model-xyz",
+        model_spec: { supportsStyleReferences: false },
+      },
+    ]);
+    render(<ImageView />);
+    fireEvent.change(screen.getByLabelText("Add style reference images"), {
+      target: {
+        files: [new File([new Uint8Array([3])], "temporary.png", { type: "image/png" })],
+      },
+    });
+    expect(await screen.findByText("temporary.png")).toBeInTheDocument();
+
+    act(() => {
+      useSettingsStore.getState().setSelectedModel("image", "unknown-model-xyz");
+    });
+    expect(screen.queryByLabelText("Add style reference images")).not.toBeInTheDocument();
+    act(() => {
+      useSettingsStore.getState().setSelectedModel("image", "nano-banana-v1");
+    });
+    expect(screen.getByLabelText("Add style reference images")).toBeInTheDocument();
+    expect(screen.queryByText("temporary.png")).not.toBeInTheDocument();
   });
 
   it("keeps a generated image downloadable when gallery persistence fails", async () => {

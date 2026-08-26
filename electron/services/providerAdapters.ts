@@ -1,7 +1,7 @@
 import { getProviderCredentialOrFallback } from './secureStore'
 import { getProviderSettings } from './providerSettingsStore'
 import type { StreamDelta } from './veniceClient'
-import { PROVIDER_REGISTRY, type AzureOpenAiConfig, type AwsBedrockConfig, type GoogleVertexConfig, type ProviderCredential } from '../../src/types/provider'
+import { PROVIDER_REGISTRY, type AzureOpenAiConfig, type AwsBedrockConfig, type GoogleVertexConfig, type ProviderCredential, type ProviderId } from '../../src/types/provider'
 
 export interface ProviderRoute {
   host: string
@@ -13,6 +13,123 @@ export interface ProviderRoute {
 }
 
 type AdapterFn = (model: string, credential: ProviderCredential | string, originalPath: string, _originalBody: Record<string, unknown>) => ProviderRoute | null
+
+type ProviderOperationFields = Readonly<
+  Partial<Record<ProviderId, Readonly<Record<string, readonly string[]>>>>
+>
+
+const TOGETHER_CHAT_FIELDS = [
+  'model', 'messages', 'max_tokens', 'stop', 'temperature', 'top_p', 'top_k',
+  'context_length_exceeded_behavior', 'repetition_penalty', 'stream', 'logprobs',
+  'n', 'min_p', 'presence_penalty', 'frequency_penalty', 'logit_bias', 'seed',
+  'function_call', 'response_format', 'tools', 'tool_choice', 'compliance',
+  'chat_template_kwargs', 'safety_model', 'reasoning_effort', 'reasoning',
+] as const
+
+const OPENAI_CHAT_FIELDS = [
+  'model', 'messages', 'audio', 'frequency_penalty', 'function_call', 'functions',
+  'logit_bias', 'logprobs', 'max_completion_tokens', 'max_tokens', 'metadata',
+  'modalities', 'n', 'parallel_tool_calls', 'prediction', 'presence_penalty',
+  'reasoning_effort', 'response_format', 'seed', 'service_tier', 'stop', 'store',
+  'stream', 'stream_options', 'temperature', 'tool_choice', 'tools', 'top_logprobs',
+  'top_p', 'user',
+] as const
+
+const PROVIDER_OPERATION_FIELDS: ProviderOperationFields = {
+  together: {
+    '/chat/completions': TOGETHER_CHAT_FIELDS,
+    '/image/generate': [
+      'model', 'prompt', 'steps', 'seed', 'variants', 'height', 'width',
+      'negative_prompt', 'cfg_scale', 'format',
+    ],
+    '/images/generations': [
+      'model', 'prompt', 'steps', 'image_url', 'seed', 'n', 'height', 'width',
+      'negative_prompt', 'response_format', 'guidance_scale', 'output_format',
+      'image_loras', 'reference_images', 'disable_safety_checker',
+    ],
+  },
+  groq: {
+    '/chat/completions': [
+      ...OPENAI_CHAT_FIELDS, 'citation_options', 'compound_custom',
+      'disable_tool_validation', 'documents', 'exclude_domains', 'include_domains',
+      'include_reasoning', 'reasoning_format', 'search_settings',
+    ],
+  },
+  fireworks: {
+    '/chat/completions': [
+      ...OPENAI_CHAT_FIELDS, 'top_k', 'prompt_cache_key',
+      'prompt_cache_isolation_key', 'raw_output', 'perf_metrics_in_response',
+      'min_p', 'typical_p', 'repetition_penalty', 'mirostat_target', 'ignore_eos',
+      'context_length_exceeded_behavior', 'speculation',
+    ],
+  },
+  mistral: {
+    '/chat/completions': [
+      ...OPENAI_CHAT_FIELDS, 'random_seed', 'safe_prompt', 'prompt_mode',
+      'guardrails',
+    ],
+  },
+  anthropic: {
+    '/chat/completions': [
+      'model', 'messages', 'max_tokens', 'stop', 'stream', 'temperature', 'top_p',
+      'top_k', 'tools', 'tool_choice', 'metadata', 'service_tier', 'thinking',
+    ],
+  },
+  cohere: {
+    '/chat/completions': [
+      'model', 'messages', 'stream', 'tools', 'documents', 'citation_options',
+      'response_format', 'safety_mode', 'max_tokens', 'stop_sequences',
+      'temperature', 'seed', 'frequency_penalty', 'presence_penalty', 'k', 'p',
+      'top_p', 'logprobs', 'tool_choice', 'thinking', 'priority', 'strict_tools',
+    ],
+  },
+  google_gemini: {
+    '/chat/completions': [
+      'model', 'messages', 'stream', 'temperature', 'max_tokens', 'top_p', 'top_k',
+      'stop', 'tools', 'tool_choice', 'response_format',
+    ],
+  },
+  google_vertex: {
+    '/chat/completions': [
+      'model', 'messages', 'stream', 'temperature', 'max_tokens', 'top_p', 'top_k',
+      'stop', 'tools', 'tool_choice', 'response_format',
+    ],
+  },
+  azure_openai: { '/chat/completions': OPENAI_CHAT_FIELDS },
+  aws_bedrock: { '/chat/completions': OPENAI_CHAT_FIELDS },
+  huggingface: { '/chat/completions': OPENAI_CHAT_FIELDS },
+  perplexity: {
+    '/chat/completions': [
+      'model', 'messages', 'max_tokens', 'stream', 'stop', 'temperature', 'top_p',
+      'response_format', 'web_search_options', 'search_mode', 'return_images',
+      'return_related_questions', 'enable_search_classifier', 'disable_search',
+      'search_domain_filter', 'search_language_filter', 'search_recency_filter',
+      'search_after_date_filter', 'search_before_date_filter',
+      'last_updated_before_filter', 'last_updated_after_filter',
+      'image_format_filter', 'image_domain_filter', 'stream_mode',
+      'reasoning_effort', 'language_preference',
+    ],
+  },
+}
+
+/** Builds a fresh provider request body from the fields documented for the
+ * selected provider operation. Unknown operations fail closed. */
+export function sanitizeProviderRequestBody(
+  providerId: ProviderId,
+  endpoint: string,
+  body: Record<string, unknown>,
+): Record<string, unknown> {
+  const allowedFields = PROVIDER_OPERATION_FIELDS[providerId]?.[endpoint]
+  if (!allowedFields) return {}
+
+  const sanitized: Record<string, unknown> = {}
+  for (const field of allowedFields) {
+    if (Object.prototype.hasOwnProperty.call(body, field) && body[field] !== undefined) {
+      sanitized[field] = body[field]
+    }
+  }
+  return sanitized
+}
 
 /** Extracts a single API key from a simple credential object or string. */
 function extractApiKey(credential: ProviderCredential | string): string {
@@ -157,15 +274,41 @@ function buildAzureOpenAiHost(resourceName: string): string {
 
 export const providerAdapters: Record<string, AdapterFn> = {
   together: (model, credential, originalPath, _originalBody) => {
-    if (originalPath !== '/chat/completions' && originalPath !== '/images/generations') return null
+    if (
+      originalPath !== '/chat/completions' &&
+      originalPath !== '/image/generate' &&
+      originalPath !== '/images/generations'
+    ) return null
     return {
       host: 'api.together.xyz',
-      path: '/v1' + originalPath,
+      path: originalPath === '/chat/completions'
+        ? '/v1/chat/completions'
+        : '/v1/images/generations',
       headers: {
         'Authorization': `Bearer ${extractApiKey(credential)}`,
         'Content-Type': 'application/json'
       },
-      transformBody: (body, realModel) => ({ ...body, model: realModel })
+      transformBody: (body, realModel) => {
+        if (originalPath !== '/image/generate') {
+          return { ...body, model: realModel }
+        }
+        const mapped = {
+          model: realModel,
+          prompt: body.prompt,
+          steps: body.steps,
+          seed: body.seed,
+          n: body.variants,
+          height: body.height,
+          width: body.width,
+          negative_prompt: body.negative_prompt,
+          guidance_scale: body.cfg_scale,
+          output_format: body.format,
+          response_format: 'base64',
+        }
+        return Object.fromEntries(
+          Object.entries(mapped).filter(([, value]) => value !== undefined),
+        )
+      }
     }
   },
   groq: (model, credential, originalPath, _originalBody) => {
@@ -501,24 +644,26 @@ export function resolveProviderRoute(
     return { error: `Provider ${providerId} does not support endpoint ${request.endpoint}`, unsupported: true }
   }
 
-  // Strip Venice-specific parameters that third-party OpenAI-compatible providers
-  // do not accept. Forwarding these causes 400 errors and can leak internal
-  // request structure to external APIs.
+  // Build a fresh provider-and-operation-specific request body before the
+  // adapter sees it. A denylist is insufficient because Venice adds new
+  // fields independently of third-party provider schemas.
+  const sanitizeForRoute = (candidate: Record<string, unknown>) => ({
+    ...sanitizeProviderRequestBody(
+      providerId as ProviderId,
+      request.endpoint as string,
+      candidate,
+    ),
+    model: realModel,
+  })
   if (route.transformBody) {
-    const originalTransformBody = route.transformBody;
+    const originalTransformBody = route.transformBody
     route.transformBody = (b: Record<string, unknown>, m: string) => {
-      const transformed = originalTransformBody(b, m);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { venice_parameters, ...sanitized } = transformed;
-      return sanitized;
-    };
+      return originalTransformBody(sanitizeForRoute(b), m)
+    }
   } else {
-    // No existing transformBody: add one that strips venice_parameters.
     route.transformBody = (b: Record<string, unknown>, _m: string) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { venice_parameters, ...sanitized } = b;
-      return { ...sanitized, model: realModel };
-    };
+      return sanitizeForRoute(b)
+    }
   }
 
   return { route }

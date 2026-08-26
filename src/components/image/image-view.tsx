@@ -67,6 +67,11 @@ import { Trans, useTranslation } from "react-i18next";
 import { ContextMenu, useContextMenu } from "../ui/ContextMenu";
 import type { ContextMenuItem } from "../ui/ContextMenu";
 import { copyText } from "../../utils/download";
+import {
+  readStyleReferenceFile,
+  StyleReferenceFileError,
+  type StyleReferenceInput,
+} from "../../utils/styleReferenceFiles";
 
 function toImageSrc(b64: string): string {
   if (!b64) return "";
@@ -135,6 +140,7 @@ export function ImageView() {
   const seedId = useId();
   const stepsId = useId();
   const variantsId = useId();
+  const styleReferencesId = useId();
   const hasVeniceKey = useAuthStore(selectHasVeniceKey);
   const selectedModel = useSettingsStore((s) => s.selectedModels.image);
   const setSelectedModel = useSettingsStore((s) => s.setSelectedModel);
@@ -152,6 +158,13 @@ export function ImageView() {
     () => buildDimensionOptions(model, constraints),
     [model, constraints],
   );
+  const styleReferenceCapabilities = useMemo(
+    () => resolveStyleReferenceCapabilities(model, modelData?.model_spec),
+    [model, modelData?.model_spec],
+  );
+  const styleReferencesEnabled =
+    styleReferenceCapabilities.supported &&
+    styleReferenceCapabilities.maxReferences > 0;
   const enhancerModelFacts = useMemo(
     () =>
       derivePromptEnhancerModelFacts({
@@ -159,19 +172,22 @@ export function ImageView() {
         runtimeModel: modelData,
         capabilities: caps,
         dimensionMode: dimOptions.dimensionMode,
-        referenceCapabilities: resolveStyleReferenceCapabilities(
-          model,
-          modelData?.model_spec,
-        ),
+        referenceCapabilities: styleReferenceCapabilities,
       }),
-    [caps, dimOptions.dimensionMode, model, modelData],
+    [caps, dimOptions.dimensionMode, model, modelData, styleReferenceCapabilities],
   );
   const capabilitySummary = useMemo(
     () =>
-      getRecipeCapabilityList(caps).map((descriptor) =>
+      getRecipeCapabilityList({
+        ...caps,
+        supportsReferences: styleReferencesEnabled,
+        referenceLimit: styleReferencesEnabled
+          ? styleReferenceCapabilities.maxReferences
+          : 0,
+      }).map((descriptor) =>
         tRuntime(descriptor.key, descriptor.values),
       ),
-    [caps, tRuntime],
+    [caps, styleReferenceCapabilities.maxReferences, styleReferencesEnabled, tRuntime],
   );
   const compatibleNegativeModel = useMemo(
     () =>
@@ -226,6 +242,7 @@ export function ImageView() {
   const [resolution, setResolution] = useState("");
   const [quality, setQuality] = useState("");
   const [style, setStyle] = useState("");
+  const [styleReferences, setStyleReferences] = useState<StyleReferenceInput[]>([]);
   const [steps, setSteps] = useState(defaultSteps);
   const [cfgScale, setCfgScale] = useState(1);
   const [variants, setVariants] = useState(1);
@@ -341,6 +358,75 @@ export function ImageView() {
     defaultSteps,
     steps,
   ]);
+
+  useEffect(() => {
+    setStyleReferences([]);
+  }, [model]);
+
+  useEffect(() => {
+    setStyleReferences((current) => {
+      if (!styleReferencesEnabled) return current.length > 0 ? [] : current;
+      if (current.length <= styleReferenceCapabilities.maxReferences) return current;
+      return current.slice(0, styleReferenceCapabilities.maxReferences);
+    });
+  }, [styleReferenceCapabilities.maxReferences, styleReferencesEnabled]);
+
+  const handleStyleReferenceFiles = useCallback(
+    async (files: FileList | null) => {
+      if (!styleReferencesEnabled || !files?.length) return;
+      const remaining = Math.max(
+        0,
+        styleReferenceCapabilities.maxReferences - styleReferences.length,
+      );
+      if (remaining === 0) {
+        toast.warn(t("imageStudioRuntime.styleReferenceLimitReached"));
+        return;
+      }
+
+      const selectedFiles = Array.from(files).slice(0, remaining);
+      if (files.length > remaining) {
+        toast.warn(
+          t("imageStudioRuntime.styleReferenceLimitReached"),
+          t("imageStudioRuntime.styleReferenceLimitDetail", {
+            count: styleReferenceCapabilities.maxReferences,
+          }),
+        );
+      }
+
+      for (const file of selectedFiles) {
+        try {
+          const reference = await readStyleReferenceFile(file);
+          setStyleReferences((current) => {
+            if (current.length >= styleReferenceCapabilities.maxReferences) return current;
+            if (current.some((candidate) => candidate.contentHash === reference.contentHash)) {
+              return current;
+            }
+            return [...current, reference];
+          });
+        } catch (error) {
+          const description =
+            error instanceof StyleReferenceFileError
+              ? t(
+                  error.code === "unsupported-type"
+                    ? "imageStudioRuntime.styleReferenceUnsupportedType"
+                    : error.code === "empty-file"
+                      ? "imageStudioRuntime.styleReferenceEmptyFile"
+                      : error.code === "too-large"
+                        ? "imageStudioRuntime.styleReferenceTooLarge"
+                        : "imageStudioRuntime.styleReferenceReadFailed",
+                )
+              : t("imageStudioRuntime.styleReferenceReadFailed");
+          toast.error(t("imageStudioRuntime.styleReferenceRejected"), description);
+        }
+      }
+    },
+    [
+      styleReferenceCapabilities.maxReferences,
+      styleReferences.length,
+      styleReferencesEnabled,
+      t,
+    ],
+  );
 
   const downloadImage = async (b64: string, index?: number) => {
     const ext = getExtensionFromDataUrl(b64);
@@ -723,6 +809,11 @@ export function ImageView() {
         supportsStyle: caps.supportsStyle,
         supportsSteps: caps.supportsSteps,
         supportsCfgScale: caps.supportsCfgScale,
+        supportsReferences: styleReferencesEnabled,
+        maxStyleReferences: styleReferenceCapabilities.maxReferences,
+        supportsStyleReferenceStrength:
+          styleReferenceCapabilities.supportsStrength,
+        references: styleReferences,
       },
       undefined,
       seedState,
@@ -1293,6 +1384,111 @@ export function ImageView() {
             placeholder={t("imageStudioRuntime.none")}
           />
         </div>
+      )}
+
+      {styleReferencesEnabled && (
+        <fieldset className="rounded-lg border border-border/60 bg-surface/40 p-3 space-y-2">
+          <legend className="px-1 text-[12px] font-semibold text-foreground-muted uppercase tracking-[0.08em]">
+            {t("imageStudioRuntime.styleReferences")}
+          </legend>
+          <p
+            id={`${styleReferencesId}-description`}
+            className="text-[12px] text-text-secondary"
+          >
+            {t("imageStudioRuntime.styleReferenceHelp", {
+              count: styleReferenceCapabilities.maxReferences,
+            })}
+          </p>
+          <Label htmlFor={styleReferencesId}>
+            {t("imageStudioRuntime.addStyleReferenceImages")}
+          </Label>
+          <input
+            id={styleReferencesId}
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            multiple={styleReferenceCapabilities.maxReferences > 1}
+            disabled={
+              styleReferences.length >= styleReferenceCapabilities.maxReferences
+            }
+            aria-describedby={`${styleReferencesId}-description ${styleReferencesId}-count`}
+            onChange={(event) => {
+              const files = event.currentTarget.files;
+              void handleStyleReferenceFiles(files);
+              event.currentTarget.value = "";
+            }}
+            className="block w-full text-[12px] text-text-secondary file:mr-2 file:rounded-md file:border file:border-border file:bg-surface-elevated file:px-2 file:py-1 file:text-text-primary hover:file:border-accent disabled:opacity-50"
+          />
+          <p
+            id={`${styleReferencesId}-count`}
+            role="status"
+            className="text-[12px] text-text-secondary"
+          >
+            {t("imageStudioRuntime.styleReferenceCount", {
+              count: styleReferences.length,
+              max: styleReferenceCapabilities.maxReferences,
+            })}
+          </p>
+          {styleReferences.length > 0 && (
+            <ul className="space-y-2" aria-label={t("imageStudioRuntime.selectedStyleReferences")}>
+              {styleReferences.map((reference) => (
+                <li
+                  key={reference.entityId}
+                  className="rounded-md border border-border/60 bg-surface-elevated p-2"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="min-w-0 truncate text-[12px] text-text-primary">
+                      {reference.name}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setStyleReferences((current) =>
+                          current.filter(
+                            (candidate) => candidate.entityId !== reference.entityId,
+                          ),
+                        )
+                      }
+                      aria-label={t("imageStudioRuntime.removeStyleReference", {
+                        name: reference.name,
+                      })}
+                      className="shrink-0 rounded-md border border-border px-2 py-1 text-[12px] text-text-secondary hover:border-accent hover:text-accent"
+                    >
+                      {t("imageStudioRuntime.remove")}
+                    </button>
+                  </div>
+                  {styleReferenceCapabilities.supportsStrength && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <input
+                        type="range"
+                        min={0.1}
+                        max={1}
+                        step={0.1}
+                        value={reference.strength}
+                        onChange={(event) => {
+                          const strength = Number(event.currentTarget.value);
+                          setStyleReferences((current) =>
+                            current.map((candidate) =>
+                              candidate.entityId === reference.entityId
+                                ? { ...candidate, strength }
+                                : candidate,
+                            ),
+                          );
+                        }}
+                        aria-label={t("imageStudioRuntime.styleReferenceStrength", {
+                          name: reference.name,
+                        })}
+                        className="min-w-0 flex-1"
+                      />
+                      <output className="w-8 text-right text-[12px] text-text-secondary">
+                        {reference.strength.toFixed(1)}
+                      </output>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </fieldset>
       )}
 
       {/* Seed controls */}

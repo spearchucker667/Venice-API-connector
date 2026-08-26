@@ -6,6 +6,17 @@ This is the active handoff and validation ledger. The canonical current-work led
 ## Latest Session Summary
 
 **Date:** 2026-08-26
+**Scope:** Close deferred August 26 audit findings PROV-001 and PROV-005.
+
+- **PROV-001:** Added a provider- and operation-aware positive allowlist at the canonical Electron fallback-adapter boundary. The policy rejects Venice-only and unknown fields before provider transforms, covers every configured third-party chat provider, and maps canonical `/image/generate` requests to Together's documented image-generation shape without forwarding Venice-only controls.
+- **PROV-005:** Wired Image Studio to runtime `model_spec` through the existing `resolveStyleReferenceCapabilities()` resolver. The accessible upload/remove/count/strength path renders only when metadata explicitly supports style references with a positive limit; absent, unsupported, zero-limit, or changed metadata clears state and cannot serialize `style_references`.
+- **Tests:** Provider adapter verification passed 72 tests; the final combined provider/Image Studio/capability/payload/file regression set passed 150 tests; `npm run test:ui` passed 346 tests.
+- **Validation:** After the final 8 MiB ingress bound, `npm run lint:eslint`, `npm run typecheck`, `npm run verify:i18n`, `npm run verify:i18n-hardcoded-regressions`, `npm run verify:contracts`, and `npm run build` all passed. `npm run verify:i18n` reported 165 expected `__MISSING__:` warnings for 15 new en-US strings across 11 incomplete non-English catalogs. Build emitted the existing `chatTtsController.ts` ineffective-dynamic-import warning and completed successfully.
+- **Not run:** Live paid fallback-provider calls and headed assistive-technology QA were not executed; both remain external evidence under `VF-VERIFY-005`.
+
+### Prior Session Summary (2026-08-26 exhaustive audit remediation) [demoted from "Latest Session Summary"]
+
+**Date:** 2026-08-26
 **Scope:** Validate current `main`, complete the exhaustive repository audit, and remediate newly discovered P0/P1/P2 findings.
 
 Current HEAD at start (`eba90428be6c87b85a96e07b83be09e0f383db89`) already contained the P1 items described in the handoff: i18n runtime-surface coverage restored to 100%, strict release localization separated from daily CI via `verify:release-readiness`, 704 key-name fallback placeholders translated, and Node 22 pinned to `>=22.15.0 <23.0.0`. Hosted CI run `32934003806` on that SHA is fully green, including all packaged Electron smoke jobs.
@@ -46,6 +57,18 @@ Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full 
 - **Remaining:** External live-provider acceptance, signed builds, clean install/upgrade, multi-device sync, and accessibility QA remain EXTERNALLY BLOCKED per `docs/reports/historical/DEFERRED_WORK_DECISION_RECORD.md` and `docs/ROADMAP.md`.
 
 ## Session History
+
+### 2026-08-26 — Close PROV-001 provider leakage and PROV-005 Image Studio style references.
+
+- Traced fallback dispatch from `electron/services/veniceClient.ts` through `resolveProviderRoute()` and every provider adapter/caller before changing the boundary.
+- Added `sanitizeProviderRequestBody()` and a provider/operation allowlist for Together, Groq, Fireworks, Mistral, Anthropic, Cohere, Gemini, Vertex, Azure, Bedrock, Hugging Face, and Perplexity; sanitation occurs before custom provider transforms.
+- Added canonical Together image fallback routing and explicit image request/response-field mapping.
+- Reused `resolveStyleReferenceCapabilities()` in Image Studio; added fail-closed metadata handling, bounded file ingestion, content hashes, accessible file/removal/strength controls, and exact payload serialization through `buildImagePayload()`.
+- Added/updated regression tests in `electron/services/providerAdapters.test.ts`, `src/components/image/image-view.test.tsx`, and `src/utils/styleReferenceFiles.test.ts`.
+- Enforced the Swagger-declared per-reference limit (strictly less than 8 MiB) before `FileReader` allocation and added a focused rejection test.
+- Synced 15 new en-US UI keys to the 11 non-English catalogs as truthful `__MISSING__:` markers; production-complete status was not changed.
+- Final validation: combined provider/Image Studio/capability/payload/file regressions PASS (150); `verify:provider-adapters` PASS (72, within aggregate contracts); `test:ui` PASS (346); ESLint PASS; typecheck PASS; i18n PASS with 165 expected incomplete-locale warnings; hardcoded-i18n regression check PASS (0); contracts PASS; build PASS.
+- Live paid-provider calls and headed screen-reader/keyboard QA were not run.
 
 ### 2026-08-26 — Validate current main, complete exhaustive audit, and remediate P0/P1/P2 findings.
 
@@ -209,15 +232,23 @@ Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full 
 ## Open TODO Ledger
 
 * See `docs/ROADMAP.md` for the canonical list of open tasks.
+* `PROV-001` and `PROV-005` are locally closed. Live credentialed provider acceptance and headed accessibility acceptance remain under `VF-VERIFY-005`.
 
 ## Validation Matrix
 
+- `npx vitest run electron/services/providerAdapters.test.ts scripts/verify-provider-adapters.test.ts --no-file-parallelism` — PASS (48 tests)
+- `npm run verify:provider-adapters` — PASS (72 tests)
+- `npx vitest run src/components/image/image-view.test.tsx src/config/image-model-capabilities.test.ts src/utils/payloadBuilders.modelAware.test.ts src/utils/styleReferenceFiles.test.ts --no-file-parallelism` — PASS (101 tests before the final 8 MiB rejection case)
+- Combined PROV-001/PROV-005 focused regression run after the final source change — PASS (150 tests)
+- `npm run test:ui` — PASS (346 tests)
 - `npm run typecheck` — PASS
-- `npm run lint:eslint` — PASS (zero warnings after removing stale `eslint-disable @typescript-eslint/ban-ts-comment` directives from 8 test files)
-- `npm run verify:i18n` — PASS (0 key-name-fallback warnings; structural coverage complete)
-- `npm run verify:i18n:release` — PASS (0 sentinel, missing-marker, key-name-fallback, or unapproved identical leaves)
-- `npm run verify:contracts` — PASS (104 release-packaging + static/feature contract checks)
-- `npm run verify:release-readiness` — PASS
+- `npm run lint:eslint` — PASS (zero warnings)
+- `npm run verify:i18n` — PASS (165 expected `__MISSING__:` warnings for 15 new strings in 11 incomplete non-English catalogs)
+- `npm run verify:i18n-hardcoded-regressions` — PASS (0 regressions)
+- `npm run verify:i18n:release` — NOT RUN in this session; the 165 new incomplete-locale markers are intentionally not represented as release-ready translations.
+- `npm run verify:contracts` — PASS
+- `npm run build` — PASS (existing ineffective-dynamic-import warning for `src/services/chatTtsController.ts`)
+- `npm run verify:release-readiness` — NOT RUN in this session.
 
 
 - **2026-08-25 — Final i18n, CI Separation, Node 22 Upgrade & GitHub Roles Remediation:**
@@ -227,3 +258,9 @@ Completed all locally actionable Phase 1–Phase 3 P1/P2 fixes and ran the full 
   - **GitHub Bypass Inventory:** Audited `Rules01` (ID: 21229461). Removed unneeded automated AI agent integrations (Jules, Copilot, Codex, Cursor, AI Studio, Qwen, Grok) from `bypass_actors` under the principle of least privilege. Documented rationale in `.github/bypass_actors.md`.
   - **Translation Completion:** Translated the remaining key-name fallback placeholders across the 11 non-English locales so that `verify:i18n:release` passes. Non-English locales remain `first-pass-machine` and are not marked `isProductionComplete: true`.
   - **External Acceptance:** Verified that external release acceptance tests (headed QA, signed packaging, live paid provider checks) correctly remain categorized under `VF-VERIFY-005` on the roadmap.
+
+### 2026-08-26 — Remediate CodeQL `js/file-access-to-http` security alert in Replicate service
+
+- Addressed GitHub Code Scanning alert 253 (`js/file-access-to-http`) which flagged the Replicate API token read from the file system being passed into an outbound network request without strict validation.
+- Updated `electron/services/replicateService.ts` to strictly sanitize the `apiToken` via regex (`/^[A-Za-z0-9_.=-]+$/`) inside `bearerHeader()` before placing it into the Authorization header. This explicitly breaks the dataflow taint for CodeQL.
+- Validation: `npm run lint:eslint` PASS, `npm run typecheck` PASS, `npm test` PASS.

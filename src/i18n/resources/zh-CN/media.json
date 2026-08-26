@@ -134,7 +134,22 @@
     "enhancementSafetyBlocked": "提示词增强已被强制儿童安全保护措施阻止；这些保护与可选的安全模式设置相互独立。原始提示词已保留。",
     "enhancementSafetyBlockedMandatory": "Tr: Prompt enhancement was stopped by mandatory child-safety protections, which are separate from optional Safe Mode settings. Your original prompt was kept.",
     "enhancementSafetyBlockedFamily": "Tr: Prompt enhancement was stopped by optional Family Safe Mode. Your original prompt was kept.",
-    "enhancementSafetyBlockedProvider": "Tr: Prompt enhancement was stopped by provider policy. Your original prompt was kept."
+    "enhancementSafetyBlockedProvider": "Tr: Prompt enhancement was stopped by provider policy. Your original prompt was kept.",
+    "styleReferences": "__MISSING__:imageStudioRuntime.styleReferences",
+    "styleReferenceHelp": "__MISSING__:imageStudioRuntime.styleReferenceHelp {{count}}",
+    "addStyleReferenceImages": "__MISSING__:imageStudioRuntime.addStyleReferenceImages",
+    "styleReferenceCount": "__MISSING__:imageStudioRuntime.styleReferenceCount {{count}} {{max}}",
+    "selectedStyleReferences": "__MISSING__:imageStudioRuntime.selectedStyleReferences",
+    "styleReferenceStrength": "__MISSING__:imageStudioRuntime.styleReferenceStrength {{name}}",
+    "removeStyleReference": "__MISSING__:imageStudioRuntime.removeStyleReference {{name}}",
+    "remove": "__MISSING__:imageStudioRuntime.remove",
+    "styleReferenceLimitReached": "__MISSING__:imageStudioRuntime.styleReferenceLimitReached",
+    "styleReferenceLimitDetail": "__MISSING__:imageStudioRuntime.styleReferenceLimitDetail {{count}}",
+    "styleReferenceRejected": "__MISSING__:imageStudioRuntime.styleReferenceRejected",
+    "styleReferenceUnsupportedType": "__MISSING__:imageStudioRuntime.styleReferenceUnsupportedType",
+    "styleReferenceEmptyFile": "__MISSING__:imageStudioRuntime.styleReferenceEmptyFile",
+    "styleReferenceReadFailed": "__MISSING__:imageStudioRuntime.styleReferenceReadFailed",
+    "styleReferenceTooLarge": "__MISSING__:imageStudioRuntime.styleReferenceTooLarge"
   },
   "contextMenu": {
     "saveAs": "Tr: Save As…",

@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { resolveProviderRoute, providerAdapters } from './providerAdapters'
+import { resolveProviderRoute, providerAdapters, sanitizeProviderRequestBody } from './providerAdapters'
 import { getProviderCredentialOrFallback } from './secureStore'
 import { getProviderSettings } from './providerSettingsStore'
 
@@ -72,6 +72,176 @@ describe('providerAdapters', () => {
   })
 
   describe('resolveProviderRoute', () => {
+    it.each([
+      ['together', 'top_k'],
+      ['groq', 'reasoning_effort'],
+      ['fireworks', 'prompt_cache_key'],
+      ['mistral', 'random_seed'],
+      ['anthropic', 'max_tokens'],
+      ['perplexity', 'web_search_options'],
+      ['huggingface', 'tool_choice'],
+      ['aws_bedrock', 'response_format'],
+      ['azure_openai', 'parallel_tool_calls'],
+      ['google_gemini', 'top_p'],
+      ['google_vertex', 'top_p'],
+      ['cohere', 'documents'],
+    ] as const)(
+      'keeps documented %s chat fields while rejecting Venice and image-only fields',
+      (providerId, documentedField) => {
+        const body = sanitizeProviderRequestBody(providerId, '/chat/completions', {
+          model: 'venice-model',
+          messages: [{ role: 'user', content: 'Hello' }],
+          stream: true,
+          temperature: 0.4,
+          [documentedField]: documentedField === 'documents' ? [{ text: 'context' }] :
+            documentedField === 'web_search_options' ? { search_context_size: 'low' } :
+              documentedField === 'response_format' ? { type: 'json_object' } :
+                documentedField === 'tool_choice' ? 'auto' :
+                  documentedField === 'parallel_tool_calls' ? true :
+                    documentedField === 'prompt_cache_key' ? 'cache-key' :
+                      documentedField === 'reasoning_effort' ? 'low' : 7,
+          venice_parameters: { enable_web_search: 'on' },
+          safe_mode: true,
+          return_binary: true,
+          enable_web_search: 'on',
+          style_references: [{ image: 'data:image/png;base64,AAAA' }],
+          negative_prompt: 'noise',
+          width: 1024,
+          height: 1024,
+        })
+
+        expect(body).toMatchObject({
+          model: 'venice-model',
+          messages: [{ role: 'user', content: 'Hello' }],
+          stream: true,
+          temperature: 0.4,
+        })
+        expect(body).toHaveProperty(documentedField)
+        expect(body).not.toHaveProperty('venice_parameters')
+        expect(body).not.toHaveProperty('safe_mode')
+        expect(body).not.toHaveProperty('return_binary')
+        expect(body).not.toHaveProperty('enable_web_search')
+        expect(body).not.toHaveProperty('style_references')
+        expect(body).not.toHaveProperty('negative_prompt')
+        expect(body).not.toHaveProperty('width')
+        expect(body).not.toHaveProperty('height')
+      },
+    )
+
+    it('keeps Together image fields while rejecting Venice and chat-only fields', () => {
+      const body = sanitizeProviderRequestBody('together', '/images/generations', {
+        model: 'venice-image-model',
+        prompt: 'A copper city',
+        steps: 8,
+        width: 1024,
+        height: 768,
+        negative_prompt: 'fog',
+        guidance_scale: 4.5,
+        response_format: 'base64',
+        output_format: 'png',
+        reference_images: ['https://example.invalid/reference.png'],
+        venice_parameters: { enable_web_search: 'on' },
+        safe_mode: true,
+        return_binary: true,
+        messages: [{ role: 'user', content: 'Hello' }],
+        temperature: 0.5,
+        tools: [{ type: 'function' }],
+      })
+
+      expect(body).toMatchObject({
+        model: 'venice-image-model',
+        prompt: 'A copper city',
+        steps: 8,
+        width: 1024,
+        height: 768,
+        negative_prompt: 'fog',
+        guidance_scale: 4.5,
+        response_format: 'base64',
+        output_format: 'png',
+        reference_images: ['https://example.invalid/reference.png'],
+      })
+      expect(body).not.toHaveProperty('venice_parameters')
+      expect(body).not.toHaveProperty('safe_mode')
+      expect(body).not.toHaveProperty('return_binary')
+      expect(body).not.toHaveProperty('messages')
+      expect(body).not.toHaveProperty('temperature')
+      expect(body).not.toHaveProperty('tools')
+    })
+
+    it('maps the canonical Venice image operation into Together fields without leaking Venice controls', () => {
+      const requestBody = {
+        model: 'venice-image-model',
+        prompt: 'A copper city',
+        steps: 8,
+        width: 1024,
+        height: 768,
+        negative_prompt: 'fog',
+        cfg_scale: 4.5,
+        variants: 2,
+        format: 'png',
+        safe_mode: true,
+        return_binary: true,
+        hide_watermark: true,
+        style_references: [{ image: 'data:image/png;base64,AAAA' }],
+      }
+      const result = resolveProviderRoute({
+        endpoint: '/image/generate',
+        body: requestBody,
+      }, 'work-profile', {
+        providerId: 'together',
+        model: 'black-forest-labs/FLUX.1-schnell',
+      })
+
+      expect(result?.error).toBeUndefined()
+      expect(result?.route?.path).toBe('/v1/images/generations')
+      const transformed = result?.route?.transformBody?.(
+        requestBody,
+        'black-forest-labs/FLUX.1-schnell',
+      )
+      expect(transformed).toEqual({
+        model: 'black-forest-labs/FLUX.1-schnell',
+        prompt: 'A copper city',
+        steps: 8,
+        width: 1024,
+        height: 768,
+        negative_prompt: 'fog',
+        guidance_scale: 4.5,
+        n: 2,
+        output_format: 'png',
+        response_format: 'base64',
+      })
+    })
+
+    it('applies the same request boundary to automatic fallback routing', () => {
+      const requestBody = {
+        model: 'venice-model',
+        messages: [{ role: 'user', content: 'Hello' }],
+        temperature: 0.2,
+        venice_parameters: { enable_web_search: 'on' },
+        safe_mode: true,
+        return_binary: true,
+      }
+      const result = resolveProviderRoute({
+        endpoint: '/chat/completions',
+        body: requestBody,
+      }, 'work-profile', {
+        providerId: 'anthropic',
+        model: 'claude-3-5-sonnet-latest',
+      })
+
+      const transformed = result?.route?.transformBody?.(
+        requestBody,
+        'claude-3-5-sonnet-latest',
+      )
+      expect(transformed).toMatchObject({
+        model: 'claude-3-5-sonnet-latest',
+        temperature: 0.2,
+      })
+      expect(transformed).not.toHaveProperty('venice_parameters')
+      expect(transformed).not.toHaveProperty('safe_mode')
+      expect(transformed).not.toHaveProperty('return_binary')
+    })
+
     it('returns null for non-fallback models', () => {
       const request = {
         endpoint: '/chat/completions',
