@@ -82,6 +82,8 @@ vi.mock("../services/secureStore", () => {
     deleteJinaApiKey: vi.fn(),
     deleteProviderApiKey: vi.fn(),
     getApiKey: vi.fn(() => null),
+    getApiKeyConfigurationStatus: vi.fn(() => ({ configured: false, state: "not-configured", storageMode: "encrypted" })),
+    getStorageMode: vi.fn(() => "encrypted"),
     getJinaApiKey: vi.fn(() => null),
     getSecureStoreStatus: vi.fn(() => ({ encryptionAvailable: true, mode: "safeStorage", corrupted: false, error: null })),
     isApiKeyConfigured: vi.fn(() => false),
@@ -980,8 +982,8 @@ describe("registerIpcHandlers", () => {
         ""
       );
 
-      expect(result).toMatchObject({ ok: false });
-      expect(result.error).toBeDefined();
+      expect(result).toMatchObject({ ok: false, code: "INVALID_KEY" });
+      expect(result.safeMessage).toMatch(/non-empty/i);
     });
   });
 
@@ -1180,8 +1182,8 @@ describe("registerIpcHandlers", () => {
       vi.mocked(isApiKeyConfigured).mockReturnValue(true);
 
       expect(await capturedHandlers.get("apiKey:isConfigured")!(event, "../../forged")).toBe(true);
-      expect(await capturedHandlers.get("apiKey:set")!(event, { key: "sk-valid", profileId: "default" })).toEqual({ ok: true });
-      expect(await capturedHandlers.get("apiKey:delete")!(event, "default")).toEqual({ ok: true });
+      expect(await capturedHandlers.get("apiKey:set")!(event, { key: "sk-valid", profileId: "default" })).toEqual({ ok: true, storageMode: "encrypted" });
+      expect(await capturedHandlers.get("apiKey:delete")!(event, "default")).toEqual({ ok: true, storageMode: "encrypted" });
       await capturedHandlers.get("apiKey:test")!(event, "../../forged");
 
       expect(isApiKeyConfigured).toHaveBeenCalledWith("work");
