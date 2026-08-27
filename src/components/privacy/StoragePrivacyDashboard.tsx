@@ -248,7 +248,7 @@ export function StoragePrivacyDashboard() {
         >
           <div className="flex items-center justify-between px-1">
             <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-widest">
-              <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.heading.activeApiKeys" />
+              {tRuntime("runtimeGenerated.services.storageprivacyservice.metadata.apiKeys")}
             </h2>
             <span className="text-[11px] text-text-muted">
               {inventory.activeApiKeys.length} configured
