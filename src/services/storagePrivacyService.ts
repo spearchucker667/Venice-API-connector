@@ -205,7 +205,7 @@ export function buildStorageInventory(
     activeApiKeys.push({
       id: "jina",
       providerId: "jina",
-      label: "Jina",
+      label: "jina",
       configured: input.jinaKey.configured,
       storage: input.jinaKey.storage,
       lastValidationStatus:
