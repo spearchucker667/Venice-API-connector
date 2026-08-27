@@ -1,6 +1,6 @@
 {
   "schemaVersion": 4,
-  "updatedAt": "2026-08-26T20:52:00.525Z",
+  "updatedAt": "2026-08-27T03:33:00.224Z",
   "extractorArtifact": "scripts/extract-i18n-keys.cjs (TS Compiler API)",
   "verifier": "scripts/verify-i18n.cjs (sentinel + missing-marker + key-name-fallback aware)",
   "runtimeSurfaceArtifact": "artifacts/i18n/hardcoded-strings.json",
@@ -28,7 +28,7 @@
       "reviewStatus": "source-language",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     },
     "es": {
       "name": "Español",
@@ -50,7 +50,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     },
     "fr": {
       "name": "Français",
@@ -72,7 +72,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     },
     "de": {
       "name": "Deutsch",
@@ -94,7 +94,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     },
     "pt-BR": {
       "name": "Português (Brasil)",
@@ -116,7 +116,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     },
     "ru": {
       "name": "Русский",
@@ -138,7 +138,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     },
     "zh-CN": {
       "name": "简体中文",
@@ -160,7 +160,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     },
     "ja": {
       "name": "日本語",
@@ -182,7 +182,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     },
     "hi": {
       "name": "हिन्दी",
@@ -204,7 +204,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     },
     "ar": {
       "name": "العربية",
@@ -226,7 +226,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     },
     "ko": {
       "name": "한국어",
@@ -248,7 +248,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     },
     "sv-SE": {
       "name": "Svenska",
@@ -270,7 +270,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-08-26T20:52:00.526Z"
+      "lastUpdated": "2026-08-27T03:33:00.225Z"
     }
   }
 }

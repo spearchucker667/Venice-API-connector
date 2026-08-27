@@ -89,13 +89,18 @@ export function subscribeActiveProfile(fn: ActiveProfileListener): () => void {
 }
 
 /**
- * Notifies all subscribers that the active profile changed. Public so
- * code that already wrote localStorage out-of-band (e.g. tests) can fire
- * the broadcast manually. Almost never called directly — prefer
- * `setActiveProfileId` which writes + broadcasts atomically.
+ * Re-broadcasts an active-profile change to subscribers without writing
+ * localStorage. Used by `profile-store.ts` after `merge` hydration so
+ * subscribers that key off the bootstrap-time active id still see a
+ * change event when the sanitizer substitutes a different default.
+ *
+ * Callers MUST pass the previous and next ids explicitly — the previous
+ * getter returns the new value once localStorage has been written, so a
+ * "compute prev from `getActiveProfileId()`" implementation is silently
+ * wrong (P2-002). Tests that want to simulate a real change should call
+ * `setActiveProfileId()` instead.
  */
-export function broadcastActiveProfileChange(nextId: string): void {
-  const prevId = getActiveProfileId();
+export function broadcastActiveProfileChange(prevId: string, nextId: string): void {
   if (prevId === nextId) return;
   fireBroadcast(nextId, prevId);
 }

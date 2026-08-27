@@ -110,11 +110,12 @@ describe("configured Venice key gating", () => {
 
   it("keeps Venice configured state unchanged when secure-store write fails", async () => {
     bridgeMocks.setApiKey.mockResolvedValueOnce({ ok: false, code: "SECRET_STORAGE_WRITE_FAILED", safeMessage: "The key could not be stored securely." });
-    await expect(useAuthStore.getState().setApiKey("venice_secret_fixture")).rejects.toThrow("The key could not be stored securely.");
+    const outcome = await useAuthStore.getState().setApiKey("venice_secret_fixture");
+    expect(outcome).toEqual({ stored: false, code: "SECRET_STORAGE_WRITE_FAILED", safeMessage: "The key could not be stored securely." });
     expect(useAuthStore.getState()).toMatchObject({ apiKey: null, isConfigured: false });
   });
 
-  it("removes a newly stored key when Venice rejects it", async () => {
+  it("retains a stored key and reports invalid validation when Venice rejects it (no silent rollback)", async () => {
     bridgeMocks.setApiKey.mockResolvedValueOnce({ ok: true, storageMode: "encrypted" });
     bridgeMocks.testApiKey.mockResolvedValueOnce({
       ok: false,
@@ -122,11 +123,13 @@ describe("configured Venice key gating", () => {
       message: "Unauthorized",
       connectivity: { ok: false, kind: "invalid-api-key", checkedAt: "2026-08-26T00:00:00.000Z", statusCode: 401, safeMessage: "API key was found, but Venice rejected it. Re-enter the key in Config.", retryable: false },
     });
-    vi.mocked(desktopApiKey.delete).mockResolvedValueOnce({ ok: true, storageMode: "encrypted" } as never);
 
-    await expect(useAuthStore.getState().setApiKey("venice_secret_fixture")).rejects.toMatchObject({ code: "PROVIDER_AUTH_REJECTED" });
-    expect(desktopApiKey.delete).toHaveBeenCalledTimes(1);
-    expect(useAuthStore.getState()).toMatchObject({ isConfigured: false, credentialFailureCode: "PROVIDER_AUTH_REJECTED" });
+    const outcome = await useAuthStore.getState().setApiKey("venice_secret_fixture");
+    // P1-003: a key the user stored must remain stored so the user can
+    // deliberately delete or replace it. We do NOT auto-roll-back storage
+    // on Venice auth rejection; we surface the typed invalid outcome.
+    expect(outcome).toEqual({ stored: true, validation: "invalid" });
+    expect(useAuthStore.getState()).toMatchObject({ isConfigured: true, credentialFailureCode: "PROVIDER_AUTH_REJECTED" });
   });
 
   it("retains a securely stored key while reporting a network verification failure", async () => {
@@ -138,7 +141,8 @@ describe("configured Venice key gating", () => {
       connectivity: { ok: false, kind: "network-failure", checkedAt: "2026-08-26T00:00:00.000Z", statusCode: 0, safeMessage: "Network request failed before Venice responded.", retryable: true },
     });
 
-    await expect(useAuthStore.getState().setApiKey("venice_secret_fixture")).rejects.toMatchObject({ code: "NETWORK_ERROR" });
+    const outcome = await useAuthStore.getState().setApiKey("venice_secret_fixture");
+    expect(outcome).toEqual({ stored: true, validation: "network-error" });
     expect(desktopApiKey.delete).not.toHaveBeenCalled();
     expect(useAuthStore.getState()).toMatchObject({ isConfigured: true, credentialFailureCode: "NETWORK_ERROR" });
   });

@@ -296,13 +296,15 @@ export function registerDocumentAgentHandlers(): void {
     try {
       const value = record(input);
       const attachmentId = stringField(value, "attachmentId", 128);
-      const resolved = attachmentRegistry.resolve(
+      // Use the main-internal accessor that returns the body buffer; the
+      // public resolve() intentionally never returns the body (P1-002).
+      const resolved = attachmentRegistry.resolveWithBody(
         getProfileSessionId(event.sender),
         attachmentId,
         rendererSession(event.sender.id),
       );
       if (!resolved) throw new Error("Attachment not found.");
-      const bodyB64 = resolved.bodyB64;
+      const bodyB64 = resolved.body.toString("base64");
       const mimeType = resolved.mimeType.toLowerCase();
       if (classifyMime(mimeType) === "reject") {
         throw new Error(`Attachment mimeType ${JSON.stringify(mimeType)} is not supported.`);

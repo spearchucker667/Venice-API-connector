@@ -79,6 +79,14 @@ const VALIDATION_BADGE: Record<ActiveApiKeyEntry["lastValidationStatus"], string
   unknown: "bg-surface-muted text-text-muted border-border",
 };
 
+// i18n-allow-next-line: aria-label is metadata for assistive tech, built from canonical issue data
+const formatIssueRegionLabel = (message: string): string =>
+  `Storage reference issue: ${message}`;
+
+// i18n-allow-next-line: aria-label is metadata for assistive tech, built from canonical issue data
+const formatReviewAriaLabel = (sourceCategory: string): string =>
+  `Review ${sourceCategory} reference`;
+
 export function StoragePrivacyDashboard() {
   const { t: tRuntime } = useTranslation("common");
   const {
@@ -398,6 +406,9 @@ export function StoragePrivacyDashboard() {
                 {inventory.issues.map((issue: StorageReferenceIssue) => (
                   <div
                     key={issue.id}
+                    role="group"
+                    aria-label={formatIssueRegionLabel(issue.message)}
+                    data-testid={`privacy-issue-${issue.id}`}
                     className="p-3 rounded-lg border border-warning/20 bg-warning/5 flex items-start justify-between gap-4"
                   >
                     <div className="space-y-1">
@@ -416,6 +427,8 @@ export function StoragePrivacyDashboard() {
                     </div>
                     {issue.repairable && (
                       <button
+                        type="button"
+                        aria-label={formatReviewAriaLabel(issue.sourceCategory)}
                         onClick={() =>
                           setActiveTab(
                             mapPrivacyCategoryToTab(issue.sourceCategory),

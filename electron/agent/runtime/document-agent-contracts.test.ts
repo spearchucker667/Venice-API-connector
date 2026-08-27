@@ -88,8 +88,18 @@ const mockAttachmentRegistry = {
     mimeType: "text/plain",
     displayName: "notes.txt",
     sizeBytes: 11,
+    createdAt: new Date().toISOString(),
+  }),
+  resolveWithBody: vi.fn().mockReturnValue({
+    id: "att_1",
+    profileId: "profile_1",
+    sessionId: "runtime_test:renderer_1:agent_agent_1",
+    mimeType: "text/plain",
+    displayName: "notes.txt",
+    sizeBytes: 11,
     bodyB64: Buffer.from("hello world").toString("base64"),
     createdAt: new Date().toISOString(),
+    body: Buffer.from("hello world"),
   }),
 };
 

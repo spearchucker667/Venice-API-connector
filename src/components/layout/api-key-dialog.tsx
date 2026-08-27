@@ -5,18 +5,27 @@ import { toast } from "../../stores/toast-store";
 import { isElectron } from "../../services/desktopBridge";
 import { Trans, useTranslation } from "react-i18next";
 
+type ConnectionMessage =
+  | { tone: "info"; text: string }
+  | { tone: "success"; text: string }
+  | { tone: "warning"; text: string }
+  | { tone: "danger"; text: string };
+
+// i18n-allow-next-line: short button label, English-only intentional copy
+const TEST_BUTTON_LABEL = "Test";
+
 export function ApiKeyDialog({
   open,
   onClose,
 }: {
-  open: boolean;
+  open: string | boolean;
   onClose: () => void;
 }) {
   const { t: tRuntime } = useTranslation("common");
-  const { apiKey, isConfigured, credentialSafeMessage, setApiKey, clearApiKey } = useAuthStore();
+  const { apiKey, isConfigured, credentialSafeMessage, veniceLastValidationStatus, setApiKey, clearApiKey, validateStoredVeniceKey } = useAuthStore();
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<ConnectionMessage | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -32,21 +41,45 @@ export function ApiKeyDialog({
   const handleConnect = async () => {
     if (!value.trim()) return;
     setBusy(true);
-    setError(null);
+    setMessage(null);
     try {
-      await setApiKey(value.trim());
-      toast.success(
-        tRuntime(
-          "runtimeGenerated.components.layout.apiKeyDialog.notification.keySavedSecurely",
-        ),
-      );
-      onClose();
-    } catch (cause) {
-      setError(
-        cause instanceof Error && "code" in cause && typeof cause.code === "string"
-          ? cause.message
-          : "The Venice API key could not be saved.",
-      );
+      const outcome = await setApiKey(value.trim());
+      if (outcome.stored) {
+        // Storage succeeded. Choose a message that is honest about what
+        // did and did not happen (P1-003: a network failure must never
+        // read as "save failed").
+        if (outcome.validation === "valid") {
+          setValue("");
+          const saved = tRuntime("runtimeGenerated.components.layout.apiKeyDialog.notification.keySavedSecurely", "API key saved and verified.");
+          setMessage({ tone: "success", text: saved });
+          toast.success(saved);
+          // Successful connect closes the dialog by convention; the
+          // caller can still see the message via the toast.
+          onClose();
+          return;
+        }
+        if (outcome.validation === "network-error") {
+          const msg = tRuntime("runtimeGenerated.components.layout.apiKeyDialog.notification.keySavedOffline", "API key saved. Venice is unreachable — you can retry the test when the network is back.");
+          setMessage({ tone: "warning", text: msg });
+          toast.info(msg);
+          return;
+        }
+        if (outcome.validation === "invalid") {
+          const msg = tRuntime("runtimeGenerated.components.layout.apiKeyDialog.notification.keyStoredInvalid", "API key stored, but Venice rejected it. Delete and re-enter, or test again.");
+          setMessage({ tone: "danger", text: msg });
+          toast.error(msg);
+          return;
+        }
+        const unverified = tRuntime("runtimeGenerated.components.layout.apiKeyDialog.notification.keySavedUnverified", "API key saved, but Venice connectivity could not be verified.");
+        setMessage({ tone: "warning", text: unverified });
+        toast.info(unverified);
+        return;
+      }
+      // Storage failed — the only path where the message should read
+      // "could not be saved".
+      setMessage({ tone: "danger", text: outcome.safeMessage });
+    } catch {
+      setMessage({ tone: "danger", text: tRuntime("runtimeGenerated.components.layout.apiKeyDialog.text.unexpectedSaveError", "The Venice API key could not be saved.") });
     } finally {
       setBusy(false);
     }
@@ -54,19 +87,47 @@ export function ApiKeyDialog({
 
   const handleDisconnect = async () => {
     setBusy(true);
-    setError(null);
+    setMessage(null);
     try {
       await clearApiKey();
       setValue("");
-      toast.info("API key cleared");
+      toast.info(tRuntime("runtimeGenerated.components.layout.apiKeyDialog.notification.keyDeleted", "API key cleared"));
     } catch {
-      setError("Failed to disconnect. Please try again.");
+      setMessage({ tone: "danger", text: tRuntime("runtimeGenerated.components.layout.apiKeyDialog.text.disconnectFailed", "Failed to disconnect. Please try again.") });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleTest = async () => {
+    setBusy(true);
+    setMessage(null);
+    try {
+      const status = await validateStoredVeniceKey();
+      if (status === "valid") {
+        setMessage({ tone: "success", text: tRuntime("runtimeGenerated.components.layout.apiKeyDialog.notification.connectionSuccessful", "Connection successful.") });
+      } else if (status === "network-error") {
+        setMessage({ tone: "warning", text: tRuntime("runtimeGenerated.components.layout.apiKeyDialog.notification.connectionOffline", "Venice is unreachable. Check the network and retry.") });
+      } else if (status === "invalid") {
+        setMessage({ tone: "danger", text: tRuntime("runtimeGenerated.components.layout.apiKeyDialog.notification.connectionRejected", "Venice rejected this API key. Delete and re-enter.") });
+      } else {
+        setMessage({ tone: "warning", text: tRuntime("runtimeGenerated.components.layout.apiKeyDialog.notification.connectionUnknown", "Connection status is unknown.") });
+      }
+    } catch {
+      setMessage({ tone: "danger", text: tRuntime("runtimeGenerated.components.layout.apiKeyDialog.notification.connectionFailed", "Connection test failed.") });
     } finally {
       setBusy(false);
     }
   };
 
   const titleId = "apikey-dialog-title";
+  const toneClass: Record<ConnectionMessage["tone"], string> = {
+    info: "text-text-secondary",
+    success: "text-success",
+    warning: "text-warning",
+    danger: "text-danger",
+  };
+  const showStoredKeyAffordance = isConfigured || apiKey || veniceLastValidationStatus === "invalid" || veniceLastValidationStatus === "network-error";
 
   return (
     <div
@@ -97,7 +158,7 @@ export function ApiKeyDialog({
             </h2>
             <p className="text-[13px] text-text-secondary">
               {isElectron()
-                ? credentialSafeMessage ?? "Stored securely in OS Keychain/Credential Manager."
+                ? credentialSafeMessage ?? tRuntime("runtimeGenerated.components.layout.apiKeyDialog.text.osSecureStorageDefault", "Stored securely in OS Keychain/Credential Manager.")
                 : tRuntime(
                     "runtimeGenerated.components.layout.apiKeyDialog.text.heldInMemoryForThisLocalDevelopmentSessionOnly",
                   )}
@@ -134,21 +195,30 @@ export function ApiKeyDialog({
           .
         </p>
 
-        {error && (
-          <p role="alert" className="text-[13px] text-danger mt-3">
-            {error}
+        {message && (
+          <p role="alert" className={`text-[13px] mt-3 ${toneClass[message.tone]}`}>
+            {message.text}
           </p>
         )}
 
         <div className="flex flex-wrap gap-2 mt-6 justify-end">
-          {(apiKey || isConfigured) && (
-            <button
-              onClick={handleDisconnect}
-              disabled={busy}
-              className="px-3 py-1.5 text-[14px] text-text-secondary hover:text-danger cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Trans i18nKey="common:surface.layoutApiKeyDialog.action.disconnect" />
-            </button>
+          {showStoredKeyAffordance && (
+            <>
+              <button
+                onClick={handleTest}
+                disabled={busy}
+                className="px-3 py-1.5 text-[14px] text-text-secondary hover:text-text-primary cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {TEST_BUTTON_LABEL}
+              </button>
+              <button
+                onClick={handleDisconnect}
+                disabled={busy}
+                className="px-3 py-1.5 text-[14px] text-text-secondary hover:text-danger cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Trans i18nKey="common:surface.layoutApiKeyDialog.action.disconnect" />
+              </button>
+            </>
           )}
           <button
             onClick={onClose}

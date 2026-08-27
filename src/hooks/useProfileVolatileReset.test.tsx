@@ -65,7 +65,8 @@ describe("subscribe / broadcast dedup", () => {
     const unsub = subscribeActiveProfile((next, prev) => seen.push([next, prev]));
 
     // Identical-to-prev is a no-op even when called directly via broadcast.
-    broadcastActiveProfileChange("default");
+    // (P2-002: callers must pass prev and next explicitly.)
+    broadcastActiveProfileChange("default", "default");
     expect(seen).toEqual([]);
 
     setActiveProfileId("work");

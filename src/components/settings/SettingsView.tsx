@@ -29,6 +29,13 @@ import { AudioSpeechPanel } from "./AudioSpeechPanel";
 import type { PendingConfirm } from "./types";
 import { modelSupportsEdit } from "../../constants/venice";
 
+// i18n-allow-next-line: toast is ephemeral, matches the api-key dialog message
+const API_KEY_SAVED_OFFLINE_TOAST = "API key saved. Venice is unreachable — try the connection test when the network is back.";
+// i18n-allow-next-line: toast is ephemeral, matches the api-key dialog message
+const API_KEY_INVALID_TOAST = "API key stored, but Venice rejected it. Delete and re-enter, or test again.";
+// i18n-allow-next-line: toast is ephemeral, matches the api-key dialog message
+const API_KEY_SAVED_UNVERIFIED_TOAST = "API key saved, but Venice connectivity could not be verified.";
+
 export function SettingsView() {
   const { t } = useTranslation(['settings', 'common']);
   const { isConfigured: veniceConfigured, setApiKey, clearApiKey } = useAuthStore();
@@ -226,13 +233,27 @@ export function SettingsView() {
   // Key operations
   async function handleSaveApiKey() {
     if (!apiKeyInput.trim()) return;
-    try {
-      await setApiKey(apiKeyInput.trim());
-      setApiKeyInput("");
-      toast.success(isElectron() ? t('settings:apiKeys.savedElectron', "Venice API key saved securely.") : t('settings:apiKeys.savedWeb', "Venice API key saved for this development session."));
-    } catch (err) {
-      toast.error(t('settings:apiKeys.saveFailed', "Failed to save API key."), redactErrorMessage(err));
+    const outcome = await setApiKey(apiKeyInput.trim());
+    setApiKeyInput("");
+    if (!outcome.stored) {
+      toast.error(t('settings:apiKeys.saveFailed', "Failed to save API key."), outcome.safeMessage);
+      return;
     }
+    if (outcome.validation === "valid") {
+      toast.success(isElectron()
+        ? t('settings:apiKeys.savedElectron', "Venice API key saved securely.")
+        : t('settings:apiKeys.savedWeb', "Venice API key saved for this development session."));
+      return;
+    }
+    if (outcome.validation === "network-error") {
+      toast.info(API_KEY_SAVED_OFFLINE_TOAST);
+      return;
+    }
+    if (outcome.validation === "invalid") {
+      toast.error(API_KEY_INVALID_TOAST);
+      return;
+    }
+    toast.info(API_KEY_SAVED_UNVERIFIED_TOAST);
   }
 
   async function handleDeleteApiKey() {

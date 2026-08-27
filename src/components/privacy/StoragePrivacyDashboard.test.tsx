@@ -1,6 +1,6 @@
 // VERIFY-056 + VERIFY-131 regression guards
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { StoragePrivacyDashboard, mapPrivacyCategoryToTab } from "./StoragePrivacyDashboard";
 import { useStoragePrivacyStore, type StoragePrivacyState } from "../../stores/storage-privacy-store";
 import type { StorageInventoryResult, StorageMaintenancePlan, StoragePrivacyCategory } from "../../types/storage-privacy";
@@ -130,11 +130,12 @@ describe("StoragePrivacyDashboard", () => {
     };
     mockStore({ inventory: inventoryWithIssue, maintenancePlan: mockMaintenancePlan });
     render(<StoragePrivacyDashboard />);
-    const issueMessage = screen.getByText("Orphaned media reference");
-    const issueCard = issueMessage.closest("div.p-3");
-    const reviewBtn = issueCard?.querySelector("button");
-    expect(reviewBtn).not.toBeNull();
-    fireEvent.click(reviewBtn!);
+    // Locate the issue group by its accessible name (the issue message
+    // is the region label) and find the Review button inside it via the
+    // accessible name exposed on the button itself.
+    const issue = screen.getByRole("group", { name: /Storage reference issue: Orphaned media reference/i });
+    const review = within(issue).getByRole("button", { name: /Review media reference/i });
+    fireEvent.click(review);
     expect(setActiveTab).toHaveBeenCalledWith("media");
   });
 });

@@ -56,15 +56,22 @@ describe('activeProfile', () => {
     unsubscribe()
   })
 
-  it('broadcastActiveProfileChange dedupes identical-to-current id', () => {
+  it('broadcastActiveProfileChange requires explicit prev and next ids and is idempotent when equal', () => {
     const listener = vi.fn()
     const unsubscribe = subscribeActiveProfile(listener)
 
     setActiveProfileId('work')
     expect(listener).toHaveBeenCalledTimes(1)
 
-    broadcastActiveProfileChange('work')
+    // Same prev and next: no broadcast.
+    broadcastActiveProfileChange('work', 'work')
     expect(listener).toHaveBeenCalledTimes(1)
+
+    // Explicit prev/next pair: the listener receives the (next, prev) pair
+    // exactly once. This is the bootstrap-time path used by the profile
+    // store after `merge` hydration.
+    broadcastActiveProfileChange('work', 'play')
+    expect(listener).toHaveBeenNthCalledWith(2, 'play', 'work')
 
     unsubscribe()
   })

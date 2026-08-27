@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { createSafeStorage } from '../lib/safe-storage'
-import { DEFAULT_PROFILE_ID, setActiveProfileId } from '../services/activeProfile'
+import { DEFAULT_PROFILE_ID, broadcastActiveProfileChange, setActiveProfileId } from '../services/activeProfile'
 import { purgeProfileData } from '../services/profilePurge'
 import { isElectron, desktopMasterPassword, desktopProfilePassword } from '../services/desktopBridge'
 import {
@@ -10,6 +10,7 @@ import {
   isUserCreatableProfileId,
   isValidProfileStorageId,
 } from '../utils/profileIdValidation'
+import { sanitizePersistedProfileState } from './profile-store-helpers/sanitizePersistedProfileState'
 
 export interface UserProfile {
   id: string
@@ -144,32 +145,45 @@ export const useProfileStore = create<ProfileState>()(
     {
       name: 'venice-profiles',
       storage: createJSONStorage(() => createSafeStorage()),
-      onRehydrateStorage: (state) => {
-        // Reject invalid profile ids that may have been imported or corrupted.
-        if (!state || typeof state !== 'object') return
-        const persisted = state as Partial<ProfileState>
-        // Use the storage validator so the 'default' system profile is preserved.
-        const validProfiles = (persisted.profiles || []).filter((p): p is UserProfile => {
-          if (!p || typeof p !== 'object') return false
-          return isValidProfileStorageId(p.id)
-        })
-        if (validProfiles.length === 0 || !validProfiles.some(p => p.id === DEFAULT_PROFILE_ID)) {
-          // Ensure the 'default' system profile always exists.
-          const hasDefault = validProfiles.some(p => p.id === DEFAULT_PROFILE_ID)
-          if (!hasDefault) {
-            validProfiles.unshift({ id: DEFAULT_PROFILE_ID, name: 'Default Profile', onboardingCompleted: false })
-          }
+      // `merge` runs AFTER storage hydration with both the persisted
+      // payload and the current in-memory state. We must not spread the
+      // untrusted persisted object across the store — that would let an
+      // attacker-supplied JSON replace action methods, set arbitrary
+      // fields, or substitute a non-default `activeProfileId`. Instead we
+      // sanitize the persisted payload to a small allowlist and merge
+      // only those fields onto the current state.
+      merge: (persistedState, currentState) => {
+        const safe = sanitizePersistedProfileState(persistedState)
+        return {
+          ...currentState,
+          profiles: safe.profiles,
+          activeProfileId: safe.activeProfileId,
         }
-        let activeId = persisted.activeProfileId || DEFAULT_PROFILE_ID
-        if (!isValidProfileStorageId(activeId) || !validProfiles.some(p => p.id === activeId)) {
-          activeId = DEFAULT_PROFILE_ID
-        }
-        persisted.profiles = validProfiles
-        persisted.activeProfileId = activeId
       },
     }
   )
 )
+
+// On first hydration, the in-memory `currentState` reports the *initial*
+// store defaults (activeProfileId = "default") before merge runs. If
+// the persisted sanitizer substitutes a different id, downstream
+// subscribers that key off the bootstrap value still need a change
+// event. `setActiveProfileId` would write localStorage unnecessarily
+// during bootstrap; `broadcastActiveProfileChange(prev, next)` is the
+// read-only equivalent.
+//
+// Best-effort: skip when running outside a browser (SSR / test
+// environments without localStorage) or when the id did not change.
+if (typeof window !== "undefined") {
+  // Defer one tick so the store fully resolves before broadcasting.
+  Promise.resolve().then(() => {
+    const state = useProfileStore.getState();
+    const persistedId = state.activeProfileId;
+    if (persistedId !== "default") {
+      broadcastActiveProfileChange("default", persistedId);
+    }
+  });
+}
 
 /** Binds the restored renderer profile to trusted main-process state before
  * credential hydration or any profile-scoped request is allowed to run. */

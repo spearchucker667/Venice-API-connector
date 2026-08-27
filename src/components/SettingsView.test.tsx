@@ -155,7 +155,7 @@ describe("SettingsView API key safety controls", () => {
   });
 
   it("persists the Venice key and clears the input on Save", async () => {
-    const setApiKey = vi.fn().mockResolvedValue(undefined);
+    const setApiKey = vi.fn().mockResolvedValue({ stored: true, validation: "valid" });
     useAuthStore.setState({ setApiKey });
     const successSpy = vi.spyOn(toast, "success");
 

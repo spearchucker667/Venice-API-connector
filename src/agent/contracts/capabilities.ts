@@ -1,9 +1,30 @@
+/**
+ * Public permission presets exposed to the renderer and surfaced in the
+ * Document Agent access-control UI.
+ *
+ * `workspace_autonomous` is intentionally NOT in the public preset set.
+ * It remains in the type as a `@deprecated` value so older code paths and
+ * persisted state still type-check, but main validation rejects it
+ * (P2-001). The Document Agent's workspace mutations are still
+ * approval-gated even under `workspace_with_approval`; an "autonomous"
+ * mode that bypasses approval is a future design that requires its own
+ * threat-model review before it can become a supported runtime preset.
+ */
 export type AgentPermissionPreset =
   | "off"
   | "read_attachments"
   | "limited_documents"
   | "workspace_with_approval"
+  /** @deprecated Reserved for a future design. Currently rejected by main. */
   | "workspace_autonomous";
+
+/** Presets the renderer may select and main will accept. */
+export const SUPPORTED_PRESETS: readonly AgentPermissionPreset[] = [
+  "off",
+  "read_attachments",
+  "limited_documents",
+  "workspace_with_approval",
+] as const;
 
 export type Capability =
   | "attachment:read"

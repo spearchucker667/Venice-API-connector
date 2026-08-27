@@ -237,3 +237,157 @@ describe("useProfileStore", () => {
   });
 
 });
+
+// ------------------------------------------------------------------
+// Persisted-hydration sanitization (P1-001 regression coverage).
+// The store's `merge` option must reject malformed persisted state before
+// it can become authoritative. These tests seed `venice-profiles` with
+// hand-crafted JSON and drive the real persist rehydration path so the
+// sanitizer is exercised end-to-end, not just via direct setState.
+// ------------------------------------------------------------------
+describe("useProfileStore hydration sanitization", () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
+  function seedPersisted(payload: unknown): void {
+    window.localStorage.setItem(
+      "venice-profiles",
+      JSON.stringify({ state: payload, version: 0 }),
+    );
+  }
+
+  // Re-importing the store module re-evaluates `persist()` and runs the
+  // `merge` callback against the value the test just seeded.
+  async function rehydrateWithFreshStore(): Promise<void> {
+    vi.resetModules();
+    const mod = await import("./profile-store");
+    // Force hydration to run by reading the initial state.
+    void mod.useProfileStore.getState();
+    // The merge callback runs synchronously during storage read, so the
+    // sanitized state is already in the store by the time getState()
+    // returns. Return the freshly imported bindings.
+    mod.useProfileStore.setState({
+      profiles: mod.useProfileStore.getState().profiles,
+      activeProfileId: mod.useProfileStore.getState().activeProfileId,
+    });
+  }
+
+  it("falls back to default when persisted state is not an object", async () => {
+    seedPersisted("not-an-object");
+    await rehydrateWithFreshStore();
+    const { useProfileStore: store } = await import("./profile-store");
+    expect(store.getState().activeProfileId).toBe("default");
+    expect(store.getState().profiles.map((p) => p.id)).toEqual(["default"]);
+  });
+
+  it("preserves a valid multi-profile payload", async () => {
+    seedPersisted({
+      profiles: [
+        { id: "default", name: "Default", onboardingCompleted: true },
+        { id: "work", name: "Work" },
+        { id: "play", name: "Play", hasPassword: true },
+      ],
+      activeProfileId: "play",
+    });
+    await rehydrateWithFreshStore();
+    const { useProfileStore: store } = await import("./profile-store");
+    expect(store.getState().activeProfileId).toBe("play");
+    expect(store.getState().profiles).toHaveLength(3);
+    const play = store.getState().profiles.find((p) => p.id === "play");
+    expect(play?.hasPassword).toBe(true);
+  });
+
+  it("drops invalid profile ids and falls back activeProfileId to default", async () => {
+    seedPersisted({
+      profiles: [
+        { id: "default", name: "Default" },
+        { id: "bad_id", name: "Bad" },
+        { id: "../etc", name: "Path" },
+      ],
+      activeProfileId: "bad_id",
+    });
+    await rehydrateWithFreshStore();
+    const { useProfileStore: store } = await import("./profile-store");
+    expect(store.getState().activeProfileId).toBe("default");
+    expect(store.getState().profiles.map((p) => p.id)).toEqual(["default"]);
+  });
+
+  it("deduplicates duplicate profile ids and keeps the first occurrence", async () => {
+    seedPersisted({
+      profiles: [
+        { id: "default", name: "Default" },
+        { id: "work", name: "First" },
+        { id: "work", name: "Second" },
+        { id: "work", name: "Third" },
+      ],
+      activeProfileId: "work",
+    });
+    await rehydrateWithFreshStore();
+    const { useProfileStore: store } = await import("./profile-store");
+    const work = store.getState().profiles.find((p) => p.id === "work");
+    expect(work?.name).toBe("First");
+    expect(store.getState().activeProfileId).toBe("work");
+  });
+
+  it("re-adds the default profile when it is missing from a multi-profile payload", async () => {
+    seedPersisted({
+      profiles: [{ id: "work", name: "Work" }],
+      activeProfileId: "work",
+    });
+    await rehydrateWithFreshStore();
+    const { useProfileStore: store } = await import("./profile-store");
+    expect(store.getState().profiles.map((p) => p.id)).toEqual([
+      "default",
+      "work",
+    ]);
+    expect(store.getState().activeProfileId).toBe("work");
+  });
+
+  it("rejects a forged activeProfileId that points to a non-existent profile", async () => {
+    seedPersisted({
+      profiles: [
+        { id: "default", name: "Default" },
+        { id: "work", name: "Work" },
+      ],
+      activeProfileId: "ghost",
+    });
+    await rehydrateWithFreshStore();
+    const { useProfileStore: store } = await import("./profile-store");
+    expect(store.getState().activeProfileId).toBe("default");
+  });
+
+  it("does not replace store methods with attacker-supplied functions", async () => {
+    seedPersisted({
+      profiles: [{ id: "default", name: "Default" }],
+      activeProfileId: "default",
+      addProfile: () => "forged",
+      deleteProfile: () => "forged",
+      requestSwitchProfile: () => "forged",
+    });
+    await rehydrateWithFreshStore();
+    const { useProfileStore: store } = await import("./profile-store");
+    expect(typeof store.getState().addProfile).toBe("function");
+    // addProfile() with an empty name should still throw the real validation error.
+    expect(() => store.getState().addProfile("")).toThrow(/empty/);
+  });
+
+  it("never persists the active profile as a profile that is missing from the sanitized list", async () => {
+    seedPersisted({
+      profiles: [{ id: "default", name: "Default" }],
+      activeProfileId: "missing-totally",
+    });
+    await rehydrateWithFreshStore();
+    const { useProfileStore: store } = await import("./profile-store");
+    const state = store.getState();
+    expect(state.profiles.map((p) => p.id)).toContain(state.activeProfileId);
+  });
+
+  it("treats a corrupt JSON document as no persistence (default profile only)", async () => {
+    window.localStorage.setItem("venice-profiles", "{not valid json");
+    await rehydrateWithFreshStore();
+    const { useProfileStore: store } = await import("./profile-store");
+    expect(store.getState().activeProfileId).toBe("default");
+    expect(store.getState().profiles.map((p) => p.id)).toEqual(["default"]);
+  });
+});

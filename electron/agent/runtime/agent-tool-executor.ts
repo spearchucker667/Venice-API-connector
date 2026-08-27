@@ -194,7 +194,13 @@ export async function executeAgentTool(ctx: ToolExecutionContext, toolCall: Assi
         if (typeof sizeBytes !== "number" || sizeBytes < 1 || sizeBytes > 1_048_576) {
           return safeToolError(internalName, toolCall.id, "INVALID_ARGUMENTS", "Invalid attachment size.");
         }
-        const attachment = services.attachmentRegistry.resolve(ctx.profileId, attachmentId, ctx.rendererSessionId);
+        // Use the main-internal accessor that returns the body buffer; the
+        // public resolve() intentionally never returns the body (P1-002).
+        const attachment = services.attachmentRegistry.resolveWithBody(
+          ctx.profileId,
+          attachmentId,
+          ctx.rendererSessionId,
+        );
         if (!attachment) {
           return safeToolError(toolName, toolCall.id, "INVALID_ARGUMENTS", "Attachment not found or access denied.");
         }
@@ -204,7 +210,7 @@ export async function executeAgentTool(ctx: ToolExecutionContext, toolCall: Assi
           relativePath,
           displayName,
           mimeType,
-          bodyB64: attachment.bodyB64,
+          bodyB64: attachment.body.toString("base64"),
         });
         await services.audit.record({
           sessionId: ctx.rendererSessionId,

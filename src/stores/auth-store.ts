@@ -8,6 +8,17 @@ import type { ApiKeyConfigurationStatus, ApiKeyValidationStatus, CredentialFailu
 
 export type AuthHydrationStatus = 'idle' | 'checking' | 'ready' | 'error'
 
+/** Outcome of `setApiKey` — separates secure-store persistence from
+ *  Venice connectivity validation so the dialog can show an honest
+ *  message for each failure mode (P1-003). */
+export type SetApiKeyOutcome =
+  | { stored: true; validation: "valid" }
+  | { stored: true; validation: "invalid" }
+  | { stored: true; validation: "network-error" }
+  | { stored: true; validation: "unknown" }
+  | { stored: false; code: CredentialFailureCode; safeMessage: string }
+  | { stored: false; code: "INVALID_INPUT"; safeMessage: string }
+
 export interface AuthState {
   apiKey: string | null
   hasEncrypted: boolean
@@ -31,8 +42,29 @@ export interface AuthState {
   providerLastValidationStatus: Record<string, ApiKeyValidationStatus>
   providerLastValidationAt: Record<string, string | null>
   checkConfiguration: () => Promise<void>
-  setApiKey: (key: string, remember?: { passphrase?: string }) => Promise<void>
+  /**
+   * Saves a Venice API key, then validates it against Venice. The
+   * returned outcome distinguishes:
+   *   - secure-store write failures (stored=false)
+   *   - validation failures after a successful save (stored=true, validation
+   *     = "invalid" | "network-error" | "unknown")
+   *   - successful save + validation (stored=true, validation="valid")
+   *
+   * Never throws for connectivity-class failures; the dialog can present
+   * the right message and leave the key stored for retry.
+   */
+  setApiKey: (key: string, remember?: { passphrase?: string }) => Promise<SetApiKeyOutcome>
+  /**
+   * Removes a stored Venice API key (idempotent). Throws only on
+   * unrecoverable secure-store errors so the caller can surface them.
+   */
   clearApiKey: () => Promise<void>
+  /**
+   * Re-runs Venice validation against the currently stored key without
+   * re-saving it. Returns the new validation status. Safe to call from
+   * the dialog "Test" button or any "Re-test connection" affordance.
+   */
+  validateStoredVeniceKey: () => Promise<ApiKeyValidationStatus>
   setJinaApiKey: (key: string) => Promise<void>
   clearJinaApiKey: () => Promise<void>
 
@@ -110,13 +142,20 @@ export const useAuthStore = create<AuthState>()((set) => ({
     }
   },
 
-  setApiKey: async (key) => {
+  setApiKey: async (key): Promise<SetApiKeyOutcome> => {
+    if (typeof key !== "string" || key.trim().length === 0) {
+      return { stored: false, code: "INVALID_INPUT", safeMessage: "Enter a Venice API key before saving." }
+    }
     const result = await desktopApiKey.set(key)
     if (!result.ok) {
-      const error = new Error(result.safeMessage) as Error & { code?: CredentialFailureCode }
-      error.code = result.code
-      throw error
+      set({
+        credentialFailureCode: result.code,
+        credentialSafeMessage: result.safeMessage,
+      })
+      return { stored: false, code: result.code, safeMessage: result.safeMessage }
     }
+    // Storage succeeded — record the configuration immediately so the
+    // UI shows "key stored" before we even attempt Venice validation.
     set({
       isConfigured: true,
       apiKey: null,
@@ -127,42 +166,25 @@ export const useAuthStore = create<AuthState>()((set) => ({
     })
     useModelCatalogRuntimeStore.getState().reset()
     await invalidateModelQueries()
-    const verification = await desktopApiKey.test()
-    if (!verification.ok) {
-      const kind = verification.connectivity?.kind
-      const code: CredentialFailureCode = kind === 'invalid-api-key'
-        ? 'PROVIDER_AUTH_REJECTED'
-        : kind === 'network-failure' || kind === 'bridge-unavailable'
-          ? 'NETWORK_ERROR'
-          : 'UNKNOWN_ERROR'
-      const connectivitySafeMessage = verification.connectivity && !verification.connectivity.ok
-        ? verification.connectivity.safeMessage
-        : undefined
-      const safeMessage = connectivitySafeMessage
-        ?? (code === 'PROVIDER_AUTH_REJECTED'
-          ? 'Venice rejected this API key. Check the key and try again.'
-          : code === 'NETWORK_ERROR'
-            ? 'The key was stored, but Venice could not be reached. Check the network and retry.'
-            : 'The key was stored, but Venice connectivity could not be verified.')
-      if (code === 'PROVIDER_AUTH_REJECTED') {
-        const removal = await desktopApiKey.delete()
-        if (removal.ok) {
-          set({ isConfigured: false, credentialState: 'not-configured' })
-          await invalidateModelQueries()
-        }
-      }
-      set({ credentialFailureCode: code, credentialSafeMessage: safeMessage })
-      const validationStatus: ApiKeyValidationStatus = code === 'PROVIDER_AUTH_REJECTED'
-        ? 'invalid'
-        : code === 'NETWORK_ERROR'
-          ? 'network-error'
-          : 'unknown'
-      set({ veniceLastValidationStatus: validationStatus, veniceLastValidationAt: new Date().toISOString() })
-      const error = new Error(safeMessage) as Error & { code?: CredentialFailureCode }
-      error.code = code
-      throw error
+
+    const validationStatus = await runVeniceValidationAndApply(set)
+    if (validationStatus === "valid") {
+      return { stored: true, validation: "valid" }
     }
-    set({ veniceLastValidationStatus: 'valid', veniceLastValidationAt: new Date().toISOString() })
+    // runVeniceValidationAndApply returns a wide ApiKeyValidationStatus;
+    // for the typed outcome we surface the three post-save classes the
+    // dialog differentiates (invalid, network-error, unknown). Other
+    // values (not-configured / configured-not-validated / bridge-error)
+    // are reported as "unknown" to the caller — the dialog does not
+    // distinguish them in the success path.
+    if (validationStatus === "invalid" || validationStatus === "network-error" || validationStatus === "unknown") {
+      return { stored: true, validation: validationStatus }
+    }
+    return { stored: true, validation: "unknown" }
+  },
+
+  validateStoredVeniceKey: async () => {
+    return await runVeniceValidationAndApply(set)
   },
 
   clearApiKey: async () => {
@@ -249,3 +271,57 @@ export const useAuthStore = create<AuthState>()((set) => ({
     set({ jinaLastValidationStatus: status, jinaLastValidationAt: timestamp })
   },
 }))
+
+/** Runs Venice validation against the currently stored key and applies the
+ *  result to the auth store. Returns the normalized validation status.
+ *
+ *  Behaviour rules (P1-003):
+ *  - "invalid" (provider auth rejected) — the key stays stored. The
+ *    product policy is explicit: the user can re-test or deliberately
+ *    delete via the dialog. We no longer silently roll back storage.
+ *  - "network-error" — the key stays stored; UI says "saved, offline".
+ *  - "unknown" — the key stays stored; UI says "couldn't verify".
+ *  - "valid" — refresh model catalog, mark connected.
+ */
+async function runVeniceValidationAndApply(
+  set: (partial: Partial<AuthState> | ((state: AuthState) => Partial<AuthState>)) => void,
+): Promise<ApiKeyValidationStatus> {
+  const verification = await desktopApiKey.test()
+  const timestamp = new Date().toISOString()
+  if (verification.ok) {
+    set({
+      credentialFailureCode: null,
+      credentialSafeMessage: null,
+      veniceLastValidationStatus: 'valid',
+      veniceLastValidationAt: timestamp,
+    })
+    return 'valid'
+  }
+  const kind = verification.connectivity?.kind
+  const code: CredentialFailureCode = kind === 'invalid-api-key'
+    ? 'PROVIDER_AUTH_REJECTED'
+    : kind === 'network-failure' || kind === 'bridge-unavailable'
+      ? 'NETWORK_ERROR'
+      : 'UNKNOWN_ERROR'
+  const connectivitySafeMessage = verification.connectivity && !verification.connectivity.ok
+    ? verification.connectivity.safeMessage
+    : undefined
+  const safeMessage = connectivitySafeMessage
+    ?? (code === 'PROVIDER_AUTH_REJECTED'
+      ? 'Venice rejected this API key. Check the key and try again.'
+      : code === 'NETWORK_ERROR'
+        ? 'The key was stored, but Venice could not be reached. Check the network and retry.'
+        : 'The key was stored, but Venice connectivity could not be verified.')
+  const validationStatus: ApiKeyValidationStatus = code === 'PROVIDER_AUTH_REJECTED'
+    ? 'invalid'
+    : code === 'NETWORK_ERROR'
+      ? 'network-error'
+      : 'unknown'
+  set({
+    credentialFailureCode: code,
+    credentialSafeMessage: safeMessage,
+    veniceLastValidationStatus: validationStatus,
+    veniceLastValidationAt: timestamp,
+  })
+  return validationStatus
+}
