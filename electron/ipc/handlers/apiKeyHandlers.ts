@@ -643,7 +643,7 @@ export function registerApiKeyHandlers(): void {
     }
     try {
       const validId = getProfileSessionId(event.sender);
-      console.log("Setting API key for", validId, "key length:", trimmed.length); setApiKey(trimmed, validId);
+      setApiKey(trimmed, validId);
       return { ok: true, storageMode: getStorageMode() };
     } catch (err) {
       const message = redactErrorMessage(err);
