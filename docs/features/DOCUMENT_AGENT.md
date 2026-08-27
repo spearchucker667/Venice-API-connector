@@ -123,9 +123,20 @@ Document Agent audit records are append-only, hash chained, and contain event me
 
 ## Attachments and promotion
 
-Chat and Document Agent share `electron/agent/attachments/attachment-registry.ts`. Attachments are profile/session-scoped, identified by opaque IDs, and capped at 1 MiB. The model receives only the opaque `attachmentId`; base64 bodies and local paths are resolved by main.
+Chat and Document Agent share `electron/agent/attachments/attachment-registry.ts`. Attachments are profile/session-scoped, identified by opaque IDs, and capped at 1 MiB. The model receives only the opaque `attachmentId`; raw bodies and local paths are resolved by main.
 
-`document.promoteAttachment` (granted in `limited_documents` and above; never in `off` or `read_attachments`) lets a chat attachment become a managed document. The renderer can either supply `bodyB64` directly or let main resolve the registered attachment by ID. Bodies are base64-decoded in main, capped at 1 MiB, classified against a MIME allow-list with an HTML blocklist, and non-overwriting. Text-bearing MIME types redact secrets through the canonical redaction pipeline before being split into bounded paragraph blocks; binary MIME types emit a deterministic placeholder block set with `contentKind: "binary"` metadata and the bytes are not retained.
+### Attachment architecture (P1-002)
+
+The registry stores bytes in a `Buffer` in main process memory. Public reads (`resolve()`) return only metadata; the body is only exposed through the main-internal accessor (`resolveWithBody()`) used by tool executors that operate entirely inside main. The renderer never receives the raw body through the public record, and the model-facing tool schema (`document.promoteAttachment`) accepts only the opaque `attachmentId`.
+
+Two transfer shapes are accepted by the registry:
+
+* `bodyBytes: Uint8Array` — preferred for main-internal call sites (preferred because it avoids the base64 round-trip).
+* `bodyB64: string` — legacy renderer-originated drag/drop transfer. The renderer still has to ferry drag/drop bytes through a structured-clone IPC, and base64 is the smallest portable wire encoding for that path. The registry validates the input is canonical base64, decodes it, and validates the resulting byte length against the 1 MiB cap. This is **explicitly a renderer-originated transfer** — the registry is not a "main resolves local file bytes" service.
+
+Cleanup hooks drop every record for a session (`revokeSession()`) or a profile (`revokeProfile()`) so memory does not leak across boundaries. The renderer never persists or serializes a registry transfer representation.
+
+`document.promoteAttachment` (granted in `limited_documents` and above; never in `off` or `read_attachments`) lets a chat attachment become a managed document. The renderer supplies only the opaque `attachmentId`; main resolves the registered attachment body through the privileged `resolveWithBody()` accessor. Bodies are decoded in main, capped at 1 MiB, classified against a MIME allow-list with an HTML blocklist, and non-overwriting. Text-bearing MIME types redact secrets through the canonical redaction pipeline before being split into bounded paragraph blocks; binary MIME types emit a deterministic placeholder block set with `contentKind: "binary"` metadata and the bytes are not retained after promotion.
 
 Every promotion records an audit event (`toolName: "document.promoteAttachment"`, `outcome: "execution"`, `resourceIds: [<document id>]`, `metadata: { attachmentId, mimeType, sizeBytes, format, mode, bytesRedacted }`) and propagates `createdBy: "import"` through `ManagedDocumentService.create()` so the revision lineage remains auditable.
 
