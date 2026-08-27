@@ -55,44 +55,28 @@ const SEVERITY_BG: Record<StoragePrivacySeverity, string> = {
 };
 
 /** Returns a friendly provider label, preferring the registry definition
- *  when the provider is recognised; falls back to the raw id otherwise. */
+ *  when the provider is recognised; falls back to a readable provider id. */
 function providerLabel(providerId: string): string {
   const def = PROVIDER_REGISTRY[providerId as keyof typeof PROVIDER_REGISTRY];
-  return def?.label ?? providerId;
+  return def?.label ?? formatAuditToken(providerId);
 }
 
-const VALIDATION_BADGE: Record<ActiveApiKeyEntry["lastValidationStatus"], {
-  label: string;
-  className: string;
-}> = {
-  "not-configured": {
-    label: "Not configured",
-    className: "bg-surface-muted text-text-muted border-border",
-  },
-  "configured-not-validated": {
-    label: "Configured, untested",
-    className: "bg-info/10 text-info border-info/20",
-  },
-  valid: {
-    label: "Valid",
-    className: "bg-success/10 text-success border-success/20",
-  },
-  invalid: {
-    label: "Invalid",
-    className: "bg-danger/10 text-danger border-danger/20",
-  },
-  "network-error": {
-    label: "Network error",
-    className: "bg-warning/10 text-warning border-warning/20",
-  },
-  "bridge-error": {
-    label: "Bridge error",
-    className: "bg-warning/10 text-warning border-warning/20",
-  },
-  unknown: {
-    label: "Unknown",
-    className: "bg-surface-muted text-text-muted border-border",
-  },
+/** Converts stable audit/schema tokens into readable labels without adding
+ *  another set of untranslated UI literals. */
+function formatAuditToken(value: string): string {
+  return value
+    .replace(/[-_]+/g, " ")
+    .replace(/\b[a-z]/g, (character) => character.toUpperCase());
+}
+
+const VALIDATION_BADGE: Record<ActiveApiKeyEntry["lastValidationStatus"], string> = {
+  "not-configured": "bg-surface-muted text-text-muted border-border",
+  "configured-not-validated": "bg-info/10 text-info border-info/20",
+  valid: "bg-success/10 text-success border-success/20",
+  invalid: "bg-danger/10 text-danger border-danger/20",
+  "network-error": "bg-warning/10 text-warning border-warning/20",
+  "bridge-error": "bg-warning/10 text-warning border-warning/20",
+  unknown: "bg-surface-muted text-text-muted border-border",
 };
 
 export function StoragePrivacyDashboard() {
@@ -251,88 +235,74 @@ export function StoragePrivacyDashboard() {
               {tRuntime("runtimeGenerated.services.storageprivacyservice.metadata.apiKeys")}
             </h2>
             <span className="text-[11px] text-text-muted">
-              {inventory.activeApiKeys.length} configured
+              {inventory.activeApiKeys.length}{" "}
+              <Trans i18nKey="settings:apiKeys.status.configured" />
             </span>
           </div>
           <div className="rounded-lg border border-border overflow-hidden">
             <table className="w-full text-left text-sm text-text-secondary">
               <thead className="bg-surface-muted text-text-muted text-xs uppercase">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Provider</th>
-                  <th className="px-4 py-3 font-medium">Storage</th>
-                  <th className="px-4 py-3 font-medium">Last validation</th>
-                  <th className="px-4 py-3 font-medium text-right">Manage</th>
+                  <th className="px-4 py-3 font-medium">
+                    <Trans i18nKey="settings:sections.providers" />
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    <Trans i18nKey="settings:sections.data" />
+                  </th>
+                  <th className="px-4 py-3 font-medium">
+                    <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.column.status" />
+                  </th>
+                  <th className="px-4 py-3 font-medium text-right">
+                    <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.action.review" />
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {inventory.activeApiKeys.map((entry) => {
-                  const badge = VALIDATION_BADGE[entry.lastValidationStatus];
-                  return (
-                    <tr key={entry.id} className="hover:bg-surface-muted">
-                      <td className="px-4 py-3">
-                        <div className="font-medium text-text-primary">
-                          {entry.providerId === "venice"
-                            ? "Venice"
-                            : entry.providerId === "jina"
-                              ? "Jina"
-                              : providerLabel(entry.providerId)}
-                        </div>
-                        <div className="text-[12px] text-text-muted font-mono">
-                          {entry.providerId}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-[12px] text-text-secondary">
-                          {entry.storage === "secure-storage"
-                            ? "OS secure storage"
-                            : entry.storage === "web-environment"
-                              ? "In-memory (web)"
-                              : entry.storage === "env"
-                                ? "Environment"
-                                : entry.storage === "memory"
-                                  ? "Memory"
-                                  : "Unavailable"}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex flex-col gap-1">
-                          <span
-                            className={`self-start inline-block text-[11px] px-2 py-0.5 rounded border font-bold uppercase ${badge.className}`}
-                          >
-                            {badge.label}
-                          </span>
-                          {entry.lastValidationAt && (
-                            <span className="text-[11px] text-text-muted">
-                              {new Date(entry.lastValidationAt).toLocaleString()}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setActiveTab(
-                              entry.providerId === "venice" || entry.providerId === "jina"
-                                ? "settings"
-                                : "settings",
-                            )
-                          }
-                          className="text-[12px] px-3 py-1 rounded border border-border bg-surface hover:bg-surface-muted text-text-primary"
+                {inventory.activeApiKeys.map((entry) => (
+                  <tr key={entry.id} className="hover:bg-surface-muted">
+                    <td className="px-4 py-3">
+                      <div className="font-medium text-text-primary">
+                        {providerLabel(entry.providerId)}
+                      </div>
+                      <div className="text-[12px] text-text-muted font-mono">
+                        {entry.providerId}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-[12px] text-text-secondary">
+                        {formatAuditToken(entry.storage)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-col gap-1">
+                        <span
+                          className={`self-start inline-block text-[11px] px-2 py-0.5 rounded border font-bold uppercase ${VALIDATION_BADGE[entry.lastValidationStatus]}`}
                         >
-                          Open settings
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                          {formatAuditToken(entry.lastValidationStatus)}
+                        </span>
+                        {entry.lastValidationAt && (
+                          <span className="text-[11px] text-text-muted">
+                            {new Date(entry.lastValidationAt).toLocaleString()}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab("settings")}
+                        className="text-[12px] px-3 py-1 rounded border border-border bg-surface hover:bg-surface-muted text-text-primary"
+                      >
+                        <Trans i18nKey="common:surface.componentsPrivacyStorageprivacydashboard.action.review" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
           <p className="text-[11px] text-text-muted">
-            Raw API key material is never sent to the renderer, never written
-            to logs, and never exported. The rows above report only storage
-            location and last validation outcome.
+            <Trans i18nKey="settings:configPanel.apiKeyImport.note" />
           </p>
         </section>
 
