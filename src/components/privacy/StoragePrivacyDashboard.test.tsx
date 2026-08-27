@@ -130,8 +130,11 @@ describe("StoragePrivacyDashboard", () => {
     };
     mockStore({ inventory: inventoryWithIssue, maintenancePlan: mockMaintenancePlan });
     render(<StoragePrivacyDashboard />);
-    const reviewBtn = screen.getByText("Review");
-    fireEvent.click(reviewBtn);
+    const issueMessage = screen.getByText("Orphaned media reference");
+    const issueCard = issueMessage.closest("div.p-3");
+    const reviewBtn = issueCard?.querySelector("button");
+    expect(reviewBtn).not.toBeNull();
+    fireEvent.click(reviewBtn!);
     expect(setActiveTab).toHaveBeenCalledWith("media");
   });
 });
