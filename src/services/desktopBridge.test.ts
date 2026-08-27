@@ -148,7 +148,7 @@ describe("desktopBridge web fallback", () => {
     expect(fetch).toHaveBeenCalledWith("/api/session-key", expect.objectContaining({ method: "POST" }));
     expect(Object.keys(localStorageStore)).toEqual(preKeys);
 
-    await expect(desktopApiKey.delete()).resolves.toEqual({ ok: true });
+    await expect(desktopApiKey.delete()).resolves.toEqual({ ok: true, storageMode: "plaintext-fallback" });
     await expect(desktopApiKey.isConfigured()).resolves.toBe(false);
   });
 
