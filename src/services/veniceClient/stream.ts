@@ -11,7 +11,6 @@ import {
 import { desktopVenice, isElectron } from "../desktopBridge";
 import type { VeniceStreamDelta } from "../../shared/veniceStreamDelta";
 import type { AppDispatch } from "../../types/app";
-import type { AgentPermissionPreset } from "../../agent/contracts/capabilities";
 import { maybeRunLocalFamilyGuard, SafetyGuardBlockedError } from "../../shared/safety";
 import {
   buildInspectorTelemetryPatch,
