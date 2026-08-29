@@ -7,9 +7,13 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 
+const mocks = vi.hoisted(() => ({
+  tempUserDataDir: "",
+}));
+
 vi.mock("electron", () => ({
   app: {
-    getPath: vi.fn(() => os.tmpdir()),
+    getPath: vi.fn(() => mocks.tempUserDataDir),
   },
   safeStorage: {
     isEncryptionAvailable: vi.fn(() => true),
@@ -63,11 +67,13 @@ import {
   __resetProfilePasswordLockoutsForTests,
 } from "./secureStore";
 
-const STORE_PATH = path.join(os.tmpdir(), "secure-prefs.json");
+let STORE_PATH = "";
 
 function cleanStore() {
-  try { fs.unlinkSync(STORE_PATH); } catch { /* ignore */ }
-  try { fs.unlinkSync(`${STORE_PATH}.tmp`); } catch { /* ignore */ }
+  if (STORE_PATH) {
+    try { fs.unlinkSync(STORE_PATH); } catch { /* ignore */ }
+    try { fs.unlinkSync(`${STORE_PATH}.tmp`); } catch { /* ignore */ }
+  }
 }
 
 describe("secureStore", () => {
@@ -75,6 +81,8 @@ describe("secureStore", () => {
   const credentialVault = new Map<string, string>();
 
   beforeEach(() => {
+    mocks.tempUserDataDir = fs.mkdtempSync(path.join(os.tmpdir(), "vf-secure-store-"));
+    STORE_PATH = path.join(mocks.tempUserDataDir, "secure-prefs.json");
     delete process.env.VENICE_FORGE_ALLOW_PLAINTEXT_KEY_STORAGE;
     __clearCacheForTests();
     __resetMasterPasswordLockoutForTests();
@@ -105,6 +113,13 @@ describe("secureStore", () => {
       process.env.VENICE_FORGE_ALLOW_PLAINTEXT_KEY_STORAGE = originalPlaintextFlag;
     }
     cleanStore();
+    if (mocks.tempUserDataDir && fs.existsSync(mocks.tempUserDataDir)) {
+      try {
+        fs.rmSync(mocks.tempUserDataDir, { recursive: true, force: true });
+      } catch {
+        /* ignore */
+      }
+    }
   });
 
   it("encrypts and stores the API key when encryption is available", () => {
