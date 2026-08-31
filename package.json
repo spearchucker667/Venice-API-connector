@@ -168,7 +168,7 @@
     "smoke:electron": "vitest run tests/smoke/electron-smoke.test.ts",
     "profile:media-studio": "node scripts/profile-media-studio.mjs",
     "capture:release-qa-snapshots": "node scripts/capture-release-qa-snapshots.mjs",
-    "typecheck": "tsc --noEmit && tsc --noEmit --project tsconfig.electron.json",
+    "typecheck": "tsc --noEmit && tsc --noEmit --project tsconfig.electron.json && tsc --noEmit --project tsconfig.electron.test.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "dist": "npm run clean && npm run verify:icon && npm run build && electron-builder --config electron-builder.config.cjs --publish never && npm run checksum:release",

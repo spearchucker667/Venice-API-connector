@@ -144,7 +144,7 @@ if (pkg) {
     "verify:workspace-contracts": "vitest run src/services/dbMigrations.test.ts src/types/project.test.ts src/stores/project-store.test.ts src/stores/chat-store.character.test.ts src/stores/media-store.test.ts src/components/layout/sidebar.test.tsx src/components/command-palette/CommandPalette.test.tsx src/components/gallery/gallery-view.test.tsx src/components/image/image-view.test.tsx --fileParallelism=false",
     "checksum:release": "node scripts/checksum-release.cjs",
     "lint:eslint": "eslint src electron server.ts scripts --max-warnings=0",
-    typecheck: "tsc --noEmit && tsc --noEmit --project tsconfig.electron.json",
+    typecheck: "tsc --noEmit && tsc --noEmit --project tsconfig.electron.json && tsc --noEmit --project tsconfig.electron.test.json",
   };
   for (const [k, v] of Object.entries(expectedScripts)) {
     if (pkg.scripts?.[k] !== v) {
