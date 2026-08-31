@@ -150,6 +150,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 ### Discovery & Planning
 
 - [discovery/DISCOVERY_DOCUMENT_AGENT.md](discovery/DISCOVERY_DOCUMENT_AGENT.md) — Repository reconciliation and Phase 0 architecture evidence.
+- [superpowers/specs/2026-08-31-unified-theme-ci-csp-electron-replicate-design.md](superpowers/specs/2026-08-31-unified-theme-ci-csp-electron-replicate-design.md) — Approved integrated design for Theme Engine V2, CI/package hardening, Electron test typechecking, strict-CSP Meteocon rendering, and durable Replicate paid submissions.
 - [superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md](superpowers/specs/2026-08-23-semantic-image-prompt-enhancer-design.md) — Implemented semantic grounding, trust-layer, model-context, configuration-migration, and validation contract for Image Studio prompt enhancement/remix.
 - [superpowers/specs/2026-08-24-deferred-provider-integration-design.md](superpowers/specs/2026-08-24-deferred-provider-integration-design.md) — Design specification for deferred provider integrations (Replicate, Bedrock, Vertex, Azure OpenAI, Hugging Face, Cohere).
 - [superpowers/specs/2026-08-26-provider-boundary-style-references-design.md](superpowers/specs/2026-08-26-provider-boundary-style-references-design.md) — Approved design for provider-operation request allowlists and runtime-gated Image Studio style references (`PROV-001`, `PROV-005`).
