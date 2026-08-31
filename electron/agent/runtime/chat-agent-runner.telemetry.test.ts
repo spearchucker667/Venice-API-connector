@@ -1,22 +1,27 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { performGuardedVeniceRequest as PerformGuardedVeniceRequest } from "../../services/guardPipeline";
+import type {
+  publishInspectorCompletion as PublishInspectorCompletion,
+  publishInspectorRequest as PublishInspectorRequest,
+} from "../../services/inspectorTelemetry";
+import { createToolExecutionContext } from "./tool-execution-context";
 
 const mocks = vi.hoisted(() => {
-  const publishInspectorRequest = vi.fn(() => "evt-chat-runner-1");
-  const publishInspectorCompletion = vi.fn();
-  const performGuardedVeniceRequest = vi.fn();
+  const publishInspectorRequest = vi.fn<typeof PublishInspectorRequest>();
+  const publishInspectorCompletion = vi.fn<typeof PublishInspectorCompletion>();
+  const performGuardedVeniceRequest = vi.fn<typeof PerformGuardedVeniceRequest>();
   return { publishInspectorRequest, publishInspectorCompletion, performGuardedVeniceRequest };
 });
 
 const { publishInspectorRequest, publishInspectorCompletion, performGuardedVeniceRequest } = mocks;
 
 vi.mock("../../services/guardPipeline", () => ({
-  performGuardedVeniceRequest: (rawRequest: unknown, options: { onDelta?: (c: unknown) => void } = {}) =>
-    mocks.performGuardedVeniceRequest(rawRequest, options),
+  performGuardedVeniceRequest: mocks.performGuardedVeniceRequest,
 }));
 
 vi.mock("../../services/inspectorTelemetry", () => ({
-  publishInspectorRequest: (...args: unknown[]) => mocks.publishInspectorRequest(...args),
-  publishInspectorCompletion: (...args: unknown[]) => mocks.publishInspectorCompletion(...args),
+  publishInspectorRequest: mocks.publishInspectorRequest,
+  publishInspectorCompletion: mocks.publishInspectorCompletion,
 }));
 
 vi.mock("./agent-tool-executor", () => ({
@@ -24,6 +29,14 @@ vi.mock("./agent-tool-executor", () => ({
 }));
 
 import { runChatAgentLoop } from "./chat-agent-runner";
+
+const toolExecutionContext = createToolExecutionContext({
+  profileId: "p1",
+  runtimeSessionId: "runtime_p1",
+  senderId: 0,
+  preset: "workspace_with_approval",
+});
+const onDelta = () => undefined;
 
 beforeEach(() => {
   performGuardedVeniceRequest.mockReset();
@@ -40,12 +53,20 @@ describe("runChatAgentLoop — Phase C inspector telemetry (VERIFY-157)", () => 
   it("emits request and completion on success path reusing eventId", async () => {
     performGuardedVeniceRequest.mockResolvedValueOnce({
       kind: "response",
-      response: { status: 200, body: { choices: [{ message: { role: "assistant", content: "" }, finish_reason: "stop", index: 0 }] } },
+      response: {
+        ok: true,
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        body: { choices: [{ message: { role: "assistant", content: "" }, finish_reason: "stop", index: 0 }] },
+        contentType: "application/json",
+      },
     });
 
     await runChatAgentLoop(
       { profileId: "p1", body: { messages: [] } },
-      () => undefined
+      toolExecutionContext,
+      onDelta,
     );
 
     expect(publishInspectorRequest).toHaveBeenCalledTimes(1);
@@ -68,12 +89,20 @@ describe("runChatAgentLoop — Phase C inspector telemetry (VERIFY-157)", () => 
   it("emits completion with status=451 on guard-block path", async () => {
     performGuardedVeniceRequest.mockResolvedValueOnce({
       kind: "blocked",
-      block: { body: { error: "blocked", reasonCode: "FAMILY_VIOLATION", category: "safety" } },
+      block: {
+        ok: false,
+        status: 451,
+        statusText: "Blocked by Family Safe Mode",
+        headers: {},
+        body: { error: "blocked", reasonCode: "FAMILY_VIOLATION", category: "safety" },
+        contentType: "application/json",
+      },
     });
 
     await runChatAgentLoop(
       { profileId: "p1", body: { messages: [] } },
-      () => undefined
+      toolExecutionContext,
+      onDelta,
     );
 
     expect(publishInspectorRequest).toHaveBeenCalledTimes(1);
@@ -89,7 +118,8 @@ describe("runChatAgentLoop — Phase C inspector telemetry (VERIFY-157)", () => 
     await expect(
       runChatAgentLoop(
         { profileId: "p1", body: { messages: [] } },
-        () => undefined
+        toolExecutionContext,
+        onDelta,
       )
     ).rejects.toThrow("upstream timeout");
 
@@ -106,13 +136,21 @@ describe("runChatAgentLoop — Phase C inspector telemetry (VERIFY-157)", () => 
     });
     performGuardedVeniceRequest.mockResolvedValueOnce({
       kind: "response",
-      response: { status: 200, body: { choices: [] } },
+      response: {
+        ok: true,
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        body: { choices: [] },
+        contentType: "application/json",
+      },
     });
 
     await expect(
       runChatAgentLoop(
         { profileId: "p1", body: { messages: [] } },
-        () => undefined
+        toolExecutionContext,
+        onDelta,
       )
     ).resolves.toBeDefined();
 

@@ -13,19 +13,33 @@
 // runner expects) rather than the legacy `{mediaId, mimeType}` stub.
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import type { ToolResult } from "../../../src/agent/contracts/tool-results";
+import type { performGuardedVeniceRequest as PerformGuardedVeniceRequest } from "../../services/guardPipeline";
+import type {
+  publishInspectorCompletion as PublishInspectorCompletion,
+  publishInspectorRequest as PublishInspectorRequest,
+} from "../../services/inspectorTelemetry";
 
 // Performance pipeline must be the producer.
-const performGuardedVeniceRequest = vi.fn();
+const mocks = vi.hoisted(() => ({
+  performGuardedVeniceRequest: vi.fn<typeof PerformGuardedVeniceRequest>(),
+  publishInspectorRequest: vi.fn<typeof PublishInspectorRequest>(),
+  publishInspectorCompletion: vi.fn<typeof PublishInspectorCompletion>(),
+}));
+const {
+  performGuardedVeniceRequest,
+  publishInspectorRequest,
+  publishInspectorCompletion,
+} = mocks;
+
 vi.mock("../../services/guardPipeline", () => ({
-  performGuardedVeniceRequest: (...args: unknown[]) => performGuardedVeniceRequest(...args),
+  performGuardedVeniceRequest: mocks.performGuardedVeniceRequest,
 }));
 
 // Inspector telemetry must be invoked for each /image/generate call.
-const publishInspectorRequest = vi.fn(() => "evt-tool-1");
-const publishInspectorCompletion = vi.fn();
 vi.mock("../../services/inspectorTelemetry", () => ({
-  publishInspectorRequest: (...args: unknown[]) => publishInspectorRequest(...args),
-  publishInspectorCompletion: (...args: unknown[]) => publishInspectorCompletion(...args),
+  publishInspectorRequest: mocks.publishInspectorRequest,
+  publishInspectorCompletion: mocks.publishInspectorCompletion,
 }));
 
 // Audit must be invoked under a non-empty session id.
@@ -67,6 +81,25 @@ const PNG_PIXEL_BASE64 = "iVBORw0KGgo"; // 1×1 transparent PNG header
 const JPEG_PIXEL_BASE64 = "/9j/"; // JPEG escape marker
 const SHAM_SHA256 = "a".repeat(64);
 
+function expectSuccessfulToolResult(result: ToolResult): asserts result is Extract<ToolResult, { ok: true }> {
+  expect(result.ok).toBe(true);
+  if (!result.ok) throw new Error(result.error.message);
+}
+
+function expectFailedToolResult(result: ToolResult): asserts result is Extract<ToolResult, { ok: false }> {
+  expect(result.ok).toBe(false);
+  if (result.ok) throw new Error("Expected tool failure");
+}
+
+function expectRecord(value: unknown, label: string): asserts value is Record<string, unknown> {
+  expect(typeof value).toBe("object");
+  expect(value).not.toBeNull();
+  expect(Array.isArray(value)).toBe(false);
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error(`Expected ${label} to be a record`);
+  }
+}
+
 describe("executeMediaTool — P0-04 guarded broker regression", () => {
   beforeEach(() => {
     performGuardedVeniceRequest.mockReset();
@@ -107,18 +140,25 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
 
     expect(fakeFetch).not.toHaveBeenCalled();
     expect(performGuardedVeniceRequest).toHaveBeenCalledTimes(1);
-    const call = performGuardedVeniceRequest.mock.calls[0][0];
-    expect(call.endpoint).toBe("/image/generate");
-    expect(call.method).toBe("POST");
-    expect(call.profileId).toBe("default");
-    expect(call.body.model).toBe("nano-banana");
-    expect(call.body.prompt).toBe("a serene landscape");
-    expect(call.body.return_binary).toBe(false);
+    const [call] = performGuardedVeniceRequest.mock.calls;
+    if (call === undefined) throw new Error("Expected guarded request call");
+    const [rawRequest] = call;
+    expectRecord(rawRequest, "guarded request");
+    const callBody = rawRequest.body;
+    expectRecord(callBody, "guarded request body");
+    expect(rawRequest.endpoint).toBe("/image/generate");
+    expect(rawRequest.method).toBe("POST");
+    expect(rawRequest.profileId).toBe("default");
+    expect(callBody.model).toBe("nano-banana");
+    expect(callBody.prompt).toBe("a serene landscape");
+    expect(callBody.return_binary).toBe(false);
 
-    expect(result.ok).toBe(true);
-    expect((result.data as any).chatRef.mediaType).toBe("image");
-    expect((result.data as any).chatRef.operation).toBe("generate");
-    expect((result.data as any).chatRef.displayUrl).toBe("venice-media://abc123.png");
+    expectSuccessfulToolResult(result);
+    expectRecord(result.data, "successful tool data");
+    expectRecord(result.data.chatRef, "successful tool chatRef");
+    expect(result.data.chatRef.mediaType).toBe("image");
+    expect(result.data.chatRef.operation).toBe("generate");
+    expect(result.data.chatRef.displayUrl).toBe("venice-media://abc123.png");
     expect(audit.record).toHaveBeenCalledWith(
       expect.objectContaining({
         toolName: "media.generateImage",
@@ -149,12 +189,12 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
       { prompt: "studio lighting still-life", model: "flux-1.1-pro" },
     );
 
-    expect(result.ok).toBe(true);
-    const data = result.data as Record<string, unknown>;
-    expect(Object.keys(data)).toEqual(["chatRef"]);
-    expect(data).not.toHaveProperty("mediaId");
-    expect(data).not.toHaveProperty("mimeType");
-    expect(isChatMediaReferenceArrayContract([data.chatRef])).toBe(true);
+    expectSuccessfulToolResult(result);
+    expectRecord(result.data, "successful tool data");
+    expect(Object.keys(result.data)).toEqual(["chatRef"]);
+    expect(result.data).not.toHaveProperty("mediaId");
+    expect(result.data).not.toHaveProperty("mimeType");
+    expect(isChatMediaReferenceArrayContract([result.data.chatRef])).toBe(true);
   });
 
   it("blocks when the runtime family-safe guard denies the request", async () => {
@@ -177,23 +217,23 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
       { prompt: "anything", model: "nano-banana" },
     );
 
-    expect(result.ok).toBe(false);
-    expect((result.error as any).code).toBe("CAPABILITY_DENIED");
-    expect((result.error as any).message).toMatch(/Test should be blocked/);
+    expectFailedToolResult(result);
+    expect(result.error.code).toBe("CAPABILITY_DENIED");
+    expect(result.error.message).toMatch(/Test should be blocked/);
     expect(audit.record).not.toHaveBeenCalled();
   });
 
   it("rejects non-string model id", async () => {
     const result = await executeMediaTool(makeMediaCtx("default"), "media.generateImage", "call-4", { prompt: "x", model: 123 });
-    expect(result.ok).toBe(false);
-    expect((result.error as any).code).toBe("INVALID_ARGUMENTS");
+    expectFailedToolResult(result);
+    expect(result.error.code).toBe("INVALID_ARGUMENTS");
     expect(performGuardedVeniceRequest).not.toHaveBeenCalled();
   });
 
   it("rejects empty / oversized prompt", async () => {
     const empty = await executeMediaTool(makeMediaCtx("default"), "media.generateImage", "call-5", { prompt: "  ", model: "x" });
-    expect(empty.ok).toBe(false);
-    expect((empty.error as any).code).toBe("INVALID_ARGUMENTS");
+    expectFailedToolResult(empty);
+    expect(empty.error.code).toBe("INVALID_ARGUMENTS");
 
     const oversized = await executeMediaTool(
       makeMediaCtx("default"),
@@ -201,8 +241,8 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
       "call-6",
       { prompt: "a".repeat(5000), model: "x" },
     );
-    expect(oversized.ok).toBe(false);
-    expect((oversized.error as any).code).toBe("INVALID_ARGUMENTS");
+    expectFailedToolResult(oversized);
+    expect(oversized.error.code).toBe("INVALID_ARGUMENTS");
   });
 
   it("rejects malformed / non-PNG image payload", async () => {
@@ -224,8 +264,8 @@ describe("executeMediaTool — P0-04 guarded broker regression", () => {
       "call-7",
       { prompt: "anything", model: "x" },
     );
-    expect(result.ok).toBe(false);
-    expect((result.error as any).code).toBe("INTERNAL_ERROR");
+    expectFailedToolResult(result);
+    expect(result.error.code).toBe("INTERNAL_ERROR");
     expect(persistGeneratedMedia).not.toHaveBeenCalled();
   });
 });
@@ -264,15 +304,20 @@ describe("executeMediaTool — Phase C inspector telemetry (VERIFY-156)", () => 
       prompt: "p", model: "nano-banana",
     });
     expect(publishInspectorRequest).toHaveBeenCalledTimes(1);
-    const reqCall = publishInspectorRequest.mock.calls[0][0];
+    const [requestCall] = publishInspectorRequest.mock.calls;
+    if (requestCall === undefined) throw new Error("Expected inspector request call");
+    const [reqCall] = requestCall;
     expect(reqCall.source).toBe("main-agent");
     expect(reqCall.transport).toBe("venice");
     expect(reqCall.endpoint).toBe("/image/generate");
     expect(reqCall.method).toBe("POST");
     expect(publishInspectorCompletion).toHaveBeenCalledTimes(1);
-    const compCall = publishInspectorCompletion.mock.calls[0][0];
+    const [completionCall] = publishInspectorCompletion.mock.calls;
+    if (completionCall === undefined) throw new Error("Expected inspector completion call");
+    const [compCall] = completionCall;
     expect(compCall.source).toBe("main-agent");
     expect(compCall.eventId).toBe("evt-tool-1");
+    if (!compCall.summaries) throw new Error("Expected inspector completion summaries");
     expect(compCall.summaries.model).toBe("nano-banana");
   });
 
@@ -282,7 +327,7 @@ describe("executeMediaTool — Phase C inspector telemetry (VERIFY-156)", () => 
       block: {
         ok: false,
         status: 451,
-        statusText: "Blocked",
+        statusText: "Blocked by Family Safe Mode",
         headers: {},
         body: { error: "blocked", reasonCode: "TEST", category: "TEST_CAT" },
         contentType: "application/json",
@@ -291,9 +336,11 @@ describe("executeMediaTool — Phase C inspector telemetry (VERIFY-156)", () => 
     const result = await executeMediaTool(makeMediaCtx("default"), "media.generateImage", "call-B", {
       prompt: "p", model: "m",
     });
-    expect(result.ok).toBe(false);
+    expectFailedToolResult(result);
     expect(publishInspectorCompletion).toHaveBeenCalledTimes(1);
-    const compCall = publishInspectorCompletion.mock.calls[0][0];
+    const [completionCall] = publishInspectorCompletion.mock.calls;
+    if (completionCall === undefined) throw new Error("Expected inspector completion call");
+    const [compCall] = completionCall;
     expect(compCall.status).toBe(451);
     expect(compCall.error).toMatch(/blocked/i);
   });
@@ -308,7 +355,10 @@ describe("executeMediaTool — Phase C inspector telemetry (VERIFY-156)", () => 
     });
     expect(publishInspectorRequest).toHaveBeenCalledTimes(1);
     expect(publishInspectorCompletion).toHaveBeenCalledTimes(1);
-    expect(publishInspectorCompletion.mock.calls[0][0].error).toMatch(/exploded/i);
+    const [completionCall] = publishInspectorCompletion.mock.calls;
+    if (completionCall === undefined) throw new Error("Expected inspector completion call");
+    const [completion] = completionCall;
+    expect(completion.error).toMatch(/exploded/i);
   });
 
   it("does NOT break tool execution when publishInspectorCompletion throws", async () => {
@@ -329,13 +379,13 @@ describe("executeMediaTool — Phase C inspector telemetry (VERIFY-156)", () => 
     const result = await executeMediaTool(makeMediaCtx("default"), "media.generateImage", "call-D", {
       prompt: "p", model: "m",
     });
-    expect(result.ok).toBe(true);
+    expectSuccessfulToolResult(result);
   });
 
   it("non-image media tools fail closed with CAPABILITY_DENIED", async () => {
     const result = await executeMediaTool(makeMediaCtx("default"), "media.generateVideo", "call-8", { prompt: "x" });
-    expect(result.ok).toBe(false);
-    expect((result.error as any).code).toBe("CAPABILITY_DENIED");
+    expectFailedToolResult(result);
+    expect(result.error.code).toBe("CAPABILITY_DENIED");
     expect(performGuardedVeniceRequest).not.toHaveBeenCalled();
   });
 });

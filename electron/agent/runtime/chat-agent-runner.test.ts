@@ -10,26 +10,34 @@
 // message metadata, never the legacy stub shape.
 
 import { describe, it, expect, vi } from "vitest";
+import type { executeAgentTool as ExecuteAgentTool } from "./agent-tool-executor";
+import type { performGuardedVeniceRequest as PerformGuardedVeniceRequest } from "../../services/guardPipeline";
 
 // Stub the executor so we can drive the runner with predictable tool results.
-const executeAgentTool = vi.fn();
+const mocks = vi.hoisted(() => ({
+  executeAgentTool: vi.fn<typeof ExecuteAgentTool>(),
+  performGuardedVeniceRequest: vi.fn<typeof PerformGuardedVeniceRequest>(),
+}));
+const { executeAgentTool, performGuardedVeniceRequest } = mocks;
+
 vi.mock("./agent-tool-executor", () => ({
-  executeAgentTool: (...args: unknown[]) => executeAgentTool(...args),
+  executeAgentTool: mocks.executeAgentTool,
 }));
 
 // Stub the guarded pipeline — we drive its onDelta callback manually so we
 // can simulate a streamed chat response that arrives with one tool_call
 // and `finish_reason: "tool_calls"`.
-const performGuardedVeniceRequest = vi.fn();
-
 vi.mock("../../services/guardPipeline", () => ({
-  performGuardedVeniceRequest: (rawRequest: unknown, options: { onDelta?: (c: unknown) => void } = {}) =>
-    performGuardedVeniceRequest(rawRequest, options),
+  performGuardedVeniceRequest: mocks.performGuardedVeniceRequest,
 }));
 
 import { runChatAgentLoop } from "./chat-agent-runner";
 import { createToolExecutionContext } from "./tool-execution-context";
 import { isChatMediaReferenceArrayContract, type ChatMediaReferenceContract } from "../../../src/shared/chatMediaReferenceContracts";
+
+type GuardedRequestOptions = NonNullable<Parameters<typeof PerformGuardedVeniceRequest>[1]>;
+type GuardedDelta = Parameters<NonNullable<GuardedRequestOptions["onDelta"]>>[0];
+type EmitGuardedDelta = (chunk: Partial<GuardedDelta>) => void;
 
 describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", () => {
   const ctx = createToolExecutionContext({
@@ -46,19 +54,25 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
    * would keep returning `tool_calls` and the loop would exhaust its
    * `MAX_AGENT_TURNS` cap producing a stream of repeated tool executions.
    */
-  function installSingleTurnMock(emitFirstTurn: (cb: (chunk: unknown) => void) => void) {
+  function installSingleTurnMock(
+    emitFirstTurn: (emit: EmitGuardedDelta) => void,
+  ) {
     let calls = 0;
-    performGuardedVeniceRequest.mockImplementation((_req: unknown, options: { onDelta?: (c: unknown) => void } = {}) => {
+    performGuardedVeniceRequest.mockImplementation((_request, options) => {
       calls += 1;
-      const cb = options.onDelta;
+      const cb = options?.onDelta;
       if (calls === 1) {
-        emitFirstTurn(cb!);
+        if (!cb) throw new Error("Expected onDelta callback");
+        emitFirstTurn((chunk) => cb({ content: "", reasoning: "", ...chunk }));
       } else {
         // Subsequent turns: no tool calls → bounded loop exits.
-        cb?.({ content: "final answer" });
-        cb?.({ finish_reason: "stop" });
+        cb?.({ content: "final answer", reasoning: "" });
+        cb?.({ content: "", reasoning: "", finish_reason: "stop" });
       }
-      return Promise.resolve({ kind: "response", response: { ok: true, status: 200, headers: {}, body: {}, contentType: "application/json" } });
+      return Promise.resolve({
+        kind: "response",
+        response: { ok: true, status: 200, statusText: "OK", headers: {}, body: {}, contentType: "application/json" },
+      });
     });
   }
 
@@ -125,7 +139,7 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
     expect(refs[0].displayUrl).toBe("venice-media://abc123.png");
     expect(refs[0].modelId).toBe("nano-banana");
     // mimeType is not part of the canonical contract; ensure it never leaks.
-    expect((refs[0] as any).mimeType).toBeUndefined();
+    expect(refs[0]).not.toHaveProperty("mimeType");
     expect(isChatMediaReferenceArrayContract(refs)).toBe(true);
   });
 
@@ -137,7 +151,7 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
             index: 0,
             id: "call_stub",
             type: "function",
-            function: { name: "legacy.imageStub", arguments: "{}" },
+            function: { name: "media.generateImage", arguments: "{}" },
           },
         ],
       });
@@ -148,7 +162,7 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
     // audit marked as broken. The runner must refuse to project it.
     executeAgentTool.mockResolvedValue({
       ok: true,
-      toolName: "legacy.imageStub",
+      toolName: "media.generateImage",
       requestId: "call_stub",
       data: { mediaId: "media-xyz", mimeType: "image/png" },
     });
@@ -212,11 +226,13 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
       },
     );
 
-    const metadata = appendedMessages[0].metadata as { generatedMedia?: ChatMediaReferenceContract[] };
+    const toolMsg = appendedMessages[0] as { metadata?: { generatedMedia?: ChatMediaReferenceContract[] } };
+    const metadata = toolMsg.metadata;
+    if (!metadata) throw new Error("Expected tool metadata");
     const refs = metadata.generatedMedia ?? [];
     expect(refs.length).toBe(1);
-    expect((refs[0] as any).ignoredShape).toBeUndefined();
-    expect((refs[0] as any).legacy).toBeUndefined();
+    expect(refs[0]).not.toHaveProperty("ignoredShape");
+    expect(refs[0]).not.toHaveProperty("legacy");
     expect(isChatMediaReferenceArrayContract(refs)).toBe(true);
   });
 
@@ -239,7 +255,7 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
       ok: false,
       toolName: "media.generateImage",
       requestId: "call_err",
-      error: { code: "INVALID_ARGUMENTS", message: "model id not allowed" },
+      error: { code: "INVALID_ARGUMENTS", message: "model id not allowed", retryable: false },
     });
 
     const appendedMessages: unknown[] = [];
@@ -260,7 +276,7 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
     performGuardedVeniceRequest.mockReset();
     performGuardedVeniceRequest.mockResolvedValueOnce({
       kind: "response",
-      response: { ok: true, status: 200, headers: {}, body: {}, contentType: "application/json" },
+      response: { ok: true, status: 200, statusText: "OK", headers: {}, body: {}, contentType: "application/json" },
     });
 
     await runChatAgentLoop(
@@ -280,4 +296,3 @@ describe("runChatAgentLoop — P0-03 canonical ChatMediaReference regression", (
     expect(passedReq.method).toBe("POST");
   });
 });
-
