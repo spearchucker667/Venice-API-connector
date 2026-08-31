@@ -3,6 +3,12 @@
 /** @fileoverview Tests for the Replicate IPC handler. */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import {
+  expectErrorResult,
+  expectOkResult,
+  invokeCapturedHandler,
+} from "../../test/ipcTestHelpers";
+import type { BackgroundTask } from "../../../src/types/background-task";
 
 const capturedHandlers = new Map<string, (...args: unknown[]) => unknown>();
 const mockWebContents = {
@@ -50,17 +56,28 @@ vi.mock("../../services/backgroundTaskManager", () => ({
   createBackgroundTaskInMain: vi.fn(),
 }));
 
-import { createReplicatePrediction } from "../../services/replicateService";
+import {
+  createReplicatePrediction,
+  validateReplicateModel,
+} from "../../services/replicateService";
 import { createBackgroundTaskInMain } from "../../services/backgroundTaskManager";
 import { registerReplicateHandlers } from "./replicateHandlers";
 
 const createPredictionMock = vi.mocked(createReplicatePrediction);
 const createTaskMock = vi.mocked(createBackgroundTaskInMain);
+const validateReplicateModelMock = vi.mocked(validateReplicateModel);
 
-function invoke(channel: string, ...args: unknown[]) {
-  const handler = capturedHandlers.get(channel);
-  if (!handler) throw new Error(`No handler registered for ${channel}`);
-  return handler({ sender: mockWebContents }, ...args);
+type ReplicateGenerateImageResult =
+  | { ok: true; task: BackgroundTask }
+  | { ok: false; error: string };
+
+function invoke<TResult>(channel: string, ...args: unknown[]): Promise<TResult> {
+  return invokeCapturedHandler<TResult>(
+    capturedHandlers,
+    channel,
+    { sender: mockWebContents },
+    ...args,
+  );
 }
 
 describe("registerReplicateHandlers", () => {
@@ -68,6 +85,11 @@ describe("registerReplicateHandlers", () => {
     capturedHandlers.clear();
     createPredictionMock.mockReset();
     createTaskMock.mockReset();
+    validateReplicateModelMock.mockReset();
+    validateReplicateModelMock.mockImplementation((model) => {
+      if (typeof model !== "string") throw new Error("Invalid model");
+      return model;
+    });
     registerReplicateHandlers();
   });
 
@@ -88,12 +110,12 @@ describe("registerReplicateHandlers", () => {
       updatedAt: Date.now(),
     });
 
-    const result = await invoke("replicate:generateImage", {
+    const result = await invoke<ReplicateGenerateImageResult>("replicate:generateImage", {
       model: "black-forest-labs/flux-schnell",
       input: { prompt: "a cat" },
     });
 
-    expect(result.ok).toBe(true);
+    expectOkResult(result);
     expect(createPredictionMock).toHaveBeenCalledWith("r8_test_token", {
       model: "black-forest-labs/flux-schnell",
       input: { prompt: "a cat" },
@@ -111,28 +133,27 @@ describe("registerReplicateHandlers", () => {
     const { getProviderApiKey } = await import("../../services/secureStore");
     vi.mocked(getProviderApiKey).mockReturnValueOnce(null);
 
-    const result = await invoke("replicate:generateImage", {
+    const result = await invoke<ReplicateGenerateImageResult>("replicate:generateImage", {
       model: "black-forest-labs/flux-schnell",
       input: { prompt: "a cat" },
     });
 
-    expect(result.ok).toBe(false);
+    expectErrorResult(result);
     expect(result.error).toMatch(/token is not configured/i);
     expect(createPredictionMock).not.toHaveBeenCalled();
   });
 
   it("returns an error for invalid input", async () => {
-    const { validateReplicateModel } = await import("../../services/replicateService");
-    validateReplicateModel.mockImplementationOnce(() => {
+    validateReplicateModelMock.mockImplementationOnce(() => {
       throw new Error("Invalid model");
     });
 
-    const result = await invoke("replicate:generateImage", {
+    const result = await invoke<ReplicateGenerateImageResult>("replicate:generateImage", {
       model: "invalid/model/with/path",
       input: { prompt: "a cat" },
     });
 
-    expect(result.ok).toBe(false);
+    expectErrorResult(result);
     expect(result.error).toMatch(/Invalid model/i);
   });
 });

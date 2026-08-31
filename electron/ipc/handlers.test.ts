@@ -12,8 +12,39 @@ import path from "path";
 import os from "os";
 import * as fs from "fs/promises";
 import { ipcMain } from "electron";
+import {
+  expectErrorResult,
+  expectOkResult,
+  invokeCapturedHandler,
+} from "../test/ipcTestHelpers";
+import type { VeniceIpcResponse } from "../services/veniceClient";
 
 const capturedHandlers = new Map<string, (...args: unknown[]) => unknown>();
+
+type IpcActionResult = { ok: true } | { ok: false; error: string };
+type VeniceHandlerResult =
+  | { ok: true; status: number; statusText: string; headers: Record<string, string>; body: unknown; contentType: string }
+  | { ok: false; status: number; statusText: string; headers: Record<string, string>; body: unknown; contentType: string };
+type JinaHandlerResult =
+  | { ok: true; status: number; body?: unknown; contentType?: string }
+  | { ok: false; status: number; body?: unknown; contentType?: string; error: string };
+type JinaConnectionResult =
+  | { ok: true; status: number; message: string }
+  | { ok: false; status: number; message: string };
+type ApiKeySetResult =
+  | { ok: true; storageMode: string }
+  | { ok: false; code: "INVALID_KEY" | "SECRET_STORAGE_UNAVAILABLE" | "SECRET_STORAGE_WRITE_FAILED"; safeMessage: string };
+
+function expectRecord(value: unknown): asserts value is Record<string, unknown> {
+  expect(value).toBeTypeOf("object");
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("Expected an object IPC response body.");
+  }
+}
+
+function invoke<TResult>(channel: string, ...args: unknown[]): Promise<TResult> {
+  return invokeCapturedHandler<TResult>(capturedHandlers, channel, ...args);
+}
 
 vi.mock("electron", () => ({
   app: {
@@ -38,7 +69,7 @@ vi.mock("electron", () => ({
       capturedHandlers.set(channel, (event, ...args) => {
         const trustedEvent =
           event && typeof event === "object"
-            ? event.senderFrame
+            ? "senderFrame" in event && event.senderFrame
               ? event
               : { ...event, senderFrame: { url: "http://localhost:5173" } }
             : { senderFrame: { url: "http://localhost:5173" } };
@@ -76,7 +107,7 @@ vi.mock("node:dns/promises", () => ({
 }));
 
 vi.mock("../services/secureStore", () => {
-  const mockIsProviderApiKeyConfigured = vi.fn(() => false);
+  const mockIsProviderApiKeyConfigured = vi.fn((..._args: unknown[]) => false);
   return {
     deleteApiKey: vi.fn(),
     deleteJinaApiKey: vi.fn(),
@@ -90,7 +121,7 @@ vi.mock("../services/secureStore", () => {
     isJinaApiKeyConfigured: vi.fn(() => false),
     isProviderApiKeyConfigured: mockIsProviderApiKeyConfigured,
     isProviderCredentialConfigured: vi.fn(() => false),
-    isProviderConfigured: vi.fn((providerId, profileId) => mockIsProviderApiKeyConfigured(providerId, profileId)),
+    isProviderConfigured: vi.fn((...args: unknown[]) => mockIsProviderApiKeyConfigured(...args)),
     setApiKey: vi.fn(),
     setJinaApiKey: vi.fn(),
     setProviderApiKey: vi.fn(),
@@ -384,9 +415,9 @@ describe("registerIpcHandlers", () => {
       "my_unlock_secret",
       "secret-unlock-token",
     ])("credential:set rejects reserved name '%s'", async (key) => {
-      const handler = capturedHandlers.get("credential:set");
-      const result = await handler!(null, { key, value: "secret" });
+      const result = await invoke<IpcActionResult>("credential:set", null, { key, value: "secret" });
       expect(result).toMatchObject({ ok: false });
+      expectErrorResult(result);
       expect(result.error).toMatch(/reserved/i);
     });
 
@@ -442,10 +473,10 @@ describe("registerIpcHandlers", () => {
     });
 
     it("returns a 451 response when the safety guard blocks the request", async () => {
-      const handler = capturedHandlers.get("venice:request");
-      expect(handler).toBeDefined();
+      expect(capturedHandlers.get("venice:request")).toBeDefined();
 
-      const result = await handler!(
+      const result = await invoke<VeniceHandlerResult>(
+        "venice:request",
         { sender: { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents },
         {
           endpoint: "/chat/completions",
@@ -459,6 +490,8 @@ describe("registerIpcHandlers", () => {
         status: 451,
         statusText: "Blocked by Family Safe Mode",
       });
+      expectErrorResult(result);
+      expectRecord(result.body);
       expect(result.body).toHaveProperty("error");
       expect(result.body).toHaveProperty("reasonCode");
     });
@@ -468,12 +501,14 @@ describe("registerIpcHandlers", () => {
       vi.mocked(performVeniceRequest).mockResolvedValueOnce({
         ok: true,
         status: 200,
+        statusText: "OK",
         headers: {},
         body: { data: [] },
-      } as any);
+        contentType: "application/json",
+      } satisfies VeniceIpcResponse);
 
-      const handler = capturedHandlers.get("venice:request");
-      const result = await handler!(
+      const result = await invoke<VeniceHandlerResult>(
+        "venice:request",
         { sender: { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents },
         {
           endpoint: "/models",
@@ -764,10 +799,9 @@ describe("registerIpcHandlers", () => {
     });
 
     it("chat:save rejects an invalid mutation origin", async () => {
-      const handler = capturedHandlers.get("chat:save");
       const conversation = { id: "chat-1", title: "t", createdAt: 1, updatedAt: 1, model: "m", messages: [] };
-      const result = await handler!(ctx(), { conversation, origin: "bad-origin" });
-      expect(result.ok).toBe(false);
+      const result = await invoke<IpcActionResult>("chat:save", ctx(), { conversation, origin: "bad-origin" });
+      expectErrorResult(result);
       expect(result.error).toMatch(/invalid mutation origin/i);
       expect(syncBridge.emitSyncPacket).not.toHaveBeenCalled();
     });
@@ -812,10 +846,9 @@ describe("registerIpcHandlers", () => {
     });
 
     it("conversations:save rejects an invalid mutation origin", async () => {
-      const handler = capturedHandlers.get("conversations:save");
       const record = { version: 1, id: "conv-1", title: "t", createdAt: 1, updatedAt: 1, model: "m", messages: [], metadata: { tags: [], pinned: false, archived: false, source: "user", messageCount: 0 }, memory: { summary: "", topics: [], entities: [], projectRefs: [] } };
-      const result = await handler!(ctx(), { ...record, origin: "bad-origin" });
-      expect(result.ok).toBe(false);
+      const result = await invoke<IpcActionResult>("conversations:save", ctx(), { ...record, origin: "bad-origin" });
+      expectErrorResult(result);
       expect(result.error).toMatch(/invalid mutation origin/i);
       expect(syncBridge.emitSyncPacket).not.toHaveBeenCalled();
     });
@@ -900,10 +933,10 @@ describe("registerIpcHandlers", () => {
     });
 
     it("returns 451 when the safety guard blocks streaming chat", async () => {
-      const handler = capturedHandlers.get("venice:streamChat");
-      expect(handler).toBeDefined();
+      expect(capturedHandlers.get("venice:streamChat")).toBeDefined();
 
-      const result = await handler!(
+      const result = await invoke<VeniceHandlerResult>(
+        "venice:streamChat",
         { sender: { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents },
         {
           endpoint: "/chat/completions",
@@ -919,8 +952,8 @@ describe("registerIpcHandlers", () => {
     });
 
     it("rejects non-chat endpoints for streaming", async () => {
-      const handler = capturedHandlers.get("venice:streamChat");
-      const result = await handler!(
+      const result = await invoke<VeniceHandlerResult>(
+        "venice:streamChat",
         { sender: { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents },
         {
           endpoint: "/models",
@@ -932,6 +965,8 @@ describe("registerIpcHandlers", () => {
         ok: false,
         statusText: "Local transport error",
       });
+      expectErrorResult(result);
+      expectRecord(result.body);
       expect(result.body.error).toMatch(/streaming is only available/i);
     });
   });
@@ -976,13 +1011,14 @@ describe("registerIpcHandlers", () => {
 
   describe("apiKey:set", () => {
     it("rejects empty API keys", async () => {
-      const handler = capturedHandlers.get("apiKey:set");
-      const result = await handler!(
+      const result = await invoke<ApiKeySetResult>(
+        "apiKey:set",
         { sender: { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents },
         ""
       );
 
       expect(result).toMatchObject({ ok: false, code: "INVALID_KEY" });
+      expectErrorResult(result);
       expect(result.safeMessage).toMatch(/non-empty/i);
     });
   });
@@ -1019,7 +1055,8 @@ describe("registerIpcHandlers", () => {
     });
 
     afterEach(async () => {
-      globalThis.fetch = originalFetch;
+      if (originalFetch) globalThis.fetch = originalFetch;
+      else vi.unstubAllGlobals();
       // Reset the runtime mock to its default (Family Safe Mode ON) so
       // tests outside this describe block are not polluted.
       const { getRuntimeLocalFamilySafeModeEnabled } = await import("../services/runtimeSafetySettings");
@@ -1036,14 +1073,16 @@ describe("registerIpcHandlers", () => {
         ),
       ) as unknown as typeof globalThis.fetch;
 
-      const handler = capturedHandlers.get("jina:request");
-      const result = await handler!(
+      const result = await invoke<JinaHandlerResult>(
+        "jina:request",
         { sender: { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents },
         { url: "https://r.jina.ai/https://example.com", headers: {}, timeoutMs: 5000 },
       );
 
       // Body screen blocks → 451 with the canonical userMessage.
       expect(result).toMatchObject({ ok: false, status: 451 });
+      expectErrorResult(result);
+      expectRecord(result.body);
       expect(result.body).toMatchObject({
         reasonCode: "CSAM_EXPLICIT_TERM",
         category: "csam_request",
@@ -1060,8 +1099,8 @@ describe("registerIpcHandlers", () => {
         new Response("ok", { status: 200, headers: { "content-type": "text/plain" } }),
       ) as unknown as typeof globalThis.fetch;
 
-      const handler = capturedHandlers.get("jina:request");
-      const result = await handler!(
+      const result = await invoke<JinaHandlerResult>(
+        "jina:request",
         { sender: { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents },
         {
           url: "https://r.jina.ai/https://example.com",
@@ -1095,13 +1134,14 @@ describe("registerIpcHandlers", () => {
         ),
       ) as unknown as typeof globalThis.fetch;
 
-      const handler = capturedHandlers.get("jina:request");
-      const result = await handler!(
+      const result = await invoke<JinaHandlerResult>(
+        "jina:request",
         { sender: { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents },
         { url: "https://r.jina.ai/https://example.com", headers: {}, timeoutMs: 5000 },
       );
 
       expect(result.status).toBe(451);
+      expectErrorResult(result);
       // The raw body MUST NOT appear in the response — neither as `body`,
       // `data`, nor any other field.
       const serialized = JSON.stringify(result);
@@ -1127,13 +1167,14 @@ describe("registerIpcHandlers", () => {
         headers: { "content-type": "text/plain" },
       })) as unknown as typeof globalThis.fetch;
 
-      const handler = capturedHandlers.get("jina:request");
-      const result = await handler!(
+      const result = await invoke<JinaHandlerResult>(
+        "jina:request",
         { sender: { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents },
         { url: "https://r.jina.ai/https://example.com", headers: {}, timeoutMs: 5000 },
       );
 
       expect(result).toMatchObject({ ok: false, status: 413 });
+      expectErrorResult(result);
       expect(result.error).toMatch(/2 MiB limit/i);
       expect(cancelled).toBe(true);
     });
@@ -1153,14 +1194,14 @@ describe("registerIpcHandlers", () => {
         ),
       ) as unknown as typeof globalThis.fetch;
 
-      const handler = capturedHandlers.get("jina:request");
-      const result = await handler!(
+      const result = await invoke<JinaHandlerResult>(
+        "jina:request",
         { sender: { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents },
         { url: "https://r.jina.ai/https://example.com", headers: {}, timeoutMs: 5000 },
       );
 
       expect(result.status).toBe(451);
-      expect(result.ok).toBe(false);
+      expectErrorResult(result);
     });
   });
 
@@ -1258,8 +1299,8 @@ describe("registerIpcHandlers", () => {
       await capturedHandlers.get("jinaApiKey:isConfigured")!(event, "../../forged");
       expect(await capturedHandlers.get("jinaApiKey:set")!(event, { key: "jina-valid-key", profileId: "default" })).toEqual({ ok: true });
       expect(await capturedHandlers.get("jinaApiKey:delete")!(event, "default")).toEqual({ ok: true });
-      const result = await capturedHandlers.get("jinaApiKey:test")!(event, "../../forged");
-      expect(result.ok).toBe(true);
+      const result = await invoke<JinaConnectionResult>("jinaApiKey:test", event, "../../forged");
+      expectOkResult(result);
       expect(isJinaApiKeyConfigured).toHaveBeenCalledWith("work");
       expect(setJinaApiKey).toHaveBeenCalledWith("jina-valid-key", "work");
       expect(deleteJinaApiKey).toHaveBeenCalledWith("work");
@@ -1287,15 +1328,15 @@ describe("registerIpcHandlers", () => {
         vi.fn(async () => new Response("<html></html>", { status: 200, headers: { "content-type": "text/html" } })),
       );
 
-      const handler = capturedHandlers.get("jina:request");
       const sender = { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents;
       setProfileSessionId(sender, "work");
-      const result = await handler!(
+      const result = await invoke<JinaHandlerResult>(
+        "jina:request",
         { sender },
         { url: "https://r.jina.ai/https://example.com", headers: {}, timeoutMs: 5000, profileId: "default" },
       );
 
-      expect(result.ok).toBe(true);
+      expectOkResult(result);
       const fetchMock = vi.mocked(globalThis.fetch);
       const sentHeaders = fetchMock.mock.calls[0]?.[1]?.headers as Record<string, string> | undefined;
       expect(sentHeaders?.Authorization).toBe("Bearer jina-key-A");
@@ -1310,13 +1351,13 @@ describe("registerIpcHandlers", () => {
         vi.fn(async () => new Response("<html></html>", { status: 200, headers: { "content-type": "text/html" } })),
       );
 
-      const handler = capturedHandlers.get("jina:request");
-      const result = await handler!(
+      const result = await invoke<JinaHandlerResult>(
+        "jina:request",
         ctx(),
         { url: "https://r.jina.ai/https://example.com", headers: {}, timeoutMs: 5000 },
       );
 
-      expect(result.ok).toBe(true);
+      expectOkResult(result);
       const fetchMock = vi.mocked(globalThis.fetch);
       const sentHeaders = fetchMock.mock.calls[0]?.[1]?.headers as Record<string, string> | undefined;
       expect(sentHeaders?.Authorization).toBe("Bearer jina-key-default");
@@ -1356,10 +1397,10 @@ describe("registerIpcHandlers", () => {
       ({ sender: { isDestroyed: () => false, send: vi.fn() } as unknown as Electron.WebContents });
 
     it("profilePassword:set rejects the reserved default id without writing", async () => {
-      const handler = capturedHandlers.get("profilePassword:set");
       const event = ctx();
-      const result = await handler!(event, { profileId: "work", password: "secret" });
+      const result = await invoke<IpcActionResult>("profilePassword:set", event, { profileId: "work", password: "secret" });
       expect(result).toMatchObject({ ok: false });
+      expectErrorResult(result);
       expect(result.error).toMatch(/default profile cannot be password-protected/);
       // MUST NOT have written a verifier row to secure-prefs.
       expect(setProfilePassword).not.toHaveBeenCalled();

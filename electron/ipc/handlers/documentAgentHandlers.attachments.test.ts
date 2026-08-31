@@ -1,10 +1,48 @@
 // VERIFY-154 regression guard
 // @vitest-environment node
 import { describe, expect, it, vi } from "vitest";
+import {
+  expectErrorResult,
+  expectOkResult,
+  invokeCapturedHandler,
+} from "../../test/ipcTestHelpers";
+
+type AttachmentPromoteInput = {
+  attachmentId: string;
+  projectId: string;
+  relativePath: string;
+  displayName?: string;
+  mimeType: string;
+  bodyB64: string;
+};
+type AttachmentPromotion = {
+  document: { id: string; projectId: string };
+  revision: { id: string; documentId: string; createdBy: string };
+  mode: "text";
+  format: "txt";
+  bytesReceived: number;
+  bytesRedacted: number;
+};
+type AuditInput = {
+  sessionId: string;
+  toolName: string;
+  outcome: string;
+  resourceIds: string[];
+  metadata?: Record<string, unknown>;
+};
+type AttachmentRegisterResult =
+  | { ok: true; attachmentId: string; sizeBytes: number }
+  | { ok: false; error: string };
+type AttachmentPromoteResult =
+  | ({ ok: true } & AttachmentPromotion)
+  | { ok: false; error: string };
+type DocumentDeleteResult =
+  | { ok: true; deleted: boolean }
+  | { ok: false; deleted: false; error: string };
 
 const handlers = vi.hoisted(() => new Map<string, (...args: unknown[]) => unknown>());
-const auditRecord = vi.hoisted(() => vi.fn(async () => ({ ok: true })));
-const attachmentsPromote = vi.hoisted(() => vi.fn(async () => ({
+const auditRecord = vi.hoisted(() => vi.fn<(input: AuditInput) => Promise<{ ok: true }>>(async () => ({ ok: true })));
+const attachmentsPromote = vi.hoisted(() => vi.fn<(profileId: string, input: AttachmentPromoteInput) => Promise<AttachmentPromotion>>(async () => ({
   document: { id: "doc_1", projectId: "project_alpha" },
   revision: { id: "rev_1", documentId: "doc_1", createdBy: "import" },
   mode: "text" as const,
@@ -12,11 +50,11 @@ const attachmentsPromote = vi.hoisted(() => vi.fn(async () => ({
   bytesReceived: 11,
   bytesRedacted: 0,
 })));
-const attachmentsPromoteError = vi.hoisted(() => vi.fn(async () => {
+const attachmentsPromoteError = vi.hoisted(() => vi.fn<() => Promise<never>>(async () => {
   throw new Error("Attachment exceeds the 1048576-byte import limit.");
 }));
 const getProfileSessionId = vi.hoisted(() => vi.fn(() => "profile_default"));
-const documentsDelete = vi.hoisted(() => vi.fn(async () => true));
+const documentsDelete = vi.hoisted(() => vi.fn<(profileId: string, documentId: string) => Promise<boolean>>(async () => true));
 
 vi.mock("electron", () => ({
   ipcMain: { handle: vi.fn((channel: string, handler: (...args: unknown[]) => unknown) => handlers.set(channel, handler)) },
@@ -97,30 +135,38 @@ async function registerAttachment(
   mimeType = "text/plain",
   body = "hello world",
 ): Promise<string> {
-  const envelope = await handlers.get("documentAgent:attachments:register")!(event, {
-    mimeType,
-    displayName: "notes.txt",
-    bodyB64: Buffer.from(body, "utf8").toString("base64"),
-  }) as { ok: boolean; attachmentId?: string };
-  expect(envelope.ok).toBe(true);
-  expect(envelope.attachmentId).toBeTypeOf("string");
-  return envelope.attachmentId!;
+  const envelope = await invokeCapturedHandler<AttachmentRegisterResult>(
+    handlers,
+    "documentAgent:attachments:register",
+    event,
+    {
+      mimeType,
+      displayName: "notes.txt",
+      bodyB64: Buffer.from(body, "utf8").toString("base64"),
+    },
+  );
+  expectOkResult(envelope);
+  return envelope.attachmentId;
 }
 
 describe("documentAgent:attachments:promote channel", () => {
   it("VERIFY-154 returns ok envelope, forwards profile authority, and audits execution with resourceId + metadata", async () => {
     resetMocks();
     registerDocumentAgentHandlers();
-    const handler = handlers.get("documentAgent:attachments:promote");
-    expect(handler).toBeTypeOf("function");
+    expect(handlers.get("documentAgent:attachments:promote")).toBeTypeOf("function");
 
     const event = { sender: { id: 42 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent;
     const attachmentId = await registerAttachment(event);
-    const envelope = await handler!(event, {
-      attachmentId,
-      projectId: "project_alpha",
-      relativePath: "promoted/notes.txt",
-    });
+    const envelope = await invokeCapturedHandler<AttachmentPromoteResult>(
+      handlers,
+      "documentAgent:attachments:promote",
+      event,
+      {
+        attachmentId,
+        projectId: "project_alpha",
+        relativePath: "promoted/notes.txt",
+      },
+    );
 
     expect(getProfileSessionId).toHaveBeenCalledWith(event.sender);
     expect(attachmentsPromote).toHaveBeenCalledTimes(1);
@@ -133,13 +179,15 @@ describe("documentAgent:attachments:promote channel", () => {
       mimeType: "text/plain",
     });
 
-    expect(envelope.ok).toBe(true);
+    expectOkResult(envelope);
     expect(envelope.document.id).toBe("doc_1");
     expect(envelope.mode).toBe("text");
     expect(envelope.format).toBe("txt");
 
     expect(auditRecord).toHaveBeenCalledTimes(1);
-    const auditInput = auditRecord.mock.calls[0][0];
+    const auditInput = auditRecord.mock.calls[0]?.[0];
+    expect(auditInput).toBeDefined();
+    if (!auditInput) throw new Error("Expected document-agent audit record.");
     expect(auditInput.toolName).toBe("document.promoteAttachment");
     expect(auditInput.outcome).toBe("execution");
     expect(auditInput.resourceIds).toEqual(["doc_1"]);
@@ -159,16 +207,20 @@ describe("documentAgent:attachments:promote channel", () => {
     attachmentsPromote.mockImplementationOnce(attachmentsPromoteError);
     registerDocumentAgentHandlers();
 
-    const handler = handlers.get("documentAgent:attachments:promote")!;
     const event = { sender: { id: 7 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent;
     const attachmentId = await registerAttachment(event);
-    const envelope = await handler(event, {
-      attachmentId,
-      projectId: "project_alpha",
-      relativePath: "promoted/big.bin",
-    });
+    const envelope = await invokeCapturedHandler<AttachmentPromoteResult>(
+      handlers,
+      "documentAgent:attachments:promote",
+      event,
+      {
+        attachmentId,
+        projectId: "project_alpha",
+        relativePath: "promoted/big.bin",
+      },
+    );
 
-    expect(envelope.ok).toBe(false);
+    expectErrorResult(envelope);
     expect(typeof envelope.error).toBe("string");
     expect(envelope.error.length).toBeGreaterThan(0);
     // No raw Error.message leaks
@@ -180,24 +232,33 @@ describe("documentAgent:attachments:promote channel", () => {
   it("returns an ok:false envelope for unsupported mime and missing attachmentId without invoking import service", async () => {
     resetMocks();
     registerDocumentAgentHandlers();
-    const handler = handlers.get("documentAgent:attachments:promote")!;
     const event = { sender: { id: 7 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent;
     const unsupportedId = await registerAttachment(event, "application/x-bogus", "data");
 
-    const unsupported = await handler(event, {
-      attachmentId: unsupportedId,
-      projectId: "project_alpha",
-      relativePath: "promoted/file.bin",
-    });
-    expect(unsupported.ok).toBe(false);
+    const unsupported = await invokeCapturedHandler<AttachmentPromoteResult>(
+      handlers,
+      "documentAgent:attachments:promote",
+      event,
+      {
+        attachmentId: unsupportedId,
+        projectId: "project_alpha",
+        relativePath: "promoted/file.bin",
+      },
+    );
+    expectErrorResult(unsupported);
     expect(attachmentsPromote).toHaveBeenCalledTimes(0);
     expect(unsupported.error).not.toContain("Error:");
 
-    const missing = await handler(event, {
-      projectId: "project_alpha",
-      relativePath: "promoted/file.txt",
-    });
-    expect(missing.ok).toBe(false);
+    const missing = await invokeCapturedHandler<AttachmentPromoteResult>(
+      handlers,
+      "documentAgent:attachments:promote",
+      event,
+      {
+        projectId: "project_alpha",
+        relativePath: "promoted/file.txt",
+      },
+    );
+    expectErrorResult(missing);
   });
 });
 
@@ -206,11 +267,15 @@ describe("documentAgent:documents:delete channel", () => {
     resetMocks();
     documentsDelete.mockReset().mockResolvedValue(true);
     registerDocumentAgentHandlers();
-    const handler = handlers.get("documentAgent:documents:delete");
-    expect(handler).toBeTypeOf("function");
+    expect(handlers.get("documentAgent:documents:delete")).toBeTypeOf("function");
     const event = { sender: { id: 51 }, senderFrame: { url: "http://localhost:5173" } } as unknown as Electron.IpcMainInvokeEvent;
 
-    const envelope = await handler!(event, { documentId: "doc_1" });
+    const envelope = await invokeCapturedHandler<DocumentDeleteResult>(
+      handlers,
+      "documentAgent:documents:delete",
+      event,
+      { documentId: "doc_1" },
+    );
 
     expect(getProfileSessionId).toHaveBeenCalledWith(event.sender);
     expect(documentsDelete).toHaveBeenCalledWith("profile_default", "doc_1");
