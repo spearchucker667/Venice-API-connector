@@ -16,18 +16,16 @@ vi.mock("electron", () => ({
   },
 }));
 
-vi.mock("chokidar", () => ({
-  default: {
-    watch: vi.fn(() => ({
-      on: vi.fn(function () { return this; }),
-      close: vi.fn().mockResolvedValue(undefined),
-    })),
-  },
-  watch: vi.fn(() => ({
-    on: vi.fn(function () { return this; }),
+vi.mock("chokidar", () => {
+  const mockWatcher = {
+    on: vi.fn().mockReturnThis(),
     close: vi.fn().mockResolvedValue(undefined),
-  })),
-}));
+  };
+  return {
+    default: { watch: vi.fn(() => mockWatcher) },
+    watch: vi.fn(() => mockWatcher),
+  };
+});
 
 import {
   setSyncFolder,

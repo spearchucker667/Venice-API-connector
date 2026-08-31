@@ -404,7 +404,6 @@ describe("secureStore", () => {
 
   it("setProfilePassword rejects empty or non-string plaintext", () => {
     vi.mocked(mockedSafeStorage.isEncryptionAvailable).mockReturnValue(true);
-    // @ts-expect-error intentionally bad input
     expect(() => setProfilePassword("", "userZ")).toThrow(/non-empty/);
     // @ts-expect-error intentionally bad input
     expect(() => setProfilePassword(undefined, "userZ")).toThrow(/non-empty/);

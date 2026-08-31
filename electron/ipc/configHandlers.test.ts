@@ -54,21 +54,21 @@ describe("configHandlers", () => {
 });
 
 describe("safety:setFamilySafeMode", () => {
-  let handlers: Record<string, () => void> = {};
+  let handlers: Record<string, (...args: unknown[]) => unknown> = {};
 
   beforeEach(() => {
     vi.clearAllMocks();
     resetIpcRateLimitForTests();
     clearRegisteredChannelsForTesting();
     handlers = {};
-    (ipcMain.handle as any).mockImplementation((channel: string, handler: () => void) => {
+    (ipcMain.handle as ReturnType<typeof vi.fn>).mockImplementation((channel: string, handler: (...args: unknown[]) => unknown) => {
       handlers[channel] = handler;
     });
     registerConfigIpcHandlers();
   });
 
-  const callHandler = async (payload: any) => {
-    return handlers["safety:setFamilySafeMode"](trustedEvent as any, payload);
+  const callHandler = async (payload: unknown) => {
+    return handlers["safety:setFamilySafeMode"](trustedEvent as unknown, payload);
   };
 
   it("rejects when no master password is set", async () => {
@@ -107,21 +107,21 @@ describe("safety:setFamilySafeMode", () => {
 });
 
 describe("config:writeSanitized generic patch rejection", () => {
-  let handlers: Record<string, () => void> = {};
+  let handlers: Record<string, (...args: unknown[]) => unknown> = {};
 
   beforeEach(() => {
     vi.clearAllMocks();
     resetIpcRateLimitForTests();
     clearRegisteredChannelsForTesting();
     handlers = {};
-    (ipcMain.handle as any).mockImplementation((channel: string, handler: () => void) => {
+    (ipcMain.handle as ReturnType<typeof vi.fn>).mockImplementation((channel: string, handler: (...args: unknown[]) => unknown) => {
       handlers[channel] = handler;
     });
     registerConfigIpcHandlers();
   });
 
-  const callHandler = async (patch: any) => {
-    return handlers["config:writeSanitized"](trustedEvent as any, patch);
+  const callHandler = async (patch: unknown) => {
+    return handlers["config:writeSanitized"](trustedEvent as unknown, patch);
   };
 
   it("rejects generic modification of Family Safe Mode", async () => {

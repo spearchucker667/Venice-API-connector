@@ -32,6 +32,11 @@ import {
 import { isValidId } from "../../src/utils/idValidation";
 import type { Conversation } from "../../src/types/conversation";
 
+async function listConversationArray(profileId?: string): Promise<Conversation[]> {
+  const result = await listConversations(undefined, profileId);
+  return Array.isArray(result) ? result : result.conversations;
+}
+
 function makeConv(overrides: Partial<Conversation> = {}): Conversation {
   return {
     id: crypto.randomUUID(),
@@ -78,7 +83,7 @@ describe("chatStorage", () => {
     await saveConversation(c2);
     await saveConversation(c3);
 
-    const list = await listConversations();
+    const list = await listConversationArray();
     expect(list.map((c) => c.id)).toEqual([c2.id, c3.id, c1.id]);
   });
 
@@ -141,7 +146,7 @@ describe("chatStorage", () => {
     const conv = makeConv();
     await saveConversation(conv);
 
-    const list = await listConversations();
+    const list = await listConversationArray();
 
     expect(list.map((item) => item.id)).toEqual([conv.id]);
     expect(readdirSpy).not.toHaveBeenCalled();
@@ -236,8 +241,8 @@ describe("chatStorage", () => {
 
     expect((await getConversation("shared", "default"))?.title).toBe("Default");
     expect((await getConversation("shared", "work"))?.title).toBe("Work");
-    expect((await listConversations(undefined, "default")).map((item) => item.title)).toEqual(["Default"]);
-    expect((await listConversations(undefined, "work")).map((item) => item.title)).toEqual(["Work"]);
+    expect((await listConversationArray("default")).map((item) => item.title)).toEqual(["Default"]);
+    expect((await listConversationArray("work")).map((item) => item.title)).toEqual(["Work"]);
 
     expect((await deleteConversation("shared", "work")).ok).toBe(true);
     expect(await getConversation("shared", "work")).toBeNull();

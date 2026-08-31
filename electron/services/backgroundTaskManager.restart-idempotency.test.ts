@@ -78,8 +78,10 @@ describe('submitPaidQueueTaskInMain restart idempotency', () => {
     vi.mocked(performVeniceRequest).mockResolvedValueOnce({
       ok: true,
       status: 200,
+      statusText: 'OK',
       headers: { 'content-type': 'application/json' },
       body: { model: 'seedance-v1', queue_id: 'queue-vid-456' },
+      contentType: 'application/json',
     });
 
     const firstResult = await submitPaidQueueTaskInMain({

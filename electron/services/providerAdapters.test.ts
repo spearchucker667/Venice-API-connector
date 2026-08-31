@@ -4,6 +4,17 @@ import { resolveProviderRoute, providerAdapters, sanitizeProviderRequestBody } f
 import { getProviderCredentialOrFallback } from './secureStore'
 import { getProviderSettings } from './providerSettingsStore'
 
+function transformBody(
+  result: { route?: { transformBody?: (body: Record<string, unknown>, realModel: string) => Record<string, unknown> } },
+  body: Record<string, unknown>,
+  realModel: string,
+): Record<string, unknown> {
+  const route = result?.route;
+  if (!route) throw new Error("Expected route to be defined");
+  expect(route.transformBody).toBeDefined();
+  return route.transformBody!(body, realModel);
+}
+
 // Mock credential lookups to return a fake key for testing
 vi.mock('./secureStore', () => ({
   getProviderApiKey: vi.fn((providerId, _profileId) => {
@@ -203,7 +214,8 @@ describe('providerAdapters', () => {
 
       expect(result?.error).toBeUndefined()
       expect(result?.route?.path).toBe('/v1/images/generations')
-      const transformed = result?.route?.transformBody?.(
+      const transformed = transformBody(
+        result ?? {},
         requestBody,
         'black-forest-labs/FLUX.1-schnell',
       )
@@ -238,7 +250,8 @@ describe('providerAdapters', () => {
         model: 'claude-3-5-sonnet-latest',
       })
 
-      const transformed = result?.route?.transformBody?.(
+      const transformed = transformBody(
+        result ?? {},
         requestBody,
         'claude-3-5-sonnet-latest',
       )
@@ -299,7 +312,7 @@ describe('providerAdapters', () => {
 
       expect(result?.error).toBeUndefined()
       expect(result?.route?.host).toBe('api.anthropic.com')
-      expect(result?.route?.transformBody({ model: 'venice-model', messages: [] }, 'claude-3-5-sonnet-latest').model)
+      expect(transformBody(result ?? {}, { model: 'venice-model', messages: [] }, 'claude-3-5-sonnet-latest').model)
         .toBe('claude-3-5-sonnet-latest')
     })
 
@@ -342,7 +355,7 @@ describe('providerAdapters', () => {
       expect(result?.route?.path).toBe('/v1/chat/completions')
       expect(result?.route?.headers['Authorization']).toBe('Bearer fake-together-key')
       
-      const transformedBody = result?.route?.transformBody!(request.body, 'meta-llama/Llama-3-70b-chat-hf')
+      const transformedBody = transformBody(result ?? {}, request.body, 'meta-llama/Llama-3-70b-chat-hf')
       expect(transformedBody.model).toBe('meta-llama/Llama-3-70b-chat-hf')
     })
 
@@ -357,7 +370,7 @@ describe('providerAdapters', () => {
       expect(result?.route?.path).toBe('/v1/chat/completions')
       expect(result?.route?.headers['Authorization']).toBe('Bearer fake-huggingface-key')
 
-      const transformedBody = result?.route?.transformBody!(request.body, 'deepseek-ai/DeepSeek-R1:fastest')
+      const transformedBody = transformBody(result ?? {}, request.body, 'deepseek-ai/DeepSeek-R1:fastest')
       expect(transformedBody.model).toBe('deepseek-ai/DeepSeek-R1:fastest')
     })
 
@@ -373,7 +386,7 @@ describe('providerAdapters', () => {
       expect(result?.route?.headers['api-key']).toBe('fake-azure-key')
       expect(result?.route?.headers['Authorization']).toBeUndefined()
 
-      const transformedBody = result?.route?.transformBody!(request.body, 'gpt-4o')
+      const transformedBody = transformBody(result ?? {}, request.body, 'gpt-4o')
       expect(transformedBody.model).toBe('gpt-4o')
     })
 
@@ -388,7 +401,7 @@ describe('providerAdapters', () => {
       expect(result?.route?.path).toBe('/v1/chat/completions')
       expect(result?.route?.headers['Authorization']).toBe('Bearer fake-bedrock-key')
 
-      const transformedBody = result?.route?.transformBody!(request.body, 'openai.gpt-oss-20b')
+      const transformedBody = transformBody(result ?? {}, request.body, 'openai.gpt-oss-20b')
       expect(transformedBody.model).toBe('openai.gpt-oss-20b')
     })
 
@@ -417,7 +430,7 @@ describe('providerAdapters', () => {
       expect(result?.route?.host).toBe('aiplatform.googleapis.com')
       expect(result?.route?.path).toBe('/v1/publishers/google/models/gemini-2.5-flash:generateContent?key=fake-vertex-key')
 
-      const transformedBody = result?.route?.transformBody!(request.body, 'gemini-2.5-flash')
+      const transformedBody = transformBody(result ?? {}, request.body, 'gemini-2.5-flash')
       expect(transformedBody).toHaveProperty('contents')
     })
 
@@ -454,7 +467,8 @@ describe('providerAdapters', () => {
 
       expect(result?.error).toBeUndefined()
       expect(result?.route?.path).toBe('/openai/deployments/custom-deployment-42/chat/completions?api-version=2024-08-01-preview')
-      const transformedBody = result?.route?.transformBody!(
+      const transformedBody = transformBody(
+        result ?? {},
         { model: 'azure_openai:unused-model-suffix', messages: [] },
         'unused-model-suffix',
       )
@@ -495,11 +509,11 @@ describe('providerAdapters', () => {
       expect(result?.route?.path).toBe('/v1/messages')
       expect(result?.route?.headers['x-api-key']).toBe('fake-anthropic-key')
       
-      const transformedBody = result?.route?.transformBody!(request.body, 'claude-3-5-sonnet-latest')
+      const transformedBody = transformBody(result ?? {}, request.body, 'claude-3-5-sonnet-latest')
       expect(transformedBody.model).toBe('claude-3-5-sonnet-latest')
       expect(transformedBody.system).toBe('You are an AI.')
-      expect(transformedBody.messages.length).toBe(1)
-      expect(transformedBody.messages[0]).toEqual({ role: 'user', content: 'Hello!' })
+      expect((transformedBody.messages as unknown[]).length).toBe(1)
+      expect((transformedBody.messages as unknown[])[0]).toEqual({ role: 'user', content: 'Hello!' })
     })
 
     it('keeps the Gemini API key out of the request URL', () => {

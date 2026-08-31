@@ -58,6 +58,7 @@ vi.mock('./runtimeSafetySettings', () => ({
 
 import { performVeniceRequest as performVeniceRequestMock } from "./veniceClient";
 import { retrieveVideoQueueResult, VideoRetrieveError } from './videoRetrieveService';
+import type { BackgroundTask } from "../../src/types/background-task";
 import {
   initBackgroundTaskManager,
   createBackgroundTaskInMain,
@@ -265,6 +266,7 @@ describe("backgroundTaskManager", () => {
     performVeniceRequest.mockImplementationOnce(() => Promise.resolve({
       ok: true,
       status: 200,
+      statusText: 'OK',
       headers: { 'content-type': 'audio/mpeg' },
       body: { dataBase64: 'SUQzAA==' },
       contentType: "audio/mpeg",

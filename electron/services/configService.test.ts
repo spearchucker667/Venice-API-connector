@@ -64,8 +64,17 @@ import {
   resetSecureStoreKeys,
   writeSanitizedConfig,
 } from "./configService";
+import type { LoadedThemeRecord } from "./themeService";
+import type { YamlTheme } from "../../src/config/configSchema";
 
 const tmpRoot = path.join(os.tmpdir(), "vf-cfg-test");
+
+function asYamlTheme(record: LoadedThemeRecord | undefined): YamlTheme {
+  if (!record || "schemaVersion" in record) {
+    throw new Error("Expected legacy YamlTheme record");
+  }
+  return record as YamlTheme;
+}
 
 async function writeYaml(filePath: string, content: string): Promise<void> {
   await fs.mkdir(path.dirname(filePath), { recursive: true });
@@ -578,7 +587,7 @@ describe("configService loadMergedThemes", () => {
 
     const result = await loadMergedThemes();
     expect(Object.keys(result.themes).length).toBeGreaterThan(0);
-    expect(result.themes["aurora-boreal"]?.display_name).toBe("Aurora Boreal");
+    expect(asYamlTheme(result.themes["aurora-boreal"]).display_name).toBe("Aurora Boreal");
     expect(result.warnings.filter((warning) => warning.severity === "error")).toEqual([]);
   });
 
@@ -605,9 +614,9 @@ describe("configService loadMergedThemes", () => {
     expect(loadedThemeIds).toContain("synthwave-harbor");
     expect(loadedThemeIds).toContain("ultraviolet-rain");
 
-    const aurora = result.themes["aurora-boreal"];
-    expect(aurora?.display_name).toBe("Aurora Boreal");
-    expect(aurora?.tokens.accent).toBe("#4dffb4");
+    const aurora = asYamlTheme(result.themes["aurora-boreal"]);
+    expect(aurora.display_name).toBe("Aurora Boreal");
+    expect(aurora.tokens.accent).toBe("#4dffb4");
   });
 });
 

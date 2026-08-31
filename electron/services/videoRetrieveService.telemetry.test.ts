@@ -33,8 +33,8 @@ vi.mock("./runtimeSafetySettings", () => ({
   getRuntimeLocalFamilySafeModeEnabled: vi.fn(() => false),
 }));
 vi.mock("./inspectorTelemetry", () => ({
-  publishInspectorRequest: (...args: unknown[]) => mocks.publishInspectorRequest(...args),
-  publishInspectorCompletion: (...args: unknown[]) => mocks.publishInspectorCompletion(...args),
+  publishInspectorRequest: mocks.publishInspectorRequest,
+  publishInspectorCompletion: mocks.publishInspectorCompletion,
 }));
 
 import { retrieveVideoQueueResult } from "./videoRetrieveService";

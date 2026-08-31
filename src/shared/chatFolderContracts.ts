@@ -114,6 +114,8 @@ export interface ExportFolderBackupResult {
   error?: string;
   /** Neutral basename only. Absolute paths never cross into the renderer. */
   fileName?: string;
+  /** Main-process callers receive the resolved absolute path for tests/internal use. */
+  backupPath?: string;
   canceled?: boolean;
 }
 

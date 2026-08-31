@@ -74,7 +74,7 @@ beforeEach(async () => {
   mockedSaveConversation.mockReset();
   mockedDeleteConversation.mockReset();
   mockedReadChatFolder.mockResolvedValue(makeFolder());
-  mockedListConversations.mockResolvedValue({ conversations: [], total: 0, hasMore: false });
+  mockedListConversations.mockResolvedValue([]);
   mockedSaveChatFolder.mockResolvedValue({ ok: true });
   mockedSaveConversation.mockResolvedValue({ ok: true });
   mockedDeleteConversation.mockResolvedValue({ ok: true });

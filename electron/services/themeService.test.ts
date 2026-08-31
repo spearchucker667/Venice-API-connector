@@ -68,10 +68,29 @@ function validTokens(): Record<string, string> {
   return tokens;
 }
 
+function asYamlTheme(record: import("./themeService").LoadedThemeRecord | undefined): import("../../src/config/configSchema").YamlTheme {
+  if (!record || "schemaVersion" in record) {
+    throw new Error("Expected legacy YamlTheme record");
+  }
+  return record as import("../../src/config/configSchema").YamlTheme;
+}
+
 function themeDocument(id: string, displayName: string) {
   return {
     themes: {
       [id]: { id, display_name: displayName, mode: "dark", tokens: validTokens() },
+    },
+  };
+}
+
+function v2FamilyDocument(id: string, name: string): import("./themeService").ThemeFamilyV2 {
+  return {
+    schemaVersion: 2,
+    id,
+    name,
+    variants: {
+      light: { tokens: validTokens() },
+      dark: { tokens: validTokens() },
     },
   };
 }
@@ -134,7 +153,7 @@ describe("readThemeFile", () => {
     const filePath = await writeYaml(path.join(TEST_ROOT, "themes"), "a.yaml", themeDocument("emerald", "Emerald"));
     const result = await readThemeFile(filePath);
     expect(result.warnings).toEqual([]);
-    expect(result.themes.emerald?.display_name).toBe("Emerald");
+    expect(asYamlTheme(result.themes.emerald).display_name).toBe("Emerald");
   });
 
   it("returns empty for an empty document", async () => {
@@ -154,6 +173,21 @@ describe("readThemeFile", () => {
     });
     const result = await readThemeFile(filePath);
     expect(result).toEqual({ themes: {}, warnings: [] });
+  });
+
+  it("parses a V2 family document", async () => {
+    const filePath = await writeYaml(path.join(TEST_ROOT, "themes"), "v2.yaml", v2FamilyDocument("v2", "V2 Theme"));
+    const result = await readThemeFile(filePath);
+    expect(result.warnings).toEqual([]);
+    expect((result.themes.v2 as import("./themeService").ThemeFamilyV2).name).toBe("V2 Theme");
+    expect((result.themes.v2 as import("./themeService").ThemeFamilyV2).schemaVersion).toBe(2);
+  });
+
+  it("returns a warning for an invalid V2 family document", async () => {
+    const filePath = await writeYaml(path.join(TEST_ROOT, "themes"), "bad-v2.yaml", { schemaVersion: 2, id: "x", name: "X" });
+    const result = await readThemeFile(filePath);
+    expect(result.themes).toEqual({});
+    expect(result.warnings.some((w) => w.message.includes("Invalid theme family V2"))).toBe(true);
   });
 
   it("returns an error warning when the YAML is invalid or unreadable", async () => {
@@ -215,18 +249,16 @@ describe("loadAllThemes", () => {
 });
 
 describe("saveTheme / deleteTheme", () => {
-  it("writes a themes-wrapped YAML with owner-only permissions where supported", async () => {
-    const theme = {
-      id: "custom-1",
-      display_name: "Custom One",
-      mode: "dark",
-      tokens: validTokens(),
-    };
+  it("writes a V2 family YAML with owner-only permissions where supported", async () => {
+    const family = v2FamilyDocument("custom-1", "Custom One");
     const filePath = path.join(TEST_ROOT, "userData", "themes", "custom-1.yaml");
     const writeSpy = vi.spyOn(fs, "writeFile");
-    await saveTheme(theme as never);
+    await saveTheme(family);
     const content = await fs.readFile(filePath, "utf8");
-    expect(content).toContain("display_name: Custom One");
+    expect(content).toContain("schemaVersion: 2");
+    expect(content).toContain("id: custom-1");
+    expect(content).toContain("name: Custom One");
+    expect(content).toContain("variants:");
     expect(content).toContain("tokens:");
     expect(writeSpy).toHaveBeenCalledWith(
       filePath,
@@ -242,14 +274,14 @@ describe("saveTheme / deleteTheme", () => {
     }
   });
 
+  it("rejects an invalid V2 payload", async () => {
+    const invalid = { id: "x", name: "X" } as unknown as import("./themeService").ThemeFamilyV2;
+    await expect(saveTheme(invalid)).rejects.toThrow("valid ThemeFamilyV2");
+  });
+
   it("deletes a theme file and tolerates a missing file", async () => {
-    const theme = {
-      id: "theme-2",
-      display_name: "Custom Two",
-      mode: "light",
-      tokens: validTokens(),
-    };
-    await saveTheme(theme as never);
+    const family = v2FamilyDocument("theme-2", "Custom Two");
+    await saveTheme(family);
     await deleteTheme("theme-2");
     await expect(fs.access(path.join(TEST_ROOT, "userData", "themes", "theme-2.yaml"))).rejects.toBeDefined();
     await expect(deleteTheme("theme-2")).resolves.toBeUndefined();

@@ -63,8 +63,11 @@ describe("windowsCredentialStore", () => {
       mod.writeWindowsCredential("VeniceForge:credential:master_password", "super-secret");
 
       expect(spawnSync).toHaveBeenCalledTimes(1);
-      const [executable, args, options] = vi.mocked(spawnSync).mock.calls[0];
+      const call = vi.mocked(spawnSync).mock.calls[0];
+      if (!call) throw new Error("Expected spawnSync call");
+      const [executable, args, options] = call;
       expect(executable).toBe("powershell.exe");
+      if (!args) throw new Error("Expected args");
       expect(args).toContain("-Command");
       expect(args[args.length - 1]).toContain("CredWriteW");
       expect(options?.input).toBe("super-secret");
@@ -141,8 +144,11 @@ describe("windowsCredentialStore", () => {
       mod.deleteWindowsCredential("VeniceForge:credential:master_password");
 
       expect(spawnSync).toHaveBeenCalledTimes(1);
-      const [executable, args] = vi.mocked(spawnSync).mock.calls[0];
+      const call = vi.mocked(spawnSync).mock.calls[0];
+      if (!call) throw new Error("Expected spawnSync call");
+      const [executable, args] = call;
       expect(executable).toBe("powershell.exe");
+      if (!args) throw new Error("Expected args");
       expect(args[args.length - 1]).toContain("CredDeleteW");
     });
 

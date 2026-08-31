@@ -143,14 +143,14 @@ describe("app:*update IPC handlers", () => {
   it("app:checkForUpdates returns a friendly error in dev mode", async () => {
     const handler = mocks.capturedHandlers.get("app:checkForUpdates");
     expect(handler).toBeDefined();
-    const result = await handler!(trustedEvent());
+    const result = await handler!(trustedEvent()) as { ok: boolean; error?: string };
     expect(result).toMatchObject({ ok: false });
     expect(result.error).toMatch(/production/i);
   });
 
   it("app:installUpdate refuses to install when no update was downloaded", async () => {
     const handler = mocks.capturedHandlers.get("app:installUpdate");
-    const result = await handler!(trustedEvent());
+    const result = await handler!(trustedEvent()) as { ok: boolean; error?: string };
     expect(result).toMatchObject({ ok: false });
     expect(result.error).toMatch(/no update downloaded/i);
     expect(mocks.mockQuitAndInstall).not.toHaveBeenCalled();

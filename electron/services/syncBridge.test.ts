@@ -10,6 +10,9 @@ vi.mock("./syncFolderWatcher", () => ({
     mainWatcher: "running",
     rendererSessionAttached: true,
     authenticated: true,
+    degradedReason: undefined,
+    profileId: "default",
+    includeMedia: false,
   }),
   writePacket: vi.fn().mockResolvedValue({ ok: true }),
 }));
@@ -30,6 +33,9 @@ describe("syncBridge", () => {
       mainWatcher: "running",
       rendererSessionAttached: true,
       authenticated: true,
+      degradedReason: undefined,
+      profileId: "default",
+      includeMedia: false,
     });
   });
 
@@ -69,6 +75,9 @@ describe("syncBridge", () => {
       mainWatcher: "stopped",
       rendererSessionAttached: false,
       authenticated: false,
+      degradedReason: undefined,
+      profileId: "default",
+      includeMedia: false,
     });
     await emitSyncPacket("conversations", "conv-1", { id: "conv-1" });
     expect(mockWritePacket).not.toHaveBeenCalled();

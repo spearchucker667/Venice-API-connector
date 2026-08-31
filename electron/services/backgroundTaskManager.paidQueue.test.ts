@@ -58,12 +58,14 @@ describe('Main-Process Paid Queue Submission & Recovery', () => {
     vi.mocked(performVeniceRequest).mockResolvedValueOnce({
       ok: true,
       status: 200,
+      statusText: 'OK',
       headers: { 'content-type': 'application/json' },
       body: {
         model: 'seedance-v1',
         queue_id: 'queue-vid-456',
         download_url: 'https://cdn.venice.ai/video/queue-vid-456.mp4?secret=token',
       },
+      contentType: 'application/json',
     });
 
     const result = await submitPaidQueueTaskInMain({
@@ -97,6 +99,7 @@ describe('Main-Process Paid Queue Submission & Recovery', () => {
     vi.mocked(performVeniceRequest).mockResolvedValueOnce({
       ok: false,
       status: 409,
+      statusText: 'Conflict',
       headers: { 'content-type': 'application/json' },
       body: {
         error: { code: 'needs_consent', message: 'Face consent required' },
@@ -104,6 +107,7 @@ describe('Main-Process Paid Queue Submission & Recovery', () => {
         face_media_roles: ['image'],
         consent: { policy_text: 'I confirm rights to face image.' },
       },
+      contentType: 'application/json',
     });
 
     const result = await submitPaidQueueTaskInMain({

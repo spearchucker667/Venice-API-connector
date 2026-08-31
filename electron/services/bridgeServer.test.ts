@@ -76,8 +76,8 @@ describe("bridgeServer", () => {
     vi.mocked(assessChildExploitationSafety).mockReturnValue({
       allow: true,
       action: "allow",
-      severity: "safe",
-      category: "general_safety",
+      severity: "none",
+      category: "none",
       reasonCode: "OK",
       userMessage: "OK",
       developerMessage: "OK",
@@ -154,7 +154,7 @@ describe("bridgeServer", () => {
       },
     });
     expect(res.status).toBe(200);
-    const json = await res.json();
+    const json = await res.json() as Record<string, unknown>;
     expect(json.ok).toBe(true);
   });
 
@@ -163,7 +163,7 @@ describe("bridgeServer", () => {
       allow: false,
       action: "block",
       severity: "critical",
-      category: "child_sexual_abuse_material",
+      category: "csam_request",
       reasonCode: "CSAM_DETECTED",
       userMessage: "Safety block",
       developerMessage: "CSAM",
@@ -190,7 +190,7 @@ describe("bridgeServer", () => {
     });
 
     expect(res.status).toBe(451);
-    const json = await res.json();
+    const json = await res.json() as Record<string, unknown>;
     // P1-015: bridge server uses the same canonical 451 block body as the
     // IPC path (flat: error / reasonCode / category / severity at top level).
     expect(json.error).toBe("Safety block");
