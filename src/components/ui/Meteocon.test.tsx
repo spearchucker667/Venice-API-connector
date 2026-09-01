@@ -22,7 +22,12 @@ describe('adaptSvgForTheme', () => {
   it('does not add unsupported properties or event handlers', () => {
     const source = '<svg><path id="Wind" stroke="#E2E8F0" /></svg>';
     const result = applySvgPresentationOverrides(source, {
-      '#Wind': { stroke: '#64748B', onclick: 'alert(1)', fill: 'url(https://evil.test/x)' },
+      '#Wind': {
+        stroke: '#64748B',
+        // @ts-expect-error onclick is not an allowlisted SVG presentation property.
+        onclick: 'alert(1)',
+        fill: 'url(https://evil.test/x)',
+      },
     });
     expect(result).toContain('stroke="#64748B"');
     expect(result).not.toContain('onclick');
