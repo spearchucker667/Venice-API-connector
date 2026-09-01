@@ -27,6 +27,7 @@ const ALLOWLIST = Object.freeze([
 
 const FILE_ALLOWLIST = Object.freeze([
   "builder-debug.yml",
+  "builder-debug.yml.sha256",
 ]);
 
 function parseArgs(argv) {

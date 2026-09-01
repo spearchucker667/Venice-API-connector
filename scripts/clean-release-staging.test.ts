@@ -57,7 +57,8 @@ describe("clean-release-staging allowlist", () => {
   
   it("contains the expected files", () => {
     expect(FILE_ALLOWLIST).toEqual([
-      "builder-debug.yml"
+      "builder-debug.yml",
+      "builder-debug.yml.sha256",
     ]);
   });
 });
@@ -105,14 +106,16 @@ describe("clean-release-staging removal behavior", () => {
     fs.writeFileSync(path.join(releaseDir, "Venice-Forge-3.0.0-beta.2-arm64.dmg"), "dmg");
     fs.writeFileSync(path.join(releaseDir, "latest-mac.yml"), "yaml");
     fs.writeFileSync(path.join(releaseDir, "builder-debug.yml"), "debug stuff");
+    fs.writeFileSync(path.join(releaseDir, "builder-debug.yml.sha256"), "debug checksum");
 
     const result = cleanReleaseStaging({ releaseDir });
 
-    expect(result.removed.sort()).toEqual(["builder-debug.yml", "linux-unpacked", "mac-arm64"]);
+    expect(result.removed.sort()).toEqual(["builder-debug.yml", "builder-debug.yml.sha256", "linux-unpacked", "mac-arm64"]);
     expect(result.skipped).toEqual([]);
     expect(fs.existsSync(path.join(releaseDir, "mac-arm64"))).toBe(false);
     expect(fs.existsSync(path.join(releaseDir, "linux-unpacked"))).toBe(false);
     expect(fs.existsSync(path.join(releaseDir, "builder-debug.yml"))).toBe(false);
+    expect(fs.existsSync(path.join(releaseDir, "builder-debug.yml.sha256"))).toBe(false);
     expect(fs.existsSync(path.join(releaseDir, "Venice-Forge-3.0.0-beta.2-arm64.dmg"))).toBe(true);
     expect(fs.existsSync(path.join(releaseDir, "latest-mac.yml"))).toBe(true);
   });
