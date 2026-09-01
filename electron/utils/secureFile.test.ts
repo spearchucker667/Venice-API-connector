@@ -49,7 +49,9 @@ describe("readRegularFileNoFollow", () => {
     "reads original bytes after the path is replaced on disk (TOCTOU regression)",
     async () => {
       const file = path.join(root, "image.bin");
+      const replacement = path.join(root, "replacement.bin");
       fs.writeFileSync(file, "original-bytes");
+      fs.writeFileSync(replacement, "replacement-bytes");
 
       const handle = await fs.promises.open(
         file,
@@ -57,8 +59,7 @@ describe("readRegularFileNoFollow", () => {
       );
       try {
         // Replace the path on disk between the open and the read.
-        fs.unlinkSync(file);
-        fs.writeFileSync(file, "replacement-bytes");
+        fs.renameSync(replacement, file);
 
         const stat = await handle.stat();
         expect(stat.isFile()).toBe(true);

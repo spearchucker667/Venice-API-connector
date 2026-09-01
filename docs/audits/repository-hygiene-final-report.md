@@ -11,7 +11,6 @@ Base: `main` @ `030380a6685a6ada83db9e0595043ae8821264fc`
 | `docs/archives/session-history-pre-2026-07-11.md` | 1.29 MiB pre-2026-07-11 agent session dump. Not referenced by runtime, package scripts, or `CANONICAL_REPORT_INDEX.md`. Directory is already policy-ignored via `/docs/archives/`. Git history retains the blob. |
 | `docs/reports/historical/historical_summary_of_work.md` | 1.22 MiB superseded session ledger. Live ledger is `docs/summary_of_work.md`. |
 | `VENICE_FORGE_COMPLETE_AUDIT.md` | Root-level 288-byte stub. Already listed in `.gitignore`. Root audit reports are forbidden by `docs/reports/historical/README.md`. |
-| `docs/audits/Records/Venice_Forge-audit-evidence-20260717-031029/EVIDENCE_MANIFEST.md` | Empty placeholder (0 bytes). `CANONICAL_REPORT_INDEX.md` already records the 2026-07-17 evidence bundle as deleted. |
 
 ## Moved Files
 
@@ -28,6 +27,7 @@ Base: `main` @ `030380a6685a6ada83db9e0595043ae8821264fc`
 | `docs/archives/README.md` | Clarified that bulky session dumps are untracked; git history remains. |
 | `docs/DOCS_INDEX.md` | Removed links to missing AGENTS/Records paths; pointed hygiene reports at their real locations. |
 | `.gitignore` | Added agent/local workspace patterns; removed trailing `/docs/audits` rule that undid the audits allowlist. Preserved every `verify-archive-clean` required pattern. |
+| `docs/audits/Records/Venice_Forge-audit-evidence-20260717-031029/EVIDENCE_MANIFEST.md` | Replaced the empty file with a historical provenance note. The path remains required by `docs/ROADMAP.md` and `verify:roadmap-current`. |
 
 ## Ignored Files
 

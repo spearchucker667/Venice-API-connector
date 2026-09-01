@@ -142,11 +142,11 @@ describe('validateRawThemeYaml', () => {
   it('rejects dangerous prototype keys anywhere in the document', () => {
     const doc = JSON.parse(JSON.stringify(validV2())) as Record<string, unknown>;
     const tokens = ((doc.variants as Record<string, unknown>).dark as Record<string, unknown>).tokens as Record<string, string>;
-    Object.defineProperty(tokens, '__proto__', {
-      value: '#000000',
-      enumerable: true,
-      configurable: true,
-    });
+    const serializedTokens = JSON.stringify(tokens);
+    const dangerousTokens = JSON.parse(
+      `${serializedTokens.slice(0, -1)},"__proto__":"#000000"}`,
+    ) as Record<string, string>;
+    ((doc.variants as Record<string, unknown>).dark as Record<string, unknown>).tokens = dangerousTokens;
     const errors = validateRawThemeYaml(doc);
     expect(errors.some((m) => m.includes('dangerous key'))).toBe(true);
   });

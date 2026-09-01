@@ -74,11 +74,11 @@ It also listed `docs/DEVELOPMENT/BUG_HUNTING_AGENT_PROMPT.md` as deleted while t
 
 1. Delete the two multi-megabyte historical Markdown dumps.
 2. Delete the root `VENICE_FORGE_COMPLETE_AUDIT.md` stub.
-3. Delete the empty `docs/audits/Records/Venice_Forge-audit-evidence-20260717-031029/EVIDENCE_MANIFEST.md` placeholder.
-4. Replace this audit and the final report with complete records.
-5. Repair `docs/DOCS_INDEX.md` links that target missing files.
-6. Update `docs/archives/README.md` to state that bulky session dumps are no longer tracked.
-7. Harden `.gitignore` for agent/local workspaces and remove the trailing `/docs/audits` contradiction. Preserve every pattern required by `scripts/verify-archive-clean.cjs`.
+3. Replace this audit and the final report with complete records.
+4. Repair `docs/DOCS_INDEX.md` links that target missing files.
+5. Update `docs/archives/README.md` to state that bulky session dumps are no longer tracked.
+6. Harden `.gitignore` for agent/local workspaces and remove the trailing `/docs/audits` contradiction. Preserve every pattern required by `scripts/verify-archive-clean.cjs`.
+7. Retain and document `docs/audits/Records/Venice_Forge-audit-evidence-20260717-031029/EVIDENCE_MANIFEST.md`; `docs/ROADMAP.md` and `verify:roadmap-current` require that audit-provenance path.
 
 ## Files Removed
 

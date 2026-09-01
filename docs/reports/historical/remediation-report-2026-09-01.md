@@ -1,4 +1,7 @@
 # Code Health, Performance & Security Remediation Report
+
+> **Historical snapshot.** Retained evidence only; the live repository, `docs/ROADMAP.md`, and `docs/summary_of_work.md` are authoritative.
+
 **Date:** 2026-09-01
 **Status:** Completed
 **Authority:** Derived from `grok_session.md` remediation handoff.
@@ -211,4 +214,3 @@ Focused tests passed.
 
 ### Result
 Improved code clarity and removed historical bug risk for bulk selections.
-

@@ -311,7 +311,6 @@ export async function performVeniceRequest(
     // 5xx/408/other retryable errors fall through to the next provider without
     // an extra per-provider retry; the cross-provider fallback chain is the
     // primary resilience path for non-429 failures.
-    let retryAttempted = false;
     try {
       const currentRequest = request;
       let providerSelection: ProviderRouteSelection | undefined;
@@ -362,7 +361,7 @@ export async function performVeniceRequest(
       // triggers a single bounded, jittered delay followed by one retry on
       // the same provider. If the retry also fails, we fall through to the
       // next provider in the chain. The delay respects the request signal.
-      if (response.status === 429 && !retryAttempted) {
+      if (response.status === 429) {
         const retryAfterMs = parseRetryAfterMs(response.headers["retry-after"]);
         if (retryAfterMs !== null) {
           const delayMs = computeJitteredDelay(retryAfterMs);
@@ -374,7 +373,6 @@ export async function performVeniceRequest(
               throw err instanceof Error ? err : new Error(String(err));
             }
           }
-          retryAttempted = true;
           logError(`Provider ${providerId} returned 429 with Retry-After=${response.headers["retry-after"]}; retrying once after ${delayMs}ms.`);
           // Re-enter the inner try so a single retry attempt runs against
           // the same provider. We intentionally do not loop here because
