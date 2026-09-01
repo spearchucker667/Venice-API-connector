@@ -204,8 +204,17 @@
 # -----------------------------------------------------------------------------
 
 /scratch/
+/tmp/
+/.local/
+/.local-dev/
+/.dev/
 /inactive-features/research-browser/
-/.agents/skills
+/.agents/
+/.agent/
+/.ai/
+/.cursor/
+/.claude/
+/.local-ai/
 /.freebuff/
 
 venice-forge-filelist.txt
@@ -271,4 +280,3 @@ __MACOSX/
 .AppleDouble/
 ._*/
 _REPO_EXTRACT_METADATA/
-/docs/audits

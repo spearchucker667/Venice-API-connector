@@ -169,8 +169,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 - [CONTRIBUTING.md](../CONTRIBUTING.md) — Branch conventions, validation commands, and PR checklist.
 - [AGENTS.md](../AGENTS.md) — Instructions for AI coding agents and session handoffs.
 - [.cursorrules](../.cursorrules) — Thin pointer to AGENTS.md for Cursor-compatible agents.
-- [AGENTS/AGENTS.md](AGENTS/AGENTS.md) — Supplementary multi-agent guidance and free-thread agent profiles.
-- [AGENTS/agent-reinitialization.md](AGENTS/agent-reinitialization.md) — Agent re-initialization protocol.
+- [AGENT_REINITIALIZATION.md](../AGENT_REINITIALIZATION.md) — Agent re-initialization protocol. Supplementary agent notes under `docs/AGENTS/` are local-only and gitignored.
 - [../scripts/dev-tools/README.md](../scripts/dev-tools/README.md) — Internal development-tool inventory.
 
 ---
@@ -184,23 +183,16 @@ This is the canonical source-of-truth navigation map for all documentation in th
 
 ### Audit Evidence
 
-- [../VENICE_FORGE_COMPLETE_AUDIT.md](../VENICE_FORGE_COMPLETE_AUDIT.md) — Historical exhaustive repository audit snapshot (2026-08-22); see `docs/ROADMAP.md` and `docs/summary_of_work.md` for current state.
-- [audits/Records/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md](audits/Records/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md) — Historical exhaustive repository audit verdict and remediation plan.
-- [audits/Records/semantic-media-classifier-decision-2026-09-01.md](audits/Records/semantic-media-classifier-decision-2026-09-01.md) — Decision record comparing local vs. provider semantic media classifiers for Family Safe Mode; selects local on-device classification for images, defers audio/video and provider-side alternatives.
-- [audits/Records/browser-reactivation-work-order.md](audits/Records/browser-reactivation-work-order.md) — Historical work order for the inactive research-browser feature.
+- [audits/repository-hygiene-audit.md](audits/repository-hygiene-audit.md) — 2026-09-01 repository hygiene inventory and keep/remove rationale.
+- [audits/repository-hygiene-final-report.md](audits/repository-hygiene-final-report.md) — 2026-09-01 hygiene execution report.
 - [audits/Records/Function_calling_todo.md](audits/Records/Function_calling_todo.md) — Implementation/acceptance specification referenced by roadmap; not a checkbox ledger.
-- [audits/Records/repository-hygiene-audit.md](audits/Records/repository-hygiene-audit.md) — 2026-08-22 repository hygiene audit and reorganization plan.
-- [audits/Records/repository-hygiene-final-report.md](audits/Records/repository-hygiene-final-report.md) — 2026-08-22 hygiene execution report.
+- [audits/Records/Venice_Forge_Video_Research_Browser_Remediation_Work_Order.md](audits/Records/Venice_Forge_Video_Research_Browser_Remediation_Work_Order.md) — Historical work order for the inactive research-browser feature.
 - [audits/repo-management/](audits/repo-management/) — Historical repository hygiene and reorganization handoffs.
 
 ### Historical Reports
 
 - [reports/historical/README.md](reports/historical/README.md) — Guideline for audit history and historical report rules.
 - [reports/historical/remediation-report-2026-09-01.md](reports/historical/remediation-report-2026-09-01.md) — 2026-09-01 Code Health, Performance & Security Remediation Report.
-- [../VENICE_FORGE_COMPLETE_AUDIT.md](../VENICE_FORGE_COMPLETE_AUDIT.md) — 2026-09-01 Complete Repository Audit.
-- [audits/repository-hygiene-audit.md](audits/repository-hygiene-audit.md) — 2026-09-01 Repository Hygiene Audit.
-- [audits/repository-hygiene-final-report.md](audits/repository-hygiene-final-report.md) — 2026-09-01 Repository Hygiene Final Report.
-
 - [reports/historical/CANONICAL_REPORT_INDEX.md](reports/historical/CANONICAL_REPORT_INDEX.md) — Navigator for past validation audits.
 - [reports/VENICE_FORGE_POST_AUGUST_24_AUDIT_REPORT.md](reports/VENICE_FORGE_POST_AUGUST_24_AUDIT_REPORT.md) — 2026-08-25 Post-August-24 provider-update audit and remediation report.
 - [reports/MEDIA_PREVIEW_TRAFFIC_INSPECTOR_REMEDIATION_REPORT_2026-07-26.md](reports/MEDIA_PREVIEW_TRAFFIC_INSPECTOR_REMEDIATION_REPORT_2026-07-26.md) — 2026-07-26 Traffic Inspector emitter wiring remediation report.
@@ -211,12 +203,13 @@ This is the canonical source-of-truth navigation map for all documentation in th
 
 ### Retired / Deleted During Hygiene
 
-These files were removed, merged, or archived during the 2026-08-22 repository-wide hygiene pass:
+These files were removed, merged, or archived during the 2026-08-22 and 2026-09-01 hygiene passes:
 - `CLAUDE.md`, `GEMINI.md`, `.windsurfrules` — Redundant copies of AGENTS.md.
 - `docs/SUPPORT.md`, `docs/privacy.md` — Duplicates of root-level files.
 - `docs/BUG_HUNTING_AGENT_PROMPT.md` — Internal agent prompt; not user-facing documentation.
-- `docs/DEVELOPMENT/BUG_HUNTING_AGENT_PROMPT.md` — Duplicate of the above.
-- `docs/audits/CHANGELOG.md` — Duplicate history ledger.
+- `VENICE_FORGE_COMPLETE_AUDIT.md` — Root-level audit stub removed 2026-09-01.
+- `docs/archives/session-history-pre-2026-07-11.md` — 1.29 MiB agent session dump untracked 2026-09-01; git history retains the blob.
+- `docs/reports/historical/historical_summary_of_work.md` — Superseded 1.22 MiB ledger untracked 2026-09-01; live ledger is `docs/summary_of_work.md`.
 - `scratch/` — Directory added to `.gitignore`.
 
 Leaf nodes `docs/security-model.md`, `docs/data-export-format.md`, `docs/backup-and-sync.md`, `docs/sync-troubleshooting.md`, `docs/chat-model-selection.md`, and `docs/memory-isolation.md` were moved into topic subdirectories during the hygiene pass. The sole authority for current paths is this index.
