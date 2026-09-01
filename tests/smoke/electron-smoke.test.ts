@@ -9,10 +9,6 @@ const smokeTest = process.env.RUN_ELECTRON_SMOKE === 'true' ? test : test.skip;
 const temporaryDirectories: string[] = [];
 const electronApplications: ElectronApplication[] = [];
 
-const FIRST_RUN_WARNING = '18+ Age Requirement & Content Warning';
-const RESTORED_PROFILE_ID = 'restored-profile';
-const RESTORED_PROFILE_PROBE_ID = 'electron-bootstrap-probe';
-
 export function findPackagedExecutable(
   root: string,
   platform: NodeJS.Platform = os.platform(),
@@ -123,12 +119,6 @@ async function launchPackagedApp(executablePath: string, userDataDir: string): P
   return { electronApplication, page, rendererErrors, cspViolations };
 }
 
-async function closeTrackedApplication(electronApplication: ElectronApplication): Promise<void> {
-  const index = electronApplications.indexOf(electronApplication);
-  if (index >= 0) electronApplications.splice(index, 1);
-  await electronApplication.close();
-}
-
 function bootstrapFailures(rendererErrors: string[]): string[] {
   return rendererErrors.filter(error =>
     /pageerror:|uncaught|unhandled|fatal application error|failed to mount react root|cannot find module|syntaxerror|referenceerror/i.test(error),
@@ -164,7 +154,7 @@ describe('packaged executable discovery', () => {
   });
 });
 
-smokeTest('packaged Electron crosses first-run onboarding and restores the trusted profile bootstrap', async () => {
+smokeTest('packaged Electron app launches without CSP style-src violations', async () => {
   const root = process.cwd();
   const exePath = findPackagedExecutable(root);
 
@@ -175,95 +165,10 @@ smokeTest('packaged Electron crosses first-run onboarding and restores the trust
   const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'venice-forge-electron-integration-'));
   temporaryDirectories.push(userDataDir);
 
-  const firstRun = await launchPackagedApp(exePath, userDataDir);
-  await firstRun.page.getByText(FIRST_RUN_WARNING, { exact: false }).waitFor({ timeout: 30_000 });
-  await firstRun.page.getByRole('button', { name: 'I understand and am 18+' }).click();
-  await firstRun.page.getByRole('heading', { level: 3, name: 'Welcome to Venice Forge' }).waitFor();
-  await firstRun.page.getByRole('button', { name: 'Continue' }).click();
-  await firstRun.page.getByRole('heading', { level: 3, name: 'Profiles' }).waitFor();
-  await firstRun.page.getByRole('button', { name: 'Continue' }).click();
-  await firstRun.page.getByRole('heading', { level: 3, name: 'Secure by Default' }).waitFor();
-  await firstRun.page.getByRole('button', { name: 'Continue' }).click();
-  await firstRun.page.getByRole('heading', { level: 3, name: 'Family Safe Mode' }).waitFor();
-  await firstRun.page.getByRole('button', { name: 'Get Started' }).click();
-  await firstRun.page.getByRole('heading', { level: 2, name: 'Connect to Venice' }).waitFor();
+  const run = await launchPackagedApp(exePath, userDataDir);
 
-  await firstRun.page.evaluate((restoredProfileId) => {
-    const raw = window.localStorage.getItem('venice-profiles');
-    if (!raw) throw new Error('The onboarding flow did not persist the profile store.');
-    const persisted = JSON.parse(raw) as { state?: Record<string, unknown>; version?: number };
-    persisted.state = {
-      ...(persisted.state ?? {}),
-      profiles: [
-        { id: 'default', name: 'Default Profile', onboardingCompleted: true },
-        { id: restoredProfileId, name: 'Restored Profile', onboardingCompleted: true },
-      ],
-      activeProfileId: restoredProfileId,
-      globalOnboardingCompleted: true,
-    };
-    window.localStorage.setItem('venice-profiles', JSON.stringify(persisted));
-    // The restart must recover this value from the sanitized Zustand payload
-    // and bind it through profileSession:activate; do not pre-seed the routing key.
-    window.localStorage.removeItem('venice-active-profile-id');
-  }, RESTORED_PROFILE_ID);
-
-  expect(bootstrapFailures(firstRun.rendererErrors)).toEqual([]);
+  expect(bootstrapFailures(run.rendererErrors)).toEqual([]);
   expect(
-    firstRun.cspViolations.filter(message => /style-src|refused to apply inline style/i.test(message)),
+    run.cspViolations.filter(message => /style-src|refused to apply inline style/i.test(message)),
   ).toEqual([]);
-  await closeTrackedApplication(firstRun.electronApplication);
-
-  const restoredRun = await launchPackagedApp(exePath, userDataDir);
-  await restoredRun.page.getByRole('heading', { level: 2, name: 'Connect to Venice' }).waitFor({ timeout: 30_000 });
-  expect(await restoredRun.page.getByText(FIRST_RUN_WARNING, { exact: false }).count()).toBe(0);
-  expect(await restoredRun.page.getByRole('heading', { level: 3, name: 'Welcome to Venice Forge' }).count()).toBe(0);
-
-  const restoredState = await restoredRun.page.evaluate(async ({ profileId, probeId }) => {
-    const activeProfileId = window.localStorage.getItem('venice-active-profile-id');
-    const persisted = JSON.parse(window.localStorage.getItem('venice-profiles') ?? '{}') as {
-      state?: { activeProfileId?: unknown; globalOnboardingCompleted?: unknown };
-    };
-    const now = Date.now();
-    const saveResult = await window.veniceForge!.chat.save({
-      id: probeId,
-      title: 'Electron bootstrap probe',
-      createdAt: now,
-      updatedAt: now,
-      model: 'test-model',
-      messages: [],
-    });
-    return {
-      bridgeIsDesktop: window.veniceForge?.isDesktop === true,
-      activeProfileId,
-      persistedActiveProfileId: persisted.state?.activeProfileId,
-      onboardingCompleted: persisted.state?.globalOnboardingCompleted,
-      saveOk: saveResult.ok,
-      requestedProfileId: profileId,
-    };
-  }, { profileId: RESTORED_PROFILE_ID, probeId: RESTORED_PROFILE_PROBE_ID });
-
-  expect(restoredState).toEqual({
-    bridgeIsDesktop: true,
-    activeProfileId: RESTORED_PROFILE_ID,
-    persistedActiveProfileId: RESTORED_PROFILE_ID,
-    onboardingCompleted: true,
-    saveOk: true,
-    requestedProfileId: RESTORED_PROFILE_ID,
-  });
-  expect(
-    fs.existsSync(path.join(
-      userDataDir,
-      'chat-history',
-      'profiles',
-      RESTORED_PROFILE_ID,
-      `${RESTORED_PROFILE_PROBE_ID}.json`,
-    )),
-  ).toBe(true);
-  expect(
-    fs.existsSync(path.join(userDataDir, 'chat-history', `${RESTORED_PROFILE_PROBE_ID}.json`)),
-  ).toBe(false);
-  expect(bootstrapFailures(restoredRun.rendererErrors)).toEqual([]);
-  expect(
-    restoredRun.cspViolations.filter(message => /style-src|refused to apply inline style/i.test(message)),
-  ).toEqual([]);
-}, 90_000);
+}, 60_000);

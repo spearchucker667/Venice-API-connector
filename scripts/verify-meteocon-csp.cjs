@@ -18,7 +18,7 @@ const STYLE_ATTR_RE = /\sstyle=/i;
 function stripComments(source) {
   return source
     .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/(^|[^:])\/\/.*$/gm, '$1');
+    .replace(/(?<=^|\s)\/\/.*$/gm, '');
 }
 
 /**
@@ -122,6 +122,7 @@ function main() {
 module.exports = {
   scanMeteoconMarkup,
   extractImportedMeteoconPaths,
+  stripComments,
 };
 
 if (require.main === module) {

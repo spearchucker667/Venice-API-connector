@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { describe, it, expect } from 'vitest';
-import { scanMeteoconMarkup, extractImportedMeteoconPaths } from './verify-meteocon-csp.cjs';
+import { scanMeteoconMarkup, extractImportedMeteoconPaths, stripComments } from './verify-meteocon-csp.cjs';
 import path from 'node:path';
 
 describe('verify-meteocon-csp', () => {
@@ -17,6 +17,14 @@ describe('verify-meteocon-csp', () => {
 
   it('accepts presentation attributes', () => {
     expect(scanMeteoconMarkup('<svg><path stroke="#64748B" /></svg>')).toEqual([]);
+  });
+
+  it('does not corrupt URLs when stripping line comments', () => {
+    const source = `// leading comment\nconst url = 'https://example.com/path'; // trailing comment`;
+    const stripped = stripComments(source);
+    expect(stripped).toContain("const url = 'https://example.com/path';");
+    expect(stripped).not.toContain('// leading');
+    expect(stripped).not.toContain('// trailing');
   });
 
   it('enumerates imported Meteocon SVG paths', () => {

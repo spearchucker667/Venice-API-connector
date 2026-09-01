@@ -1,3 +1,17 @@
+/**
+ * Build-time Vite plugin for CSP-safe Meteocon SVG assets.
+ *
+ * Bundled `@meteocons/svg/fill/*.svg?raw` imports contain inline
+ * `style="mask-type:alpha"` attributes on mask elements. If left as-is,
+ * those raw strings are emitted into `dist` renderer assets and violate the
+ * production `style-src 'self'` Content-Security-Policy.
+ *
+ * This plugin runs at build time via `jsdom`, converting allowed source
+ * `style` declarations to presentation attributes and stripping the rest
+ * before Vite inlines the SVG strings, keeping the built bundle free of
+ * inline SVG style markup.
+ */
+
 import type { Plugin } from 'vite';
 import { JSDOM } from 'jsdom';
 import { sanitizeSvgDocument } from '../src/components/ui/meteoconSvgTransformer';
