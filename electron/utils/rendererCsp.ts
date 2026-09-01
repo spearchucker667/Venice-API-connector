@@ -5,9 +5,12 @@
  * In development, 'unsafe-inline' and 'unsafe-eval' are kept for Vite HMR.
  *
  * STYLE-SRC POLICY (T1): production style-src is 'self' (no 'unsafe-inline').
- * The renderer's *application* code has zero JSX `style={...}` attributes —
- * this invariant is enforced by tests/csp/inlineStyleInvariant.test.ts
- * (VERIFY-007). The bootstrap script (public/bootstrap-theme.js) does call
+ * Renderer application code has zero JSX `style={...}` attributes — enforced
+ * by tests/csp/inlineStyleInvariant.test.ts (VERIFY-007). Bundled raw SVG
+ * output rendered by the Meteocon component must also avoid inline `<style>`
+ * blocks and `style="..."` attributes; that bundled-output invariant is owned
+ * by scripts/verify-meteocon-csp.cjs. The bootstrap script
+ * (public/bootstrap-theme.js) does call
  * `document.documentElement.style.setProperty(...)` to apply theme tokens
  * before first paint, but that path is not blocked by style-src 'self'
  * (style.setProperty writes to inline styles which the browser allows

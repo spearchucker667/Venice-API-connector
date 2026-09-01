@@ -2,6 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig, Plugin} from 'vite';
+import {meteoconCspPlugin} from './scripts/vite-plugin-meteocon-csp';
 
 /** Strips crossorigin attributes from script/link tags in the built HTML.
  *  Electron loads files via the file:// protocol, where CORS does not apply
@@ -24,6 +25,7 @@ export default defineConfig(() => {
     plugins: [
       react(),
       tailwindcss(),
+      meteoconCspPlugin(),
       isElectronBuild ? stripCrossorigin() : undefined,
     ].filter(Boolean),
     resolve: {

@@ -1,22 +1,26 @@
 // VERIFY-007 regression guard: T1 / CSP `style-src 'unsafe-inline'` audit.
 //
-// The Electron renderer's production CSP includes 'unsafe-inline' for styles
-// because public/bootstrap-theme.js writes CSS variables via
+// Production renderer CSP keeps style-src as 'self' (no 'unsafe-inline').
+// public/bootstrap-theme.js writes CSS variables via
 // `document.documentElement.style.setProperty(...)` at startup to prevent
-// FOUC. Removing 'unsafe-inline' from style-src would block the bootstrap
-// and cause a flash of unstyled content on every launch.
+// FOUC; that programmatic path is allowed by the browser regardless of CSP.
 //
-// This test enforces the invariant: the *application* code (under src/) must
-// have ZERO inline `style={...}` JSX attributes. If a future PR introduces
-// one, this test fails immediately, prompting either:
+// This test enforces the JSX-level invariant: the *application* code (under
+// src/) must have ZERO inline `style={...}` JSX attributes. Bundled raw SVG
+// output (e.g. Meteocon icons) must also avoid inline `<style>` blocks and
+// `style="..."` attributes; that bundled-output invariant is owned by
+// scripts/verify-meteocon-csp.cjs, not by this source-only scan.
+//
+// If a future PR introduces a JSX inline style, this test fails immediately,
+// prompting either:
 //   (a) refactor the component to use a CSS class or CSS variable, or
 //   (b) update the audit backlog with rationale for the new inline style.
 //
-// Combined with the explicit comment in electron/main.ts:31, the CSP can be
-// tightened to `'unsafe-inline'` for the bootstrap script only after the
-// bootstrap is migrated to a nonced stylesheet (or to a self-hosted CSS
-// file that applies the variables via :root). Tracked as a follow-up in
-// `docs/POST_VENICE_JINA_AUDIT_2026_06_06.md` (T1 / VERIFY-007 follow-up).
+// Combined with the explicit comment in electron/utils/rendererCsp.ts, the
+// CSP can be tightened to a nonced stylesheet after the bootstrap is migrated
+// to a self-hosted CSS file that applies the variables via :root. Tracked as
+// a follow-up in `docs/POST_VENICE_JINA_AUDIT_2026_06_06.md`
+// (T1 / VERIFY-007 follow-up).
 
 import { describe, it, expect } from 'vitest'
 import { readdirSync, readFileSync, statSync } from 'node:fs'
