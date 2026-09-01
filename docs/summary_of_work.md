@@ -34,6 +34,13 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Session History
 
+### 2026-09-01 — Hygiene and Complete Audit Execution
+
+- Ran `docs/audits/repo-management/Venice Forge — Exhaustive Repository A.md` and `Venice Forge — Repository Hygiene, Reo.md`.
+- Validated the state matches historical outputs from 2026-08-22.
+- Removed lingering scratch scripts.
+- Verified lint, typecheck, build pass.
+
 ### 2026-09-01 — Cross-tranche coordination closeout (VF-AUD-20260901 coordination).
 
 - **Scope:** Reconcile the five parallel subagent tranches (P1 media approval boundary, P2 durable paid media, P2 attachment budgets, P2 release evidence, P2 capability tokens) whose combined edits left cross-cutting breakage that no single tranche owned; restore the full verification matrix to green; complete the interrupted audit handoff (`kimi-export-session_-20260901-172643.md`, Turn 5 "resume" which never executed).
@@ -732,6 +739,13 @@ Investigation only, then four targeted fixes based on the user-reported defects
 * `VF-MEDIA-APPROVAL-2026-09-01` (P1 agent media tool contract/authorization/approval) is locally implemented for `media.generateImage`: capability-gated tool visibility, trusted runtime model resolution, immutable approval plans, and approved-plan execution through the durable paid-submission manager. Broader media tool surface (video/audio), custom protocol capability-token wiring, semantic classifier implementation, and release-packaging evidence remain deferred per `docs/ROADMAP.md`.
 
 ## Validation Matrix
+
+### 2026-09-01 — Hygiene and Complete Audit Execution
+
+- Ran `docs/audits/repo-management/Venice Forge — Exhaustive Repository A.md` and `Venice Forge — Repository Hygiene, Reo.md`.
+- Validated the state matches historical outputs from 2026-08-22.
+- Removed lingering scratch scripts.
+- Verified lint, typecheck, build pass.
 
 ### 2026-09-01 — Cross-tranche coordination closeout (VF-AUD-20260901 coordination)
 

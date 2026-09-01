@@ -197,6 +197,10 @@ This is the canonical source-of-truth navigation map for all documentation in th
 
 - [reports/historical/README.md](reports/historical/README.md) — Guideline for audit history and historical report rules.
 - [reports/historical/remediation-report-2026-09-01.md](reports/historical/remediation-report-2026-09-01.md) — 2026-09-01 Code Health, Performance & Security Remediation Report.
+- [../VENICE_FORGE_COMPLETE_AUDIT.md](../VENICE_FORGE_COMPLETE_AUDIT.md) — 2026-09-01 Complete Repository Audit.
+- [audits/repository-hygiene-audit.md](audits/repository-hygiene-audit.md) — 2026-09-01 Repository Hygiene Audit.
+- [audits/repository-hygiene-final-report.md](audits/repository-hygiene-final-report.md) — 2026-09-01 Repository Hygiene Final Report.
+
 - [reports/historical/CANONICAL_REPORT_INDEX.md](reports/historical/CANONICAL_REPORT_INDEX.md) — Navigator for past validation audits.
 - [reports/VENICE_FORGE_POST_AUGUST_24_AUDIT_REPORT.md](reports/VENICE_FORGE_POST_AUGUST_24_AUDIT_REPORT.md) — 2026-08-25 Post-August-24 provider-update audit and remediation report.
 - [reports/MEDIA_PREVIEW_TRAFFIC_INSPECTOR_REMEDIATION_REPORT_2026-07-26.md](reports/MEDIA_PREVIEW_TRAFFIC_INSPECTOR_REMEDIATION_REPORT_2026-07-26.md) — 2026-07-26 Traffic Inspector emitter wiring remediation report.
