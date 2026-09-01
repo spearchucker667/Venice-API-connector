@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-18
 **Agent:** Venice Forge Agent
-**Repository:** Venice Forge v3.0.0-beta.2
+**Repository:** Venice Forge v3.0.0-beta.3
 **Branch:** main (commit 10d4d9f)
 
 ---
