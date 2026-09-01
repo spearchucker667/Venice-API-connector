@@ -10,6 +10,7 @@ import {
 } from "./chat-stream-manager";
 import { useChatStore } from "./chat-store";
 import { useCharacterStore } from "./character-store";
+import { useDocumentAgentStore } from "./document-agent-store";
 import { veniceStreamChat } from "../services/veniceClient";
 
 vi.mock("../services/veniceClient", () => ({
@@ -28,6 +29,7 @@ vi.mock("../services/modelService", () => ({
 const mockedVeniceStreamChat = vi.mocked(veniceStreamChat);
 
 function resetStores() {
+  useDocumentAgentStore.setState({ preset: "limited_documents" });
   useChatStore.setState({
     conversations: [],
     activeConversationId: null,
@@ -61,7 +63,7 @@ describe("chat-stream-manager", () => {
   // P1-005: tools are only sent when runtime metadata explicitly advertises
   // supportsFunctionCalling; the document/workspace flags alone must never
   // push tools to an unsupported model, and missing metadata fails closed.
-  it("sends document and media tools only for models that support function calling", async () => {
+  it("sends document tools (but not media tools) for capable models under the default documents preset", async () => {
     const convId = useChatStore.getState().createConversation("capable-model");
     useChatStore.getState().addMessage(convId, { role: "user", content: "Hello" });
     useChatStore.getState().setVeniceParams({
@@ -82,7 +84,31 @@ describe("chat-stream-manager", () => {
     expect(Array.isArray(tools)).toBe(true);
     const names = tools.map((t) => t.function?.name ?? "");
     expect(names.some((n) => n.startsWith("document_"))).toBe(true);
+    expect(names.some((n) => n.startsWith("media_"))).toBe(false);
+  });
+
+  it("sends media tools only under the media_with_approval preset", async () => {
+    useDocumentAgentStore.getState().setPreset("media_with_approval");
+    const convId = useChatStore.getState().createConversation("capable-model");
+    useChatStore.getState().addMessage(convId, { role: "user", content: "Hello" });
+    useChatStore.getState().setVeniceParams({
+      enable_document_tools: true,
+      include_venice_system_prompt: true,
+      enable_web_search: "off",
+    });
+    mockGetModelById.mockReturnValue({
+      id: "capable-model",
+      capabilities: { supportsFunctionCalling: true },
+    });
+    mockedVeniceStreamChat.mockResolvedValueOnce(undefined);
+
+    await startStream(convId, "capable-model");
+
+    const body = mockedVeniceStreamChat.mock.calls[0][0] as Record<string, unknown>;
+    const tools = body.tools as Array<{ function?: { name?: string } }>;
+    const names = tools.map((t) => t.function?.name ?? "");
     expect(names.some((n) => n.startsWith("media_"))).toBe(true);
+    expect(names.some((n) => n.startsWith("document_"))).toBe(false);
   });
 
   it("omits tools when the model does not support function calling, even with document tools enabled", async () => {

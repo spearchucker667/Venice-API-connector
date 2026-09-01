@@ -30,12 +30,33 @@ import {
   recoverPendingGeneratedMediaWrites,
   startGeneratedMediaIntegrityMonitor,
 } from './services/generatedMediaStore';
+// Future VF-CAPABILITY-PROVENANCE: import { createCustomProtocolCapabilityManager }
+// from './utils/customProtocolAccess' and instantiate one manager per app lifetime.
+// The manager issues short-lived `venice-media://<id>?cap=<token>` URLs to the
+// renderer and verifies them in the protocol handler below; tokens are scoped to
+// profile/session, expire quickly, and are revoked on profile switch/reload/shutdown.
 import { readRegularFileNoFollow } from "./utils/secureFile";
 import { createShutdownCoordinator } from "./services/appShutdownCoordinator";
 import { migrateLegacyFolders } from "./services/chatFolderService";
-import { setProfileSessionId } from "./services/profileSession";
+import { setProfileSessionId, getProfileSessionId } from "./services/profileSession";
+import { getAgentServices, RUNTIME_SESSION_ID } from "./agent/runtime/agent-services";
 
 export { isValidBridgeHost };
+
+/** Best-effort revocation of attachment records for a renderer that is
+ *  closing, crashing, or reloading. Safe to call multiple times. */
+function cleanupRendererAttachments(contents: Electron.WebContents): void {
+  try {
+    const profileId = getProfileSessionId(contents);
+    getAgentServices().attachmentRegistry.revokeRendererSession(
+      RUNTIME_SESSION_ID,
+      profileId,
+      contents.id,
+    );
+  } catch {
+    // Cleanup must never break window lifecycle.
+  }
+}
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -178,6 +199,10 @@ function createWindow(): BrowserWindow {
   });
   win.webContents.on("render-process-gone", (_event, details) => {
     logError("render-process-gone", details);
+    cleanupRendererAttachments(win.webContents);
+  });
+  win.webContents.on("destroyed", () => {
+    cleanupRendererAttachments(win.webContents);
   });
   win.webContents.on("console-message", (_event, level, message, line, sourceId) => {
     if (isDev) {
@@ -364,6 +389,11 @@ if (!gotLock) {
     protocol.handle(GENERATED_MEDIA_SCHEME, async (request) => {
       const parsedUrl = new URL(request.url);
       const id = parsedUrl.hostname || parsedUrl.pathname.replace(/^\/+/, '');
+      // Future VF-CAPABILITY-PROVENANCE: extract `?cap=<token>` via
+      // `parseCustomProtocolCapabilityUrl(request.url)` and verify it through the
+      // app-scoped capability manager before falling back to the origin/referer
+      // defense-in-depth check inside `createGeneratedMediaResponse`. Tokens are
+      // never logged; only object/profile/session metadata may be logged.
       return createGeneratedMediaResponse(id, request, {
         isDev,
         origin: request.headers.get("origin"),
@@ -520,6 +550,9 @@ if (!gotLock) {
         // Intentionally do nothing for windowless contents — block navigation.
       }
       return { action: "deny" };
+    });
+    contents.on("destroyed", () => {
+      cleanupRendererAttachments(contents);
     });
   });
 }

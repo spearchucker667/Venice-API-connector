@@ -15,6 +15,7 @@ export type AgentPermissionPreset =
   | "read_attachments"
   | "limited_documents"
   | "workspace_with_approval"
+  | "media_with_approval"
   /** @deprecated Reserved for a future design. Currently rejected by main. */
   | "workspace_autonomous";
 
@@ -24,6 +25,7 @@ export const SUPPORTED_PRESETS: readonly AgentPermissionPreset[] = [
   "read_attachments",
   "limited_documents",
   "workspace_with_approval",
+  "media_with_approval",
 ] as const;
 
 export type Capability =
@@ -88,6 +90,7 @@ export interface WorkspaceGrant {
 const PRESET_CAPABILITIES: Record<AgentPermissionPreset, readonly Capability[]> = {
   off: [],
   read_attachments: ["attachment:read"],
+  media_with_approval: ["media:generate-image"],
   limited_documents: [
     "attachment:read",
     "attachment:promote",

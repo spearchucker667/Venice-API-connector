@@ -650,6 +650,7 @@
         "readAttachmentsOnly": "Read attachments only",
         "limitedDocuments": "Limited Documents",
         "manageSelectedWorkspace": "Manage selected workspace",
+        "mediaWithApproval": "Generate images with approval",
         "markdownMd": "Markdown (.md)",
         "textTxt": "Text (.txt)",
         "jsonJson": "JSON (.json)",

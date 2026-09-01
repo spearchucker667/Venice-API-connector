@@ -11,17 +11,20 @@ import {
   buildDocumentEditPlan,
   buildDocumentExportPlan,
   buildDocumentRestorePlan,
+  buildGenerateImagePlan,
   buildWorkspaceChangesetPlan,
   buildWorkspaceMovePlan,
   buildWorkspaceTrashPlan,
   isDocumentEditPlan,
   isDocumentExportPlan,
   isDocumentRestorePlan,
+  isGenerateImagePlan,
   isWorkspaceChangesetPlan,
   isWorkspaceMovePlan,
   isWorkspaceTrashPlan,
 } from "../approvals/plan-factories";
 import type { ToolExecutionContext } from "./tool-execution-context";
+import { computePayloadHash } from "../../../src/shared/venice-media-contract/payload-hash";
 
 const PNG_PIXEL_BASE64 = "iVBORw0KGgo";
 
@@ -146,6 +149,10 @@ vi.mock("../../services/inspectorTelemetry", () => ({
   publishInspectorCompletion: vi.fn(),
 }));
 
+vi.mock("./image-model-resolver", () => ({
+  resolveGenerateImageModel: vi.fn().mockResolvedValue("flux-dev"),
+}));
+
 function makeWorkspaceGrant(workspaceId: string, sessionId: string): WorkspaceGrant {
   return {
     id: "grant_1",
@@ -171,6 +178,7 @@ function makeContext(tool: RegisteredTool): ToolExecutionContext {
   const agentSessionId = "agent_1";
   const rendererSessionId = `${runtimeSessionId}:renderer_${senderId}:agent_${agentSessionId}`;
   const isWorkspace = tool.requiredCapabilities.some((capability) => capability.startsWith("workspace:"));
+  const isMedia = tool.requiredCapabilities.some((capability) => capability.startsWith("media:"));
 
   if (isWorkspace) {
     return createToolExecutionContext({
@@ -188,7 +196,7 @@ function makeContext(tool: RegisteredTool): ToolExecutionContext {
     runtimeSessionId,
     senderId,
     agentSessionId,
-    preset: "limited_documents",
+    preset: isMedia ? "media_with_approval" : "limited_documents",
   });
 }
 
@@ -273,7 +281,7 @@ function makeValidArgs(tool: RegisteredTool): Record<string, unknown> {
     case "workspace.trash":
       return { workspaceId: "ws_1", relativePath: "a.txt" };
     case "media.generateImage":
-      return { prompt: "a serene landscape", model: "nano-banana" };
+      return { prompt: "a serene landscape" };
     default:
       return {};
   }
@@ -284,6 +292,8 @@ describe("Document Agent contracts", () => {
     performGuardedVeniceRequest.mockReset();
     persistGeneratedMedia.mockReset();
     mockAudit.record.mockReset();
+    mockApprovals.prepare.mockReset();
+    mockApprovals.prepare.mockResolvedValue({ id: "approval_1" });
 
     performGuardedVeniceRequest.mockResolvedValue({
       kind: "response",
@@ -484,6 +494,72 @@ describe("Document Agent contracts", () => {
       expect(plan.workspaceId).toBe("ws_1");
       expect(plan.relativePath).toBe("a.txt");
       expect(isWorkspaceTrashPlan(plan)).toBe(true);
+    });
+
+    it("buildGenerateImagePlan contains required identity fields, wirePayload, hash, and isGenerateImagePlan returns true", () => {
+      const wirePayload = { model: "flux-dev", prompt: "a serene landscape", return_binary: false };
+      const plan = buildGenerateImagePlan({
+        profileId: "profile_1",
+        toolCallId: "call_1",
+        prompt: "a serene landscape",
+        modelId: "flux-dev",
+        payloadHash: `sha256:${computePayloadHash(wirePayload)}`,
+        requestFingerprint: "fingerprint_1",
+        wirePayload,
+      });
+      expect(plan.kind).toBe("generate_image");
+      expect(plan.profileId).toBe("profile_1");
+      expect(plan.toolCallId).toBe("call_1");
+      expect(plan.prompt).toBe("a serene landscape");
+      expect(plan.modelId).toBe("flux-dev");
+      expect(plan.payloadHash).toContain("sha256:");
+      expect(plan.requestFingerprint).toBe("fingerprint_1");
+      expect(plan.wirePayload).toEqual(wirePayload);
+      expect(isGenerateImagePlan(plan)).toBe(true);
+    });
+  });
+
+  describe("E. media.generateImage approval path", () => {
+    it("returns a pendingApprovalId instead of dispatching directly", async () => {
+      const tools = createCanonicalToolDefinitions().filter((tool) => tool.internalName === "media.generateImage");
+      expect(tools.length).toBe(1);
+      const tool = tools[0]!;
+      const ctx = makeContext(tool);
+      const toolCall = makeToolCall(tool);
+      const result = await executeAgentTool(ctx, toolCall);
+
+      expect(result.ok).toBe(true);
+      if (!result.ok) throw new Error("Expected success");
+      expect(result.data).toHaveProperty("pendingApprovalId");
+      expect((result.data as { pendingApprovalId: string }).pendingApprovalId).toBe("approval_1");
+      expect(mockApprovals.prepare).toHaveBeenCalledTimes(1);
+      const [prepareCall] = mockApprovals.prepare.mock.calls;
+      if (prepareCall === undefined) throw new Error("Expected approval prepare call");
+      const [prepareArgs] = prepareCall;
+      expect(prepareArgs.proposalType).toBe("media_generate_image");
+      expect(prepareArgs.canonicalToolName).toBe("media.generateImage");
+      expect(prepareArgs.grantId).toBe("media:profile_1");
+      expect(prepareArgs.privateExecutionPlan.kind).toBe("generate_image");
+      expect(isGenerateImagePlan(prepareArgs.privateExecutionPlan)).toBe(true);
+    });
+
+    it("rejects media.generateImage under a document-only preset", async () => {
+      const ctx = createToolExecutionContext({
+        profileId: "profile_1",
+        runtimeSessionId: "runtime_test",
+        senderId: 1,
+        agentSessionId: "agent_1",
+        preset: "limited_documents",
+      });
+      const toolCall = {
+        id: "call_media_1",
+        type: "function" as const,
+        function: { name: "media_generate_image", arguments: JSON.stringify({ prompt: "a serene landscape" }) },
+      };
+      const result = await executeAgentTool(ctx, toolCall);
+      expect(result.ok).toBe(false);
+      if (result.ok) throw new Error("Expected failure");
+      expect(result.error.code).toBe("CAPABILITY_DENIED");
     });
   });
 });

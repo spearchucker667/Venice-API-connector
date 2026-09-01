@@ -128,20 +128,18 @@ jobs:
             fi
           fi
 
-      - name: Record signature/notarization evidence
-        if: startsWith(github.ref, 'refs/tags/v') && vars.RELEASE_ALLOW_UNSIGNED != 'true'
+      - name: Write macOS signature evidence
+        if: startsWith(github.ref, 'refs/tags/v')
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
-          GITHUB_SHA: ${{ github.sha }}
+          RELEASE_ALLOW_UNSIGNED: ${{ vars.RELEASE_ALLOW_UNSIGNED }}
         run: |
-          set -e
-          EVIDENCE_FILE="docs/RELEASE/SIGNED_ARTIFACT_EVIDENCE.md"
-          TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          # Append a release evidence row. Maintainer is expected to verify
-          # the entry and remove the "auto" tag in the commit.
-          echo "" >> "$EVIDENCE_FILE"
-          echo "| ${GITHUB_REF_NAME} | ${TS} | ${GITHUB_SHA} | auto | auto | auto | auto | GitHub Actions tag run |" >> "$EVIDENCE_FILE"
-          echo "Recorded signature/notarization evidence for ${GITHUB_REF_NAME} in ${EVIDENCE_FILE}"
+          if [[ "$RELEASE_ALLOW_UNSIGNED" == "true" ]]; then
+            UNSIGNED_FLAG="--unsigned"
+          else
+            UNSIGNED_FLAG=""
+          fi
+          node scripts/write-signature-evidence.cjs --platform macos --tag "$GITHUB_REF_NAME" $UNSIGNED_FLAG
 
       - name: Remove packaging staging directories
         run: node scripts/clean-release-staging.cjs
@@ -158,6 +156,7 @@ jobs:
           name: venice-forge-macos-${{ github.ref_name }}
           path: |
             release/*
+            release-evidence/*
           if-no-files-found: error
 
   build-windows:
@@ -276,6 +275,20 @@ jobs:
             }
           }
 
+      - name: Write Windows signature evidence
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          RELEASE_ALLOW_UNSIGNED: ${{ vars.RELEASE_ALLOW_UNSIGNED }}
+        run: |
+          if [[ "$RELEASE_ALLOW_UNSIGNED" == "true" ]]; then
+            UNSIGNED_FLAG="--unsigned"
+          else
+            UNSIGNED_FLAG=""
+          fi
+          node scripts/write-signature-evidence.cjs --platform windows --tag "$GITHUB_REF_NAME" $UNSIGNED_FLAG
+
       - name: Remove packaging staging directories
         run: node scripts/clean-release-staging.cjs
 
@@ -294,6 +307,7 @@ jobs:
           name: venice-forge-windows-${{ github.ref_name }}
           path: |
             release/*
+            release-evidence/*
           if-no-files-found: error
 
   build-linux:
@@ -356,12 +370,20 @@ jobs:
       - name: Verify archive hygiene (no tracked contaminants)
         run: node scripts/verify-archive-clean.cjs
 
+      - name: Write Linux signature evidence
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: |
+          node scripts/write-signature-evidence.cjs --platform linux --tag "$GITHUB_REF_NAME"
+
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: venice-forge-linux-${{ github.ref_name }}
           path: |
             release/*
+            release-evidence/*
           if-no-files-found: error
 
   publish:
@@ -389,27 +411,48 @@ jobs:
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: venice-forge-macos-${{ github.ref_name }}
-          path: release/
+          path: ./
 
       - name: Download Windows artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: venice-forge-windows-${{ github.ref_name }}
-          path: release/
+          path: ./
 
       - name: Download Linux artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: venice-forge-linux-${{ github.ref_name }}
-          path: release/
+          path: ./
 
       - name: Verify all platform artifacts before publishing
         run: node scripts/verify-dist.cjs --all --release-artifacts-only
 
+      - name: Collect release evidence
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          RUNNER_OS: ${{ runner.os }}
+          RELEASE_ALLOW_UNSIGNED: ${{ vars.RELEASE_ALLOW_UNSIGNED }}
+        run: node scripts/collect-release-evidence.cjs
+
+      - name: Upload release evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-evidence-${{ github.ref_name }}
+          path: release-evidence/*
+          if-no-files-found: error
+
       - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@fe965f7af51af5f2602596916f38a38df2e33de0 # v3.0.2
         with:
-          files: release/*
+          files: |
+            release/*
+            release-evidence/*
           # P1 hardening: create a draft release so a maintainer can review
           # artifacts, checksums, and signing/notarization status before
           # clicking "Publish release".

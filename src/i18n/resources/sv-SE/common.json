@@ -498,6 +498,7 @@
         "readAttachmentsOnly": "Endast läsning av bilagor",
         "limitedDocuments": "Begränsade dokument",
         "manageSelectedWorkspace": "Hantera vald arbetsyta",
+        "mediaWithApproval": "Generera bilder med godkännande",
         "markdownMd": "Markdown (.md)",
         "textTxt": "Text (.txt)",
         "jsonJson": "JSON (.json)",

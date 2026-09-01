@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { AttachmentRegistry } from "./attachment-registry";
 
 const VALID_PROFILE_ID = "profile_1";
@@ -407,6 +407,223 @@ describe("AttachmentRegistry", () => {
 
       registry.revoke(VALID_PROFILE_ID, record.id, VALID_SESSION_ID);
       expect(registry.revoke(VALID_PROFILE_ID, record.id, VALID_SESSION_ID)).toBe(false);
+    });
+  });
+
+  describe("metrics", () => {
+    it("returns zero/null values for an empty registry", () => {
+      const metrics = registry.getMetrics();
+      expect(metrics.recordCount).toBe(0);
+      expect(metrics.aggregateBytes).toBe(0);
+      expect(metrics.profileCount).toBe(0);
+      expect(metrics.oldestRecordAgeMs).toBeNull();
+    });
+
+    it("reflects registered records without exposing bodies", () => {
+      registry.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: VALID_SESSION_ID,
+        mimeType: VALID_MIME_TYPE,
+        displayName: VALID_DISPLAY_NAME,
+        bodyB64: VALID_BODY_B64,
+      });
+      const metrics = registry.getMetrics();
+      expect(metrics.recordCount).toBe(1);
+      expect(metrics.aggregateBytes).toBe(11);
+      expect(metrics.profileCount).toBe(1);
+      expect(metrics.oldestRecordAgeMs).toBeGreaterThanOrEqual(0);
+    });
+  });
+
+  describe("aggregate budgets", () => {
+    it("rejects before allocation when total byte budget would be exceeded", () => {
+      const limited = new AttachmentRegistry({
+        maxTotalBytes: 100,
+        maxBytesPerProfile: 200,
+        maxBytesPerSession: 200,
+        maxRecords: 200,
+      });
+      limited.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: VALID_SESSION_ID,
+        mimeType: VALID_MIME_TYPE,
+        displayName: "a",
+        bodyBytes: new Uint8Array(100),
+      });
+      expect(() =>
+        limited.register({
+          profileId: VALID_PROFILE_ID,
+          sessionId: VALID_SESSION_ID,
+          mimeType: VALID_MIME_TYPE,
+          displayName: "b",
+          bodyBytes: new Uint8Array(1),
+        }),
+      ).toThrow(/total byte budget/);
+    });
+
+    it("rejects before allocation when per-profile byte budget would be exceeded", () => {
+      const limited = new AttachmentRegistry({
+        maxTotalBytes: 200,
+        maxBytesPerProfile: 100,
+        maxBytesPerSession: 200,
+        maxRecords: 200,
+      });
+      limited.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: `${VALID_SESSION_ID}_1`,
+        mimeType: VALID_MIME_TYPE,
+        displayName: "a",
+        bodyBytes: new Uint8Array(100),
+      });
+      // Same profile, different session should still fail.
+      expect(() =>
+        limited.register({
+          profileId: VALID_PROFILE_ID,
+          sessionId: `${VALID_SESSION_ID}_2`,
+          mimeType: VALID_MIME_TYPE,
+          displayName: "b",
+          bodyBytes: new Uint8Array(1),
+        }),
+      ).toThrow(/profile byte budget/);
+    });
+
+    it("rejects before allocation when per-session byte budget would be exceeded", () => {
+      const limited = new AttachmentRegistry({
+        maxTotalBytes: 200,
+        maxBytesPerProfile: 200,
+        maxBytesPerSession: 100,
+        maxRecords: 200,
+      });
+      limited.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: VALID_SESSION_ID,
+        mimeType: VALID_MIME_TYPE,
+        displayName: "a",
+        bodyBytes: new Uint8Array(100),
+      });
+      expect(() =>
+        limited.register({
+          profileId: VALID_PROFILE_ID,
+          sessionId: VALID_SESSION_ID,
+          mimeType: VALID_MIME_TYPE,
+          displayName: "b",
+          bodyBytes: new Uint8Array(1),
+        }),
+      ).toThrow(/session byte budget/);
+    });
+
+    it("rejects before allocation when record count cap would be exceeded", () => {
+      const limited = new AttachmentRegistry({
+        maxTotalBytes: 10_000,
+        maxBytesPerProfile: 10_000,
+        maxBytesPerSession: 10_000,
+        maxRecords: 2,
+      });
+      limited.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: VALID_SESSION_ID,
+        mimeType: VALID_MIME_TYPE,
+        displayName: "a",
+        bodyBytes: new Uint8Array(1),
+      });
+      limited.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: VALID_SESSION_ID,
+        mimeType: VALID_MIME_TYPE,
+        displayName: "b",
+        bodyBytes: new Uint8Array(1),
+      });
+      expect(() =>
+        limited.register({
+          profileId: VALID_PROFILE_ID,
+          sessionId: VALID_SESSION_ID,
+          mimeType: VALID_MIME_TYPE,
+          displayName: "c",
+          bodyBytes: new Uint8Array(1),
+        }),
+      ).toThrow(/record limit/);
+    });
+  });
+
+  describe("TTL/age-based eviction", () => {
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it("evicts expired records on register and metrics reads", () => {
+      vi.useFakeTimers();
+      const ttl = 1_000;
+      const limited = new AttachmentRegistry({ defaultTtlMs: ttl });
+      limited.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: VALID_SESSION_ID,
+        mimeType: VALID_MIME_TYPE,
+        displayName: "a",
+        bodyBytes: new Uint8Array(1),
+      });
+      vi.advanceTimersByTime(ttl + 1);
+      // Registering a new record triggers eviction of the stale one.
+      limited.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: VALID_SESSION_ID,
+        mimeType: VALID_MIME_TYPE,
+        displayName: "b",
+        bodyBytes: new Uint8Array(1),
+      });
+      const metrics = limited.getMetrics();
+      expect(metrics.recordCount).toBe(1);
+      expect(metrics.aggregateBytes).toBe(1);
+    });
+
+    it("exposes evictExpired for explicit lifecycle cleanup", () => {
+      vi.useFakeTimers();
+      const ttl = 500;
+      registry = new AttachmentRegistry({ defaultTtlMs: ttl });
+      registry.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: VALID_SESSION_ID,
+        mimeType: VALID_MIME_TYPE,
+        displayName: "a",
+        bodyBytes: new Uint8Array(1),
+      });
+      vi.advanceTimersByTime(ttl + 1);
+      expect(registry.evictExpired()).toBe(1);
+      expect(registry.getMetrics().recordCount).toBe(0);
+    });
+  });
+
+  describe("revokeRendererSession lifecycle hook", () => {
+    it("drops every record for a renderer sender across agent sessions", () => {
+      const runtimeSessionId = "runtime_test";
+      const senderId = 42;
+      const baseSession = `${runtimeSessionId}:renderer_${senderId}`;
+      const a = registry.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: `${baseSession}:agent_1`,
+        mimeType: VALID_MIME_TYPE,
+        displayName: "a.txt",
+        bodyB64: VALID_BODY_B64,
+      });
+      const b = registry.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: `${baseSession}:agent_2`,
+        mimeType: VALID_MIME_TYPE,
+        displayName: "b.txt",
+        bodyB64: VALID_BODY_B64,
+      });
+      const otherSender = registry.register({
+        profileId: VALID_PROFILE_ID,
+        sessionId: `${runtimeSessionId}:renderer_99:agent_1`,
+        mimeType: VALID_MIME_TYPE,
+        displayName: "c.txt",
+        bodyB64: VALID_BODY_B64,
+      });
+
+      const removed = registry.revokeRendererSession(runtimeSessionId, VALID_PROFILE_ID, senderId);
+      expect(removed).toBe(2);
+      expect(registry.resolve(VALID_PROFILE_ID, a.id, a.sessionId)).toBeNull();
+      expect(registry.resolve(VALID_PROFILE_ID, b.id, b.sessionId)).toBeNull();
+      expect(registry.resolve(VALID_PROFILE_ID, otherSender.id, otherSender.sessionId)).not.toBeNull();
     });
   });
 });

@@ -31,6 +31,7 @@ const IPC_PAYLOAD_TOO_LARGE = "Conversation payload is too large.";
 import { registerPrivilegedIpcChannel } from "./common";
 import { validateMutationOrigin } from "../validation";
 import { getProfileSessionId } from "../../services/profileSession";
+import { getAgentServices } from "../../agent/runtime/agent-services";
 
 interface LookupResult {
   address: string;
@@ -79,7 +80,16 @@ export function registerSystemHandlers(): void {
       const sessionProfileId = getProfileSessionId(event.sender);
       if (requestedProfileId !== sessionProfileId) throw new Error("Profile purge is limited to the active authenticated profile.");
       const { purgeMainProfileData } = await import("../../services/profilePurge");
-      return await purgeMainProfileData(sessionProfileId);
+      const result = await purgeMainProfileData(sessionProfileId);
+      // Drop any in-memory attachment records for the purged profile; this is
+      // best-effort cleanup and must not prevent the purge from reporting its
+      // primary result.
+      try {
+        getAgentServices().attachmentRegistry.revokeProfile(sessionProfileId);
+      } catch {
+        // ignore
+      }
+      return result;
     } catch (error) {
       return { ok: false, error: redactErrorMessage(error) };
     }

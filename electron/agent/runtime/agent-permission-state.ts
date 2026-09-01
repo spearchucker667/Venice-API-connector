@@ -7,6 +7,7 @@ const VALID_PRESETS = new Set<AgentPermissionPreset>([
   "read_attachments",
   "limited_documents",
   "workspace_with_approval",
+  "media_with_approval",
 ]);
 
 type PermissionRecord = { profileId: string; preset: AgentPermissionPreset };

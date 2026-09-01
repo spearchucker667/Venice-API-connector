@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { getAgentServices } from "./agent-services";
 import { type ToolResult, safeToolError } from "../../../src/agent/contracts/tool-results";
@@ -7,17 +6,18 @@ import type { DocumentBlock, DocumentEditOperation, DocumentFormat } from "../..
 import { serializableDocumentToBlocks } from "../../../src/agent/documents/document-source";
 import type { AssistantToolCall } from "../../../src/types/venice";
 import { sanitizeErrorText } from "../../../src/shared/redaction";
-import { performGuardedVeniceRequest } from "../../services/guardPipeline";
-import { publishInspectorRequest, publishInspectorCompletion } from "../../services/inspectorTelemetry";
 import { contextHasCapability, type ToolExecutionContext } from "./tool-execution-context";
 import {
   buildDocumentEditPlan,
   buildDocumentExportPlan,
   buildDocumentRestorePlan,
+  buildGenerateImagePlan,
   buildWorkspaceChangesetPlan,
   buildWorkspaceMovePlan,
   buildWorkspaceTrashPlan,
 } from "../approvals/plan-factories";
+import { resolveGenerateImageModel } from "./image-model-resolver";
+import { computePayloadHash } from "../../../src/shared/venice-media-contract/payload-hash";
 
 export async function executeAgentTool(ctx: ToolExecutionContext, toolCall: AssistantToolCall): Promise<ToolResult> {
   const services = getAgentServices();
@@ -51,11 +51,68 @@ export async function executeAgentTool(ctx: ToolExecutionContext, toolCall: Assi
   }
 
   try {
-    if (internalName.startsWith("media.")) {
-      return await executeMediaTool(ctx, internalName, toolCall.id, args);
-    }
-
     switch (internalName) {
+      case "media.generateImage": {
+        const denied = requireCapability("media:generate-image");
+        if (denied) return denied;
+        const prompt = typeof args.prompt === "string" ? args.prompt.trim() : "";
+        if (prompt.length === 0) {
+          return safeToolError(internalName, toolCall.id, "INVALID_ARGUMENTS", "generateImage requires a non-empty prompt.");
+        }
+        if (prompt.length > PROMPT_MAX_CHARS) {
+          return safeToolError(internalName, toolCall.id, "INVALID_ARGUMENTS", `generateImage prompt exceeds ${PROMPT_MAX_CHARS} characters.`);
+        }
+        const negativePrompt = typeof args.negativePrompt === "string" ? args.negativePrompt.trim().slice(0, PROMPT_MAX_CHARS) : undefined;
+        const aspectRatio = typeof args.aspectRatio === "string" && /^[0-9]+:[0-9]+$/.test(args.aspectRatio) ? args.aspectRatio : undefined;
+        let width: number | undefined;
+        let height: number | undefined;
+        if (typeof args.resolution === "string" && /^[0-9]{1,5}x[0-9]{1,5}$/.test(args.resolution)) {
+          const [w, h] = args.resolution.split("x").map((part) => Number.parseInt(part, 10));
+          if (Number.isFinite(w) && Number.isFinite(h) && w > 0 && h > 0 && w <= 4096 && h <= 4096) {
+            width = w;
+            height = h;
+          }
+        }
+        const modelId = await resolveGenerateImageModel({ profileId: ctx.profileId });
+        const wirePayload: Record<string, unknown> = {
+          model: modelId,
+          prompt,
+          return_binary: false,
+        };
+        if (negativePrompt) wirePayload.negative_prompt = negativePrompt;
+        if (aspectRatio) wirePayload.aspect_ratio = aspectRatio;
+        if (width !== undefined && height !== undefined) {
+          wirePayload.width = width;
+          wirePayload.height = height;
+        }
+        const payloadHash = `sha256:${computePayloadHash(wirePayload)}`;
+        const requestFingerprint = payloadHash;
+        const plan = buildGenerateImagePlan({
+          profileId: ctx.profileId,
+          toolCallId: toolCall.id,
+          prompt,
+          modelId,
+          negativePrompt,
+          aspectRatio,
+          resolution: typeof args.resolution === "string" ? args.resolution : undefined,
+          payloadHash,
+          requestFingerprint,
+          wirePayload,
+        });
+        const pending = await services.approvals.prepare({
+          grantId: `media:${ctx.profileId}`,
+          proposalType: "media_generate_image",
+          canonicalToolName: "media.generateImage",
+          validatedArguments: { prompt, negativePrompt, aspectRatio, resolution: typeof args.resolution === "string" ? args.resolution : undefined },
+          baseRevisionIds: [],
+          affectedResources: [],
+          publicSummary: { prompt: prompt.slice(0, 200), modelId },
+          privateExecutionPlan: plan,
+        });
+        await services.audit.record({ sessionId: ctx.rendererSessionId, toolName: "media.generateImage", outcome: "proposal" });
+        return { ok: true, toolName: internalName, requestId: toolCall.id, data: { pendingApprovalId: pending.id } };
+      }
+
       case "document.get": {
         const denied = requireCapability("document:read");
         if (denied) return denied;
@@ -386,208 +443,4 @@ export async function executeAgentTool(ctx: ToolExecutionContext, toolCall: Assi
   }
 }
 
-// Phase 5.1 — `media.generateImage` is the only currently enabled media
-// tool. It routes through the canonical guarded Venice request pipeline
-// (Local Family Safe Mode -> trusted runtime composition -> performVeniceRequest
-// -> response screening) instead of raw `fetch`, so every prompt payload is
-// preflighted and every response is audited. Other media.* tools are
-// not yet wired and surface CAPABILITY_DENIED rather than silently
-// miscalling /image/generate.
-
-const ENABLE_RESOLUTION_RE = /^[0-9]{1,5}x[0-9]{1,5}$/;
-const MODEL_ID_RE = /^[a-zA-Z0-9_.:-]{1,128}$/;
 const PROMPT_MAX_CHARS = 4000;
-
-function detectImageMimeTypeFromBase64(b64: string): "image/png" | "image/jpeg" | "image/webp" | null {
-  // The base64 prefixes below fingerprint every common format we accept.
-  // persistGeneratedMedia's allowlist is the second line of defence; this
-  // first-line sniff rejects unknown / empty payloads before we ever
-  // attempt base64-to-byte conversion.
-  if (b64.startsWith("iVBORw0KGgo")) return "image/png";
-  if (b64.startsWith("/9j/")) return "image/jpeg";
-  if (b64.startsWith("UklGR")) return "image/webp";
-  return null;
-}
-
-export async function executeMediaTool(
-  ctx: ToolExecutionContext,
-  internalName: string,
-  requestId: string,
-  args: Record<string, unknown>,
-): Promise<ToolResult> {
-  const services = getAgentServices();
-
-  try {
-    if (internalName !== "media.generateImage") {
-      // Phase 5.2 — video / audio tools are intentionally absent from the
-      // canonical tool registry while their durable approval pipeline is
-      // pending. Fail closed rather than silently miscalling /image/generate.
-      return safeToolError(internalName as any, requestId, "CAPABILITY_DENIED", `Media tool ${internalName} is not enabled in this build.`);
-    }
-
-    const prompt = typeof args.prompt === "string" ? args.prompt.trim() : "";
-    if (prompt.length === 0) {
-      return safeToolError(internalName as any, requestId, "INVALID_ARGUMENTS", "generateImage requires a non-empty prompt.");
-    }
-    if (prompt.length > PROMPT_MAX_CHARS) {
-      return safeToolError(internalName as any, requestId, "INVALID_ARGUMENTS", `generateImage prompt exceeds ${PROMPT_MAX_CHARS} characters.`);
-    }
-    const requestedModel = typeof args.model === "string" ? args.model.trim() : "";
-    if (!MODEL_ID_RE.test(requestedModel)) {
-      return safeToolError(internalName as any, requestId, "INVALID_ARGUMENTS", "generateImage requires a string model id.");
-    }
-    const negativePrompt = typeof args.negativePrompt === "string" ? args.negativePrompt.trim().slice(0, PROMPT_MAX_CHARS) : undefined;
-    const aspectRatio = typeof args.aspectRatio === "string" && /^[0-9]+:[0-9]+$/.test(args.aspectRatio) ? args.aspectRatio : undefined;
-    let width: number | undefined;
-    let height: number | undefined;
-    if (typeof args.resolution === "string" && ENABLE_RESOLUTION_RE.test(args.resolution)) {
-      const [w, h] = args.resolution.split("x").map((part) => Number.parseInt(part, 10));
-      if (Number.isFinite(w) && Number.isFinite(h) && w > 0 && h > 0 && w <= 4096 && h <= 4096) {
-        width = w;
-        height = h;
-      }
-    }
-
-    const imagePayload: Record<string, unknown> = {
-      model: requestedModel,
-      prompt,
-      return_binary: false,
-    };
-    if (negativePrompt) imagePayload.negative_prompt = negativePrompt;
-    if (aspectRatio) imagePayload.aspect_ratio = aspectRatio;
-    if (width !== undefined && height !== undefined) {
-      imagePayload.width = width;
-      imagePayload.height = height;
-    }
-
-    const startedAt = Date.now();
-    let eventId = "";
-    try {
-      eventId = publishInspectorRequest({
-        source: "main-agent",
-        transport: "venice",
-        endpoint: "/image/generate",
-        method: "POST",
-      });
-    } catch {
-      // Telemetry must never break tool execution.
-    }
-    let guarded: Awaited<ReturnType<typeof performGuardedVeniceRequest>>;
-    try {
-      guarded = await performGuardedVeniceRequest({
-        endpoint: "/image/generate",
-        method: "POST",
-        body: imagePayload,
-        profileId: ctx.profileId,
-      });
-    } catch (err) {
-      try {
-        publishInspectorCompletion({
-          source: "main-agent",
-          transport: "venice",
-          endpoint: "/image/generate",
-          method: "POST",
-          summaries: { durationMs: Date.now() - startedAt, model: requestedModel },
-          eventId,
-          error: sanitizeErrorText(err instanceof Error ? err.message : String(err)),
-        });
-      } catch {
-        // ignore
-      }
-      return safeToolError(internalName as any, requestId, "INTERNAL_ERROR", sanitizeErrorText(err instanceof Error ? err.message : String(err)));
-    }
-
-    if (guarded.kind === "blocked") {
-      const reason = (guarded.block.body as { error?: unknown } | undefined)?.error;
-      const reasonText = typeof reason === "string" ? reason : "image-generate request blocked by Family Safe Mode";
-      try {
-        publishInspectorCompletion({
-          source: "main-agent",
-          transport: "venice",
-          endpoint: "/image/generate",
-          method: "POST",
-          summaries: { durationMs: Date.now() - startedAt, model: requestedModel },
-          eventId,
-          status: 451,
-          error: sanitizeErrorText(reasonText),
-        });
-      } catch {
-        // ignore
-      }
-      return safeToolError(internalName as any, requestId, "CAPABILITY_DENIED", sanitizeErrorText(reasonText));
-    }
-    try {
-      publishInspectorCompletion({
-        source: "main-agent",
-        transport: "venice",
-        endpoint: "/image/generate",
-        method: "POST",
-        summaries: { durationMs: Date.now() - startedAt, model: requestedModel },
-        eventId,
-        status: guarded.response.ok ? guarded.response.status : 0,
-      });
-    } catch {
-      // ignore
-    }
-    const response = guarded.response;
-    if (!response.ok) {
-      return safeToolError(internalName as any, requestId, "INTERNAL_ERROR", sanitizeErrorText(`Image generate returned status ${response.status} ${response.statusText ?? ""}.`));
-    }
-
-    const responseBody = (response.body ?? {}) as { images?: unknown };
-    const rawImages = Array.isArray(responseBody.images) ? responseBody.images : [];
-    if (rawImages.length === 0) {
-      return safeToolError(internalName as any, requestId, "INTERNAL_ERROR", "Image generate response did not include any images.");
-    }
-    const first = rawImages[0] as unknown;
-    const b64 = typeof first === "string" ? first : (first && typeof first === "object" && typeof (first as { b64_json?: unknown }).b64_json === "string")
-      ? (first as { b64_json: string }).b64_json
-      : "";
-    if (b64.length === 0) {
-      return safeToolError(internalName as any, requestId, "INTERNAL_ERROR", "Image generate response was missing base64 image data.");
-    }
-    const mimeType = detectImageMimeTypeFromBase64(b64);
-    if (!mimeType) {
-      return safeToolError(internalName as any, requestId, "INTERNAL_ERROR", "Image generate produced an unsupported image format.");
-    }
-
-    const { persistGeneratedMedia } = await import("../../services/generatedMediaStore");
-    const buffer = Buffer.from(b64, "base64");
-    const persisted = await persistGeneratedMedia(buffer, mimeType);
-
-    await services.audit.record({
-      sessionId: ctx.rendererSessionId,
-      toolName: "media.generateImage",
-      outcome: "execution",
-      resourceIds: [persisted.id],
-    });
-
-    const createdAt = Date.now();
-    // Canonical fields consumed by `chat-agent-runner` to build a
-    // `metadata.generatedMedia: ChatMediaReference[]` attachment on the tool
-    // message. Keeping the executor output canonical means the chat-store
-    // Media Studio upsert path always sees the full ChatMediaReference shape
-    // it expects instead of a stub `{ mediaId, mimeType }` object.
-    return {
-      ok: true,
-      toolName: internalName as any,
-      requestId,
-      data: {
-        chatRef: {
-          id: persisted.id,
-          mediaId: persisted.id,
-          mediaType: "image",
-          operation: "generate",
-          displayUrl: persisted.url,
-          thumbnailUrl: persisted.url,
-          altText: prompt.slice(0, 200),
-          modelId: requestedModel,
-          createdAt,
-          mimeType: persisted.mimeType,
-        },
-      },
-    };
-  } catch (error) {
-    return safeToolError(internalName as any, requestId, "INTERNAL_ERROR", sanitizeErrorText(error instanceof Error ? error.message : String(error)));
-  }
-}

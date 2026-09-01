@@ -186,6 +186,7 @@ This is the canonical source-of-truth navigation map for all documentation in th
 
 - [../VENICE_FORGE_COMPLETE_AUDIT.md](../VENICE_FORGE_COMPLETE_AUDIT.md) — Historical exhaustive repository audit snapshot (2026-08-22); see `docs/ROADMAP.md` and `docs/summary_of_work.md` for current state.
 - [audits/Records/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md](audits/Records/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md) — Historical exhaustive repository audit verdict and remediation plan.
+- [audits/Records/semantic-media-classifier-decision-2026-09-01.md](audits/Records/semantic-media-classifier-decision-2026-09-01.md) — Decision record comparing local vs. provider semantic media classifiers for Family Safe Mode; selects local on-device classification for images, defers audio/video and provider-side alternatives.
 - [audits/Records/browser-reactivation-work-order.md](audits/Records/browser-reactivation-work-order.md) — Historical work order for the inactive research-browser feature.
 - [audits/Records/Function_calling_todo.md](audits/Records/Function_calling_todo.md) — Implementation/acceptance specification referenced by roadmap; not a checkbox ledger.
 - [audits/Records/repository-hygiene-audit.md](audits/Records/repository-hygiene-audit.md) — 2026-08-22 repository hygiene audit and reorganization plan.

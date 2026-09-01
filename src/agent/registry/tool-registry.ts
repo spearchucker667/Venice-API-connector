@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { Capability, CapabilityGrant } from "../contracts/capabilities";
 import { isGrantActive } from "../contracts/capabilities";
 import {
@@ -419,14 +417,14 @@ const DEFINITIONS: Array<{
   {
     internalName: "media.generateImage",
     description: "Generate an image based on a text prompt.", // i18n-allow: model-facing tool metadata, not application presentation
-    capability: "media:generate-image" as any,
+    capability: "media:generate-image",
     approval: "always",
     required: ["prompt"],
     properties: {
-      prompt: { type: "string", minLength: 1, maxLength: 2000 },
-      negativePrompt: { type: "string", maxLength: 2000 },
-      aspectRatio: { type: "string" },
-      resolution: { type: "string" },
+      prompt: { type: "string", minLength: 1, maxLength: 4000 },
+      negativePrompt: { type: "string", maxLength: 4000 },
+      aspectRatio: { type: "string", maxLength: 16 },
+      resolution: { type: "string", maxLength: 16 },
     },
   },
   // Phase 5.2 — media.generateVideo and media.generateAudio are intentionally
@@ -544,10 +542,8 @@ export function resolveAvailableTools(
   const allowedCapabilities = new Set(capabilitiesForPreset(preset));
 
   return allDefinitions
-    .filter((tool) => {
-      // Media tools are universally exposed when function calling is supported.
-      if (tool.internalName.startsWith("media.")) return true;
-      return tool.requiredCapabilities.every((capability) => allowedCapabilities.has(capability));
-    })
+    .filter((tool) =>
+      tool.requiredCapabilities.every((capability) => allowedCapabilities.has(capability)),
+    )
     .map((tool) => structuredClone(tool.schema));
 }

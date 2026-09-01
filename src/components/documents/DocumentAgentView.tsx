@@ -134,6 +134,9 @@ function DocumentAccessControl({
             <option value="workspace_with_approval">
               <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.manageSelectedWorkspace" />
             </option>
+            <option value="media_with_approval">
+              <Trans i18nKey="common:surface.componentsDocumentsDocumentagentview.option.mediaWithApproval" />
+            </option>
           </select>
         </div>
 

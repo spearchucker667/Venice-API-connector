@@ -533,6 +533,7 @@
         "readAttachmentsOnly": "仅读取附件",
         "limitedDocuments": "有限文档",
         "manageSelectedWorkspace": "管理选定的工作区",
+        "mediaWithApproval": "经批准生成图像",
         "markdownMd": "降价 (.md)",
         "textTxt": "文本 (.txt)",
         "jsonJson": "JSON (.json)",

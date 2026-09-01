@@ -4,7 +4,8 @@ export type ProposalType =
   | "document_export"
   | "workspace_changeset"
   | "workspace_move"
-  | "workspace_trash";
+  | "workspace_trash"
+  | "media_generate_image";
 
 export interface PendingApproval {
   id: string;

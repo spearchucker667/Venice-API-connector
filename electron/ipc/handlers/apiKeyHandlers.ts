@@ -37,6 +37,7 @@ import type { ApiConnectivityFailureKind, ApiConnectivityStatus, ProviderConnect
 import { registerPrivilegedIpcChannel } from "./common";
 import { PROVIDER_REGISTRY, requiresStructuredCredential, type ProviderId, type AzureOpenAiConfig, type AwsBedrockConfig, type GoogleVertexConfig } from "../../../src/types/provider";
 import { getProfileSessionId, setProfileSessionId } from "../../services/profileSession";
+import { getAgentServices, RUNTIME_SESSION_ID } from "../../agent/runtime/agent-services";
 import {
   disableProvider,
   getProviderSettings,
@@ -555,6 +556,20 @@ export function registerApiKeyHandlers(): void {
             verified: false,
             lockedOutSeconds: getProfilePasswordLockoutSeconds(validId),
           };
+        }
+      }
+      const previousProfileId = getProfileSessionId(event.sender);
+      if (previousProfileId !== validId) {
+        // Best-effort cleanup of attachment records tied to the previous
+        // profile on this renderer before binding the new profile.
+        try {
+          getAgentServices().attachmentRegistry.revokeRendererSession(
+            RUNTIME_SESSION_ID,
+            previousProfileId,
+            event.sender.id,
+          );
+        } catch {
+          // ignore
         }
       }
       setProfileSessionId(event.sender, validId);

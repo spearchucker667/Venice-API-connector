@@ -355,6 +355,12 @@ const veniceForge = {
     }> {
       return ipcRenderer.invoke("app:media:thumb", input);
     },
+    /** Future VF-CAPABILITY-PROVENANCE: `resolveMediaUrl({ objectId, scheme })`
+     *  will ask main to mint a short-lived capability token and return
+     *  `scheme://objectId?cap=<token>`. The renderer must use the returned URL
+     *  directly in `<img>` / `<video>` / `<audio>` elements instead of composing
+     *  venice-media URLs itself. */
+
     /** Character avatar cache: fetch/cache a Venice character photo and return a venice-character-cache:// URL for renderer img-src loading. */
     getCharacterImage(url: string): Promise<{
       ok: boolean; url?: string; contentType?: string; bytes?: number; error?: string;

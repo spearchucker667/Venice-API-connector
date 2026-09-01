@@ -533,6 +533,7 @@
         "readAttachmentsOnly": "添付ファイルの読み取りのみ",
         "limitedDocuments": "制限付きドキュメント",
         "manageSelectedWorkspace": "選択したワークスペースの管理",
+        "mediaWithApproval": "承認付きで画像を生成",
         "markdownMd": "マークダウン (.md)",
         "textTxt": "テキスト (.txt)",
         "jsonJson": "JSON (.json)",

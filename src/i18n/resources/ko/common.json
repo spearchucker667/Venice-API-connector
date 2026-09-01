@@ -533,6 +533,7 @@
         "readAttachmentsOnly": "첨부 파일만 읽기",
         "limitedDocuments": "제한된 문서",
         "manageSelectedWorkspace": "선택한 작업 공간 관리",
+        "mediaWithApproval": "승인을 통해 이미지 생성",
         "markdownMd": "마크다운(.md)",
         "textTxt": "텍스트(.txt)",
         "jsonJson": "JSON(.json)",

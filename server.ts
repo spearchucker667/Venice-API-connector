@@ -280,8 +280,12 @@ export function createServerApp() {
     }
     if (req.method === "POST") {
       const key = typeof req.body?.key === "string" ? req.body.key.trim() : "";
-      if (!key || key.length > 512) {
-        res.status(400).json({ error: "A valid API key is required." });
+      if (!key) {
+        res.status(400).json({ error: "An API key is required. Provide it as the \"key\" field in the JSON body." });
+        return;
+      }
+      if (key.length > 512) {
+        res.status(400).json({ error: "API key is too long (max 512 characters)." });
         return;
       }
       devSessionVeniceApiKey = createDevSessionKey(key);
@@ -312,8 +316,12 @@ export function createServerApp() {
     }
     if (req.method === "POST") {
       const key = typeof req.body?.key === "string" ? req.body.key.trim() : "";
-      if (!key || key.length > 512) {
-        res.status(400).json({ error: "A valid Jina API key is required." });
+      if (!key) {
+        res.status(400).json({ error: "A Jina API key is required. Provide it as the \"key\" field in the JSON body." });
+        return;
+      }
+      if (key.length > 512) {
+        res.status(400).json({ error: "Jina API key is too long (max 512 characters)." });
         return;
       }
       devSessionJinaApiKey = createDevSessionKey(key);
@@ -443,16 +451,14 @@ export function createServerApp() {
   const veniceRateLimiter = createRateLimiter("venice");
   const proxyRateLimiter = createRateLimiter("proxy");
 
-  app.use("/api/venice", veniceRateLimiter, (req, res, next) => {
-    if (!AppConfig.VENICE_API_KEY && !isDevSessionConfigured(devSessionVeniceApiKey) && AppConfig.NODE_ENV !== "test") {
-      return res.status(500).json({ error: "VENICE_API_KEY is not configured on the server." });
-    }
-    next();
-  });
-
   // Apply shared rate limiting to Jina and scrape proxies.
   app.use("/api/proxy-jina", proxyRateLimiter);
   app.use("/api/proxy-scrape", proxyRateLimiter);
+
+  // Rate-limit Venice requests before any validation so every request counts
+  // toward the limit (matches the original wiring where the rate limiter was
+  // attached to the first /api/venice middleware).
+  app.use("/api/venice", veniceRateLimiter);
 
   const MAX_PROXY_BODY_BYTES = AppConfig.MAX_PROXY_BODY_BYTES;
 
@@ -519,7 +525,20 @@ export function createServerApp() {
     next();
   });
 
-  // Venice API Proxy
+  // VF-PLAYTEST-001: The API-key-config gate previously ran *before* the
+  // method/endpoint allowlist validation, so a server with no key configured
+  // returned 500 "VENICE_API_KEY is not configured" for *every* malformed
+  // request — masking the real 403 (unknown endpoint) / 405 (wrong method)
+  // and misleading a first user into thinking the server itself was broken.
+  // It now runs *after* the allowlist so malformed requests get the correct
+  // status regardless of key state; only requests that would actually reach
+  // the upstream are gated on key presence.
+  app.use("/api/venice", (req, res, next) => {
+    if (!AppConfig.VENICE_API_KEY && !isDevSessionConfigured(devSessionVeniceApiKey) && AppConfig.NODE_ENV !== "test") {
+      return res.status(500).json({ error: "VENICE_API_KEY is not configured on the server." });
+    }
+    next();
+  });
   // We use express.raw() to leave req.body as a Buffer for the safety guard before proxying.
   app.use(
     "/api/venice",
@@ -600,6 +619,17 @@ export function createServerApp() {
       const isMedia = req.path.startsWith("/image/") || req.path.startsWith("/video/") || req.path.startsWith("/audio/");
       const isLocalFamilySafe = isLocalFamilySafeModeEnabled(req);
       
+      // VF-WEB-001: For FSM media routes, force `Accept-Encoding: identity` so
+      // Venice returns raw (uncompressed) binary. This is applied via the proxy
+      // `headers` option, which http-proxy-middleware/httpxy sets on the outbound
+      // ClientRequest at creation time — before headers are flushed. The previous
+      // implementation called `proxyReq.removeHeader("Accept-Encoding")` inside the
+      // `proxyReq` event, but httpxy flushes headers before that event fires, so the
+      // removal threw `ERR_HTTP_HEADERS_SENT` and crashed the entire server on the
+      // first FSM media request.
+      const fsmMediaHeaders: Record<string, string> =
+        isMedia && isLocalFamilySafe ? { "Accept-Encoding": "identity" } : {};
+
       const proxyConfig = {
         target: `https://${VENICE_API_HOST}${VENICE_API_BASE_PATH}`,
         changeOrigin: true,
@@ -608,17 +638,11 @@ export function createServerApp() {
         pathRewrite: {
           "^/api/venice": "", // remove base path
         },
+        headers: fsmMediaHeaders,
         on: {
           proxyReq: (proxyReq: VeniceProxyOutboundRequest, proxyReqReq: express.Request, _proxyReqRes: express.Response) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             applyVeniceProxyHeaders(proxyReq as any, proxyReqReq as any, getDevSessionKey(devSessionVeniceApiKey) || AppConfig.VENICE_API_KEY);
-            // VF-WEB-001: For FSM media routes, strip Accept-Encoding so Venice returns
-            // raw (uncompressed) binary.  This ensures our streaming byte counter sees
-            // the full decompressed payload size without needing a decompression step.
-            if (isMedia && isLocalFamilySafe) {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (proxyReq as any).removeHeader("Accept-Encoding");
-            }
           },
           proxyRes: (proxyRes: http.IncomingMessage, proxyResReq: express.Request, proxyResRes: express.Response) => {
             const retryAfter = proxyRes.headers["retry-after"];

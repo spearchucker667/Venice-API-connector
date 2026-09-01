@@ -22,11 +22,13 @@ import {
   isDocumentEditPlan,
   isDocumentExportPlan,
   isDocumentRestorePlan,
+  isGenerateImagePlan,
   isWorkspaceChangesetPlan,
   isWorkspaceMovePlan,
   isWorkspaceTrashPlan,
   type DocumentExportPlan,
 } from "../../agent/approvals/plan-factories";
+import { executeApprovedGenerateImagePlan } from "../../agent/runtime/approved-media-executor";
 
 const DOCUMENT_FORMATS = new Set<DocumentFormat>(["txt", "md", "json", "csv", "html", "docx", "pdf"]);
 
@@ -211,8 +213,15 @@ export function registerDocumentAgentHandlers(): void {
       const decided = await approvals.decide({ pendingApprovalId: stringField(value, "pendingApprovalId", 128), proposalHash: stringField(value, "proposalHash", 128), decision });
       if (decision === "reject") return { ok: true, rejected: true };
       const plan = decided.privateExecutionPlan;
-      if (!isDocumentEditPlan(plan) && !isDocumentRestorePlan(plan) && !isDocumentExportPlan(plan) && !isWorkspaceChangesetPlan(plan) && !isWorkspaceMovePlan(plan) && !isWorkspaceTrashPlan(plan)) throw new Error("Invalid stored execution plan.");
+      if (!isDocumentEditPlan(plan) && !isDocumentRestorePlan(plan) && !isDocumentExportPlan(plan) && !isWorkspaceChangesetPlan(plan) && !isWorkspaceMovePlan(plan) && !isWorkspaceTrashPlan(plan) && !isGenerateImagePlan(plan)) throw new Error("Invalid stored execution plan.");
       if (plan.profileId !== getProfileSessionId(event.sender)) throw new Error("APPROVAL_MISMATCH");
+
+      if (isGenerateImagePlan(plan)) {
+        const result = await executeApprovedGenerateImagePlan(plan);
+        if (!result.ok) return { ok: false, error: result.error };
+        await audit.record({ sessionId: rendererSession(event.sender.id), toolName: "media.generateImage", outcome: "execution", resourceIds: [result.chatRef.mediaId] });
+        return { ok: true, chatRef: result.chatRef, task: result.task };
+      }
 
       if (isDocumentEditPlan(plan) || isDocumentRestorePlan(plan)) {
         const revision = await approvals.withResourceLocks([plan.documentId], () => isDocumentEditPlan(plan)

@@ -533,6 +533,7 @@
         "readAttachmentsOnly": "Только чтение вложений",
         "limitedDocuments": "Ограниченные документы",
         "manageSelectedWorkspace": "Управление выбранным рабочим пространством",
+        "mediaWithApproval": "Генерация изображений с подтверждением",
         "markdownMd": "Уценка (.md)",
         "textTxt": "Текст (.txt)",
         "jsonJson": "JSON (.json)",

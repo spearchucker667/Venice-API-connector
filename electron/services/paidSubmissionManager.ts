@@ -99,8 +99,18 @@ export async function submitDurablePaidTask<TAccepted>(
   // is written.
   const release = await acquireFingerprintLock(fingerprintKey);
   try {
-    // 1. Reuse an active persisted equivalent submission (restart or recent call)
-    //    or detect a same-fingerprint/different-payload conflict.
+    // 1. Deduplicate concurrent equivalent calls in the current session first.
+    //    This ensures all concurrent callers receive the same promise and the
+    //    same completed result, rather than a stale active task that has not
+    //    finished yet.
+    const inFlight = inFlightPaidSubmissions.get(fullKey);
+    if (inFlight) {
+      return inFlight;
+    }
+
+    // 2. Reuse an active persisted equivalent submission (restart recovery or
+    //    a recent call that already left the in-flight window) or detect a
+    //    same-fingerprint/different-payload conflict.
     const existing = findActivePaidSubmission({
       profileId,
       providerId: provider,
@@ -115,12 +125,6 @@ export async function submitDurablePaidTask<TAccepted>(
         };
       }
       return { kind: "reused", task: existing };
-    }
-
-    // 2. Deduplicate concurrent equivalent calls.
-    const inFlight = inFlightPaidSubmissions.get(fullKey);
-    if (inFlight) {
-      return inFlight;
     }
 
     // 3. Persist durable intent before any billable provider work.

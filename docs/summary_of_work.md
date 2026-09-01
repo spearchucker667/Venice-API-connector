@@ -4,6 +4,22 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+- **2026-09-01 live-service playtest and fix (VF-PLAYTEST-001/002).** Drove the real web-proxy surface (`server.ts`, the non-Electron transport) with HTTP requests the way a first client would, including the careless versions. Two substantiated defects found and fixed. **(1) P1 server crash:** every Family Safe Mode media POST (`/image/generate`, `/video/`, `/audio/`) crashed the entire Express process with `ERR_HTTP_HEADERS_SENT` — the `proxyReq` event handler called `proxyReq.removeHeader("Accept-Encoding")`, but http-proxy-middleware v4/httpxy flushes outbound headers before that event fires, so the removal threw and the exception was uncaught. Fixed by moving the Accept-Encoding override into the proxy `headers` option (`Accept-Encoding: identity`, applied at request creation, before flush), preserving the VF-WEB-001 intent. The old tests never caught this because they mock `proxyReq` with a stub `removeHeader` that cannot throw. **(2) Misleading 500 on a keyless server:** the API-key-config gate ran *before* the method/endpoint allowlist, so a server with no key returned 500 "VENICE_API_KEY is not configured" for every malformed request, masking the real 403 (unknown endpoint) / 405 (wrong method) and pointing users at the wrong problem. The gate now runs after the allowlist; the rate limiter stays in front (standalone `app.use`) so all requests still count, and the key gate no longer double-attaches it. **(3) Terse 400:** the session-key endpoint's "A valid API key is required." now distinguishes missing (`Provide it as the "key" field in the JSON body.`) from too-long (max 512), for both the Venice and Jina variants. Verified against the live server: keyless 403/405 correct, media POST returns upstream 401 with the server alive afterwards (health 200, no crash in log). Added 3 regression tests in `server.test.ts` (keyless 403, keyless 405, media no-crash under FSM). Validation: `npx vitest run server.test.ts` 92/92 PASS; `npm run test:server` 63/63 PASS; `npm run test:contracts` 267/267 PASS; `npm run lint:eslint` PASS; `npm run typecheck` PASS; `npm run build` PASS; `npm run verify:contracts` PASS (104 checks). Not covered: real paid media generation (needs a funded API key), Electron IPC surface, hosted CI.
+
+- **2026-09-01 cross-tranche coordination closeout (VF-AUD-20260901 coordination).** The five parallel subagent tranches (P1 media approval boundary, P2 durable paid media, P2 attachment budgets, P2 release evidence, P2 capability tokens) left cross-cutting breakage that no single tranche owned. This session reconciled the whole worktree: fixed the `chat-stream-manager.test.ts` expectation so the renderer test matches the new preset-scoped tool visibility (media tools only under `media_with_approval`, document tools only under the documents presets — the old test asserted a universal media bypass the P1 tranche deliberately removed); restored the verifier tokens the AGENTS.md rewrite dropped (`**Version:**` for `verify:release-metadata`, `VERIFY-052` for `verify:release-packaging-hardening`, `VERIFY-058`/`VERIFY-050`/`VERIFY-051` annotations for their respective verifiers — the AGENTS.md is load-bearing for verifier checks, not just prose); and added the missing `mediaWithApproval` i18n key to all 11 non-English catalogs (ru, pt-BR, sv-SE, de, es, fr, ko, ja, ar, zh-CN, hi) that `verify:i18n` requires for the new preset option. Validation: `npm run lint:eslint` PASS; `npm run typecheck` PASS; `npm run test:electron` PASS (106 files / 1162 tests); `npm run test:unit` PASS; `npm run test:server` PASS (60/60); `npm run test:ingestion` PASS (65/65); `npm run test:ui` PASS (18/18); `npm run test:contracts` PASS (267/267); `npm run build` PASS; `npm run verify:release-packaging-hardening` PASS (104 checks); `npm run verify:release-metadata` PASS; `npm run verify:document-ingestion` PASS; `npm run verify:research-workspace` PASS; `npm run verify:i18n` PASS (12 locales); `npm run verify:i18n-hardcoded-regressions` PASS (0 regressions); `npm run verify:markdown-links` PASS; `npm run verify:safety-guard` PASS; `npm run verify:agent-docs` PASS; `npm run verify:storage-privacy` PASS; `npm run verify:rp-studio-polish` PASS; `npm run verify:workspace-contracts` PASS (222/222); `npm run verify:model-aware-recipes` PASS; `npm run verify:media-studio-power-tools` PASS; `npm run verify:status-diagnostics` PASS. Full-suite `npm test` exceeds the 10-minute foreground timeout on this host; the segmented `test:ci` matrix (server, electron, ingestion, unit, ui, contracts) was run instead and passes end to end.
+
+- **2026-09-01 P2 durable paid-media submission for `media.generateImage` (VF-MEDIA-DURABLE-PAID-2026-09-01).** Completed the integration of `paidSubmissionManager` into the approved `media.generateImage` execution path. Wired `executeApprovedGenerateImagePlan()` into `documentAgent:approvals:decide`, removed the dead `executeMediaTool()` / `executeStoredGenerateImagePlan()` direct-dispatch code from `agent-tool-executor.ts`, and cleaned up unused guard-pipeline/telemetry imports. Updated `document-agent-contracts.test.ts` so media tests use the `media_with_approval` preset and assert a `pendingApprovalId`. Replaced `agent-tool-executor.test.ts` with approval-path regression tests. Added `approved-media-executor.test.ts` covering intent-before-dispatch, concurrent deduplication, Family Safe Mode blocks, 4xx pre-dispatch failures, post-dispatch ambiguous failures, inspector telemetry, and canonical `ChatMediaReference` output. Fixed `submitDurablePaidTask()` to check the in-flight submission map before the persisted-active lookup, so concurrent identical callers receive the same promise instead of a stale active task. Validation: `npm run lint:eslint`, `npm run typecheck`, focused runtime suites, and `npm run test:electron` (106 files / 1161 tests) all pass.
+
+- **2026-09-01 P1 agent media tool contract/authorization/approval (VF-MEDIA-APPROVAL-2026-09-01).** Gated `media.generateImage` behind the canonical approval boundary. Added the `media_with_approval` preset and `media:generate-image` capability, removed the universal media bypass in `resolveAvailableTools`, fixed the tool schema to exclude an LLM-supplied `model` and enforce bounded string fields, and routed model resolution through the trusted `resolveGenerateImageModel()` helper backed by live `/models?type=image` metadata. `executeAgentTool()` now builds an immutable `GenerateImagePlan` (with payload hash, request fingerprint, and wire payload) and returns `{ pendingApprovalId }` without dispatching `/image/generate`. The approval decision handler executes the stored plan through `executeApprovedGenerateImagePlan()` and the durable paid-submission manager. Added focused regression tests covering the approval-plan path and an end-to-end test from `resolveAvailableTools` through schema validation to pending approval. P2 scopes (attachment memory accounting, release/Rules01 workflow, custom protocol capability tokens, semantic classifier decision record, durable paid media integration) remain deferred for other subagents.
+
+- **2026-09-01 P2 attachment registry hardening (VF-ATTACHMENT-BUDGETS-2026-09-01).** Hardened `electron/agent/attachments/attachment-registry.ts` with aggregate memory budgets (64 MiB total, 16 MiB per-profile, 8 MiB per-session, 10 000 records), TTL/age-based eviction (30 minute default), content-free metrics (`recordCount`, `aggregateBytes`, `profileCount`, `oldestRecordAgeMs`), and a renderer-scoped `revokeRendererSession()` lifecycle hook. Budgets are overridable for tests and are enforced before any allocation. Wired the registry to real lifecycle events: renderer teardown/crash in `electron/main.ts`, profile switch in `electron/ipc/handlers/apiKeyHandlers.ts`, and profile purge in `electron/ipc/handlers/systemHandlers.ts`. Added focused regression tests for budgets, TTL eviction, metrics, and `revokeRendererSession`.
+
+- **2026-09-01 P2 release evidence persistence + Rules01 sync + P3 roadmap (VF-RULES01-SYNC-2026-08-31 / VF-EXTERNAL-RELEASE-ACCEPTANCE-2026-08-31).** Replaced the ephemeral `docs/RELEASE/SIGNED_ARTIFACT_EVIDENCE.md` append in `.github/workflows/release.yml` with a persistent workflow-generated `release-evidence/` directory. Each platform build job now writes a per-platform signature evidence file via `scripts/write-signature-evidence.cjs`; the publish job aggregates artifacts, checksum sidecars, and signature evidence into `release-evidence/manifest.json`, `release-evidence/checksums.sha256`, `release-evidence/metadata.json`, and the three `release-evidence/signatures-*.json` files. The evidence directory is uploaded as a workflow artifact and attached to the draft release. No workflow commit to `main` is performed. Rewrote `scripts/enforce-github-rules.sh` as a proper bash script that preserves `bypass_actors` and supports `--dry-run`, and added regression tests verifying the required-checks list matches the CI/CodeQL workflows and that the script passes `bash -n`. Updated `docs/ROADMAP.md` to reflect that exact-SHA packaged smoke evidence is now green and that Rules01 sync is actionable via the helper script. Added focused regression tests for the new evidence scripts.
+
+- **2026-09-01 P2 custom protocol capability-token design (VF-CAPABILITY-PROVENANCE-2026-08-31).** Designed a short-lived capability-token model for provenance-less `venice-media://<opaque-id>?cap=<token>` requests. Added `createCustomProtocolCapabilityManager()`, `parseCustomProtocolCapabilityUrl()`, and related types to `electron/utils/customProtocolAccess.ts`. Tokens are 256-bit random values bound to `{ objectId, profileId, sessionId, issuedAt, expiresAt }`, held only in main-process memory, revoked by session/profile/all, and never persisted or logged. Updated `electron/main.ts`, `electron/preload.ts`, and `src/services/desktopBridge.ts` with integration notes and future IPC/bridge extension points. The existing `evaluateCustomProtocolAccess()` origin/referer defense-in-depth remains untouched, so current media-playback tests continue to pass. Added 8 focused regression tests for issuance, validation, expiry, revocation, metrics safety, and URL parsing.
+
+- **2026-09-01 semantic media classifier backend decision (VF-FSM-CLASSIFIER-2026-08-31).** Produced `docs/audits/Records/semantic-media-classifier-decision-2026-09-01.md` comparing local on-device vs. provider-side semantic classifiers for Family Safe Mode. Decision: adopt a local on-device image classifier when implementation begins; defer provider-side classification unless compliance or accuracy requirements override the privacy/cost/local-first advantages. Audio and video semantic classification remain explicitly deferred. Registered the record in `docs/DOCS_INDEX.md` under Audit Evidence. No ML dependencies or implementation code were added; the existing `ClassifierBackend` registration hook and `getClassifierCapabilities()` contract remain unchanged.
+
 - **2026-09-01 hosted macOS smoke follow-up.** Publication SHA `797c0e04` passed packaging, packaged Electron smoke, and all preceding CI gates, but `verify:dist --mac --arch arm64` found the checksum sidecar for electron-builder's temporary `builder-debug.yml` after staging cleanup. The cleanup allowlist now removes both `builder-debug.yml` and `builder-debug.yml.sha256`, with regression coverage; a follow-up publication is required before CI can be called fully green.
 
 - **2026-09-01 packaged-CI recovery on `main` starting at `d6a0296b`.** Reconciled the attached 2026-08-31 audit/handoff against the live tree and GitHub Actions run `33481772588`. CodeQL and every non-packaging CI job passed, but all three packaged-smoke jobs failed before launch because `electron-builder.config.cjs` used the invalid v26 shape `linux.desktop.StartupWMClass`; the Windows failure diagnostic then also failed because ordinary Node attempted to `require()` the uncompiled TypeScript file `tests/smoke/smoke-utils.ts`. Replaced the invalid desktop object with the supported `package.json.desktopName` + `linux.syncDesktopName` identity contract, centralized packaged-executable discovery in runtime-safe CommonJS, added a bounded/sanitized cross-platform diagnostic writer, made the Linux runner install the `rpm` build prerequisite explicitly, and corrected `.desktop` verification for electron-builder's quoted executable path. Focused tests (49/49), `npm run test:coverage:scripts` (245/245), `npm run typecheck`, the full `npm run test:ci` matrix, both dependency audits, `npm run build`, and `npm run verify:contracts` pass. A real Linux package run produced the expected `x86_64.AppImage` and `amd64.deb`; the generated `venice-forge.desktop` contains `StartupWMClass=venice-forge` and `Exec="/opt/Venice Forge/venice-forge" %U`. Full local RPM completion is blocked because this sandbox cannot install `rpmbuild`; hosted packaged-smoke acceptance remains required on the publication commit.
@@ -14,7 +30,89 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 - **Validation matrix (Unified Coordinator):** `npm run lint:eslint` PASS (0 warnings); `npm run typecheck` PASS (no errors in src, electron, or electron tests); `npm test` PASS; `npm run verify:safety-guard` PASS; `npm run verify:markdown-links` PASS; `npm run verify:contracts` PASS; `npm run build` PASS; `npm run ci` PASS. `npm run verify:i18n` PASS; `npm run verify:i18n-hardcoded-regressions` PASS; `npm run dist:mac:arm64` PASS; `RUN_ELECTRON_SMOKE=true npx vitest run tests/smoke/electron-smoke.test.ts --no-file-parallelism` PASS; `node scripts/clean-release-staging.cjs` PASS; `node scripts/verify-dist.cjs --mac --arch arm64` PASS.
 
+- **Validation matrix (attachment registry hardening):** Focused lint of changed files PASS (0 warnings); `npx vitest run electron/agent/attachments/attachment-registry.test.ts electron/ipc/handlers/documentAgentHandlers.attachments.test.ts` PASS (37/37); `npx vitest run electron/ipc/handlers/apiKeyHandlers.reserved.test.ts` PASS (5/5); `npx vitest run electron/main.test.ts` PASS (33/33). Full `npm run lint:eslint` and `npm run typecheck` are blocked by pre-existing baseline failures in `scripts/collect-release-evidence.test.ts`, `scripts/write-signature-evidence.test.ts`, `electron/agent/runtime/agent-tool-executor.ts`, and `src/agent/registry/tool-registry.ts` that were not introduced by this change.
+
 ## Session History
+
+### 2026-09-01 — Cross-tranche coordination closeout (VF-AUD-20260901 coordination).
+
+- **Scope:** Reconcile the five parallel subagent tranches (P1 media approval boundary, P2 durable paid media, P2 attachment budgets, P2 release evidence, P2 capability tokens) whose combined edits left cross-cutting breakage that no single tranche owned; restore the full verification matrix to green; complete the interrupted audit handoff (`kimi-export-session_-20260901-172643.md`, Turn 5 "resume" which never executed).
+- **Files changed:**
+  - `src/stores/chat-stream-manager.test.ts` — the old test asserted a universal `media_` tool injection for any function-calling model, which the P1 tranche deliberately removed (media tools are now preset-scoped). Split it into two tests: document tools (not media) under the default `limited_documents` preset, and media tools (not document) under `media_with_approval`. Added `useDocumentAgentStore` reset in `resetStores()`.
+  - `AGENTS.md` — restored verifier tokens the header rewrite dropped: `**Version:** 3.0.0-beta.3` (required by `verify:release-metadata`), `VERIFY-052` annotation (required by `verify:release-packaging-hardening`), `VERIFY-058` / `VERIFY-050` / `VERIFY-051` annotations (required by their respective verifiers). The AGENTS.md is load-bearing for verifier checks, not just prose.
+  - `src/i18n/resources/{ru,pt-BR,sv-SE,de,es,fr,ko,ja,ar,zh-CN,hi}/common.json` — added the missing `mediaWithApproval` key under `surface.componentsDocumentsDocumentagentview.option` that `verify:i18n` requires for the new preset option (11 non-English catalogs).
+  - `docs/summary_of_work.md` — this entry.
+- **Commands executed & results:**
+  - `npm run lint:eslint` — PASS (0 warnings)
+  - `npm run typecheck` — PASS (renderer, electron, electron test)
+  - `npm run test:electron` — PASS (106 files / 1162 tests)
+  - `npm run test:unit` — PASS (after the chat-stream-manager test fix)
+  - `npm run test:server` — PASS (60/60); `npm run test:ingestion` — PASS (65/65); `npm run test:ui` — PASS (18/18); `npm run test:contracts` — PASS (267/267)
+  - `npm run build` — PASS
+  - `npm run verify:release-packaging-hardening` — PASS (104 checks); `npm run verify:release-metadata` — PASS; `npm run verify:document-ingestion` — PASS; `npm run verify:research-workspace` — PASS; `npm run verify:agent-docs` PASS; `npm run verify:storage-privacy` PASS; `npm run verify:rp-studio-polish` PASS; `npm run verify:workspace-contracts` PASS (222/222); `npm run verify:model-aware-recipes` PASS; `npm run verify:media-studio-power-tools` PASS; `npm run verify:status-diagnostics` PASS
+  - `npm run verify:i18n` — PASS (12 locales) after adding the missing `mediaWithApproval` key to the 11 non-English catalogs
+  - `npm run verify:i18n-hardcoded-regressions` — PASS (0 regressions)
+  - `npm run verify:markdown-links` PASS (208 files); `npm run verify:safety-guard` PASS
+  - Full-suite `npm test` exceeds the 10-minute foreground timeout on this host; the segmented `test:ci` matrix (server 60/60, electron 1162/1162, ingestion 65/65, unit, ui 18/18, contracts 267/267) passes end to end.
+- **Remaining risks:** hosted CI/CodeQL acceptance not run (no publication authorized); full `npm test` exceeds the 10-minute foreground timeout on this host (segmented `test:ci` matrix passes instead); manual QA of the media approval UI not performed.
+
+### 2026-09-01 — P2 durable paid-media submission for `media.generateImage`.
+
+- **Scope:** Complete the P2 integration of `paidSubmissionManager` into the approved `media.generateImage` execution path, remove the dead direct-dispatch code, and add focused regression tests for the approved executor.
+- **Files changed:**
+  - `electron/ipc/handlers/documentAgentHandlers.ts` — wired `executeApprovedGenerateImagePlan()` into `documentAgent:approvals:decide`; added `isGenerateImagePlan` to the plan-type guard and a branch that executes the plan, records audit, and returns `{ chatRef, task }`.
+  - `electron/agent/runtime/agent-tool-executor.ts` — removed dead `executeMediaTool()` and `executeStoredGenerateImagePlan()`, removed unused `performGuardedVeniceRequest`, `publishInspectorRequest`, `publishInspectorCompletion`, `getCurrentConfig`, and `getTextToImageModelCapabilities` imports, and removed the now-unused `ENABLE_RESOLUTION_RE` and `detectImageMimeTypeFromBase64` helpers.
+  - `electron/services/paidSubmissionManager.ts` — reordered `submitDurablePaidTask()` to check the in-flight submission map before the persisted-active lookup, ensuring concurrent identical callers receive the same promise.
+  - `electron/agent/runtime/document-agent-contracts.test.ts` — added `media_with_approval` preset handling, `buildGenerateImagePlan`/ `isGenerateImagePlan` coverage, and media.generateImage approval-path tests asserting `pendingApprovalId` and capability denial.
+  - `electron/agent/runtime/agent-tool-executor.test.ts` — replaced the obsolete direct-dispatch regression tests with approval-path tests for capability gating, validation, canonical plan construction, trusted model resolution, and audit recording.
+  - `electron/agent/runtime/approved-media-executor.test.ts` (new) — regression tests for intent-before-dispatch, concurrent deduplication, Family Safe Mode blocks, 4xx pre-dispatch failures, post-dispatch ambiguous failures, inspector telemetry, and canonical `ChatMediaReference` output.
+  - `docs/summary_of_work.md` — updated Latest Session Summary and Session History.
+- **Tests added/updated:** 8 tests in `approved-media-executor.test.ts`, 9 tests in `agent-tool-executor.test.ts`, and 2 additional tests in `document-agent-contracts.test.ts`.
+- **Commands executed:**
+  - `npm run lint:eslint` — PASS (0 warnings).
+  - `npm run typecheck` — PASS (renderer, electron, electron test).
+  - `npx vitest run electron/agent/runtime/document-agent-contracts.test.ts electron/agent/runtime/agent-tool-executor.test.ts electron/agent/runtime/approved-media-executor.test.ts electron/agent/runtime/image-model-resolver.test.ts electron/services/paidSubmissionManager.test.ts` — PASS (44 tests).
+  - `npm run test:electron` — PASS (106 files / 1161 tests).
+- **Remaining risks/deferred work:** The approved executor returns `ok: false` with the active task when `submitDurablePaidTask` reports a reused active task that has not yet completed (e.g., cross-session restart recovery). Callers must poll the returned background task; an in-executor wait loop is a future UX refinement.
+
+### 2026-09-01 — P1 agent media tool contract/authorization/approval.
+
+- **Scope:** Close the P1 agent media tool authorization gap by gating `media.generateImage` behind the canonical approval boundary, removing the LLM's ability to select the image model, and ensuring no provider dispatch happens before user approval.
+- **Files changed:**
+  - `src/agent/contracts/capabilities.ts` — added `media_with_approval` preset with the `media:generate-image` capability.
+  - `src/agent/contracts/proposals.ts` — added `"media_generate_image"` to `ProposalType`.
+  - `src/agent/registry/tool-registry.ts` — fixed `media.generateImage` schema (removed `model` from properties, kept `required: ["prompt"]`, added `maxLength` bounds), removed the universal media exposure in `resolveAvailableTools` so media tools are capability-gated like everything else, and removed an unused `eslint-disable` directive.
+  - `electron/agent/runtime/agent-permission-state.ts` — updated `VALID_PRESETS` to accept `media_with_approval`.
+  - `electron/agent/runtime/image-model-resolver.ts` (new) — trusted runtime resolver for the effective image generation model using profile preference, live `/models?type=image` catalog, and static capability registry fallback; never reads the model from LLM tool arguments.
+  - `electron/agent/runtime/agent-tool-executor.ts` — `executeAgentTool()` now validates `media.generateImage` args, resolves the model, builds an immutable `GenerateImagePlan`, prepares an approval via `services.approvals.prepare`, and returns `{ pendingApprovalId }` without dispatching. Added `buildGenerateImageWirePayload()`, `executeStoredGenerateImagePlan()`, and a deprecated `executeMediaTool()` wrapper that delegates to the stored-plan executor for backward-compatible tests.
+  - `electron/agent/runtime/approved-media-executor.ts` (new) — approved-plan execution path that dispatches the stored payload through `submitDurablePaidTask`, persists the returned image, updates the background task to completed, and handles intent-before-dispatch and ambiguous failures conservatively.
+  - `electron/ipc/handlers/documentAgentHandlers.ts` — wired `executeApprovedGenerateImagePlan()` into `documentAgent:approvals:decide`; added `isGenerateImagePlan` to the plan-type guard and a branch that executes the plan and records audit.
+  - `src/components/documents/DocumentAgentView.tsx` — added the `media_with_approval` UI option.
+  - `src/i18n/resources/en-US/common.json` — added the `mediaWithApproval` translation key.
+  - `electron/agent/runtime/agent-tool-executor.test.ts` — mocked `image-model-resolver`, removed the obsolete "rejects non-string model id" test, and added tests for the `executeAgentTool` approval-plan path and the end-to-end `resolveAvailableTools -> schema -> approval plan` regression.
+  - `electron/agent/runtime/document-agent-contracts.test.ts` — fixed a pre-existing type narrowing issue on `result.data.pendingApprovalId`.
+  - `electron/agent/runtime/approved-media-executor.test.ts` — added explicit types to inspector telemetry mocks to satisfy strict TypeScript.
+- **Tests added/updated:**
+  - `electron/agent/runtime/agent-tool-executor.test.ts` (approval plan path + end-to-end regression).
+  - `electron/agent/runtime/approved-media-executor.test.ts` (8 tests for the approved execution path, existing).
+  - `electron/agent/runtime/document-agent-contracts.test.ts` (media.generateImage approval path tests, existing).
+- **Commands executed:**
+  - `npm run lint:eslint` — PASS (0 warnings).
+  - `npm run typecheck` — PASS (renderer, electron, electron test).
+  - `npx vitest run electron/agent/runtime/agent-tool-executor.test.ts electron/agent/runtime/document-agent-contracts.test.ts electron/agent/runtime/approved-media-executor.test.ts --no-file-parallelism` — PASS (3 files / 33 tests).
+- **Blockers / deferred work:**
+  - P2 scopes explicitly outside this session: attachment memory accounting, release/Rules01 workflow, custom protocol capability tokens, semantic classifier decision record, and durable paid media integration beyond the P1 `media.generateImage` approval boundary.
+  - Full `npm test` / `npm run ci` / packaged smoke not executed in this session; focused regression tests pass.
+
+### 2026-09-01 — P2 attachment registry hardening.
+
+- **Scope:** Add aggregate memory accounting, TTL eviction, content-free metrics, and lifecycle wiring to the main-process `AttachmentRegistry`; keep the existing single-attachment 1 MiB limit and renderer-safe public records intact.
+- **Files changed:** `electron/agent/attachments/attachment-registry.ts`, `electron/agent/attachments/attachment-registry.test.ts`, `electron/ipc/handlers/apiKeyHandlers.ts`, `electron/ipc/handlers/systemHandlers.ts`, `electron/main.ts`, `docs/summary_of_work.md`.
+- **Implementation notes:** Introduced `AttachmentRegistryBudgets` so tests can use small budgets; production defaults remain 64 MiB total / 16 MiB per-profile / 8 MiB per-session / 10 000 records / 30 minute TTL. `register()` evicts expired records and then rejects before allocation when any budget would be exceeded. `getMetrics()` is content-free and evicts stale records before returning counts. `revokeRendererSession()` drops every record whose session id begins with `{runtimeSessionId}:renderer_{senderId}`, enabling cleanup without knowing each agent-session suffix.
+- **Lifecycle wiring:** `electron/main.ts` calls `cleanupRendererAttachments()` on `render-process-gone` and `destroyed` for every `WebContents`; `electron/ipc/handlers/apiKeyHandlers.ts` revokes the previous profile's renderer sessions on `profileSession:activate`; `electron/ipc/handlers/systemHandlers.ts` revokes all attachments for a profile after `profile:purge`.
+- **Tests added/updated:** Budget enforcement (total, per-profile, per-session, record-count), TTL eviction, metrics, and `revokeRendererSession` in `electron/agent/attachments/attachment-registry.test.ts`. Existing attachment-handler, main-process, and API-key reserved-credential tests still pass.
+- **Commands executed:** `npx vitest run electron/agent/attachments/attachment-registry.test.ts electron/ipc/handlers/documentAgentHandlers.attachments.test.ts`; `npx vitest run electron/ipc/handlers/apiKeyHandlers.reserved.test.ts`; `npx vitest run electron/main.test.ts`; `npx eslint <changed-files> --max-warnings=0`; `npm run lint:eslint`; `npm run typecheck`.
+- **Blockers:** Full `npm run lint:eslint` and `npm run typecheck` fail on pre-existing baseline issues unrelated to this change (unused imports/eslint-disable directives in `scripts/collect-release-evidence.test.ts`, `scripts/write-signature-evidence.test.ts`, `electron/agent/runtime/agent-tool-executor.ts`, and `src/agent/registry/tool-registry.ts`).
 
 ### 2026-09-01 — Recover cross-platform package jobs after the 2026-08-31 audit tranche.
 
@@ -24,6 +122,62 @@ This is the active handoff and validation ledger. The canonical current-work led
 - **Tests added/updated:** `scripts/electron-builder-config.test.ts`, `scripts/capture-smoke-diagnostics.test.ts`, `scripts/verify-dist.test.ts`, `scripts/verify-ci-contract.test.ts`, and `tests/smoke/packaged-executable-discovery.test.ts` now cover schema validity, synchronized Linux identity, diagnostic path confinement/sanitization, real desktop Exec syntax, portable collector wiring, required RPM tooling, and exact Windows unpacked-app discovery.
 - **Validation:** focused Vitest run PASS (5 files / 49 tests); `npm run test:coverage:scripts` PASS (30 files / 245 tests; all thresholds met); `npm run verify:ci-contract` PASS; `npm run typecheck` PASS; `npm run test:ci` PASS; both dependency audits PASS (0 vulnerabilities); `npm run build` PASS; `npm run verify:contracts` PASS (including all 104 release-packaging-hardening checks). `npm run dist:linux` passed renderer/server/Electron builds, schema validation, native dependency rebuild, Linux unpacked app, AppImage, and Debian package generation. The Debian package's generated desktop entry was extracted and verified. RPM creation stopped only because `rpmbuild` is unavailable locally and sandbox restrictions prevent installing `rpm`; `.github/workflows/ci.yml` now installs it. Local Node is v24.19.0 rather than the supported Node 22.15.x, so hosted Node 22 validation remains authoritative.
 - **Not yet claimed:** Windows/macOS packaging, Linux RPM completion, headed packaged smoke, live Rules01 mutation, signed/paid/two-device/headed release acceptance, and native-language review remain pending their proper environments/evidence.
+
+### 2026-09-01 — Semantic media classifier backend decision record.
+
+- **Scope:** Resolve the deferred backend decision for `VF-FSM-CLASSIFIER-2026-08-31` by documenting a structured comparison of local on-device vs. provider-side semantic classifiers and selecting a canonical path.
+- **Files changed:**
+  - `docs/audits/Records/semantic-media-classifier-decision-2026-09-01.md` (new) — decision record covering context, candidate comparison, architectural constraints, recommendation, gating conditions, and deferred implementation notes.
+  - `docs/DOCS_INDEX.md` — registered the new decision record under Audit Evidence.
+  - `docs/summary_of_work.md` — this entry.
+- **Decision:** Adopt a local on-device semantic classifier for images when implementation begins. Provider-side classification is reserved for future re-evaluation only if legal/compliance requirements or a first-party Venice safe-mode endpoint make it necessary. Audio and video semantic classification remain out of scope; the capability descriptor continues to report `"unavailable"` for those modalities.
+- **Validation:** `npm run lint:eslint` PASS; `npm run typecheck` PASS; `npm run verify:markdown-links` PASS. No code, tests, or dependencies were changed.
+- **Notes:** No secrets, prompts, generated media, signed URLs, or private machine paths introduced. The decision record explicitly defers implementation; no ML runtime, model weights, or provider API integrations were added.
+
+### 2026-09-01 — P2 custom protocol capability-token design (VF-CAPABILITY-PROVENANCE-2026-08-31).
+
+- **Scope:** Produce a concrete capability-token design for provenance-less custom-protocol media requests and add minimal, safe scaffolding without changing the current protocol behavior or breaking media-playback tests.
+- **Files changed:**
+  - `electron/utils/customProtocolAccess.ts` — added capability-token design documentation, `CustomProtocolCapabilitySpec`, `CustomProtocolCapabilityManager`, `CustomProtocolCapabilityMetrics`, `createCustomProtocolCapabilityManager()`, `parseCustomProtocolCapabilityUrl()`, `DEFAULT_CAPABILITY_TOKEN_TTL_MS`, and `CAPABILITY_TOKEN_BYTES`. Tokens are random 256-bit base64url values scoped to object/profile/session with configurable TTL (default 5 minutes, max 24 hours), stored only in a main-process Map, and revoked by session, profile, or all. Object ids are constrained to the generated-media sha256 shape. Token values are never logged, persisted, or returned in metrics.
+  - `electron/main.ts` — added future-integration comments near the `GENERATED_MEDIA_SCHEME` import and `protocol.handle` registration describing how the capability manager will be instantiated and how token verification will be wired before the existing origin/referer defense-in-depth.
+  - `electron/preload.ts` — added a future `resolveMediaUrl({ objectId, scheme })` IPC note in the `files` bridge.
+  - `src/services/desktopBridge.ts` — added a future `desktopMedia.resolveUrl()` bridge note.
+  - `electron/utils/customProtocolAccess.test.ts` — added 8 regression tests covering token issuance/verification, invalid inputs, expiry, session/profile/all revocation, safe metrics, and capability URL parsing.
+  - `docs/summary_of_work.md` — this entry.
+- **Validation:**
+  - `npx vitest run electron/utils/customProtocolAccess.test.ts` — 18/18 PASS (10 pre-existing + 8 new).
+  - `npx vitest run electron/services/generatedMediaStore.test.ts` — 13/13 PASS (no behavior change).
+  - Focused typecheck of `tsconfig.electron.json` and `tsconfig.electron.test.json` shows no errors in the changed files.
+- **Notes:** No secrets, raw media bytes, signed URLs, token values, or private paths introduced. The design preserves the existing origin/referer defense-in-depth; full protocol wiring remains intentionally deferred until a coordinated implementation can integrate the manager with `createGeneratedMediaResponse`, the preload IPC bridge, and renderer media consumers.
+
+### 2026-09-01 — P2 release evidence persistence + Rules01 sync + P3 roadmap.
+
+- **Scope:** Make signature/notarization evidence a workflow artifact, update the Rules01 sync helper, and reflect exact-SHA smoke status in the canonical roadmap.
+- **Files changed:**
+  - `.github/workflows/release.yml`:
+    - Removed the per-platform "Record signature/notarization evidence" step that appended a row to `docs/RELEASE/SIGNED_ARTIFACT_EVIDENCE.md`.
+    - Added per-platform "Write * signature evidence" steps (macOS, Windows, Linux) that call `scripts/write-signature-evidence.cjs` to produce `release-evidence/signatures-*.json`.
+    - Updated each platform artifact upload to include both `release/*` and `release-evidence/*`.
+    - Changed the publish job artifact downloads from `release/` to `./` so the merged `release/` and `release-evidence/` directories land at the repository root.
+    - Added a "Collect release evidence" step in the publish job that runs `scripts/collect-release-evidence.cjs` after `verify-dist --all --release-artifacts-only` succeeds.
+    - Added an "Upload release evidence" step that uploads `release-evidence/*` as a workflow artifact.
+    - Updated the draft-release attachment to include both `release/*` and `release-evidence/*`.
+  - `scripts/write-signature-evidence.cjs` (new) + `scripts/write-signature-evidence.test.ts` (new): helper that writes safe, deterministic per-platform signature evidence JSON with `--platform`, `--tag`, and optional `--unsigned` flags.
+  - `scripts/collect-release-evidence.cjs` (new) + `scripts/collect-release-evidence.test.ts` (new): aggregates downloaded artifacts, checksum sidecars, and per-platform signature evidence into `release-evidence/manifest.json`, `release-evidence/checksums.sha256`, `release-evidence/metadata.json`, and the three `release-evidence/signatures-*.json` files. Rejects missing or malformed sidecars.
+  - `scripts/enforce-github-rules.sh`: rewrote as a proper bash script using `gh api` and `jq`; preserves `bypass_actors`; supports `--dry-run`; lists the exact required checks matching `.github/workflows/ci.yml` and CodeQL.
+  - `scripts/enforce-github-rules.test.ts` (new): regression tests verifying bash syntax, canonical Rules01 ID, required-checks list against CI/CodeQL workflows, and payload preservation of `bypass_actors`.
+  - `docs/ROADMAP.md`: updated `VF-RULES01-SYNC-2026-08-31` and `VF-EXTERNAL-RELEASE-ACCEPTANCE-2026-08-31` to state that exact-SHA packaged smoke evidence is green and Rules01 sync is actionable.
+- **Tests added/updated:** `scripts/write-signature-evidence.test.ts` (10 tests), `scripts/collect-release-evidence.test.ts` (10 tests), `scripts/enforce-github-rules.test.ts` (4 tests).
+- **Validation:**
+  - `npx vitest run scripts/write-signature-evidence.test.ts scripts/collect-release-evidence.test.ts scripts/enforce-github-rules.test.ts scripts/verify-release-packaging-hardening.test.ts --no-file-parallelism` — PASS (4 files / 35 tests).
+  - `node scripts/verify-release-packaging-hardening.cjs` — PASS (104 checks).
+  - `node scripts/verify-roadmap-current.cjs` — PASS.
+  - `node scripts/verify-ci-contract.cjs` — PASS.
+  - `bash -n scripts/enforce-github-rules.sh` — syntax OK.
+  - `npx eslint scripts/collect-release-evidence.cjs scripts/collect-release-evidence.test.ts scripts/write-signature-evidence.cjs scripts/write-signature-evidence.test.ts scripts/enforce-github-rules.test.ts --max-warnings=0` — PASS (0 warnings).
+  - `npx tsc --noEmit` — PASS (src, server.ts, scripts).
+  - Full `npm run lint:eslint` / `npm run typecheck` — blocked by pre-existing baseline failures in concurrent scopes (see Validation Matrix).
+- **Notes:** No secrets, raw artifacts, signed URLs, or private paths introduced. Evidence files contain only version, commit, artifact names, byte counts, sha256 hashes, and boolean signature status. The workflow does not commit to `main`.
 
 ### 2026-08-31 — VF-AUD-20260831 audit remediation tranche (P2-004, P2-009, P2-011, P3-006, P3-012 + deferred design notes).
 
@@ -513,6 +667,7 @@ Investigation only, then four targeted fixes based on the user-reported defects
 
 ## Session History
 
+
 ### 2026-08-25 — Propagate typed safety layer/category/reasonCode through prompt enhancer and Character Creator UI.
 
 - Created `src/shared/safety/formatSafetyDecision.ts`:
@@ -570,10 +725,49 @@ Investigation only, then four targeted fixes based on the user-reported defects
 * See `docs/ROADMAP.md` for the canonical list of open tasks.
 * `PROV-001` and `PROV-005` are locally closed. Live credentialed provider acceptance and headed accessibility acceptance remain under `VF-VERIFY-005`.
 * `VF-DOCUMENT-AGENT-001` is regression-repaired in this session. The shared workspace contract, lazy directory tree, `ToolExecutionContext` authority, preset semantics, attachment registry/promotion, approval boundary, and supported tool matrix are documented and locally implemented. Closure awaits the headed manual acceptance suite and packaged cross-platform smoke.
-* `P1-004` onboarding/restored-profile coverage is implemented locally. Cross-platform execution remains pending a hosted packaged-smoke run after the 2026-09-01 package-schema repair; live Rules01 synchronization remains a separate administrator action and must wait for green smoke jobs.
+* `P1-004` onboarding/restored-profile coverage is implemented locally. Exact-SHA packaged smoke evidence is green after the 2026-09-01 repair; live Rules01 synchronization is now actionable via `scripts/enforce-github-rules.sh` and awaits administrator application.
+* `VF-RULES01-SYNC-2026-08-31` is actionable (local helper + CI agreement verified); the live GitHub API mutation must be applied by a repository administrator.
+* `VF-EXTERNAL-RELEASE-ACCEPTANCE-2026-08-31` remains BETA/INCOMPLETE; signed/paid/two-device/headed release evidence still must be produced on a real publication tag.
 * `CSP-001` is closed by the Meteocon remediation recorded above; the canonical roadmap no longer lists it as unfinished work.
+* `VF-MEDIA-APPROVAL-2026-09-01` (P1 agent media tool contract/authorization/approval) is locally implemented for `media.generateImage`: capability-gated tool visibility, trusted runtime model resolution, immutable approval plans, and approved-plan execution through the durable paid-submission manager. Broader media tool surface (video/audio), custom protocol capability-token wiring, semantic classifier implementation, and release-packaging evidence remain deferred per `docs/ROADMAP.md`.
 
 ## Validation Matrix
+
+### 2026-09-01 — Cross-tranche coordination closeout (VF-AUD-20260901 coordination)
+
+- `npm run lint:eslint` — PASS (0 warnings).
+- `npm run typecheck` — PASS (`tsc --noEmit`, `tsc --noEmit --project tsconfig.electron.json`, `tsc --noEmit --project tsconfig.electron.test.json`).
+- `npm run test:electron` — PASS (106 files / 1162 tests).
+- `npm run test:unit` — PASS (33 files / 269 tests, after the chat-stream-manager test fix).
+- `npm run test:server` — PASS (60/60); `npm run test:ingestion` — PASS (65/65); `npm run test:ui` — PASS (18/18); `npm run test:contracts` — PASS (267/267).
+- `npm run build` — PASS.
+- `npm run verify:release-packaging-hardening` — PASS (104 checks); `npm run verify:release-metadata` — PASS; `npm run verify:document-ingestion` — PASS; `npm run verify:research-workspace` — PASS; `npm run verify:agent-docs` — PASS; `npm run verify:storage-privacy` — PASS; `npm run verify:rp-studio-polish` — PASS; `npm run verify:workspace-contracts` — PASS (222/222); `npm run verify:model-aware-recipes` — PASS; `npm run verify:media-studio-power-tools` — PASS; `npm run verify:status-diagnostics` — PASS.
+- `npm run verify:i18n` — PASS (12 locales) after adding the missing `mediaWithApproval` key to the 11 non-English catalogs.
+- `npm run verify:i18n-hardcoded-regressions` — PASS (0 regressions).
+- `npm run verify:markdown-links` — PASS (208 files); `npm run verify:safety-guard` — PASS.
+- Full-suite `npm test` — NOT EXECUTED (exceeds the 10-minute foreground timeout on this host); the segmented `test:ci` matrix was run instead and passes end to end.
+- Hosted CI / CodeQL — NOT CHECKED (no publication authorized).
+
+### 2026-09-01 — P1 agent media tool contract/authorization/approval
+
+- `npm run lint:eslint` — PASS (0 warnings).
+- `npm run typecheck` — PASS (`tsc --noEmit`, `tsc --noEmit --project tsconfig.electron.json`, `tsc --noEmit --project tsconfig.electron.test.json`).
+- `npx vitest run electron/agent/runtime/agent-tool-executor.test.ts electron/agent/runtime/document-agent-contracts.test.ts electron/agent/runtime/approved-media-executor.test.ts --no-file-parallelism` — PASS (3 files / 33 tests).
+- Full `npm test` / `npm run ci` / packaged smoke — NOT EXECUTED in this session; focused regression tests pass.
+
+### 2026-09-01 — P2 release evidence persistence + Rules01 sync
+
+- `npx vitest run scripts/write-signature-evidence.test.ts scripts/collect-release-evidence.test.ts scripts/enforce-github-rules.test.ts scripts/verify-release-packaging-hardening.test.ts --no-file-parallelism` — PASS (4 files / 35 tests)
+- `node scripts/verify-release-packaging-hardening.cjs` — PASS (104 checks)
+- `node scripts/verify-roadmap-current.cjs` — PASS
+- `node scripts/verify-ci-contract.cjs` — PASS
+- `bash -n scripts/enforce-github-rules.sh` — syntax OK
+- `npx eslint scripts/collect-release-evidence.cjs scripts/collect-release-evidence.test.ts scripts/write-signature-evidence.cjs scripts/write-signature-evidence.test.ts scripts/enforce-github-rules.test.ts --max-warnings=0` — PASS (0 warnings)
+- `npx tsc --noEmit` — PASS (src, server.ts, scripts)
+- `.github/workflows/release.yml` YAML syntax — valid
+- Full `npm run lint:eslint` — FAIL (0 errors in scope; 2 pre-existing unused eslint-disable warnings in `electron/agent/runtime/agent-tool-executor.ts` and `src/agent/registry/tool-registry.ts` from concurrent scopes)
+- Full `npm run typecheck` — FAIL (0 errors in scope; 1 pre-existing error in `electron/agent/runtime/document-agent-contracts.test.ts` from a concurrent scope)
+- Full `npm test` / fresh packaging / hosted CI re-run — NOT EXECUTED in this session; changes are limited to workflow, script, and documentation files.
 
 ### 2026-08-31 — Electron test typecheck subsystem
 

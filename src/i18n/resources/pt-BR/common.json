@@ -498,6 +498,7 @@
         "readAttachmentsOnly": "Somente leitura de anexos",
         "limitedDocuments": "Documentos limitados",
         "manageSelectedWorkspace": "Gerenciar espaço de trabalho selecionado",
+        "mediaWithApproval": "Gerar imagens com aprovação",
         "markdownMd": "Remarcação (.md)",
         "textTxt": "Texto (.txt)",
         "jsonJson": "JSON (.json)",

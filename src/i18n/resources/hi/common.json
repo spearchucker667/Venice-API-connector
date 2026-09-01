@@ -533,6 +533,7 @@
         "readAttachmentsOnly": "केवल अटैचमेंट पढ़ें",
         "limitedDocuments": "सीमित दस्तावेज़",
         "manageSelectedWorkspace": "चयनित कार्यस्थान प्रबंधित करें",
+        "mediaWithApproval": "अनुमोदन के साथ छवियाँ बनाएं",
         "markdownMd": "मार्कडाउन (.md)",
         "textTxt": "टेक्स्ट (.txt)",
         "jsonJson": "JSON (.json)।",

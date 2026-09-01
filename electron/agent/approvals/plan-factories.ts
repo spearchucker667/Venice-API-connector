@@ -66,13 +66,28 @@ export interface DocumentExportPlan {
   suggestedFileName: string;
 }
 
+export interface GenerateImagePlan {
+  kind: "generate_image";
+  profileId: string;
+  toolCallId: string;
+  prompt: string;
+  modelId: string;
+  negativePrompt?: string;
+  aspectRatio?: string;
+  resolution?: string;
+  payloadHash: string;
+  requestFingerprint: string;
+  wirePayload: Record<string, unknown>;
+}
+
 export type ExecutionPlan =
   | DocumentEditPlan
   | DocumentRestorePlan
   | DocumentExportPlan
   | WorkspaceChangesetPlan
   | WorkspaceMovePlan
-  | WorkspaceTrashPlan;
+  | WorkspaceTrashPlan
+  | GenerateImagePlan;
 
 export function buildDocumentEditPlan(input: {
   profileId: string;
@@ -122,6 +137,33 @@ export function buildDocumentExportPlan(input: {
     revisionId: input.revisionId,
     format: input.format,
     suggestedFileName: input.suggestedFileName,
+  };
+}
+
+export function buildGenerateImagePlan(input: {
+  profileId: string;
+  toolCallId: string;
+  prompt: string;
+  modelId: string;
+  negativePrompt?: string;
+  aspectRatio?: string;
+  resolution?: string;
+  payloadHash: string;
+  requestFingerprint: string;
+  wirePayload: Record<string, unknown>;
+}): GenerateImagePlan {
+  return {
+    kind: "generate_image",
+    profileId: input.profileId,
+    toolCallId: input.toolCallId,
+    prompt: input.prompt,
+    modelId: input.modelId,
+    negativePrompt: input.negativePrompt,
+    aspectRatio: input.aspectRatio,
+    resolution: input.resolution,
+    payloadHash: input.payloadHash,
+    requestFingerprint: input.requestFingerprint,
+    wirePayload: structuredClone(input.wirePayload),
   };
 }
 
@@ -256,5 +298,22 @@ export function isWorkspaceTrashPlan(value: unknown): value is WorkspaceTrashPla
     hasString(plan, "grantId") &&
     hasString(plan, "workspaceId") &&
     hasString(plan, "relativePath")
+  );
+}
+
+export function isGenerateImagePlan(value: unknown): value is GenerateImagePlan {
+  if (!value || typeof value !== "object") return false;
+  const plan = value as Partial<GenerateImagePlan>;
+  return (
+    plan.kind === "generate_image" &&
+    hasString(plan, "profileId") &&
+    hasString(plan, "toolCallId") &&
+    hasString(plan, "prompt") &&
+    hasString(plan, "modelId") &&
+    hasString(plan, "payloadHash") &&
+    hasString(plan, "requestFingerprint") &&
+    !!plan.wirePayload &&
+    typeof plan.wirePayload === "object" &&
+    !Array.isArray(plan.wirePayload)
   );
 }

@@ -298,6 +298,74 @@ describe("server.ts proxy validation", () => {
     expect(res.headers["content-security-policy"]).toBeTruthy();
   });
 
+  // VF-PLAYTEST-001: A keyless server must still return the correct 403/405
+  // for malformed requests, not mask them behind 500 "not configured". The
+  // API-key-config gate now runs *after* the method/endpoint allowlist.
+  it("returns 403 for an unknown endpoint even with no API key configured (VF-PLAYTEST-001)", async () => {
+    const prev = process.env.NODE_ENV;
+    const prevKey = process.env.VENICE_API_KEY;
+    process.env.NODE_ENV = "development";
+    delete process.env.VENICE_API_KEY;
+    try {
+      const keylessApp = createServerApp();
+      const res = await request(keylessApp).get("/api/venice/totally-fake-endpoint");
+      expect(res.status).toBe(403);
+      expect(res.body.error).toMatch(/not allowed/i);
+    } finally {
+      process.env.NODE_ENV = prev;
+      if (prevKey) process.env.VENICE_API_KEY = prevKey;
+    }
+  });
+
+  it("returns 405 for a wrong method even with no API key configured (VF-PLAYTEST-001)", async () => {
+    const prev = process.env.NODE_ENV;
+    const prevKey = process.env.VENICE_API_KEY;
+    process.env.NODE_ENV = "development";
+    delete process.env.VENICE_API_KEY;
+    try {
+      const keylessApp = createServerApp();
+      const res = await request(keylessApp).post("/api/venice/models").send({});
+      expect(res.status).toBe(405);
+      expect(res.body.error).toMatch(/not allowed for endpoint/i);
+    } finally {
+      process.env.NODE_ENV = prev;
+      if (prevKey) process.env.VENICE_API_KEY = prevKey;
+    }
+  });
+
+  // VF-PLAYTEST-002: The FSM media route previously called
+  // `proxyReq.removeHeader("Accept-Encoding")` inside the `proxyReq` event,
+  // but httpxy flushes headers before that event fires, so the removal threw
+  // `ERR_HTTP_HEADERS_SENT` and crashed the entire server on the first media
+  // request. The fix uses the proxy `headers` option (set at request
+  // creation). This test confirms the media route no longer crashes the
+  // process and the server stays alive.
+  it("does not crash the server on a media route under Family Safe Mode (VF-PLAYTEST-002)", async () => {
+    const prev = process.env.NODE_ENV;
+    const prevKey = process.env.VENICE_API_KEY;
+    process.env.NODE_ENV = "development";
+    process.env.VENICE_API_KEY = "vf-regression-fake-key";
+    try {
+      const mediaApp = createServerApp();
+      // The media POST should reach the upstream (which will 4xx/5xx the fake
+      // key) and must NOT crash the process.
+      const res = await request(mediaApp)
+        .post("/api/venice/image/generate")
+        .send({ prompt: "a cat" })
+        .set("content-type", "application/json");
+      // Any non-crash status is acceptable (401/422/502 from upstream); the
+      // point is that the process did not throw ERR_HTTP_HEADERS_SENT.
+      expect(res.status).not.toBe(0);
+      // The server must still answer a subsequent request.
+      const health = await request(mediaApp).get("/health");
+      expect(health.status).toBe(200);
+    } finally {
+      process.env.NODE_ENV = prev;
+      if (prevKey) process.env.VENICE_API_KEY = prevKey;
+      else delete process.env.VENICE_API_KEY;
+    }
+  });
+
   // VERIFY-062: production CSP must not allow arbitrary https: images.
   it("sets a production CSP that does not allow arbitrary https: image sources", async () => {
     vi.spyOn(AppConfig, "NODE_ENV", "get").mockReturnValue("production");

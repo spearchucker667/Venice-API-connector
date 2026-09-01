@@ -1027,7 +1027,13 @@ export const desktopSync = {
 /** Media Studio bridge. In Electron, delegates to the typed IPC channels
  *  defined on the preload bridge; in web mode, falls back to a browser
  *  download anchor (export) or to a "desktop-only" error (reveal / meta /
- *  thumb — those are explicit desktop affordances). */
+ *  thumb — those are explicit desktop affordances).
+ *
+ *  Future VF-CAPABILITY-PROVENANCE: `desktopMedia.resolveUrl({ objectId, scheme })`
+ *  will request a main-process capability token and return a URL such as
+ *  `venice-media://<objectId>?cap=<token>`. The renderer must not assemble
+ *  custom-protocol URLs itself; tokens are scoped to profile/session and
+ *  revoked on profile switch/renderer reload. */
 export const desktopMedia = {
   /** Persists generated image bytes in the main-owned content-addressed blob
    * store. Renderer code receives only the stable media identifier and URL. */
