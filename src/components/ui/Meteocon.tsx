@@ -67,130 +67,203 @@ function getThemeMode(): 'dark' | 'light' {
   return mode === 'light' ? 'light' : 'dark';
 }
 
+/** Presentation properties that may be applied to SVG elements. */
+type SvgPresentationProperty = 'fill' | 'stroke' | 'stroke-width' | 'opacity';
+
+/** Per-icon, per-element theme overrides expressed as presentation attributes. */
+type SvgPresentationOverrides = Readonly<
+  Record<string, Readonly<Partial<Record<SvgPresentationProperty, string>>>>
+>;
+
 /**
- * CSS style blocks injected into the SVG <defs> for light-mode correction.
+ * Allowed values for presentation attributes applied by this transformer.
+ * Hex colors, the keyword `none`, `currentColor`, and numeric values are
+ * permitted. Complex CSS values such as `url(...)`, gradients, or arbitrary
+ * strings are rejected.
+ */
+const SAFE_SVG_VALUE = /^(?:#[0-9a-fA-F]{3,8}|none|currentColor|\d+(?:\.\d+)?)$/;
+
+/**
+ * Presentation attributes that may be converted from inline `style=""`
+ * attributes to element attributes. Only a tiny, structural set is honoured
+ * so that bundled SVG source can remain CSP-safe while preserving rendering.
+ */
+const SAFE_SOURCE_STYLE_PROPERTIES = new Set(['mask-type']);
+
+/**
+ * Allowed values for source style properties that are converted to attributes.
+ */
+const SAFE_SOURCE_STYLE_VALUES: Record<string, RegExp> = {
+  'mask-type': /^(?:alpha|luminance)$/,
+};
+
+/**
+ * Light-mode presentation overrides. In dark mode the bundled fill-variant
+ * icons are designed for dark backgrounds and need no changes.
  *
- * The fill/stroke *attributes* on SVG elements have lower specificity than CSS
- * declarations, so a `<style>` block can override them without touching the
- * source SVG. Each rule targets the exact element IDs present in the bundled
- * meteocon SVG files.
- *
- * Dark theme: no overrides needed – the fill-variant icons are designed for
- * dark backgrounds.
- *
- * Light theme: we need to:
+ * In light mode we need to:
  *  - Make cloud fills visible (light grey → stronger grey)
  *  - Make white text/icon elements on coloured backgrounds dark
  *  - Make near-white strokes visible on white backgrounds
  *  - Keep dark-background dial icons (compass, barometer, horizon) visible
  *    by giving them a light slate background tint
  */
-const LIGHT_MODE_STYLE_OVERRIDES: Partial<Record<MeteoconName, string>> = {
-  // ── Cloud-body icons ─────────────────────────────────────────────────────
-  // Cloud gradient (#F3F7FE → #E6EFFC) and stroke (#E6EFFC) are near-invisible
-  // on a white/light background. We replace them with a mid-slate palette.
-  'cloudy': `
-    #Cloud_2 { fill: #CBD5E1 !important; stroke: #94A3B8 !important; }
-  `,
-  'partly-cloudy-day': `
-    #Cloud_2 { fill: #CBD5E1 !important; stroke: #94A3B8 !important; }
-  `,
-  'thunderstorms': `
-    #Cloud_2 { fill: #CBD5E1 !important; stroke: #94A3B8 !important; }
-    #Lightning { stroke: #F6A823 !important; }
-  `,
-  'weather-alarm': `
-    #Cloud_2 { fill: #CBD5E1 !important; stroke: #94A3B8 !important; }
-    #Exclamation { stroke: #64748B !important; }
-    #ExclamationMark { fill: #F8FAFC !important; }
-  `,
-  // ── Code-alert icons ─────────────────────────────────────────────────────
-  // Triangle body is coloured (fine). The exclamation text is fill="white"
-  // which is invisible if the triangle is light-coloured. On light bg the
-  // triangle colour is visible enough; just ensure mark is contrasting.
-  'code-purple': `
-    #ExclamationMark { fill: #F8FAFC !important; }
-  `,
-  'code-green': `
-    #ExclamationMark { fill: #F8FAFC !important; }
-  `,
-  // ── Humidity ─────────────────────────────────────────────────────────────
-  // Raindrop body is a dark blue gradient (fine). The % label is fill="white".
-  // On a light bg the label is invisible against the coloured drop; keep white
-  // so it pops against the blue drop body (the gradient is dark enough).
-  // No change needed – dark blue drop + white text reads fine on any bg.
-
-  // ── Wind ─────────────────────────────────────────────────────────────────
+const LIGHT_MODE_OVERRIDES: Partial<Record<MeteoconName, SvgPresentationOverrides>> = {
+  // Cloud-body icons: near-invisible cloud gradients/strokes on white bg.
+  'cloudy': {
+    '#Cloud_2': { fill: '#CBD5E1', stroke: '#94A3B8' },
+  },
+  'partly-cloudy-day': {
+    '#Cloud_2': { fill: '#CBD5E1', stroke: '#94A3B8' },
+  },
+  'thunderstorms': {
+    '#Cloud_2': { fill: '#CBD5E1', stroke: '#94A3B8' },
+    '#Lightning': { stroke: '#F6A823' },
+  },
+  'weather-alarm': {
+    '#Cloud_2': { fill: '#CBD5E1', stroke: '#94A3B8' },
+    '#Exclamation': { stroke: '#64748B' },
+    '#ExclamationMark': { fill: '#F8FAFC' },
+  },
+  // Code-alert icons: keep the exclamation mark contrasting on light bg.
+  'code-purple': {
+    '#ExclamationMark': { fill: '#F8FAFC' },
+  },
+  'code-green': {
+    '#ExclamationMark': { fill: '#F8FAFC' },
+  },
   // Wind lines use #E2E8F0 (near-white) – invisible on light bg.
-  'wind': `
-    #Wind { stroke: #64748B !important; }
-    [id^="Wind Line"] { stroke: #64748B !important; }
-  `,
-  // ── Snowflake ────────────────────────────────────────────────────────────
-  // Stroke #72B9D5 (light blue) has low contrast on white.
-  'snowflake': `
-    #Snowflake_2 { stroke: #0EA5E9 !important; }
-  `,
-  // ── Star ─────────────────────────────────────────────────────────────────
-  // Star uses a very light yellow (#FEF3C7 → #FDE68A). Not invisible but low
-  // contrast on white. Deepen the stroke to amber.
-  'star': `
-    #Star_2 { stroke: #D97706 !important; }
-  `,
-  // ── Dark-dial icons ──────────────────────────────────────────────────────
-  // Compass and barometer have a dark navy dial background (#334155 → #1E293B).
-  // On a light background these are clearly visible (dark on light is fine),
-  // so no structural change is needed. The white compass needle pointer is
-  // also visible against the dark dial body. No override needed.
-
-  // ── Horizon ─────────────────────────────────────────────────────────────
-  // Horizon line is stroke="#202939" (very dark) – fine on light bg.
-  // The mask rect uses fill="black" which is structural (mask-type:alpha).
-  // No colour change needed.
-
-  // ── Time-night label ────────────────────────────────────────────────────
-  // The label text (fill="#202939") renders dark – reads well on light bg.
-  // No change needed.
-
-  // ── Time-morning ────────────────────────────────────────────────────────
-  // The clock face label fill="#202939" is dark – reads fine on light bg.
-  // Sunrise sun rays are #F8AF18 – visible. No change needed.
-
-  // ── Thermometer ─────────────────────────────────────────────────────────
-  // Glass gradient is very transparent blue (opacity 0.25) – barely visible
-  // on both themes but intentionally subtle. Mercury red is fine. No change.
-
-  // ── Tornado ─────────────────────────────────────────────────────────────
-  // Tornado strokes are #D6DFE9 (light grey). Deepen for light bg.
-  'tornado': `
-    [id^="Tornado"] { stroke: #64748B !important; }
-  `,
-  // ── Raindrop ────────────────────────────────────────────────────────────
-  // Stroke #1D4ED8 (blue) – visible on both themes. No change needed.
-
-  // ── Umbrella ────────────────────────────────────────────────────────────
-  // Umbrella stick stroke #71717A – fine. Top fill has gradient + stroke
-  // #F1F5F9 (near-white) on outer section. Deepen outer stroke.
-  'umbrella': `
-    #Vector_2 { stroke: #94A3B8 !important; }
-  `,
+  'wind': {
+    '#Wind': { stroke: '#64748B' },
+    '[id^="Wind Line"]': { stroke: '#64748B' },
+  },
+  // Snowflake stroke is light blue – low contrast on white.
+  'snowflake': {
+    '#Snowflake_2': { stroke: '#0EA5E9' },
+  },
+  // Star uses very light yellow – deepen the stroke to amber.
+  'star': {
+    '#Star_2': { stroke: '#D97706' },
+  },
+  // Tornado strokes are light grey – deepen for light bg.
+  'tornado': {
+    '[id^="Tornado"]': { stroke: '#64748B' },
+  },
+  // Umbrella outer stroke is near-white – deepen for light bg.
+  'umbrella': {
+    '#Vector_2': { stroke: '#94A3B8' },
+  },
 };
 
+/** Removes inline event handlers and non-local resource references. */
+function sanitizeSvgElement(element: Element): void {
+  for (const attribute of Array.from(element.attributes)) {
+    if (/^on/i.test(attribute.name)) {
+      element.removeAttribute(attribute.name);
+    }
+    if (
+      (attribute.name === 'href' || attribute.name === 'xlink:href') &&
+      !attribute.value.startsWith('#')
+    ) {
+      element.removeAttribute(attribute.name);
+    }
+  }
+}
+
+/** Parses a simple inline style declaration into property/value pairs. */
+function parseInlineStyle(style: string): Array<[string, string]> {
+  const declarations: Array<[string, string]> = [];
+  for (const declaration of style.split(';')) {
+    const colonIndex = declaration.indexOf(':');
+    if (colonIndex === -1) continue;
+    const property = declaration.slice(0, colonIndex).trim();
+    const value = declaration.slice(colonIndex + 1).trim();
+    if (property && value) {
+      declarations.push([property, value]);
+    }
+  }
+  return declarations;
+}
+
 /**
- * Injects a per-icon light-mode <style> block into the raw SVG string so that
- * theme-incompatible hardcoded colours are overridden via CSS specificity.
- * The style block is injected before </svg> so it is always part of the DOM
- * shadow when rendered via dangerouslySetInnerHTML.
+ * Converts allowed source `style=""` declarations to presentation attributes,
+ * then removes the inline style attribute entirely. This preserves structural
+ * SVG behaviour (e.g. `mask-type:alpha`) without retaining CSP-violating
+ * inline styles.
  */
-function adaptSvgForTheme(rawSvg: string, name: MeteoconName, mode: 'dark' | 'light'): string {
-  if (mode === 'dark') return rawSvg;
-  const overrides = LIGHT_MODE_STYLE_OVERRIDES[name];
-  if (!overrides) return rawSvg;
-  const styleTag = `<style>${overrides}</style>`;
-  // Inject before closing </svg> tag.
-  const insertAt = rawSvg.lastIndexOf('</svg>');
-  if (insertAt === -1) return rawSvg + styleTag;
-  return rawSvg.slice(0, insertAt) + styleTag + rawSvg.slice(insertAt);
+function convertSafeSourceStyles(element: Element): void {
+  const style = element.getAttribute('style');
+  if (!style) return;
+
+  for (const [property, value] of parseInlineStyle(style)) {
+    if (!SAFE_SOURCE_STYLE_PROPERTIES.has(property)) continue;
+    const valuePattern = SAFE_SOURCE_STYLE_VALUES[property];
+    if (!valuePattern || !valuePattern.test(value)) continue;
+    element.setAttribute(property, value);
+  }
+  element.removeAttribute('style');
+}
+
+/**
+ * Applies an allowlisted set of presentation-attribute overrides to a raw SVG
+ * string. The transformer also strips any source `<style>` elements, inline
+ * `style=""` attributes, event handlers, and non-local references so that the
+ * serialized result is safe for a strict `style-src 'self'` CSP.
+ *
+ * @param rawSvg The raw SVG markup.
+ * @param overrides Per-selector presentation attributes to apply.
+ * @returns The sanitized, attribute-only SVG markup.
+ */
+export function applySvgPresentationOverrides(
+  rawSvg: string,
+  overrides: SvgPresentationOverrides,
+): string {
+  const doc = new DOMParser().parseFromString(rawSvg, 'image/svg+xml');
+  const root = doc.documentElement;
+  if (root.nodeName.toLowerCase() !== 'svg' || root.querySelector('parsererror')) {
+    return rawSvg;
+  }
+
+  root
+    .querySelectorAll('script, foreignObject, iframe, object, embed')
+    .forEach((element) => element.remove());
+
+  root.querySelectorAll('*').forEach((element) => {
+    sanitizeSvgElement(element);
+    convertSafeSourceStyles(element);
+  });
+
+  for (const [selector, properties] of Object.entries(overrides)) {
+    for (const element of root.querySelectorAll(selector)) {
+      for (const [property, value] of Object.entries(properties)) {
+        if (!SAFE_SVG_VALUE.test(value)) continue;
+        element.setAttribute(property, value);
+      }
+    }
+  }
+
+  root.querySelectorAll('style').forEach((element) => element.remove());
+  root.querySelectorAll('[style]').forEach((element) => element.removeAttribute('style'));
+
+  return new XMLSerializer().serializeToString(root);
+}
+
+/**
+ * Adapts a bundled Meteocon SVG for the current theme without emitting inline
+ * `<style>` blocks or `style=""` attributes.
+ *
+ * @param rawSvg The bundled raw SVG string.
+ * @param name The Meteocon icon name.
+ * @param mode The active theme mode.
+ * @returns CSP-safe SVG markup using presentation attributes only.
+ */
+export function adaptSvgForTheme(
+  rawSvg: string,
+  name: MeteoconName,
+  mode: 'dark' | 'light',
+): string {
+  const overrides = mode === 'light' ? LIGHT_MODE_OVERRIDES[name] : undefined;
+  return applySvgPresentationOverrides(rawSvg, overrides ?? {});
 }
 
 export function Meteocon({ name, size = 22, className = '', ...props }: MeteoconProps) {
