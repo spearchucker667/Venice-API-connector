@@ -247,12 +247,31 @@ export async function initBackgroundTaskManager(): Promise<void> {
           task.status = 'queued';
           task.updatedAt = Date.now();
         } else {
-          task.status = 'failed';
+          task.status = 'acceptance_unknown';
           task.error = 'Application restarted before provider accepted the request.  Acceptance unknown.';
           task.updatedAt = Date.now();
         }
       }
-      if (!isTerminalStatus(task.status)) {
+      // Classify explicit paid-submission lifecycle states.
+      if (task.status === 'dispatching') {
+        // We do not know whether the provider saw the request; never auto-redispatch.
+        task.status = 'acceptance_unknown';
+        if (!task.error) {
+          task.error = 'Application restarted while dispatching to the provider. Acceptance unknown.';
+        }
+        task.updatedAt = Date.now();
+      }
+      if (task.status === 'intent_persisted' && task.dispatchStartedAt) {
+        // Dispatching had started before the crash; treat as acceptance unknown.
+        task.status = 'acceptance_unknown';
+        if (!task.error) {
+          task.error = 'Application restarted after dispatch started. Acceptance unknown.';
+        }
+        task.updatedAt = Date.now();
+      }
+      // intent_persisted with no dispatchStartedAt and acceptance_unknown are
+      // retained as safe non-dispatching records.
+      if (!isTerminalStatus(task.status) && task.status !== 'acceptance_unknown' && task.status !== 'intent_persisted') {
         if (isProviderPolledBackgroundTaskType(task.type, task.providerId)) {
           startPolling(task.id);
         } else {
@@ -357,6 +376,14 @@ async function applyUpdate(taskId: string, updates: BackgroundTaskUpdate): Promi
       updated.queueId = String(updates.queueId).slice(0, 128);
       hasChanges = true;
     }
+  }
+  if (updates.dispatchStartedAt !== undefined && updates.dispatchStartedAt !== task.dispatchStartedAt) {
+    updated.dispatchStartedAt = Number(updates.dispatchStartedAt);
+    hasChanges = true;
+  }
+  if (updates.acceptedAt !== undefined && updates.acceptedAt !== task.acceptedAt) {
+    updated.acceptedAt = Number(updates.acceptedAt);
+    hasChanges = true;
   }
   if (updates.attemptStartedAt !== undefined && updates.attemptStartedAt !== task.attemptStartedAt) {
     updated.attemptStartedAt = Number(updates.attemptStartedAt);
@@ -478,6 +505,66 @@ export async function clearBackgroundTaskInMain(taskId: string): Promise<void> {
   clearEphemeralSecrets(taskId);
   await flushPersistFatal();
   emit(taskId, null, 'removed', profileId);
+}
+
+/** Fatal journal operations for provider-neutral paid submissions.
+ *  Each transition writes to disk before returning so a crash can never leave
+ *  a billable dispatch unrecorded. */
+export async function persistPaidSubmissionIntent(input: BackgroundTaskCreateInput): Promise<BackgroundTask> {
+  await initBackgroundTaskManager();
+  const task = createBackgroundTask(input);
+  (task as unknown as Record<string, unknown>).status = 'intent_persisted';
+  state.tasks[task.id] = task;
+  await flushPersistFatal();
+  emit(task.id, task, 'created', task.profileId);
+  return task;
+}
+
+export async function markPaidSubmissionDispatching(taskId: string): Promise<BackgroundTask> {
+  await initBackgroundTaskManager();
+  const updated = await applyUpdate(taskId, { status: 'dispatching', dispatchStartedAt: Date.now() });
+  if (!updated) throw new Error(`Task ${taskId} not found when marking dispatching.`);
+  await flushPersistFatal();
+  return updated;
+}
+
+export async function markPaidSubmissionAccepted(taskId: string, remoteTaskId: string): Promise<BackgroundTask> {
+  await initBackgroundTaskManager();
+  const updated = await applyUpdate(taskId, {
+    status: 'queued',
+    queueId: remoteTaskId,
+    acceptedAt: Date.now(),
+  });
+  if (!updated) throw new Error(`Task ${taskId} not found when marking accepted.`);
+  await flushPersistFatal();
+  if (isProviderPolledBackgroundTaskType(updated.type, updated.providerId)) {
+    startPolling(updated.id);
+  }
+  return updated;
+}
+
+export async function markPaidSubmissionAcceptanceUnknown(taskId: string, error: string): Promise<BackgroundTask> {
+  await initBackgroundTaskManager();
+  const updated = await applyUpdate(taskId, { status: 'acceptance_unknown', error });
+  if (!updated) throw new Error(`Task ${taskId} not found when marking acceptance unknown.`);
+  await flushPersistFatal();
+  return updated;
+}
+
+export function findActivePaidSubmission(query: {
+  profileId: string;
+  providerId: string;
+  operation: string;
+  requestFingerprint: string;
+}): BackgroundTask | undefined {
+  const activeStatuses: BackgroundTaskStatus[] = ['intent_persisted', 'dispatching', 'queued', 'processing'];
+  return Object.values(state.tasks).find((task) =>
+    task.profileId === query.profileId &&
+    task.providerId === query.providerId &&
+    task.operation === query.operation &&
+    task.requestFingerprint === query.requestFingerprint &&
+    activeStatuses.includes(task.status),
+  );
 }
 
 function stopPolling(taskId: string): void {
