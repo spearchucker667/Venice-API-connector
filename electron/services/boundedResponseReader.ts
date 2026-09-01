@@ -10,14 +10,86 @@ export interface BoundedReadOptions {
   signal?: AbortSignal;
 }
 
+type StreamReadResult<T> =
+  | { done: true; value?: T }
+  | { done: false; value: T };
+
 function buildTimeoutError(label: string, timeoutMs: number): Error {
   return new Error(`${label} timed out after ${timeoutMs}ms`);
+}
+
+/** Fallback reader for environments without streaming bodies (e.g. some test
+ *  mocks).  Races response.text() against the same deadline and size cap as the
+ *  streaming path. */
+async function readResponseBodyFallback(
+  response: Response,
+  options: BoundedReadOptions,
+): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    let settled = false;
+
+    const timer = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      reject(buildTimeoutError(options.label, options.timeoutMs));
+    }, options.timeoutMs);
+
+    const abortListener = () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      if (options.signal) {
+        options.signal.removeEventListener("abort", abortListener);
+      }
+      reject(new Error(`${options.label} aborted`));
+    };
+
+    if (options.signal) {
+      if (options.signal.aborted) {
+        settled = true;
+        clearTimeout(timer);
+        reject(new Error(`${options.label} aborted`));
+        return;
+      }
+      options.signal.addEventListener("abort", abortListener);
+    }
+
+    response
+      .text()
+      .then((text) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        if (options.signal) {
+          options.signal.removeEventListener("abort", abortListener);
+        }
+        const buffer = Buffer.from(text, "utf8");
+        if (buffer.length > options.maxBytes) {
+          reject(
+            new Error(
+              `${options.label} exceeds maximum ${options.maxBytes} bytes.`,
+            ),
+          );
+        } else {
+          resolve(buffer);
+        }
+      })
+      .catch((err) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        if (options.signal) {
+          options.signal.removeEventListener("abort", abortListener);
+        }
+        reject(err);
+      });
+  });
 }
 
 async function readChunkWithDeadline(
   reader: ReadableStreamDefaultReader<Uint8Array>,
   options: BoundedReadOptions,
-): Promise<ReadableStreamReadResult<Uint8Array>> {
+): Promise<StreamReadResult<Uint8Array>> {
   return new Promise((resolve, reject) => {
     let settled = false;
 
@@ -121,12 +193,7 @@ export async function readResponseBufferBounded(
   }
 
   // Fallback for environments without streaming bodies (e.g. some test mocks).
-  const text = await response.text().catch(() => "");
-  const buffer = Buffer.from(text, "utf8");
-  if (buffer.length > options.maxBytes) {
-    throw new Error(`${options.label} exceeds maximum ${options.maxBytes} bytes.`);
-  }
-  return buffer;
+  return readResponseBodyFallback(response, options);
 }
 
 /** Convenience wrapper that returns the bounded body as a UTF-8 string. */

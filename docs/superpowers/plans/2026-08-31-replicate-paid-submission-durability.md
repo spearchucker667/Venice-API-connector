@@ -204,7 +204,7 @@ export async function persistPaidSubmissionIntent(input: BackgroundTaskCreateInp
 export async function markPaidSubmissionDispatching(taskId: string): Promise<BackgroundTask>;
 export async function markPaidSubmissionAccepted(taskId: string, remoteTaskId: string): Promise<BackgroundTask>;
 export async function markPaidSubmissionAcceptanceUnknown(taskId: string, error: string): Promise<BackgroundTask>;
-export function findActivePaidSubmission(query: { profileId: string; providerId: string; operation: string; requestFingerprint: string }): BackgroundTask | undefined;
+export function findActivePaidSubmission(query: { profileId: string; providerId: string; operation: string; requestFingerprint: string; payloadHash?: string }): BackgroundTask | undefined;
 ```
 
 Each mutating operation updates in-memory state and awaits `flushPersistFatal()` before returning success.

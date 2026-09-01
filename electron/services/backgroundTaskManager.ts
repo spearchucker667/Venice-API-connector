@@ -556,6 +556,7 @@ export function findActivePaidSubmission(query: {
   providerId: string;
   operation: string;
   requestFingerprint: string;
+  payloadHash?: string;
 }): BackgroundTask | undefined {
   const activeStatuses: BackgroundTaskStatus[] = ['intent_persisted', 'dispatching', 'queued', 'processing'];
   return Object.values(state.tasks).find((task) =>
@@ -563,6 +564,7 @@ export function findActivePaidSubmission(query: {
     task.providerId === query.providerId &&
     task.operation === query.operation &&
     task.requestFingerprint === query.requestFingerprint &&
+    (query.payloadHash === undefined || task.payloadHash === query.payloadHash) &&
     activeStatuses.includes(task.status),
   );
 }

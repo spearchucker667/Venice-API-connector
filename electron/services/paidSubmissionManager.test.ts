@@ -223,4 +223,69 @@ describe("submitDurablePaidTask", () => {
     expect(first.kind).toBe("submitted");
     expect(second.kind).toBe("submitted");
   });
+
+  it("returns acceptance_unknown when persistAcceptanceUnknown itself fails", async () => {
+    const dispatchError = new Error("provider connection dropped after bytes sent");
+
+    const result = await submitDurablePaidTask({
+      ...makeInput(),
+      dispatch: vi.fn().mockRejectedValue(dispatchError),
+      persistAcceptanceUnknown: vi.fn().mockRejectedValue(new Error("disk full")),
+    });
+
+    expect(result.kind).toBe("acceptance_unknown");
+    if (result.kind !== "acceptance_unknown") return;
+    expect(result.error).toBe(dispatchError.message);
+    expect(result.task.status).toBe("acceptance_unknown");
+  });
+
+  it("prevents same-fingerprint different-payload concurrent calls from both dispatching", async () => {
+    let dispatches = 0;
+    let intents = 0;
+    const persistedTasks: BackgroundTask[] = [];
+    dispatchingMock.mockResolvedValue(makeTask({ status: "dispatching" }));
+
+    // Simulate the real manager: findActivePaidSubmission sees tasks after
+    // persistIntent completes.
+    findMock.mockImplementation((query) =>
+      persistedTasks.find(
+        (t) =>
+          t.profileId === query.profileId &&
+          t.providerId === query.providerId &&
+          t.operation === query.operation &&
+          t.requestFingerprint === query.requestFingerprint,
+      ),
+    );
+
+    const base = makeInput({
+      persistIntent: async () => {
+        intents++;
+        await new Promise((resolve) => setTimeout(resolve, 5));
+        const task = makeTask({
+          id: `task-${intents}`,
+          payloadHash: intents === 1 ? "sha256:payload-a" : "sha256:payload-b",
+        });
+        persistedTasks.push(task);
+        return task;
+      },
+      dispatch: async () => {
+        dispatches++;
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        return { remoteTaskId: "pred-1" };
+      },
+    });
+
+    const [first, second] = await Promise.all([
+      submitDurablePaidTask({ ...base, payloadHash: "sha256:payload-a" }),
+      submitDurablePaidTask({ ...base, payloadHash: "sha256:payload-b" }),
+    ]);
+
+    // Only one intent may be written and only one provider dispatch may occur.
+    expect(intents).toBe(1);
+    expect(dispatches).toBe(1);
+
+    const kinds = new Set([first.kind, second.kind]);
+    expect(kinds.has("submitted")).toBe(true);
+    expect(kinds.has("conflict")).toBe(true);
+  });
 });

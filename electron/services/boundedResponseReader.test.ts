@@ -34,14 +34,20 @@ function buildStream(chunks: Uint8Array[], delayMs = 0): ReadableStream<Uint8Arr
 function buildResponse(overrides: {
   headers?: Headers;
   body?: ReadableStream<Uint8Array>;
-  text?: string;
-  arrayBuffer?: ArrayBuffer;
+  text?: string | (() => Promise<string>);
+  arrayBuffer?: ArrayBuffer | (() => Promise<ArrayBuffer>);
 }): Response {
   return {
     headers: overrides.headers ?? new Headers(),
     body: overrides.body,
-    text: vi.fn().mockResolvedValue(overrides.text ?? ""),
-    arrayBuffer: vi.fn().mockResolvedValue(overrides.arrayBuffer ?? new ArrayBuffer(0)),
+    text:
+      typeof overrides.text === "function"
+        ? vi.fn(overrides.text)
+        : vi.fn().mockResolvedValue(overrides.text ?? ""),
+    arrayBuffer:
+      typeof overrides.arrayBuffer === "function"
+        ? vi.fn(overrides.arrayBuffer)
+        : vi.fn().mockResolvedValue(overrides.arrayBuffer ?? new ArrayBuffer(0)),
   } as unknown as Response;
 }
 
@@ -106,6 +112,28 @@ describe("readResponseBufferBounded", () => {
 
     const result = await readResponseTextBounded(response, baseOptions);
     expect(result).toBe("fallback body");
+  });
+
+  it("rejects a slow non-stream fallback that exceeds the deadline", async () => {
+    const response = buildResponse({
+      text: () => new Promise<string>((resolve) =>
+        setTimeout(() => resolve("too late"), baseOptions.timeoutMs * 2),
+      ),
+    });
+
+    await expect(readResponseBufferBounded(response, baseOptions)).rejects.toThrow(
+      /timed out/i,
+    );
+  });
+
+  it("rejects an oversized non-stream fallback", async () => {
+    const response = buildResponse({
+      text: "x".repeat(baseOptions.maxBytes + 1),
+    });
+
+    await expect(readResponseBufferBounded(response, baseOptions)).rejects.toThrow(
+      /exceeds maximum/i,
+    );
   });
 
   it("respects a parent abort signal", async () => {
