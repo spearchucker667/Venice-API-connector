@@ -20,7 +20,7 @@ function fnv1a64(str: string): string {
   return hash.toString(16).padStart(16, '0');
 }
 
-function dedupToolRuntimeLayers(layers: AgentRuntimeLayer[]): AgentRuntimeLayer[] {
+export function dedupToolRuntimeLayers(layers: AgentRuntimeLayer[]): AgentRuntimeLayer[] {
   const seen = new Set<string>();
   const out: AgentRuntimeLayer[] = [];
   for (const layer of layers) {

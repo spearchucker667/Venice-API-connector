@@ -1,11 +1,47 @@
 import { describe, it, expect } from "vitest";
-import type { CustomAgentLayer } from "../../../src/shared/agentRuntimeContracts";
+import type {
+  AgentRuntimeLayer,
+  CustomAgentLayer,
+  ToolRuntimeLayer,
+} from "../../../src/shared/agentRuntimeContracts";
 import {
   composeTrustedRequest,
   composeAgentRuntime,
   buildTrustedRuntimeLayer,
+  buildToolRuntimeLayer,
+  dedupToolRuntimeLayers,
   substituteTimeAndDatePlaceholders,
 } from "./trusted-agent-request";
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function expectRecord(value: unknown, label: string): Record<string, unknown> {
+  if (!isRecord(value)) {
+    throw new Error(`Expected ${label} to be a record`);
+  }
+  return value;
+}
+
+function expectString(value: unknown, label: string): string {
+  if (typeof value !== "string") {
+    throw new Error(`Expected ${label} to be a string`);
+  }
+  return value;
+}
+
+function expectArray(value: unknown, label: string): unknown[] {
+  if (!Array.isArray(value)) {
+    throw new Error(`Expected ${label} to be an array`);
+  }
+  return value;
+}
+
+function expectComposedBody(raw: unknown): Record<string, unknown> {
+  const record = expectRecord(raw, "composed request");
+  return expectRecord(record.body, "composed request body");
+}
 
 describe("trusted-agent-request", () => {
   it("injects System Runtime Context at the top of messages", () => {
@@ -14,17 +50,32 @@ describe("trusted-agent-request", () => {
       method: "POST",
       body: {
         messages: [{ role: "user", content: "hello" }],
-        tools: [{ type: "function" }]
-      }
+        tools: [{ type: "function" }],
+      },
     };
 
-    const composed = composeTrustedRequest(raw) as any;
-    expect(composed.body.messages.length).toBe(2);
-    expect(composed.body.messages[0].role).toBe("system");
-    expect(composed.body.messages[0].content).toContain("[System Runtime Context]");
-    expect(composed.body.messages[0].content).toContain("Current Date/Time:");
-    expect(composed.body.messages[0].content).toContain("Timezone:");
-    expect(composed.body.messages[1].content).toBe("hello");
+    const body = expectComposedBody(composeTrustedRequest(raw));
+    const messages = expectArray(body.messages, "messages");
+    expect(messages.length).toBe(2);
+    expect(messages[0]).toEqual(
+      expect.objectContaining({
+        role: "system",
+        content: expect.stringContaining("[System Runtime Context]"),
+      }),
+    );
+    expect(messages[0]).toEqual(
+      expect.objectContaining({
+        role: "system",
+        content: expect.stringContaining("Current Date/Time:"),
+      }),
+    );
+    expect(messages[0]).toEqual(
+      expect.objectContaining({
+        role: "system",
+        content: expect.stringContaining("Timezone:"),
+      }),
+    );
+    expect(messages[1]).toEqual(expect.objectContaining({ content: "hello" }));
   });
 
   it("prepends to existing system message", () => {
@@ -33,21 +84,35 @@ describe("trusted-agent-request", () => {
       method: "POST",
       body: {
         messages: [{ role: "system", content: "User system prompt." }],
-      }
+      },
     };
 
-    const composed = composeTrustedRequest(raw) as any;
-    expect(composed.body.messages.length).toBe(1);
-    expect(composed.body.messages[0].role).toBe("system");
-    expect(composed.body.messages[0].content).toContain("[System Runtime Context]");
-    expect(composed.body.messages[0].content).toContain("User system prompt.");
+    const body = expectComposedBody(composeTrustedRequest(raw));
+    const messages = expectArray(body.messages, "messages");
+    expect(messages.length).toBe(1);
+    expect(messages[0]).toEqual(
+      expect.objectContaining({
+        role: "system",
+        content: expect.stringContaining("[System Runtime Context]"),
+      }),
+    );
+    expect(messages[0]).toEqual(
+      expect.objectContaining({
+        role: "system",
+        content: expect.stringContaining("User system prompt."),
+      }),
+    );
   });
 
   it("ignores invalid shapes", () => {
     expect(composeTrustedRequest(null)).toBe(null);
     expect(composeTrustedRequest("abc")).toBe("abc");
-    expect(composeTrustedRequest({ body: "not-an-object" })).toEqual({ body: "not-an-object" });
-    expect(composeTrustedRequest({ body: { messages: "not-an-array" } })).toEqual({ body: { messages: "not-an-array" } });
+    expect(composeTrustedRequest({ body: "not-an-object" })).toEqual({
+      body: "not-an-object",
+    });
+    expect(
+      composeTrustedRequest({ body: { messages: "not-an-array" } }),
+    ).toEqual({ body: { messages: "not-an-array" } });
   });
 });
 
@@ -65,11 +130,26 @@ describe("trusted-agent-request — P0-05 trust boundary regressions", () => {
         ],
       },
     };
-    const composed = composeTrustedRequest(raw) as any;
-    expect(composed.body.messages[0].role).toBe("system");
-    expect(composed.body.messages[0].content).toContain("Toolchain Trust Ledger:");
-    expect(composed.body.messages[0].content).toContain("media.generateImage (trusted=true)");
-    expect(composed.body.messages[0].content).toContain("media.listImages (trusted=true)");
+    const body = expectComposedBody(composeTrustedRequest(raw));
+    const messages = expectArray(body.messages, "messages");
+    expect(messages[0]).toEqual(
+      expect.objectContaining({
+        role: "system",
+        content: expect.stringContaining("Toolchain Trust Ledger:"),
+      }),
+    );
+    expect(messages[0]).toEqual(
+      expect.objectContaining({
+        role: "system",
+        content: expect.stringContaining("media.generateImage (trusted=true)"),
+      }),
+    );
+    expect(messages[0]).toEqual(
+      expect.objectContaining({
+        role: "system",
+        content: expect.stringContaining("media.listImages (trusted=true)"),
+      }),
+    );
   });
 
   it("does not inject System Runtime Context into /image/generate body.prompt", () => {
@@ -78,10 +158,11 @@ describe("trusted-agent-request — P0-05 trust boundary regressions", () => {
       method: "POST",
       body: { model: "nano-banana", prompt: "a quiet forest at dawn" },
     };
-    const composed = composeTrustedRequest(raw) as any;
-    expect(composed.body.prompt.startsWith("[System Runtime Context]")).toBe(false);
-    expect(composed.body.prompt).toBe("a quiet forest at dawn");
-    expect(composed.body.model).toBe("nano-banana");
+    const body = expectComposedBody(composeTrustedRequest(raw));
+    const prompt = expectString(body.prompt, "body.prompt");
+    expect(prompt.startsWith("[System Runtime Context]")).toBe(false);
+    expect(prompt).toBe("a quiet forest at dawn");
+    expect(body.model).toBe("nano-banana");
   });
 
   it("P0-05 (3) leaves non-POST endpoints untouched", () => {
@@ -90,18 +171,26 @@ describe("trusted-agent-request — P0-05 trust boundary regressions", () => {
       method: "GET",
       body: {},
     };
-    const composed = composeTrustedRequest(raw) as any;
-    expect(composed.body).toEqual({});
+    const body = expectComposedBody(composeTrustedRequest(raw));
+    expect(body).toEqual({});
   });
 
   it("P0-05 (4) substitutes {{time && date}} placeholders inside the system prompt", () => {
     const trusted = buildTrustedRuntimeLayer();
-    expect(substituteTimeAndDatePlaceholders("payload at {{time && date}}", trusted))
-      .toBe(`payload at ${trusted.content.currentDate} ${trusted.content.currentTime}`);
-    expect(substituteTimeAndDatePlaceholders("{{date}} start", trusted))
-      .toBe(`${trusted.content.currentDate} start`);
-    expect(substituteTimeAndDatePlaceholders("plain string with no markers", trusted))
-      .toBe("plain string with no markers");
+    expect(
+      substituteTimeAndDatePlaceholders("payload at {{time && date}}", trusted),
+    ).toBe(
+      `payload at ${trusted.content.currentDate} ${trusted.content.currentTime}`,
+    );
+    expect(substituteTimeAndDatePlaceholders("{{date}} start", trusted)).toBe(
+      `${trusted.content.currentDate} start`,
+    );
+    expect(
+      substituteTimeAndDatePlaceholders(
+        "plain string with no markers",
+        trusted,
+      ),
+    ).toBe("plain string with no markers");
   });
 
   it("P0-05 (4) substitutes placeholders before injecting into messages[0]", () => {
@@ -112,8 +201,10 @@ describe("trusted-agent-request — P0-05 trust boundary regressions", () => {
         messages: [{ role: "system", content: "context stamp: {{time && date}}" }],
       },
     };
-    const composed = composeTrustedRequest(raw) as any;
-    const substituted = composed.body.messages[0].content;
+    const body = expectComposedBody(composeTrustedRequest(raw));
+    const messages = expectArray(body.messages, "messages");
+    const first = expectRecord(messages[0], "messages[0]");
+    const substituted = expectString(first.content, "messages[0].content");
     expect(substituted).toContain("context stamp: ");
     expect(substituted).not.toContain("{{time && date}}");
   });
@@ -125,13 +216,15 @@ describe("trusted-agent-request — P0-05 trust boundary regressions", () => {
       immutable: false,
       content: "evil",
     };
-    expect(() => composeAgentRuntime({
-      systemPrompt: "ok system",
-      userPrompt: "hi",
-      model: "m",
-      tools: ["x"],
-      customLayers: [customLayer], // priority < 0 forbidden
-    })).toThrow(/immutable priority floor/);
+    expect(() =>
+      composeAgentRuntime({
+        systemPrompt: "ok system",
+        userPrompt: "hi",
+        model: "m",
+        tools: ["x"],
+        customLayers: [customLayer], // priority < 0 forbidden
+      }),
+    ).toThrow(/immutable priority floor/);
   });
 
   it("P0-05 (3-dupe) keeps custom layers in the typed runtime contract", () => {
@@ -150,6 +243,30 @@ describe("trusted-agent-request — P0-05 trust boundary regressions", () => {
     const toolLayers = composed.layers.filter((l) => l.kind === "tool-runtime");
     expect(toolLayers).toHaveLength(1);
     expect(toolLayers[0].tools).toEqual([{ name: "alpha", trusted: true }]);
-    expect(composed.layers.filter((layer) => layer.kind === "custom")).toEqual(customLayers);
+    expect(composed.layers.filter((layer) => layer.kind === "custom")).toEqual(
+      customLayers,
+    );
+  });
+
+  it("P0-05 (3-dupe) dedupes identical tool-runtime layers by content hash", () => {
+    const trusted = buildTrustedRuntimeLayer();
+    // Two layers with the same tool names (in different order) share a hash
+    // because `dedupToolRuntimeLayers` sorts the tool list before hashing.
+    const a = buildToolRuntimeLayer(["alpha", "beta"]);
+    const b = buildToolRuntimeLayer(["beta", "alpha"]);
+    const c = buildToolRuntimeLayer(["gamma"]);
+
+    const layers: AgentRuntimeLayer[] = [trusted, a, b, c];
+    const deduplicated = dedupToolRuntimeLayers(layers);
+
+    const toolLayers = deduplicated.filter(
+      (l): l is ToolRuntimeLayer => l.kind === "tool-runtime",
+    );
+    // a and b are identical after sorting; only one is kept, plus c.
+    expect(toolLayers).toHaveLength(2);
+    const fingerprints = toolLayers.map((l) =>
+      l.tools.map((t) => t.name).sort().join("|"),
+    );
+    expect(fingerprints).toEqual(["alpha|beta", "gamma"]);
   });
 });

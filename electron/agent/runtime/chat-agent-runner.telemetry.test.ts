@@ -30,6 +30,15 @@ vi.mock("./agent-tool-executor", () => ({
 
 import { runChatAgentLoop } from "./chat-agent-runner";
 
+function firstCompletionArg(): Parameters<typeof publishInspectorCompletion>[0] {
+  const [call] = publishInspectorCompletion.mock.calls;
+  if (call === undefined) {
+    throw new Error("Expected publishInspectorCompletion to have been called");
+  }
+  const [arg] = call;
+  return arg;
+}
+
 const toolExecutionContext = createToolExecutionContext({
   profileId: "p1",
   runtimeSessionId: "runtime_p1",
@@ -79,7 +88,7 @@ describe("runChatAgentLoop — Phase C inspector telemetry (VERIFY-157)", () => 
       })
     );
     expect(publishInspectorCompletion).toHaveBeenCalledTimes(1);
-    const completionArg = publishInspectorCompletion.mock.calls[0][0] as Record<string, unknown>;
+    const completionArg = firstCompletionArg();
     expect(completionArg.eventId).toBe("evt-chat-runner-1");
     expect(completionArg.status).toBe(200);
     expect(completionArg.source).toBe("main-agent");
@@ -107,7 +116,7 @@ describe("runChatAgentLoop — Phase C inspector telemetry (VERIFY-157)", () => 
 
     expect(publishInspectorRequest).toHaveBeenCalledTimes(1);
     expect(publishInspectorCompletion).toHaveBeenCalledTimes(1);
-    const completionArg = publishInspectorCompletion.mock.calls[0][0] as Record<string, unknown>;
+    const completionArg = firstCompletionArg();
     expect(completionArg.eventId).toBe("evt-chat-runner-1");
     expect(completionArg.status).toBe(451);
   });
@@ -125,7 +134,7 @@ describe("runChatAgentLoop — Phase C inspector telemetry (VERIFY-157)", () => 
 
     expect(publishInspectorRequest).toHaveBeenCalledTimes(1);
     expect(publishInspectorCompletion).toHaveBeenCalledTimes(1);
-    const completionArg = publishInspectorCompletion.mock.calls[0][0] as Record<string, unknown>;
+    const completionArg = firstCompletionArg();
     expect(completionArg.eventId).toBe("evt-chat-runner-1");
     expect(completionArg.error).toEqual(expect.stringContaining("upstream timeout"));
   });
