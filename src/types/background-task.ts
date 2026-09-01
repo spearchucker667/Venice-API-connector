@@ -1,6 +1,17 @@
 import { redactSecrets } from '../shared/redaction'
 
-export type BackgroundTaskStatus = 'idle' | 'queued' | 'processing' | 'completed' | 'failed' | 'aborted' | 'timeout' | 'pending_finalize'
+export type BackgroundTaskStatus =
+  | 'idle'
+  | 'intent_persisted'
+  | 'dispatching'
+  | 'acceptance_unknown'
+  | 'queued'
+  | 'processing'
+  | 'completed'
+  | 'failed'
+  | 'aborted'
+  | 'timeout'
+  | 'pending_finalize'
 
 export type BackgroundTaskType = 'video' | 'music' | 'image' | 'research' | 'document'
 export type VideoTaskStage = 'queued' | 'generating' | 'retrieving' | 'saving' | 'completed'
@@ -40,10 +51,13 @@ export interface BackgroundTask {
   profileId: string
   providerId?: string
   modelId?: string
+  operation?: string
   sourceTab?: string
   requestFingerprint?: string
-  /** SHA-256 hex of the canonical wire payload; persisted for cross-restart idempotency conflict detection. */
+  /** SHA-256 digest of the canonical wire payload, optionally prefixed `sha256:`; persisted for cross-restart idempotency conflict detection. */
   payloadHash?: string
+  dispatchStartedAt?: number
+  acceptedAt?: number
   attemptStartedAt?: number
   attemptNumber?: number
   pollAttempts?: number
@@ -63,10 +77,13 @@ export interface BackgroundTaskCreateInput {
   profileId: string
   providerId?: string
   modelId?: string
+  operation?: string
   sourceTab?: string
   requestFingerprint?: string
-  /** SHA-256 hex of the canonical wire payload; persisted for cross-restart idempotency conflict detection. */
+  /** SHA-256 digest of the canonical wire payload, optionally prefixed `sha256:`; persisted for cross-restart idempotency conflict detection. */
   payloadHash?: string
+  dispatchStartedAt?: number
+  acceptedAt?: number
 }
 
 export interface BackgroundTaskUpdate {
@@ -78,6 +95,8 @@ export interface BackgroundTaskUpdate {
   stage?: VideoTaskStage
   metadata?: Record<string, unknown>
   queueId?: string
+  dispatchStartedAt?: number
+  acceptedAt?: number
   attemptStartedAt?: number
   attemptNumber?: number
   pollAttempts?: number
@@ -94,7 +113,7 @@ export interface BackgroundTaskIpcEnvelope {
   taskId?: string
 }
 
-const VALID_STATUSES: BackgroundTaskStatus[] = ['idle', 'queued', 'processing', 'completed', 'failed', 'aborted', 'timeout', 'pending_finalize']
+const VALID_STATUSES: BackgroundTaskStatus[] = ['idle', 'intent_persisted', 'dispatching', 'acceptance_unknown', 'queued', 'processing', 'completed', 'failed', 'aborted', 'timeout', 'pending_finalize']
 const VALID_TYPES: BackgroundTaskType[] = ['video', 'music', 'image', 'research', 'document']
 const VALID_VIDEO_STAGES: VideoTaskStage[] = ['queued', 'generating', 'retrieving', 'saving', 'completed']
 const VALID_ID_RE = /^[a-zA-Z0-9_.-]{1,128}$/
@@ -145,7 +164,7 @@ function isValidProgress(value: unknown): value is number | undefined {
   return typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1
 }
 
-const PAYLOAD_HASH_RE = /^[a-f0-9]{64}$/
+const PAYLOAD_HASH_RE = /^(?:sha256:)?[a-f0-9]{64}$/
 
 export function isValidBackgroundTask(value: unknown): value is BackgroundTask {
   if (!value || typeof value !== 'object') return false
@@ -165,9 +184,12 @@ export function isValidBackgroundTask(value: unknown): value is BackgroundTask {
     typeof task.profileId === 'string' &&
     (task.providerId === undefined || typeof task.providerId === 'string') &&
     (task.modelId === undefined || typeof task.modelId === 'string') &&
+    (task.operation === undefined || typeof task.operation === 'string') &&
     (task.sourceTab === undefined || typeof task.sourceTab === 'string') &&
     (task.requestFingerprint === undefined || typeof task.requestFingerprint === 'string') &&
     (task.payloadHash === undefined || (typeof task.payloadHash === 'string' && PAYLOAD_HASH_RE.test(task.payloadHash))) &&
+    (task.dispatchStartedAt === undefined || (typeof task.dispatchStartedAt === 'number' && Number.isFinite(task.dispatchStartedAt))) &&
+    (task.acceptedAt === undefined || (typeof task.acceptedAt === 'number' && Number.isFinite(task.acceptedAt))) &&
     (task.attemptStartedAt === undefined || (typeof task.attemptStartedAt === 'number' && Number.isFinite(task.attemptStartedAt))) &&
     (task.attemptNumber === undefined || (typeof task.attemptNumber === 'number' && Number.isFinite(task.attemptNumber))) &&
     (task.pollAttempts === undefined || (typeof task.pollAttempts === 'number' && Number.isFinite(task.pollAttempts))) &&
@@ -218,6 +240,21 @@ export function parseTasksStrict(raw: string): ParseTasksResult {
   return {
     ok: true,
     tasks: tasks
+      .map((rawTask) => {
+        const record = rawTask as Record<string, unknown>
+        // Migrate legacy write-ahead sentinel. A real remote ID means the
+        // provider accepted the billable job before the crash; otherwise the
+        // submission state is irrecoverable and must not be auto-redispatched.
+        if (record.status === 'pending_finalize') {
+          const queueId = record.queueId
+          const hasRealQueueId = typeof queueId === 'string' && queueId.length > 0 && queueId !== 'pending'
+          record.status = hasRealQueueId ? 'queued' : 'acceptance_unknown'
+          if (!hasRealQueueId && typeof record.error !== 'string') {
+            record.error = 'Application restarted before provider accepted the request. Acceptance unknown.'
+          }
+        }
+        return rawTask
+      })
       .filter(isValidBackgroundTask)
       .map((task) => ({ ...task, metadata: sanitizePersistedMetadata(task.metadata) })),
   }
@@ -235,9 +272,12 @@ export function createBackgroundTask(input: BackgroundTaskCreateInput): Backgrou
     profileId: input.profileId,
     providerId: input.providerId,
     modelId: input.modelId,
+    operation: input.operation,
     sourceTab: input.sourceTab,
     requestFingerprint: input.requestFingerprint,
     payloadHash: input.payloadHash,
+    dispatchStartedAt: input.dispatchStartedAt,
+    acceptedAt: input.acceptedAt,
     attemptStartedAt: now,
     attemptNumber: 1,
     pollAttempts: 0,
