@@ -2,6 +2,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
 
 describe("verify:ci-contract required gate coverage", () => {
@@ -74,9 +75,10 @@ describe("verify:ci-contract external action pinning enforcement", () => {
     expect(source).toContain("['statements', 70]");
   });
 
-  it("enforces the CI job dependency graph (build gates on coverage, smokes gate on platform)", () => {
+  it("enforces the CI job dependency graph (build gates on coverage, script-coverage, smokes gate on platform)", () => {
     const source = readVerifier();
     expect(source).toContain("'build' job must depend on the 'coverage' job");
+    expect(source).toContain("'script-coverage'");
     expect(source).toContain("electron-smoke-macos");
     expect(source).toContain("electron-smoke-windows");
     expect(source).toContain("must depend on both 'build'");
@@ -115,5 +117,15 @@ describe("verify-ci-contract workflow contents", () => {
         expect(value, `${file}: ${value}`).toMatch(/^[^.][^\s]*@[0-9a-fA-F]{40}$/);
       }
     }
+  });
+
+  it("passes against the real repository without treating script thresholds as aggregate floors", () => {
+    const root = path.resolve(__dirname, "..");
+    const result = spawnSync("node", [path.join(root, "scripts", "verify-ci-contract.cjs")], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    expect(result.status, result.stderr || result.stdout).toBe(0);
+    expect(result.stdout).toContain("vitest.config.ts test isolation and coverage schema are valid");
   });
 });

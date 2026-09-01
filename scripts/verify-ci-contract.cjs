@@ -155,18 +155,25 @@ if (fs.existsSync(vitestConfigPath)) {
   // functions >= 68, lines >= 73, statements >= 70. Lowering any of them here
   // intentionally fails this verifier (raise the bar only with evidence and an
   // explicit policy change tracked in docs/).
+  //
+  // vitest.config.ts declares two threshold sets: a lower set for the dedicated
+  // scripts/ coverage suite (COVERAGE_SCRIPTS=true) and the aggregate set for
+  // all other coverage. This verifier must enforce the floor only against the
+  // aggregate thresholds, so we match every occurrence and validate the final
+  // one, which is the else-branch aggregate set.
   for (const [name, minimum] of [
     ['branches', 59],
     ['functions', 68],
     ['lines', 73],
     ['statements', 70],
   ]) {
-    const matcher = new RegExp(`${name}\\s*:\\s*([0-9]+(?:\\.[0-9]+)?)`);
-    const match = vitestConfig.match(matcher);
-    if (!match) {
+    const matcher = new RegExp(`${name}\\s*:\\s*([0-9]+(?:\\.[0-9]+)?)`, 'g');
+    const matches = [...vitestConfig.matchAll(matcher)];
+    if (matches.length === 0) {
       console.error(`❌ vitest.config.ts must declare an explicit '${name}' coverage threshold`);
       process.exit(1);
     }
+    const match = matches[matches.length - 1];
     if (parseFloat(match[1]) < minimum) {
       console.error(`❌ vitest.config.ts '${name}' coverage threshold (${match[1]}) is below the required minimum (${minimum}); the coverage bar cannot be lowered`);
       process.exit(1);
@@ -386,13 +393,13 @@ if (!buildNeeds || !buildNeeds.includes('coverage')) {
   console.error("❌ ci.yml 'build' job must depend on the 'coverage' job (needs must include coverage)");
   process.exit(1);
 }
-for (const gate of ['lint-and-typecheck', 'unit-and-integration-tests', 'contracts']) {
+for (const gate of ['lint-and-typecheck', 'unit-and-integration-tests', 'script-coverage', 'contracts']) {
   if (!buildNeeds.includes(gate)) {
     console.error(`❌ ci.yml 'build' job must depend on '${gate}'`);
     process.exit(1);
   }
 }
-console.log("✓ ci.yml build job gates on lint/typecheck, tests, coverage, and contracts");
+console.log("✓ ci.yml build job gates on lint/typecheck, tests, coverage, script-coverage, and contracts");
 
 for (const [smoke, sensitive] of [
   ['electron-smoke-macos', 'macos-sensitive-tests'],

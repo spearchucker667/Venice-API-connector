@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, it, expect } from "vitest";
 // @ts-expect-error - CJS import in TS file
-import { getTargets, FORBIDDEN_DIST_PATTERNS, SECRET_PATTERNS, FORBIDDEN_ELECTRON_TEXT_PATTERNS, brandingNoticesInSync } from "./verify-dist.cjs";
+import { getTargets, buildReleaseAllowlist, FORBIDDEN_DIST_PATTERNS, SECRET_PATTERNS, FORBIDDEN_ELECTRON_TEXT_PATTERNS, brandingNoticesInSync } from "./verify-dist.cjs";
 
 describe("verify-dist platform selection", () => {
   it("selects Windows x64 when running on win32 with no args", () => {
@@ -66,6 +66,77 @@ describe("verify-dist platform selection", () => {
     expect(targets.checkLinux).toBe(false);
     expect(targets.checkMac).toBe(false);
     expect(targets.checkWin).toBe(false);
+  });
+});
+
+describe("verify-dist release artifact allowlist", () => {
+  const version = "3.0.0-beta.2";
+
+  it("includes expected Windows setup, portable, and updater artifacts", () => {
+    const allowed = buildReleaseAllowlist(version, {
+      checkWin: true,
+      checkMac: false,
+      checkLinux: false,
+      targetArches: ["x64"],
+      isPortableOnly: false,
+    });
+    expect(allowed.has(`Venice-Forge-${version}-x64-Setup.exe`)).toBe(true);
+    expect(allowed.has(`Venice-Forge-${version}-x64-Portable.exe`)).toBe(true);
+    expect(allowed.has("latest.yml")).toBe(true);
+    expect(allowed.has(`Venice-Forge-${version}-x64-Setup.exe.sha256`)).toBe(true);
+    expect(allowed.has(`Venice-Forge-${version}-x64-Setup.exe.blockmap`)).toBe(true);
+  });
+
+  it("includes expected macOS artifacts for both architectures", () => {
+    const allowed = buildReleaseAllowlist(version, {
+      checkWin: false,
+      checkMac: true,
+      checkLinux: false,
+      targetArches: ["x64", "arm64"],
+      isPortableOnly: false,
+    });
+    expect(allowed.has(`Venice-Forge-${version}-x64.dmg`)).toBe(true);
+    expect(allowed.has(`Venice-Forge-${version}-arm64.zip`)).toBe(true);
+    expect(allowed.has("latest-mac.yml")).toBe(true);
+    expect(allowed.has(`Venice-Forge-${version}-x64.dmg.blockmap.sha256`)).toBe(true);
+  });
+
+  it("includes expected Linux artifacts for x64", () => {
+    const allowed = buildReleaseAllowlist(version, {
+      checkWin: false,
+      checkMac: false,
+      checkLinux: true,
+      targetArches: ["x64"],
+      isPortableOnly: false,
+    });
+    expect(allowed.has(`Venice-Forge-${version}-x64.AppImage`)).toBe(true);
+    expect(allowed.has(`Venice-Forge-${version}-x64.deb`)).toBe(true);
+    expect(allowed.has(`Venice-Forge-${version}-x64.rpm`)).toBe(true);
+    expect(allowed.has("latest-linux.yml")).toBe(true);
+  });
+
+  it("excludes unrelated platform artifacts", () => {
+    const allowed = buildReleaseAllowlist(version, {
+      checkWin: true,
+      checkMac: false,
+      checkLinux: false,
+      targetArches: ["x64"],
+      isPortableOnly: false,
+    });
+    expect(allowed.has(`Venice-Forge-${version}-x64.dmg`)).toBe(false);
+    expect(allowed.has(`Venice-Forge-${version}-x64.AppImage`)).toBe(false);
+  });
+
+  it("includes electron-builder debug manifest", () => {
+    const allowed = buildReleaseAllowlist(version, {
+      checkWin: false,
+      checkMac: false,
+      checkLinux: false,
+      targetArches: ["x64"],
+      isPortableOnly: false,
+    });
+    expect(allowed.has("builder-debug.yml")).toBe(true);
+    expect(allowed.has("builder-debug.yml.sha256")).toBe(true);
   });
 });
 

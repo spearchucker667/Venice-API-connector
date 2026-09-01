@@ -73,6 +73,30 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  script-coverage:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    needs: [lint-and-typecheck]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      # Dedicated script coverage job. scripts/ are excluded from the aggregate
+      # coverage map unless COVERAGE_SCRIPTS=true; this job enforces the
+      # scripts/ thresholds from vitest.config.ts independently.
+      - run: npm run test:coverage:scripts
+      - name: Upload Script Coverage
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: failure()
+        with:
+          name: script-coverage
+          path: coverage/
+          if-no-files-found: ignore
+          retention-days: 7
+
   contracts:
     runs-on: ubuntu-22.04
     timeout-minutes: 30
@@ -90,7 +114,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     timeout-minutes: 30
-    needs: [lint-and-typecheck, unit-and-integration-tests, coverage, contracts]
+    needs: [lint-and-typecheck, unit-and-integration-tests, coverage, script-coverage, contracts]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -203,12 +227,14 @@ jobs:
       - run: npm ci
       - name: Package macOS app
         run: npm run dist:mac:arm64
-      - name: Verify macOS artifact
-        run: node scripts/verify-dist.cjs --mac --arch arm64
       - name: Run packaged Electron smoke test
         run: npx vitest run tests/smoke/electron-smoke.test.ts
         env:
           RUN_ELECTRON_SMOKE: 'true'
+      - name: Remove packaging staging directories
+        run: node scripts/clean-release-staging.cjs
+      - name: Verify macOS artifact
+        run: node scripts/verify-dist.cjs --mac --arch arm64
 
   # Packaged Electron smoke test on Windows
   electron-smoke-windows:
@@ -227,12 +253,14 @@ jobs:
         run: npm run dist:portable
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
-      - name: Verify Windows portable artifact
-        run: npm run verify:dist:portable
       - name: Run packaged Electron smoke test
         run: npx vitest run tests/smoke/electron-smoke.test.ts
         env:
           RUN_ELECTRON_SMOKE: 'true'
+      - name: Remove packaging staging directories
+        run: node scripts/clean-release-staging.cjs
+      - name: Verify Windows portable artifact
+        run: npm run verify:dist:portable
 
   # Packaged Electron smoke test on Linux
   electron-smoke-linux:
@@ -251,9 +279,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y xvfb libgbm-dev
       - name: Package Linux app
         run: npm run dist:linux
-      - name: Verify Linux artifact
-        run: node scripts/verify-dist.cjs --linux
       - name: Run packaged Electron smoke test
         run: xvfb-run --auto-servernum npx vitest run tests/smoke/electron-smoke.test.ts
         env:
           RUN_ELECTRON_SMOKE: 'true'
+      - name: Remove packaging staging directories
+        run: node scripts/clean-release-staging.cjs
+      - name: Verify Linux artifact
+        run: node scripts/verify-dist.cjs --linux

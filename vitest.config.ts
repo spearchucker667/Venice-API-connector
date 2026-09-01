@@ -49,24 +49,31 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
-      thresholds: {
-        branches: 59,
-        functions: 68,
-        lines: 73,
-        statements: 70,
-        "scripts/**/*": {
-          branches: 41,
-          functions: 38,
-          lines: 57,
-          statements: 56,
-        },
-      },
+      // When running the dedicated script-coverage suite, only scripts/ should
+      // contribute to coverage and the thresholds should reflect the scripts/
+      // bar. Otherwise scripts/ are excluded and the global app thresholds apply.
+      thresholds:
+        process.env.COVERAGE_SCRIPTS === "true"
+          ? {
+              branches: 41,
+              functions: 38,
+              lines: 57,
+              statements: 56,
+            }
+          : {
+              branches: 59,
+              functions: 68,
+              lines: 73,
+              statements: 70,
+            },
       exclude: [
         "node_modules/",
         "dist/",
         "dist-electron/",
         "release/",
-        ...(process.env.COVERAGE_SCRIPTS === "true" ? [] : ["scripts/"]),
+        ...(process.env.COVERAGE_SCRIPTS === "true"
+          ? ["src/", "electron/"]
+          : ["scripts/"]),
         "**/*.test.ts",
         "**/*.test.tsx",
         "vite.config.ts",

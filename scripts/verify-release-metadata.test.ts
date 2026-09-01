@@ -51,4 +51,35 @@ describe("release metadata contract", () => {
       "LEGAL.md must source release version from package.json, not a stale literal.",
     ]));
   });
+
+  it("rejects a GitHub tag that does not match package.json version", () => {
+    const previous = process.env.GITHUB_REF_NAME;
+    process.env.GITHUB_REF_NAME = "v3.0.0";
+    try {
+      const failures = verifyReleaseMetadata(fixture());
+      expect(failures).toEqual(expect.arrayContaining([
+        "GitHub tag v3.0.0 must match package.json version v3.0.0-beta.2.",
+      ]));
+    } finally {
+      if (previous === undefined) {
+        delete process.env.GITHUB_REF_NAME;
+      } else {
+        process.env.GITHUB_REF_NAME = previous;
+      }
+    }
+  });
+
+  it("accepts a GitHub tag that matches package.json version", () => {
+    const previous = process.env.GITHUB_REF_NAME;
+    process.env.GITHUB_REF_NAME = "v3.0.0-beta.2";
+    try {
+      expect(verifyReleaseMetadata(fixture())).toEqual([]);
+    } finally {
+      if (previous === undefined) {
+        delete process.env.GITHUB_REF_NAME;
+      } else {
+        process.env.GITHUB_REF_NAME = previous;
+      }
+    }
+  });
 });

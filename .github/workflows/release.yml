@@ -43,6 +43,12 @@ jobs:
       - name: Verify release readiness (VERIFY-052 + i18n)
         run: npm run verify:release-readiness
 
+      - name: Verify tag/version parity
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: npm run verify:release-metadata
+
       - name: Lint (zero warnings)
         run: npm run lint:eslint
         # Mirrors the CI workflow gate so a release cannot ship with an ESLint
@@ -93,6 +99,9 @@ jobs:
       - name: Generate SHA-256 checksums
         run: npm run checksum:release
 
+      - name: Remove packaging staging directories
+        run: node scripts/clean-release-staging.cjs
+
       - name: Verify release artifacts
         run: npm run verify:dist:mac
 
@@ -135,6 +144,12 @@ jobs:
 
       - name: Verify release readiness (VERIFY-052 + i18n)
         run: npm run verify:release-readiness
+
+      - name: Verify tag/version parity
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: npm run verify:release-metadata
 
       - name: Lint (zero warnings)
         run: npm run lint:eslint
@@ -181,6 +196,9 @@ jobs:
       - name: Generate SHA-256 checksums
         run: npm run checksum:release
 
+      - name: Remove packaging staging directories
+        run: node scripts/clean-release-staging.cjs
+
       - name: Verify release artifacts
         run: npm run verify:dist:win
 
@@ -225,6 +243,12 @@ jobs:
       - name: Verify release readiness (VERIFY-052 + i18n)
         run: npm run verify:release-readiness
 
+      - name: Verify tag/version parity
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: npm run verify:release-metadata
+
       - name: Lint (zero warnings)
         run: npm run lint:eslint
         # Mirrors the CI workflow gate so a release cannot ship with an ESLint
@@ -242,6 +266,9 @@ jobs:
 
       - name: Generate SHA-256 checksums
         run: npm run checksum:release
+
+      - name: Remove packaging staging directories
+        run: node scripts/clean-release-staging.cjs
 
       - name: Verify Linux release artifacts
         run: npm run verify:dist:linux

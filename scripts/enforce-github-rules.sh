@@ -28,9 +28,19 @@ JSON_PAYLOAD=$(cat <<JSON
       "parameters": {
         "strict_required_status_checks_policy": true,
         "required_status_checks": [
-          { "context": "CI" },
-          { "context": "CodeQL" },
-          { "context": "build" }
+          { "context": "lint-and-typecheck" },
+          { "context": "unit-and-integration-tests" },
+          { "context": "coverage" },
+          { "context": "script-coverage" },
+          { "context": "contracts" },
+          { "context": "build" },
+          { "context": "windows-sensitive-tests" },
+          { "context": "macos-sensitive-tests" },
+          { "context": "electron-smoke-macos" },
+          { "context": "electron-smoke-windows" },
+          { "context": "electron-smoke-linux" },
+          { "context": "CodeQL / javascript-typescript" },
+          { "context": "CodeQL / actions" }
         ]
       }
     }

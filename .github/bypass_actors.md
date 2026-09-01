@@ -17,6 +17,7 @@ The following actor remains authorized to bypass `Rules01` (including required C
    - **Required permission scope:** Repository administration.
    - **Risk if compromised:** A compromised admin account can push arbitrary code to `main`. Mitigated by MFA, audit logging, and the narrowness of this single remaining bypass.
    - **Keep/remove decision:** KEEP as the sole emergency bypass.
+   - **Risk acceptance:** This is a deliberate, documented emergency bypass. It is the only remaining bypass actor and is restricted to repository administrators. Removing it would require an alternate out-of-band recovery process for incidents where the normal PR/CI path is unavailable. Re-evaluate at each security review.
    - **Evidence:** Verified via `gh api repos/spearchucker667/Venice_Forge/rulesets/21229461`.
 
 ## Removed Bypass Actors (Security Cleanup)

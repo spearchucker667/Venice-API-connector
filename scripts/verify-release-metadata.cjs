@@ -21,6 +21,12 @@ function verifyReleaseMetadata(rootDir) {
   if (/fully stabilized/i.test(about)) failures.push("ABOUT.md must not claim the beta is fully stabilized.");
   if (/currently v\d+\.\d+/i.test(legal)) failures.push("LEGAL.md must source release version from package.json, not a stale literal.");
   if (!aboutPanel.includes('from "../../../package.json"')) failures.push("In-app About must consume package.json version metadata.");
+
+  const tag = process.env.GITHUB_REF_NAME;
+  if (tag && tag.startsWith("v") && tag !== `v${version}`) {
+    failures.push(`GitHub tag ${tag} must match package.json version v${version}.`);
+  }
+
   return failures;
 }
 

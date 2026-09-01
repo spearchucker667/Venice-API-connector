@@ -37,6 +37,63 @@ function getTargets(platform, args) {
   return { checkWin, checkMac, checkLinux, targetArches, linuxArches };
 }
 
+/**
+ * Build the explicit allowlist of release artifacts (including checksum sidecars
+ * and updater blockmaps) for the requested platform set. Anything in release/
+ * that is not on this list is rejected before publishing.
+ */
+function buildReleaseAllowlist(version, { checkWin, checkMac, checkLinux, targetArches, isPortableOnly }) {
+  const allowed = new Set();
+
+  function addSidecar(name) {
+    allowed.add(name);
+    allowed.add(`${name}.sha256`);
+    if (name.endsWith(".exe") || name.endsWith(".dmg") || name.endsWith(".zip")) {
+      allowed.add(`${name}.blockmap`);
+      allowed.add(`${name}.blockmap.sha256`);
+    }
+  }
+
+  if (checkWin) {
+    const winArches = targetArches.includes("x64") ? ["x64"] : [];
+    for (const arch of winArches) {
+      if (!isPortableOnly) {
+        addSidecar(`Venice-Forge-${version}-${arch}-Setup.exe`);
+      }
+      addSidecar(`Venice-Forge-${version}-${arch}-Portable.exe`);
+    }
+    if (!isPortableOnly) {
+      addSidecar("latest.yml");
+    }
+  }
+
+  if (checkMac) {
+    for (const arch of targetArches) {
+      addSidecar(`Venice-Forge-${version}-${arch}.dmg`);
+      addSidecar(`Venice-Forge-${version}-${arch}.zip`);
+    }
+    addSidecar("latest-mac.yml");
+  }
+
+  if (checkLinux) {
+    const linuxArches = targetArches.includes("x64") ? ["x64"] : targetArches;
+    for (const arch of linuxArches) {
+      for (const ext of ["AppImage", "deb", "rpm"]) {
+        addSidecar(`Venice-Forge-${version}-${arch}.${ext}`);
+      }
+    }
+    // Linux updater metadata uses a platform-specific latest file name.
+    for (const file of ["latest-linux.yml", "latest-linux-arm64.yml", "latest-linux-x64.yml"]) {
+      addSidecar(file);
+    }
+  }
+
+  // electron-builder emits a debug manifest for every platform build.
+  addSidecar("builder-debug.yml");
+
+  return allowed;
+}
+
 // Forbidden patterns inside the build outputs. Phase 2J hygiene guard.
 const FORBIDDEN_DIST_PATTERNS = [
   // Source maps must never be shipped
@@ -101,6 +158,7 @@ function brandingNoticesInSync(rootDir) {
 if (require.main !== module) {
   module.exports = {
     getTargets,
+    buildReleaseAllowlist,
     FORBIDDEN_DIST_PATTERNS,
     SECRET_PATTERNS,
     FORBIDDEN_ELECTRON_TEXT_PATTERNS,
@@ -109,6 +167,7 @@ if (require.main !== module) {
 } else {
 
 const { checkWin, checkMac, checkLinux, targetArches } = getTargets(process.platform, args);
+const isPortableOnly = args.includes("--portable") && !args.includes("--all");
 
 const root = path.join(__dirname, "..");
 const pkg = require(path.join(root, "package.json"));
@@ -331,7 +390,6 @@ const verified = [];
 if (checkWin) {
   console.log("[verify:dist] Verifying Windows artifacts...");
   verifyFileExists(path.join(root, "build", "icon.ico"), 1024);
-  const isPortableOnly = args.includes("--portable") && !args.includes("--all");
 
   const winArches = targetArches.includes("x64") ? ["x64"] : []; // Windows is only x64 for now
   for (const arch of winArches) {
@@ -400,6 +458,17 @@ if (checkMac) {
 
 if (checkLinux) {
   verifyLinuxArtifacts(releaseDir, verified);
+}
+
+const allowed = buildReleaseAllowlist(version, { checkWin, checkMac, checkLinux, targetArches, isPortableOnly });
+const releaseEntries = fs.readdirSync(releaseDir, { withFileTypes: true });
+const unexpected = releaseEntries
+  .filter((e) => !allowed.has(e.name))
+  .map((e) => (e.isDirectory() ? `${e.name}/` : e.name));
+if (unexpected.length > 0) {
+  fail(
+    `Unexpected top-level output in release/ is not on the artifact allowlist:\n  ${unexpected.join("\n  ")}`
+  );
 }
 
 console.log("[verify:dist] Successfully verified artifacts:");
