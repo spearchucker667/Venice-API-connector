@@ -40,6 +40,8 @@ This is the active handoff and validation ledger. The canonical current-work led
 - Validated the state matches historical outputs from 2026-08-22.
 - Removed lingering scratch scripts.
 - Verified lint, typecheck, build pass.
+- Fixed high-severity vulnerability in `browserslist` via `npm audit fix` (resolved Dependabot alert #23).
+
 
 ### 2026-09-01 — Cross-tranche coordination closeout (VF-AUD-20260901 coordination).
 
@@ -746,6 +748,8 @@ Investigation only, then four targeted fixes based on the user-reported defects
 - Validated the state matches historical outputs from 2026-08-22.
 - Removed lingering scratch scripts.
 - Verified lint, typecheck, build pass.
+- Fixed high-severity vulnerability in `browserslist` via `npm audit fix` (resolved Dependabot alert #23).
+
 
 ### 2026-09-01 — Cross-tranche coordination closeout (VF-AUD-20260901 coordination)
 
