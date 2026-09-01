@@ -78,6 +78,32 @@ function resolveExpectedCharacterIds(ctx: RpPromptContext): string[] {
   return id ? [id] : [];
 }
 
+/** First-match index so duplicate character ids keep Array.prototype.find semantics. */
+function indexCharactersByFirstId(
+  characters: readonly CharacterCardV1[],
+): Map<string, CharacterCardV1> {
+  const charactersById = new Map<string, CharacterCardV1>();
+  for (const character of characters) {
+    if (!charactersById.has(character.id)) {
+      charactersById.set(character.id, character);
+    }
+  }
+  return charactersById;
+}
+
+/** Resolves active cards in `characterIds` order; missing ids are skipped. */
+function resolveActiveCharacterCards(
+  charactersById: Map<string, CharacterCardV1>,
+  characterIds: readonly string[],
+): CharacterCardV1[] {
+  const activeCards: CharacterCardV1[] = [];
+  for (const characterId of characterIds) {
+    const card = charactersById.get(characterId);
+    if (card) activeCards.push(card);
+  }
+  return activeCards;
+}
+
 /** Matches a single keyword against the trigger rules. */
 function keywordMatches(
   keyword: string,
@@ -339,11 +365,10 @@ export function buildRpPrompt(ctx: RpPromptContext): PromptAssemblyResult {
     included: true,
   });
 
+  const charactersById = indexCharactersByFirstId(ctx.characters);
+  const expectedId = ctx.expectedCharacterId ?? ctx.rpChat.characterIds[0];
   const expectedCard =
-    ctx.characters.find(
-      (card) =>
-        card.id === (ctx.expectedCharacterId ?? ctx.rpChat.characterIds[0]),
-    ) ?? ctx.characters[0];
+    (expectedId ? charactersById.get(expectedId) : undefined) ?? ctx.characters[0];
   // 2. System prompt. A card prompt replaces/falls back to the global prompt
   // according to the explicit behavior; it is not duplicated in the character definition.
   const modelSys = resolveCharacterSystemPrompt(
@@ -413,11 +438,10 @@ export function buildRpPrompt(ctx: RpPromptContext): PromptAssemblyResult {
   }
 
   // 4. Characters — one block per active card, in chat order. Validated against the cap.
-  const activeCards: CharacterCardV1[] = [];
-  for (const cid of ctx.rpChat.characterIds) {
-    const card = ctx.characters.find((c) => c.id === cid);
-    if (card) activeCards.push(card);
-  }
+  const activeCards = resolveActiveCharacterCards(
+    charactersById,
+    ctx.rpChat.characterIds,
+  );
   for (const card of activeCards) {
     const content = buildCharactersBlock([card]);
     if (content) {
@@ -686,7 +710,7 @@ export function buildRpPrompt(ctx: RpPromptContext): PromptAssemblyResult {
   // 9. Active-turn instruction — names the responding character(s).
   const expected = resolveExpectedCharacterIds(ctx);
   const expectedNames = expected
-    .map((id) => ctx.characters.find((c) => c.id === id)?.name)
+    .map((id) => charactersById.get(id)?.name)
     .filter((n): n is string => typeof n === "string" && n.length > 0);
   if (expectedNames.length > 0) {
     const turnText = `You are now playing: ${expectedNames.join(", ")}. Respond in character.`;

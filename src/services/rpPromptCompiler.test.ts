@@ -171,6 +171,43 @@ describe("rpPromptCompiler", () => {
     expect(out.firstMessage).toBeUndefined();
   });
 
+  it("skips empty or missing prompt-library refs and preserves caller order", () => {
+    const refs: RpPromptLibraryRef[] = [
+      { id: "p_empty", label: "Empty", content: "" },
+      { id: "p_1", label: "First", content: "alpha" },
+      { id: "p_2", label: "Second", content: "beta" },
+    ];
+    const out = compileRpPrompt({
+      rpChat: chat(),
+      characters: [character()],
+      lorebooks: [],
+      memories: [],
+      currentUserMessage: "hi",
+      promptLibraryRefs: refs,
+    });
+    const lib = out.sections.filter((s) => s.kind === "prompt-library");
+    expect(lib.map((s) => s.sourceId)).toEqual(["p_1", "p_2"]);
+    expect(lib.map((s) => s.content)).toEqual(["alpha", "beta"]);
+  });
+
+  it("preserves duplicate prompt-library refs in caller order", () => {
+    const refs: RpPromptLibraryRef[] = [
+      { id: "p_1", label: "Style", content: "Speak in limericks." },
+      { id: "p_1", label: "Style again", content: "Speak in limericks." },
+    ];
+    const out = compileRpPrompt({
+      rpChat: chat(),
+      characters: [character()],
+      lorebooks: [],
+      memories: [],
+      currentUserMessage: "hi",
+      promptLibraryRefs: refs,
+    });
+    const lib = out.sections.filter((s) => s.kind === "prompt-library");
+    expect(lib).toHaveLength(2);
+    expect(lib.every((s) => s.sourceId === "p_1")).toBe(true);
+  });
+
   it("includes prompt-library refs as a prompt-library section", () => {
     const refs: RpPromptLibraryRef[] = [
       { id: "p_1", label: "Style guide", content: "Speak in limericks." },

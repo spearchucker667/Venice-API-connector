@@ -333,6 +333,43 @@ describe("buildRpPrompt", () => {
     expect(a).toEqual(b);
   });
 
+  it("emits character blocks in characterIds order and skips missing ids", () => {
+    const ctx = {
+      rpChat: makeChat([], { characterIds: ["card_b", "missing", "card_a"] }),
+      characters: [
+        makeCard({ id: "card_a", name: "Alice" }),
+        makeCard({ id: "card_b", name: "Bob" }),
+      ],
+      lorebooks: [],
+      memories: [],
+      currentUserMessage: "Hello",
+      systemBlockBudget: 32_000,
+      recentMessageBudget: 8,
+    };
+    const out = buildRpPrompt(ctx);
+    const characterTrace = out.trace.filter((t) => t.kind === "character" && t.included);
+    expect(characterTrace.map((t) => t.sourceId)).toEqual(["card_b", "card_a"]);
+  });
+
+  it("uses the first matching character when duplicate ids exist", () => {
+    const ctx = {
+      rpChat: makeChat([], { characterIds: ["card_a"] }),
+      characters: [
+        makeCard({ id: "card_a", name: "First Alice" }),
+        makeCard({ id: "card_a", name: "Second Alice" }),
+      ],
+      lorebooks: [],
+      memories: [],
+      currentUserMessage: "Hello",
+      systemBlockBudget: 32_000,
+      recentMessageBudget: 8,
+    };
+    const out = buildRpPrompt(ctx);
+    const turn = out.systemMessages.find((m) => m.content.startsWith("You are now playing:"));
+    expect(turn?.content).toContain("First Alice");
+    expect(turn?.content).not.toContain("Second Alice");
+  });
+
   it("names the active character in the active-turn instruction", () => {
     const ctx = {
       rpChat: makeChat(),

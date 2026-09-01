@@ -38,10 +38,7 @@ function sanitizeTarget(target: string): string {
   return target;
 }
 
-function escapePsString(value: string): string {
-  // Escape single quotes by doubling them for PowerShell single-quoted strings.
-  return value.replace(/'/g, "''");
-}
+const CRED_TARGET_ENV = "VENICE_FORGE_CRED_TARGET";
 
 /** Returns true when running on Windows. PowerShell availability is checked at call time. */
 export function isWindowsCredentialStoreAvailable(): boolean {
@@ -55,20 +52,31 @@ interface PowerShellResult {
   error?: Error;
 }
 
-function runPowerShell(script: string, stdin?: string, timeoutMs = DEFAULT_TIMEOUT_MS): PowerShellResult {
+function runPowerShell(
+  script: string,
+  options: { stdin?: string; target?: string; timeoutMs?: number } = {},
+): PowerShellResult {
+  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   try {
-    // The script is passed as a -Command argument so that stdin remains
-    // available for Read-Host inside the script. The secret (when present) is
-    // piped via stdin and never becomes part of the command text.
+    // Static scripts read the non-secret target from an env var so no
+    // user-controlled string is interpolated into -Command. Secrets stay
+    // on stdin for Read-Host. -ExecutionPolicy Bypass is retained because
+    // Add-Type compiles inline C# and can be blocked by a restrictive
+    // machine policy even for -Command scripts.
+    const env: NodeJS.ProcessEnv = { ...process.env };
+    if (options.target !== undefined) {
+      env[CRED_TARGET_ENV] = options.target;
+    }
     const result = spawnSync(
       "powershell.exe",
       ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", script],
       {
-        input: stdin,
+        input: options.stdin,
         windowsHide: true,
         encoding: "utf-8",
         timeout: timeoutMs,
         killSignal: "SIGTERM",
+        env,
       },
     );
     return {
@@ -123,7 +131,8 @@ public class CredManager {
   public static extern bool CredWriteW(IntPtr credential, uint flags);
 }
 '@
-$target = '${escapePsString(t)}'
+$target = $env:VENICE_FORGE_CRED_TARGET
+if ([string]::IsNullOrWhiteSpace($target)) { throw "Credential target is missing." }
 $secure = Read-Host -AsSecureString
 $BSTR = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
 try {
@@ -148,7 +157,7 @@ try {
 }
 `;
 
-  const result = runPowerShell(script, secret);
+  const result = runPowerShell(script, { stdin: secret, target: t });
   if (result.status !== 0) {
     throw new Error(
       `Failed to write Windows credential: ${result.error?.message || result.stderr || result.stdout || "unknown error"}`,
@@ -190,7 +199,8 @@ public class CredManager {
   public static extern void CredFree(IntPtr buffer);
 }
 '@
-$target = '${escapePsString(t)}'
+$target = $env:VENICE_FORGE_CRED_TARGET
+if ([string]::IsNullOrWhiteSpace($target)) { throw "Credential target is missing." }
 $credPtr = [IntPtr]::Zero
 try {
   $ok = [CredManager]::CredReadW($target, 1, 0, [ref]$credPtr)
@@ -209,7 +219,7 @@ try {
 }
 `;
 
-  const result = runPowerShell(script);
+  const result = runPowerShell(script, { target: t });
   if (result.status !== 0) {
     throw new Error(
       `Failed to read Windows credential: ${result.error?.message || result.stderr || result.stdout || "unknown error"}`,
@@ -236,7 +246,8 @@ public class CredManager {
   public static extern bool CredDeleteW(string target, uint type, uint reservedFlag);
 }
 '@
-$target = '${escapePsString(t)}'
+$target = $env:VENICE_FORGE_CRED_TARGET
+if ([string]::IsNullOrWhiteSpace($target)) { throw "Credential target is missing." }
 $ok = [CredManager]::CredDeleteW($target, 1, 0)
 if (-not $ok) {
   $err = [Runtime.InteropServices.Marshal]::GetLastWin32Error()
@@ -244,7 +255,7 @@ if (-not $ok) {
 }
 `;
 
-  const result = runPowerShell(script);
+  const result = runPowerShell(script, { target: t });
   if (result.status !== 0) {
     throw new Error(
       `Failed to delete Windows credential: ${result.error?.message || result.stderr || result.stdout || "unknown error"}`,

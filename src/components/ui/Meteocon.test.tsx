@@ -69,7 +69,8 @@ describe('adaptSvgForTheme', () => {
   });
 
   it('preserves local fragment href references', () => {
-    const source = '<svg><use xlink:href="#local" href="#local" /></svg>';
+    const source =
+      '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#local" href="#local" /></svg>';
     const result = applySvgPresentationOverrides(source, {});
     expect(result).toContain('href="#local"');
   });
@@ -81,9 +82,19 @@ describe('adaptSvgForTheme', () => {
     expect(result).not.toContain('evil.test');
   });
 
-  it('returns raw input for non-SVG or parse errors', () => {
-    const source = '<div>not svg</div>';
-    expect(applySvgPresentationOverrides(source, {})).toBe(source);
+  it('returns an empty svg instead of unsanitized markup on parse errors', () => {
+    const source = '<div>not svg<script>alert(1)</script></div>';
+    const result = applySvgPresentationOverrides(source, {});
+    expect(result).toBe('<svg xmlns="http://www.w3.org/2000/svg"></svg>');
+    expect(result).not.toContain('script');
+    expect(result).not.toContain('alert(1)');
+  });
+
+  it('strips javascript: hrefs', () => {
+    const source = '<svg><a href="javascript:alert(1)" /><use href="javascript:alert(2)" /></svg>';
+    const result = applySvgPresentationOverrides(source, {});
+    expect(result).not.toContain('javascript:');
+    expect(result).not.toContain('alert');
   });
 });
 
@@ -120,5 +131,18 @@ describe('Meteocon component', () => {
     const html = svg!.outerHTML;
     expect(html).not.toMatch(/<style\b|\sstyle=/i);
     expect(html).toContain('stroke="#64748B"');
+  });
+
+  it('does not let caller-supplied HTML override the sanitized icon', () => {
+    const { container } = render(
+      <Meteocon
+        name="wind"
+        // @ts-expect-error hostile HTML override must not win at runtime
+        dangerouslySetInnerHTML={{ __html: '<script>alert(1)</script>' }}
+      />,
+    );
+    expect(container.innerHTML).not.toContain('<script');
+    expect(container.innerHTML).not.toContain('alert(1)');
+    expect(container.querySelector('svg')).toBeTruthy();
   });
 });

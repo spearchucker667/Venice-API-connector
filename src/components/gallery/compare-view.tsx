@@ -16,7 +16,7 @@ import {
   extractGenerationRecipe,
   type GenerationRecipe,
 } from "../../types/project";
-import { MEDIA_SELECTION_MAX } from "../../stores/media-selection-store";
+import { MEDIA_COMPARE_MAX } from "../../stores/media-selection-store";
 import { Trans, useTranslation } from "react-i18next";
 
 export interface CompareField {
@@ -435,12 +435,12 @@ export function CompareView({ items, className, onClose }: CompareViewProps) {
     [items, recipes, tRuntime],
   );
 
-  if (items.length < 2 || items.length > MEDIA_SELECTION_MAX) {
+  if (items.length < 2 || items.length > MEDIA_COMPARE_MAX) {
     return (
       <div className={className} data-testid="compare-view-disabled">
         <p className="text-[12px] text-text-muted">
           <Trans i18nKey="common:surface.componentsGalleryCompareView.description.select2To" />{" "}
-          {MEDIA_SELECTION_MAX}{" "}
+          {MEDIA_COMPARE_MAX}{" "}
           <Trans i18nKey="common:surface.componentsGalleryCompareView.description.itemsToCompare" />
           {items.length}{" "}
           <Trans i18nKey="common:surface.componentsGalleryCompareView.description.selected" />

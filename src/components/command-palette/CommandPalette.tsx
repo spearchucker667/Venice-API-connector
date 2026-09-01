@@ -26,7 +26,7 @@ import { toast } from "../../stores/toast-store";
 import { redactErrorMessage } from "../../shared/redaction";
 import {
   useMediaSelectionStore,
-  MEDIA_SELECTION_MAX,
+  MEDIA_COMPARE_MAX,
 } from "../../stores/media-selection-store";
 import {
   getMediaCommandHandlers,
@@ -73,7 +73,7 @@ export function CommandPalette({
   const isCompareReady = useMediaSelectionStore(
     (s) =>
       s.selectedMediaIds.length >= 2 &&
-      s.selectedMediaIds.length <= MEDIA_SELECTION_MAX,
+      s.selectedMediaIds.length <= MEDIA_COMPARE_MAX,
   );
   // Subscribe to the handlers registry so the media section appears
   // / disappears as the user moves between tabs.
@@ -215,12 +215,12 @@ export function CommandPalette({
       } else if (kind === "compare") {
         if (
           store.selectedMediaIds.length < 2 ||
-          store.selectedMediaIds.length > MEDIA_SELECTION_MAX
+          store.selectedMediaIds.length > MEDIA_COMPARE_MAX
         ) {
           toast.error(
             t("commandPalette.selectCountToCompare", {
               defaultValue: "Select 2 to {{max}} items to compare.",
-              max: MEDIA_SELECTION_MAX,
+              max: MEDIA_COMPARE_MAX,
             }),
           );
           return;

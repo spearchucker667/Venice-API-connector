@@ -82,15 +82,27 @@ export const isValidProfileId = isUserCreatableProfileId;
  */
 export const assertValidProfileId = assertUserCreatableProfileId;
 
-/** Generates a fresh profile id using the platform RNG. */
-export function generateProfileId(): string {
-  // crypto.randomUUID() returns a UUID v4 (e.g. 550e8400-e29b-41d4-a716-446655440000).
-  // Hyphens and hex digits are within the safe alphabet.
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
+function formatUuidV4(bytes: Uint8Array): string {
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+}
+
+function generateSecureUuid(): string {
+  const webCrypto = globalThis.crypto;
+  if (webCrypto && typeof webCrypto.randomUUID === "function") {
+    return webCrypto.randomUUID();
   }
-  // Fallback for environments without crypto.randomUUID (e.g. some test runners).
-  const hex = () => Math.floor(Math.random() * 16).toString(16);
-  const seg = (n: number) => Array.from({ length: n }, hex).join("");
-  return `${seg(8)}-${seg(4)}-${seg(4)}-${seg(4)}-${seg(12)}`;
+  if (webCrypto && typeof webCrypto.getRandomValues === "function") {
+    const bytes = new Uint8Array(16);
+    webCrypto.getRandomValues(bytes);
+    return formatUuidV4(bytes);
+  }
+  throw new Error("Secure random number generation is unavailable.");
+}
+
+/** Generates a fresh profile id using a CSPRNG. Hyphens and hex digits are in the safe alphabet. */
+export function generateProfileId(): string {
+  return generateSecureUuid();
 }

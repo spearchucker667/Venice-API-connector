@@ -66,7 +66,7 @@ flowchart TD
 - **Roleplay (RP) Studio Engine (`VERIFY-048`):** Combines `PersonaV1`, `CharacterCardV1`, `ScenarioV1`, and `LorebookV1` using `compileRpPromptStack()` in `src/services/rpPromptCompiler.ts`. Token estimates are displayed via `rpTokenCounter`, and character cards support V2 PNG chunk metadata and safety wrappers.
 - **Prompt Library & Scene Composer (`VERIFY-046`, `VERIFY-047`):** IndexedDB stores `promptLibrary` (v8) and `scenes` (v9) store append-only version chains (`PromptVersion`, `SceneVersion`). `compileSceneToRecipe` assembles scene components in canonical order (`subject` $\rightarrow$ `character` $\rightarrow$ `location` $\rightarrow$ `mood` $\rightarrow$ `style` $\rightarrow$ `camera` $\rightarrow$ `lighting` $\rightarrow$ `composition` $\rightarrow$ `note`).
 - **Managed Document Agent (`VERIFY-058`):** Bounded chat agent execution loop (`MAX_AGENT_TURNS = 8`, `MAX_AGENT_TOOL_CALLS = 16`). Universal attachment pipeline classifies, parses, redacts secrets, and wraps documents (PDF, DOCX, CSV, code, text) with XML escaping.
-- **Media Studio Power Tools (`VERIFY-044`):** Zustand store `media-selection-store` caps multi-select at `MEDIA_SELECTION_MAX = 4`. Supports multi-select compare, lineage graph tracing (`parentId` $\rightarrow$ `childrenIds`), bulk project assignment/tagging, and safe export bundles.
+- **Media Studio Power Tools (`VERIFY-044`):** Zustand store `media-selection-store` keeps bulk multi-select unbounded and enables compare only when 2..`MEDIA_COMPARE_MAX` (4) items are selected. Supports multi-select compare, lineage graph tracing (`parentId` $\rightarrow$ `childrenIds`), bulk project assignment/tagging, and safe export bundles.
 
 ---
 

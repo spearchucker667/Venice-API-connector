@@ -20,7 +20,7 @@ import { useImageWorkspaceStore } from "../../stores/image-workspace-store";
 import { useProjectStore } from "../../stores/project-store";
 import {
   useMediaSelectionStore,
-  MEDIA_SELECTION_MAX,
+  MEDIA_COMPARE_MAX,
 } from "../../stores/media-selection-store";
 import { registerMediaCommandHandlers } from "../../stores/media-command-handlers";
 import { toast } from "../../stores/toast-store";
@@ -1185,7 +1185,7 @@ export function MediaStudioView() {
         onBatchCompare={handleBatchCompare}
         compareReady={
           selectedMediaIds.length >= 2 &&
-          selectedMediaIds.length <= MEDIA_SELECTION_MAX
+          selectedMediaIds.length <= MEDIA_COMPARE_MAX
         }
       />
 
@@ -1473,7 +1473,7 @@ export function MediaStudioView() {
             onClick={() => setCompareOpen(true)}
             disabled={
               selectedMediaIds.length < 2 ||
-              selectedMediaIds.length > MEDIA_SELECTION_MAX
+              selectedMediaIds.length > MEDIA_COMPARE_MAX
             }
             data-testid="open-compare"
             className="rounded-md border border-border px-2 py-1 text-text-secondary hover:border-accent hover:text-accent disabled:opacity-30"

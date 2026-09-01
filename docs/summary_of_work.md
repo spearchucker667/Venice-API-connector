@@ -934,3 +934,24 @@ Investigation only, then four targeted fixes based on the user-reported defects
 - **P2-003 (Stop publishing/checksumming builder-debug.yml):** Closed. Updated `scripts/clean-release-staging.cjs` to delete `builder-debug.yml` after the build, and removed it from `buildReleaseAllowlist` in `scripts/verify-dist.cjs`. Assertions for this behavior were added to the unit test suites in `scripts/clean-release-staging.test.ts` and `scripts/verify-dist.test.ts`.
 - **P2-004 (Add post-build macOS and Windows signature/notarization verification to tag jobs):** Closed. Added explicit `codesign`, `spctl`, and `xcrun stapler validate` verification steps for macOS `.app` bundles, and a PowerShell `Get-AuthenticodeSignature` check for the Windows Setup executable in `.github/workflows/release.yml`. Both checks gracefully bypass if `RELEASE_ALLOW_UNSIGNED` is set to `true`.
 - **P3-001 (Set explicit Linux desktop identity and executable naming):** Closed. Added `linux.executableName: "venice-forge"` and `desktop: { StartupWMClass: "venice-forge" }` to `electron-builder.config.cjs`. Added `.desktop` content verification using `dpkg-deb` and `tar` to extract and inspect the generated `.deb` package during the `verify:dist:linux` verification phase (in `scripts/verify-dist.cjs`).
+
+### 2026-09-01 — Code Health, Performance & Security Remediation (VF-CH-001, VF-PERF-001, VF-PERF-002, VF-PERF-003, VF-SEC-001, VF-SEC-002, VF-SEC-003, VF-CH-002).
+
+- **Scope:** Complete a focused remediation pass over 8 unique work items regarding code-health, performance, and security findings.
+- **Files changed:**
+  - `src/shared/safety/childExploitationGuard.ts` & `test.ts`: Migrated to `assessChildExploitationSafety` directly, removing deprecated wrapper `assessPromptForSafeContext`.
+  - `src/services/rpPromptCompiler.ts`: Cleaned up prompt library processing loop.
+  - `src/services/rp/promptBuilderService.ts` & `tests/rp/promptBuilder.test.ts`: Indexed character active cards for O(1) lookups during prompt building.
+  - `src/lib/workflow-validator.ts` & `test.ts`: Indexed parameter schema specs for O(1) lookups during validation.
+  - `src/components/ui/Meteocon.tsx` & `test.tsx`: Integrated SVG sanitization before `dangerouslySetInnerHTML`.
+  - `src/utils/profileIdValidation.ts` & `test.ts`: Replaced `Math.random()` profile ID generator fallback with CSPRNG `crypto.getRandomValues()`.
+  - `electron/services/windowsCredentialStore.ts` & `test.ts`: Hardened PowerShell invocation paths with validation and input structuring.
+  - `src/stores/media-selection-store.ts` & `test.ts`, `src/components/gallery/compare-view.tsx` & `test.tsx`, `src/components/command-palette/CommandPalette.tsx` & `test.tsx`: Replaced deprecated `MEDIA_SELECTION_MAX` with `MEDIA_COMPARE_MAX` internally.
+- **Tests added/updated:** Added regression and optimization tests for character IDs, parameter schemas, Meteocon XSS payloads, CSPRNG profile IDs, and Windows credential injection.
+- **Commands executed:**
+  - `npm run lint:eslint` — PASS.
+  - `npm run typecheck` — PASS.
+  - `npx vitest run ...` (11 test files) — PASS (323 tests).
+- **Result:** Improved application security boundaries (Meteocon XSS defense, CSPRNG IDs), increased performance on RP character lookups and workflow validations, and cleaned up deprecated internals. 
+- **Blockers / deferred work:** Full matrix and packaged CI will run in the upcoming publish PR/commit.
+

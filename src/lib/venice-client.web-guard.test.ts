@@ -69,7 +69,6 @@ vi.mock("../shared/safety", () => ({
   },
   assessChildExploitationSafety: vi.fn(),
   assertChildExploitationSafe: vi.fn(),
-  assessPromptForSafeContext: vi.fn(),
   normalizeText: vi.fn(),
   extractPromptLikeFields: vi.fn(() => []),
   recordDecision: vi.fn(),

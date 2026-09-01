@@ -273,7 +273,9 @@ export function compileRpPrompt(input: RpCompileInput): RpCompileResult {
 
   // 3) Inject Phase 2F prompt-library refs (newest first, in caller
   //    order). The caller is expected to have already sanitised content
-  //    and re-redacted secrets.
+  //    and re-redacted secrets. Duplicate ids are preserved: repeating a
+  //    ref is caller-visible prompt content, and per-ref work is O(1)
+  //    token estimation plus a section object. Do not cache or dedupe.
   if (input.promptLibraryRefs && input.promptLibraryRefs.length > 0) {
     for (const ref of input.promptLibraryRefs) {
       if (!ref || !ref.content) {

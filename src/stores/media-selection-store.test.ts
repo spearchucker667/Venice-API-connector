@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
-  MEDIA_SELECTION_MAX as _MEDIA_SELECTION_MAX,
+  MEDIA_COMPARE_MAX,
   useMediaSelectionStore,
 } from "./media-selection-store";
 
@@ -151,6 +151,12 @@ describe("media-selection-store (VERIFY-044)", () => {
     expect(useMediaSelectionStore.getState().isCompareReady()).toBe(false);
     // Selection remains 5 — bulk selection does not cap to MEDIA_COMPARE_MAX.
     expect(useMediaSelectionStore.getState().selectedMediaIds).toContain("e");
+  });
+
+  it("does not export the deprecated MEDIA_SELECTION_MAX alias", () => {
+    const src = readFileSync(join(__dirname, "media-selection-store.ts"), "utf8");
+    expect(src).not.toMatch(/MEDIA_SELECTION_MAX/);
+    expect(MEDIA_COMPARE_MAX).toBe(4);
   });
 
   it("selection does NOT import MediaItem (no store coupling)", () => {

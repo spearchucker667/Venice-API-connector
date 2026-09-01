@@ -56,6 +56,39 @@ describe("windowsCredentialStore", () => {
       );
     });
 
+    it("rejects PowerShell metacharacters and newlines in the target before spawn", async () => {
+      const mod = await loadModule("win32");
+      const payloads = [
+        "VeniceForge;calc",
+        "VeniceForge|whoami",
+        "VeniceForge&dir",
+        "VeniceForge`whoami",
+        "VeniceForge$(whoami)",
+        "VeniceForge'",
+        'VeniceForge"',
+        "VeniceForge\nwhoami",
+        "VeniceForge\rwhoami",
+        "VeniceForge target",
+        "",
+        "x".repeat(257),
+      ];
+      for (const payload of payloads) {
+        expect(() => mod.writeWindowsCredential(payload, "secret")).toThrow();
+      }
+      expect(spawnSync).not.toHaveBeenCalled();
+    });
+
+    it("accepts representative valid target names", async () => {
+      const mod = await loadModule("win32");
+      vi.mocked(spawnSync).mockReturnValue({ status: 0, stdout: "", stderr: "" } as ReturnType<typeof spawnSync>);
+      expect(() =>
+        mod.writeWindowsCredential("VeniceForge:credential:master_password", "secret"),
+      ).not.toThrow();
+      expect(() =>
+        mod.writeWindowsCredential("a_b.c-d:e0123", "secret"),
+      ).not.toThrow();
+    });
+
     it("calls PowerShell with the script and pipes the secret via stdin", async () => {
       const mod = await loadModule("win32");
       vi.mocked(spawnSync).mockReturnValue({ status: 0, stdout: "", stderr: "" } as ReturnType<typeof spawnSync>);
@@ -69,8 +102,16 @@ describe("windowsCredentialStore", () => {
       expect(executable).toBe("powershell.exe");
       if (!args) throw new Error("Expected args");
       expect(args).toContain("-Command");
-      expect(args[args.length - 1]).toContain("CredWriteW");
+      const script = String(args[args.length - 1]);
+      expect(script).toContain("CredWriteW");
+      expect(script).toContain("$env:VENICE_FORGE_CRED_TARGET");
+      expect(script).not.toContain("super-secret");
+      expect(script).not.toContain("VeniceForge:credential:master_password");
+      expect(JSON.stringify(args)).not.toContain("super-secret");
       expect(options?.input).toBe("super-secret");
+      expect((options?.env as NodeJS.ProcessEnv | undefined)?.VENICE_FORGE_CRED_TARGET).toBe(
+        "VeniceForge:credential:master_password",
+      );
     });
 
     it("throws when PowerShell reports a failure", async () => {

@@ -5,7 +5,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { CompareView, buildCompareRowsForTest } from "./compare-view";
 import { MEDIA_ITEM_VERSION, type MediaItem } from "../../types/media";
-import { MEDIA_SELECTION_MAX } from "../../stores/media-selection-store";
+import { MEDIA_COMPARE_MAX } from "../../stores/media-selection-store";
 
 function makeItem(over: Partial<MediaItem> = {}, id: string): MediaItem {
   return {
@@ -33,7 +33,7 @@ describe("CompareView (VERIFY-044)", () => {
   });
 
   it("renders the disabled state when more than 4 items are supplied", () => {
-    const items = Array.from({ length: MEDIA_SELECTION_MAX + 1 }, (_, i) => makeItem({ id: `m${i}` }, `m${i}`));
+    const items = Array.from({ length: MEDIA_COMPARE_MAX + 1 }, (_, i) => makeItem({ id: `m${i}` }, `m${i}`));
     render(<CompareView items={items} />);
     expect(screen.getByTestId("compare-view-disabled")).toBeInTheDocument();
   });

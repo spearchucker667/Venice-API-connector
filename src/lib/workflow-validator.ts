@@ -312,6 +312,19 @@ export function validatePatch(patch: WorkflowPatch): ValidationIssue[] {
   return issues;
 }
 
+/** First-match index so duplicate spec names keep Array.prototype.find semantics. */
+function indexParamSpecsByFirstName(
+  params: readonly ParamSchema[],
+): Map<string, ParamSchema> {
+  const specsByName = new Map<string, ParamSchema>();
+  for (const spec of params) {
+    if (!specsByName.has(spec.name)) {
+      specsByName.set(spec.name, spec);
+    }
+  }
+  return specsByName;
+}
+
 function checkParams(
   issues: ValidationIssue[],
   schema: { params: readonly ParamSchema[]; label?: string },
@@ -319,8 +332,9 @@ function checkParams(
 ): void {
   const label = schema.label ?? "node";
   if (!params) return;
+  const specsByName = indexParamSpecsByFirstName(schema.params);
   for (const [k, v] of Object.entries(params)) {
-    const spec = schema.params.find((p) => p.name === k);
+    const spec = specsByName.get(k);
     if (!spec) {
       issues.push({
         severity: "warning",

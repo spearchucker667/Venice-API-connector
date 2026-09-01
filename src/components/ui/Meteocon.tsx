@@ -56,7 +56,10 @@ export const METEOCONS = {
 
 export type MeteoconName = keyof typeof METEOCONS;
 
-export interface MeteoconProps extends React.HTMLAttributes<HTMLSpanElement> {
+const EMPTY_SVG = '<svg xmlns="http://www.w3.org/2000/svg"></svg>';
+
+export interface MeteoconProps
+  extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'dangerouslySetInnerHTML' | 'children'> {
   name: MeteoconName;
   size?: number | string;
   className?: string;
@@ -90,7 +93,8 @@ export function applySvgPresentationOverrides(
   const doc = new DOMParser().parseFromString(rawSvg, 'image/svg+xml');
   const root = doc.documentElement;
   if (root.nodeName.toLowerCase() !== 'svg' || root.querySelector('parsererror')) {
-    return rawSvg;
+    // Fail closed: never inject unsanitized markup through dangerouslySetInnerHTML.
+    return EMPTY_SVG;
   }
   sanitizeSvgDocument(doc, overrides);
   return new XMLSerializer().serializeToString(root);
@@ -144,10 +148,10 @@ export function Meteocon({ name, size = 22, className = '', ...props }: Meteocon
 
   return (
     <span
+      {...props}
       ref={spanRef}
       className={`inline-flex shrink-0 items-center justify-center pointer-events-none [&>svg]:w-full [&>svg]:h-full ${className}`}
       dangerouslySetInnerHTML={{ __html: adaptedSvg }}
-      {...props}
     />
   );
 }

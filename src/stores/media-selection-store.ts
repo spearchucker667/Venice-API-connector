@@ -24,10 +24,6 @@
  *     selected. When more than MEDIA_COMPARE_MAX items are selected,
  *     isCompareReady() returns false and the toolbar should show an
  *     explanatory label rather than truncating the selection.
- *
- * NOTE: MEDIA_SELECTION_MAX is retained as an alias of MEDIA_COMPARE_MAX
- * for backwards-compat with any external consumers; it is no longer used
- * to cap bulk selection paths.
  */
 
 import { create } from "zustand";
@@ -36,13 +32,6 @@ import { create } from "zustand";
 export const MEDIA_COMPARE_MIN = 2;
 /** Maximum items supported by compare mode. */
 export const MEDIA_COMPARE_MAX = 4;
-
-/**
- * @deprecated Use MEDIA_COMPARE_MAX.  This constant previously capped
- * all selection paths, which incorrectly limited bulk actions.
- * It is kept for backwards-compat with tests and external consumers.
- */
-export const MEDIA_SELECTION_MAX = MEDIA_COMPARE_MAX;
 
 export interface MediaSelectionState {
   /** Ordered, deduplicated list of selected media ids. */

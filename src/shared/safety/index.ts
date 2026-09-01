@@ -5,7 +5,6 @@
 export {
   assessChildExploitationSafety,
   assertChildExploitationSafe,
-  assessPromptForSafeContext,
   SafetyGuardBlockedError,
   normalizeText,
 } from "./childExploitationGuard";

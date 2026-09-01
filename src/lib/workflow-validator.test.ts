@@ -57,6 +57,23 @@ describe("validatePatch", () => {
     expect(warns.length).toBe(1);
   });
 
+  it("reports mixed known and unknown params in Object.entries order", () => {
+    const issues = validatePatch({
+      op: "add_node",
+      nodeType: "chat",
+      id: "n1",
+      params: {
+        prompt: "hi",
+        bogus: "x",
+        temperature: 0.2,
+        alsoBogus: true,
+      },
+    });
+    expect(issues.map((i) => i.severity)).toEqual(["warning", "warning"]);
+    expect(issues[0]?.message).toMatch(/bogus/);
+    expect(issues[1]?.message).toMatch(/alsoBogus/);
+  });
+
   it("rejects set_params with non-primitive values", () => {
     const issues = validatePatch({
       op: "set_params",

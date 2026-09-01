@@ -1,4 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   isValidProfileId,
   assertValidProfileId,
@@ -39,6 +41,48 @@ describe("profileIdValidation", () => {
   it("generateProfileId produces valid ids", () => {
     const id = generateProfileId();
     expect(isValidProfileId(id)).toBe(true);
+    expect(id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+    );
+  });
+
+  describe("generateProfileId CSPRNG fallback", () => {
+    const originalCrypto = globalThis.crypto;
+
+    afterEach(() => {
+      Object.defineProperty(globalThis, "crypto", {
+        configurable: true,
+        value: originalCrypto,
+      });
+    });
+
+    it("builds a UUID v4 from getRandomValues when randomUUID is unavailable", () => {
+      const getRandomValues = vi.fn((bytes: Uint8Array) => {
+        for (let i = 0; i < bytes.length; i += 1) bytes[i] = i;
+        return bytes;
+      });
+      Object.defineProperty(globalThis, "crypto", {
+        configurable: true,
+        value: { getRandomValues },
+      });
+      const id = generateProfileId();
+      expect(getRandomValues).toHaveBeenCalledTimes(1);
+      expect(id).toBe("00010203-0405-4607-8809-0a0b0c0d0e0f");
+      expect(isValidProfileId(id)).toBe(true);
+    });
+
+    it("throws when no CSPRNG is available", () => {
+      Object.defineProperty(globalThis, "crypto", {
+        configurable: true,
+        value: undefined,
+      });
+      expect(() => generateProfileId()).toThrow(/Secure random number generation is unavailable/);
+    });
+
+    it("does not use Math.random", () => {
+      const src = readFileSync(join(__dirname, "profileIdValidation.ts"), "utf8");
+      expect(src).not.toMatch(/Math\.random/);
+    });
   });
 
   // Storage-level validator: "default" must be valid for system/storage use.

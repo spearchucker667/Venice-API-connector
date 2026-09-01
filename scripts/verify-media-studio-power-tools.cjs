@@ -55,7 +55,7 @@ function main() {
       "clearSelection",
       "reconcileWithVisible",
       "isCompareReady",
-      "MEDIA_SELECTION_MAX",
+      "MEDIA_COMPARE_MAX",
       "setVisibleMediaIds",
     ],
     "selection store API",

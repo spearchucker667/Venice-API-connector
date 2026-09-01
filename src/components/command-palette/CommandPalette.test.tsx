@@ -219,7 +219,7 @@ describe("CommandPalette — keyboard navigation", () => {
 // Phase 2B: VERIFY-044 selection-aware Media Studio commands
 import {
   useMediaSelectionStore,
-  MEDIA_SELECTION_MAX,
+  MEDIA_COMPARE_MAX,
 } from "../../stores/media-selection-store";
 import {
   registerMediaCommandHandlers,
@@ -496,8 +496,8 @@ describe("CommandPalette — Phase 2B selection-aware Media Studio commands", ()
     expect(getMediaCommandHandlers()).toBeNull();
   });
 
-  it("MEDIA_SELECTION_MAX is exported and is 4", () => {
-    expect(MEDIA_SELECTION_MAX).toBe(4);
+  it("MEDIA_COMPARE_MAX is exported and is 4", () => {
+    expect(MEDIA_COMPARE_MAX).toBe(4);
   });
 });
 
