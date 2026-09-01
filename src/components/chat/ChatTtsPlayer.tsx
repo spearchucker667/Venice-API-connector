@@ -5,6 +5,7 @@ import {
   type TtsPlaybackState,
 } from "../../services/chatTtsController";
 import { GenerationLoadingIndicator } from "../generation/GenerationLoadingIndicator";
+import * as logger from "../../shared/logger";
 
 interface ChatTtsPlayerProps {
   messageId: string;
@@ -42,7 +43,9 @@ export function ChatTtsPlayer({
     if (isPlaying) {
       chatTtsController.pause();
     } else {
-      chatTtsController.play(messageId, text).catch(console.error);
+      chatTtsController.play(messageId, text).catch((err: unknown) => {
+        logger.error("chat TTS play failed", err);
+      });
     }
   };
 

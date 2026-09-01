@@ -107,11 +107,12 @@ describe("verify-dist release artifact allowlist", () => {
       checkMac: false,
       checkLinux: true,
       targetArches: ["x64"],
+      linuxArches: ["x64"],
       isPortableOnly: false,
     });
-    expect(allowed.has(`Venice-Forge-${version}-x64.AppImage`)).toBe(true);
-    expect(allowed.has(`Venice-Forge-${version}-x64.deb`)).toBe(true);
-    expect(allowed.has(`Venice-Forge-${version}-x64.rpm`)).toBe(true);
+    expect(allowed.has(`Venice-Forge-${version}-x86_64.AppImage`)).toBe(true);
+    expect(allowed.has(`Venice-Forge-${version}-amd64.deb`)).toBe(true);
+    expect(allowed.has(`Venice-Forge-${version}-x86_64.rpm`)).toBe(true);
     expect(allowed.has("latest-linux.yml")).toBe(true);
   });
 
@@ -127,7 +128,7 @@ describe("verify-dist release artifact allowlist", () => {
     expect(allowed.has(`Venice-Forge-${version}-x64.AppImage`)).toBe(false);
   });
 
-  it("includes electron-builder debug manifest", () => {
+  it("excludes electron-builder debug manifest", () => {
     const allowed = buildReleaseAllowlist(version, {
       checkWin: false,
       checkMac: false,
@@ -135,8 +136,8 @@ describe("verify-dist release artifact allowlist", () => {
       targetArches: ["x64"],
       isPortableOnly: false,
     });
-    expect(allowed.has("builder-debug.yml")).toBe(true);
-    expect(allowed.has("builder-debug.yml.sha256")).toBe(true);
+    expect(allowed.has("builder-debug.yml")).toBe(false);
+    expect(allowed.has("builder-debug.yml.sha256")).toBe(false);
   });
 });
 

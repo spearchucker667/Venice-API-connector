@@ -235,7 +235,7 @@ if (ciYaml.includes('libxvfb')) {
   console.error("❌ ci.yml must install the Ubuntu package 'xvfb', not nonexistent 'libxvfb'");
   process.exit(1);
 }
-if (!ciYaml.includes('xvfb-run --auto-servernum npx vitest run tests/smoke/electron-smoke.test.ts')) {
+if (!ciYaml.includes('xvfb-run --auto-servernum npx vitest run tests/smoke/')) {
   console.error("❌ ci.yml 'electron-smoke-linux' must run the packaged smoke test through xvfb-run");
   process.exit(1);
 }

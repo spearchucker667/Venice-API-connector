@@ -51,9 +51,15 @@ export interface AwsBedrockConfig {
   apiKey: string;
 }
 
-export type GoogleVertexConfig =
-  | { authMode: "express"; apiKey: string }
-  | { authMode: "full"; projectId: string; location: string; credentialsJson: string };
+// VF-AUD-20260831-P2-007: the "full" OAuth/service-account branch is removed
+// from the public type until service-account credential custody and OAuth
+// token mint/refresh are implemented. The deferred design lives in
+// `docs/superpowers/plans/2026-08-24-deferred-provider-integration.md` and the
+// canonical UI field is `authMode: "express"` with an API key only.
+export interface GoogleVertexConfig {
+  authMode: "express";
+  apiKey: string;
+}
 
 export interface GenericOpenAiConfig {
   baseUrl: string;

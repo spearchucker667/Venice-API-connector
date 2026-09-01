@@ -434,23 +434,6 @@ describe('providerAdapters', () => {
       expect(transformedBody).toHaveProperty('contents')
     })
 
-    it('rejects Google Vertex requests for unsupported full OAuth mode', () => {
-      vi.mocked(getProviderCredentialOrFallback).mockReturnValueOnce({
-        providerId: 'google_vertex',
-        authMode: 'full',
-        projectId: 'venice-forge-test',
-        location: 'us-central1',
-        credentialsJson: '{}'
-      })
-
-      const result = resolveProviderRoute({
-        endpoint: '/chat/completions',
-        body: { model: 'google_vertex:gemini-2.5-flash', messages: [] }
-      })
-
-      expect(result?.error).toMatch(/not implemented/i)
-    })
-
     it('uses the configured deployment name as the authoritative routing identity', () => {
       vi.mocked(getProviderCredentialOrFallback).mockReturnValueOnce({
         providerId: 'azure_openai',

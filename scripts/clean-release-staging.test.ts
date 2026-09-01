@@ -9,12 +9,14 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const {
   ALLOWLIST,
+  FILE_ALLOWLIST,
   cleanReleaseStaging,
   validateReleaseDir,
   isWithin,
   parseArgs,
 } = require("./clean-release-staging.cjs") as {
   ALLOWLIST: string[];
+  FILE_ALLOWLIST: string[];
   cleanReleaseStaging(options?: { releaseDir?: string | null }): { removed: string[]; skipped: { dirName: string; reason: string }[] };
   validateReleaseDir(releaseDir: string | null | undefined, cwd: string): string;
   isWithin(parent: string, child: string): boolean;
@@ -50,6 +52,12 @@ describe("clean-release-staging allowlist", () => {
       "win-unpacked",
       "linux-unpacked",
       "linux-arm64-unpacked",
+    ]);
+  });
+  
+  it("contains the expected files", () => {
+    expect(FILE_ALLOWLIST).toEqual([
+      "builder-debug.yml"
     ]);
   });
 });
@@ -88,7 +96,7 @@ describe("clean-release-staging path safety", () => {
 });
 
 describe("clean-release-staging removal behavior", () => {
-  it("removes allowed staging directories while preserving final artifacts", () => {
+  it("removes allowed staging directories and files while preserving final artifacts", () => {
     const root = makeTempRoot("vf-clean-rm-");
     const releaseDir = makeReleaseDir(root);
 
@@ -96,13 +104,15 @@ describe("clean-release-staging removal behavior", () => {
     fs.mkdirSync(path.join(releaseDir, "linux-unpacked"), { recursive: true });
     fs.writeFileSync(path.join(releaseDir, "Venice-Forge-3.0.0-beta.2-arm64.dmg"), "dmg");
     fs.writeFileSync(path.join(releaseDir, "latest-mac.yml"), "yaml");
+    fs.writeFileSync(path.join(releaseDir, "builder-debug.yml"), "debug stuff");
 
     const result = cleanReleaseStaging({ releaseDir });
 
-    expect(result.removed.sort()).toEqual(["linux-unpacked", "mac-arm64"]);
+    expect(result.removed.sort()).toEqual(["builder-debug.yml", "linux-unpacked", "mac-arm64"]);
     expect(result.skipped).toEqual([]);
     expect(fs.existsSync(path.join(releaseDir, "mac-arm64"))).toBe(false);
     expect(fs.existsSync(path.join(releaseDir, "linux-unpacked"))).toBe(false);
+    expect(fs.existsSync(path.join(releaseDir, "builder-debug.yml"))).toBe(false);
     expect(fs.existsSync(path.join(releaseDir, "Venice-Forge-3.0.0-beta.2-arm64.dmg"))).toBe(true);
     expect(fs.existsSync(path.join(releaseDir, "latest-mac.yml"))).toBe(true);
   });

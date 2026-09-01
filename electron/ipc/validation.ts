@@ -194,13 +194,12 @@ export function validateProviderCredential(providerId: string, credential: unkno
       };
     }
     case "google_vertex": {
-      const authMode = c.authMode === "full" ? "full" : "express";
-      if (authMode === "full") {
-        throw new Error("Google Vertex full OAuth/service-account mode is not implemented. Use Express Mode (API key).");
-      }
+      // VF-AUD-20260831-P2-007: only express (API-key) mode is supported.
+      // The previous "full" branch was selectable in the UI but guaranteed to
+      // fail; it has been removed until service-account/OAuth is implemented.
       return {
         providerId,
-        authMode,
+        authMode: "express" as const,
         apiKey: validateCredentialString(c.apiKey, "Google Cloud API key", 512),
       };
     }

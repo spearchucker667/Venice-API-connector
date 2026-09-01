@@ -2,24 +2,22 @@
 # Venice Forge
 # Repository ignore policy
 #
-# Keep source, canonical documentation, packaging assets, tests, and examples
-# tracked. Keep dependencies, generated output, machine-local configuration,
-# agent working files, diagnostics, audit scratch data, and release contaminants
-# local only.
+# Keep: source, canonical documentation, packaging assets, tests, examples
+# Ignore: dependencies, generated output, machine-local config, agent working
+# files, diagnostics, audit scratch data, release contaminants
 # =============================================================================
 
-
-# =============================================================================
+# -----------------------------------------------------------------------------
 # Dependencies and local runtimes
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 /node_modules/
 /.node22/
 
 
-# =============================================================================
-# Build, test, packaging, and release output
-# =============================================================================
+# -----------------------------------------------------------------------------
+# Build, test, packaging output
+# -----------------------------------------------------------------------------
 
 /dist/
 /dist-electron/
@@ -28,12 +26,9 @@
 /.vite/
 
 
-# =============================================================================
-# Build resources
-#
-# Generated build resources are local. Canonical application icons and the
-# placeholder/documentation file remain tracked.
-# =============================================================================
+# -----------------------------------------------------------------------------
+# Build resources (generated)
+# -----------------------------------------------------------------------------
 
 /build/*
 !/build/icon.ico
@@ -42,12 +37,9 @@
 !/build/icon-placeholder.md
 
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # Generated application artifacts
-#
-# Runtime captures, translation runs, generated inventories, media output, and
-# similar machine-generated artifacts are not part of the public source tree.
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 /artifacts/
 /venice-media-output/
@@ -56,75 +48,58 @@
 /debug-output/
 
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # Design and development-tool output
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 /.design-captures/
 /.impeccable/
 /.superpowers/
-/.freebuff
+/.freebuff/
 
 /scripts/dev-tools/venice-styles.json
 
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # Local configuration and secrets
-# =============================================================================
+# -----------------------------------------------------------------------------
 
-# Environment files may contain credentials or machine-local configuration.
 .env*
 !.env.example
 
-# Only example configuration belongs in source control.
 /.config/*.yaml
 /.config/*.yml
 !.config/*.example.yaml
 !.config/*.example.yml
 
-# Explicit local config names, retained for clarity if naming conventions change.
 /.config/*.local.yaml
 /.config/*.local.yml
 
-# Local integration/source mirrors.
 /.integration-src/
 
 
-# =============================================================================
-# Local agent output, handoffs, transcripts, and generated documentation
-# =============================================================================
+# -----------------------------------------------------------------------------
+# Documentation: local/generated only
+# -----------------------------------------------------------------------------
 
 /docs/AGENTS/
 /docs/HQE_AUDIT_REPORT.md
-
-# Local authoritative/upstream Venice API documentation mirror.
 /docs/reference/venice-api-upstream/
-
-
-# =============================================================================
-# Design-roadmap scratch files
-#
-# Theme implementation is canonical in src/styles/theme.css. Markdown design
-# documentation may remain tracked.
-# =============================================================================
 
 /docs/design/*
 !/docs/design/*.md
 
-
-# =============================================================================
-# Repository-management and archival working directories
-# =============================================================================
-
 /docs/Repo-management/
 /docs/archives/
 
+/docs/ROADMAP.md
+/docs/ROADMAP.md.clean
+/docs/DOCS_INDEX.md
 
-# =============================================================================
-# Local work records and cross-reference scratchpads
-#
-# Canonical work history belongs in docs/summary_of_work.md.
-# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Work records and scratchpads
+# -----------------------------------------------------------------------------
 
 /todo.md
 /records.json
@@ -148,12 +123,15 @@
 /duplicates.txt
 
 
-# =============================================================================
-# Agent-generated root scripts and transcript dumps
-# =============================================================================
+# -----------------------------------------------------------------------------
+# Scripts: root-level scratch/ad-hoc only
+# -----------------------------------------------------------------------------
 
-/first-prompt*.txt
+# Shell
+/clean-repo-zip.sh
+/patch_summary.sh
 
+# Python
 /extract.py
 /fix_*.py
 /get_p*.py
@@ -161,87 +139,82 @@
 /patch_*.py
 /update_summary.py
 
-/patch_*.txt
+# JavaScript/Node
 /patch_runner.js
+/update-summary*.cjs
+/update_summary.cjs
+/update_latest.cjs
+/scratch*.cjs
+/test-apiKeySet.cjs
+/test-safeStorage*.cjs
+/test-save-key.cjs
+
+# TypeScript (root-level ad-hoc only; repo tests in test/ are tracked)
+/test_*.ts
+/test-*.ts
+
+/first-prompt*.txt
 
 /.agent-backups/
 
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # Audit artifacts
-#
-# Audit scratch/generated material is ignored by default. Approved reports,
-# structured evidence, active records, and visual regression snapshots remain
-# eligible for source control.
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 /docs/audits/*
 
-# Canonical/active audit directories.
 !/docs/audits/Records/
 !/docs/audits/active/
-
-# Supported top-level audit reports and manifests.
 !/docs/audits/*.md
 !/docs/audits/*.yaml
 !/docs/audits/*.yml
 
-# Machine-generated inventories remain local even when audit reports are kept.
+# Machine-generated inventories
 /docs/audits/file-inventory.tsv
 /docs/audits/repo-tree-current.txt
 
-
-# -----------------------------------------------------------------------------
-# Approved Venice Forge scan evidence — 2026-07-14
-# -----------------------------------------------------------------------------
-
+# Approved scan evidence — 2026-07-14
 !/docs/audits/VENICE_FORGE_SCAN_EVIDENCE_2026-07-14/
 /docs/audits/VENICE_FORGE_SCAN_EVIDENCE_2026-07-14/*
 !/docs/audits/VENICE_FORGE_SCAN_EVIDENCE_2026-07-14/*.md
 !/docs/audits/VENICE_FORGE_SCAN_EVIDENCE_2026-07-14/*.json
 
-
-# -----------------------------------------------------------------------------
-# Approved Venice Forge exhaustive audit — 2026-08-15
-# -----------------------------------------------------------------------------
-
+# Approved exhaustive audit — 2026-08-15
 !/docs/audits/venice-forge-exhaustive-audit-2026-08-15/
 /docs/audits/venice-forge-exhaustive-audit-2026-08-15/*
 !/docs/audits/venice-forge-exhaustive-audit-2026-08-15/*.md
 !/docs/audits/venice-forge-exhaustive-audit-2026-08-15/*.json
 
-
-# -----------------------------------------------------------------------------
 # Approved visual regression snapshots
-# -----------------------------------------------------------------------------
-
 !/docs/audits/visual-snapshots/
 /docs/audits/visual-snapshots/*
 !/docs/audits/visual-snapshots/*.png
 
-
-# Generated audit directories outside docs/audits.
+# Generated audit directories outside docs/audits/
 /Venice_Forge-audit-*/
 /*-audit-*/
 
+# Privacy/forensic data
+/docs/AGENTS/venice-forge-privacy-summary-*.json
 
-# =============================================================================
-# Local scripts and scratch copies
-# =============================================================================
 
-# Root copy is scratch only. Canonical script lives under scripts/.
-/clean-repo-zip.sh
+# -----------------------------------------------------------------------------
+# Scratch directories and local tooling
+# -----------------------------------------------------------------------------
 
 /scratch/
+/inactive-features/research-browser/
+/.agents/skills
+/.freebuff/
 
-# Root-level ad-hoc TypeScript test files. Repository tests under their proper
-# test directories are unaffected.
-/test_*.ts
+venice-forge-filelist.txt
+VENICE_FORGE_COMPLETE_AUDIT.md
 
 
-# =============================================================================
-# Runtime logs, caches, backups, and temporary files
-# =============================================================================
+# -----------------------------------------------------------------------------
+# Runtime logs, caches, backups, temp files
+# -----------------------------------------------------------------------------
 
 /venice-forge.log
 
@@ -257,37 +230,31 @@
 *~
 
 
-# =============================================================================
-# Agent / IDE instruction stubs
-#
-# AGENTS.md is the canonical repository instruction file.
-# =============================================================================
+# -----------------------------------------------------------------------------
+# Agent / IDE instruction stubs (AGENTS.md is canonical)
+# -----------------------------------------------------------------------------
 
 /.windsurfrules
 /CLAUDE.md
 /GEMINI.md
 
 
-# =============================================================================
-# Editor and IDE machine-local metadata
-# =============================================================================
+# -----------------------------------------------------------------------------
+# Editor and IDE metadata
+# -----------------------------------------------------------------------------
 
 .idea/
-
-# Keep repository-level VS Code configuration eligible for tracking while
-# excluding logs and machine-local state.
 .vscode/*.log
 .vscode/.ropeproject/
 .vscode/.history/
 
 
-# =============================================================================
-# Operating-system metadata
-# =============================================================================
+# -----------------------------------------------------------------------------
+# OS metadata
+# -----------------------------------------------------------------------------
 
 .DS_Store
 .DS_Store?
-._*
 .AppleDouble
 .LSOverride
 
@@ -296,45 +263,12 @@ Thumbs.db:encryptable
 desktop.ini
 
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # Archive/extraction contaminants
-#
-# These must never enter commits, ZIP archives, tarballs, or release artifacts.
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 __MACOSX/
 .AppleDouble/
-._*
+._*/
 _REPO_EXTRACT_METADATA/
-
-
-# =============================================================================
-# Local/generated privacy and forensic data
-# =============================================================================
-
-# Covered by /docs/AGENTS/, but kept here as an explicit policy marker in case
-# that directory becomes partially tracked in the future.
-/docs/AGENTS/venice-forge-privacy-summary-*.json
-
-
-# =============================================================================
-# Local repository tooling
-# =============================================================================
-
-/.freebuff/
-/docs/archives
-/inactive-features/research-browser/
-/.agents/skills
-venice-forge-filelist.txt
-VENICE_FORGE_COMPLETE_AUDIT.md
-patch_summary.sh
-update-summary.cjs
-update-summary2.cjs
-update-summary3.cjs
-test-apiKeySet.cjs
-test-safeStorage.cjs
-test-safeStorage2.cjs
-test-save-key.cjs
-test-testVeniceConnection.ts
-update_latest.cjs
-update_summary.cjs
+/docs/audits

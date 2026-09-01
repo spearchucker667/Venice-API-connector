@@ -5,7 +5,6 @@
 // Primary maintainer and security gatekeeper for the Electron main process.
 import { app, BrowserWindow, dialog, shell, session, protocol } from "electron";
 import path from "path";
-import fs from "fs";
 import { fileURLToPath } from "url";
 import { registerIpcHandlers } from "./ipc/handlers";
 import { initializeConfig } from "./services/configService";
@@ -421,27 +420,41 @@ if (!gotLock) {
         return new Response("Invalid image key", { status: 400 });
       }
 
-      const dp = path.join(getCharacterImageCacheDir(), `${key}.bin`);
-      if (!checkPathContained(dp, getCharacterImageCacheDir())) {
+      const cacheDir = getCharacterImageCacheDir();
+      const dp = path.join(cacheDir, `${key}.bin`);
+      if (!checkPathContained(dp, cacheDir)) {
         return new Response("Forbidden", { status: 403 });
       }
 
+      // Descriptor-safe read: validation (fstat) and consumption (readFile) share
+      // the same open descriptor, closing the TOCTOU window that existed between
+      // the previous `fs.promises.stat(dp)` and `fs.createReadStream(dp)` calls.
+      // Character image entries are bounded to MAX_CHARACTER_IMAGE_BYTES (2 MiB)
+      // by the cache writer, so reading the whole entry into memory is safe.
+      let bytes: Buffer;
       try {
-        const stat = await fs.promises.stat(dp);
-        if (!stat.isFile()) {
-          return new Response("Not found", { status: 404 });
-        }
+        bytes = await readRegularFileNoFollow(dp);
       } catch {
         return new Response("Not found", { status: 404 });
       }
 
+      // Schema-check the metadata sidecar before using its contentType as a
+      // response header. The metadata read is also descriptor-safe.
       let metaContentType = "application/octet-stream";
       try {
-        const metaPath = path.join(getCharacterImageCacheDir(), `${key}.meta.json`);
-        const metaRaw = await fs.promises.readFile(metaPath, "utf-8");
-        const meta = JSON.parse(metaRaw);
-        if (meta.contentType) {
-          metaContentType = meta.contentType;
+        const metaPath = path.join(cacheDir, `${key}.meta.json`);
+        const metaBuffer = await readRegularFileNoFollow(metaPath);
+        const parsed: unknown = JSON.parse(metaBuffer.toString("utf-8"));
+        if (
+          parsed &&
+          typeof parsed === "object" &&
+          "contentType" in parsed &&
+          typeof (parsed as { contentType?: unknown }).contentType === "string"
+        ) {
+          const candidate = (parsed as { contentType: string }).contentType;
+          if (ALLOWED_CONTENT_TYPES.has(candidate)) {
+            metaContentType = candidate;
+          }
         }
       } catch {
         // Fallback to octet-stream if meta missing or invalid
@@ -451,8 +464,7 @@ if (!gotLock) {
         return new Response("Unsupported Media Type", { status: 415 });
       }
 
-      const stream = fs.createReadStream(dp);
-      return new Response(stream as unknown as ReadableStream, {
+      return new Response(bytes, {
         headers: {
           "Content-Type": metaContentType,
           "Cache-Control": "private, max-age=604800",

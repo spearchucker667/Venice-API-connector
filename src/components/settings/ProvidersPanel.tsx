@@ -88,13 +88,12 @@ export function ProvidersPanel() {
           apiKey: fields.apiKey?.trim() ?? '',
         } as ProviderCredential
       case 'google_vertex':
+        // VF-AUD-20260831-P2-007: only Express Mode (API key) is supported.
+        // The previous "full" branch was selectable but guaranteed to fail.
         return {
           providerId,
-          authMode: fields.authMode === 'full' ? 'full' : 'express',
+          authMode: 'express',
           apiKey: fields.apiKey?.trim() ?? '',
-          projectId: fields.projectId?.trim() ?? '',
-          location: fields.location?.trim() ?? '',
-          credentialsJson: fields.credentialsJson?.trim() ?? '',
         } as ProviderCredential
       default:
         throw new Error(`Unsupported structured provider: ${providerId}`)
@@ -370,54 +369,14 @@ export function ProvidersPanel() {
                       </>
                     )}
                     {provider.id === 'google_vertex' && (
-                      <>
-                        <select
-                          value={structuredInputs[provider.id]?.authMode || 'express'}
-                          onChange={(e) => handleStructuredChange(provider.id, 'authMode', e.target.value)}
-                          className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
-                          disabled={saving || isUnavailable}
-                        >
-                          <option value="express">{t('settings:providers.inputs.vertexExpressMode', 'Express Mode (API key)')}</option>
-                          <option value="full">{t('settings:providers.inputs.vertexFullMode', 'Full Vertex (project/location/service account)')}</option>
-                        </select>
-                        {(structuredInputs[provider.id]?.authMode ?? 'express') === 'express' ? (
-                          <input
-                            type="password"
-                            placeholder={t('settings:providers.inputs.vertexApiKey', 'Vertex Express API key')}
-                            value={structuredInputs[provider.id]?.apiKey || ''}
-                            onChange={(e) => handleStructuredChange(provider.id, 'apiKey', e.target.value)}
-                            className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
-                            disabled={saving || isUnavailable}
-                          />
-                        ) : (
-                          <>
-                            <input
-                              type="text"
-                              placeholder={t('settings:providers.inputs.vertexProjectId', 'Google Cloud project ID')}
-                              value={structuredInputs[provider.id]?.projectId || ''}
-                              onChange={(e) => handleStructuredChange(provider.id, 'projectId', e.target.value)}
-                              className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
-                              disabled={saving || isUnavailable}
-                            />
-                            <input
-                              type="text"
-                              placeholder={t('settings:providers.inputs.vertexLocation', 'Google Cloud location (e.g. us-central1)')}
-                              value={structuredInputs[provider.id]?.location || ''}
-                              onChange={(e) => handleStructuredChange(provider.id, 'location', e.target.value)}
-                              className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
-                              disabled={saving || isUnavailable}
-                            />
-                            <textarea
-                              placeholder={t('settings:providers.inputs.vertexCredentialsJson', 'Service account JSON')}
-                              value={structuredInputs[provider.id]?.credentialsJson || ''}
-                              onChange={(e) => handleStructuredChange(provider.id, 'credentialsJson', e.target.value)}
-                              className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
-                              disabled={saving || isUnavailable}
-                              rows={3}
-                            />
-                          </>
-                        )}
-                      </>
+                      <input
+                        type="password"
+                        placeholder={t('settings:providers.inputs.vertexApiKey', 'Vertex Express API key')}
+                        value={structuredInputs[provider.id]?.apiKey || ''}
+                        onChange={(e) => handleStructuredChange(provider.id, 'apiKey', e.target.value)}
+                        className="w-full px-3 py-1.5 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)] text-sm"
+                        disabled={saving || isUnavailable}
+                      />
                     )}
                     <PrimaryButton
                       onClick={() => handleSaveKey(provider.id)}

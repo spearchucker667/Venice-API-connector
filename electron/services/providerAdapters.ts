@@ -179,17 +179,16 @@ function extractAwsBedrockConfig(credential: ProviderCredential | string): AwsBe
 }
 
 /** Extracts and validates the structured Google Vertex credential.
- *  Express Mode (authMode: 'express') is the supported production slice.
- *  Full OAuth/service-account mode is typed but rejected until implemented.
+ *  VF-AUD-20260831-P2-007: only Express Mode is supported. The previous
+ *  "full" OAuth/service-account branch was selectable in the UI but
+ *  guaranteed to fail; it has been removed from the public type until a
+ *  service-account/OAuth custody path is implemented.
  */
-function extractGoogleVertexConfig(credential: ProviderCredential | string): Extract<GoogleVertexConfig, { authMode: 'express' }> {
+function extractGoogleVertexConfig(credential: ProviderCredential | string): GoogleVertexConfig {
   if (typeof credential === 'string' || !credential || typeof credential !== 'object' || credential.providerId !== 'google_vertex') {
     throw new Error('Google Vertex credential is not structured correctly')
   }
   const c = credential as GoogleVertexConfig
-  if (c.authMode !== 'express') {
-    throw new Error('Google Vertex full OAuth/service-account mode is not implemented. Use Express Mode (API key).')
-  }
   if (!c.apiKey) {
     throw new Error('Google Vertex Express Mode credential is missing required fields')
   }

@@ -23,6 +23,97 @@ import {
 /** Maximum non-streaming Venice response body size we will buffer in memory. */
 const MAX_VENICE_RESPONSE_BYTES = 25 * 1024 * 1024;
 
+/** Maximum delay honored from a single Retry-After response, in milliseconds.
+ *  Larger upstream values are clamped to this cap so a misbehaving peer
+ *  cannot indefinitely stall the user. */
+export const MAX_RETRY_AFTER_MS = 30_000;
+
+/** Per-attempt jitter window (±20% by default). Applied symmetrically so the
+ *  average delay equals the upstream-suggested value. */
+export const RETRY_AFTER_JITTER_FRACTION = 0.2;
+
+/** Parses a Retry-After header value into the milliseconds-from-now delay.
+ *  Returns null if the header is absent, malformed, or represents a past
+ *  time. Supports both the delta-seconds form (`120`) and the RFC 7231
+ *  HTTP-date form (`Wed, 21 Oct 2026 07:28:00 GMT`).
+ *  @param value The raw Retry-After header value.
+ *  @param now Override for the current epoch millis (used by tests).
+ *  @returns The delay in milliseconds, or null when the value cannot be honored.
+ */
+export function parseRetryAfterMs(
+  value: string | undefined,
+  now: number = Date.now(),
+): number | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  // RFC 7231 delta-seconds: one or more digits, optional fractional part.
+  if (/^\d+(\.\d+)?$/.test(trimmed)) {
+    const seconds = Number(trimmed);
+    if (!Number.isFinite(seconds) || seconds < 0) return null;
+    return Math.round(seconds * 1000);
+  }
+  // RFC 7231 IMF-fixdate HTTP-date form: e.g. `Wed, 21 Oct 2026 07:28:00 GMT`.
+  // The trailing `GMT` is the strongest signal that this is an HTTP-date
+  // rather than a free-form string that Node's lenient Date.parse would
+  // otherwise interpret (e.g. "abc 123" or "-5"). We also require a
+  // recognizable day-of-week prefix to reject inputs that merely happen to
+  // contain "GMT" by coincidence.
+  if (
+    !/^(Sun|Mon|Tue|Wed|Thu|Fri|Sat),\s+\d{2}\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{4}\s+\d{2}:\d{2}:\d{2}\s+GMT$/i.test(trimmed)
+  ) {
+    return null;
+  }
+  const when = Date.parse(trimmed);
+  if (!Number.isFinite(when)) return null;
+  return Math.max(0, when - now);
+}
+
+/** Applies a symmetric jitter window around the requested delay and clamps to
+ *  the maximum Retry-After cap after jitter. Exported for testability.
+ *  @param delayMs The base delay in milliseconds (>= 0).
+ *  @param jitterFraction Half-width of the jitter window (0..1).
+ *  @param capMs The upper bound for the jittered delay.
+ *  @param random Math.random-compatible source (overridden in tests).
+ *  @returns The jittered, capped delay in milliseconds.
+ */
+export function computeJitteredDelay(
+  delayMs: number,
+  jitterFraction: number = RETRY_AFTER_JITTER_FRACTION,
+  capMs: number = MAX_RETRY_AFTER_MS,
+  random: () => number = Math.random,
+): number {
+  if (!Number.isFinite(delayMs) || delayMs <= 0) return 0;
+  const safeFraction = Math.max(0, Math.min(1, jitterFraction));
+  const offset = delayMs * safeFraction * (random() * 2 - 1);
+  const jittered = Math.max(0, Math.round(delayMs + offset));
+  return Math.min(jittered, capMs);
+}
+
+/** Sleeps for the requested delay, aborting early if `signal` fires. Rejects
+ *  with the signal's reason when aborted, otherwise resolves on timeout.
+ *  @param ms The delay in milliseconds.
+ *  @param signal Optional AbortSignal that interrupts the wait.
+ */
+export function abortableDelay(ms: number, signal?: AbortSignal): Promise<void> {
+  if (ms <= 0) return Promise.resolve();
+  return new Promise<void>((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(signal.reason ?? new Error("abortableDelay aborted"));
+      return;
+    }
+    const timer = setTimeout(() => {
+      signal?.removeEventListener("abort", onAbort);
+      resolve();
+    }, ms);
+    const onAbort = () => {
+      clearTimeout(timer);
+      reject(signal?.reason ?? new Error("abortableDelay aborted"));
+    };
+    signal?.addEventListener("abort", onAbort, { once: true });
+  });
+}
+
 /** Tracks active requests so they can be aborted by signal ID. */
 const activeRequests = new Map<string, { destroy: () => void }>();
 export const MAX_CONCURRENT_VENICE_REQUESTS = 10;
@@ -212,8 +303,15 @@ export async function performVeniceRequest(
   let lastResponse: VeniceIpcResponse | null = null;
   let lastError: Error | null = null;
 
+  const requestSignal = (request as { signal?: AbortSignal }).signal;
+
   for (const providerId of providersToTry) {
     let hasStartedStreaming = false;
+    // VF-AUD-20260831-P2-008: at most one Retry-After-aware retry per provider.
+    // 5xx/408/other retryable errors fall through to the next provider without
+    // an extra per-provider retry; the cross-provider fallback chain is the
+    // primary resilience path for non-429 failures.
+    let retryAttempted = false;
     try {
       const currentRequest = request;
       let providerSelection: ProviderRouteSelection | undefined;
@@ -258,6 +356,47 @@ export async function performVeniceRequest(
       if (hasStartedStreaming) {
         logError(`Provider ${providerId} failed with ${response.status} after stream started, cannot fallback.`);
         return response;
+      }
+
+      // VF-AUD-20260831-P2-008: 429 with a parseable Retry-After header
+      // triggers a single bounded, jittered delay followed by one retry on
+      // the same provider. If the retry also fails, we fall through to the
+      // next provider in the chain. The delay respects the request signal.
+      if (response.status === 429 && !retryAttempted) {
+        const retryAfterMs = parseRetryAfterMs(response.headers["retry-after"]);
+        if (retryAfterMs !== null) {
+          const delayMs = computeJitteredDelay(retryAfterMs);
+          if (delayMs > 0) {
+            try {
+              await abortableDelay(delayMs, requestSignal);
+            } catch (err) {
+              // Aborted during the Retry-After wait — surface the abort.
+              throw err instanceof Error ? err : new Error(String(err));
+            }
+          }
+          retryAttempted = true;
+          logError(`Provider ${providerId} returned 429 with Retry-After=${response.headers["retry-after"]}; retrying once after ${delayMs}ms.`);
+          // Re-enter the inner try so a single retry attempt runs against
+          // the same provider. We intentionally do not loop here because
+          // a second 429 should fall through to the next provider.
+          try {
+            const retried = await performSingleVeniceRequest(currentRequest, wrappedOptions, providerSelection);
+            lastResponse = retried;
+            if (retried.ok) return retried;
+            // Non-OK retry: return the latest response so the caller can
+            // inspect the post-retry status without further fallback
+            // exhausting the user's patience.
+            logError(`Provider ${providerId} retry after Retry-After returned ${retried.status}.`);
+            return retried;
+          } catch (innerErr) {
+            if (innerErr instanceof Error && innerErr.message === "Request aborted") {
+              throw innerErr;
+            }
+            logError(`Provider ${providerId} retry after Retry-After threw.`, innerErr);
+            lastError = innerErr as Error;
+            continue;
+          }
+        }
       }
 
       // If we got here, it's a retryable error.

@@ -42,7 +42,14 @@ function getTargets(platform, args) {
  * and updater blockmaps) for the requested platform set. Anything in release/
  * that is not on this list is rejected before publishing.
  */
-function buildReleaseAllowlist(version, { checkWin, checkMac, checkLinux, targetArches, isPortableOnly }) {
+function linuxArtifactArch(target, arch) {
+  if (arch !== "x64") return arch;
+  if (target === "deb") return "amd64";
+  if (target === "AppImage" || target === "rpm") return "x86_64";
+  throw new Error(`Unsupported Linux target: ${target}`);
+}
+
+function buildReleaseAllowlist(version, { checkWin, checkMac, checkLinux, targetArches, linuxArches, isPortableOnly }) {
   const allowed = new Set();
 
   function addSidecar(name) {
@@ -76,10 +83,10 @@ function buildReleaseAllowlist(version, { checkWin, checkMac, checkLinux, target
   }
 
   if (checkLinux) {
-    const linuxArches = targetArches.includes("x64") ? ["x64"] : targetArches;
-    for (const arch of linuxArches) {
+    for (const arch of linuxArches || []) {
       for (const ext of ["AppImage", "deb", "rpm"]) {
-        addSidecar(`Venice-Forge-${version}-${arch}.${ext}`);
+        const artifactArch = linuxArtifactArch(ext, arch);
+        addSidecar(`Venice-Forge-${version}-${artifactArch}.${ext}`);
       }
     }
     // Linux updater metadata uses a platform-specific latest file name.
@@ -88,8 +95,6 @@ function buildReleaseAllowlist(version, { checkWin, checkMac, checkLinux, target
     }
   }
 
-  // electron-builder emits a debug manifest for every platform build.
-  addSidecar("builder-debug.yml");
 
   return allowed;
 }
@@ -166,7 +171,7 @@ if (require.main !== module) {
   };
 } else {
 
-const { checkWin, checkMac, checkLinux, targetArches } = getTargets(process.platform, args);
+const { checkWin, checkMac, checkLinux, targetArches, linuxArches } = getTargets(process.platform, args);
 const isPortableOnly = args.includes("--portable") && !args.includes("--all");
 
 const root = path.join(__dirname, "..");
@@ -331,6 +336,26 @@ function verifyLinuxArtifacts(releaseDir, verified) {
       verifyFileExists(fullPath, 1024 * 1024 * 10);
       verifyChecksum(fullPath);
       verified.push(file);
+
+      // P3-001: Package-content verification for the resulting desktop entry
+      if (ext === ".deb" && process.platform === "linux") {
+        try {
+          const cp = require("child_process");
+          const desktopStr = cp.execSync(
+            `dpkg-deb --fsys-tarfile "${fullPath}" | tar xOf - "./usr/share/applications/venice-forge.desktop"`,
+            { encoding: "utf8" }
+          );
+          if (!desktopStr.includes("StartupWMClass=venice-forge")) {
+            fail("Linux .deb .desktop file is missing StartupWMClass=venice-forge");
+          }
+          if (!desktopStr.includes("Exec=/opt/Venice Forge/venice-forge")) {
+            fail("Linux .deb .desktop file has incorrect Exec path (expected /opt/Venice Forge/venice-forge)");
+          }
+          console.log(`[verify:dist] Verified .desktop contents in ${file}`);
+        } catch (err) {
+          fail(`Failed to extract or verify .desktop file from .deb: ${err.message}`);
+        }
+      }
     }
   }
 
@@ -460,7 +485,7 @@ if (checkLinux) {
   verifyLinuxArtifacts(releaseDir, verified);
 }
 
-const allowed = buildReleaseAllowlist(version, { checkWin, checkMac, checkLinux, targetArches, isPortableOnly });
+const allowed = buildReleaseAllowlist(version, { checkWin, checkMac, checkLinux, targetArches, linuxArches, isPortableOnly });
 const releaseEntries = fs.readdirSync(releaseDir, { withFileTypes: true });
 const unexpected = releaseEntries
   .filter((e) => !allowed.has(e.name))

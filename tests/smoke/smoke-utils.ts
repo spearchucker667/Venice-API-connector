@@ -1,13 +1,7 @@
-import { afterEach, describe, expect, test } from 'vitest';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
 import { _electron as electron, type ElectronApplication, type Page } from 'playwright';
-
-const smokeTest = process.env.RUN_ELECTRON_SMOKE === 'true' ? test : test.skip;
-
-const temporaryDirectories: string[] = [];
-const electronApplications: ElectronApplication[] = [];
 
 export function findPackagedExecutable(
   root: string,
@@ -17,9 +11,11 @@ export function findPackagedExecutable(
   const releaseDir = path.join(root, 'release');
 
   if (platform === 'win32') {
-    if (!fs.existsSync(releaseDir)) return undefined;
-    const portable = fs.readdirSync(releaseDir).find(file => file.endsWith('-Portable.exe'));
-    return portable ? path.join(releaseDir, portable) : undefined;
+    const unpacked = path.join(releaseDir, "win-unpacked");
+    if (!fs.existsSync(unpacked)) return undefined;
+    const executable = fs.readdirSync(unpacked, { withFileTypes: true })
+      .find(entry => entry.isFile() && entry.name.toLowerCase().endsWith(".exe"));
+    return executable ? path.join(unpacked, executable.name) : undefined;
   }
 
   if (platform === 'darwin') {
@@ -65,16 +61,7 @@ export function findPackagedExecutable(
   return undefined;
 }
 
-afterEach(async () => {
-  for (const electronApplication of electronApplications.splice(0)) {
-    await electronApplication.close().catch(() => undefined);
-  }
-  for (const directory of temporaryDirectories.splice(0)) {
-    fs.rmSync(directory, { recursive: true, force: true });
-  }
-});
-
-async function launchPackagedApp(executablePath: string, userDataDir: string): Promise<{
+export async function launchPackagedApp(executablePath: string, userDataDir: string, electronApplications: ElectronApplication[]): Promise<{
   electronApplication: ElectronApplication;
   page: Page;
   rendererErrors: string[];
@@ -114,61 +101,21 @@ async function launchPackagedApp(executablePath: string, userDataDir: string): P
       cspViolations.push(`console: ${text}`);
     }
   });
+
+  await page.reload();
   await page.waitForLoadState('domcontentloaded');
   await page.waitForFunction(() => window.veniceForge?.isDesktop === true);
   return { electronApplication, page, rendererErrors, cspViolations };
 }
 
-function bootstrapFailures(rendererErrors: string[]): string[] {
+export function bootstrapFailures(rendererErrors: string[]): string[] {
   return rendererErrors.filter(error =>
     /pageerror:|uncaught|unhandled|fatal application error|failed to mount react root|cannot find module|syntaxerror|referenceerror/i.test(error),
   );
 }
 
-describe('packaged executable discovery', () => {
-  test('finds the unpacked Linux executable produced by electron-builder', () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'venice-forge-smoke-'));
-    temporaryDirectories.push(root);
-    const executable = path.join(root, 'release', 'linux-unpacked', 'venice-forge');
-    fs.mkdirSync(path.dirname(executable), { recursive: true });
-    fs.writeFileSync(executable, 'fixture');
-
-    expect(findPackagedExecutable(root, 'linux', 'x64')).toBe(executable);
-  });
-
-  test('finds a macOS app executable without assuming the bundle or binary name', () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'venice-forge-smoke-'));
-    temporaryDirectories.push(root);
-    const executable = path.join(root, 'release', 'mac-arm64', 'Renamed Product.app', 'Contents', 'MacOS', 'renamed-product');
-    fs.mkdirSync(path.dirname(executable), { recursive: true });
-    fs.writeFileSync(executable, 'fixture');
-
-    expect(findPackagedExecutable(root, 'darwin', 'arm64')).toBe(executable);
-  });
-
-  test('returns undefined when the platform package is absent', () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'venice-forge-smoke-'));
-    temporaryDirectories.push(root);
-
-    expect(findPackagedExecutable(root, 'linux', 'x64')).toBeUndefined();
-  });
-});
-
-smokeTest('packaged Electron app launches without CSP style-src violations', async () => {
-  const root = process.cwd();
-  const exePath = findPackagedExecutable(root);
-
-  if (!exePath || !fs.existsSync(exePath)) {
-    throw new Error(`Packaged app not found for ${os.platform()}/${os.arch()}. Did you run the platform dist command?`);
-  }
-
-  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'venice-forge-electron-integration-'));
-  temporaryDirectories.push(userDataDir);
-
-  const run = await launchPackagedApp(exePath, userDataDir);
-
-  expect(bootstrapFailures(run.rendererErrors)).toEqual([]);
-  expect(
-    run.cspViolations.filter(message => /style-src|refused to apply inline style/i.test(message)),
-  ).toEqual([]);
-}, 60_000);
+export async function closeTrackedApplication(electronApplication: ElectronApplication, electronApplications: ElectronApplication[]): Promise<void> {
+  const index = electronApplications.indexOf(electronApplication);
+  if (index >= 0) electronApplications.splice(index, 1);
+  await electronApplication.close();
+}

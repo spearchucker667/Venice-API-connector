@@ -185,11 +185,11 @@ This is the canonical source-of-truth navigation map for all documentation in th
 ### Audit Evidence
 
 - [../VENICE_FORGE_COMPLETE_AUDIT.md](../VENICE_FORGE_COMPLETE_AUDIT.md) — Historical exhaustive repository audit snapshot (2026-08-22); see `docs/ROADMAP.md` and `docs/summary_of_work.md` for current state.
-- [audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md](audits/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md) — Historical exhaustive repository audit verdict and remediation plan.
-- [audits/browser-reactivation-work-order.md](audits/browser-reactivation-work-order.md) — Historical work order for the inactive research-browser feature.
+- [audits/Records/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md](audits/Records/venice-forge-exhaustive-audit-2026-08-15/00-EXECUTIVE-SUMMARY.md) — Historical exhaustive repository audit verdict and remediation plan.
+- [audits/Records/browser-reactivation-work-order.md](audits/Records/browser-reactivation-work-order.md) — Historical work order for the inactive research-browser feature.
 - [audits/Records/Function_calling_todo.md](audits/Records/Function_calling_todo.md) — Implementation/acceptance specification referenced by roadmap; not a checkbox ledger.
-- [audits/repository-hygiene-audit.md](audits/repository-hygiene-audit.md) — 2026-08-22 repository hygiene audit and reorganization plan.
-- [audits/repository-hygiene-final-report.md](audits/repository-hygiene-final-report.md) — 2026-08-22 hygiene execution report.
+- [audits/Records/repository-hygiene-audit.md](audits/Records/repository-hygiene-audit.md) — 2026-08-22 repository hygiene audit and reorganization plan.
+- [audits/Records/repository-hygiene-final-report.md](audits/Records/repository-hygiene-final-report.md) — 2026-08-22 hygiene execution report.
 - [audits/repo-management/](audits/repo-management/) — Historical repository hygiene and reorganization handoffs.
 
 ### Historical Reports

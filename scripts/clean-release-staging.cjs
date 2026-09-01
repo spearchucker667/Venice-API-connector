@@ -25,6 +25,10 @@ const ALLOWLIST = Object.freeze([
   "linux-arm64-unpacked",
 ]);
 
+const FILE_ALLOWLIST = Object.freeze([
+  "builder-debug.yml",
+]);
+
 function parseArgs(argv) {
   const args = argv.slice(2);
   let releaseDir = null;
@@ -110,8 +114,33 @@ function cleanReleaseStaging(options = {}) {
     console.log(`[clean-release-staging] Removed ${path.relative(cwd, fullPath)}/`);
   }
 
+  for (const fileName of FILE_ALLOWLIST) {
+    const fullPath = path.join(releaseDir, fileName);
+
+    if (!isWithin(releaseDir, fullPath)) {
+      skipped.push({ dirName: fileName, reason: "path escapes release directory" });
+      continue;
+    }
+
+    let stat;
+    try {
+      stat = fs.lstatSync(fullPath);
+    } catch {
+      continue;
+    }
+
+    if (!stat.isFile()) {
+      skipped.push({ dirName: fileName, reason: "not a file" });
+      continue;
+    }
+
+    fs.rmSync(fullPath, { force: true });
+    removed.push(fileName);
+    console.log(`[clean-release-staging] Removed file ${path.relative(cwd, fullPath)}`);
+  }
+
   if (removed.length === 0) {
-    console.log("[clean-release-staging] No staging directories present.");
+    console.log("[clean-release-staging] No staging directories or files present.");
   }
 
   return { removed, skipped };
@@ -130,6 +159,7 @@ function main() {
 
 module.exports = {
   ALLOWLIST,
+  FILE_ALLOWLIST,
   cleanReleaseStaging,
   validateReleaseDir,
   isWithin,
