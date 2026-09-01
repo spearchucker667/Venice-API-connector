@@ -7,11 +7,14 @@
 import { app } from "electron";
 import { redactUrl, sanitizeErrorText } from "../../src/shared/redaction";
 import { logError, logInfo } from "./logger";
+import { readResponseBufferBounded, readResponseTextBounded } from "./boundedResponseReader";
 
 const REPLICATE_API_BASE = "https://api.replicate.com/v1";
 export const OPERATION_TIMEOUT_MS = 30_000;
 export const DOWNLOAD_TIMEOUT_MS = 60_000;
 export const MAX_DOWNLOAD_BYTES = 50 * 1024 * 1024;
+export const MAX_CONTROL_RESPONSE_BYTES = 1024 * 1024;
+export const CONTROL_BODY_TIMEOUT_MS = 30_000;
 const MAX_REDIRECTS = 5;
 
 /** Hostnames that Replicate uses for signed output URLs. */
@@ -150,7 +153,12 @@ async function replicateFetch(
     });
 
     let body: unknown;
-    const text = await response.text().catch(() => "");
+    const text = await readResponseTextBounded(response, {
+      maxBytes: MAX_CONTROL_RESPONSE_BYTES,
+      timeoutMs: CONTROL_BODY_TIMEOUT_MS,
+      label: "Replicate control response",
+      signal: controller.signal,
+    }).catch(() => "");
     try {
       body = text ? JSON.parse(text) : {};
     } catch {
@@ -353,36 +361,6 @@ function validateMediaSignature(buffer: Buffer, mimeType: string): boolean {
   return false;
 }
 
-async function readResponseWithLimit(response: Response, maxBytes: number): Promise<Buffer> {
-  if (response.body) {
-    const reader = response.body.getReader();
-    const chunks: Buffer[] = [];
-    let total = 0;
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = Buffer.isBuffer(value) ? value : Buffer.from(value);
-        total += chunk.length;
-        if (total > maxBytes) {
-          throw new Error(`Replicate output exceeds maximum allowed size (${maxBytes} bytes).`);
-        }
-        chunks.push(chunk);
-      }
-      return Buffer.concat(chunks);
-    } finally {
-      reader.cancel().catch(() => undefined);
-    }
-  }
-
-  // Fallback for environments without streaming (e.g. some test mocks).
-  const arrayBuffer = await response.arrayBuffer();
-  if (arrayBuffer.byteLength > maxBytes) {
-    throw new Error(`Replicate output exceeds maximum allowed size (${maxBytes} bytes).`);
-  }
-  return Buffer.from(arrayBuffer);
-}
-
 /** Downloads a Replicate output URL into a Buffer.
  *  The URL is treated as an expiring signed URL and is never persisted.
  *  Redirects are followed manually and validated at every hop. Downloads are
@@ -399,13 +377,60 @@ export async function downloadReplicateOutput(
   while (true) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), DOWNLOAD_TIMEOUT_MS);
-    let response: Response | undefined;
     try {
-      response = await fetch(currentUrl, {
+      const response = await fetch(currentUrl, {
         method: "GET",
         signal: controller.signal,
         redirect: "manual",
       });
+
+      if (response.status >= 300 && response.status < 400) {
+        const location = response.headers.get("location");
+        if (!location) {
+          throw new Error("Replicate output download redirect missing Location header.");
+        }
+        if (redirects >= MAX_REDIRECTS) {
+          throw new Error("Replicate output download exceeded redirect limit.");
+        }
+        redirects++;
+        const nextUrl = new URL(location, currentUrl).href;
+        validateReplicateOutputUrl(nextUrl);
+        currentUrl = nextUrl;
+        continue;
+      }
+
+      if (!response.ok) {
+        throw new Error(`Replicate output download failed: ${response.status} ${response.statusText}`);
+      }
+
+      const contentLengthHeader = response.headers.get("content-length");
+      if (contentLengthHeader) {
+        const contentLength = Number(contentLengthHeader);
+        if (!Number.isFinite(contentLength) || contentLength > MAX_DOWNLOAD_BYTES) {
+          throw new Error(
+            `Replicate output exceeds maximum allowed size (${MAX_DOWNLOAD_BYTES} bytes).`,
+          );
+        }
+      }
+
+      const contentType = response.headers.get("content-type") || "application/octet-stream";
+      const mimeType = contentType.split(";")[0].trim().toLowerCase();
+      if (!ALLOWED_DOWNLOAD_MIME_TYPES.has(mimeType)) {
+        throw new Error(`Replicate output MIME type ${mimeType} is not allowed.`);
+      }
+
+      const buffer = await readResponseBufferBounded(response, {
+        maxBytes: MAX_DOWNLOAD_BYTES,
+        timeoutMs: DOWNLOAD_TIMEOUT_MS,
+        label: "Replicate output download",
+        signal: controller.signal,
+      });
+
+      if (!validateMediaSignature(buffer, mimeType)) {
+        throw new Error(`Replicate output failed ${mimeType} signature validation.`);
+      }
+
+      return { buffer, mimeType };
     } catch (err) {
       if (isAbortError(err)) {
         throw new Error(`Replicate output download timed out after ${DOWNLOAD_TIMEOUT_MS}ms.`);
@@ -414,57 +439,6 @@ export async function downloadReplicateOutput(
     } finally {
       clearTimeout(timer);
     }
-
-    if (response.status >= 300 && response.status < 400) {
-      const location = response.headers.get("location");
-      if (!location) {
-        throw new Error("Replicate output download redirect missing Location header.");
-      }
-      if (redirects >= MAX_REDIRECTS) {
-        throw new Error("Replicate output download exceeded redirect limit.");
-      }
-      redirects++;
-      const nextUrl = new URL(location, currentUrl).href;
-      validateReplicateOutputUrl(nextUrl);
-      currentUrl = nextUrl;
-      continue;
-    }
-
-    if (!response.ok) {
-      throw new Error(`Replicate output download failed: ${response.status} ${response.statusText}`);
-    }
-
-    const contentLengthHeader = response.headers.get("content-length");
-    if (contentLengthHeader) {
-      const contentLength = Number(contentLengthHeader);
-      if (!Number.isFinite(contentLength) || contentLength > MAX_DOWNLOAD_BYTES) {
-        throw new Error(
-          `Replicate output exceeds maximum allowed size (${MAX_DOWNLOAD_BYTES} bytes).`,
-        );
-      }
-    }
-
-    const contentType = response.headers.get("content-type") || "application/octet-stream";
-    const mimeType = contentType.split(";")[0].trim().toLowerCase();
-    if (!ALLOWED_DOWNLOAD_MIME_TYPES.has(mimeType)) {
-      throw new Error(`Replicate output MIME type ${mimeType} is not allowed.`);
-    }
-
-    let buffer: Buffer;
-    try {
-      buffer = await readResponseWithLimit(response, MAX_DOWNLOAD_BYTES);
-    } catch (err) {
-      if (err instanceof Error && err.message.includes("timed out")) {
-        throw new Error(`Replicate output download timed out after ${DOWNLOAD_TIMEOUT_MS}ms.`);
-      }
-      throw err;
-    }
-
-    if (!validateMediaSignature(buffer, mimeType)) {
-      throw new Error(`Replicate output failed ${mimeType} signature validation.`);
-    }
-
-    return { buffer, mimeType };
   }
 }
 

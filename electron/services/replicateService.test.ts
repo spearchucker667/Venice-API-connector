@@ -359,7 +359,7 @@ describe("replicateService", () => {
       vi.stubGlobal("fetch", fetchMock);
 
       await expect(downloadReplicateOutput("https://replicate.delivery/out.png")).rejects.toThrow(
-        "maximum allowed size",
+        /exceeds maximum/i,
       );
     });
 
