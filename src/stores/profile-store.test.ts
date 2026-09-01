@@ -289,11 +289,13 @@ describe("useProfileStore hydration sanitization", () => {
         { id: "play", name: "Play", hasPassword: true },
       ],
       activeProfileId: "play",
+      globalOnboardingCompleted: true,
     });
     await rehydrateWithFreshStore();
     const { useProfileStore: store } = await import("./profile-store");
     expect(store.getState().activeProfileId).toBe("play");
     expect(store.getState().profiles).toHaveLength(3);
+    expect(store.getState().globalOnboardingCompleted).toBe(true);
     const play = store.getState().profiles.find((p) => p.id === "play");
     expect(play?.hasPassword).toBe(true);
   });
@@ -311,6 +313,17 @@ describe("useProfileStore hydration sanitization", () => {
     const { useProfileStore: store } = await import("./profile-store");
     expect(store.getState().activeProfileId).toBe("default");
     expect(store.getState().profiles.map((p) => p.id)).toEqual(["default"]);
+  });
+
+  it("does not restore a non-boolean onboarding-completion value", async () => {
+    seedPersisted({
+      profiles: [{ id: "default", name: "Default" }],
+      activeProfileId: "default",
+      globalOnboardingCompleted: "true",
+    });
+    await rehydrateWithFreshStore();
+    const { useProfileStore: store } = await import("./profile-store");
+    expect(store.getState().globalOnboardingCompleted).toBe(false);
   });
 
   it("deduplicates duplicate profile ids and keeps the first occurrence", async () => {
