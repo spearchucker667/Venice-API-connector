@@ -36,11 +36,13 @@ describe('packaged executable discovery', () => {
   test('finds the Windows unpacked executable produced by electron-builder', () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'venice-forge-smoke-'));
     temporaryDirectories.push(root);
+    fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify({ productName: 'Venice Forge' }));
     const unpackedDir = path.join(root, 'release', 'win-unpacked');
     const executable = path.join(unpackedDir, 'Venice Forge.exe');
     fs.mkdirSync(unpackedDir, { recursive: true });
     fs.writeFileSync(executable, 'fixture');
     fs.writeFileSync(path.join(unpackedDir, 'dummy.txt'), 'fixture');
+    fs.writeFileSync(path.join(root, 'release', 'Venice-Forge-1.2.3-x64-Portable.exe'), 'wrapper');
 
     expect(findPackagedExecutable(root, 'win32', 'x64')).toBe(executable);
   });

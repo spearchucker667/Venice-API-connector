@@ -160,6 +160,17 @@ function brandingNoticesInSync(rootDir) {
   };
 }
 
+function parseDesktopEntry(content) {
+  const values = new Map();
+  for (const line of content.split(/\r?\n/)) {
+    if (!line || line.startsWith("#") || line.startsWith("[")) continue;
+    const separator = line.indexOf("=");
+    if (separator <= 0) continue;
+    values.set(line.slice(0, separator), line.slice(separator + 1));
+  }
+  return values;
+}
+
 if (require.main !== module) {
   module.exports = {
     getTargets,
@@ -168,6 +179,7 @@ if (require.main !== module) {
     SECRET_PATTERNS,
     FORBIDDEN_ELECTRON_TEXT_PATTERNS,
     brandingNoticesInSync,
+    parseDesktopEntry,
   };
 } else {
 
@@ -345,11 +357,12 @@ function verifyLinuxArtifacts(releaseDir, verified) {
             `dpkg-deb --fsys-tarfile "${fullPath}" | tar xOf - "./usr/share/applications/venice-forge.desktop"`,
             { encoding: "utf8" }
           );
-          if (!desktopStr.includes("StartupWMClass=venice-forge")) {
+          const desktopEntry = parseDesktopEntry(desktopStr);
+          if (desktopEntry.get("StartupWMClass") !== "venice-forge") {
             fail("Linux .deb .desktop file is missing StartupWMClass=venice-forge");
           }
-          if (!desktopStr.includes("Exec=/opt/Venice Forge/venice-forge")) {
-            fail("Linux .deb .desktop file has incorrect Exec path (expected /opt/Venice Forge/venice-forge)");
+          if (desktopEntry.get("Exec") !== '"/opt/Venice Forge/venice-forge" %U') {
+            fail(`Linux .deb .desktop file has incorrect Exec value (expected '"/opt/Venice Forge/venice-forge" %U')`);
           }
           console.log(`[verify:dist] Verified .desktop contents in ${file}`);
         } catch (err) {

@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, it, expect } from "vitest";
 // @ts-expect-error - CJS import in TS file
-import { getTargets, buildReleaseAllowlist, FORBIDDEN_DIST_PATTERNS, SECRET_PATTERNS, FORBIDDEN_ELECTRON_TEXT_PATTERNS, brandingNoticesInSync } from "./verify-dist.cjs";
+import { getTargets, buildReleaseAllowlist, FORBIDDEN_DIST_PATTERNS, SECRET_PATTERNS, FORBIDDEN_ELECTRON_TEXT_PATTERNS, brandingNoticesInSync, parseDesktopEntry } from "./verify-dist.cjs";
 
 describe("verify-dist platform selection", () => {
   it("selects Windows x64 when running on win32 with no args", () => {
@@ -138,6 +138,21 @@ describe("verify-dist release artifact allowlist", () => {
     });
     expect(allowed.has("builder-debug.yml")).toBe(false);
     expect(allowed.has("builder-debug.yml.sha256")).toBe(false);
+  });
+});
+
+describe("verify-dist Linux desktop entry contract", () => {
+  it("parses the quoted executable path emitted by electron-builder", () => {
+    const entry = parseDesktopEntry([
+      "[Desktop Entry]",
+      "Name=Venice Forge",
+      'Exec="/opt/Venice Forge/venice-forge" %U',
+      "StartupWMClass=venice-forge",
+      "",
+    ].join("\n"));
+
+    expect(entry.get("Exec")).toBe('"/opt/Venice Forge/venice-forge" %U');
+    expect(entry.get("StartupWMClass")).toBe("venice-forge");
   });
 });
 

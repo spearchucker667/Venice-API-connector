@@ -87,9 +87,17 @@ describe("verify:ci-contract external action pinning enforcement", () => {
   it("enforces the Linux packaged smoke dependencies", () => {
     const source = readVerifier();
     expect(source).toContain("electron-smoke-linux");
-    expect(source).toContain("apt-get install -y xvfb libgbm-dev");
+    expect(source).toContain("apt-get install -y xvfb libgbm-dev rpm");
     expect(source).toContain("nonexistent 'libxvfb'");
     expect(source).toContain("xvfb-run --auto-servernum");
+  });
+
+  it("enforces the portable packaged-smoke diagnostic collector", () => {
+    const source = readVerifier();
+    expect(source).toContain("capture-smoke-diagnostics.cjs --platform darwin");
+    expect(source).toContain("capture-smoke-diagnostics.cjs --platform win32");
+    expect(source).toContain("capture-smoke-diagnostics.cjs --platform linux");
+    expect(source).toContain("must not require an uncompiled TypeScript smoke utility");
   });
 
   it("enforces the CodeQL language matrix (javascript-typescript + actions)", () => {

@@ -128,9 +128,10 @@ const config = {
     icon: "build/icon.png",
     category: "Utility",
     executableName: "venice-forge",
-    desktop: {
-      StartupWMClass: "venice-forge",
-    },
+    // Keep the generated .desktop filename aligned with package.json's
+    // desktopName so Electron's app_id, StartupWMClass, and launcher identity
+    // all resolve to the same stable value.
+    syncDesktopName: true,
     // Maintainer is required for .deb/.rpm packages because the
     // package.json `author` field is a string, not an object with email.
     maintainer: "Venice Forge contributors <venice-forge-contributors@users.noreply.github.com>",

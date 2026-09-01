@@ -237,20 +237,7 @@ jobs:
         run: node scripts/verify-dist.cjs --mac --arch arm64
       - name: Capture sanitized smoke diagnostics on failure
         if: failure()
-        env:
-          ELECTRON_SMOKE_DIAGNOSTICS_DIR: smoke-diagnostics
-        run: |
-          mkdir -p "$ELECTRON_SMOKE_DIAGNOSTICS_DIR"
-          cat > "$ELECTRON_SMOKE_DIAGNOSTICS_DIR/summary.json" <<EOF
-          {
-            "platform": "darwin",
-            "arch": "arm64",
-            "appVersion": "$(node -p "require('./package.json').version")",
-            "commit": "$GITHUB_SHA",
-            "runner": "$RUNNER_OS",
-            "discoveredExecutable": "$(node -e "const{findPackagedExecutable}=require('./tests/smoke/smoke-utils');console.log(findPackagedExecutable(process.cwd(),'darwin','arm64')||'(not found)')")"
-          }
-          EOF
+        run: node scripts/capture-smoke-diagnostics.cjs --platform darwin --arch arm64 --output smoke-diagnostics/summary.json
       - name: Upload smoke diagnostics
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -288,22 +275,7 @@ jobs:
         run: npm run verify:dist:portable
       - name: Capture sanitized smoke diagnostics on failure
         if: failure()
-        shell: pwsh
-        env:
-          ELECTRON_SMOKE_DIAGNOSTICS_DIR: smoke-diagnostics
-        run: |
-          New-Item -ItemType Directory -Force -Path $env:ELECTRON_SMOKE_DIAGNOSTICS_DIR | Out-Null
-          $appVersion = node -p "require('./package.json').version"
-          $exe = node -e "const{findPackagedExecutable}=require('./tests/smoke/smoke-utils');console.log(findPackagedExecutable(process.cwd(),'win32','x64')||'(not found)')"
-          $summary = @{
-            platform = "win32"
-            arch = "x64"
-            appVersion = $appVersion
-            commit = $env:GITHUB_SHA
-            runner = $env:RUNNER_OS
-            discoveredExecutable = $exe
-          } | ConvertTo-Json
-          $summary | Out-File -FilePath "$env:ELECTRON_SMOKE_DIAGNOSTICS_DIR/summary.json" -Encoding utf8
+        run: node scripts/capture-smoke-diagnostics.cjs --platform win32 --arch x64 --output smoke-diagnostics/summary.json
       - name: Upload smoke diagnostics
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -328,7 +300,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Install Linux dependencies
-        run: sudo apt-get update && sudo apt-get install -y xvfb libgbm-dev
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgbm-dev rpm
       - name: Package Linux app
         run: npm run dist:linux
       - name: Run packaged Electron smoke test
@@ -341,20 +313,7 @@ jobs:
         run: node scripts/verify-dist.cjs --linux
       - name: Capture sanitized smoke diagnostics on failure
         if: failure()
-        env:
-          ELECTRON_SMOKE_DIAGNOSTICS_DIR: smoke-diagnostics
-        run: |
-          mkdir -p "$ELECTRON_SMOKE_DIAGNOSTICS_DIR"
-          cat > "$ELECTRON_SMOKE_DIAGNOSTICS_DIR/summary.json" <<EOF
-          {
-            "platform": "linux",
-            "arch": "x64",
-            "appVersion": "$(node -p "require('./package.json').version")",
-            "commit": "$GITHUB_SHA",
-            "runner": "$RUNNER_OS",
-            "discoveredExecutable": "$(node -e "const{findPackagedExecutable}=require('./tests/smoke/smoke-utils');console.log(findPackagedExecutable(process.cwd(),'linux','x64')||'(not found)')")"
-          }
-          EOF
+        run: node scripts/capture-smoke-diagnostics.cjs --platform linux --arch x64 --output smoke-diagnostics/summary.json
       - name: Upload smoke diagnostics
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

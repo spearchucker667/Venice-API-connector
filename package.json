@@ -1,6 +1,7 @@
 {
   "name": "venice-forge",
   "productName": "Venice Forge",
+  "desktopName": "venice-forge.desktop",
   "description": "Unofficial third-party desktop client for the Venice API. Not affiliated with Venice.ai, Inc.",
   "author": "fayeblade (@spearchucker667)",
   "license": "MIT",

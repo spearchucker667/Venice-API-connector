@@ -220,6 +220,22 @@ if (!ciYaml.includes('RUN_ELECTRON_SMOKE: \'true\'')) {
 }
 console.log("✓ Windows packaged smoke job exists");
 
+for (const invocation of [
+  "node scripts/capture-smoke-diagnostics.cjs --platform darwin --arch arm64 --output smoke-diagnostics/summary.json",
+  "node scripts/capture-smoke-diagnostics.cjs --platform win32 --arch x64 --output smoke-diagnostics/summary.json",
+  "node scripts/capture-smoke-diagnostics.cjs --platform linux --arch x64 --output smoke-diagnostics/summary.json",
+]) {
+  if (!ciYaml.includes(invocation)) {
+    console.error(`❌ ci.yml is missing the portable smoke diagnostic collector: ${invocation}`);
+    process.exit(1);
+  }
+}
+if (ciYaml.includes("require('./tests/smoke/smoke-utils')")) {
+  console.error("❌ ci.yml must not require an uncompiled TypeScript smoke utility from Node");
+  process.exit(1);
+}
+console.log("✓ Packaged smoke jobs use the portable sanitized diagnostic collector");
+
 // 5a. Verify Linux packaged smoke dependencies and headless execution. Ubuntu
 // provides xvfb-run via the `xvfb` package; `libxvfb` is not a valid package
 // name and causes the smoke job to fail before packaging begins.
@@ -227,8 +243,8 @@ if (!ciYaml.includes('electron-smoke-linux:')) {
   console.error("❌ ci.yml is missing 'electron-smoke-linux' job");
   process.exit(1);
 }
-if (!ciYaml.includes('apt-get install -y xvfb libgbm-dev')) {
-  console.error("❌ ci.yml 'electron-smoke-linux' must install xvfb and libgbm-dev");
+if (!ciYaml.includes('apt-get install -y xvfb libgbm-dev rpm')) {
+  console.error("❌ ci.yml 'electron-smoke-linux' must install xvfb, libgbm-dev, and rpm");
   process.exit(1);
 }
 if (ciYaml.includes('libxvfb')) {
