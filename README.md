@@ -25,11 +25,14 @@
   <a href="https://github.com/spearchucker667/Venice_Forge/releases">
     <img alt="macOS" src="https://img.shields.io/badge/platform-macOS-000000?logo=apple" />
   </a>
+  <a href="https://github.com/spearchucker667/Venice_Forge/releases">
+    <img alt="Linux" src="https://img.shields.io/badge/platform-Linux-fcc624?logo=linux&logoColor=black" />
+  </a>
   <a href="LICENSE">
     <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-green.svg" />
   </a>
   <a href="package.json">
-    <img alt="Node 22" src="https://img.shields.io/badge/node-22.15%2B-339933.svg" />
+    <img alt="Node.js 22.15.x" src="https://img.shields.io/badge/node.js-22.15.x-339933.svg" />
   </a>
   <a href="tsconfig.json">
     <img alt="TypeScript strict" src="https://img.shields.io/badge/typescript-strict-3178c6.svg" />
@@ -81,7 +84,7 @@ production-incomplete until qualified native reviewers record dated approval.
 
 Venice Forge is an unofficial, local-first creative desktop client for the [Venice API](https://docs.venice.ai). Designed as a premium, secure workspace, it empowers authors, artists, developers, and researchers with advanced local tooling that goes far beyond generic web interfaces.
 
-By prioritizing local data ownership, Venice Forge runs all storage operations locally on your machine—utilizing IndexedDB with AES-GCM encryption in the browser/renderer and secure OS-level keychain boundaries for credentials.
+By prioritizing local data ownership, Venice Forge keeps application data on your machine. Renderer state uses local browser storage, encrypted backup archives protect exported data, and Electron credentials use the operating system's secure storage boundary.
 
 ---
 
@@ -89,7 +92,7 @@ By prioritizing local data ownership, Venice Forge runs all storage operations l
 
 - **Multi-Language Runtime:** Twelve bundled catalogs cover the complete application surface, with instant switching, persisted selection, locale-aware formatting, and Arabic RTL layout. English is source-complete; the other catalogs are clearly identified as first-pass translations pending native review.
 - **Local-First Backup & Sync:** Manually export/import encrypted `.vfbackup` archives, or use a background sync folder (e.g. iCloud, Dropbox) with automated end-to-end encrypted packet syncing and robust conflict resolution.
-- **Streaming AI Conversations:** Experience highly responsive model outputs with full Markdown, LaTeX math rendering, prompt limits enforcement, and attachment context.
+- **Streaming AI Conversations:** Experience responsive model outputs with full Markdown, LaTeX math rendering, prompt-limit enforcement, and attachment context.
 - **Projects & Workspaces:** Organize your chat histories, generation parameters, and media assets into logical local projects.
 - **Document Tools & Workspace Grants:** Create non-overwriting managed documents, review exact edit diffs, retain immutable revisions, search text files across granted workspace directories, and export through native save boundaries.
 - **Model-Aware Image Generation:** Image Studio adapts inputs to selected model capabilities and uses endpoint-correct payloads across generation, edit, inpaint, background removal, and API-compliant 2×/4× upscaling. Generated desktop images are verified and persisted through the main-owned media store, with explicit retry and Save As recovery when local storage fails.
@@ -98,9 +101,9 @@ By prioritizing local data ownership, Venice Forge runs all storage operations l
 - **Video & Music Studios:** Queue text/image-to-video and lyrics-driven music requests with explicit stage tracking (`queued` → `generating` → `retrieving` → `saving` → `completed`), durable stream persistence, and MP4/audio exports.
 - **Research Workspace:** Synthesize facts using Venice/Jina-backed search, web scraping, and social discovery within an isolated sandbox.
 - **Prompt Library & Scene Composer:** Version, tag, and reuse prompts; arrange prompts, media references, and models into structured visual scene compositions.
-- **ST Card Studio, Character Creator & RP Studio:** Turn rough ideas into complete, editable character cards with model `zai-org-glm-5-2` immutably; view real event-driven design process decisions; create, preview-import, edit, version, test, and verified-export Tavern V1 / Character Card V2 JSON and V2 PNG cards; manage personas, scenarios, lorebooks, multi-character chats, and scene generation.
+- **ST Card Studio, Character Creator & RP Studio:** Turn rough ideas into complete, editable character cards with the configured authoring model; view event-driven design decisions; create, preview-import, edit, version, test, and verified-export Tavern V1 / Character Card V2 JSON and V2 PNG cards; manage personas, scenarios, lorebooks, multi-character chats, and scene generation.
 - **Playground & Workflow Editor:** Interactive visual node graph builder for constructing and running multi-modal AI task chains.
-- **Token-Based Styling:** Dynamic premium glassmorphism theme system supporting 35 built-in themes and fully custom YAML palette imports.
+- **Token-Based Styling:** Dynamic token-based glassmorphism theme system supporting 43 built-in themes plus custom YAML palette imports.
 
 ---
 
@@ -137,7 +140,7 @@ flowchart LR
 | **Embeddings** | Beta | Text vector array inspection and model evaluation |
 | **Research** | Beta | Integrated search/scrape runner with Jina and Venice search synthesis |
 | **Characters & RP** | Beta | SillyTavern-compatible ST Card Studio, local cards, personas, lorebooks, and multi-character chats |
-| **Character Creator** | Beta | AI-assisted character authoring pipeline using `zai-org-glm-5-2` with visible event-driven design process decisions and local library persistence |
+| **Character Creator** | Beta | AI-assisted character authoring pipeline with visible event-driven design process decisions and local library persistence |
 | **RP Studio** | Beta | Standalone scenarios, openers, setting text, and character card seeding |
 | **Workflows** | Beta | Versioned template-based automation chains |
 | **Playground** | Beta | Interactive visual node graph builder and multi-model workflow execution engine |
@@ -194,10 +197,10 @@ Privacy is the core design pillar of Venice Forge:
 
 The user interface uses a token-based styling model matching dynamic glassmorphism aesthetics.
 - **YAML Themes:** Built-in and user-supplied themes live under `config/themes/` using standard CSS variable key-value maps.
-- **Built-in Catalog (44 Themes):**
+- **Built-in Catalog (43 Themes):**
   - *Pastel Aqua/Pink Theme Pack:* cotton-candy-console, sweet-nightmare, dual-persona, polaroid-board.
-  - *Dracula & Dark Palettes:* Basalt Noir, catppuccin, dracula, gruvbox_dark, midnight-velvet, monokai, nord, obsidian-bloom, one_dark, rosepine, solarized_dark, synthwave-harbor, tokyo_night, venice.
-  - *Light & High Contrast:* amber-archive, arctic-glass, aurora-boreal, circuit-mint, copper, cyber-orchid, dark, desert-copperfield, ember-monastery, github_light, glacial-ink, harbor-fog, light, moss-circuit, neon-dusk, porcelain-daybreak, sakura-terminal, solar-ash, solarized_light, toxic-limewire, ultraviolet-rain.
+  - *Dracula & Dark Palettes:* basalt-noir, catppuccin, dracula, gruvbox_dark, midnight-cobalt, midnight-velvet, monokai, nord, obsidian-bloom, obsidian-ember, one_dark, rosepine, solarized_dark, synthwave-harbor, terminal-forest, tokyo_night, venice.
+  - *Light & High Contrast:* amber-archive, arctic-glass, aurora-boreal, circuit-mint, copper, cyber-orchid, dark, desert-copperfield, ember-monastery, github_light, glacial-ink, harbor-fog, light, moss-circuit, neon-dusk, polaroid-board, porcelain-daybreak, porcelain-sky, sakura-terminal, sandstone, solar-ash, solarized_light, toxic-limewire, ultraviolet-rain.
 
 ---
 
@@ -214,7 +217,7 @@ The user interface uses a token-based styling model matching dynamic glassmorphi
 
 ## Developer Setup
 
-Ensure you have Node.js (`>=22.13.0 <23.0.0`) and npm (`>=10.0.0`) installed.
+Ensure you have Node.js (`>=22.15.0 <23.0.0`) and npm (`>=10.0.0`) installed. The repository pins Node.js through `.nvmrc`; use Node 22 for local and CI parity.
 
 ```bash
 # Clone the repository
@@ -238,7 +241,7 @@ npm run dev
 
 ## Validation / CI Gates
 
-Before submitting a pull request, verify that all linting, typing, tests, and contract verifications pass:
+Before submitting changes, verify that linting, typing, tests, contracts, and production builds pass:
 
 ```bash
 # 1. Run ESLint (zero warnings enforced)
@@ -263,6 +266,9 @@ npm run verify:dist
 # Localization integrity and zero-hardcoded-prose regression gates
 npm run verify:i18n
 npm run verify:i18n-hardcoded-regressions
+
+# Complete CI-equivalent gate, including coverage and feature contracts
+npm run test:ci
 ```
 
 ---
