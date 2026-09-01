@@ -10,8 +10,8 @@ import { redactErrorMessage } from "../shared/redaction";
 import { useSettingsStore } from "./settings-store";
 import { useCharacterStore } from "./character-store";
 import type { YamlInternalPromptEnhancer } from "../config/configSchema";
-import type { Theme } from "../theme";
-import { yamlThemeToTheme } from "../theme/yamlTheme";
+import type { ThemeFamily } from "../theme";
+import { yamlThemeToFamily } from "../theme/yamlTheme";
 
 export interface ConfigStatusSnapshot {
   configPath: string;
@@ -99,7 +99,7 @@ export interface SanitizedConfigSnapshot {
 interface ConfigState {
   config: SanitizedConfigSnapshot | null;
   status: ConfigStatusSnapshot | null;
-  yamlThemes: Record<string, Theme>;
+  yamlThemes: Record<string, ThemeFamily>;
   loading: boolean;
   hydrated: boolean;
   error: string | null;
@@ -108,7 +108,7 @@ interface ConfigState {
   setStatus: (status: ConfigStatusSnapshot) => void;
   setError: (error: string) => void;
   setLoading: (loading: boolean) => void;
-  setYamlThemes: (themes: Record<string, Theme>) => void;
+  setYamlThemes: (themes: Record<string, ThemeFamily>) => void;
   reset: () => void;
 }
 
@@ -129,20 +129,33 @@ export const useConfigStore = create<ConfigState>((set) => ({
   reset: () => set({ config: null, status: null, yamlThemes: {}, error: null, hydrated: false, lastLoadedAt: 0 }),
 }));
 
-/** Loads merged themes from the main process and converts them to Theme objects. */
-export async function loadYamlThemes(): Promise<Record<string, Theme>> {
+/** Loads merged themes from the main process and converts them to ThemeFamily objects. */
+export async function loadYamlThemes(): Promise<Record<string, ThemeFamily>> {
   if (!isElectron()) return {};
   try {
     const res = await desktopConfig.loadMergedThemes();
     if (!res.ok || !res.themes) return {};
-    const themes: Record<string, Theme> = {};
+    const themes: Record<string, ThemeFamily> = {};
     for (const [id, raw] of Object.entries(res.themes as Record<string, unknown>)) {
       const rec = raw as Record<string, unknown>;
+      // Theme Engine V2 family record.
+      if (rec.schemaVersion === 2 && typeof rec.id === 'string' && typeof rec.name === 'string') {
+        try {
+          const family = raw as ThemeFamily;
+          if (family.variants?.light?.tokens && family.variants?.dark?.tokens) {
+            themes[id] = family;
+          }
+        } catch {
+          // Skip malformed V2 families defensively
+        }
+        continue;
+      }
+      // Legacy V1 single-mode theme record.
       if (typeof rec.display_name !== 'string' || !rec.display_name) continue;
       if (rec.mode !== 'dark' && rec.mode !== 'light') continue;
       if (!rec.tokens || typeof rec.tokens !== 'object') continue;
       try {
-        themes[id] = yamlThemeToTheme(id, rec.display_name, rec.mode, rec.tokens as Record<string, string>);
+        themes[id] = yamlThemeToFamily(id, rec.display_name, rec.mode, rec.tokens as Record<string, string>);
       } catch {
         // Skip malformed themes defensively
       }

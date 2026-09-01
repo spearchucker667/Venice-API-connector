@@ -184,7 +184,8 @@
         "mode": "Modus:",
         "aCustomThemeNamedLdquo": "Ein benutzerdefiniertes Thema mit dem Namen „",
         "rdquoAlreadyExistsInYourWorkspace": "“ ist bereits in Ihrem Arbeitsbereich vorhanden.",
-        "importedLayoutPreview": "Vorschau des importierten Layouts"
+        "importedLayoutPreview": "Vorschau des importierten Layouts",
+        "id": "ID:"
       }
     },
     "componentsAudioAudioView": {

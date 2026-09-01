@@ -158,6 +158,7 @@ export const useProfileStore = create<ProfileState>()(
           ...currentState,
           profiles: safe.profiles,
           activeProfileId: safe.activeProfileId,
+          globalOnboardingCompleted: safe.globalOnboardingCompleted,
         }
       },
     }

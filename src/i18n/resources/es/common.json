@@ -204,7 +204,8 @@
         "mode": "Modo:",
         "aCustomThemeNamedLdquo": "Ya existe un tema personalizado llamado “",
         "rdquoAlreadyExistsInYourWorkspace": "” en su espacio de trabajo.",
-        "importedLayoutPreview": "Vista previa de diseño importado"
+        "importedLayoutPreview": "Vista previa de diseño importado",
+        "id": "ID:"
       }
     },
     "componentsThemepreview": {

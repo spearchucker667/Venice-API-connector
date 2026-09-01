@@ -1,6 +1,17 @@
 import { describe, it, expect } from "vitest";
 import { contrastRatio, isAAPass } from "./contrast";
-import { BUILTIN_COPPER, BUILTIN_DARK, BUILTIN_DRACULA, BUILTIN_THEMES, BUILTIN_VENICE } from "./themes";
+import {
+  BUILTIN_COPPER,
+  BUILTIN_DARK,
+  BUILTIN_DRACULA,
+  BUILTIN_THEME_FAMILIES,
+  BUILTIN_VENICE,
+} from "./themes";
+import type { ThemeFamily, ThemeMode } from "./themeTypes";
+
+function tokensFor(family: ThemeFamily, mode: ThemeMode = "dark") {
+  return family.variants[mode].tokens;
+}
 
 describe("contrastRatio", () => {
   it("returns 21:1 for black on white", () => {
@@ -59,7 +70,7 @@ describe("isAAPass", () => {
 });
 
 describe("Forge Dracula WCAG AA regression guard", () => {
-  const t = BUILTIN_DRACULA.tokens;
+  const t = tokensFor(BUILTIN_DRACULA, "dark");
 
   it("textPrimary passes AA on background", () => {
     expect(isAAPass(t.foreground, t.background)).toBe(true);
@@ -116,17 +127,22 @@ describe("Forge Dracula WCAG AA regression guard", () => {
 });
 
 // VERIFY-092 regression guard: softened body text must stay AA and avoid pure white
+// Dracula is dark-only in practice, so we test its dark variant directly.
 describe("softened dark-theme body text", () => {
-  it.each([BUILTIN_VENICE, BUILTIN_DARK, BUILTIN_COPPER])("$name avoids pure white and remains AA", (theme) => {
-    expect(theme.tokens.textPrimary.toLowerCase()).not.toBe("#ffffff");
-    expect(isAAPass(theme.tokens.textPrimary, theme.tokens.background)).toBe(true);
-    expect(isAAPass(theme.tokens.textSecondary, theme.tokens.background)).toBe(true);
-    expect(isAAPass(theme.tokens.textMuted, theme.tokens.background)).toBe(true);
+  it.each([
+    { name: BUILTIN_VENICE.name, tokens: tokensFor(BUILTIN_VENICE, "dark") },
+    { name: BUILTIN_DARK.name, tokens: tokensFor(BUILTIN_DARK, "dark") },
+    { name: BUILTIN_COPPER.name, tokens: tokensFor(BUILTIN_COPPER, "dark") },
+  ])("$name avoids pure white and remains AA", ({ tokens }) => {
+    expect(tokens.textPrimary.toLowerCase()).not.toBe("#ffffff");
+    expect(isAAPass(tokens.textPrimary, tokens.background)).toBe(true);
+    expect(isAAPass(tokens.textSecondary, tokens.background)).toBe(true);
+    expect(isAAPass(tokens.textMuted, tokens.background)).toBe(true);
   });
 });
 
 describe("built-in semantic theme contract", () => {
-  it("defines every required semantic token for every built-in theme", () => {
+  it("defines every required semantic token for every built-in variant", () => {
     const keys = [
       "background", "surface", "surfaceElevated", "surfaceMuted", "foreground",
       "foregroundMuted", "foregroundSubtle", "border", "borderStrong", "accent",
@@ -136,17 +152,72 @@ describe("built-in semantic theme contract", () => {
       "buttonSecondaryBackground", "buttonSecondaryForeground", "link", "focusRing",
       "selectionBackground", "selectionForeground",
     ] as const;
-    for (const theme of BUILTIN_THEMES) {
-      for (const key of keys) expect(theme.tokens[key], `${theme.id}.${key}`).toBeTruthy();
+    for (const family of BUILTIN_THEME_FAMILIES) {
+      for (const mode of ["light", "dark"] as ThemeMode[]) {
+        const t = family.variants[mode].tokens;
+        for (const key of keys) expect(t[key], `${family.id}.${mode}.${key}`).toBeTruthy();
+      }
     }
   });
 });
 
+const CANONICAL_MODES: Record<string, ThemeMode> = {
+  "amber-archive": "light",
+  "arctic-glass": "light",
+  "aurora-boreal": "dark",
+  "basalt-noir": "dark",
+  catppuccin: "dark",
+  "circuit-mint": "dark",
+  copper: "dark",
+  "cotton-candy-console": "light",
+  "cyber-orchid": "dark",
+  dark: "dark",
+  "desert-copperfield": "light",
+  dracula: "dark",
+  "dual-persona": "light",
+  "ember-monastery": "dark",
+  "github-light": "light",
+  "glacial-ink": "dark",
+  "gruvbox-dark": "dark",
+  "harbor-fog": "light",
+  light: "light",
+  "midnight-cobalt": "dark",
+  "midnight-velvet": "dark",
+  monokai: "dark",
+  "moss-circuit": "dark",
+  "neon-dusk": "dark",
+  nord: "dark",
+  "obsidian-bloom": "dark",
+  "obsidian-ember": "dark",
+  "one-dark": "dark",
+  "polaroid-board": "light",
+  "porcelain-daybreak": "light",
+  "porcelain-sky": "light",
+  rosepine: "dark",
+  "sakura-terminal": "dark",
+  sandstone: "light",
+  "solar-ash": "light",
+  solarized: "dark",
+  "sweet-nightmare": "dark",
+  "synthwave-harbor": "dark",
+  "terminal-forest": "dark",
+  "tokyo-night": "dark",
+  "toxic-limewire": "dark",
+  "ultraviolet-rain": "dark",
+  venice: "dark",
+};
+
+function canonicalMode(family: ThemeFamily): ThemeMode {
+  return CANONICAL_MODES[family.id] ?? "dark";
+}
+
 describe("all built-in themes WCAG contrast regression guard", () => {
-  it.each(BUILTIN_THEMES.map((t) => [t.id, t] as const))(
+  it.each(
+    BUILTIN_THEME_FAMILIES.map((f) => [`${f.id}:${canonicalMode(f)}`, f, canonicalMode(f)] as const)
+  )(
     "%s passes expanded contrast checks",
-    (_id, theme) => {
-      const t = theme.tokens;
+    (_id, family, mode) => {
+      const t = tokensFor(family, mode);
       expect(isAAPass(t.foreground, t.background)).toBe(true);
       expect(isAAPass(t.foregroundMuted, t.background)).toBe(true);
       expect(isAAPass(t.foreground, t.surface)).toBe(true);

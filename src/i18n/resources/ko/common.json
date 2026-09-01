@@ -204,7 +204,8 @@
         "mode": "모드:",
         "aCustomThemeNamedLdquo": "이름이 \"",
         "rdquoAlreadyExistsInYourWorkspace": "\"인 사용자 정의 테마가 작업 공간에 이미 존재합니다.",
-        "importedLayoutPreview": "가져온 레이아웃 미리보기"
+        "importedLayoutPreview": "가져온 레이아웃 미리보기",
+        "id": "ID:"
       }
     },
     "componentsThemepreview": {

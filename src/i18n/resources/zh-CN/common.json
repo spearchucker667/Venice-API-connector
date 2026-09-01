@@ -204,7 +204,8 @@
         "mode": "模式：",
         "aCustomThemeNamedLdquo": "您的工作区中已存在名为“",
         "rdquoAlreadyExistsInYourWorkspace": "”的自定义主题。",
-        "importedLayoutPreview": "导入的布局预览"
+        "importedLayoutPreview": "导入的布局预览",
+        "id": "ID:"
       }
     },
     "componentsThemepreview": {

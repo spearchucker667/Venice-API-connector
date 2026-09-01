@@ -8,11 +8,11 @@ interface ChipProps {
 
 const toneClasses: Record<string, string> = {
   ok: 'bg-accent/10 text-accent border-transparent',
-  warn: 'bg-[rgba(212,168,67,0.12)] text-[var(--color-warning)] border-transparent',
-  danger: 'bg-[rgba(239,68,68,0.12)] text-[var(--color-danger)] border-transparent',
+  warn: 'bg-warning/10 text-warning border-transparent',
+  danger: 'bg-danger/10 text-danger border-transparent',
   running: 'bg-accent/10 text-accent border-transparent',
   muted: 'bg-surface-elevated text-text-muted border-border',
-  video: 'bg-[rgba(110,231,211,0.08)] text-accent border-transparent',
+  video: 'bg-info/10 text-info border-transparent',
   default: 'bg-surface text-text-primary border-border'
 };
 

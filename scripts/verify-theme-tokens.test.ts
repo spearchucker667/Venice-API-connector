@@ -8,11 +8,13 @@ import { afterEach, describe, expect, it } from "vitest";
 const {
   collectScanFiles,
   isSourceFile,
+  verifyBuiltinFamilies,
   verifyThemeTokens,
   // eslint-disable-next-line @typescript-eslint/no-require-imports
 } = require("./verify-theme-tokens.cjs") as {
   collectScanFiles: (root: string, scanRoots: string[]) => Set<string>;
   isSourceFile: (entry: string) => boolean;
+  verifyBuiltinFamilies: (root: string) => string[];
   verifyThemeTokens: (
     root: string,
     options?: {
@@ -116,5 +118,20 @@ describe("verifyThemeTokens", () => {
     const result = verifyThemeTokens(root, { scanRoots: ["src/components"] });
     expect(result.ok).toBe(false);
     expect(result.violations.length).toBeGreaterThanOrEqual(9);
+  });
+});
+
+describe("verifyBuiltinFamilies", () => {
+  it("reports missing schemaVersion or variants", () => {
+    const root = fixture({
+      "src/theme/builtins/bad.ts": "export const BAD = { id: 'bad', name: 'Bad' };\n",
+      "src/theme/builtins/good.ts":
+        "export const GOOD = { schemaVersion: 2, variants: { light: { tokens: {} }, dark: { tokens: {} } } };\n",
+    });
+
+    const violations = verifyBuiltinFamilies(root);
+    expect(violations.some((v) => v.includes("bad.ts") && v.includes("schemaVersion"))).toBe(true);
+    expect(violations.some((v) => v.includes("bad.ts") && v.includes("variants"))).toBe(true);
+    expect(violations.some((v) => v.includes("good.ts"))).toBe(false);
   });
 });

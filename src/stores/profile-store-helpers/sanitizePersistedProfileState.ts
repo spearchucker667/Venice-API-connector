@@ -116,18 +116,24 @@ function sanitizeActiveProfileId(
  *  Never mutates the input. Never throws. */
 export function sanitizePersistedProfileState(
   persisted: unknown,
-): Pick<ProfileState, "profiles" | "activeProfileId"> {
+): Pick<ProfileState, "profiles" | "activeProfileId" | "globalOnboardingCompleted"> {
   if (!persisted || typeof persisted !== "object" || Array.isArray(persisted)) {
     return {
       profiles: sanitizeProfiles(undefined),
       activeProfileId: DEFAULT_PROFILE_ID,
+      globalOnboardingCompleted: false,
     };
   }
-  const candidate = persisted as { profiles?: unknown; activeProfileId?: unknown };
+  const candidate = persisted as {
+    profiles?: unknown;
+    activeProfileId?: unknown;
+    globalOnboardingCompleted?: unknown;
+  };
   const profiles = sanitizeProfiles(candidate.profiles);
   return {
     profiles,
     activeProfileId: sanitizeActiveProfileId(candidate.activeProfileId, profiles),
+    globalOnboardingCompleted: candidate.globalOnboardingCompleted === true,
   };
 }
 

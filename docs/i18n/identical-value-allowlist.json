@@ -112,7 +112,8 @@
       "providers.inputs.vertexApiKey",
       "providers.inputs.vertexProjectId",
       "providers.inputs.vertexLocation",
-      "providers.inputs.vertexCredentialsJson"
+      "providers.inputs.vertexCredentialsJson",
+      "ID:"
     ],
     "fr": [
       "· {{value1}}",
@@ -252,7 +253,8 @@
       "providers.inputs.vertexApiKey",
       "providers.inputs.vertexProjectId",
       "providers.inputs.vertexLocation",
-      "providers.inputs.vertexCredentialsJson"
+      "providers.inputs.vertexCredentialsJson",
+      "ID:"
     ],
     "de": [
       "· {{value1}}",
@@ -397,7 +399,8 @@
       "providers.inputs.vertexApiKey",
       "providers.inputs.vertexProjectId",
       "providers.inputs.vertexLocation",
-      "providers.inputs.vertexCredentialsJson"
+      "providers.inputs.vertexCredentialsJson",
+      "ID:"
     ],
     "pt-BR": [
       "· {{value1}}",
@@ -509,7 +512,8 @@
       "providers.inputs.vertexApiKey",
       "providers.inputs.vertexProjectId",
       "providers.inputs.vertexLocation",
-      "providers.inputs.vertexCredentialsJson"
+      "providers.inputs.vertexCredentialsJson",
+      "ID:"
     ],
     "ru": [
       "· {{value1}}",
@@ -595,7 +599,8 @@
       "providers.inputs.vertexApiKey",
       "providers.inputs.vertexProjectId",
       "providers.inputs.vertexLocation",
-      "providers.inputs.vertexCredentialsJson"
+      "providers.inputs.vertexCredentialsJson",
+      "ID:"
     ],
     "zh-CN": [
       "· {{value1}}",
@@ -685,7 +690,8 @@
       "providers.inputs.vertexApiKey",
       "providers.inputs.vertexProjectId",
       "providers.inputs.vertexLocation",
-      "providers.inputs.vertexCredentialsJson"
+      "providers.inputs.vertexCredentialsJson",
+      "ID:"
     ],
     "ja": [
       "· {{value1}}",
@@ -775,7 +781,8 @@
       "providers.inputs.vertexApiKey",
       "providers.inputs.vertexProjectId",
       "providers.inputs.vertexLocation",
-      "providers.inputs.vertexCredentialsJson"
+      "providers.inputs.vertexCredentialsJson",
+      "ID:"
     ],
     "hi": [
       "· {{value1}}",
@@ -854,7 +861,8 @@
       "providers.inputs.vertexApiKey",
       "providers.inputs.vertexProjectId",
       "providers.inputs.vertexLocation",
-      "providers.inputs.vertexCredentialsJson"
+      "providers.inputs.vertexCredentialsJson",
+      "ID:"
     ],
     "ar": [
       "· {{value1}}",
@@ -937,7 +945,8 @@
       "providers.inputs.vertexApiKey",
       "providers.inputs.vertexProjectId",
       "providers.inputs.vertexLocation",
-      "providers.inputs.vertexCredentialsJson"
+      "providers.inputs.vertexCredentialsJson",
+      "ID:"
     ],
     "ko": [
       "· {{value1}}",
@@ -1026,7 +1035,8 @@
       "providers.inputs.vertexApiKey",
       "providers.inputs.vertexProjectId",
       "providers.inputs.vertexLocation",
-      "providers.inputs.vertexCredentialsJson"
+      "providers.inputs.vertexCredentialsJson",
+      "ID:"
     ],
     "sv-SE": [
       "· {{value1}}",
@@ -1185,7 +1195,8 @@
       "providers.inputs.vertexApiKey",
       "providers.inputs.vertexProjectId",
       "providers.inputs.vertexLocation",
-      "providers.inputs.vertexCredentialsJson"
+      "providers.inputs.vertexCredentialsJson",
+      "ID:"
     ]
   }
 }

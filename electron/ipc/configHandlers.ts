@@ -153,9 +153,11 @@ export function registerConfigIpcHandlers() {
 
   handleIpc("config:saveTheme", async (_event, theme: unknown) => {
     try {
-      const { saveTheme } = await import("../services/themeService");
-      // Use cast to YamlTheme & { id: string }
-      await saveTheme(theme as import("../../src/config/configSchema").YamlTheme & { id: string });
+      const { saveTheme, isThemeFamilyV2 } = await import("../services/themeService");
+      if (!isThemeFamilyV2(theme)) {
+        throw new Error("Theme must be a valid ThemeFamilyV2 document.");
+      }
+      await saveTheme(theme);
       return { ok: true };
     } catch (err) {
       return { ok: false, error: redactErrorMessage(err) };

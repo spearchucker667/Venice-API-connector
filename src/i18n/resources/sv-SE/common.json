@@ -184,7 +184,8 @@
         "mode": "Läge:",
         "aCustomThemeNamedLdquo": "Ett anpassat tema med namnet “",
         "rdquoAlreadyExistsInYourWorkspace": "” finns redan i din arbetsyta.",
-        "importedLayoutPreview": "Förhandsgranskning av importerad layout"
+        "importedLayoutPreview": "Förhandsgranskning av importerad layout",
+        "id": "ID:"
       }
     },
     "componentsAudioAudioView": {

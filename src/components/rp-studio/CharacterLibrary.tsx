@@ -847,7 +847,7 @@ function CardTile({
               );
             }
           }}
-          className="flex-1 text-[12px] py-1.5 rounded-md border border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] focus-visible:outline-offset-2"
+          className="flex-1 text-[12px] py-1.5 rounded-md border border-success/30 text-success-fg hover:bg-success/10 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] focus-visible:outline-offset-2"
         >
           <Trans i18nKey="common:surface.componentsRpStudioCharacterlibrary.action.chat" />
         </button>

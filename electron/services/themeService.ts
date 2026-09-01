@@ -7,6 +7,35 @@ import yaml from "yaml";
 
 import { logInfo } from "./logger";
 
+/** Minimal local ThemeFamily V2 shape used for IPC persistence. */
+export interface ThemeFamilyV2 {
+  schemaVersion: 2;
+  id: string;
+  name: string;
+  variants: {
+    light: { tokens: Record<string, string> };
+    dark: { tokens: Record<string, string> };
+  };
+}
+
+export function isThemeFamilyV2(value: unknown): value is ThemeFamilyV2 {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const rec = value as Record<string, unknown>;
+  return (
+    rec.schemaVersion === 2 &&
+    typeof rec.id === "string" &&
+    typeof rec.name === "string" &&
+    typeof rec.variants === "object" &&
+    rec.variants !== null &&
+    !Array.isArray(rec.variants) &&
+    typeof (rec.variants as Record<string, unknown>).light === "object" &&
+    typeof (rec.variants as Record<string, unknown>).dark === "object"
+  );
+}
+
+/** Theme records returned by loaders: legacy V1 single-mode themes or V2 families. */
+export type LoadedThemeRecord = YamlTheme | ThemeFamilyV2;
+
 let watcher: FSWatcher | null = null;
 
 export function getBuiltinThemesDir(): string {
@@ -26,24 +55,35 @@ export async function ensureCustomThemesDir(): Promise<string> {
   return customDir;
 }
 
-export async function readThemeFile(filePath: string): Promise<{ themes: Record<string, YamlTheme>; warnings: ConfigWarning[] }> {
+export async function readThemeFile(filePath: string): Promise<{ themes: Record<string, LoadedThemeRecord>; warnings: ConfigWarning[] }> {
   try {
     const content = await fs.readFile(filePath, "utf-8");
     const raw = yaml.parse(content);
     if (!raw) return { themes: {}, warnings: [] };
+    if (typeof raw !== "object" || Array.isArray(raw)) {
+      return { themes: {}, warnings: [] };
+    }
+    // Theme Engine V2 family document.
+    if (raw.schemaVersion === 2) {
+      if (!isThemeFamilyV2(raw)) {
+        return { themes: {}, warnings: [{ field: filePath, message: "Invalid theme family V2 document", severity: "error" }] };
+      }
+      return { themes: { [raw.id]: raw }, warnings: [] };
+    }
+    // Legacy V1 `themes:` block.
+    if ("themes" in raw) {
+      return validateThemesFile(raw);
+    }
     // Legacy terminal-color templates are already represented by the renderer's
     // built-in theme registry. Only schema-versioned/`themes` mappings belong in
     // the merged YAML registry.
-    if (typeof raw === "object" && !Array.isArray(raw) && !("themes" in raw)) {
-      return { themes: {}, warnings: [] };
-    }
-    return validateThemesFile(raw);
+    return { themes: {}, warnings: [] };
   } catch (err) {
     return { themes: {}, warnings: [{ field: filePath, message: err instanceof Error ? err.message : String(err), severity: "error" }] };
   }
 }
 
-async function scanThemesDirectory(dir: string, allThemes: Record<string, YamlTheme>, allWarnings: ConfigWarning[]) {
+async function scanThemesDirectory(dir: string, allThemes: Record<string, LoadedThemeRecord>, allWarnings: ConfigWarning[]) {
   try {
     const files = await fs.readdir(dir);
     for (const file of files) {
@@ -63,8 +103,8 @@ async function scanThemesDirectory(dir: string, allThemes: Record<string, YamlTh
   }
 }
 
-export async function loadAllThemes(legacyThemesPath: string): Promise<{ themes: Record<string, YamlTheme>; warnings: ConfigWarning[] }> {
-  const allThemes: Record<string, YamlTheme> = {};
+export async function loadAllThemes(legacyThemesPath: string): Promise<{ themes: Record<string, LoadedThemeRecord>; warnings: ConfigWarning[] }> {
+  const allThemes: Record<string, LoadedThemeRecord> = {};
   const allWarnings: ConfigWarning[] = [];
 
   // 1. Load built-in individual files
@@ -91,7 +131,7 @@ export async function loadAllThemes(legacyThemesPath: string): Promise<{ themes:
   await scanThemesDirectory(customDir, allThemes, allWarnings);
 
   // Enforce deterministic alphabetical order by sorting the keys
-  const sortedThemes: Record<string, YamlTheme> = {};
+  const sortedThemes: Record<string, LoadedThemeRecord> = {};
   for (const key of Object.keys(allThemes).sort()) {
     sortedThemes[key] = allThemes[key];
   }
@@ -126,19 +166,26 @@ export async function startThemeWatcher() {
   watcher.on("unlink", notify);
 }
 
-export async function saveTheme(theme: YamlTheme & { id: string }): Promise<void> {
-  const customDir = await ensureCustomThemesDir();
-  const filePath = path.join(customDir, `${theme.id}.yaml`);
-  const out = {
-    themes: {
-      [theme.id]: {
-        display_name: theme.display_name,
-        mode: theme.mode,
-        tokens: theme.tokens,
-      }
-    }
+function serializeV2Family(family: ThemeFamilyV2): string {
+  const doc = {
+    schemaVersion: 2,
+    id: family.id,
+    name: family.name,
+    variants: {
+      light: { tokens: family.variants.light.tokens },
+      dark: { tokens: family.variants.dark.tokens },
+    },
   };
-  await fs.writeFile(filePath, yaml.stringify(out), { encoding: "utf-8", mode: 0o600 });
+  return yaml.stringify(doc);
+}
+
+export async function saveTheme(family: ThemeFamilyV2): Promise<void> {
+  if (!isThemeFamilyV2(family)) {
+    throw new Error("Theme must be a valid ThemeFamilyV2 document.");
+  }
+  const customDir = await ensureCustomThemesDir();
+  const filePath = path.join(customDir, `${family.id}.yaml`);
+  await fs.writeFile(filePath, serializeV2Family(family), { encoding: "utf-8", mode: 0o600 });
 }
 
 export async function deleteTheme(id: string): Promise<void> {

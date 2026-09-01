@@ -245,6 +245,7 @@
         "liveThemePreview": "Live Theme Preview",
         "showingLivePreviewOfActiveDraft": "Showing live preview of active draft",
         "themeName": "Theme Name:",
+        "id": "ID:",
         "mode": "Mode:",
         "aCustomThemeNamedLdquo": "A custom theme named “",
         "rdquoAlreadyExistsInYourWorkspace": "” already exists in your workspace.",

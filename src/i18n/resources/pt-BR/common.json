@@ -184,7 +184,8 @@
         "mode": "Modo:",
         "aCustomThemeNamedLdquo": "Um tema personalizado chamado “",
         "rdquoAlreadyExistsInYourWorkspace": "” já existe em sua área de trabalho.",
-        "importedLayoutPreview": "Visualização de layout importado"
+        "importedLayoutPreview": "Visualização de layout importado",
+        "id": "ID:"
       }
     },
     "componentsAudioAudioView": {

@@ -63,7 +63,7 @@ describe("ThemeMaker Custom Theme Engine Features", () => {
     const resetButton = screen.getByRole("button", { name: "Cancel / Reset" });
     fireEvent.click(resetButton);
 
-    expect(bgInput.value).toBe(BUILTIN_VENICE.tokens.background);
+    expect(bgInput.value).toBe(BUILTIN_VENICE.variants.dark.tokens.background);
   });
 
   it("deletes a user custom theme and falls back safely", async () => {
@@ -71,7 +71,7 @@ describe("ThemeMaker Custom Theme Engine Features", () => {
       id: "user-test-theme",
       name: "User Test Theme",
       mode: "dark" as const,
-      tokens: BUILTIN_DRACULA.tokens,
+      tokens: BUILTIN_DRACULA.variants.dark.tokens,
     };
     useSettingsStore.setState({
       selectedThemeId: "user-test-theme",
@@ -92,7 +92,13 @@ describe("ThemeMaker Custom Theme Engine Features", () => {
   });
 
   it("opens structured import preview modal when a YAML file is loaded", async () => {
-    const validYaml = await themeToYaml(BUILTIN_DRACULA);
+    const draculaTheme = {
+      id: BUILTIN_DRACULA.id,
+      name: BUILTIN_DRACULA.name,
+      mode: "dark" as const,
+      tokens: BUILTIN_DRACULA.variants.dark.tokens,
+    };
+    const validYaml = await themeToYaml(draculaTheme);
     const mockImport = vi.fn().mockResolvedValue(validYaml);
     vi.mocked(desktopFiles.importYamlString).mockImplementation(mockImport);
 

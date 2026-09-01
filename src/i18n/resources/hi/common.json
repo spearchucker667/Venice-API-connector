@@ -204,7 +204,8 @@
         "mode": "मोड:",
         "aCustomThemeNamedLdquo": "आपके कार्यक्षेत्र में \"",
         "rdquoAlreadyExistsInYourWorkspace": "\" नामक एक कस्टम थीम पहले से मौजूद है।",
-        "importedLayoutPreview": "आयातित लेआउट पूर्वावलोकन"
+        "importedLayoutPreview": "आयातित लेआउट पूर्वावलोकन",
+        "id": "ID:"
       }
     },
     "componentsThemepreview": {

@@ -10,6 +10,7 @@ describe("sanitizePersistedProfileState", () => {
       expect(safe.profiles).toHaveLength(1);
       expect(safe.profiles[0].id).toBe("default");
       expect(safe.activeProfileId).toBe("default");
+      expect(safe.globalOnboardingCompleted).toBe(false);
     }
   });
 
@@ -147,12 +148,23 @@ describe("sanitizePersistedProfileState", () => {
         { id: "play", name: "Play" },
       ],
       activeProfileId: "work",
+      globalOnboardingCompleted: true,
     });
     expect(safe.profiles).toHaveLength(3);
     expect(safe.activeProfileId).toBe("work");
     const work = safe.profiles.find((p) => p.id === "work");
     expect(work?.hasPassword).toBe(true);
     expect(work?.avatarUrl).toBe("https://example.com/a.png");
+    expect(safe.globalOnboardingCompleted).toBe(true);
+  });
+
+  it("accepts only a literal true onboarding-completion flag", () => {
+    expect(sanitizePersistedProfileState({ globalOnboardingCompleted: true }).globalOnboardingCompleted).toBe(true);
+    for (const value of [false, "true", 1, {}, [], null, undefined]) {
+      expect(
+        sanitizePersistedProfileState({ globalOnboardingCompleted: value }).globalOnboardingCompleted,
+      ).toBe(false);
+    }
   });
 
   it("every returned profile id is itself a valid storage id", () => {

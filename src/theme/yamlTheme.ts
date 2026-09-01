@@ -1,4 +1,4 @@
-import { completeThemeTokens, type Theme } from './themeTypes';
+import { completeThemeTokens, type Theme, type ThemeFamily, type ThemeMode } from './themeTypes';
 import { isValidColorValue } from './validateColor';
 
 /**
@@ -39,8 +39,38 @@ export function yamlThemeToTheme(
 }
 
 /**
+ * Convert a single-mode YAML theme entry into a ThemeFamily. The authored
+ * mode uses the provided tokens; the companion variant reuses the same
+ * tokens so the theme remains usable regardless of appearance mode.
+ *
+ * Theme Engine V2 YAML files should ideally ship both variants; this helper
+ * preserves backward compatibility with single-mode YAML themes.
+ */
+export function yamlThemeToFamily(
+  id: string,
+  display_name: string,
+  mode: ThemeMode,
+  tokens: Record<string, string>
+): ThemeFamily {
+  const theme = yamlThemeToTheme(id, display_name, mode, tokens);
+  return {
+    schemaVersion: 2,
+    id: theme.id,
+    name: theme.name,
+    aliases: [],
+    builtIn: false,
+    variants: {
+      light: { tokens: theme.tokens },
+      dark: { tokens: theme.tokens },
+    },
+  };
+}
+
+/**
  * Resolves a theme id against a merged registry of built-in + YAML themes.
  * Returns null when the id is not found in either registry.
+ *
+ * @deprecated Use the canonical theme registry in `src/theme/registry.ts`.
  */
 export function findMergedTheme(
   id: string | null | undefined,

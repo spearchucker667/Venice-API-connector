@@ -204,7 +204,8 @@
         "mode": "الوضع:",
         "aCustomThemeNamedLdquo": "يوجد سمة مخصصة تسمى \"",
         "rdquoAlreadyExistsInYourWorkspace": "\" بالفعل في مساحة العمل الخاصة بك.",
-        "importedLayoutPreview": "معاينة التخطيط المستوردة"
+        "importedLayoutPreview": "معاينة التخطيط المستوردة",
+        "id": "ID:"
       }
     },
     "componentsThemepreview": {

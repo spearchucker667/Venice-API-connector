@@ -1,49 +1,18 @@
 import { translateRuntime } from "../i18n/runtimeTranslator";
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  BUILTIN_VENICE,
-  BUILTIN_DARK,
-  BUILTIN_LIGHT,
-  BUILTIN_COPPER,
-  BUILTIN_DRACULA,
-  BUILTIN_GRUVBOX_DARK,
-  BUILTIN_ROSEPINE,
-  BUILTIN_NORD,
-  BUILTIN_TOKYO_NIGHT,
-  BUILTIN_CATPPUCCIN,
-  BUILTIN_SOLARIZED_DARK,
-  BUILTIN_SOLARIZED_LIGHT,
-  BUILTIN_ONE_DARK,
-  BUILTIN_MONOKAI,
-  BUILTIN_GITHUB_LIGHT,
-  BUILTIN_OBSIDIAN_BLOOM,
-  BUILTIN_HARBOR_FOG,
-  BUILTIN_CIRCUIT_MINT,
-  BUILTIN_AMBER_ARCHIVE,
-  BUILTIN_NEON_DUSK,
-  BUILTIN_AURORA_BOREAL,
-  BUILTIN_SAKURA_TERMINAL,
-  BUILTIN_BASALT_NOIR,
-  BUILTIN_SOLAR_ASH,
-  BUILTIN_CYBER_ORCHID,
-  BUILTIN_ARCTIC_GLASS,
-  BUILTIN_DESERT_COPPERFIELD,
-  BUILTIN_TOXIC_LIMEWIRE,
-  BUILTIN_MIDNIGHT_VELVET,
-  BUILTIN_PORCELAIN_DAYBREAK,
-  BUILTIN_SYNTHWAVE_HARBOR,
-  BUILTIN_MOSS_CIRCUIT,
-  BUILTIN_EMBER_MONASTERY,
-  BUILTIN_GLACIAL_INK,
-  BUILTIN_ULTRAVIOLET_RAIN,
   applyTheme,
-  completeThemeTokens,
+  legacyThemeToFamily,
   luminance,
+  resolveTheme,
+  serializeThemeFamilyYaml,
+  parseThemeYaml,
   type Theme,
+  type ThemeFamily,
   type ThemeMode,
-  type ThemeTokenInput,
   type ThemeTokens,
 } from "../theme";
+import { BUILTIN_THEME_FAMILIES } from "../theme/builtins";
 import { COLOR_INPUT_FALLBACK } from "../theme/fallbacks";
 import { isValidColorValue } from "../theme/validateColor";
 import { ThemePreview } from "./ThemePreview";
@@ -164,174 +133,58 @@ const TOKEN_CATEGORIES: Array<{
   },
 ];
 
-function cloneTheme(theme: Theme): Theme {
-  return { ...theme, tokens: completeThemeTokens(theme.mode, theme.tokens) };
-}
-
-function defaultCustomTheme(): Theme {
+function cloneFamily(family: ThemeFamily): ThemeFamily {
   return {
-    id: `custom-${Date.now()}`,
-    name: "My Custom Theme",
-    mode: "dark",
-    tokens: completeThemeTokens("dark", BUILTIN_VENICE.tokens),
-  };
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function camelToSnake(value: string): string {
-  return value.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
-}
-
-function snakeToCamel(value: string): string {
-  return value.replace(/_([a-z])/g, (_, letter: string) =>
-    letter.toUpperCase(),
-  );
-}
-
-function importedTokens(mode: ThemeMode, raw: unknown): ThemeTokens {
-  if (!isRecord(raw))
-    throw new Error("Invalid theme yaml: tokens must be a mapping.");
-  const fallback = cloneTheme(
-    mode === "light" ? BUILTIN_LIGHT : BUILTIN_VENICE,
-  ).tokens;
-  const merged: Record<string, string> = { ...fallback };
-  for (const [rawKey, value] of Object.entries(raw)) {
-    const key = snakeToCamel(rawKey);
-    if (!(key in TOKEN_LABELS)) continue;
-    if (typeof value !== "string" || !isValidColorValue(value)) {
-      throw new Error(`Invalid color value for theme token ${rawKey}.`);
-    }
-    merged[key] = value;
-  }
-  return completeThemeTokens(mode, merged as unknown as ThemeTokenInput);
-}
-
-export async function themeToYaml(theme: Theme): Promise<string> {
-  const { stringify } = await import("yaml");
-  const tokens = Object.fromEntries(
-    Object.entries(completeThemeTokens(theme.mode, theme.tokens)).map(
-      ([key, value]) => [camelToSnake(key), value],
-    ),
-  );
-  return stringify({
-    version: 1,
-    themes: {
-      custom: {
-        display_name: theme.name,
-        mode: theme.mode,
-        tokens,
-      },
+    ...family,
+    variants: {
+      light: { tokens: { ...family.variants.light.tokens } },
+      dark: { tokens: { ...family.variants.dark.tokens } },
     },
-  });
+  };
 }
 
-export async function yamlToTheme(yamlStr: string): Promise<Theme> {
-  const { parse } = await import("yaml");
-  const raw: unknown = parse(yamlStr);
-  if (!isRecord(raw))
-    throw new Error("Invalid theme yaml: root must be a mapping.");
-
-  if (isRecord(raw.themes)) {
-    const first = Object.values(raw.themes)[0];
-    if (!isRecord(first))
-      throw new Error("Invalid theme yaml: themes must contain an entry.");
-    if (first.mode !== "dark" && first.mode !== "light") {
-      throw new Error("Invalid theme yaml: mode must be dark or light.");
-    }
-    const mode: ThemeMode = first.mode === "light" ? "light" : "dark";
-    const name =
-      typeof first.display_name === "string" && first.display_name.trim()
-        ? first.display_name.trim()
-        : "Imported Theme";
-    return {
-      id: `custom-${Date.now()}`,
-      name,
-      mode,
-      tokens: importedTokens(mode, first.tokens),
-    };
-  }
-
-  const background = typeof raw.background === "string" ? raw.background : null;
-  const foreground = typeof raw.foreground === "string" ? raw.foreground : null;
-  const accent = typeof raw.accent === "string" ? raw.accent : null;
-  const details = typeof raw.details === "string" ? raw.details : null;
-  if (!background || !foreground || !accent) {
-    throw new Error(
-      "Invalid theme yaml: expected a themes block or legacy background/foreground/accent fields.",
-    );
-  }
-  if (![background, foreground, accent].every(isValidColorValue)) {
-    throw new Error(
-      "Invalid theme yaml: legacy color fields contain an unsafe value.",
-    );
-  }
-
-  const detailsIsColor =
-    typeof details === "string" && isValidColorValue(details);
-  const rawName =
-    typeof raw.name === "string" && raw.name.trim() ? raw.name.trim() : null;
-  const name =
-    rawName || (detailsIsColor || !details ? "Imported Theme" : details);
-
-  const inferredMode: ThemeMode =
-    luminance(background) > 0.5 ? "light" : "dark";
-  const mode: ThemeMode =
-    raw.mode === "light" || raw.mode === "dark" ? raw.mode : inferredMode;
-
-  const terminal = isRecord(raw.terminal_colors) ? raw.terminal_colors : {};
-  const bright = isRecord(terminal.bright) ? terminal.bright : {};
-  const normal = isRecord(terminal.normal) ? terminal.normal : {};
-  const color = (
-    record: Record<string, unknown>,
-    key: string,
-    fallback: string,
-  ): string =>
-    typeof record[key] === "string" && isValidColorValue(record[key])
-      ? record[key]
-      : fallback;
-
-  const surfaceFallback =
-    detailsIsColor && details ? details : color(normal, "black", background);
-  const surfaceElevatedFallback =
-    detailsIsColor && details ? details : color(bright, "black", background);
-  const borderFallback =
-    detailsIsColor && details ? details : color(normal, "white", foreground);
-  const accentForeground = luminance(accent) > 0.5 ? foreground : background;
-
-  const legacy: ThemeTokenInput = {
-    background,
-    surface: surfaceFallback,
-    surfaceElevated: surfaceElevatedFallback,
-    border: borderFallback,
-    textPrimary: foreground,
-    textSecondary: color(normal, "white", foreground),
-    textMuted: color(bright, "black", foreground),
-    accent,
-    accentHover: color(bright, "blue", accent),
-    accentForeground,
-    success: color(bright, "green", "#74d66a"),
-    warning: color(bright, "yellow", "#d6a84f"),
-    danger: color(bright, "red", "#ef4444"),
-    info: color(bright, "cyan", "#7da7ff"),
-    focusRing: accent,
-    overlay: mode === "light" ? "rgba(0, 0, 0, 0.25)" : "rgba(0, 0, 0, 0.6)",
-    glow: `${accent}25`,
-  };
+function singleModeThemeFromFamily(family: ThemeFamily, mode: ThemeMode): Theme {
   return {
-    id: `custom-${Date.now()}`,
-    name,
+    id: family.id,
+    name: family.name,
     mode,
-    tokens: completeThemeTokens(mode, legacy),
+    tokens: family.variants[mode].tokens,
   };
+}
+
+function familyFromTheme(theme: Theme): ThemeFamily {
+  return legacyThemeToFamily(theme);
+}
+
+function defaultCustomFamily(): ThemeFamily {
+  const base = BUILTIN_THEME_FAMILIES.find((f) => f.id === "venice") ?? BUILTIN_THEME_FAMILIES[0];
+  return cloneFamily(base);
+}
+
+function getCanonicalMode(family: ThemeFamily): ThemeMode {
+  return luminance(family.variants.light.tokens.background) > 0.55 ? "light" : "dark";
 }
 
 const EMPTY_CUSTOM_THEMES: Theme[] = [];
 
+/** Backwards-compatible single-mode Theme exporter.
+ *  Serializes the theme as a V2 family with the same tokens in both variants. */
+export async function themeToYaml(theme: Theme): Promise<string> {
+  return serializeThemeFamilyYaml(familyFromTheme(theme));
+}
+
+/** Backwards-compatible single-mode Theme importer.
+ *  Parses V2, V1, or legacy flat YAML and returns the family's canonical variant.
+ *  Legacy documents that declare an explicit `mode` field preserve that mode. */
+export async function yamlToTheme(yamlStr: string): Promise<Theme> {
+  const family = parseThemeYaml(yamlStr);
+  const explicitMode = yamlStr.match(/^mode:\s*(dark|light)$/m)?.[1] as ThemeMode | undefined;
+  const mode = explicitMode || getCanonicalMode(family);
+  return singleModeThemeFromFamily(family, mode);
+}
+
 interface ImportPreviewModalState {
-  theme: Theme;
+  family: ThemeFamily;
   conflictId?: string;
   conflictName?: string;
 }
@@ -351,344 +204,116 @@ export function ThemeMaker() {
   const yamlThemes = useConfigStore((s) => s.yamlThemes);
   const setYamlThemes = useConfigStore((s) => s.setYamlThemes);
 
-  const builtInMap: Record<string, Theme> = useMemo(
-    () => ({
-      "builtin-venice": BUILTIN_VENICE,
-      "builtin-dark": BUILTIN_DARK,
-      "builtin-light": BUILTIN_LIGHT,
-      "builtin-copper": BUILTIN_COPPER,
-      "builtin-dracula": BUILTIN_DRACULA,
-      "builtin-gruvbox-dark": BUILTIN_GRUVBOX_DARK,
-      "builtin-rosepine": BUILTIN_ROSEPINE,
-      "builtin-nord": BUILTIN_NORD,
-      "builtin-tokyo-night": BUILTIN_TOKYO_NIGHT,
-      "builtin-catppuccin": BUILTIN_CATPPUCCIN,
-      "builtin-solarized-dark": BUILTIN_SOLARIZED_DARK,
-      "builtin-solarized-light": BUILTIN_SOLARIZED_LIGHT,
-      "builtin-one-dark": BUILTIN_ONE_DARK,
-      "builtin-monokai": BUILTIN_MONOKAI,
-      "builtin-github-light": BUILTIN_GITHUB_LIGHT,
-      "builtin-obsidian-bloom": BUILTIN_OBSIDIAN_BLOOM,
-      "builtin-harbor-fog": BUILTIN_HARBOR_FOG,
-      "builtin-circuit-mint": BUILTIN_CIRCUIT_MINT,
-      "builtin-amber-archive": BUILTIN_AMBER_ARCHIVE,
-      "builtin-neon-dusk": BUILTIN_NEON_DUSK,
-      "builtin-aurora-boreal": BUILTIN_AURORA_BOREAL,
-      "builtin-sakura-terminal": BUILTIN_SAKURA_TERMINAL,
-      "builtin-basalt-noir": BUILTIN_BASALT_NOIR,
-      "builtin-solar-ash": BUILTIN_SOLAR_ASH,
-      "builtin-cyber-orchid": BUILTIN_CYBER_ORCHID,
-      "builtin-arctic-glass": BUILTIN_ARCTIC_GLASS,
-      "builtin-desert-copperfield": BUILTIN_DESERT_COPPERFIELD,
-      "builtin-toxic-limewire": BUILTIN_TOXIC_LIMEWIRE,
-      "builtin-midnight-velvet": BUILTIN_MIDNIGHT_VELVET,
-      "builtin-porcelain-daybreak": BUILTIN_PORCELAIN_DAYBREAK,
-      "builtin-synthwave-harbor": BUILTIN_SYNTHWAVE_HARBOR,
-      "builtin-moss-circuit": BUILTIN_MOSS_CIRCUIT,
-      "builtin-ember-monastery": BUILTIN_EMBER_MONASTERY,
-      "builtin-glacial-ink": BUILTIN_GLACIAL_INK,
-      "builtin-ultraviolet-rain": BUILTIN_ULTRAVIOLET_RAIN,
-    }),
-    [],
-  );
-
-  const customThemesMap = useMemo(() => {
-    const map: Record<string, Theme> = {};
-    for (const theme of customThemes) {
-      map[theme.id] = theme;
-    }
-    for (const [id, theme] of Object.entries(yamlThemes)) {
-      if (!builtInMap[id]) {
-        map[id] = theme;
-      }
+  // Registry maps.
+  const builtInMap = useMemo(() => {
+    const map: Record<string, ThemeFamily> = {};
+    for (const family of BUILTIN_THEME_FAMILIES) {
+      map[`builtin-${family.id}`] = family;
+      map[family.id] = family;
     }
     return map;
-  }, [customThemes, yamlThemes, builtInMap]);
+  }, []);
 
-  const allThemesMap = useMemo(
-    () => ({ ...builtInMap, ...customThemesMap, ...yamlThemes }),
-    [builtInMap, customThemesMap, yamlThemes],
-  );
+  const customFamilyMap = useMemo(() => {
+    const map: Record<string, ThemeFamily> = {};
+    for (const theme of customThemes) {
+      map[theme.id] = familyFromTheme(theme);
+    }
+    return map;
+  }, [customThemes]);
+
+  const allFamiliesMap = useMemo(() => {
+    return {
+      ...builtInMap,
+      ...customFamilyMap,
+      ...yamlThemes,
+    };
+  }, [builtInMap, customFamilyMap, yamlThemes]);
 
   const [selector, setSelector] = useState<string>(
     selectedThemeId || "builtin-venice",
   );
-  const [draft, setDraft] = useState<Theme>(() => {
-    const active =
-      allThemesMap[selectedThemeId] || customTheme || BUILTIN_VENICE;
-    return cloneTheme(active);
+  const [draft, setDraft] = useState<ThemeFamily>(() => {
+    const active = allFamiliesMap[selectedThemeId] ||
+      (customTheme ? familyFromTheme(customTheme) : null) ||
+      defaultCustomFamily();
+    return cloneFamily(active);
+  });
+  const [previewMode, setPreviewMode] = useState<ThemeMode>(() => {
+    const family = allFamiliesMap[selectedThemeId] || defaultCustomFamily();
+    return getCanonicalMode(family);
   });
   const [importModal, setImportModal] =
     useState<ImportPreviewModalState | null>(null);
 
-  // Intentional state-sync: Resets the editor draft when the globally selected
-  // theme or available themes change from outside.
+  // Reset the editor draft when the globally selected theme changes from outside.
   useEffect(() => {
-    setSelector(selectedThemeId || "builtin-venice");
     const active =
-      allThemesMap[selectedThemeId] || customTheme || BUILTIN_VENICE;
-    setDraft(cloneTheme(active));
-  }, [selectedThemeId, customTheme, customThemes, allThemesMap]);
+      allFamiliesMap[selectedThemeId] ||
+      (customTheme ? familyFromTheme(customTheme) : null) ||
+      defaultCustomFamily();
+    setSelector(selectedThemeId || "builtin-venice");
+    setDraft(cloneFamily(active));
+    setPreviewMode(getCanonicalMode(active));
+  }, [selectedThemeId, customTheme, customThemes, allFamiliesMap]);
 
   const isCustomSelected =
-    selector === "custom" || Boolean(customThemesMap[selector]);
+    selector === "custom" ||
+    Boolean(customFamilyMap[selector]) ||
+    Boolean(yamlThemes[selector]);
+
+  const storedFamily = useMemo(() => {
+    return (
+      allFamiliesMap[selector] ||
+      (customTheme ? familyFromTheme(customTheme) : null) ||
+      defaultCustomFamily()
+    );
+  }, [allFamiliesMap, selector, customTheme]);
 
   const isDraftDirty = useMemo(() => {
-    const currentStored =
-      allThemesMap[selector] || customTheme || BUILTIN_VENICE;
-    if (draft.name !== currentStored.name || draft.mode !== currentStored.mode)
+    if (draft.id !== storedFamily.id || draft.name !== storedFamily.name) {
       return true;
-    return (
-      JSON.stringify(draft.tokens) !== JSON.stringify(currentStored.tokens)
-    );
-  }, [draft, selector, allThemesMap, customTheme]);
+    }
+    for (const mode of ["light", "dark"] as ThemeMode[]) {
+      if (
+        JSON.stringify(draft.variants[mode].tokens) !==
+        JSON.stringify(storedFamily.variants[mode].tokens)
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }, [draft, storedFamily]);
 
   const themeOptions = useMemo(() => {
-    const builtInOptions = [
-      {
-        id: "builtin-venice",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.veniceParityDark",
-        ),
-      },
-      {
-        id: "builtin-dark",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeGraphite",
-        ),
-      },
-      {
-        id: "builtin-light",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeDaylight",
-        ),
-      },
-      {
-        id: "builtin-copper",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeCopper",
-        ),
-      },
-      {
-        id: "builtin-dracula",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeDracula",
-        ),
-      },
-      {
-        id: "builtin-gruvbox-dark",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.gruvboxDark",
-        ),
-      },
-      {
-        id: "builtin-rosepine",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.rosepine",
-        ),
-      },
-      {
-        id: "builtin-nord",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeNord",
-        ),
-      },
-      {
-        id: "builtin-tokyo-night",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeTokyo",
-        ),
-      },
-      {
-        id: "builtin-catppuccin",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeCatppuccin",
-        ),
-      },
-      {
-        id: "builtin-solarized-dark",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeSolarizedDark",
-        ),
-      },
-      {
-        id: "builtin-solarized-light",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeSolarizedLight",
-        ),
-      },
-      {
-        id: "builtin-one-dark",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeOneDark",
-        ),
-      },
-      {
-        id: "builtin-monokai",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeMonokai",
-        ),
-      },
-      {
-        id: "builtin-github-light",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.forgeGithubLight",
-        ),
-      },
-      {
-        id: "builtin-obsidian-bloom",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.obsidianBloom",
-        ),
-      },
-      {
-        id: "builtin-harbor-fog",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.harborFog",
-        ),
-      },
-      {
-        id: "builtin-circuit-mint",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.circuitMint",
-        ),
-      },
-      {
-        id: "builtin-amber-archive",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.amberArchive",
-        ),
-      },
-      {
-        id: "builtin-neon-dusk",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.neonDusk",
-        ),
-      },
-      {
-        id: "builtin-aurora-boreal",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.auroraBoreal",
-        ),
-      },
-      {
-        id: "builtin-sakura-terminal",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.sakuraTerminal",
-        ),
-      },
-      {
-        id: "builtin-basalt-noir",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.basaltNoir",
-        ),
-      },
-      {
-        id: "builtin-solar-ash",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.solarAsh",
-        ),
-      },
-      {
-        id: "builtin-cyber-orchid",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.cyberOrchid",
-        ),
-      },
-      {
-        id: "builtin-arctic-glass",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.arcticGlass",
-        ),
-      },
-      {
-        id: "builtin-desert-copperfield",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.desertCopperfield",
-        ),
-      },
-      {
-        id: "builtin-toxic-limewire",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.toxicLimewire",
-        ),
-      },
-      {
-        id: "builtin-midnight-velvet",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.midnightVelvet",
-        ),
-      },
-      {
-        id: "builtin-porcelain-daybreak",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.porcelainDaybreak",
-        ),
-      },
-      {
-        id: "builtin-synthwave-harbor",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.synthwaveHarbor",
-        ),
-      },
-      {
-        id: "builtin-moss-circuit",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.mossCircuit",
-        ),
-      },
-      {
-        id: "builtin-ember-monastery",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.emberMonastery",
-        ),
-      },
-      {
-        id: "builtin-glacial-ink",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.glacialInk",
-        ),
-      },
-      {
-        id: "builtin-ultraviolet-rain",
-        label: tRuntime(
-          "runtimeGenerated.components.thememaker.metadata.ultravioletRain",
-        ),
-      },
-    ];
-
     const optionsMap = new Map<string, { id: string; label: string }>();
     const labelToIdMap = new Map<string, string>();
 
-    // Add built-ins first
-    builtInOptions.forEach((opt) => {
-      optionsMap.set(opt.id, opt);
-      labelToIdMap.set(opt.label, opt.id);
-    });
-
-    // Add yaml themes (overriding built-ins with the same exact name)
-    Object.entries(yamlThemes).forEach(([id, theme]) => {
-      if (labelToIdMap.has(theme.name)) {
-        const existingId = labelToIdMap.get(theme.name)!;
+    function addOption(id: string, label: string) {
+      if (labelToIdMap.has(label)) {
+        const existingId = labelToIdMap.get(label)!;
         if (existingId !== id) {
           optionsMap.delete(existingId);
         }
       }
-      optionsMap.set(id, { id, label: theme.name });
-      labelToIdMap.set(theme.name, id);
-    });
+      optionsMap.set(id, { id, label });
+      labelToIdMap.set(label, id);
+    }
 
-    // Add custom user themes
-    Object.values(customThemesMap).forEach((theme) => {
-      if (labelToIdMap.has(theme.name)) {
-        const existingId = labelToIdMap.get(theme.name)!;
-        if (existingId !== theme.id) {
-          optionsMap.delete(existingId);
-        }
-      }
-      optionsMap.set(theme.id, { id: theme.id, label: theme.name });
-      labelToIdMap.set(theme.name, theme.id);
-    });
+    // Built-ins use legacy "builtin-<id>" selectors for backwards compatibility.
+    for (const family of BUILTIN_THEME_FAMILIES) {
+      addOption(`builtin-${family.id}`, family.name);
+    }
+
+    // YAML themes override built-ins with the same display name.
+    for (const [id, family] of Object.entries(yamlThemes)) {
+      addOption(id, family.name);
+    }
+
+    // Custom user themes.
+    for (const theme of customThemes) {
+      addOption(theme.id, theme.name);
+    }
 
     const options = sortThemeOptions(Array.from(optionsMap.values()));
     if (!optionsMap.has("custom")) {
@@ -700,51 +325,65 @@ export function ThemeMaker() {
       });
     }
     return options;
-  }, [yamlThemes, customThemesMap, tRuntime]);
+  }, [yamlThemes, customThemes, tRuntime]);
+
+  const applyDraft = React.useCallback((preview: ThemeMode) => {
+    applyTheme(resolveTheme(draft, preview));
+  }, [draft]);
 
   function handleSelect(id: string) {
     setSelector(id);
     if (id !== "custom") {
-      const theme = allThemesMap[id] || BUILTIN_VENICE;
-      setDraft(cloneTheme(theme));
-      applyTheme(theme);
+      const family = allFamiliesMap[id] || defaultCustomFamily();
+      const mode = getCanonicalMode(family);
+      setDraft(cloneFamily(family));
+      setPreviewMode(mode);
+      applyTheme(resolveTheme(family, mode));
       setSelectedThemeId(id);
-      setAppearanceMode(theme.mode);
-      if (customThemesMap[id]) {
-        setCustomTheme(customThemesMap[id]);
+      setAppearanceMode(mode);
+      if (customThemes.find((t) => t.id === id)) {
+        setCustomTheme(customThemes.find((t) => t.id === id) ?? null);
       }
     } else {
-      const base = customTheme ? cloneTheme(customTheme) : defaultCustomTheme();
-      setDraft(base);
-      applyTheme(base);
+      const base = customTheme ? familyFromTheme(customTheme) : defaultCustomFamily();
+      const mode = getCanonicalMode(base);
+      setDraft(cloneFamily(base));
+      setPreviewMode(mode);
+      applyTheme(resolveTheme(base, mode));
     }
   }
 
+  async function persistFamily(family: ThemeFamily, mode: ThemeMode) {
+    const single = singleModeThemeFromFamily(family, mode);
+    const result = await desktopConfig.saveTheme(family);
+    if (!result.ok) throw new Error(result.error || "Theme persistence failed.");
+    saveCustomTheme(single);
+    setYamlThemes({
+      ...useConfigStore.getState().yamlThemes,
+      [family.id]: family,
+    });
+  }
+
   async function handleCreateNewFromActive() {
-    const base = allThemesMap[selector] || draft || BUILTIN_VENICE;
-    const newTheme: Theme = {
+    const base = allFamiliesMap[selector] || draft || defaultCustomFamily();
+    const mode = previewMode;
+    const newFamily: ThemeFamily = {
+      ...cloneFamily(base),
       id: `user-theme-${Date.now()}`,
       name: `${base.name} (Custom)`,
-      mode: base.mode,
-      tokens: completeThemeTokens(base.mode, base.tokens),
+      aliases: [],
+      builtIn: false,
     };
-    setDraft(newTheme);
-    setSelector(newTheme.id);
-    applyTheme(newTheme);
+    setDraft(newFamily);
+    setSelector(newFamily.id);
+    applyTheme(resolveTheme(newFamily, mode));
 
     try {
-      const result = await desktopConfig.saveTheme(newTheme);
-      if (!result.ok)
-        throw new Error(result.error || "Theme persistence failed.");
-      saveCustomTheme(newTheme);
-      setYamlThemes({
-        ...useConfigStore.getState().yamlThemes,
-        [newTheme.id]: newTheme,
-      });
+      await persistFamily(newFamily, mode);
       toast.success(
         tRuntime(
           "runtimeGenerated.components.thememaker.notification.createdNewCustomThemeValue1",
-          { value1: newTheme.name },
+          { value1: newFamily.name },
         ),
       );
     } catch (err) {
@@ -758,60 +397,32 @@ export function ThemeMaker() {
   }
 
   function updateToken(key: keyof ThemeTokens, value: string) {
-    setDraft((prev: Theme) => {
-      const next = cloneTheme(prev);
-      next.tokens[key] = value;
+    setDraft((prev: ThemeFamily) => {
+      const next = cloneFamily(prev);
+      next.variants[previewMode].tokens[key] = value;
       return next;
     });
   }
 
-  function updateMode(mode: ThemeMode) {
-    if (draft.mode === mode) return;
-    setDraft((prev: Theme) => {
-      const next = cloneTheme(prev);
-      next.mode = mode;
-      const base = mode === "light" ? BUILTIN_LIGHT : BUILTIN_VENICE;
-      next.tokens = { ...base.tokens };
-      return next;
-    });
-    // VERIFY: persist the mode switch so it survives reload, navigation, and
-    // theme re-selection. Without this the live preview would flip but the
-    // global `appearanceMode` (used by App.tsx to bootstrap the active theme
-    // on cold start) would stay at the previous mode, silently reverting the
-    // user's choice.
-    setAppearanceMode(mode);
-    // If the user is editing a built-in theme, jump the active selection to
-    // the matching canonical theme so the palette highlight and the
-    // persisted `selectedThemeId` reflect the new mode. Custom themes keep
-    // their own identity and only the global mode is updated.
-    if (!customThemesMap[selector]) {
-      const target = mode === "light" ? "builtin-light" : "builtin-dark";
-      setSelectedThemeId(target);
-      setSelector(target);
-    }
+  function updatePreviewMode(mode: ThemeMode) {
+    if (previewMode === mode) return;
+    setPreviewMode(mode);
   }
 
   function updateName(name: string) {
-    setDraft((prev: Theme) => ({ ...prev, name }));
+    setDraft((prev: ThemeFamily) => ({ ...prev, name }));
   }
 
   useEffect(() => {
-    if (isCustomSelected || isDraftDirty) {
-      applyTheme(draft);
-    }
-  }, [draft, isCustomSelected, isDraftDirty]);
+    applyDraft(previewMode);
+  }, [applyDraft, draft, previewMode]);
 
   async function handleSave() {
     try {
-      const result = await desktopConfig.saveTheme(draft);
-      if (!result.ok)
-        throw new Error(result.error || "Theme persistence failed.");
-      saveCustomTheme(draft);
-      setYamlThemes({
-        ...useConfigStore.getState().yamlThemes,
-        [draft.id]: draft,
-      });
+      await persistFamily(draft, previewMode);
       setSelector(draft.id);
+      setSelectedThemeId(draft.id);
+      setAppearanceMode(previewMode);
       toast.success(
         tRuntime(
           "runtimeGenerated.components.thememaker.notification.themeValue1SavedSuccessfully",
@@ -829,26 +440,29 @@ export function ThemeMaker() {
   }
 
   function handleReset() {
-    const stored = allThemesMap[selector] || customTheme || BUILTIN_VENICE;
-    const reverted = cloneTheme(stored);
+    const reverted = cloneFamily(storedFamily);
     setDraft(reverted);
-    applyTheme(reverted);
+    setPreviewMode(getCanonicalMode(reverted));
+    applyTheme(resolveTheme(reverted, getCanonicalMode(reverted)));
     toast.info("Unsaved draft changes reset");
   }
 
   function handleRestoreDefaults() {
+    const venice = BUILTIN_THEME_FAMILIES.find((f) => f.id === "venice") ?? BUILTIN_THEME_FAMILIES[0];
+    const mode = getCanonicalMode(venice);
     setSelector("builtin-venice");
-    applyTheme(BUILTIN_VENICE);
+    setDraft(cloneFamily(venice));
+    setPreviewMode(mode);
+    applyTheme(resolveTheme(venice, mode));
     setSelectedThemeId("builtin-venice");
-    setAppearanceMode("dark");
+    setAppearanceMode(mode);
     setCustomTheme(null);
-    setDraft(cloneTheme(BUILTIN_VENICE));
     toast.info("Restored default Venice theme");
   }
 
   async function handleDeleteCustom() {
-    if (!customThemesMap[selector] && selector !== "custom") return;
-    const targetId = selector;
+    if (!isCustomSelected) return;
+    const targetId = draft.id;
     try {
       const result = await desktopConfig.deleteTheme(targetId);
       if (!result.ok) throw new Error(result.error || "Theme deletion failed.");
@@ -857,10 +471,12 @@ export function ThemeMaker() {
       delete nextYamlThemes[targetId];
       setYamlThemes(nextYamlThemes);
       const settings = useSettingsStore.getState();
-      const fallback = allThemesMap[settings.selectedThemeId] || BUILTIN_VENICE;
+      const fallback =
+        allFamiliesMap[settings.selectedThemeId] || defaultCustomFamily();
       setSelector(settings.selectedThemeId);
-      setDraft(cloneTheme(fallback));
-      applyTheme(fallback);
+      setDraft(cloneFamily(fallback));
+      setPreviewMode(getCanonicalMode(fallback));
+      applyTheme(resolveTheme(fallback, getCanonicalMode(fallback)));
       toast.info("Custom theme deleted");
     } catch (err) {
       toast.error(
@@ -874,7 +490,7 @@ export function ThemeMaker() {
 
   async function handleExport() {
     try {
-      const yaml = await themeToYaml(draft);
+      const yaml = serializeThemeFamilyYaml(draft);
       const filename = `${draft.name.toLowerCase().replace(/[^a-z0-9_-]/g, "_")}.theme.yaml`;
       await desktopFiles.exportYaml(yaml, filename);
       toast.success(
@@ -896,15 +512,15 @@ export function ThemeMaker() {
     try {
       const yaml = await desktopFiles.importYamlString();
       if (!yaml) return;
-      const importedTheme = await yamlToTheme(yaml);
+      const importedFamily = parseThemeYaml(yaml);
 
-      const conflict = Object.values(customThemesMap).find(
-        (t) =>
-          t.id === importedTheme.id ||
-          t.name.toLowerCase() === importedTheme.name.toLowerCase(),
+      const conflict = Object.values(customFamilyMap).find(
+        (f) =>
+          f.id === importedFamily.id ||
+          f.name.toLowerCase() === importedFamily.name.toLowerCase(),
       );
       setImportModal({
-        theme: importedTheme,
+        family: importedFamily,
         conflictId: conflict?.id,
         conflictName: conflict?.name,
       });
@@ -925,34 +541,30 @@ export function ThemeMaker() {
         ? `user-theme-${Date.now()}`
         : mode === "replace" && importModal.conflictId
           ? importModal.conflictId
-          : importModal.theme.id;
+          : importModal.family.id;
     const targetName =
       mode === "copy" || (mode === "apply" && importModal.conflictId)
-        ? `${importModal.theme.name} (Imported)`
-        : importModal.theme.name;
+        ? `${importModal.family.name} (Imported)`
+        : importModal.family.name;
 
-    const finalTheme: Theme = {
-      ...cloneTheme(importModal.theme),
+    const finalFamily: ThemeFamily = {
+      ...cloneFamily(importModal.family),
       id: targetId,
       name: targetName,
     };
+    const targetMode = getCanonicalMode(finalFamily);
     try {
-      const result = await desktopConfig.saveTheme(finalTheme);
-      if (!result.ok)
-        throw new Error(result.error || "Theme persistence failed.");
-      saveCustomTheme(finalTheme);
-      setYamlThemes({
-        ...useConfigStore.getState().yamlThemes,
-        [finalTheme.id]: finalTheme,
-      });
-      setDraft(finalTheme);
-      setSelector(finalTheme.id);
-      applyTheme(finalTheme);
+      await persistFamily(finalFamily, targetMode);
+      setDraft(finalFamily);
+      setSelector(finalFamily.id);
+      applyTheme(resolveTheme(finalFamily, targetMode));
+      setSelectedThemeId(finalFamily.id);
+      setAppearanceMode(targetMode);
       setImportModal(null);
       toast.success(
         tRuntime(
           "runtimeGenerated.components.thememaker.notification.themeValue1ImportedAndApplied",
-          { value1: finalTheme.name },
+          { value1: finalFamily.name },
         ),
       );
     } catch (err) {
@@ -966,6 +578,8 @@ export function ThemeMaker() {
   }
 
   const validColor = (v: string) => isValidColorValue(v);
+
+  const previewTheme = singleModeThemeFromFamily(draft, previewMode);
 
   return (
     <div className="space-y-6">
@@ -1006,8 +620,10 @@ export function ThemeMaker() {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 max-h-64 overflow-y-auto p-2 border border-border rounded-lg bg-surface-elevated">
           {themeOptions.map((opt) => {
-            const theme = allThemesMap[opt.id];
+            const family = allFamiliesMap[opt.id];
             const isSelected = selector === opt.id;
+            const familyMode = family ? getCanonicalMode(family) : "dark";
+            const theme = family ? singleModeThemeFromFamily(family, familyMode) : null;
             return (
               <button
                 key={opt.id}
@@ -1028,8 +644,8 @@ export function ThemeMaker() {
                 aria-pressed={isSelected}
               >
                 {theme ? (
-                  <div 
-                    className="h-12 w-full flex border-b border-border/50 bg-[var(--theme-bg)]" 
+                  <div
+                    className="h-12 w-full flex border-b border-border/50 bg-[var(--theme-bg)]"
                     aria-hidden="true"
                   >
                     <div className="w-1/2 h-full flex items-end justify-start p-1 bg-[var(--theme-surface)]">
@@ -1037,7 +653,7 @@ export function ThemeMaker() {
                     </div>
                   </div>
                 ) : (
-                  <div 
+                  <div
                     className="h-12 w-full bg-surface-elevated flex items-center justify-center text-xs text-text-muted border-b border-border/50"
                     aria-hidden="true"
                   >
@@ -1055,12 +671,12 @@ export function ThemeMaker() {
         </div>
       </div>
 
-      {/* Draft Custom Editor */}
+      {/* Draft Family Editor */}
       <div className="space-y-4 rounded-xl border border-border p-4 bg-surface">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-3">
           <div className="flex items-center gap-3">
             <input
-              type="text" id="theme-maker-1" 
+              type="text" id="theme-maker-1"
               value={draft.name}
               onChange={(e) => updateName(e.target.value)}
               className="rounded-md border border-border bg-surface-elevated px-3 py-1 text-sm font-semibold text-text-primary"
@@ -1071,9 +687,9 @@ export function ThemeMaker() {
             <div className="flex items-center gap-1 rounded-lg border border-border bg-surface-elevated p-1">
               <button
                 type="button"
-                onClick={() => updateMode("dark")}
+                onClick={() => updatePreviewMode("dark")}
                 className={`rounded px-2 py-0.5 text-xs font-medium ${
-                  draft.mode === "dark"
+                  previewMode === "dark"
                     ? "bg-accent text-accent-fg"
                     : "text-text-muted hover:text-text-primary"
                 }`}
@@ -1082,9 +698,9 @@ export function ThemeMaker() {
               </button>
               <button
                 type="button"
-                onClick={() => updateMode("light")}
+                onClick={() => updatePreviewMode("light")}
                 className={`rounded px-2 py-0.5 text-xs font-medium ${
-                  draft.mode === "light"
+                  previewMode === "light"
                     ? "bg-accent text-accent-fg"
                     : "text-text-muted hover:text-text-primary"
                 }`}
@@ -1108,7 +724,7 @@ export function ThemeMaker() {
             >
               {tRuntime("runtimeSlashLabels.cancelReset")}
             </button>
-            {customThemesMap[selector] && (
+            {isCustomSelected && (
               <button className="btn danger" onClick={handleDeleteCustom}>
                 <Trans i18nKey="common:surface.componentsThememaker.action.deleteTheme" />
               </button>
@@ -1128,7 +744,7 @@ export function ThemeMaker() {
               </h4>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {cat.keys.map((key) => {
-                  const value = draft.tokens[key] || "";
+                  const value = draft.variants[previewMode].tokens[key] || "";
                   const valid = validColor(value);
                   return (
                     <div
@@ -1194,7 +810,7 @@ export function ThemeMaker() {
             <Trans i18nKey="common:surface.componentsThememaker.text.showingLivePreviewOfActiveDraft" />
           </span>
         </div>
-        <ThemePreview theme={draft} />
+        <ThemePreview theme={previewTheme} />
       </div>
 
       {/* Import Preview Modal */}
@@ -1215,13 +831,13 @@ export function ThemeMaker() {
                 <strong>
                   <Trans i18nKey="common:surface.componentsThememaker.text.themeName" />
                 </strong>{" "}
-                {importModal.theme.name}
+                {importModal.family.name}
               </div>
               <div>
                 <strong>
-                  <Trans i18nKey="common:surface.componentsThememaker.text.mode" />
+                  <Trans i18nKey="common:surface.componentsThememaker.text.id" />
                 </strong>{" "}
-                {importModal.theme.mode}
+                {importModal.family.id}
               </div>
               {importModal.conflictName && (
                 <div className="rounded-lg border border-warning/30 bg-warning/10 p-3 text-xs text-warning">
@@ -1236,7 +852,7 @@ export function ThemeMaker() {
               <div className="text-xs font-semibold text-text-muted mb-2">
                 <Trans i18nKey="common:surface.componentsThememaker.text.importedLayoutPreview" />
               </div>
-              <ThemePreview theme={importModal.theme} />
+              <ThemePreview theme={singleModeThemeFromFamily(importModal.family, getCanonicalMode(importModal.family))} />
             </div>
 
             <div className="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-border/50">

@@ -204,7 +204,8 @@
         "mode": "Режим:",
         "aCustomThemeNamedLdquo": "Пользовательская тема с именем «",
         "rdquoAlreadyExistsInYourWorkspace": "» уже существует в вашей рабочей области.",
-        "importedLayoutPreview": "Предварительный просмотр импортированного макета"
+        "importedLayoutPreview": "Предварительный просмотр импортированного макета",
+        "id": "ID:"
       }
     },
     "componentsThemepreview": {

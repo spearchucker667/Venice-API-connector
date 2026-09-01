@@ -203,23 +203,50 @@ function verifyThemeTokens(root, options = {}) {
   };
 }
 
+function verifyBuiltinFamilies(root) {
+  const builtinsDir = path.resolve(root, "src/theme/builtins");
+  const violations = [];
+  if (!fs.existsSync(builtinsDir)) {
+    violations.push(`missing ${path.relative(root, builtinsDir)}`);
+    return violations;
+  }
+  const files = fs.readdirSync(builtinsDir).filter((f) => f.endsWith(".ts") && f !== "index.ts");
+  for (const file of files) {
+    const abs = path.join(builtinsDir, file);
+    const content = fs.readFileSync(abs, "utf8");
+    if (!/schemaVersion:\s*2/.test(content)) {
+      violations.push(`${path.relative(root, abs)}: missing schemaVersion: 2`);
+    }
+    if (!/variants:\s*\{/.test(content)) {
+      violations.push(`${path.relative(root, abs)}: missing variants block`);
+    }
+    if (!/light:\s*\{/.test(content)) {
+      violations.push(`${path.relative(root, abs)}: missing light variant`);
+    }
+    if (!/dark:\s*\{/.test(content)) {
+      violations.push(`${path.relative(root, abs)}: missing dark variant`);
+    }
+  }
+  return violations;
+}
+
 function main() {
   const result = verifyThemeTokens(ROOT);
+  const familyViolations = verifyBuiltinFamilies(ROOT);
+  const allViolations = [...result.violations, ...familyViolations];
 
-  if (result.ok) {
+  if (allViolations.length === 0) {
     console.log(
       `[verify:theme-tokens] OK: no forbidden hardcoded color classes in themeable UI (${result.filesScanned} files scanned).`,
     );
     process.exit(0);
   }
 
-  if (result.violations.length > 0) {
-    console.error(`[verify:theme-tokens] FAILED: ${result.violations.length} violation(s)`);
-    for (const v of result.violations) {
-      console.error(`  ${v}`);
-    }
-    console.error(`\nUse \`// ${ALLOW_COMMENT}\` sparingly to document intentional fixed colors.`);
+  console.error(`[verify:theme-tokens] FAILED: ${allViolations.length} violation(s)`);
+  for (const v of allViolations) {
+    console.error(`  ${v}`);
   }
+  console.error(`\nUse \`// ${ALLOW_COMMENT}\` sparingly to document intentional fixed colors.`);
 
   process.exit(1);
 }
@@ -236,6 +263,7 @@ module.exports = {
   isThemeScanFile,
   scanFile,
   toPosixPath,
+  verifyBuiltinFamilies,
   verifyThemeTokens,
 };
 

@@ -3,12 +3,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { isAAPass, contrastRatio } from "./contrast";
 import {
-  BUILTIN_THEMES,
+  BUILTIN_THEME_FAMILIES,
   BUILTIN_NORD,
   BUILTIN_TOKYO_NIGHT,
   BUILTIN_CATPPUCCIN,
-  BUILTIN_SOLARIZED_DARK,
-  BUILTIN_SOLARIZED_LIGHT,
+  BUILTIN_SOLARIZED,
   BUILTIN_ONE_DARK,
   BUILTIN_MONOKAI,
   BUILTIN_GITHUB_LIGHT,
@@ -18,42 +17,48 @@ import {
   BUILTIN_DUAL_PERSONA,
   BUILTIN_POLAROID_BOARD,
 } from "./themes";
+import type { ThemeFamily, ThemeMode } from "./themeTypes";
 
 const NEW_BUILTINS = [
-  BUILTIN_NORD,
-  BUILTIN_TOKYO_NIGHT,
-  BUILTIN_CATPPUCCIN,
-  BUILTIN_SOLARIZED_DARK,
-  BUILTIN_SOLARIZED_LIGHT,
-  BUILTIN_ONE_DARK,
-  BUILTIN_MONOKAI,
-  BUILTIN_GITHUB_LIGHT,
+  { family: BUILTIN_NORD, mode: "dark" as const },
+  { family: BUILTIN_TOKYO_NIGHT, mode: "dark" as const },
+  { family: BUILTIN_CATPPUCCIN, mode: "dark" as const },
+  { family: BUILTIN_SOLARIZED, mode: "dark" as const },
+  { family: BUILTIN_ONE_DARK, mode: "dark" as const },
+  { family: BUILTIN_MONOKAI, mode: "dark" as const },
+  { family: BUILTIN_GITHUB_LIGHT, mode: "light" as const },
   // Light themes with explicit WCAG AA coverage
-  BUILTIN_LIGHT,
-  BUILTIN_COTTON_CANDY_CONSOLE,
-  BUILTIN_SWEET_NIGHTMARE,
-  BUILTIN_DUAL_PERSONA,
-  BUILTIN_POLAROID_BOARD,
+  { family: BUILTIN_LIGHT, mode: "light" as const },
+  { family: BUILTIN_COTTON_CANDY_CONSOLE, mode: "light" as const },
+  { family: BUILTIN_SWEET_NIGHTMARE, mode: "dark" as const },
+  { family: BUILTIN_DUAL_PERSONA, mode: "light" as const },
+  { family: BUILTIN_POLAROID_BOARD, mode: "light" as const },
 ];
 
-function expectedYamlNames(themeId: string): string[] {
-  const suffix = themeId.replace("builtin-", "");
-  return [`${suffix}.yaml`, `${suffix.replace(/-/g, "_")}.yaml`];
+function expectedYamlNames(familyId: string): string[] {
+  if (familyId === "solarized") {
+    return ["solarized.yaml", "solarized_dark.yaml", "solarized_light.yaml"];
+  }
+  return [`${familyId}.yaml`, `${familyId.replace(/-/g, "_")}.yaml`];
 }
 
-describe("built-in theme collection", () => {
-  it("has unique theme ids", () => {
-    const ids = BUILTIN_THEMES.map((t) => t.id);
+function familyVariantTokens(family: ThemeFamily, mode: ThemeMode) {
+  return family.variants[mode].tokens;
+}
+
+describe("built-in theme families", () => {
+  it("has unique theme family ids", () => {
+    const ids = BUILTIN_THEME_FAMILIES.map((f) => f.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
 
   it("has unique, non-empty display names", () => {
-    const names = BUILTIN_THEMES.map((t) => t.name);
+    const names = BUILTIN_THEME_FAMILIES.map((f) => f.name);
     expect(names.every((n) => n.trim().length > 0)).toBe(true);
     expect(new Set(names).size).toBe(names.length);
   });
 
-  it("defines every required semantic token for every built-in theme", () => {
+  it("defines every required semantic token for every variant of every family", () => {
     const keys = [
       "background",
       "surface",
@@ -85,17 +90,20 @@ describe("built-in theme collection", () => {
       "selectionBackground",
       "selectionForeground",
     ] as const;
-    for (const theme of BUILTIN_THEMES) {
-      for (const key of keys) {
-        expect(theme.tokens[key], `${theme.id}.${key}`).toBeTruthy();
+    for (const family of BUILTIN_THEME_FAMILIES) {
+      for (const mode of ["light", "dark"] as ThemeMode[]) {
+        const tokens = familyVariantTokens(family, mode);
+        for (const key of keys) {
+          expect(tokens[key], `${family.id}.${mode}.${key}`).toBeTruthy();
+        }
       }
     }
   });
 
-  it.each(NEW_BUILTINS.map((t) => [t.id, t] as const))(
+  it.each(NEW_BUILTINS.map(({ family, mode }) => [`${family.id}:${mode}`, family, mode] as const))(
     "%s passes WCAG AA contrast checks",
-    (_id, theme) => {
-      const t = theme.tokens;
+    (_id, family, mode) => {
+      const t = familyVariantTokens(family, mode);
       expect(isAAPass(t.foreground, t.background)).toBe(true);
       expect(isAAPass(t.foregroundMuted, t.background)).toBe(true);
       expect(isAAPass(t.foregroundSubtle, t.background)).toBe(true);
@@ -114,10 +122,10 @@ describe("built-in theme collection", () => {
     }
   );
 
-  it.each(NEW_BUILTINS.map((t) => [t.id, t] as const))(
+  it.each(NEW_BUILTINS.map(({ family, mode }) => [`${family.id}:${mode}`, family, mode] as const))(
     "%s surfaces are visually distinct",
-    (_id, theme) => {
-      const t = theme.tokens;
+    (_id, family, mode) => {
+      const t = familyVariantTokens(family, mode);
       expect(t.surface).not.toBe(t.background);
       expect(t.surfaceElevated).not.toBe(t.surface);
       expect(t.surfaceElevated).not.toBe(t.border);
@@ -125,18 +133,18 @@ describe("built-in theme collection", () => {
     }
   );
 
-  it("has a YAML starter template for every built-in theme", () => {
+  it("has a YAML starter template for every built-in family", () => {
     const root = path.resolve(__dirname, "../../config/themes");
     const files = new Set(fs.readdirSync(root));
-    for (const theme of BUILTIN_THEMES) {
-      const names = expectedYamlNames(theme.id);
+    for (const family of BUILTIN_THEME_FAMILIES) {
+      const names = expectedYamlNames(family.id);
       const hasYaml = names.some((n) => files.has(n));
-      expect(hasYaml, `${theme.id} missing YAML counterpart (${names.join(" or ")})`).toBe(true);
+      expect(hasYaml, `${family.id} missing YAML counterpart (${names.join(" or ")})`).toBe(true);
     }
   });
 
-  it("exports the expected number of built-in themes", () => {
-    // This guard ensures the count stays in sync with the handoff-specified inventory.
-    expect(BUILTIN_THEMES.length).toBe(44);
+  it("exports the expected number of built-in theme families", () => {
+    // 44 single-mode built-ins were consolidated into 43 families (solarized merged).
+    expect(BUILTIN_THEME_FAMILIES.length).toBe(43);
   });
 });

@@ -7,13 +7,23 @@ import {
   BUILTIN_NORD,
   BUILTIN_TOKYO_NIGHT,
   BUILTIN_CATPPUCCIN,
-  BUILTIN_SOLARIZED_DARK,
-  BUILTIN_SOLARIZED_LIGHT,
+  BUILTIN_SOLARIZED,
   BUILTIN_ONE_DARK,
   BUILTIN_MONOKAI,
   BUILTIN_GITHUB_LIGHT,
+  type Theme,
+  type ThemeFamily,
 } from "../theme";
 import { themeToYaml, yamlToTheme } from "./ThemeMaker";
+
+function familyToTheme(family: ThemeFamily, mode: "dark" | "light" = "dark"): Theme {
+  return {
+    id: family.id,
+    name: family.name,
+    mode,
+    tokens: family.variants[mode].tokens,
+  };
+}
 
 const NEW_THEME_YAMLS = [
   "dracula.yaml",
@@ -28,14 +38,18 @@ const NEW_THEME_YAMLS = [
   "github_light.yaml",
 ];
 
+const BUILTIN_SOLARIZED_DARK = familyToTheme(BUILTIN_SOLARIZED, "dark");
+const BUILTIN_SOLARIZED_LIGHT = familyToTheme(BUILTIN_SOLARIZED, "light");
+
 describe("ThemeMaker YAML", () => {
   it("round-trips the complete semantic token contract", async () => {
-    const yaml = await themeToYaml(BUILTIN_DRACULA);
+    const theme = familyToTheme(BUILTIN_DRACULA, "dark");
+    const yaml = await themeToYaml(theme);
     const imported = await yamlToTheme(yaml);
 
-    expect(imported.name).toBe(BUILTIN_DRACULA.name);
+    expect(imported.name).toBe(theme.name);
     expect(imported.mode).toBe("dark");
-    expect(imported.tokens).toEqual(BUILTIN_DRACULA.tokens);
+    expect(imported.tokens).toEqual(theme.tokens);
     expect(yaml).toContain("selection_background:");
     expect(yaml).toContain("button_primary_foreground:");
   });
@@ -88,16 +102,16 @@ terminal_colors:
 
 describe("ThemeMaker new built-in theme round-trips", () => {
   it.each([
-    BUILTIN_DRACULA,
-    BUILTIN_GRUVBOX_DARK,
-    BUILTIN_NORD,
-    BUILTIN_TOKYO_NIGHT,
-    BUILTIN_CATPPUCCIN,
+    familyToTheme(BUILTIN_DRACULA, "dark"),
+    familyToTheme(BUILTIN_GRUVBOX_DARK, "dark"),
+    familyToTheme(BUILTIN_NORD, "dark"),
+    familyToTheme(BUILTIN_TOKYO_NIGHT, "dark"),
+    familyToTheme(BUILTIN_CATPPUCCIN, "dark"),
     BUILTIN_SOLARIZED_DARK,
     BUILTIN_SOLARIZED_LIGHT,
-    BUILTIN_ONE_DARK,
-    BUILTIN_MONOKAI,
-    BUILTIN_GITHUB_LIGHT,
+    familyToTheme(BUILTIN_ONE_DARK, "dark"),
+    familyToTheme(BUILTIN_MONOKAI, "dark"),
+    familyToTheme(BUILTIN_GITHUB_LIGHT, "light"),
   ])("round-trips $name via themeToYaml/yamlToTheme", async (theme) => {
     const yaml = await themeToYaml(theme);
     const imported = await yamlToTheme(yaml);

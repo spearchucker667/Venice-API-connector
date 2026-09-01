@@ -1,4 +1,7 @@
 export type ThemeMode = 'dark' | 'light';
+export type AppearanceMode = 'dark' | 'light' | 'system';
+
+export const THEME_FAMILY_SCHEMA_VERSION = 2 as const;
 
 export interface LegacyThemeTokens {
   background: string;
@@ -85,6 +88,10 @@ export function completeThemeTokens(mode: ThemeMode, input: ThemeTokenInput): Th
   };
 }
 
+/**
+ * Legacy single-mode runtime theme. Kept for backward compatibility with
+ * existing components and persisted custom themes.
+ */
 export interface Theme {
   id: string;
   name: string;
@@ -97,4 +104,38 @@ export interface ThemeState {
   appearanceMode: ThemeMode;
   customTheme: Theme | null;
   customThemes?: Theme[];
+}
+
+/**
+ * A single variant (light or dark) inside a ThemeFamily.
+ */
+export interface ThemeVariant {
+  tokens: ThemeTokens;
+}
+
+/**
+ * Versioned theme family: one identity with intentional light and dark
+ * variants. This is the durable, shareable unit for built-ins, custom
+ * themes, and YAML themes.
+ */
+export interface ThemeFamily {
+  schemaVersion: 2;
+  id: string;
+  name: string;
+  variants: Record<ThemeMode, ThemeVariant>;
+  aliases?: string[];
+  description?: string;
+  author?: string;
+  builtIn?: boolean;
+}
+
+/**
+ * Fully resolved runtime theme: a family + effective mode + flattened tokens.
+ * This is what applyTheme consumes.
+ */
+export interface ResolvedTheme {
+  id: string;
+  name: string;
+  mode: ThemeMode;
+  tokens: ThemeTokens;
 }

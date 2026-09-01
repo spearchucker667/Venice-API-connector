@@ -2,6 +2,8 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { createSafeStorage } from '../lib/safe-storage'
 import type { Theme } from '../theme'
+import type { AppearanceMode } from '../theme'
+import { migrateAppearanceMode } from '../theme'
 import { normaliseTab, type TabId } from '../config/tabs'
 
 /**
@@ -154,8 +156,8 @@ interface SettingsState {
   setCustomThemes: (themes: Theme[]) => void
   saveCustomTheme: (theme: Theme) => void
   deleteCustomTheme: (id: string) => void
-  appearanceMode: 'dark' | 'light'
-  setAppearanceMode: (mode: 'dark' | 'light') => void
+  appearanceMode: AppearanceMode
+  setAppearanceMode: (mode: AppearanceMode) => void
   imageDownloadDirectory: string
   setImageDownloadDirectory: (dir: string) => void
   // `redTeamMode` is the persisted Zustand slice whose visible switch is
@@ -377,7 +379,7 @@ export const useSettingsStore = create<SettingsState>()(
     }),
     {
       name: 'venice-settings',
-      version: 15,
+      version: 16,
       storage: createJSONStorage(() => createSafeStorage()),
       migrate: (persisted) => {
         const state = persisted && typeof persisted === 'object'
@@ -386,6 +388,10 @@ export const useSettingsStore = create<SettingsState>()(
         return {
           ...state,
           uiLocale: state.uiLocale ?? 'system',
+          // v16 (Theme Engine V2): coerce persisted appearance mode to the
+          // AppearanceMode union. Legacy 'dark'/'light' values pass through;
+          // anything else defaults to 'system'.
+          appearanceMode: migrateAppearanceMode(state.appearanceMode),
           // v14: collapse state and the separately clamped expanded width persist.
           sidebarOpen: typeof state.sidebarOpen === 'boolean' ? state.sidebarOpen : true,
           sidebarWidth: clampSidebarWidth(state.sidebarWidth),

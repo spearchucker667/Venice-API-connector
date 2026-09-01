@@ -204,7 +204,8 @@
         "mode": "モード:",
         "aCustomThemeNamedLdquo": "「",
         "rdquoAlreadyExistsInYourWorkspace": "」という名前のカスタム テーマがワークスペースにすでに存在します。",
-        "importedLayoutPreview": "インポートされたレイアウトのプレビュー"
+        "importedLayoutPreview": "インポートされたレイアウトのプレビュー",
+        "id": "ID:"
       }
     },
     "componentsThemepreview": {

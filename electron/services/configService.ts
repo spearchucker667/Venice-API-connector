@@ -32,9 +32,9 @@ import {
   type ConfigWarning,
   type SanitizedConfig,
   type YamlConfig,
-  type YamlTheme,
 } from "../../src/config/configSchema";
 import { logError, logInfo } from "./logger";
+import type { LoadedThemeRecord } from "./themeService";
 import {
   deleteApiKey,
   deleteJinaApiKey,
@@ -644,7 +644,7 @@ export function getPaths(): ResolvedPaths {
 }
 
 /** Returns the parsed themes file (built-in + merged) for theme loaders. */
-export async function loadMergedThemes(): Promise<{ themes: Record<string, YamlTheme>; warnings: ConfigWarning[] }> {
+export async function loadMergedThemes(): Promise<{ themes: Record<string, LoadedThemeRecord>; warnings: ConfigWarning[] }> {
   const paths = resolvePaths();
   const { loadAllThemes } = await import("./themeService");
   return loadAllThemes(paths.themesPath);
