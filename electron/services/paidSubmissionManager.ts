@@ -6,9 +6,7 @@
 import type { BackgroundTask } from "../../src/types/background-task";
 import {
   findActivePaidSubmission,
-  markPaidSubmissionAcceptanceUnknown,
   markPaidSubmissionDispatching,
-  persistPaidSubmissionIntent,
 } from "./backgroundTaskManager";
 
 export interface DurablePaidSubmissionInput<TAccepted> {

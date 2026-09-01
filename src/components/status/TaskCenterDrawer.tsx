@@ -12,7 +12,10 @@ const STATUS_BADGE: Record<BackgroundTaskStatus, string> = {
   idle: "bg-surface-muted text-text-muted border-border",
   queued: "bg-surface-muted text-text-muted border-border",
   pending_finalize: "bg-surface-muted text-text-muted border-border",
+  intent_persisted: "bg-surface-muted text-text-muted border-border",
+  dispatching: "bg-info/15 text-info border-info/30",
   processing: "bg-info/15 text-info border-info/30",
+  acceptance_unknown: "bg-warning/15 text-warning border-warning/30",
   completed: "bg-success/15 text-success border-success/30",
   failed: "bg-danger/15 text-danger border-danger/30",
   aborted: "bg-warning/15 text-warning border-warning/30",
@@ -147,13 +150,15 @@ export function TaskCenterDrawer() {
                       <GenerationLoadingIndicator
                         size="sm"
                         state={
-                          task.status === "processing"
+                          task.status === "processing" || task.status === "dispatching"
                             ? "generating"
                             : task.status === "aborted"
                               ? "cancelled"
-                              : task.status === "timeout"
+                              : task.status === "timeout" || task.status === "acceptance_unknown"
                                 ? "failed"
-                                : task.status === "idle" || task.status === "pending_finalize"
+                                : task.status === "idle" ||
+                                    task.status === "pending_finalize" ||
+                                    task.status === "intent_persisted"
                                   ? "queued"
                                   : task.status
                         }

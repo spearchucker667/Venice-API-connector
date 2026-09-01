@@ -181,7 +181,7 @@ describe("submitDurablePaidTask", () => {
     const result = await submitDurablePaidTask(makeInput());
 
     expect(result.kind).toBe("conflict");
-    expect(result.error).toContain("IDEMPOTENCY_CONFLICT");
+    expect("error" in result && result.error).toContain("IDEMPOTENCY_CONFLICT");
   });
 
   it("does not deduplicate submissions for different profiles", async () => {
