@@ -228,13 +228,38 @@ jobs:
       - name: Package macOS app
         run: npm run dist:mac:arm64
       - name: Run packaged Electron smoke test
-        run: npx vitest run tests/smoke/electron-smoke.test.ts
+        run: npx vitest run tests/smoke/
         env:
           RUN_ELECTRON_SMOKE: 'true'
       - name: Remove packaging staging directories
         run: node scripts/clean-release-staging.cjs
       - name: Verify macOS artifact
         run: node scripts/verify-dist.cjs --mac --arch arm64
+      - name: Capture sanitized smoke diagnostics on failure
+        if: failure()
+        env:
+          ELECTRON_SMOKE_DIAGNOSTICS_DIR: smoke-diagnostics
+        run: |
+          mkdir -p "$ELECTRON_SMOKE_DIAGNOSTICS_DIR"
+          cat > "$ELECTRON_SMOKE_DIAGNOSTICS_DIR/summary.json" <<EOF
+          {
+            "platform": "darwin",
+            "arch": "arm64",
+            "appVersion": "$(node -p "require('./package.json').version")",
+            "commit": "$GITHUB_SHA",
+            "runner": "$RUNNER_OS",
+            "discoveredExecutable": "$(node -e "const{findPackagedExecutable}=require('./tests/smoke/smoke-utils');console.log(findPackagedExecutable(process.cwd(),'darwin','arm64')||'(not found)')")"
+          }
+          EOF
+      - name: Upload smoke diagnostics
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: electron-smoke-macos-diagnostics-${{ github.sha }}
+          path: smoke-diagnostics/
+          if-no-files-found: ignore
+          # Sanitized summary only. No secrets, prompts, raw generated media, or
+          # unredacted userData are written to this directory.
 
   # Packaged Electron smoke test on Windows
   electron-smoke-windows:
@@ -254,13 +279,40 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
       - name: Run packaged Electron smoke test
-        run: npx vitest run tests/smoke/electron-smoke.test.ts
+        run: npx vitest run tests/smoke/
         env:
           RUN_ELECTRON_SMOKE: 'true'
       - name: Remove packaging staging directories
         run: node scripts/clean-release-staging.cjs
       - name: Verify Windows portable artifact
         run: npm run verify:dist:portable
+      - name: Capture sanitized smoke diagnostics on failure
+        if: failure()
+        shell: pwsh
+        env:
+          ELECTRON_SMOKE_DIAGNOSTICS_DIR: smoke-diagnostics
+        run: |
+          New-Item -ItemType Directory -Force -Path $env:ELECTRON_SMOKE_DIAGNOSTICS_DIR | Out-Null
+          $appVersion = node -p "require('./package.json').version"
+          $exe = node -e "const{findPackagedExecutable}=require('./tests/smoke/smoke-utils');console.log(findPackagedExecutable(process.cwd(),'win32','x64')||'(not found)')"
+          $summary = @{
+            platform = "win32"
+            arch = "x64"
+            appVersion = $appVersion
+            commit = $env:GITHUB_SHA
+            runner = $env:RUNNER_OS
+            discoveredExecutable = $exe
+          } | ConvertTo-Json
+          $summary | Out-File -FilePath "$env:ELECTRON_SMOKE_DIAGNOSTICS_DIR/summary.json" -Encoding utf8
+      - name: Upload smoke diagnostics
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: electron-smoke-windows-diagnostics-${{ github.sha }}
+          path: smoke-diagnostics/
+          if-no-files-found: ignore
+          # Sanitized summary only. No secrets, prompts, raw generated media, or
+          # unredacted userData are written to this directory.
 
   # Packaged Electron smoke test on Linux
   electron-smoke-linux:
@@ -280,10 +332,35 @@ jobs:
       - name: Package Linux app
         run: npm run dist:linux
       - name: Run packaged Electron smoke test
-        run: xvfb-run --auto-servernum npx vitest run tests/smoke/electron-smoke.test.ts
+        run: xvfb-run --auto-servernum npx vitest run tests/smoke/
         env:
           RUN_ELECTRON_SMOKE: 'true'
       - name: Remove packaging staging directories
         run: node scripts/clean-release-staging.cjs
       - name: Verify Linux artifact
         run: node scripts/verify-dist.cjs --linux
+      - name: Capture sanitized smoke diagnostics on failure
+        if: failure()
+        env:
+          ELECTRON_SMOKE_DIAGNOSTICS_DIR: smoke-diagnostics
+        run: |
+          mkdir -p "$ELECTRON_SMOKE_DIAGNOSTICS_DIR"
+          cat > "$ELECTRON_SMOKE_DIAGNOSTICS_DIR/summary.json" <<EOF
+          {
+            "platform": "linux",
+            "arch": "x64",
+            "appVersion": "$(node -p "require('./package.json').version")",
+            "commit": "$GITHUB_SHA",
+            "runner": "$RUNNER_OS",
+            "discoveredExecutable": "$(node -e "const{findPackagedExecutable}=require('./tests/smoke/smoke-utils');console.log(findPackagedExecutable(process.cwd(),'linux','x64')||'(not found)')")"
+          }
+          EOF
+      - name: Upload smoke diagnostics
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: electron-smoke-linux-diagnostics-${{ github.sha }}
+          path: smoke-diagnostics/
+          if-no-files-found: ignore
+          # Sanitized summary only. No secrets, prompts, raw generated media, or
+          # unredacted userData are written to this directory.

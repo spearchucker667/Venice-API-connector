@@ -1,7 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  clearClassifierBackend,
+  getClassifierCapabilities,
   identifyAndValidateGeneratedMedia,
   normalizeAndIdentifyMime,
+  registerClassifierBackend,
 } from "./mediaScreener";
 
 describe("normalizeAndIdentifyMime", () => {
@@ -135,5 +138,33 @@ describe("identifyAndValidateGeneratedMedia", () => {
     expect(result.userMessage).toBe(
       "Media generation is not available while Family Safe Mode is enabled.",
     );
+  });
+});
+
+describe("getClassifierCapabilities (VF-AUD-20260831-P2-009)", () => {
+  afterEach(() => {
+    clearClassifierBackend();
+  });
+
+  it("reports all modalities as 'unavailable' when no backend is registered", () => {
+    clearClassifierBackend();
+    const caps = getClassifierCapabilities();
+    expect(caps).toEqual({
+      semanticImageClassifier: "unavailable",
+      semanticAudioClassifier: "unavailable",
+      semanticVideoClassifier: "unavailable",
+      hasRegisteredBackend: false,
+    });
+  });
+
+  it("reports the image classifier as 'local' when an image backend is registered", () => {
+    registerClassifierBackend({
+      classifyImage: vi.fn().mockResolvedValue({ allowed: true }),
+    });
+    const caps = getClassifierCapabilities();
+    expect(caps.semanticImageClassifier).toBe("local");
+    expect(caps.semanticAudioClassifier).toBe("unavailable");
+    expect(caps.semanticVideoClassifier).toBe("unavailable");
+    expect(caps.hasRegisteredBackend).toBe(true);
   });
 });

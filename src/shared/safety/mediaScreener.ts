@@ -138,11 +138,14 @@ export function normalizeAndIdentifyMime(
 /**
  * ClassifierBackend — optional interface for a real semantic classifier.
  *
- * An ML-backed implementation (e.g. nsfwjs + TensorFlow.js) can be registered
- * via `registerClassifierBackend()` at Electron main-process startup.  When no
- * backend is registered the heuristic classifier is used instead.  Audio and
- * video classification always fall back to heuristic (structural pass) because
- * no open semantic model exists for those formats yet.
+ * VF-AUD-20260831-P2-009: An ML-backed implementation (e.g. nsfwjs + TensorFlow.js)
+ * can be registered via `registerClassifierBackend()` at Electron main-process
+ * startup.  When no backend is registered the structural heuristic is used
+ * instead — this is "structural generated-media validation", NOT semantic
+ * content screening.  Use `getClassifierCapabilities()` to truthfully report
+ * the current classification regime to the UI/status surface.  Audio and video
+ * classification always fall back to structural pass because no open semantic
+ * model exists for those formats yet.
  */
 export interface ClassifierBackend {
   classifyImage(buffer: Buffer, mimeType: string): Promise<GeneratedMediaSafetyResult>;
@@ -168,6 +171,45 @@ export function clearClassifierBackend(): void {
 /** @internal Exposed for testing only. */
 export function _getRegisteredBackend(): ClassifierBackend | null {
   return _registeredBackend;
+}
+
+/**
+ * VF-AUD-20260831-P2-009: Truthful capability descriptor for the Family Safe
+ * Mode media classifier.  Each modality is reported as one of:
+ *   - "unavailable" — no production classifier is registered and structural
+ *     validation is the only gate.  This is the current default for image,
+ *     audio, and video.
+ *   - "local"        — a local on-device ML backend is registered.  Not yet
+ *     implemented in production builds.
+ *   - "provider"     — classification is delegated to an external provider.
+ *     Not yet implemented in production builds.
+ *
+ * The returned shape is the public contract surfaced to diagnostics/status UI;
+ * do not narrow it without updating consumers.
+ */
+export interface ClassifierCapabilities {
+  semanticImageClassifier: "unavailable" | "local" | "provider";
+  semanticAudioClassifier: "unavailable" | "local" | "provider";
+  semanticVideoClassifier: "unavailable" | "local" | "provider";
+  /** True when a registered ML backend is present (any modality). */
+  hasRegisteredBackend: boolean;
+}
+
+/**
+ * Returns the current classifier capabilities.  Today the production build
+ * always reports "unavailable" because no semantic ML backend is registered.
+ * The diagnostic is exposed so the UI can truthfully state that Family Safe
+ * Mode is currently "structural generated-media validation" rather than
+ * "semantic content screening".
+ */
+export function getClassifierCapabilities(): ClassifierCapabilities {
+  const hasRegisteredBackend = _registeredBackend !== null;
+  return {
+    semanticImageClassifier: hasRegisteredBackend ? "local" : "unavailable",
+    semanticAudioClassifier: "unavailable",
+    semanticVideoClassifier: "unavailable",
+    hasRegisteredBackend,
+  };
 }
 
 const FAMILY_SAFE_MODE_MEDIA_BLOCKED =

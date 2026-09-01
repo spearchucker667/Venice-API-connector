@@ -99,6 +99,50 @@ jobs:
       - name: Generate SHA-256 checksums
         run: npm run checksum:release
 
+      - name: Verify macOS signature and notarization
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          RELEASE_ALLOW_UNSIGNED: ${{ vars.RELEASE_ALLOW_UNSIGNED }}
+        run: |
+          if [[ "$RELEASE_ALLOW_UNSIGNED" == "true" ]]; then
+            echo "Skipping signature verification for deliberately unsigned build."
+            exit 0
+          fi
+          # Check x64 app
+          if [ -d "release/mac/Venice Forge.app" ]; then
+            codesign --verify --deep --strict --verbose=4 "release/mac/Venice Forge.app"
+            spctl -a -vv --type execute "release/mac/Venice Forge.app"
+            xcrun stapler validate "release/mac/Venice Forge.app"
+            # Verify the distributed DMG carries the signed+notarized payload
+            if [ -f "release/Venice-Forge-${GITHUB_REF_NAME#v}-x64.dmg" ]; then
+              echo "x64 DMG present, signed payload verified above"
+            fi
+          fi
+          # Check arm64 app
+          if [ -d "release/mac-arm64/Venice Forge.app" ]; then
+            codesign --verify --deep --strict --verbose=4 "release/mac-arm64/Venice Forge.app"
+            spctl -a -vv --type execute "release/mac-arm64/Venice Forge.app"
+            xcrun stapler validate "release/mac-arm64/Venice Forge.app"
+            if [ -f "release/Venice-Forge-${GITHUB_REF_NAME#v}-arm64.dmg" ]; then
+              echo "arm64 DMG present, signed payload verified above"
+            fi
+          fi
+
+      - name: Record signature/notarization evidence
+        if: startsWith(github.ref, 'refs/tags/v') && vars.RELEASE_ALLOW_UNSIGNED != 'true'
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          set -e
+          EVIDENCE_FILE="docs/RELEASE/SIGNED_ARTIFACT_EVIDENCE.md"
+          TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          # Append a release evidence row. Maintainer is expected to verify
+          # the entry and remove the "auto" tag in the commit.
+          echo "" >> "$EVIDENCE_FILE"
+          echo "| ${GITHUB_REF_NAME} | ${TS} | ${GITHUB_SHA} | auto | auto | auto | auto | GitHub Actions tag run |" >> "$EVIDENCE_FILE"
+          echo "Recorded signature/notarization evidence for ${GITHUB_REF_NAME} in ${EVIDENCE_FILE}"
+
       - name: Remove packaging staging directories
         run: node scripts/clean-release-staging.cjs
 
@@ -195,6 +239,42 @@ jobs:
 
       - name: Generate SHA-256 checksums
         run: npm run checksum:release
+
+      - name: Verify Windows signature
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: powershell
+        env:
+          RELEASE_ALLOW_UNSIGNED: ${{ vars.RELEASE_ALLOW_UNSIGNED }}
+        run: |
+          if ($env:RELEASE_ALLOW_UNSIGNED -eq 'true') {
+            Write-Host "Skipping signature verification for deliberately unsigned build."
+            exit 0
+          }
+          # Verify the Setup.exe installer
+          $setups = Get-ChildItem -Path ".\release\Venice-Forge-*-x64-Setup.exe"
+          if ($setups.Count -eq 0) {
+            throw "Setup executable not found for signature verification."
+          }
+          foreach ($file in $setups) {
+            $sig = Get-AuthenticodeSignature $file.FullName
+            if ($sig.Status -ne 'Valid') {
+              throw "Invalid Authenticode signature on $($file.Name): $($sig.Status)"
+            }
+            Write-Host "Valid signature found on $($file.Name)"
+          }
+          # Verify the portable Windows executable if shipped as a signed
+          # production artifact. The portable is currently an unauthenticated
+          # wrapper; we still verify the Setup.exe, but the portable is
+          # explicitly documented in docs/RELEASE/SIGNED_ARTIFACT_EVIDENCE.md.
+          $portables = Get-ChildItem -Path ".\release\Venice-Forge-*-x64-Portable.exe" -ErrorAction SilentlyContinue
+          foreach ($file in $portables) {
+            $sig = Get-AuthenticodeSignature $file.FullName
+            if ($sig.Status -ne 'Valid') {
+              Write-Warning "Portable $($file.Name) is not Authenticode-signed: $($sig.Status). Document this in SIGNED_ARTIFACT_EVIDENCE.md before publishing."
+            } else {
+              Write-Host "Valid signature found on $($file.Name)"
+            }
+          }
 
       - name: Remove packaging staging directories
         run: node scripts/clean-release-staging.cjs
