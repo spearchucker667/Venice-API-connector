@@ -169,4 +169,46 @@ describe('validateRawThemeYaml', () => {
     (doc as Record<string, unknown>).base = { extra: true };
     expect(validateRawThemeYaml(doc)).toContain('base.extra: unknown base key.');
   });
+
+  it('accepts optional code configuration in variants', () => {
+    const doc = JSON.parse(JSON.stringify(validV2())) as Record<string, unknown>;
+    const variants = doc.variants as Record<string, Record<string, unknown>>;
+    variants.light.code = {
+      preset: 'github-light',
+      tokens: {
+        background: '#ffffff',
+        foreground: '#1f2328',
+        keyword: '#cf222e',
+      },
+    };
+    expect(validateRawThemeYaml(doc)).toEqual([]);
+  });
+
+  it('rejects unknown code tokens', () => {
+    const doc = JSON.parse(JSON.stringify(validV2())) as Record<string, unknown>;
+    const variants = doc.variants as Record<string, Record<string, unknown>>;
+    variants.dark.code = { tokens: { unknown_token: '#123456' } };
+    expect(validateRawThemeYaml(doc).some((m) => m.includes('unknown code token'))).toBe(true);
+  });
+
+  it('rejects invalid code color values', () => {
+    const doc = JSON.parse(JSON.stringify(validV2())) as Record<string, unknown>;
+    const variants = doc.variants as Record<string, Record<string, unknown>>;
+    variants.dark.code = { tokens: { keyword: 'url(evil)' } };
+    expect(validateRawThemeYaml(doc).some((m) => m.includes('invalid or unsafe color value'))).toBe(true);
+  });
+
+  it('rejects unknown code presets', () => {
+    const doc = JSON.parse(JSON.stringify(validV2())) as Record<string, unknown>;
+    const variants = doc.variants as Record<string, Record<string, unknown>>;
+    variants.light.code = { preset: 'nonexistent-preset' };
+    expect(validateRawThemeYaml(doc).some((m) => m.includes('unknown preset'))).toBe(true);
+  });
+
+  it('rejects dangerous keys inside code configuration', () => {
+    const doc = JSON.parse(JSON.stringify(validV2())) as Record<string, unknown>;
+    const variants = doc.variants as Record<string, Record<string, unknown>>;
+    variants.dark.code = JSON.parse('{ "__proto__": "#000000" }');
+    expect(validateRawThemeYaml(doc).some((m) => m.includes('dangerous key'))).toBe(true);
+  });
 });

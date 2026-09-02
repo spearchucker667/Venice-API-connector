@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_OBSIDIAN_BLOOM: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_OBSIDIAN_BLOOM: ThemeFamily = {
       overlay: "rgba(15, 10, 18, 0.7)",
       glow: "rgba(224, 108, 133, 0.25)",
       }),
+      code: { preset: 'obsidian-bloom', tokens: resolveCodeThemeTokens('obsidian-bloom', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_OBSIDIAN_BLOOM: ThemeFamily = {
       overlay: "rgba(15, 10, 18, 0.7)",
       glow: "rgba(224, 108, 133, 0.25)",
       }),
+      code: { preset: 'obsidian-bloom', tokens: resolveCodeThemeTokens('obsidian-bloom', 'dark') },
     },
   },
 };

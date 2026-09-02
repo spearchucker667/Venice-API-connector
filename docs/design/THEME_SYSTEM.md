@@ -1,9 +1,9 @@
 # Venice Forge Theme System
 
-> Scope: Complete token-based theming architecture, live theme editor, FOUC prevention, and WCAG AA contrast compliance.
+> Scope: Complete token-based theming architecture, live theme editor, FOUC prevention, WCAG AA contrast compliance, and theme-aware syntax highlighting for Markdown code blocks.
 > Implemented: 2026-05-28
-> Last updated: 2026-06-14
-> Commit: `715fa1d`
+> Last updated: 2026-09-01
+> Commit: see current `git log --oneline -1 docs/design/THEME_SYSTEM.md`
 
 ---
 
@@ -24,9 +24,9 @@
 
 ## Overview
 
-Venice Forge uses a **semantic token-based theme system** built on Tailwind CSS v4 CSS variables. Core surfaces, text, status, form, button, link, focus, and selection colors derive from 29 canonical semantic roles mapped to CSS custom properties. This enables:
+Venice Forge uses a **semantic token-based theme system** built on Tailwind CSS v4 CSS variables. Core surfaces, text, status, form, button, link, focus, and selection colors derive from 29 canonical semantic roles mapped to CSS custom properties. In addition, every theme variant carries a dedicated **code/syntax palette** with 33 canonical roles for fenced code blocks and inline code. This enables:
 
-- **Built-in themes:** 35 hardcoded themes including Venice Parity Dark (default), Forge Graphite, Forge Daylight, Forge Copper, Forge Dracula, GruvBox Dark, Rosepine, Nord, Tokyo Night, Catppuccin, Solarized Dark, Solarized Light, One Dark, Monokai, GitHub Light, Aurora Boreal, Sakura Terminal, Basalt Noir, Solar Ash, Cyber Orchid, Arctic Glass, Desert Copperfield, Toxic Limewire, Midnight Velvet, Porcelain Daybreak, Synthwave Harbor, Moss Circuit, Ember Monastery, Glacial Ink, Ultraviolet Rain, and the five new themes Obsidian Bloom, Harbor Fog, Circuit Mint, Amber Archive, and Neon Dusk.
+- **Built-in themes:** 43 hardcoded theme families including Venice (default), Dark, Light, Copper, Dracula, Gruvbox Dark, Rose Pine, Nord, Tokyo Night, Catppuccin, Solarized, One Dark, Monokai, GitHub Light, and Venice Forge-specific families such as Obsidian Ember, Midnight Cobalt, Terminal Forest, Porcelain Sky, Sandstone, Obsidian Bloom, Harbor Fog, Circuit Mint, Amber Archive, Neon Dusk, and others. Every family ships complete light and dark variants, each with a dedicated code-syntax preset.
 - **YAML-backed themes:** 36 starter YAML templates ship under `config/themes/` (one for each built-in theme plus `example.theme.yaml`). User themes can also be loaded from `.config/themes.local.yaml` (dev) or `themes.yaml` (userData) at runtime and are validated by the same schema as built-in themes.
 - **Custom themes:** Users can define every token via the in-app ThemeMaker and import/export configurations in YAML format. The starter configurations for all built-in themes are provided in the `config/themes/` directory as `.yaml` files.
 - **Live preview:** Changes apply immediately without reload.
@@ -171,10 +171,58 @@ All component and module bodies consume **CSS variables / Tailwind semantic toke
 
 ### Typography
 Typography is managed locally to ensure privacy and offline capability.
-- `@fontsource/inter` is mapped to `--font-sans`.
-- `@fontsource/lora` is mapped to `--font-display` and `--font-brand`.
-- `@fontsource/jetbrains-mono` is mapped to `--font-mono`.
+- `MesloLGM Nerd Font` is mapped to `--font-sans`.
+- `MesloLGS Nerd Font Mono` is mapped to `--font-mono`.
 No external font requests (e.g., Google Fonts) are made, which is enforced by the Content Security Policy.
+
+### Code & Syntax Tokens
+
+In addition to the 29 UI tokens, every theme variant now defines 33 **code/syntax tokens** exposed as CSS custom properties:
+
+**Code surfaces (8 tokens):**
+
+| Token | CSS Variable | Usage |
+|---|---|---|
+| `background` | `--code-bg` | Fenced code block background |
+| `foreground` | `--code-fg` | Fenced code block text |
+| `border` | `--code-border` | Code block border |
+| `headerBackground` | `--code-header-bg` | Language label/copy header background |
+| `headerForeground` | `--code-header-fg` | Language label/copy header text |
+| `inlineBackground` | `--code-inline-bg` | Inline `<code>` background |
+| `inlineForeground` | `--code-inline-fg` | Inline `<code>` text |
+| `selectionBackground` | `--code-selection-bg` | Selected code text background |
+
+**Syntax tokens (25 tokens):**
+
+| Token | CSS Variable | Example code elements |
+|---|---|---|
+| `comment` | `--syntax-comment` | Comments, prolog, doctype, CDATA |
+| `punctuation` | `--syntax-punctuation` | Brackets, commas, delimiters |
+| `property` | `--syntax-property` | Object properties |
+| `tag` | `--syntax-tag` | HTML/XML tags |
+| `boolean` | `--syntax-boolean` | `true` / `false` |
+| `number` | `--syntax-number` | Numeric literals |
+| `constant` | `--syntax-constant` | Constants |
+| `symbol` | `--syntax-symbol` | Symbols |
+| `deleted` | `--syntax-deleted` | Diff deletions |
+| `selector` | `--syntax-selector` | CSS selectors |
+| `attribute` | `--syntax-attribute` | Attribute names/values |
+| `string` | `--syntax-string` | Strings, attr-values |
+| `character` | `--syntax-character` | Character escapes |
+| `builtin` | `--syntax-builtin` | Built-in identifiers |
+| `inserted` | `--syntax-inserted` | Diff insertions |
+| `operator` | `--syntax-operator` | Operators |
+| `entity` | `--syntax-entity` | Entities |
+| `url` | `--syntax-url` | URLs |
+| `atRule` | `--syntax-atrule` | CSS at-rules |
+| `keyword` | `--syntax-keyword` | Keywords |
+| `function` | `--syntax-function` | Function names |
+| `className` | `--syntax-class-name` | Class/type names |
+| `regex` | `--syntax-regex` | Regular expressions |
+| `important` | `--syntax-important` | `!important` |
+| `variable` | `--syntax-variable` | Variables |
+
+No component or stylesheet hardcodes a syntax color; every token resolves through `applyTheme()` to a CSS variable, so switching themes recolors already-rendered code immediately without re-tokenization.
 
 ---
 
@@ -260,19 +308,24 @@ All built-in themes are audited against an expanded WCAG AA contrast matrix enfo
 Located in **Settings → Appearance → Theme Maker** (`src/components/ThemeMaker.tsx`).
 
 ### Features
-- **Theme selector:** Switch between all built-in themes or Custom.
-- **Token editor:** Each token has a synced native color picker and hex text input.
+- **Theme selector:** Switch between all built-in theme families or Custom.
+- **Token editor:** Each UI token has a synced native color picker and hex text input.
+- **Code & Syntax editor:** A dedicated section edits the active variant's code palette.
+  - **Syntax preset selector:** Choose from bundled presets (Venice, Dracula, Gruvbox Dark, Rose Pine, Nord, Tokyo Night, Catppuccin, Solarized, One Dark, Monokai, GitHub Light, Automatic/Derived, and family-specific presets). Selecting a preset replaces the underlying code tokens; subsequent individual edits override the preset value while keeping the preset metadata.
+  - **Code surface controls:** Background, foreground, border, header background/foreground, inline background/foreground, and selection background.
+  - **Syntax token controls:** All 25 syntax roles exposed as color inputs.
+  - **Light/dark isolation:** Editing the dark variant never mutates the light variant and vice versa.
 - **Hex validation:** Regex `/^#([0-9a-f]{3}|[0-9a-f]{6})$/i`; invalid input falls back to `#000000`.
-- **Live preview:** `applyTheme(draftTheme)` updates the entire app in real time as you edit.
-- **Contrast warnings:** Checks primary/muted text, accent, input, danger, warning, and success foreground/background pairs against WCAG AA. Warnings render in an `aria-live="polite"` region.
-- **Preview card:** A mini app mock-up (`ThemePreview.tsx`) showing background, sidebar, active tab, button, input, and alert tokens.
+- **Live preview:** `applyTheme(draftTheme)` updates the entire app in real time as you edit, including the live syntax preview.
+- **Contrast warnings:** Checks UI token pairs and code-surface pairs (`foreground`/`background`, `inlineForeground`/`inlineBackground`, `headerForeground`/`headerBackground`) against WCAG AA. Built-in themes must pass; custom themes warn rather than rewrite. Warnings render in an `aria-live="polite"` region.
+- **Preview card:** A mini app mock-up (`ThemePreview.tsx`) showing background, sidebar, active tab, button, input, alert tokens, and a syntax-highlighted TypeScript sample.
 
 ### Controls
-- **Save custom theme:** Persists to canonical IndexedDB settings + refreshes bootstrap cache.
-- **Export theme:** Saves the current custom theme as a standalone `.yaml` file conforming to the `theme.yaml` schema using native OS dialogs.
-- **Import theme:** Loads a previously exported `.yaml` theme file or any legacy `accent/background/details/foreground/terminal_colors` template, validating its schema, inferring light/dark mode from the background luminance, and applying it.
-- **Reset custom theme:** Reverts editor to last saved custom theme.
-- **Restore defaults:** Switches to Forge Graphite and clears the custom theme.
+- **Save custom theme:** Persists to canonical IndexedDB settings + refreshes bootstrap cache, including the full `code` config for the selected variant.
+- **Export theme:** Saves the current custom theme as a standalone `.yaml` file conforming to Theme Engine V2 (`schemaVersion: 2`) with complete `variants.<mode>.code` blocks.
+- **Import theme:** Loads a previously exported `.yaml` theme file or legacy single-mode `Theme`, validates the schema, and applies it. Missing `code` configuration is derived deterministically from UI tokens.
+- **Reset custom theme:** Reverts editor to last saved custom theme, including code data.
+- **Restore defaults:** Switches to the Venice built-in family and clears the custom theme.
 
 ---
 
@@ -376,23 +429,29 @@ Users create custom themes via the ThemeMaker UI. No code changes required.
 
 | File | Purpose |
 |------|---------|
-| `src/theme/themeTypes.ts` | Type contracts (`ThemeMode`, `ThemeTokens`, `Theme`, `ThemeState`) |
+| `src/theme/themeTypes.ts` | Type contracts (`ThemeMode`, `ThemeTokens`, `Theme`, `ThemeFamily`, `ResolvedTheme`, `CodeThemeTokens`, `CodeThemeConfig`) |
+| `src/theme/codeSyntaxTypes.ts` | Re-export barrel for code/syntax types |
+| `src/theme/codeSyntaxPresets.ts` | Bundled code-syntax presets (light/dark pairs for 43+ preset identities) |
+| `src/theme/codeSyntax.ts` | Preset resolution, automatic derivation from UI tokens, and `completeCodeThemeConfig` |
 | `src/theme/themes.ts` | Built-in palette barrel (back-compat) |
-| `src/theme/builtins/index.ts` | Built-in theme registry and `BUILTIN_THEMES` array |
-| `src/theme/builtins/obsidianBloom.ts` | Obsidian Bloom built-in theme |
-| `src/theme/builtins/harborFog.ts` | Harbor Fog built-in theme |
-| `src/theme/builtins/circuitMint.ts` | Circuit Mint built-in theme |
-| `src/theme/builtins/amberArchive.ts` | Amber Archive built-in theme |
-| `src/theme/builtins/neonDusk.ts` | Neon Dusk built-in theme |
-| `src/theme/applyTheme.ts` | Maps tokens to CSS variables + resolves initial theme |
+| `src/theme/builtins/index.ts` | Built-in theme family registry and `BUILTIN_THEME_FAMILIES` array |
+| `src/theme/builtins/*.ts` | Per-family light/dark palette definitions, each including a `code` config |
+| `src/theme/applyTheme.ts` | Maps UI and code tokens to CSS variables; resolves initial theme |
 | `src/theme/contrast.ts` | WCAG luminance and contrast ratio utilities |
 | `src/theme/fallbacks.ts` | Shared fallback constant (`#000000`) for validation |
 | `src/theme/index.ts` | Barrel export |
-| `src/theme/yamlTheme.ts` | Converts validated YAML theme entries to `Theme` objects (snake_case → camelCase normalization) |
+| `src/theme/yamlTheme.ts` | Converts validated YAML theme entries to `ThemeFamily` objects (snake_case → camelCase normalization) |
+| `src/theme/yaml/validate.ts` | Strict Theme Engine V2 YAML validator, including `code` shape validation |
+| `src/theme/yaml/normalize.ts` | Normalizes partial V2 families to complete `ThemeFamily` objects |
+| `src/theme/yaml/serialize.ts` | Deterministic V2 YAML serializer, including complete `code` blocks |
+| `src/theme/yaml/parse.ts` | V2 YAML parser |
 | `src/stores/config-store.ts` | Zustand store holding `yamlThemes` cache; loads themes on startup via `desktopConfig.loadMergedThemes()` |
-| `src/components/ThemeMaker.tsx` | Theme editor UI (now includes YAML theme selector) |
-| `src/components/ThemePreview.tsx` | Mini preview card |
-| `.config/themes.local.yaml` | Dev environment YAML theme definitions (15 themes) |
+| `src/stores/settings-store.ts` | Custom theme persistence; preserves `code` config through single-mode `Theme` round trips |
+| `src/components/ThemeMaker.tsx` | Theme editor UI with Code & Syntax section |
+| `src/components/ThemePreview.tsx` | Mini preview card with live syntax sample |
+| `src/components/chat/ChatMarkdown.tsx` | Markdown renderer with fenced-code highlighting and copy-code |
+| `src/components/chat/codeHighlighting.tsx` | Refractor integration, alias map, HAST-to-React renderer, and performance guard |
+| `.config/themes.local.yaml` | Dev environment YAML theme definitions |
 | `.config/themes.example.yaml` | Tracked example YAML theme file (shipped with repo) |
 
 ### Modified Files (Theming Impact)
@@ -401,9 +460,10 @@ Users create custom themes via the ThemeMaker UI. No code changes required.
 |------|--------|
 | `src/types/app.ts` | Extended `AppSettings` with theme fields |
 | `src/state/appReducer.ts` | Added theme fields to `initialState.settings` and `SET_SETTINGS` whitelist |
-| `src/styles/theme.css` | Expanded `:root` vars, `@theme` semantic colors, `.btn` system, `prefers-reduced-motion` |
+| `src/styles/theme.css` | Expanded `:root` vars, `@theme` semantic colors, code-surface/syntax CSS variables, `.btn` system, `prefers-reduced-motion` |
 | `index.html` | Inline FOUC-prevention bootstrap script |
-| `src/App.tsx` | Theme hydration/reconciliation effects; reskinned shell |
+| `src/App.tsx` | Theme hydration/reconciliation effects; bootstrap cache includes code-surface tokens; reskinned shell |
+| `src/stores/settings-store.ts` | Persists custom themes with full `code` config; migrates legacy themes without code data |
 | `src/components/TabButton.tsx` | Token-based active/inactive states |
 | `src/components/Chip.tsx` | Token-based status chips |
 | `src/components/ToastHost.tsx` | Token-based toast variants |
@@ -417,7 +477,11 @@ Users create custom themes via the ThemeMaker UI. No code changes required.
 | `src/components/ImageGenerationPreview.tsx` | Token-based preview |
 | `src/components/ImageActionModal.tsx` | Token-based modal |
 | `src/components/SettingsView.tsx` | Integrated ThemeMaker; reskinned settings UI (replaces historical `src/modules/SettingsModule.tsx`) |
+| `src/components/ThemeMaker.tsx` | Added Code & Syntax editor with preset selector, code-surface controls, syntax-token controls, light/dark isolation, and contrast warnings |
+| `src/components/ThemePreview.tsx` | Added live syntax-highlighted TypeScript sample and code-contrast warnings |
 | `src/components/chat/ChatView.tsx` | Reskinned chat UI (replaces historical `src/modules/ChatModule.tsx`) |
+| `src/components/chat/ChatMarkdown.tsx` | Markdown renderer with theme-aware fenced-code highlighting, language label, copy button, and preserved sanitation |
+| `src/components/chat/codeHighlighting.tsx` | Refractor grammar registration, alias map, safe HAST-to-React renderer, and complexity fallback |
 | `src/components/SearchScrapeView.tsx` | Reskinned research UI (replaces historical `src/modules/SearchScrapeModule.tsx`) |
 | `src/components/gallery/gallery-view.tsx` | Reskinned Media Studio UI (formerly "Library"; canonical tab id is `media`, see `src/config/tabs.ts`) |
 | `src/components/image/ImageView.tsx` | Reskinned image UI (replaces historical `src/modules/ImageModule.tsx`) |
@@ -439,13 +503,15 @@ Users create custom themes via the ThemeMaker UI. No code changes required.
 
 - **No `tailwind.config`:** Tailwind v4 is CSS-first. Add new semantic colors to the `@theme` block in `src/styles/theme.css`, not a JS config.
 - **No raw hex in components:** If you need a new color, add it as a token. If it is one-off, justify it in the PR. The existing exceptions are intentional and scoped.
-- **Test contrast:** If you change a built-in palette, run the contrast checks. The minimum acceptable ratio is 4.5:1 for text-on-background pairs.
+- **No hardcoded syntax colors:** Code/syntax colors must come from `--code-*` and `--syntax-*` CSS variables. Do not add literal `#hex` values to `src/components/chat` or `src/styles` for syntax highlighting.
+- **Test contrast:** If you change a built-in palette, run the contrast checks. The minimum acceptable ratio is 4.5:1 for text-on-background pairs and 3.0:1 for UI borders/focus rings. Code-surface pairs (`code.foreground`/`code.background`, `inlineForeground`/`inlineBackground`, `headerForeground`/`headerBackground`) must also meet 4.5:1.
 
 ### For Users Upgrading from Pre-Theme Versions
 
-- On first launch after upgrade, the app detects no theme settings and defaults to **Forge Graphite (dark)**.
+- On first launch after upgrade, the app detects no theme settings and defaults to **Venice (dark)**.
 - Existing settings (API key, model defaults, etc.) are preserved.
 - The old `theme` string field (if present) is migrated gracefully; the new fields `selectedThemeId`, `appearanceMode`, and `customTheme` take precedence.
+- **Legacy themes without code configuration:** Single-mode `Theme` records and old V2 `ThemeFamily` YAML files that omit `variants.<mode>.code` continue to load. The app derives a readable code palette from the existing UI tokens using the `automatic` preset. No user theme is lost or corrupted.
 
 ---
 

@@ -1,4 +1,5 @@
 import { REQUIRED_THEME_TOKEN_KEYS } from '../../config/configSchema';
+import { CODE_SYNTAX_PRESET_IDS, CODE_THEME_TOKEN_KEYS } from '../themeTypes';
 import { isValidColorValue } from '../validateColor';
 
 export const DANGEROUS_YAML_KEYS = new Set<string>(['__proto__', 'prototype', 'constructor']);
@@ -14,7 +15,7 @@ export const ALLOWED_TOP_LEVEL_KEYS = new Set<string>([
   'author',
 ]);
 
-export const ALLOWED_VARIANT_KEYS = new Set<string>(['tokens']);
+export const ALLOWED_VARIANT_KEYS = new Set<string>(['tokens', 'code']);
 
 export const ALLOWED_BASE_KEYS = new Set<string>(['tokens']);
 
@@ -87,6 +88,61 @@ function validateTokens(
   return errors;
 }
 
+const CODE_TOKEN_ALLOWLIST = new Set<string>(CODE_THEME_TOKEN_KEYS);
+const PRESET_ALLOWLIST = new Set<string>(CODE_SYNTAX_PRESET_IDS);
+
+function validateCode(
+  code: unknown,
+  path: string,
+): string[] {
+  const errors: string[] = [];
+  if (code === undefined) return errors;
+  if (!code || typeof code !== 'object' || Array.isArray(code)) {
+    errors.push(`${path} must be an object.`);
+    return errors;
+  }
+  const c = code as Record<string, unknown>;
+  const dangerous = collectDangerousKeys(c, path);
+  if (dangerous.length > 0) {
+    errors.push(...dangerous.map((p) => `${p}: dangerous key is not allowed.`));
+  }
+  for (const key of Object.keys(c)) {
+    if (key !== 'preset' && key !== 'tokens') {
+      errors.push(`${path}.${key}: unknown code key.`);
+    }
+  }
+  if (c.preset !== undefined) {
+    if (typeof c.preset !== 'string') {
+      errors.push(`${path}.preset: must be a string.`);
+    } else if (!PRESET_ALLOWLIST.has(c.preset)) {
+      errors.push(`${path}.preset: unknown preset "${c.preset}".`);
+    }
+  }
+  if (c.tokens !== undefined) {
+    if (!c.tokens || typeof c.tokens !== 'object' || Array.isArray(c.tokens)) {
+      errors.push(`${path}.tokens: must be a mapping.`);
+    } else {
+      const tokens = c.tokens as Record<string, unknown>;
+      for (const [rawKey, value] of Object.entries(tokens)) {
+        const normalizedKey = normalizeTokenKey(rawKey);
+        const tokenPath = `${path}.tokens.${rawKey}`;
+        if (!CODE_TOKEN_ALLOWLIST.has(normalizedKey)) {
+          errors.push(`${tokenPath}: unknown code token "${rawKey}".`);
+          continue;
+        }
+        if (typeof value !== 'string') {
+          errors.push(`${tokenPath}: color value must be a string.`);
+          continue;
+        }
+        if (!isValidColorValue(value)) {
+          errors.push(`${tokenPath}: invalid or unsafe color value "${value}".`);
+        }
+      }
+    }
+  }
+  return errors;
+}
+
 function validateVariant(
   mode: 'light' | 'dark',
   variant: unknown,
@@ -108,6 +164,7 @@ function validateVariant(
     }
   }
   errors.push(...validateTokens(v.tokens, `${path}.tokens`));
+  errors.push(...validateCode(v.code, `${path}.code`));
   return errors;
 }
 

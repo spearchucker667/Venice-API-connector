@@ -42,21 +42,31 @@
   --color-overlay: var(--overlay);
   --color-glow: var(--glow);
 
+  /* Code surfaces */
+  --color-code-bg: var(--code-bg);
+  --color-code-fg: var(--code-fg);
+  --color-code-border: var(--code-border);
+  --color-code-header-bg: var(--code-header-bg);
+  --color-code-header-fg: var(--code-header-fg);
+  --color-code-inline-bg: var(--code-inline-bg);
+  --color-code-inline-fg: var(--code-inline-fg);
+  --color-code-selection-bg: var(--code-selection-bg);
+
   /* Surface scale — slightly warmer than pure greyscale, gives dark UI more depth */
-  --color-bg-base: #0a0a0c;
-  --color-bg-raised: #111114;
-  --color-bg-overlay: #16161b;
+  --color-bg-base: #0a0a0c; /* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */
+  --color-bg-raised: #111114; /* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */
+  --color-bg-overlay: #16161b; /* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */
 
   /* Border scale */
-  --color-border-faint: rgba(255, 255, 255, 0.05);
-  --color-border-soft: rgba(255, 255, 255, 0.08);
+  --color-border-faint: rgba(255, 255, 255, 0.05); /* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */
+  --color-border-soft: rgba(255, 255, 255, 0.08); /* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */
 
   /* Text scale */
   --color-text-tertiary: var(--foreground-subtle);
   --color-text-quaternary: var(--disabled-fg);
 
   /* Accent — Venice teal, used sparingly for status, focus rings, primary CTAs */
-  --color-accent-soft: rgba(110, 231, 211, 0.16);
+  --color-accent-soft: rgba(110, 231, 211, 0.16); /* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */
 }
 
 :root {
@@ -206,31 +216,73 @@ select:focus:not(:focus-visible) { outline: none; }
 .prose-venice code {
   font-family: var(--font-mono);
   font-size: 0.86em;
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
+  background: var(--code-inline-bg, var(--surface-elevated));
+  border: 1px solid var(--code-border, var(--border));
   padding: 0.13em 0.4em;
   border-radius: 4px;
-  color: var(--text-primary);
+  color: var(--code-inline-fg, var(--text-primary));
 }
 .prose-venice pre {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--code-bg, var(--surface));
+  border: 1px solid var(--code-border, var(--border));
   border-radius: 8px;
-  padding: 1em;
-  padding-top: 1.9em;
+  padding: 0;
   overflow-x: auto;
   margin: 0.8em 0;
 }
 .prose-venice pre code {
+  display: block;
   background: none;
-  padding: 0;
+  padding: 1em;
+  padding-top: 1.9em;
   border-radius: 0;
   font-size: 0.85em;
   line-height: 1.65;
-  color: var(--text-primary);
+  color: var(--code-fg, var(--text-primary));
   tab-size: 2;
   border: none;
 }
+.prose-venice pre code ::selection {
+  background: var(--code-selection-bg, var(--selection-bg));
+}
+
+/* Syntax tokens — populated by Refractor via theme-driven CSS variables */
+.prose-venice .token.comment,
+.prose-venice .token.prolog,
+.prose-venice .token.doctype,
+.prose-venice .token.cdata {
+  color: var(--syntax-comment);
+}
+.prose-venice .token.punctuation { color: var(--syntax-punctuation); }
+.prose-venice .token.property { color: var(--syntax-property); }
+.prose-venice .token.tag { color: var(--syntax-tag); }
+.prose-venice .token.boolean { color: var(--syntax-boolean); }
+.prose-venice .token.number { color: var(--syntax-number); }
+.prose-venice .token.constant { color: var(--syntax-constant); }
+.prose-venice .token.symbol { color: var(--syntax-symbol); }
+.prose-venice .token.deleted { color: var(--syntax-deleted); }
+.prose-venice .token.selector { color: var(--syntax-selector); }
+.prose-venice .token.attr-name,
+.prose-venice .token.attribute { color: var(--syntax-attribute); }
+.prose-venice .token.string,
+.prose-venice .token.attr-value { color: var(--syntax-string); }
+.prose-venice .token.char,
+.prose-venice .token.character { color: var(--syntax-character); }
+.prose-venice .token.builtin { color: var(--syntax-builtin); }
+.prose-venice .token.inserted { color: var(--syntax-inserted); }
+.prose-venice .token.operator { color: var(--syntax-operator); }
+.prose-venice .token.entity { color: var(--syntax-entity); cursor: help; }
+.prose-venice .token.url { color: var(--syntax-url); }
+.prose-venice .token.atrule { color: var(--syntax-atrule); }
+.prose-venice .token.keyword { color: var(--syntax-keyword); }
+.prose-venice .token.function { color: var(--syntax-function); }
+.prose-venice .token.class-name { color: var(--syntax-class-name); }
+.prose-venice .token.regex { color: var(--syntax-regex); }
+.prose-venice .token.important { color: var(--syntax-important); }
+.prose-venice .token.variable { color: var(--syntax-variable); }
+.prose-venice .token.bold { font-weight: bold; }
+.prose-venice .token.italic { font-style: italic; }
+
 .prose-venice ul, .prose-venice ol {
   padding-left: 1.4em;
   margin: 0.5em 0;
@@ -269,7 +321,7 @@ select:focus:not(:focus-visible) { outline: none; }
 .prose-venice a {
   color: var(--color-accent);
   text-decoration: underline;
-  text-decoration-color: rgba(110, 231, 211, 0.4);
+  text-decoration-color: rgba(110, 231, 211, 0.4); /* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */
   text-underline-offset: 2px;
   transition: text-decoration-color 0.1s;
 }

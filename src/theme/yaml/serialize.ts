@@ -1,11 +1,22 @@
 import { stringify } from 'yaml';
-import type { ThemeFamily, ThemeTokens } from '../themeTypes';
+import type { CodeThemeTokens, ThemeFamily, ThemeTokens } from '../themeTypes';
 
 function camelToSnake(value: string): string {
   return value.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 }
 
 function serializeTokens(tokens: ThemeTokens): Record<string, string> {
+  const out: Record<string, string> = {};
+  const keys = Object.keys(tokens).sort();
+  const tokenMap = tokens as unknown as Record<string, string>;
+  for (const key of keys) {
+    const snake = camelToSnake(key);
+    out[snake] = tokenMap[key];
+  }
+  return out;
+}
+
+function serializeCodeTokens(tokens: CodeThemeTokens): Record<string, string> {
   const out: Record<string, string> = {};
   const keys = Object.keys(tokens).sort();
   const tokenMap = tokens as unknown as Record<string, string>;
@@ -30,9 +41,17 @@ export function serializeThemeFamilyYaml(family: ThemeFamily): string {
     variants: {
       light: {
         tokens: serializeTokens(family.variants.light.tokens),
+        code: {
+          preset: family.variants.light.code.preset,
+          tokens: serializeCodeTokens(family.variants.light.code.tokens),
+        },
       },
       dark: {
         tokens: serializeTokens(family.variants.dark.tokens),
+        code: {
+          preset: family.variants.dark.code.preset,
+          tokens: serializeCodeTokens(family.variants.dark.code.tokens),
+        },
       },
     },
   };

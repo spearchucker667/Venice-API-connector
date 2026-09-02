@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_GRUVBOX_DARK: ThemeFamily = {
   schemaVersion: 2,
@@ -29,6 +30,7 @@ export const BUILTIN_GRUVBOX_DARK: ThemeFamily = {
       surfaceMuted: "#aca9a7",
       borderStrong: "#918478",
       }),
+      code: { preset: 'gruvbox-dark', tokens: resolveCodeThemeTokens('gruvbox-dark', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -52,6 +54,7 @@ export const BUILTIN_GRUVBOX_DARK: ThemeFamily = {
       surfaceMuted: "#32302f",
       borderStrong: "#928374",
       }),
+      code: { preset: 'gruvbox-dark', tokens: resolveCodeThemeTokens('gruvbox-dark', 'dark') },
     },
   },
 };

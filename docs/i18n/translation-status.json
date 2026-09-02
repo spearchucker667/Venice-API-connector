@@ -1,11 +1,11 @@
 {
   "schemaVersion": 4,
-  "updatedAt": "2026-09-01T23:45:06.681Z",
+  "updatedAt": "2026-09-02T05:21:20.631Z",
   "extractorArtifact": "scripts/extract-i18n-keys.cjs (TS Compiler API)",
   "verifier": "scripts/verify-i18n.cjs (sentinel + missing-marker + key-name-fallback aware)",
   "runtimeSurfaceArtifact": "artifacts/i18n/hardcoded-strings.json",
   "runtimeSurfaceFindings": 0,
-  "runtimeSurfaceFilesScanned": 520,
+  "runtimeSurfaceFilesScanned": 527,
   "runtimeSurfaceExtractor": "typescript-compiler-api-runtime-visible-text-v2",
   "locales": {
     "en-US": {
@@ -14,8 +14,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "source-language",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -28,7 +28,7 @@
       "reviewStatus": "source-language",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     },
     "es": {
       "name": "Español",
@@ -36,8 +36,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -50,7 +50,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     },
     "fr": {
       "name": "Français",
@@ -58,8 +58,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -72,7 +72,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     },
     "de": {
       "name": "Deutsch",
@@ -80,8 +80,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -94,7 +94,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     },
     "pt-BR": {
       "name": "Português (Brasil)",
@@ -102,8 +102,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -116,7 +116,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     },
     "ru": {
       "name": "Русский",
@@ -124,8 +124,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -138,7 +138,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     },
     "zh-CN": {
       "name": "简体中文",
@@ -146,8 +146,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -160,7 +160,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     },
     "ja": {
       "name": "日本語",
@@ -168,8 +168,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -182,7 +182,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     },
     "hi": {
       "name": "हिन्दी",
@@ -190,8 +190,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -204,7 +204,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     },
     "ar": {
       "name": "العربية",
@@ -212,8 +212,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -226,7 +226,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     },
     "ko": {
       "name": "한국어",
@@ -234,8 +234,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -248,7 +248,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     },
     "sv-SE": {
       "name": "Svenska",
@@ -256,8 +256,8 @@
       "runtimeSurfaceCoverage": 100,
       "linguisticReviewStatus": "first-pass-machine",
       "uiCoveragePercent": 100,
-      "canonicalKeyTotal": 3992,
-      "translatedKeyTotal": 3992,
+      "canonicalKeyTotal": 4028,
+      "translatedKeyTotal": 4028,
       "sentinelLeaves": 0,
       "missingMarkerLeaves": 0,
       "keyNameFallbackLeaves": 0,
@@ -270,7 +270,7 @@
       "reviewStatus": "first-pass-machine",
       "reviewer": null,
       "reviewedAt": null,
-      "lastUpdated": "2026-09-01T23:45:06.682Z"
+      "lastUpdated": "2026-09-02T05:21:20.632Z"
     }
   }
 }

@@ -186,14 +186,16 @@
       },
       "heading": {
         "themeSystemEditor": "테마 시스템 및 편집기",
-        "importThemePreview": "테마 미리보기 가져오기"
+        "importThemePreview": "테마 미리보기 가져오기",
+        "codeAndSyntax": "Code & Syntax"
       },
       "description": {
         "configureThemeColorsBorderContrastFocusRings": "Venice Forge 전반에 걸쳐 테마 색상, 테두리 대비, 포커스 링 및 작업 버튼 스타일을 구성합니다.",
         "reviewThemeMetadataAndPreviewLayoutBefore": "작업공간에 적용하기 전에 테마 메타데이터 및 미리보기 레이아웃을 검토하세요."
       },
       "label": {
-        "selectActiveTheme": "활성 테마 선택"
+        "selectActiveTheme": "활성 테마 선택",
+        "syntaxPreset": "Syntax preset"
       },
       "text": {
         "unsavedDraftChanges": "저장되지 않은 초안 변경 사항",
@@ -206,6 +208,41 @@
         "rdquoAlreadyExistsInYourWorkspace": "\"인 사용자 정의 테마가 작업 공간에 이미 존재합니다.",
         "importedLayoutPreview": "가져온 레이아웃 미리보기",
         "id": "ID:"
+      },
+      "codeToken": {
+        "background": "Code background",
+        "foreground": "Code foreground",
+        "border": "Code border",
+        "headerBackground": "Header background",
+        "headerForeground": "Header foreground",
+        "inlineBackground": "Inline background",
+        "inlineForeground": "Inline foreground",
+        "selectionBackground": "Selection background",
+        "comment": "Comment",
+        "punctuation": "Punctuation",
+        "property": "Property",
+        "tag": "Tag",
+        "boolean": "Boolean",
+        "number": "Number",
+        "constant": "Constant",
+        "symbol": "Symbol",
+        "deleted": "Deleted",
+        "selector": "Selector",
+        "attribute": "Attribute",
+        "string": "String",
+        "character": "Character",
+        "builtin": "Builtin",
+        "inserted": "Inserted",
+        "operator": "Operator",
+        "entity": "Entity",
+        "url": "URL",
+        "atRule": "At-rule",
+        "keyword": "Keyword",
+        "function": "Function",
+        "className": "Class / Type",
+        "regex": "Regex",
+        "important": "Important",
+        "variable": "Variable"
       }
     },
     "componentsThemepreview": {
@@ -220,7 +257,8 @@
         "inputField": "입력 필드…",
         "focusedControl": "집중 제어",
         "alertMessageBoundary": "경고 메시지 경계",
-        "contrastWarnings": "대비 경고:"
+        "contrastWarnings": "대비 경고:",
+        "syntaxPreview": "Syntax preview"
       }
     },
     "componentsAudioAudioView": {

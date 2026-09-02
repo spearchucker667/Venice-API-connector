@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_LIGHT: ThemeFamily = {
   schemaVersion: 2,
@@ -31,6 +32,7 @@ export const BUILTIN_LIGHT: ThemeFamily = {
       placeholder: "#57606a",
       disabledForeground: "#6e7781",
       }),
+      code: { preset: 'light', tokens: resolveCodeThemeTokens('light', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -56,6 +58,7 @@ export const BUILTIN_LIGHT: ThemeFamily = {
       placeholder: "#586069",
       disabledForeground: "#6f7780",
       }),
+      code: { preset: 'light', tokens: resolveCodeThemeTokens('light', 'dark') },
     },
   },
 };

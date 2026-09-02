@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_SYNTHWAVE_HARBOR: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_SYNTHWAVE_HARBOR: ThemeFamily = {
       overlay: "rgba(10, 15, 30, 0.7)",
       glow: "rgba(255, 97, 166, 0.25)",
       }),
+      code: { preset: 'synthwave-harbor', tokens: resolveCodeThemeTokens('synthwave-harbor', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_SYNTHWAVE_HARBOR: ThemeFamily = {
       overlay: "rgba(10, 15, 30, 0.7)",
       glow: "rgba(255, 97, 166, 0.25)",
       }),
+      code: { preset: 'synthwave-harbor', tokens: resolveCodeThemeTokens('synthwave-harbor', 'dark') },
     },
   },
 };

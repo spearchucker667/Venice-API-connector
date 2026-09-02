@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_MIDNIGHT_VELVET: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_MIDNIGHT_VELVET: ThemeFamily = {
       overlay: "rgba(10, 14, 26, 0.7)",
       glow: "rgba(216, 180, 226, 0.25)",
       }),
+      code: { preset: 'midnight-velvet', tokens: resolveCodeThemeTokens('midnight-velvet', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_MIDNIGHT_VELVET: ThemeFamily = {
       overlay: "rgba(10, 14, 26, 0.7)",
       glow: "rgba(216, 180, 226, 0.25)",
       }),
+      code: { preset: 'midnight-velvet', tokens: resolveCodeThemeTokens('midnight-velvet', 'dark') },
     },
   },
 };

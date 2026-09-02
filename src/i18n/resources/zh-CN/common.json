@@ -186,14 +186,16 @@
       },
       "heading": {
         "themeSystemEditor": "主题系统和编辑器",
-        "importThemePreview": "导入主题预览"
+        "importThemePreview": "导入主题预览",
+        "codeAndSyntax": "Code & Syntax"
       },
       "description": {
         "configureThemeColorsBorderContrastFocusRings": "在 Venice Forge 上配置主题颜色、边框对比度、对焦环和操作按钮样式。",
         "reviewThemeMetadataAndPreviewLayoutBefore": "在应用于工作区之前检查主题元数据和预览布局。"
       },
       "label": {
-        "selectActiveTheme": "选择活动主题"
+        "selectActiveTheme": "选择活动主题",
+        "syntaxPreset": "Syntax preset"
       },
       "text": {
         "unsavedDraftChanges": "未保存的草稿更改",
@@ -206,6 +208,41 @@
         "rdquoAlreadyExistsInYourWorkspace": "”的自定义主题。",
         "importedLayoutPreview": "导入的布局预览",
         "id": "ID:"
+      },
+      "codeToken": {
+        "background": "Code background",
+        "foreground": "Code foreground",
+        "border": "Code border",
+        "headerBackground": "Header background",
+        "headerForeground": "Header foreground",
+        "inlineBackground": "Inline background",
+        "inlineForeground": "Inline foreground",
+        "selectionBackground": "Selection background",
+        "comment": "Comment",
+        "punctuation": "Punctuation",
+        "property": "Property",
+        "tag": "Tag",
+        "boolean": "Boolean",
+        "number": "Number",
+        "constant": "Constant",
+        "symbol": "Symbol",
+        "deleted": "Deleted",
+        "selector": "Selector",
+        "attribute": "Attribute",
+        "string": "String",
+        "character": "Character",
+        "builtin": "Builtin",
+        "inserted": "Inserted",
+        "operator": "Operator",
+        "entity": "Entity",
+        "url": "URL",
+        "atRule": "At-rule",
+        "keyword": "Keyword",
+        "function": "Function",
+        "className": "Class / Type",
+        "regex": "Regex",
+        "important": "Important",
+        "variable": "Variable"
       }
     },
     "componentsThemepreview": {
@@ -220,7 +257,8 @@
         "inputField": "输入字段…",
         "focusedControl": "聚焦控制",
         "alertMessageBoundary": "警报消息边界",
-        "contrastWarnings": "对比度警告："
+        "contrastWarnings": "对比度警告：",
+        "syntaxPreview": "Syntax preview"
       }
     },
     "componentsAudioAudioView": {

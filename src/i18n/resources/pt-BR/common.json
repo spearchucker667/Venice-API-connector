@@ -166,14 +166,16 @@
       },
       "heading": {
         "themeSystemEditor": "Sistema e editor de tema",
-        "importThemePreview": "Visualização do tema de importação"
+        "importThemePreview": "Visualização do tema de importação",
+        "codeAndSyntax": "Code & Syntax"
       },
       "description": {
         "configureThemeColorsBorderContrastFocusRings": "Configure cores de tema, contraste de borda, anéis de foco e estilos de botão de ação em Venice Forge.",
         "reviewThemeMetadataAndPreviewLayoutBefore": "Revise os metadados do tema e visualize o layout antes de aplicá-lo ao seu espaço de trabalho."
       },
       "label": {
-        "selectActiveTheme": "Selecionar tema ativo"
+        "selectActiveTheme": "Selecionar tema ativo",
+        "syntaxPreset": "Syntax preset"
       },
       "text": {
         "unsavedDraftChanges": "Alterações de rascunho não salvas",
@@ -186,6 +188,41 @@
         "rdquoAlreadyExistsInYourWorkspace": "” já existe em sua área de trabalho.",
         "importedLayoutPreview": "Visualização de layout importado",
         "id": "ID:"
+      },
+      "codeToken": {
+        "background": "Code background",
+        "foreground": "Code foreground",
+        "border": "Code border",
+        "headerBackground": "Header background",
+        "headerForeground": "Header foreground",
+        "inlineBackground": "Inline background",
+        "inlineForeground": "Inline foreground",
+        "selectionBackground": "Selection background",
+        "comment": "Comment",
+        "punctuation": "Punctuation",
+        "property": "Property",
+        "tag": "Tag",
+        "boolean": "Boolean",
+        "number": "Number",
+        "constant": "Constant",
+        "symbol": "Symbol",
+        "deleted": "Deleted",
+        "selector": "Selector",
+        "attribute": "Attribute",
+        "string": "String",
+        "character": "Character",
+        "builtin": "Builtin",
+        "inserted": "Inserted",
+        "operator": "Operator",
+        "entity": "Entity",
+        "url": "URL",
+        "atRule": "At-rule",
+        "keyword": "Keyword",
+        "function": "Function",
+        "className": "Class / Type",
+        "regex": "Regex",
+        "important": "Important",
+        "variable": "Variable"
       }
     },
     "componentsAudioAudioView": {
@@ -1759,7 +1796,8 @@
         "inputField": "Campo de entrada…",
         "focusedControl": "Controle focado",
         "alertMessageBoundary": "Limite da mensagem de alerta",
-        "contrastWarnings": "Avisos de contraste:"
+        "contrastWarnings": "Avisos de contraste:",
+        "syntaxPreview": "Syntax preview"
       }
     },
     "componentsCharacterCreatorCharactercreatorcompleted": {

@@ -29,9 +29,18 @@ export default defineConfig(() => {
       isElectronBuild ? stripCrossorigin() : undefined,
     ].filter(Boolean),
     resolve: {
-      alias: {
-        '@': path.resolve(__dirname, '.'),
-      },
+      alias: [
+        { find: '@', replacement: path.resolve(__dirname, '.') },
+        {
+          // Refractor v5 exposes language grammars through a wildcard export
+          // (`./*` -> `./lang/*.js`) that Vite's resolver does not expand by
+          // default. Map each `refractor/lang/<name>` import to the concrete
+          // file so explicit grammar registration works without pulling in
+          // `refractor/all`.
+          find: /^refractor\/lang\/(.+)$/,
+          replacement: path.resolve(__dirname, 'node_modules/refractor/lang/$1.js'),
+        },
+      ],
     },
     // Electron's loadFile requires relative asset paths
     base: isElectronBuild ? "./" : "/",

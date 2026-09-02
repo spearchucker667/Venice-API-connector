@@ -9,12 +9,21 @@ const {
   collectScanFiles,
   isSourceFile,
   verifyBuiltinFamilies,
+  verifySyntaxColorTokens,
   verifyThemeTokens,
   // eslint-disable-next-line @typescript-eslint/no-require-imports
 } = require("./verify-theme-tokens.cjs") as {
   collectScanFiles: (root: string, scanRoots: string[]) => Set<string>;
   isSourceFile: (entry: string) => boolean;
   verifyBuiltinFamilies: (root: string) => string[];
+  verifySyntaxColorTokens: (
+    root: string,
+    options?: {
+      syntaxColorScanRoots?: string[];
+      syntaxColorPatterns?: Array<{ pattern: RegExp; name: string }>;
+      allowComment?: string;
+    },
+  ) => string[];
   verifyThemeTokens: (
     root: string,
     options?: {
@@ -118,6 +127,43 @@ describe("verifyThemeTokens", () => {
     const result = verifyThemeTokens(root, { scanRoots: ["src/components"] });
     expect(result.ok).toBe(false);
     expect(result.violations.length).toBeGreaterThanOrEqual(9);
+  });
+});
+
+describe("verifySyntaxColorTokens", () => {
+  it("flags hardcoded hex, rgb, hsl, and named colors in chat/styles", () => {
+    const root = fixture({
+      "src/components/chat/ChatMarkdown.tsx":
+        "const style = { color: '#ff0000', background: 'rgb(0, 0, 0)', borderColor: 'hsl(0, 0%, 0%)', fill: 'red' };\n",
+      "src/styles/theme.css": ".token.keyword { color: var(--syntax-keyword); }\n",
+    });
+
+    const violations = verifySyntaxColorTokens(root);
+    expect(violations.length).toBe(4);
+    expect(violations.some((v) => v.includes("hex color"))).toBe(true);
+    expect(violations.some((v) => v.includes("rgb color"))).toBe(true);
+    expect(violations.some((v) => v.includes("hsl color"))).toBe(true);
+    expect(violations.some((v) => v.includes("named color"))).toBe(true);
+  });
+
+  it("allows intentional fixed colors with the allow comment", () => {
+    const root = fixture({
+      "src/styles/theme.css":
+        ".foo { color: #0a0a0c; } /* THEME_TOKEN_ALLOW_INTENTIONAL_FIXED_COLOR */\n",
+    });
+
+    const violations = verifySyntaxColorTokens(root);
+    expect(violations).toEqual([]);
+  });
+
+  it("does not flag theme variables", () => {
+    const root = fixture({
+      "src/components/chat/codeHighlighting.tsx":
+        "const style = { color: 'var(--syntax-keyword)', background: 'var(--code-bg)' };\n",
+    });
+
+    const violations = verifySyntaxColorTokens(root);
+    expect(violations).toEqual([]);
   });
 });
 

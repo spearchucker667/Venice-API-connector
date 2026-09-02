@@ -11,6 +11,14 @@ import {
   type ThemeFamily,
   type ThemeMode,
   type ThemeTokens,
+  type CodeThemeConfig,
+  type CodeSyntaxPresetId,
+  type CodeThemeTokens,
+  CODE_SYNTAX_PRESETS,
+  CODE_SURFACE_TOKEN_KEYS,
+  CODE_SYNTAX_TOKEN_KEYS,
+  resolveCodeThemeTokens,
+  deriveCodeThemeTokens,
 } from "../theme";
 import { BUILTIN_THEME_FAMILIES } from "../theme/builtins";
 import { COLOR_INPUT_FALLBACK } from "../theme/fallbacks";
@@ -133,12 +141,82 @@ const TOKEN_CATEGORIES: Array<{
   },
 ];
 
+function getCodeTokenLabel(
+  t: (key: string, fallback: string) => string,
+  key: keyof CodeThemeTokens,
+): string {
+  return t(
+    `runtimeGenerated.componentsThememaker.codeToken.${key}`,
+    CODE_TOKEN_LABELS[key] ?? key,
+  );
+}
+
+const CODE_TOKEN_LABELS: Record<(typeof CODE_SURFACE_TOKEN_KEYS)[number] | (typeof CODE_SYNTAX_TOKEN_KEYS)[number], string> = {
+  background: "Code background",
+  foreground: "Code foreground",
+  border: "Code border",
+  headerBackground: "Header background",
+  headerForeground: "Header foreground",
+  inlineBackground: "Inline background",
+  inlineForeground: "Inline foreground",
+  selectionBackground: "Selection background",
+  comment: "Comment",
+  punctuation: "Punctuation",
+  property: "Property",
+  tag: "Tag",
+  boolean: "Boolean",
+  number: "Number",
+  constant: "Constant",
+  symbol: "Symbol",
+  deleted: "Deleted",
+  selector: "Selector",
+  attribute: "Attribute",
+  string: "String",
+  character: "Character",
+  builtin: "Builtin",
+  inserted: "Inserted",
+  operator: "Operator",
+  entity: "Entity",
+  url: "URL",
+  atRule: "At-rule",
+  keyword: "Keyword",
+  function: "Function",
+  className: "Class / Type",
+  regex: "Regex",
+  important: "Important",
+  variable: "Variable",
+};
+
+const CODE_TOKEN_CATEGORIES: Array<{
+  name: string;
+  keys: Array<keyof CodeThemeTokens>;
+}> = [
+  {
+    name: "Code Surfaces",
+    keys: [...CODE_SURFACE_TOKEN_KEYS],
+  },
+  {
+    name: "Syntax Tokens",
+    keys: [...CODE_SYNTAX_TOKEN_KEYS],
+  },
+];
+
+function cloneCodeConfig(code: CodeThemeConfig): CodeThemeConfig {
+  return { preset: code.preset, tokens: { ...code.tokens } };
+}
+
 function cloneFamily(family: ThemeFamily): ThemeFamily {
   return {
     ...family,
     variants: {
-      light: { tokens: { ...family.variants.light.tokens } },
-      dark: { tokens: { ...family.variants.dark.tokens } },
+      light: {
+        tokens: { ...family.variants.light.tokens },
+        code: cloneCodeConfig(family.variants.light.code),
+      },
+      dark: {
+        tokens: { ...family.variants.dark.tokens },
+        code: cloneCodeConfig(family.variants.dark.code),
+      },
     },
   };
 }
@@ -149,6 +227,7 @@ function singleModeThemeFromFamily(family: ThemeFamily, mode: ThemeMode): Theme 
     name: family.name,
     mode,
     tokens: family.variants[mode].tokens,
+    code: cloneCodeConfig(family.variants[mode].code),
   };
 }
 
@@ -281,6 +360,12 @@ export function ThemeMaker() {
       ) {
         return true;
       }
+      if (
+        JSON.stringify(draft.variants[mode].code) !==
+        JSON.stringify(storedFamily.variants[mode].code)
+      ) {
+        return true;
+      }
     }
     return false;
   }, [draft, storedFamily]);
@@ -400,6 +485,32 @@ export function ThemeMaker() {
     setDraft((prev: ThemeFamily) => {
       const next = cloneFamily(prev);
       next.variants[previewMode].tokens[key] = value;
+      return next;
+    });
+  }
+
+  function updateCodePreset(preset: CodeSyntaxPresetId) {
+    setDraft((prev: ThemeFamily) => {
+      const next = cloneFamily(prev);
+      const uiTokens = next.variants[previewMode].tokens;
+      next.variants[previewMode].code = {
+        preset,
+        tokens:
+          preset === "automatic"
+            ? deriveCodeThemeTokens({ mode: previewMode, tokens: uiTokens })
+            : resolveCodeThemeTokens(preset, previewMode),
+      };
+      return next;
+    });
+  }
+
+  function updateCodeToken(key: keyof CodeThemeTokens, value: string) {
+    setDraft((prev: ThemeFamily) => {
+      const next = cloneFamily(prev);
+      next.variants[previewMode].code.tokens[key] = value;
+      // Once the user touches an individual token, the preset becomes a custom
+      // override so it is clear the palette is no longer the pure preset.
+      next.variants[previewMode].code.preset = "automatic";
       return next;
     });
   }
@@ -777,6 +888,94 @@ export function ThemeMaker() {
                           type="text"
                           value={value}
                           onChange={(e) => updateToken(key, e.target.value)}
+                          aria-invalid={!valid}
+                          className={`w-full rounded border px-1.5 py-0.5 text-xs font-mono bg-surface text-text-primary ${
+                            valid ? "border-border" : "border-danger"
+                          }`}
+                        />
+                      </div>
+                      {!valid && (
+                        <span
+                          role="alert"
+                          className="text-[10px] text-danger shrink-0"
+                        >
+                          <Trans i18nKey="common:surface.componentsThememaker.text.invalid" />
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Code & Syntax Editor */}
+        <div className="space-y-4 pt-4 border-t border-border/50">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h4 className="text-sm font-semibold text-text-secondary">
+              <Trans i18nKey="common:surface.componentsThememaker.heading.codeAndSyntax" />
+            </h4>
+            <div className="flex items-center gap-2">
+              <label htmlFor="code-syntax-preset" className="text-xs text-text-muted">
+                <Trans i18nKey="common:surface.componentsThememaker.label.syntaxPreset" />
+              </label>
+              <select
+                id="code-syntax-preset"
+                value={draft.variants[previewMode].code.preset}
+                onChange={(e) => updateCodePreset(e.target.value as CodeSyntaxPresetId)}
+                className="rounded-md border border-border bg-surface-elevated px-2 py-1 text-xs text-text-primary"
+              >
+                {Object.keys(CODE_SYNTAX_PRESETS).map((preset) => (
+                  <option key={preset} value={preset}>
+                    {preset}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {CODE_TOKEN_CATEGORIES.map((cat) => (
+            <div key={cat.name} className="space-y-2">
+              <h5 className="text-xs font-semibold uppercase tracking-wider text-text-muted border-b border-border/50 pb-1">
+                {cat.name}
+              </h5>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {cat.keys.map((key) => {
+                  const value = draft.variants[previewMode].code.tokens[key] || "";
+                  const valid = validColor(value);
+                  const label = getCodeTokenLabel(tRuntime, key);
+                  return (
+                    <div
+                      key={key}
+                      className="flex items-center gap-2 rounded-md border border-border/60 p-2 bg-surface-elevated"
+                    >
+                      <input
+                        type="color"
+                        aria-label={tRuntime(
+                          "runtimeGenerated.components.thememaker.attribute.value1ColorPicker",
+                          { value1: label },
+                        )}
+                        value={
+                          /^#[0-9a-fA-F]{6}$/.test(value)
+                            ? value
+                            : COLOR_INPUT_FALLBACK
+                        }
+                        onChange={(e) => updateCodeToken(key, e.target.value)}
+                        className="h-7 w-8 shrink-0 rounded border border-border bg-transparent cursor-pointer"
+                      />
+                      <div className="flex flex-1 flex-col min-w-0">
+                        <label
+                          htmlFor={`code-token-${key}`}
+                          className="text-xs text-text-secondary truncate"
+                        >
+                          {label}
+                        </label>
+                        <input
+                          id={`code-token-${key}`}
+                          type="text"
+                          value={value}
+                          onChange={(e) => updateCodeToken(key, e.target.value)}
                           aria-invalid={!valid}
                           className={`w-full rounded border px-1.5 py-0.5 text-xs font-mono bg-surface text-text-primary ${
                             valid ? "border-border" : "border-danger"

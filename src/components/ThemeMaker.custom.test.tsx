@@ -6,7 +6,7 @@ import { ThemeMaker, themeToYaml } from "./ThemeMaker";
 import { useSettingsStore } from "../stores/settings-store";
 import { useConfigStore } from "../stores/config-store";
 import { desktopFiles } from "../services/desktopBridge";
-import { BUILTIN_DRACULA, BUILTIN_VENICE } from "../theme";
+import { BUILTIN_DRACULA, BUILTIN_VENICE, resolveCodeThemeTokens } from "../theme";
 
 vi.mock("../services/desktopBridge", async () => {
   const actual = await vi.importActual<typeof import("../services/desktopBridge")>(
@@ -72,6 +72,7 @@ describe("ThemeMaker Custom Theme Engine Features", () => {
       name: "User Test Theme",
       mode: "dark" as const,
       tokens: BUILTIN_DRACULA.variants.dark.tokens,
+      code: BUILTIN_DRACULA.variants.dark.code,
     };
     useSettingsStore.setState({
       selectedThemeId: "user-test-theme",
@@ -97,6 +98,7 @@ describe("ThemeMaker Custom Theme Engine Features", () => {
       name: BUILTIN_DRACULA.name,
       mode: "dark" as const,
       tokens: BUILTIN_DRACULA.variants.dark.tokens,
+      code: BUILTIN_DRACULA.variants.dark.code,
     };
     const validYaml = await themeToYaml(draculaTheme);
     const mockImport = vi.fn().mockResolvedValue(validYaml);
@@ -118,5 +120,80 @@ describe("ThemeMaker Custom Theme Engine Features", () => {
       expect(screen.queryByText("Import Theme Preview")).not.toBeInTheDocument();
     });
     expect(useSettingsStore.getState().customThemes.length).toBe(1);
+  });
+
+  it("updates code tokens when a syntax preset is selected", async () => {
+    render(<ThemeMaker />);
+
+    const presetSelect = screen.getByLabelText("Syntax preset") as HTMLSelectElement;
+    fireEvent.change(presetSelect, { target: { value: "dracula" } });
+
+    await waitFor(() => {
+      expect(presetSelect.value).toBe("dracula");
+    });
+
+    const keywordInput = screen.getByLabelText("Keyword") as HTMLInputElement;
+    expect(keywordInput.value).toBe(resolveCodeThemeTokens("dracula", "dark").keyword);
+  });
+
+  it("marks draft dirty and switches to automatic preset when a code token is edited", async () => {
+    render(<ThemeMaker />);
+
+    const keywordInput = screen.getByLabelText("Keyword") as HTMLInputElement;
+    fireEvent.change(keywordInput, { target: { value: "#abcdef" } });
+
+    await waitFor(() => {
+      const presetSelect = screen.getByLabelText("Syntax preset") as HTMLSelectElement;
+      expect(presetSelect.value).toBe("automatic");
+    });
+  });
+
+  it("keeps light and dark code palettes independent", async () => {
+    render(<ThemeMaker />);
+
+    const keywordInput = screen.getByLabelText("Keyword") as HTMLInputElement;
+    const darkKeyword = keywordInput.value;
+
+    fireEvent.click(screen.getByText("Light Mode"));
+
+    await waitFor(() => {
+      expect(screen.getByText("Dark Mode")).toBeInTheDocument();
+    });
+
+    const lightKeywordInput = screen.getByLabelText("Keyword") as HTMLInputElement;
+    expect(lightKeywordInput.value).not.toBe(darkKeyword);
+
+    fireEvent.change(lightKeywordInput, { target: { value: "#123456" } });
+    expect(lightKeywordInput.value).toBe("#123456");
+
+    fireEvent.click(screen.getByText("Dark Mode"));
+    await waitFor(() => {
+      expect(screen.getByText("Light Mode")).toBeInTheDocument();
+    });
+
+    expect((screen.getByLabelText("Keyword") as HTMLInputElement).value).toBe(darkKeyword);
+  });
+
+  it("persists code config through save and create-from-active", async () => {
+    render(<ThemeMaker />);
+
+    const keywordInput = screen.getByLabelText("Keyword") as HTMLInputElement;
+    fireEvent.change(keywordInput, { target: { value: "#abcdef" } });
+
+    fireEvent.click(screen.getByRole("button", { name: "Save Theme" }));
+
+    await waitFor(() => {
+      const state = useSettingsStore.getState();
+      expect(state.customThemes.length).toBe(1);
+      expect(state.customThemes[0].code.tokens.keyword).toBe("#abcdef");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "+ Create New Theme" }));
+
+    await waitFor(() => {
+      const state = useSettingsStore.getState();
+      expect(state.customThemes.length).toBe(2);
+      expect(state.customThemes[1].code.tokens.keyword).toBe("#abcdef");
+    });
   });
 });

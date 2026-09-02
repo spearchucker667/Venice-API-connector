@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_DRACULA: ThemeFamily = {
   schemaVersion: 2,
@@ -33,6 +34,7 @@ export const BUILTIN_DRACULA: ThemeFamily = {
       disabledForeground: "#9495a8",
       link: "#94e3f4",
       }),
+      code: { preset: 'dracula', tokens: resolveCodeThemeTokens('dracula', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -60,6 +62,7 @@ export const BUILTIN_DRACULA: ThemeFamily = {
       disabledForeground: "#9293aa",
       link: "#8be9fd",
       }),
+      code: { preset: 'dracula', tokens: resolveCodeThemeTokens('dracula', 'dark') },
     },
   },
 };

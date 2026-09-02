@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_AMBER_ARCHIVE: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_AMBER_ARCHIVE: ThemeFamily = {
       overlay: "rgba(44, 36, 22, 0.25)",
       glow: "rgba(156, 95, 42, 0.18)",
       }),
+      code: { preset: 'amber-archive', tokens: resolveCodeThemeTokens('amber-archive', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_AMBER_ARCHIVE: ThemeFamily = {
       overlay: "rgba(44, 36, 22, 0.25)",
       glow: "rgba(156, 95, 42, 0.18)",
       }),
+      code: { preset: 'amber-archive', tokens: resolveCodeThemeTokens('amber-archive', 'dark') },
     },
   },
 };

@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_COPPER: ThemeFamily = {
   schemaVersion: 2,
@@ -29,6 +30,7 @@ export const BUILTIN_COPPER: ThemeFamily = {
       surfaceMuted: "#a4b2c5",
       borderStrong: "#7e8794",
       }),
+      code: { preset: 'copper', tokens: resolveCodeThemeTokens('copper', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -52,6 +54,7 @@ export const BUILTIN_COPPER: ThemeFamily = {
       surfaceMuted: "#11161d",
       borderStrong: "#6b7686",
       }),
+      code: { preset: 'copper', tokens: resolveCodeThemeTokens('copper', 'dark') },
     },
   },
 };

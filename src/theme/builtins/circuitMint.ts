@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_CIRCUIT_MINT: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_CIRCUIT_MINT: ThemeFamily = {
       overlay: "rgba(13, 17, 18, 0.7)",
       glow: "rgba(110, 231, 183, 0.25)",
       }),
+      code: { preset: 'circuit-mint', tokens: resolveCodeThemeTokens('circuit-mint', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_CIRCUIT_MINT: ThemeFamily = {
       overlay: "rgba(13, 17, 18, 0.7)",
       glow: "rgba(110, 231, 183, 0.25)",
       }),
+      code: { preset: 'circuit-mint', tokens: resolveCodeThemeTokens('circuit-mint', 'dark') },
     },
   },
 };

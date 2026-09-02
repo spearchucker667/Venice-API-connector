@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_COTTON_CANDY_CONSOLE: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_COTTON_CANDY_CONSOLE: ThemeFamily = {
       overlay: "rgba(65, 42, 58, 0.4)",
       glow: "rgba(127, 184, 199, 0.25)",
       }),
+      code: { preset: 'cotton-candy-console', tokens: resolveCodeThemeTokens('cotton-candy-console', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_COTTON_CANDY_CONSOLE: ThemeFamily = {
       overlay: "rgba(65, 42, 58, 0.4)",
       glow: "rgba(127, 184, 199, 0.25)",
       }),
+      code: { preset: 'cotton-candy-console', tokens: resolveCodeThemeTokens('cotton-candy-console', 'dark') },
     },
   },
 };

@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_AURORA_BOREAL: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_AURORA_BOREAL: ThemeFamily = {
       overlay: "rgba(2, 16, 21, 0.7)",
       glow: "rgba(77, 255, 180, 0.25)",
       }),
+      code: { preset: 'aurora-boreal', tokens: resolveCodeThemeTokens('aurora-boreal', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_AURORA_BOREAL: ThemeFamily = {
       overlay: "rgba(2, 16, 21, 0.7)",
       glow: "rgba(77, 255, 180, 0.25)",
       }),
+      code: { preset: 'aurora-boreal', tokens: resolveCodeThemeTokens('aurora-boreal', 'dark') },
     },
   },
 };

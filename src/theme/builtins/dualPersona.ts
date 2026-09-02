@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_DUAL_PERSONA: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_DUAL_PERSONA: ThemeFamily = {
       overlay: "rgba(65, 42, 58, 0.4)",
       glow: "rgba(134, 189, 203, 0.25)",
       }),
+      code: { preset: 'dual-persona', tokens: resolveCodeThemeTokens('dual-persona', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_DUAL_PERSONA: ThemeFamily = {
       overlay: "rgba(65, 42, 58, 0.4)",
       glow: "rgba(134, 189, 203, 0.25)",
       }),
+      code: { preset: 'dual-persona', tokens: resolveCodeThemeTokens('dual-persona', 'dark') },
     },
   },
 };

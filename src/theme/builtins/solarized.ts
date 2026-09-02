@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_SOLARIZED: ThemeFamily = {
   schemaVersion: 2,
@@ -29,6 +30,7 @@ export const BUILTIN_SOLARIZED: ThemeFamily = {
         surfaceMuted: '#e6dfc8',
         borderStrong: '#586e75',
       }),
+      code: { preset: 'solarized', tokens: resolveCodeThemeTokens('solarized', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -52,6 +54,7 @@ export const BUILTIN_SOLARIZED: ThemeFamily = {
         surfaceMuted: '#00313f',
         borderStrong: '#93a1a1',
       }),
+      code: { preset: 'solarized', tokens: resolveCodeThemeTokens('solarized', 'dark') },
     },
   },
 };

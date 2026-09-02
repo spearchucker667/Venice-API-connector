@@ -1,6 +1,31 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { SIDEBAR_DEFAULT_WIDTH, SIDEBAR_MAX_WIDTH, SIDEBAR_MIN_WIDTH, useSettingsStore } from './settings-store'
-import type { Theme } from '../theme'
+import type { Theme, CodeSyntaxPresetId } from '../theme'
+import { completeThemeTokens, completeCodeThemeConfig } from '../theme'
+
+function makeTheme(id: string, name: string, mode: 'light' | 'dark', codePreset: CodeSyntaxPresetId): Theme {
+  const tokens = completeThemeTokens(mode, {
+    background: mode === 'light' ? '#ffffff' : '#0a0a0c',
+    surface: mode === 'light' ? '#f3f4f6' : '#13131a',
+    surfaceElevated: mode === 'light' ? '#ffffff' : '#1a1a24',
+    border: mode === 'light' ? '#e5e7eb' : '#2a2a3a',
+    textPrimary: mode === 'light' ? '#111827' : '#f3f4f6',
+    textSecondary: mode === 'light' ? '#4b5563' : '#9ca3af',
+    textMuted: mode === 'light' ? '#6b7280' : '#6b7280',
+    accent: mode === 'light' ? '#2563eb' : '#63b3ed',
+    accentHover: mode === 'light' ? '#1d4ed8' : '#4299e1',
+    accentForeground: '#ffffff',
+    success: mode === 'light' ? '#16a34a' : '#4ade80',
+    warning: mode === 'light' ? '#ca8a04' : '#facc15',
+    danger: mode === 'light' ? '#dc2626' : '#f87171',
+    info: mode === 'light' ? '#0891b2' : '#67e8f9',
+    focusRing: mode === 'light' ? '#3b82f6' : '#93c5fd',
+    overlay: mode === 'light' ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.6)',
+    glow: mode === 'light' ? 'rgba(37,99,235,0.2)' : 'rgba(99,179,237,0.2)',
+  });
+  const code = completeCodeThemeConfig(mode, { preset: codePreset }, { mode, tokens });
+  return { id, name, mode, tokens, code };
+}
 
 describe('settings-store', () => {
   beforeEach(() => {
@@ -111,6 +136,44 @@ describe('settings-store', () => {
     it('sets appearanceMode', () => {
       useSettingsStore.getState().setAppearanceMode('light')
       expect(useSettingsStore.getState().appearanceMode).toBe('light')
+    })
+
+    it('saveCustomTheme preserves code config and appends to customThemes', () => {
+      const darkTheme = makeTheme('user-dark', 'User Dark', 'dark', 'dracula')
+      const lightTheme = makeTheme('user-light', 'User Light', 'light', 'github-light')
+
+      useSettingsStore.getState().saveCustomTheme(darkTheme)
+      useSettingsStore.getState().saveCustomTheme(lightTheme)
+
+      const state = useSettingsStore.getState()
+      expect(state.customThemes).toHaveLength(2)
+      expect(state.customThemes[0].code.preset).toBe('dracula')
+      expect(state.customThemes[1].code.preset).toBe('github-light')
+      expect(state.customThemes[0].code.tokens.keyword).toBe(darkTheme.code.tokens.keyword)
+      expect(state.customThemes[1].code.tokens.keyword).toBe(lightTheme.code.tokens.keyword)
+      expect(state.customThemes[0].code.tokens.keyword).not.toBe(state.customThemes[1].code.tokens.keyword)
+      expect(state.customTheme?.id).toBe('user-light')
+      expect(state.selectedThemeId).toBe('user-light')
+    })
+
+    it('setCustomTheme stores code config', () => {
+      const theme = makeTheme('user-custom', 'User Custom', 'dark', 'nord')
+      useSettingsStore.getState().setCustomTheme(theme)
+      expect(useSettingsStore.getState().customTheme?.code.preset).toBe('nord')
+      expect(useSettingsStore.getState().customTheme?.code.tokens.string).toBe(theme.code.tokens.string)
+    })
+
+    it('deleteCustomTheme preserves code config on remaining themes', () => {
+      const darkTheme = makeTheme('user-dark', 'User Dark', 'dark', 'dracula')
+      const lightTheme = makeTheme('user-light', 'User Light', 'light', 'github-light')
+
+      useSettingsStore.getState().saveCustomTheme(darkTheme)
+      useSettingsStore.getState().saveCustomTheme(lightTheme)
+      useSettingsStore.getState().deleteCustomTheme('user-light')
+
+      const state = useSettingsStore.getState()
+      expect(state.customThemes).toHaveLength(1)
+      expect(state.customThemes[0].code.preset).toBe('dracula')
     })
   })
 
@@ -238,6 +301,40 @@ describe('settings-store', () => {
       
       expect(merged.activeTab).toBe('chat')
       expect(merged.sidebarOpen).toBe(true)
+    })
+
+    it('migrates legacy custom themes without code config to derived code config', () => {
+      const migrate = useSettingsStore.persist.getOptions().migrate as (persistedState: unknown, version: number) => any
+      const legacyTheme = makeTheme('legacy', 'Legacy Theme', 'dark', 'dracula')
+      const { code: _, ...legacyWithoutCode } = legacyTheme
+
+      const migrated = migrate({
+        customTheme: legacyWithoutCode,
+        customThemes: [legacyWithoutCode],
+      }, 15)
+
+      expect(migrated.customTheme).toBeDefined()
+      expect(migrated.customTheme.code).toBeDefined()
+      expect(migrated.customTheme.code.preset).toBeDefined()
+      expect(typeof migrated.customTheme.code.tokens.keyword).toBe('string')
+      expect(migrated.customThemes[0].code.tokens.keyword).toBe(migrated.customTheme.code.tokens.keyword)
+    })
+
+    it('round-trips distinct light and dark code palettes through migration', () => {
+      const migrate = useSettingsStore.persist.getOptions().migrate as (persistedState: unknown, version: number) => any
+      const darkTheme = makeTheme('user-dark', 'User Dark', 'dark', 'dracula')
+      const lightTheme = makeTheme('user-light', 'User Light', 'light', 'github-light')
+
+      const migrated = migrate({
+        customThemes: [darkTheme, lightTheme],
+      }, 15)
+
+      expect(migrated.customThemes).toHaveLength(2)
+      expect(migrated.customThemes[0].code.preset).toBe('dracula')
+      expect(migrated.customThemes[1].code.preset).toBe('github-light')
+      expect(migrated.customThemes[0].code.tokens.keyword).toBe(darkTheme.code.tokens.keyword)
+      expect(migrated.customThemes[1].code.tokens.keyword).toBe(lightTheme.code.tokens.keyword)
+      expect(migrated.customThemes[0].code.tokens.keyword).not.toBe(migrated.customThemes[1].code.tokens.keyword)
     })
   })
 })

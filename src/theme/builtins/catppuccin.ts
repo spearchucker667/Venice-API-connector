@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_CATPPUCCIN: ThemeFamily = {
   schemaVersion: 2,
@@ -29,6 +30,7 @@ export const BUILTIN_CATPPUCCIN: ThemeFamily = {
       surfaceMuted: "#a3a3c0",
       borderStrong: "#d0d8f1",
       }),
+      code: { preset: 'catppuccin', tokens: resolveCodeThemeTokens('catppuccin', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -52,6 +54,7 @@ export const BUILTIN_CATPPUCCIN: ThemeFamily = {
       surfaceMuted: "#181825",
       borderStrong: "#cdd6f4",
       }),
+      code: { preset: 'catppuccin', tokens: resolveCodeThemeTokens('catppuccin', 'dark') },
     },
   },
 };

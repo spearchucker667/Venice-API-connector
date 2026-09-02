@@ -6,6 +6,7 @@ import rehypeKatex from "rehype-katex";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import { useTranslation } from "react-i18next";
 import { copyText } from "../../stores/media-send-to";
+import { highlightCode } from "./codeHighlighting";
 // Allow http/https/mailto links and image data: URIs only. Strips javascript:,
 // vbscript:, file:, and unknown other smuggled protocols.
 const SAFE_URL_PROTOCOLS = /^(https?:|mailto:|#)/i;
@@ -80,8 +81,9 @@ function PreRenderer({
     };
   }, []);
 
-  // Find the nested <code> element to extract language and raw text
+  // Find the nested <code> element to extract language, className, and raw text
   let lang = "";
+  let codeClassName = "";
   let rawText = "";
 
   React.Children.forEach(children, (child) => {
@@ -92,9 +94,10 @@ function PreRenderer({
       }>(child)
     ) {
       const className = child.props.className || "";
+      codeClassName = className;
       const match = /language-([a-zA-Z0-9#\-+]+)/.exec(className);
       if (match) lang = match[1];
-      
+
       rawText = extractReactText(child.props.children).replace(/\n$/, "");
     }
   });
@@ -102,9 +105,9 @@ function PreRenderer({
   const copyLabel = tRuntime("runtimeGenerated.components.chat.messageBubble.text.copy");
 
   return (
-    <pre className="relative group/code mb-4 mt-2 overflow-hidden rounded-md border border-border bg-surface-sunken">
-      <div className="flex items-center justify-between bg-surface-elevated px-3 py-1.5 border-b border-border/50">
-        <div className="text-[12px] text-text-muted font-mono uppercase tracking-wider select-none">
+    <pre className="relative group/code mb-4 mt-2 overflow-hidden rounded-md border border-code-border bg-code-bg">
+      <div className="flex items-center justify-between bg-code-header-bg px-3 py-1.5 border-b border-code-border/50">
+        <div className="text-[12px] text-code-header-fg font-mono uppercase tracking-wider select-none">
           {lang || "text"}
         </div>
         <button
@@ -119,7 +122,7 @@ function PreRenderer({
               copyTimeoutRef.current = setTimeout(() => setCodeCopied(false), 1500);
             }
           }}
-          className="px-2 py-1 text-[11px] font-medium text-text-muted hover:text-text-secondary bg-surface/50 hover:bg-surface rounded transition-colors cursor-pointer"
+          className="px-2 py-1 text-[11px] font-medium text-code-header-fg hover:opacity-80 bg-code-bg/50 hover:bg-code-bg rounded transition-colors cursor-pointer"
         >
           {codeCopied
             ? tRuntime("runtimeGenerated.components.chat.messageBubble.text.copied")
@@ -127,7 +130,9 @@ function PreRenderer({
         </button>
       </div>
       <div className="p-3 overflow-x-auto text-[13px] leading-relaxed" {...(props as ComponentPropsWithoutRef<"div">)}>
-        {children}
+        <code className={codeClassName}>
+          {highlightCode(rawText, lang)}
+        </code>
       </div>
     </pre>
   );
@@ -157,6 +162,7 @@ export function ChatMarkdown({ content }: ChatMarkdownProps) {
                 span: [
                   ...(defaultSchema.attributes?.span || []),
                   ["className", /^katex.*$/],
+                  ["className", /^token(\s+[a-z-]+)*$/],
                 ],
                 div: [
                   ...(defaultSchema.attributes?.div || []),

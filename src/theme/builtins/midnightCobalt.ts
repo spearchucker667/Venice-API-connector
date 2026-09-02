@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_MIDNIGHT_COBALT: ThemeFamily = {
   schemaVersion: 2,
@@ -32,6 +33,7 @@ export const BUILTIN_MIDNIGHT_COBALT: ThemeFamily = {
       warningForeground: "#ffffff",
       successForeground: "#ffffff",
       }),
+      code: { preset: 'midnight-cobalt', tokens: resolveCodeThemeTokens('midnight-cobalt', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -58,6 +60,7 @@ export const BUILTIN_MIDNIGHT_COBALT: ThemeFamily = {
       warningForeground: "#ffffff",
       successForeground: "#ffffff",
       }),
+      code: { preset: 'midnight-cobalt', tokens: resolveCodeThemeTokens('midnight-cobalt', 'dark') },
     },
   },
 };

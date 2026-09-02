@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_EMBER_MONASTERY: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_EMBER_MONASTERY: ThemeFamily = {
       overlay: "rgba(26, 18, 14, 0.7)",
       glow: "rgba(255, 110, 64, 0.25)",
       }),
+      code: { preset: 'ember-monastery', tokens: resolveCodeThemeTokens('ember-monastery', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_EMBER_MONASTERY: ThemeFamily = {
       overlay: "rgba(26, 18, 14, 0.7)",
       glow: "rgba(255, 110, 64, 0.25)",
       }),
+      code: { preset: 'ember-monastery', tokens: resolveCodeThemeTokens('ember-monastery', 'dark') },
     },
   },
 };

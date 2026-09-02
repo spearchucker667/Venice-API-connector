@@ -3,6 +3,124 @@ export type AppearanceMode = 'dark' | 'light' | 'system';
 
 export const THEME_FAMILY_SCHEMA_VERSION = 2 as const;
 
+/**
+ * Canonical code/syntax token roles. These map to CSS custom properties
+ * under the --code-* and --syntax-* namespaces.
+ */
+export const CODE_SURFACE_TOKEN_KEYS = [
+  'background',
+  'foreground',
+  'border',
+  'headerBackground',
+  'headerForeground',
+  'inlineBackground',
+  'inlineForeground',
+  'selectionBackground',
+] as const;
+
+export const CODE_SYNTAX_TOKEN_KEYS = [
+  'comment',
+  'punctuation',
+  'property',
+  'tag',
+  'boolean',
+  'number',
+  'constant',
+  'symbol',
+  'deleted',
+  'selector',
+  'attribute',
+  'string',
+  'character',
+  'builtin',
+  'inserted',
+  'operator',
+  'entity',
+  'url',
+  'atRule',
+  'keyword',
+  'function',
+  'className',
+  'regex',
+  'important',
+  'variable',
+] as const;
+
+export const CODE_THEME_TOKEN_KEYS = [
+  ...CODE_SURFACE_TOKEN_KEYS,
+  ...CODE_SYNTAX_TOKEN_KEYS,
+] as const;
+
+export type CodeSurfaceTokenKey = (typeof CODE_SURFACE_TOKEN_KEYS)[number];
+export type CodeSyntaxTokenKey = (typeof CODE_SYNTAX_TOKEN_KEYS)[number];
+export type CodeThemeTokenKey = (typeof CODE_THEME_TOKEN_KEYS)[number];
+
+export type CodeThemeTokens = Record<CodeThemeTokenKey, string>;
+
+export const CODE_SYNTAX_PRESET_IDS = [
+  'automatic',
+  'venice',
+  'dark',
+  'light',
+  'dracula',
+  'gruvbox-dark',
+  'rosepine',
+  'nord',
+  'tokyo-night',
+  'catppuccin',
+  'solarized',
+  'one-dark',
+  'monokai',
+  'github-light',
+  'midnight-cobalt',
+  'obsidian-ember',
+  'terminal-forest',
+  'porcelain-sky',
+  'sandstone',
+  'obsidian-bloom',
+  'harbor-fog',
+  'circuit-mint',
+  'amber-archive',
+  'neon-dusk',
+  'aurora-boreal',
+  'sakura-terminal',
+  'basalt-noir',
+  'solar-ash',
+  'cyber-orchid',
+  'arctic-glass',
+  'desert-copperfield',
+  'toxic-limewire',
+  'midnight-velvet',
+  'porcelain-daybreak',
+  'synthwave-harbor',
+  'moss-circuit',
+  'ember-monastery',
+  'glacial-ink',
+  'ultraviolet-rain',
+  'copper',
+  'cotton-candy-console',
+  'sweet-nightmare',
+  'dual-persona',
+  'polaroid-board',
+] as const;
+
+export type CodeSyntaxPresetId = (typeof CODE_SYNTAX_PRESET_IDS)[number];
+
+export interface CodeThemeConfig {
+  preset: CodeSyntaxPresetId;
+  tokens: CodeThemeTokens;
+}
+
+export interface CodeThemeInput {
+  preset?: string;
+  tokens?: Partial<CodeThemeTokens>;
+}
+
+export interface CodeThemeDerivationContext {
+  mode: ThemeMode;
+  tokens: ThemeTokens;
+}
+
 export interface LegacyThemeTokens {
   background: string;
   surface: string;
@@ -97,6 +215,7 @@ export interface Theme {
   name: string;
   mode: ThemeMode;
   tokens: ThemeTokens;
+  code: CodeThemeConfig;
 }
 
 export interface ThemeState {
@@ -111,6 +230,7 @@ export interface ThemeState {
  */
 export interface ThemeVariant {
   tokens: ThemeTokens;
+  code: CodeThemeConfig;
 }
 
 /**
@@ -138,4 +258,5 @@ export interface ResolvedTheme {
   name: string;
   mode: ThemeMode;
   tokens: ThemeTokens;
+  code: CodeThemeConfig;
 }

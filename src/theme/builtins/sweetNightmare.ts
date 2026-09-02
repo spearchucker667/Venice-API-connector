@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_SWEET_NIGHTMARE: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_SWEET_NIGHTMARE: ThemeFamily = {
       overlay: "rgba(33, 25, 35, 0.75)",
       glow: "rgba(139, 199, 208, 0.25)",
       }),
+      code: { preset: 'sweet-nightmare', tokens: resolveCodeThemeTokens('sweet-nightmare', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_SWEET_NIGHTMARE: ThemeFamily = {
       overlay: "rgba(33, 25, 35, 0.75)",
       glow: "rgba(139, 199, 208, 0.25)",
       }),
+      code: { preset: 'sweet-nightmare', tokens: resolveCodeThemeTokens('sweet-nightmare', 'dark') },
     },
   },
 };

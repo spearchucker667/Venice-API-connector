@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_BASALT_NOIR: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_BASALT_NOIR: ThemeFamily = {
       overlay: "rgba(20, 20, 20, 0.7)",
       glow: "rgba(255, 107, 53, 0.25)",
       }),
+      code: { preset: 'basalt-noir', tokens: resolveCodeThemeTokens('basalt-noir', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_BASALT_NOIR: ThemeFamily = {
       overlay: "rgba(20, 20, 20, 0.7)",
       glow: "rgba(255, 107, 53, 0.25)",
       }),
+      code: { preset: 'basalt-noir', tokens: resolveCodeThemeTokens('basalt-noir', 'dark') },
     },
   },
 };

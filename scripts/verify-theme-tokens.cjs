@@ -34,6 +34,7 @@ const INVALID_BROWSER_TOKEN_SCAN_ROOTS = [
   "src/styles",
   "assets",
 ];
+const SYNTAX_COLOR_SCAN_ROOTS = ["src/components/chat", "src/styles"];
 
 const FORBIDDEN = [
   { pattern: /\btext-white(?:\/|\b)/, name: "text-white" },
@@ -59,6 +60,21 @@ const FORBIDDEN = [
   { pattern: /\bbg-bg-base\b/, name: "hardcoded bg-bg-base" },
   { pattern: /\bbg-bg-raised\b/, name: "hardcoded bg-bg-raised" },
   { pattern: /\bbg-bg-overlay\b/, name: "hardcoded bg-bg-overlay" },
+];
+
+const SYNTAX_COLOR_PATTERNS = [
+  // Hex colors (3, 4, 6, or 8 digit). Allows an optional quote so TS/JS
+  // string literals are caught alongside CSS declarations.
+  { pattern: /:\s*['"]?#[0-9a-fA-F]{3,8}\b/, name: "hardcoded hex color" },
+  // rgb()/rgba()
+  { pattern: /:\s*['"]?rgba?\s*\(/, name: "hardcoded rgb color" },
+  // hsl()/hsla()
+  { pattern: /:\s*['"]?hsla?\s*\(/, name: "hardcoded hsl color" },
+  // Common named colors used as CSS values.
+  {
+    pattern: /:\s*['"]?(red|green|blue|white|black|yellow|orange|purple|pink|cyan|magenta|gray|grey|brown|lime|indigo|violet|teal|navy|maroon|olive)\b/,
+    name: "hardcoded named color",
+  },
 ];
 
 const INVALID_BROWSER_TOKENS = [
@@ -169,6 +185,31 @@ function scanFile(root, relPath, forbidden, allowComment) {
   return violations;
 }
 
+function verifySyntaxColorTokens(root, options = {}) {
+  const scanRoots = options.syntaxColorScanRoots ?? SYNTAX_COLOR_SCAN_ROOTS;
+  const patterns = options.syntaxColorPatterns ?? SYNTAX_COLOR_PATTERNS;
+  const allowComment = options.allowComment ?? ALLOW_COMMENT;
+
+  const files = collectTokenScanFiles(root, scanRoots);
+  const violations = [];
+
+  for (const file of files) {
+    const abs = path.resolve(root, file);
+    const content = fs.readFileSync(abs, "utf8");
+    const lines = content.split(/\r?\n/);
+    lines.forEach((line, idx) => {
+      if (line.includes(allowComment)) return;
+      for (const { pattern, name } of patterns) {
+        if (pattern.test(line)) {
+          violations.push(`${file}:${idx + 1}: ${name}: ${line.trim()}`);
+        }
+      }
+    });
+  }
+
+  return violations;
+}
+
 function verifyThemeTokens(root, options = {}) {
   const scanRoots = options.scanRoots ?? SCAN_ROOTS;
   const forbidden = options.forbidden ?? FORBIDDEN;
@@ -196,9 +237,13 @@ function verifyThemeTokens(root, options = {}) {
     });
   }
 
+  const syntaxColorFiles = collectTokenScanFiles(root, options.syntaxColorScanRoots ?? SYNTAX_COLOR_SCAN_ROOTS);
+  const syntaxColorViolations = verifySyntaxColorTokens(root, options);
+  allViolations.push(...syntaxColorViolations);
+
   return {
     ok: allViolations.length === 0,
-    filesScanned: files.size + invalidBrowserTokenFiles.size,
+    filesScanned: files.size + invalidBrowserTokenFiles.size + syntaxColorFiles.size,
     violations: allViolations,
   };
 }
@@ -257,6 +302,8 @@ module.exports = {
   INVALID_BROWSER_TOKENS,
   INVALID_BROWSER_TOKEN_SCAN_ROOTS,
   SCAN_ROOTS,
+  SYNTAX_COLOR_PATTERNS,
+  SYNTAX_COLOR_SCAN_ROOTS,
   collectScanFiles,
   collectTokenScanFiles,
   isSourceFile,
@@ -264,6 +311,7 @@ module.exports = {
   scanFile,
   toPosixPath,
   verifyBuiltinFamilies,
+  verifySyntaxColorTokens,
   verifyThemeTokens,
 };
 

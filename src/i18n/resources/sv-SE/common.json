@@ -166,14 +166,16 @@
       },
       "heading": {
         "themeSystemEditor": "Temasystem och redigerare",
-        "importThemePreview": "Importera förhandsgranskning av tema"
+        "importThemePreview": "Importera förhandsgranskning av tema",
+        "codeAndSyntax": "Code & Syntax"
       },
       "description": {
         "configureThemeColorsBorderContrastFocusRings": "Konfigurera temafärger, kantkontrast, fokusringar och actionknappstilar över Venice Forge.",
         "reviewThemeMetadataAndPreviewLayoutBefore": "Granska temametadata och förhandsgranska layout innan du applicerar på din arbetsyta."
       },
       "label": {
-        "selectActiveTheme": "Välj aktivt tema"
+        "selectActiveTheme": "Välj aktivt tema",
+        "syntaxPreset": "Syntax preset"
       },
       "text": {
         "unsavedDraftChanges": "Osparade utkaständringar",
@@ -186,6 +188,41 @@
         "rdquoAlreadyExistsInYourWorkspace": "” finns redan i din arbetsyta.",
         "importedLayoutPreview": "Förhandsgranskning av importerad layout",
         "id": "ID:"
+      },
+      "codeToken": {
+        "background": "Code background",
+        "foreground": "Code foreground",
+        "border": "Code border",
+        "headerBackground": "Header background",
+        "headerForeground": "Header foreground",
+        "inlineBackground": "Inline background",
+        "inlineForeground": "Inline foreground",
+        "selectionBackground": "Selection background",
+        "comment": "Comment",
+        "punctuation": "Punctuation",
+        "property": "Property",
+        "tag": "Tag",
+        "boolean": "Boolean",
+        "number": "Number",
+        "constant": "Constant",
+        "symbol": "Symbol",
+        "deleted": "Deleted",
+        "selector": "Selector",
+        "attribute": "Attribute",
+        "string": "String",
+        "character": "Character",
+        "builtin": "Builtin",
+        "inserted": "Inserted",
+        "operator": "Operator",
+        "entity": "Entity",
+        "url": "URL",
+        "atRule": "At-rule",
+        "keyword": "Keyword",
+        "function": "Function",
+        "className": "Class / Type",
+        "regex": "Regex",
+        "important": "Important",
+        "variable": "Variable"
       }
     },
     "componentsAudioAudioView": {
@@ -1759,7 +1796,8 @@
         "inputField": "Inmatningsfält...",
         "focusedControl": "Fokuserad kontroll",
         "alertMessageBoundary": "Gräns ​​för varningsmeddelande",
-        "contrastWarnings": "Kontrastvarningar:"
+        "contrastWarnings": "Kontrastvarningar:",
+        "syntaxPreview": "Syntax preview"
       }
     },
     "componentsCharacterCreatorCharactercreatorcompleted": {

@@ -1,4 +1,5 @@
 import { completeThemeTokens } from './themeTypes';
+import { completeCodeThemeConfig } from './codeSyntax';
 import type { AppearanceMode, ResolvedTheme, ThemeFamily, ThemeMode } from './themeTypes';
 
 export function getSystemThemeMode(): ThemeMode {
@@ -19,10 +20,16 @@ export function resolveTheme(
     appearanceMode === 'system' ? (systemAppearance ?? getSystemThemeMode()) : appearanceMode;
   const variant = family.variants[effectiveMode];
   const tokens = completeThemeTokens(effectiveMode, variant.tokens);
+  const code = completeCodeThemeConfig(
+    effectiveMode,
+    variant.code,
+    { mode: effectiveMode, tokens },
+  );
   return {
     id: family.id,
     name: family.name,
     mode: effectiveMode,
     tokens,
+    code,
   };
 }

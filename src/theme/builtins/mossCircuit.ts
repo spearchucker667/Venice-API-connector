@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_MOSS_CIRCUIT: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_MOSS_CIRCUIT: ThemeFamily = {
       overlay: "rgba(13, 20, 15, 0.7)",
       glow: "rgba(124, 179, 66, 0.25)",
       }),
+      code: { preset: 'moss-circuit', tokens: resolveCodeThemeTokens('moss-circuit', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_MOSS_CIRCUIT: ThemeFamily = {
       overlay: "rgba(13, 20, 15, 0.7)",
       glow: "rgba(124, 179, 66, 0.25)",
       }),
+      code: { preset: 'moss-circuit', tokens: resolveCodeThemeTokens('moss-circuit', 'dark') },
     },
   },
 };

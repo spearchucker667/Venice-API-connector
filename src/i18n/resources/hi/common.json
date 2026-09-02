@@ -186,14 +186,16 @@
       },
       "heading": {
         "themeSystemEditor": "थीम सिस्टम और संपादक",
-        "importThemePreview": "आयात थीम पूर्वावलोकन"
+        "importThemePreview": "आयात थीम पूर्वावलोकन",
+        "codeAndSyntax": "Code & Syntax"
       },
       "description": {
         "configureThemeColorsBorderContrastFocusRings": "Venice Forge में थीम रंग, बॉर्डर कंट्रास्ट, फोकस रिंग और एक्शन बटन शैलियों को कॉन्फ़िगर करें।",
         "reviewThemeMetadataAndPreviewLayoutBefore": "अपने कार्यक्षेत्र पर लागू करने से पहले थीम मेटाडेटा और पूर्वावलोकन लेआउट की समीक्षा करें।"
       },
       "label": {
-        "selectActiveTheme": "सक्रिय थीम चुनें"
+        "selectActiveTheme": "सक्रिय थीम चुनें",
+        "syntaxPreset": "Syntax preset"
       },
       "text": {
         "unsavedDraftChanges": "बिना सहेजे गए ड्राफ्ट परिवर्तन",
@@ -206,6 +208,41 @@
         "rdquoAlreadyExistsInYourWorkspace": "\" नामक एक कस्टम थीम पहले से मौजूद है।",
         "importedLayoutPreview": "आयातित लेआउट पूर्वावलोकन",
         "id": "ID:"
+      },
+      "codeToken": {
+        "background": "Code background",
+        "foreground": "Code foreground",
+        "border": "Code border",
+        "headerBackground": "Header background",
+        "headerForeground": "Header foreground",
+        "inlineBackground": "Inline background",
+        "inlineForeground": "Inline foreground",
+        "selectionBackground": "Selection background",
+        "comment": "Comment",
+        "punctuation": "Punctuation",
+        "property": "Property",
+        "tag": "Tag",
+        "boolean": "Boolean",
+        "number": "Number",
+        "constant": "Constant",
+        "symbol": "Symbol",
+        "deleted": "Deleted",
+        "selector": "Selector",
+        "attribute": "Attribute",
+        "string": "String",
+        "character": "Character",
+        "builtin": "Builtin",
+        "inserted": "Inserted",
+        "operator": "Operator",
+        "entity": "Entity",
+        "url": "URL",
+        "atRule": "At-rule",
+        "keyword": "Keyword",
+        "function": "Function",
+        "className": "Class / Type",
+        "regex": "Regex",
+        "important": "Important",
+        "variable": "Variable"
       }
     },
     "componentsThemepreview": {
@@ -220,7 +257,8 @@
         "inputField": "इनपुट फ़ील्ड…",
         "focusedControl": "केंद्रित नियंत्रण",
         "alertMessageBoundary": "चेतावनी संदेश सीमा",
-        "contrastWarnings": "कंट्रास्ट चेतावनियाँ:"
+        "contrastWarnings": "कंट्रास्ट चेतावनियाँ:",
+        "syntaxPreview": "Syntax preview"
       }
     },
     "componentsAudioAudioView": {

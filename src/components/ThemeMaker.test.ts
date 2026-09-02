@@ -22,6 +22,7 @@ function familyToTheme(family: ThemeFamily, mode: "dark" | "light" = "dark"): Th
     name: family.name,
     mode,
     tokens: family.variants[mode].tokens,
+    code: family.variants[mode].code,
   };
 }
 
@@ -50,8 +51,11 @@ describe("ThemeMaker YAML", () => {
     expect(imported.name).toBe(theme.name);
     expect(imported.mode).toBe("dark");
     expect(imported.tokens).toEqual(theme.tokens);
+    expect(imported.code.tokens).toEqual(theme.code.tokens);
+    expect(imported.code.preset).toBe(theme.code.preset);
     expect(yaml).toContain("selection_background:");
     expect(yaml).toContain("button_primary_foreground:");
+    expect(yaml).toContain("code:");
   });
 
   it("normalizes snake_case semantic token overrides", async () => {
@@ -119,6 +123,8 @@ describe("ThemeMaker new built-in theme round-trips", () => {
     expect(imported.name).toBe(theme.name);
     expect(imported.mode).toBe(theme.mode);
     expect(imported.tokens).toEqual(theme.tokens);
+    expect(imported.code.tokens).toEqual(theme.code.tokens);
+    expect(imported.code.preset).toBe(theme.code.preset);
   });
 });
 

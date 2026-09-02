@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_ARCTIC_GLASS: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_ARCTIC_GLASS: ThemeFamily = {
       overlay: "rgba(30, 41, 59, 0.25)",
       glow: "rgba(56, 189, 248, 0.18)",
       }),
+      code: { preset: 'arctic-glass', tokens: resolveCodeThemeTokens('arctic-glass', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_ARCTIC_GLASS: ThemeFamily = {
       overlay: "rgba(30, 41, 59, 0.25)",
       glow: "rgba(56, 189, 248, 0.18)",
       }),
+      code: { preset: 'arctic-glass', tokens: resolveCodeThemeTokens('arctic-glass', 'dark') },
     },
   },
 };

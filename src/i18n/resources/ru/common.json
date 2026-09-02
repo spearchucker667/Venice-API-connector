@@ -186,14 +186,16 @@
       },
       "heading": {
         "themeSystemEditor": "Система и редактор тем",
-        "importThemePreview": "Предварительный просмотр импорта темы"
+        "importThemePreview": "Предварительный просмотр импорта темы",
+        "codeAndSyntax": "Code & Syntax"
       },
       "description": {
         "configureThemeColorsBorderContrastFocusRings": "Настройте цвета темы, контрастность границ, кольца фокусировки и стили кнопок действий в Venice Forge.",
         "reviewThemeMetadataAndPreviewLayoutBefore": "Перед применением в рабочей области просмотрите метаданные темы и макет предварительного просмотра."
       },
       "label": {
-        "selectActiveTheme": "Выбрать активную тему"
+        "selectActiveTheme": "Выбрать активную тему",
+        "syntaxPreset": "Syntax preset"
       },
       "text": {
         "unsavedDraftChanges": "Несохраненные черновые изменения",
@@ -206,6 +208,41 @@
         "rdquoAlreadyExistsInYourWorkspace": "» уже существует в вашей рабочей области.",
         "importedLayoutPreview": "Предварительный просмотр импортированного макета",
         "id": "ID:"
+      },
+      "codeToken": {
+        "background": "Code background",
+        "foreground": "Code foreground",
+        "border": "Code border",
+        "headerBackground": "Header background",
+        "headerForeground": "Header foreground",
+        "inlineBackground": "Inline background",
+        "inlineForeground": "Inline foreground",
+        "selectionBackground": "Selection background",
+        "comment": "Comment",
+        "punctuation": "Punctuation",
+        "property": "Property",
+        "tag": "Tag",
+        "boolean": "Boolean",
+        "number": "Number",
+        "constant": "Constant",
+        "symbol": "Symbol",
+        "deleted": "Deleted",
+        "selector": "Selector",
+        "attribute": "Attribute",
+        "string": "String",
+        "character": "Character",
+        "builtin": "Builtin",
+        "inserted": "Inserted",
+        "operator": "Operator",
+        "entity": "Entity",
+        "url": "URL",
+        "atRule": "At-rule",
+        "keyword": "Keyword",
+        "function": "Function",
+        "className": "Class / Type",
+        "regex": "Regex",
+        "important": "Important",
+        "variable": "Variable"
       }
     },
     "componentsThemepreview": {
@@ -220,7 +257,8 @@
         "inputField": "Поле ввода…",
         "focusedControl": "Фокусное управление",
         "alertMessageBoundary": "Граница предупреждающего сообщения",
-        "contrastWarnings": "Контрастные предупреждения:"
+        "contrastWarnings": "Контрастные предупреждения:",
+        "syntaxPreview": "Syntax preview"
       }
     },
     "componentsAudioAudioView": {

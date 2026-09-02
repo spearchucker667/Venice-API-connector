@@ -216,7 +216,8 @@
     "componentsThememaker": {
       "heading": {
         "themeSystemEditor": "Theme System & Editor",
-        "importThemePreview": "Import Theme Preview"
+        "importThemePreview": "Import Theme Preview",
+        "codeAndSyntax": "Code & Syntax"
       },
       "description": {
         "configureThemeColorsBorderContrastFocusRings": "Configure theme colors, border contrast, focus rings, and action button styles across Venice Forge.",
@@ -237,7 +238,43 @@
         "importApply": "Import & Apply"
       },
       "label": {
-        "selectActiveTheme": "Select Active Theme"
+        "selectActiveTheme": "Select Active Theme",
+        "syntaxPreset": "Syntax preset"
+      },
+      "codeToken": {
+        "background": "Code background",
+        "foreground": "Code foreground",
+        "border": "Code border",
+        "headerBackground": "Header background",
+        "headerForeground": "Header foreground",
+        "inlineBackground": "Inline background",
+        "inlineForeground": "Inline foreground",
+        "selectionBackground": "Selection background",
+        "comment": "Comment",
+        "punctuation": "Punctuation",
+        "property": "Property",
+        "tag": "Tag",
+        "boolean": "Boolean",
+        "number": "Number",
+        "constant": "Constant",
+        "symbol": "Symbol",
+        "deleted": "Deleted",
+        "selector": "Selector",
+        "attribute": "Attribute",
+        "string": "String",
+        "character": "Character",
+        "builtin": "Builtin",
+        "inserted": "Inserted",
+        "operator": "Operator",
+        "entity": "Entity",
+        "url": "URL",
+        "atRule": "At-rule",
+        "keyword": "Keyword",
+        "function": "Function",
+        "className": "Class / Type",
+        "regex": "Regex",
+        "important": "Important",
+        "variable": "Variable"
       },
       "text": {
         "unsavedDraftChanges": "Unsaved Draft Changes",
@@ -264,7 +301,8 @@
         "inputField": "Input field…",
         "focusedControl": "Focused control",
         "alertMessageBoundary": "Alert message boundary",
-        "contrastWarnings": "Contrast warnings:"
+        "contrastWarnings": "Contrast warnings:",
+        "syntaxPreview": "Syntax preview"
       }
     },
     "componentsAudioAudioView": {

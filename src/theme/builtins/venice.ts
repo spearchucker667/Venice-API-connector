@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_VENICE: ThemeFamily = {
   schemaVersion: 2,
@@ -29,6 +30,7 @@ export const BUILTIN_VENICE: ThemeFamily = {
       surfaceMuted: "#9db7d1",
       borderStrong: "#7f8996",
       }),
+      code: { preset: 'venice', tokens: resolveCodeThemeTokens('venice', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -52,6 +54,7 @@ export const BUILTIN_VENICE: ThemeFamily = {
       surfaceMuted: "#0b131b",
       borderStrong: "#687483",
       }),
+      code: { preset: 'venice', tokens: resolveCodeThemeTokens('venice', 'dark') },
     },
   },
 };

@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_DARK: ThemeFamily = {
   schemaVersion: 2,
@@ -29,6 +30,7 @@ export const BUILTIN_DARK: ThemeFamily = {
       surfaceMuted: "#a4b2c5",
       borderStrong: "#7e8794",
       }),
+      code: { preset: 'dark', tokens: resolveCodeThemeTokens('dark', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -52,6 +54,7 @@ export const BUILTIN_DARK: ThemeFamily = {
       surfaceMuted: "#11161d",
       borderStrong: "#6b7686",
       }),
+      code: { preset: 'dark', tokens: resolveCodeThemeTokens('dark', 'dark') },
     },
   },
 };

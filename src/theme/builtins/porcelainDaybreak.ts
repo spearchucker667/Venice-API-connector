@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_PORCELAIN_DAYBREAK: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_PORCELAIN_DAYBREAK: ThemeFamily = {
       overlay: "rgba(55, 71, 79, 0.25)",
       glow: "rgba(255, 171, 145, 0.18)",
       }),
+      code: { preset: 'porcelain-daybreak', tokens: resolveCodeThemeTokens('porcelain-daybreak', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_PORCELAIN_DAYBREAK: ThemeFamily = {
       overlay: "rgba(55, 71, 79, 0.25)",
       glow: "rgba(255, 171, 145, 0.18)",
       }),
+      code: { preset: 'porcelain-daybreak', tokens: resolveCodeThemeTokens('porcelain-daybreak', 'dark') },
     },
   },
 };

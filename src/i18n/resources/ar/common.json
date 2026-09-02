@@ -186,14 +186,16 @@
       },
       "heading": {
         "themeSystemEditor": "نظام السمة ومحررها",
-        "importThemePreview": "استيراد معاينة السمة"
+        "importThemePreview": "استيراد معاينة السمة",
+        "codeAndSyntax": "Code & Syntax"
       },
       "description": {
         "configureThemeColorsBorderContrastFocusRings": "قم بتكوين ألوان السمة وتباين الحدود وحلقات التركيز وأنماط أزرار الإجراء عبر Venice Forge.",
         "reviewThemeMetadataAndPreviewLayoutBefore": "راجع بيانات تعريف السمة ومعاينة التخطيط قبل تطبيقها على مساحة العمل الخاصة بك."
       },
       "label": {
-        "selectActiveTheme": "تحديد السمة النشطة"
+        "selectActiveTheme": "تحديد السمة النشطة",
+        "syntaxPreset": "Syntax preset"
       },
       "text": {
         "unsavedDraftChanges": "مسودة التغييرات غير المحفوظة",
@@ -206,6 +208,41 @@
         "rdquoAlreadyExistsInYourWorkspace": "\" بالفعل في مساحة العمل الخاصة بك.",
         "importedLayoutPreview": "معاينة التخطيط المستوردة",
         "id": "ID:"
+      },
+      "codeToken": {
+        "background": "Code background",
+        "foreground": "Code foreground",
+        "border": "Code border",
+        "headerBackground": "Header background",
+        "headerForeground": "Header foreground",
+        "inlineBackground": "Inline background",
+        "inlineForeground": "Inline foreground",
+        "selectionBackground": "Selection background",
+        "comment": "Comment",
+        "punctuation": "Punctuation",
+        "property": "Property",
+        "tag": "Tag",
+        "boolean": "Boolean",
+        "number": "Number",
+        "constant": "Constant",
+        "symbol": "Symbol",
+        "deleted": "Deleted",
+        "selector": "Selector",
+        "attribute": "Attribute",
+        "string": "String",
+        "character": "Character",
+        "builtin": "Builtin",
+        "inserted": "Inserted",
+        "operator": "Operator",
+        "entity": "Entity",
+        "url": "URL",
+        "atRule": "At-rule",
+        "keyword": "Keyword",
+        "function": "Function",
+        "className": "Class / Type",
+        "regex": "Regex",
+        "important": "Important",
+        "variable": "Variable"
       }
     },
     "componentsThemepreview": {
@@ -220,7 +257,8 @@
         "inputField": "حقل الإدخال...",
         "focusedControl": "التحكم المركّز",
         "alertMessageBoundary": "حد رسالة التنبيه",
-        "contrastWarnings": "تحذيرات التباين:"
+        "contrastWarnings": "تحذيرات التباين:",
+        "syntaxPreview": "Syntax preview"
       }
     },
     "componentsAudioAudioView": {

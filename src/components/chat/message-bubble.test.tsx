@@ -290,7 +290,7 @@ describe("MessageBubble Markdown and Fenced Code Rendering (Regression)", () => 
     expect(pre).not.toBeNull();
     expect(code).not.toBeNull();
     expect(code?.className).toContain("language-typescript");
-    expect(code?.textContent).toBe("const x = 1;\n");
+    expect(code?.textContent).toBe("const x = 1;");
     expect(container.textContent).not.toContain("```typescript");
     expect(screen.getByText("typescript")).toBeInTheDocument();
     
@@ -357,7 +357,7 @@ describe("MessageBubble Markdown and Fenced Code Rendering (Regression)", () => 
     );
     
     expect(container.querySelector("pre")).not.toBeNull();
-    expect(container.querySelector("code")?.textContent).toBe("one\ntwo\n");
+    expect(container.querySelector("code")?.textContent).toBe("one\ntwo");
     expect(screen.getByText("text")).toBeInTheDocument();
   });
 
@@ -371,6 +371,57 @@ describe("MessageBubble Markdown and Fenced Code Rendering (Regression)", () => 
     );
     
     expect(container.querySelector("script")).toBeNull();
-    expect(container.querySelector("code")?.textContent).toBe("<script>alert(1)</script>\n");
+    expect(container.querySelector("code")?.textContent).toBe("<script>alert(1)</script>");
+  });
+
+  it("emits semantic token spans for recognized fenced code", () => {
+    const message: ChatMessage = {
+      role: "assistant",
+      content: "```typescript\nconst x = 1;\n```",
+    };
+    const { container } = render(
+      <MessageBubble message={message} index={0} onCopy={() => {}} onDelete={() => {}} />
+    );
+
+    const code = container.querySelector("pre code");
+    expect(code).not.toBeNull();
+    expect(code?.querySelector(".token.keyword")).not.toBeNull();
+    expect(code?.querySelector(".token.number")).not.toBeNull();
+    expect(code?.querySelector(".token.operator")).not.toBeNull();
+    expect(code?.querySelector(".token.punctuation")).not.toBeNull();
+    expect(code?.textContent).toBe("const x = 1;");
+  });
+
+  it("falls back to plain text for unknown fence languages", () => {
+    const message: ChatMessage = {
+      role: "assistant",
+      content: "```some-unknown-lang\nhello world\n```",
+    };
+    const { container } = render(
+      <MessageBubble message={message} index={0} onCopy={() => {}} onDelete={() => {}} />
+    );
+
+    const code = container.querySelector("pre code");
+    expect(code).not.toBeNull();
+    expect(code?.textContent).toBe("hello world");
+    expect(code?.querySelector(".token")).toBeNull();
+  });
+
+  it("copies the exact raw source text from a code block", async () => {
+    const message: ChatMessage = {
+      role: "assistant",
+      content: "```typescript\nconst x = 1;\n```",
+    };
+    render(
+      <MessageBubble message={message} index={0} onCopy={() => {}} onDelete={() => {}} />
+    );
+
+    const copyButton = screen.getAllByRole("button", { name: "Copy" }).find((btn) =>
+      btn.closest("pre")
+    );
+    expect(copyButton).toBeDefined();
+    await userEvent.click(copyButton!);
+
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith("const x = 1;");
   });
 });

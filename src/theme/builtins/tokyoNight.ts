@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_TOKYO_NIGHT: ThemeFamily = {
   schemaVersion: 2,
@@ -29,6 +30,7 @@ export const BUILTIN_TOKYO_NIGHT: ThemeFamily = {
       surfaceMuted: "#9aa1bf",
       borderStrong: "#acb3d3",
       }),
+      code: { preset: 'tokyo-night', tokens: resolveCodeThemeTokens('tokyo-night', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -52,6 +54,7 @@ export const BUILTIN_TOKYO_NIGHT: ThemeFamily = {
       surfaceMuted: "#1f2335",
       borderStrong: "#a9b1d6",
       }),
+      code: { preset: 'tokyo-night', tokens: resolveCodeThemeTokens('tokyo-night', 'dark') },
     },
   },
 };

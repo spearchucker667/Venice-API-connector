@@ -83,14 +83,25 @@ function themeDocument(id: string, displayName: string) {
   };
 }
 
+function codeConfig(preset = "automatic"): { preset: string; tokens: Record<string, string> } {
+  return {
+    preset,
+    tokens: {
+      background: "#0a0a0a",
+      foreground: "#f0f0f0",
+      keyword: "#ff0000",
+    },
+  };
+}
+
 function v2FamilyDocument(id: string, name: string): import("./themeService").ThemeFamilyV2 {
   return {
     schemaVersion: 2,
     id,
     name,
     variants: {
-      light: { tokens: validTokens() },
-      dark: { tokens: validTokens() },
+      light: { tokens: validTokens(), code: codeConfig("github-light") },
+      dark: { tokens: validTokens(), code: codeConfig("dracula") },
     },
   };
 }
@@ -285,6 +296,31 @@ describe("saveTheme / deleteTheme", () => {
     await deleteTheme("theme-2");
     await expect(fs.access(path.join(TEST_ROOT, "userData", "themes", "theme-2.yaml"))).rejects.toBeDefined();
     await expect(deleteTheme("theme-2")).resolves.toBeUndefined();
+  });
+
+  it("persists code configuration in saved V2 family YAML", async () => {
+    const family = v2FamilyDocument("custom-code", "Custom Code");
+    await saveTheme(family);
+    const content = await fs.readFile(path.join(TEST_ROOT, "userData", "themes", "custom-code.yaml"), "utf8");
+    expect(content).toContain("code:");
+    expect(content).toContain("preset:");
+    expect(content).toContain("keyword:");
+  });
+
+  it("accepts legacy V2 family documents without code configuration", async () => {
+    const legacy = {
+      schemaVersion: 2,
+      id: "legacy-codeless",
+      name: "Legacy Codeless",
+      variants: {
+        light: { tokens: validTokens() },
+        dark: { tokens: validTokens() },
+      },
+    } as import("./themeService").ThemeFamilyV2;
+    await saveTheme(legacy);
+    const filePath = path.join(TEST_ROOT, "userData", "themes", "legacy-codeless.yaml");
+    const content = await fs.readFile(filePath, "utf8");
+    expect(content).toContain("schemaVersion: 2");
   });
 });
 

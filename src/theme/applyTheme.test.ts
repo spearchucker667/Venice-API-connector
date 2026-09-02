@@ -33,7 +33,24 @@ describe("applyTheme", () => {
     expect(setPropertySpy).toHaveBeenCalledWith("--button-primary-fg", theme.tokens.buttonPrimaryForeground);
     expect(setPropertySpy).toHaveBeenCalledWith("--selection-fg", theme.tokens.selectionForeground);
     expect(setPropertySpy).toHaveBeenCalledWith("--app-mesh-opacity", "0.12");
-    expect(setPropertySpy).toHaveBeenCalledTimes(37);
+
+    // Code surface variables
+    expect(setPropertySpy).toHaveBeenCalledWith("--code-bg", theme.code.tokens.background);
+    expect(setPropertySpy).toHaveBeenCalledWith("--code-fg", theme.code.tokens.foreground);
+    expect(setPropertySpy).toHaveBeenCalledWith("--code-border", theme.code.tokens.border);
+    expect(setPropertySpy).toHaveBeenCalledWith("--code-header-bg", theme.code.tokens.headerBackground);
+    expect(setPropertySpy).toHaveBeenCalledWith("--code-header-fg", theme.code.tokens.headerForeground);
+    expect(setPropertySpy).toHaveBeenCalledWith("--code-inline-bg", theme.code.tokens.inlineBackground);
+    expect(setPropertySpy).toHaveBeenCalledWith("--code-inline-fg", theme.code.tokens.inlineForeground);
+    expect(setPropertySpy).toHaveBeenCalledWith("--code-selection-bg", theme.code.tokens.selectionBackground);
+
+    // Syntax token variables
+    expect(setPropertySpy).toHaveBeenCalledWith("--syntax-keyword", theme.code.tokens.keyword);
+    expect(setPropertySpy).toHaveBeenCalledWith("--syntax-string", theme.code.tokens.string);
+    expect(setPropertySpy).toHaveBeenCalledWith("--syntax-function", theme.code.tokens.function);
+    expect(setPropertySpy).toHaveBeenCalledWith("--syntax-comment", theme.code.tokens.comment);
+
+    expect(setPropertySpy).toHaveBeenCalledTimes(70);
   });
 
   it("sets data-theme-mode attribute", () => {

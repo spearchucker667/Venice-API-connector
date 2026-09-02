@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_PORCELAIN_SKY: ThemeFamily = {
   schemaVersion: 2,
@@ -32,6 +33,7 @@ export const BUILTIN_PORCELAIN_SKY: ThemeFamily = {
       successForeground: "#ffffff",
       dangerForeground: "#ffffff",
       }),
+      code: { preset: 'porcelain-sky', tokens: resolveCodeThemeTokens('porcelain-sky', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -58,6 +60,7 @@ export const BUILTIN_PORCELAIN_SKY: ThemeFamily = {
       successForeground: "#404040",
       dangerForeground: "#404040",
       }),
+      code: { preset: 'porcelain-sky', tokens: resolveCodeThemeTokens('porcelain-sky', 'dark') },
     },
   },
 };

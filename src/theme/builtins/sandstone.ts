@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_SANDSTONE: ThemeFamily = {
   schemaVersion: 2,
@@ -32,6 +33,7 @@ export const BUILTIN_SANDSTONE: ThemeFamily = {
       successForeground: "#ffffff",
       dangerForeground: "#ffffff",
       }),
+      code: { preset: 'sandstone', tokens: resolveCodeThemeTokens('sandstone', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -58,6 +60,7 @@ export const BUILTIN_SANDSTONE: ThemeFamily = {
       successForeground: "#404040",
       dangerForeground: "#404040",
       }),
+      code: { preset: 'sandstone', tokens: resolveCodeThemeTokens('sandstone', 'dark') },
     },
   },
 };

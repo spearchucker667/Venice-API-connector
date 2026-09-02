@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_MONOKAI: ThemeFamily = {
   schemaVersion: 2,
@@ -30,6 +31,7 @@ export const BUILTIN_MONOKAI: ThemeFamily = {
       surfaceMuted: "#b1b2a7",
       borderStrong: "#f8f8f2",
       }),
+      code: { preset: 'monokai', tokens: resolveCodeThemeTokens('monokai', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -54,6 +56,7 @@ export const BUILTIN_MONOKAI: ThemeFamily = {
       surfaceMuted: "#2c2d26",
       borderStrong: "#f8f8f2",
       }),
+      code: { preset: 'monokai', tokens: resolveCodeThemeTokens('monokai', 'dark') },
     },
   },
 };

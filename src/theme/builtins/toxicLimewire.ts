@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_TOXIC_LIMEWIRE: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_TOXIC_LIMEWIRE: ThemeFamily = {
       overlay: "rgba(15, 20, 16, 0.7)",
       glow: "rgba(198, 255, 0, 0.25)",
       }),
+      code: { preset: 'toxic-limewire', tokens: resolveCodeThemeTokens('toxic-limewire', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_TOXIC_LIMEWIRE: ThemeFamily = {
       overlay: "rgba(15, 20, 16, 0.7)",
       glow: "rgba(198, 255, 0, 0.25)",
       }),
+      code: { preset: 'toxic-limewire', tokens: resolveCodeThemeTokens('toxic-limewire', 'dark') },
     },
   },
 };

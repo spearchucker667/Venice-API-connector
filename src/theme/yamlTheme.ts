@@ -1,4 +1,5 @@
 import { completeThemeTokens, type Theme, type ThemeFamily, type ThemeMode } from './themeTypes';
+import { completeCodeThemeConfig } from './codeSyntax';
 import { isValidColorValue } from './validateColor';
 
 /**
@@ -30,11 +31,13 @@ export function yamlThemeToTheme(
     normalized[key] = value;
   }
 
+  const completedTokens = completeThemeTokens(mode, normalized as unknown as Theme['tokens']);
   return {
     id,
     name: display_name,
     mode,
-    tokens: completeThemeTokens(mode, normalized as unknown as Theme['tokens']),
+    tokens: completedTokens,
+    code: completeCodeThemeConfig(mode, undefined, { mode, tokens: completedTokens }),
   };
 }
 
@@ -60,8 +63,8 @@ export function yamlThemeToFamily(
     aliases: [],
     builtIn: false,
     variants: {
-      light: { tokens: theme.tokens },
-      dark: { tokens: theme.tokens },
+      light: { tokens: theme.tokens, code: theme.code },
+      dark: { tokens: theme.tokens, code: theme.code },
     },
   };
 }

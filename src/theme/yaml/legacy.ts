@@ -5,6 +5,7 @@ import {
   type ThemeMode,
   type ThemeTokenInput,
 } from '../themeTypes';
+import { completeCodeThemeConfig } from '../codeSyntax';
 import { isValidColorValue } from '../validateColor';
 import { luminance } from '../contrast';
 
@@ -80,6 +81,7 @@ function legacyFallbackTokens(mode: ThemeMode): Record<string, string> {
 }
 
 function themeToFamily(theme: Theme): ThemeFamily {
+  const code = theme.code ?? completeCodeThemeConfig(theme.mode, undefined, { mode: theme.mode, tokens: theme.tokens });
   return {
     schemaVersion: 2,
     id: theme.id,
@@ -87,8 +89,8 @@ function themeToFamily(theme: Theme): ThemeFamily {
     aliases: [],
     builtIn: false,
     variants: {
-      light: { tokens: theme.tokens },
-      dark: { tokens: theme.tokens },
+      light: { tokens: theme.tokens, code },
+      dark: { tokens: theme.tokens, code },
     },
   };
 }
@@ -113,11 +115,13 @@ export function parseV1ThemeEntry(
       : id;
   const fallback = legacyFallbackTokens(mode);
   const normalized = validateAndNormalizeTokens(mode, entry.tokens, fallback);
+  const tokens = completeThemeTokens(mode, normalized as unknown as ThemeTokenInput);
   const theme: Theme = {
     id,
     name: displayName,
     mode,
-    tokens: completeThemeTokens(mode, normalized as unknown as ThemeTokenInput),
+    tokens,
+    code: completeCodeThemeConfig(mode, undefined, { mode, tokens }),
   };
   return themeToFamily(theme);
 }
@@ -194,11 +198,13 @@ export function parseFlatTheme(raw: Record<string, unknown>): ThemeFamily {
     glow: `${accent}25`,
   };
 
+  const tokens = completeThemeTokens(mode, legacy);
   const theme: Theme = {
     id: `custom-${Date.now()}`,
     name,
     mode,
-    tokens: completeThemeTokens(mode, legacy),
+    tokens,
+    code: completeCodeThemeConfig(mode, undefined, { mode, tokens }),
   };
   return themeToFamily(theme);
 }

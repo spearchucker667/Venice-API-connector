@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_SOLAR_ASH: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_SOLAR_ASH: ThemeFamily = {
       overlay: "rgba(44, 40, 37, 0.25)",
       glow: "rgba(201, 162, 39, 0.18)",
       }),
+      code: { preset: 'solar-ash', tokens: resolveCodeThemeTokens('solar-ash', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_SOLAR_ASH: ThemeFamily = {
       overlay: "rgba(44, 40, 37, 0.25)",
       glow: "rgba(201, 162, 39, 0.18)",
       }),
+      code: { preset: 'solar-ash', tokens: resolveCodeThemeTokens('solar-ash', 'dark') },
     },
   },
 };

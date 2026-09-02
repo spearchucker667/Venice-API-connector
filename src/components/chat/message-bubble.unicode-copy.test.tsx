@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
-import { render, screen, within } from "@testing-library/react";
+import { render, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChatMessage } from "../../types/venice";
@@ -51,7 +51,7 @@ describe("MessageBubble code-block copy regression (BUG-004)", () => {
       />,
     );
 
-    const codeBlock = screen.getByText(rawCode).closest("pre");
+    const codeBlock = document.querySelector("pre");
     expect(codeBlock).not.toBeNull();
     await userEvent.click(within(codeBlock!).getByRole("button", { name: "Copy" }));
 

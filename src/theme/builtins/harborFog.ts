@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_HARBOR_FOG: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_HARBOR_FOG: ThemeFamily = {
       overlay: "rgba(26, 42, 58, 0.25)",
       glow: "rgba(32, 122, 122, 0.18)",
       }),
+      code: { preset: 'harbor-fog', tokens: resolveCodeThemeTokens('harbor-fog', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_HARBOR_FOG: ThemeFamily = {
       overlay: "rgba(26, 42, 58, 0.25)",
       glow: "rgba(32, 122, 122, 0.18)",
       }),
+      code: { preset: 'harbor-fog', tokens: resolveCodeThemeTokens('harbor-fog', 'dark') },
     },
   },
 };

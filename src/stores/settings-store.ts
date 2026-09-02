@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import { createSafeStorage } from '../lib/safe-storage'
 import type { Theme } from '../theme'
 import type { AppearanceMode } from '../theme'
-import { migrateAppearanceMode } from '../theme'
+import { migrateAppearanceMode, completeCodeThemeConfig } from '../theme'
 import { normaliseTab, type TabId } from '../config/tabs'
 
 /**
@@ -69,6 +69,16 @@ function coerceSettingsSection(value: unknown): SettingsSection | null {
   return VALID_SETTINGS_SECTIONS.has(value as SettingsSection)
     ? (value as SettingsSection)
     : null
+}
+
+function ensureThemeCode(theme: Theme): Theme {
+  if (theme.code && typeof theme.code === 'object' && theme.code.tokens) {
+    return theme;
+  }
+  return {
+    ...theme,
+    code: completeCodeThemeConfig(theme.mode, theme.code, { mode: theme.mode, tokens: theme.tokens }),
+  };
 }
 
 function safeNormaliseTab(id: string | null | undefined): TabId {
@@ -442,9 +452,12 @@ export const useSettingsStore = create<SettingsState>()(
           // we only preserve an explicit on-state that already lives in storage.
           diagnosticsIncludePrompts: state.diagnosticsIncludePrompts === true,
           // v12: customThemes array migration. Existing single customTheme is preserved.
-          customThemes: Array.isArray(state.customThemes)
+          customThemes: (Array.isArray(state.customThemes)
             ? state.customThemes
-            : (state.customTheme ? [state.customTheme] : []),
+            : (state.customTheme ? [state.customTheme] : [])).map(ensureThemeCode),
+          // v13: ensure every persisted single-mode theme carries a code config
+          // so syntax highlighting does not silently drop custom palettes.
+          customTheme: state.customTheme ? ensureThemeCode(state.customTheme) : null,
         } as SettingsState
       },
       merge: (persisted, current) => {

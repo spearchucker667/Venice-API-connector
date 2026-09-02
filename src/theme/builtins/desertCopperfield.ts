@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_DESERT_COPPERFIELD: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_DESERT_COPPERFIELD: ThemeFamily = {
       overlay: "rgba(61, 41, 20, 0.25)",
       glow: "rgba(156, 95, 42, 0.18)",
       }),
+      code: { preset: 'desert-copperfield', tokens: resolveCodeThemeTokens('desert-copperfield', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_DESERT_COPPERFIELD: ThemeFamily = {
       overlay: "rgba(61, 41, 20, 0.25)",
       glow: "rgba(156, 95, 42, 0.18)",
       }),
+      code: { preset: 'desert-copperfield', tokens: resolveCodeThemeTokens('desert-copperfield', 'dark') },
     },
   },
 };

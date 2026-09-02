@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_TERMINAL_FOREST: ThemeFamily = {
   schemaVersion: 2,
@@ -32,6 +33,7 @@ export const BUILTIN_TERMINAL_FOREST: ThemeFamily = {
       warningForeground: "#ffffff",
       successForeground: "#ffffff",
       }),
+      code: { preset: 'terminal-forest', tokens: resolveCodeThemeTokens('terminal-forest', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -58,6 +60,7 @@ export const BUILTIN_TERMINAL_FOREST: ThemeFamily = {
       warningForeground: "#ffffff",
       successForeground: "#ffffff",
       }),
+      code: { preset: 'terminal-forest', tokens: resolveCodeThemeTokens('terminal-forest', 'dark') },
     },
   },
 };

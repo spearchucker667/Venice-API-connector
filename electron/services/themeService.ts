@@ -13,24 +13,42 @@ export interface ThemeFamilyV2 {
   id: string;
   name: string;
   variants: {
-    light: { tokens: Record<string, string> };
-    dark: { tokens: Record<string, string> };
+    light: { tokens: Record<string, string>; code?: { preset: string; tokens: Record<string, string> } };
+    dark: { tokens: Record<string, string>; code?: { preset: string; tokens: Record<string, string> } };
   };
+}
+
+function isCodeConfig(value: unknown): value is { preset: string; tokens: Record<string, string> } {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const c = value as Record<string, unknown>;
+  if (typeof c.preset !== "string") return false;
+  if (!c.tokens || typeof c.tokens !== "object" || Array.isArray(c.tokens)) return false;
+  return true;
+}
+
+function isVariant(value: unknown): value is { tokens: Record<string, string>; code?: { preset: string; tokens: Record<string, string> } } {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const v = value as Record<string, unknown>;
+  if (!v.tokens || typeof v.tokens !== "object" || Array.isArray(v.tokens)) return false;
+  if (v.code !== undefined && !isCodeConfig(v.code)) return false;
+  return true;
 }
 
 export function isThemeFamilyV2(value: unknown): value is ThemeFamilyV2 {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const rec = value as Record<string, unknown>;
-  return (
-    rec.schemaVersion === 2 &&
-    typeof rec.id === "string" &&
-    typeof rec.name === "string" &&
-    typeof rec.variants === "object" &&
-    rec.variants !== null &&
-    !Array.isArray(rec.variants) &&
-    typeof (rec.variants as Record<string, unknown>).light === "object" &&
-    typeof (rec.variants as Record<string, unknown>).dark === "object"
-  );
+  if (
+    rec.schemaVersion !== 2 ||
+    typeof rec.id !== "string" ||
+    typeof rec.name !== "string" ||
+    typeof rec.variants !== "object" ||
+    rec.variants === null ||
+    Array.isArray(rec.variants)
+  ) {
+    return false;
+  }
+  const variants = rec.variants as Record<string, unknown>;
+  return isVariant(variants.light) && isVariant(variants.dark);
 }
 
 /** Theme records returned by loaders: legacy V1 single-mode themes or V2 families. */
@@ -172,8 +190,14 @@ function serializeV2Family(family: ThemeFamilyV2): string {
     id: family.id,
     name: family.name,
     variants: {
-      light: { tokens: family.variants.light.tokens },
-      dark: { tokens: family.variants.dark.tokens },
+      light: {
+        tokens: family.variants.light.tokens,
+        code: family.variants.light.code,
+      },
+      dark: {
+        tokens: family.variants.dark.tokens,
+        code: family.variants.dark.code,
+      },
     },
   };
   return yaml.stringify(doc);

@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_SAKURA_TERMINAL: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_SAKURA_TERMINAL: ThemeFamily = {
       overlay: "rgba(26, 18, 24, 0.7)",
       glow: "rgba(255, 143, 163, 0.25)",
       }),
+      code: { preset: 'sakura-terminal', tokens: resolveCodeThemeTokens('sakura-terminal', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_SAKURA_TERMINAL: ThemeFamily = {
       overlay: "rgba(26, 18, 24, 0.7)",
       glow: "rgba(255, 143, 163, 0.25)",
       }),
+      code: { preset: 'sakura-terminal', tokens: resolveCodeThemeTokens('sakura-terminal', 'dark') },
     },
   },
 };

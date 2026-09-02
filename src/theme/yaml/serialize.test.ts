@@ -98,6 +98,8 @@ describe('serializeThemeFamilyYaml', () => {
     expect(yaml).toContain('variants:');
     expect(yaml).toContain('light:');
     expect(yaml).toContain('dark:');
+    expect(yaml).toContain('code:');
+    expect(yaml).toContain('preset:');
     expect(yaml).toContain('surface_elevated:');
     expect(yaml).toContain('button_primary_background:');
   });
@@ -111,6 +113,10 @@ describe('serializeThemeFamilyYaml', () => {
     expect(reparsed.name).toBe(original.name);
     expect(reparsed.variants.light.tokens).toEqual(original.variants.light.tokens);
     expect(reparsed.variants.dark.tokens).toEqual(original.variants.dark.tokens);
+    expect(reparsed.variants.light.code.tokens).toEqual(original.variants.light.code.tokens);
+    expect(reparsed.variants.dark.code.tokens).toEqual(original.variants.dark.code.tokens);
+    expect(reparsed.variants.light.code.preset).toBe(original.variants.light.code.preset);
+    expect(reparsed.variants.dark.code.preset).toBe(original.variants.dark.code.preset);
   });
 
   it('emits both light and dark variants', () => {

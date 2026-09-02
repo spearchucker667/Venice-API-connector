@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_NEON_DUSK: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_NEON_DUSK: ThemeFamily = {
       overlay: "rgba(15, 12, 31, 0.7)",
       glow: "rgba(217, 70, 239, 0.25)",
       }),
+      code: { preset: 'neon-dusk', tokens: resolveCodeThemeTokens('neon-dusk', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_NEON_DUSK: ThemeFamily = {
       overlay: "rgba(15, 12, 31, 0.7)",
       glow: "rgba(217, 70, 239, 0.25)",
       }),
+      code: { preset: 'neon-dusk', tokens: resolveCodeThemeTokens('neon-dusk', 'dark') },
     },
   },
 };

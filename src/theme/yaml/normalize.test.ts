@@ -192,4 +192,42 @@ describe('normalizeThemeFamilyYaml', () => {
     expect(family.variants.light.tokens.danger).toBe('#111111');
     expect(family.variants.dark.tokens.danger).toBe('#111111');
   });
+
+  it('derives a deterministic code theme when no code config is provided', () => {
+    const family = normalizeThemeFamilyYaml(validV2());
+    expect(family.variants.light.code.preset).toBe('automatic');
+    expect(family.variants.dark.code.tokens.background).toBeTruthy();
+    expect(family.variants.light.code.tokens.keyword).toBeTruthy();
+  });
+
+  it('applies explicit code presets and token overrides', () => {
+    const doc = JSON.parse(JSON.stringify(validV2())) as Record<string, unknown>;
+    const variants = doc.variants as Record<string, Record<string, unknown>>;
+    variants.dark.code = {
+      preset: 'dracula',
+      tokens: {
+        keyword: '#ff00ff',
+        string: '#00ff00',
+      },
+    };
+    const family = normalizeThemeFamilyYaml(doc);
+    expect(family.variants.dark.code.preset).toBe('dracula');
+    expect(family.variants.dark.code.tokens.keyword).toBe('#ff00ff');
+    expect(family.variants.dark.code.tokens.string).toBe('#00ff00');
+    // Non-overridden tokens come from the preset.
+    expect(family.variants.dark.code.tokens.function).toBeTruthy();
+  });
+
+  it('keeps light and dark code configurations independent', () => {
+    const doc = JSON.parse(JSON.stringify(validV2())) as Record<string, unknown>;
+    const variants = doc.variants as Record<string, Record<string, unknown>>;
+    variants.light.code = { preset: 'github-light' };
+    variants.dark.code = { preset: 'dracula' };
+    const family = normalizeThemeFamilyYaml(doc);
+    expect(family.variants.light.code.preset).toBe('github-light');
+    expect(family.variants.dark.code.preset).toBe('dracula');
+    expect(family.variants.light.code.tokens.background).not.toBe(
+      family.variants.dark.code.tokens.background,
+    );
+  });
 });

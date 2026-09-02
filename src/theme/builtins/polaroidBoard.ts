@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_POLAROID_BOARD: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_POLAROID_BOARD: ThemeFamily = {
       overlay: "rgba(41, 26, 30, 0.45)",
       glow: "rgba(158, 191, 208, 0.25)",
       }),
+      code: { preset: 'polaroid-board', tokens: resolveCodeThemeTokens('polaroid-board', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_POLAROID_BOARD: ThemeFamily = {
       overlay: "rgba(41, 26, 30, 0.45)",
       glow: "rgba(158, 191, 208, 0.25)",
       }),
+      code: { preset: 'polaroid-board', tokens: resolveCodeThemeTokens('polaroid-board', 'dark') },
     },
   },
 };

@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_CYBER_ORCHID: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_CYBER_ORCHID: ThemeFamily = {
       overlay: "rgba(13, 6, 18, 0.7)",
       glow: "rgba(192, 132, 252, 0.25)",
       }),
+      code: { preset: 'cyber-orchid', tokens: resolveCodeThemeTokens('cyber-orchid', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_CYBER_ORCHID: ThemeFamily = {
       overlay: "rgba(13, 6, 18, 0.7)",
       glow: "rgba(192, 132, 252, 0.25)",
       }),
+      code: { preset: 'cyber-orchid', tokens: resolveCodeThemeTokens('cyber-orchid', 'dark') },
     },
   },
 };

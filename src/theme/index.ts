@@ -1,4 +1,7 @@
 export * from './themeTypes';
+export * from './codeSyntaxTypes';
+export * from './codeSyntaxPresets';
+export * from './codeSyntax';
 export * from './schema';
 export * from './themes';
 export * from './applyTheme';

@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_GLACIAL_INK: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_GLACIAL_INK: ThemeFamily = {
       overlay: "rgba(13, 27, 42, 0.7)",
       glow: "rgba(0, 229, 255, 0.25)",
       }),
+      code: { preset: 'glacial-ink', tokens: resolveCodeThemeTokens('glacial-ink', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_GLACIAL_INK: ThemeFamily = {
       overlay: "rgba(13, 27, 42, 0.7)",
       glow: "rgba(0, 229, 255, 0.25)",
       }),
+      code: { preset: 'glacial-ink', tokens: resolveCodeThemeTokens('glacial-ink', 'dark') },
     },
   },
 };

@@ -6,6 +6,7 @@ import {
   type ThemeFamily,
   type ThemeMode,
 } from './themeTypes';
+import { completeCodeThemeConfig } from './codeSyntax';
 import { BUILTIN_THEME_FAMILIES, DEFAULT_THEME_FAMILY } from './themes';
 import { isValidColorValue } from './validateColor';
 import { themeRegistry } from './registry';
@@ -20,7 +21,13 @@ export function isValidPersistedTheme(value: unknown): value is Theme {
   if (!theme.tokens || typeof theme.tokens !== 'object') return false;
   try {
     const tokens = completeThemeTokens(theme.mode, theme.tokens as Theme['tokens']);
-    return Object.values(tokens).every((token) => isValidColorValue(token));
+    if (!Object.values(tokens).every((token) => isValidColorValue(token))) return false;
+    const code = completeCodeThemeConfig(
+      theme.mode,
+      theme.code,
+      { mode: theme.mode, tokens },
+    );
+    return Object.values(code.tokens).every((token) => isValidColorValue(token));
   } catch {
     return false;
   }
@@ -32,6 +39,7 @@ export function isValidPersistedTheme(value: unknown): value is Theme {
  * preserved regardless of the active appearance mode.
  */
 export function legacyThemeToFamily(theme: Theme): ThemeFamily {
+  const code = theme.code ?? completeCodeThemeConfig(theme.mode, undefined, { mode: theme.mode, tokens: theme.tokens });
   return {
     schemaVersion: 2,
     id: theme.id,
@@ -39,8 +47,8 @@ export function legacyThemeToFamily(theme: Theme): ThemeFamily {
     aliases: [],
     builtIn: false,
     variants: {
-      light: { tokens: theme.tokens },
-      dark: { tokens: theme.tokens },
+      light: { tokens: theme.tokens, code },
+      dark: { tokens: theme.tokens, code },
     },
   };
 }
@@ -48,6 +56,7 @@ export function legacyThemeToFamily(theme: Theme): ThemeFamily {
 export function applyTheme(theme: ResolvedTheme): void {
   const root = document.documentElement;
   const t = theme.tokens;
+  const c = theme.code.tokens;
   const map: Record<string, string> = {
     '--bg': t.background,
     '--surface': t.surface,
@@ -86,6 +95,43 @@ export function applyTheme(theme: ResolvedTheme): void {
     '--overlay': t.overlay,
     '--glow': t.glow,
     '--app-mesh-opacity': theme.mode === 'light' ? '0.08' : '0.12',
+
+    // Code surfaces
+    '--code-bg': c.background,
+    '--code-fg': c.foreground,
+    '--code-border': c.border,
+    '--code-header-bg': c.headerBackground,
+    '--code-header-fg': c.headerForeground,
+    '--code-inline-bg': c.inlineBackground,
+    '--code-inline-fg': c.inlineForeground,
+    '--code-selection-bg': c.selectionBackground,
+
+    // Syntax tokens
+    '--syntax-comment': c.comment,
+    '--syntax-punctuation': c.punctuation,
+    '--syntax-property': c.property,
+    '--syntax-tag': c.tag,
+    '--syntax-boolean': c.boolean,
+    '--syntax-number': c.number,
+    '--syntax-constant': c.constant,
+    '--syntax-symbol': c.symbol,
+    '--syntax-deleted': c.deleted,
+    '--syntax-selector': c.selector,
+    '--syntax-attribute': c.attribute,
+    '--syntax-string': c.string,
+    '--syntax-character': c.character,
+    '--syntax-builtin': c.builtin,
+    '--syntax-inserted': c.inserted,
+    '--syntax-operator': c.operator,
+    '--syntax-entity': c.entity,
+    '--syntax-url': c.url,
+    '--syntax-atrule': c.atRule,
+    '--syntax-keyword': c.keyword,
+    '--syntax-function': c.function,
+    '--syntax-class-name': c.className,
+    '--syntax-regex': c.regex,
+    '--syntax-important': c.important,
+    '--syntax-variable': c.variable,
   };
   Object.entries(map).forEach(([k, v]) => root.style.setProperty(k, v));
   root.dataset.themeMode = theme.mode;

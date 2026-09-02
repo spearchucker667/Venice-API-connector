@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_ROSEPINE: ThemeFamily = {
   schemaVersion: 2,
@@ -29,6 +30,7 @@ export const BUILTIN_ROSEPINE: ThemeFamily = {
       surfaceMuted: "#a29fbc",
       borderStrong: "#817e95",
       }),
+      code: { preset: 'rosepine', tokens: resolveCodeThemeTokens('rosepine', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -52,6 +54,7 @@ export const BUILTIN_ROSEPINE: ThemeFamily = {
       surfaceMuted: "#211f30",
       borderStrong: "#6e6a86",
       }),
+      code: { preset: 'rosepine', tokens: resolveCodeThemeTokens('rosepine', 'dark') },
     },
   },
 };

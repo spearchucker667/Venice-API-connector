@@ -1,4 +1,5 @@
 import { completeThemeTokens, type ThemeFamily } from '../themeTypes';
+import { resolveCodeThemeTokens } from '../codeSyntax';
 
 export const BUILTIN_ULTRAVIOLET_RAIN: ThemeFamily = {
   schemaVersion: 2,
@@ -46,6 +47,7 @@ export const BUILTIN_ULTRAVIOLET_RAIN: ThemeFamily = {
       overlay: "rgba(18, 16, 24, 0.7)",
       glow: "rgba(143, 99, 255, 0.25)",
       }),
+      code: { preset: 'ultraviolet-rain', tokens: resolveCodeThemeTokens('ultraviolet-rain', 'light') },
     },
     dark: {
       tokens: completeThemeTokens('dark', {
@@ -86,6 +88,7 @@ export const BUILTIN_ULTRAVIOLET_RAIN: ThemeFamily = {
       overlay: "rgba(18, 16, 24, 0.7)",
       glow: "rgba(143, 99, 255, 0.25)",
       }),
+      code: { preset: 'ultraviolet-rain', tokens: resolveCodeThemeTokens('ultraviolet-rain', 'dark') },
     },
   },
 };

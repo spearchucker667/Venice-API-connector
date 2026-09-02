@@ -1,4 +1,5 @@
-import { completeThemeTokens, type ThemeFamily, type ThemeMode, type ThemeTokens, type ThemeTokenInput } from '../themeTypes';
+import { completeThemeTokens, type CodeThemeInput, type ThemeFamily, type ThemeMode, type ThemeTokens, type ThemeTokenInput } from '../themeTypes';
+import { completeCodeThemeConfig } from '../codeSyntax';
 
 function normalizeTokenKey(key: string): string {
   return key.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
@@ -15,6 +16,10 @@ function normalizeTokens(raw: unknown): Record<string, string> {
     }
   }
   return out;
+}
+
+function normalizeCodeTokens(raw: unknown): Record<string, string> {
+  return normalizeTokens(raw);
 }
 
 /**
@@ -35,10 +40,22 @@ export function normalizeThemeFamilyYaml(raw: unknown): ThemeFamily {
 
   const variants = doc.variants as Record<string, Record<string, unknown>>;
 
-  function buildVariant(mode: ThemeMode): { tokens: ThemeTokens } {
+  function buildVariant(mode: ThemeMode): { tokens: ThemeTokens; code: ReturnType<typeof completeCodeThemeConfig> } {
     const rawTokens = normalizeTokens(variants[mode]?.tokens);
     const merged = { ...baseTokens, ...rawTokens } as unknown as ThemeTokenInput;
-    return { tokens: completeThemeTokens(mode, merged) };
+    const tokens = completeThemeTokens(mode, merged);
+    const rawCodeVariant = variants[mode]?.code;
+    const rawCode: CodeThemeInput | undefined =
+      rawCodeVariant && typeof rawCodeVariant === 'object' && !Array.isArray(rawCodeVariant)
+        ? {
+            preset:
+              typeof (rawCodeVariant as Record<string, unknown>).preset === 'string'
+                ? ((rawCodeVariant as Record<string, unknown>).preset as string)
+                : undefined,
+            tokens: normalizeCodeTokens((rawCodeVariant as Record<string, unknown>).tokens),
+          }
+        : undefined;
+    return { tokens, code: completeCodeThemeConfig(mode, rawCode, { mode, tokens }) };
   }
 
   const aliases = Array.isArray(doc.aliases)

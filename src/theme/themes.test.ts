@@ -17,6 +17,9 @@ import {
   BUILTIN_DUAL_PERSONA,
   BUILTIN_POLAROID_BOARD,
 } from "./themes";
+import { CODE_THEME_TOKEN_KEYS } from "./themeTypes";
+import { isCodeSyntaxPresetId } from "./codeSyntax";
+import { isValidColorValue } from "./validateColor";
 import type { ThemeFamily, ThemeMode } from "./themeTypes";
 
 const NEW_BUILTINS = [
@@ -146,5 +149,36 @@ describe("built-in theme families", () => {
   it("exports the expected number of built-in theme families", () => {
     // 44 single-mode built-ins were consolidated into 43 families (solarized merged).
     expect(BUILTIN_THEME_FAMILIES.length).toBe(43);
+  });
+
+  it("defines a complete code theme config for every variant of every family", () => {
+    for (const family of BUILTIN_THEME_FAMILIES) {
+      for (const mode of ["light", "dark"] as ThemeMode[]) {
+        const code = family.variants[mode].code;
+        expect(code, `${family.id}.${mode}.code`).toBeDefined();
+        expect(isCodeSyntaxPresetId(code.preset), `${family.id}.${mode}.preset=${code.preset}`).toBe(true);
+        for (const key of CODE_THEME_TOKEN_KEYS) {
+          expect(code.tokens[key], `${family.id}.${mode}.code.tokens.${key}`).toBeTruthy();
+          expect(isValidColorValue(code.tokens[key]), `${family.id}.${mode}.code.tokens.${key}`).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("does not rely on the automatic fallback for built-in code themes", () => {
+    for (const family of BUILTIN_THEME_FAMILIES) {
+      for (const mode of ["light", "dark"] as ThemeMode[]) {
+        expect(family.variants[mode].code.preset, `${family.id}.${mode}`).not.toBe("automatic");
+      }
+    }
+  });
+
+  it.each(BUILTIN_THEME_FAMILIES.flatMap((family) =>
+    (["light", "dark"] as ThemeMode[]).map((mode) => [`${family.id}:${mode}`, family, mode] as const),
+  ))("%s code surfaces meet WCAG AA contrast", (_id, family, mode) => {
+    const c = family.variants[mode].code.tokens;
+    expect(isAAPass(c.foreground, c.background)).toBe(true);
+    expect(isAAPass(c.inlineForeground, c.inlineBackground)).toBe(true);
+    expect(isAAPass(c.headerForeground, c.headerBackground)).toBe(true);
   });
 });

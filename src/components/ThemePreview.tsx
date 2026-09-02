@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { completeThemeTokens, type Theme } from "../theme/themeTypes";
 import { contrastRatio } from "../theme/contrast";
+import { highlightCode } from "./chat/codeHighlighting";
 import { Trans } from 'react-i18next';
 
 export function ThemePreview({ theme }: { theme: Theme }) {
@@ -17,6 +18,23 @@ export function ThemePreview({ theme }: { theme: Theme }) {
     { name: "Success foreground / Success", fg: t.successForeground, bg: t.success },
   ];
   ratios.forEach((r) => {
+    const ratio = contrastRatio(r.fg, r.bg);
+    if (ratio < 4.5) {
+      warnings.push(`${r.name}: ${ratio.toFixed(2)}:1 (AA: 4.5:1)`);
+    }
+  });
+
+  const c = theme.code.tokens;
+  const codeRatios = [
+    { name: "Code foreground / background", fg: c.foreground, bg: c.background },
+    { name: "Inline code foreground / background", fg: c.inlineForeground, bg: c.inlineBackground },
+    { name: "Code header foreground / background", fg: c.headerForeground, bg: c.headerBackground },
+    { name: "Code string / background", fg: c.string, bg: c.background },
+    { name: "Code keyword / background", fg: c.keyword, bg: c.background },
+    { name: "Code function / background", fg: c.function, bg: c.background },
+    { name: "Code comment / background", fg: c.comment, bg: c.background },
+  ];
+  codeRatios.forEach((r) => {
     const ratio = contrastRatio(r.fg, r.bg);
     if (ratio < 4.5) {
       warnings.push(`${r.name}: ${ratio.toFixed(2)}:1 (AA: 4.5:1)`);
@@ -46,7 +64,42 @@ export function ThemePreview({ theme }: { theme: Theme }) {
     el.style.setProperty("--preview-danger", t.dangerForeground);
     el.style.setProperty("--preview-danger-bg", `${t.danger}20`);
     el.style.setProperty("--preview-danger-border", `${t.danger}40`);
-  }, [t]);
+
+    const c = theme.code.tokens;
+    el.style.setProperty("--preview-code-bg", c.background);
+    el.style.setProperty("--preview-code-fg", c.foreground);
+    el.style.setProperty("--preview-code-border", c.border);
+    el.style.setProperty("--preview-code-header-bg", c.headerBackground);
+    el.style.setProperty("--preview-code-header-fg", c.headerForeground);
+    el.style.setProperty("--preview-code-inline-bg", c.inlineBackground);
+    el.style.setProperty("--preview-code-inline-fg", c.inlineForeground);
+    el.style.setProperty("--preview-code-selection-bg", c.selectionBackground);
+    el.style.setProperty("--syntax-comment", c.comment);
+    el.style.setProperty("--syntax-punctuation", c.punctuation);
+    el.style.setProperty("--syntax-property", c.property);
+    el.style.setProperty("--syntax-tag", c.tag);
+    el.style.setProperty("--syntax-boolean", c.boolean);
+    el.style.setProperty("--syntax-number", c.number);
+    el.style.setProperty("--syntax-constant", c.constant);
+    el.style.setProperty("--syntax-symbol", c.symbol);
+    el.style.setProperty("--syntax-deleted", c.deleted);
+    el.style.setProperty("--syntax-selector", c.selector);
+    el.style.setProperty("--syntax-attribute", c.attribute);
+    el.style.setProperty("--syntax-string", c.string);
+    el.style.setProperty("--syntax-character", c.character);
+    el.style.setProperty("--syntax-builtin", c.builtin);
+    el.style.setProperty("--syntax-inserted", c.inserted);
+    el.style.setProperty("--syntax-operator", c.operator);
+    el.style.setProperty("--syntax-entity", c.entity);
+    el.style.setProperty("--syntax-url", c.url);
+    el.style.setProperty("--syntax-atrule", c.atRule);
+    el.style.setProperty("--syntax-keyword", c.keyword);
+    el.style.setProperty("--syntax-function", c.function);
+    el.style.setProperty("--syntax-class-name", c.className);
+    el.style.setProperty("--syntax-regex", c.regex);
+    el.style.setProperty("--syntax-important", c.important);
+    el.style.setProperty("--syntax-variable", c.variable);
+  }, [t, theme.code.tokens]);
 
   return (
     <div className="space-y-3">
@@ -106,6 +159,33 @@ export function ThemePreview({ theme }: { theme: Theme }) {
           className="rounded-lg px-3 py-2 text-xs bg-[var(--preview-danger-bg)] border border-[var(--preview-danger-border)] text-[var(--preview-danger)]"
         >
           <Trans i18nKey="common:surface.componentsThemepreview.text.alertMessageBoundary" /></div>
+
+        {/* Code preview */}
+        <div
+          className="rounded-lg border overflow-hidden bg-[var(--preview-code-bg)] border-[var(--preview-code-border)]"
+        >
+          <div className="flex items-center justify-between px-3 py-1.5 border-b border-[var(--preview-code-border)] bg-[var(--preview-code-header-bg)]">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--preview-code-header-fg)] select-none">
+              <Trans i18nKey="common:surface.componentsThemepreview.text.syntaxPreview" />
+            </span>
+          </div>
+          <div className="p-3 overflow-x-auto text-[13px] leading-relaxed">
+            <pre className="m-0 p-0 bg-transparent border-none">
+              <code className="font-mono text-[var(--preview-code-fg)] bg-transparent border-none p-0">
+                {highlightCode(
+                  `type ThemeMode = "light" | "dark";
+
+export function resolveTheme(name: string, enabled = true) {
+  const count = 42;
+  // Theme-aware syntax preview
+  return enabled ? \`\${name}:\${count}\` : null;
+}`,
+                  "typescript",
+                )}
+              </code>
+            </pre>
+          </div>
+        </div>
       </div>
       {warnings.length > 0 && (
         <div className="rounded-lg border border-warning/30 bg-warning/10 p-3 text-xs text-warning" aria-live="polite">
