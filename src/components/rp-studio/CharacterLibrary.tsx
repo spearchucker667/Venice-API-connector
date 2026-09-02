@@ -145,9 +145,17 @@ export function CharacterLibrary({ onEdit }: Props) {
   }, [hasLoaded, load]);
 
   useEffect(() => {
+    let active = true;
     void listCharacterCardDrafts()
-      .then(setDraftRecords)
-      .catch(() => setDraftRecords([]));
+      .then((records) => {
+        if (active) setDraftRecords(records);
+      })
+      .catch(() => {
+        if (active) setDraftRecords([]);
+      });
+    return () => {
+      active = false;
+    };
   }, [showDraftManager]);
 
   const filtered = useMemo(() => {

@@ -121,6 +121,7 @@ describe("custom protocol access guard", () => {
   });
 });
 
+
 describe("CORS response header builder", () => {
   it("emits Allow-Origin + Vary + Expose-Headers for an allowed dev request", () => {
     const decision = evaluateCustomProtocolAccess({
@@ -210,8 +211,9 @@ describe("custom protocol capability-token manager", () => {
     ).toThrow("Capability TTL must be");
   });
 
-  it("rejects expired, unknown, and reused-after-revocation tokens", async () => {
-    const manager = createCustomProtocolCapabilityManager();
+  it("rejects expired, unknown, and reused-after-revocation tokens", () => {
+    let now = 1_000;
+    const manager = createCustomProtocolCapabilityManager({ now: () => now });
     const { token } = manager.issue({
       scheme: "venice-media",
       objectId,
@@ -223,8 +225,8 @@ describe("custom protocol capability-token manager", () => {
     // Token should still be valid immediately after issuance.
     expect(manager.verify(token)).not.toBeNull();
 
-    // After expiry the token is rejected and removed from the store.
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    // At the exact expiry boundary the token is rejected and removed.
+    now += 1;
     expect(manager.verify(token)).toBeNull();
     expect(manager.verify("totally-unknown-token")).toBeNull();
   });
@@ -288,4 +290,3 @@ describe("custom protocol capability-token manager", () => {
     });
   });
 });
-

@@ -242,11 +242,14 @@ function isValidObjectId(objectId: string): boolean {
 }
 
 /** Creates an in-memory capability-token authority. */
-export function createCustomProtocolCapabilityManager(): CustomProtocolCapabilityManager {
+export function createCustomProtocolCapabilityManager(options: {
+  now?: () => number;
+} = {}): CustomProtocolCapabilityManager {
   // SECURITY: token value is the Map key; the spec is the value. The token
   // value must never be logged, persisted, or sent anywhere except inside the
   // issued URL returned to the renderer.
   const tokens = new Map<string, CustomProtocolCapabilitySpec>();
+  const now = options.now ?? Date.now;
 
   function issue(input: {
     scheme: string;
@@ -273,7 +276,7 @@ export function createCustomProtocolCapabilityManager(): CustomProtocolCapabilit
       throw new Error("Capability TTL must be between 1 ms and 24 hours.");
     }
 
-    const issuedAt = Date.now();
+    const issuedAt = now();
     const token = crypto.randomBytes(CAPABILITY_TOKEN_BYTES).toString("base64url");
     const spec: CustomProtocolCapabilitySpec = {
       objectId: input.objectId,
@@ -291,7 +294,7 @@ export function createCustomProtocolCapabilityManager(): CustomProtocolCapabilit
   function verify(token: string): CustomProtocolCapabilitySpec | null {
     const spec = tokens.get(token);
     if (!spec) return null;
-    if (Date.now() >= spec.expiresAt) {
+    if (now() >= spec.expiresAt) {
       tokens.delete(token);
       return null;
     }
@@ -318,11 +321,11 @@ export function createCustomProtocolCapabilityManager(): CustomProtocolCapabilit
     let oldestTokenAgeMs: number | null = null;
     const profiles = new Set<string>();
     const sessions = new Set<string>();
-    const now = Date.now();
+    const observedAt = now();
     for (const spec of tokens.values()) {
       profiles.add(spec.profileId);
       sessions.add(spec.sessionId);
-      const age = now - spec.issuedAt;
+      const age = observedAt - spec.issuedAt;
       if (oldestTokenAgeMs === null || age > oldestTokenAgeMs) {
         oldestTokenAgeMs = age;
       }
