@@ -562,7 +562,7 @@
         "loadFromLibrary": "Chargement à partir de la bibliothèque..."
       },
       "text": {
-        "approachingSystemPromptSizeLimit": "La taille limite de l'invite système approche ("
+        "approachingSystemPromptSizeLimit": "Taille du prompt système : {{estimatedTokenCount}} / {{maximumTokens}} jetons estimés ; {{codePointCount}} / {{maximumCodePoints}} points de code Unicode."
       }
     },
     "componentsDocumentsDocumentagentview": {
@@ -1240,7 +1240,7 @@
         "tags": "Balises",
         "personality": "Personnalité",
         "systemPrompt": "Invite système",
-        "approachingSystemPromptSizeLimit": "Taille limite de l'invite système proche (",
+        "approachingSystemPromptSizeLimit": "Taille du prompt système : {{estimatedTokenCount}} / {{maximumTokens}} jetons estimés ; {{codePointCount}} / {{maximumCodePoints}} points de code Unicode.",
         "postHistoryInstructions": "Instructions post-historique",
         "instructions": "Instructions",
         "firstMessagePrimaryGreeting": "Premier message (message d'accueil principal)",
@@ -1325,7 +1325,8 @@
         "scene": "Scène :",
         "prompt": "Invite :",
         "reApplyTo": "Réappliquer à",
-        "savingCharacter": "Enregistrement du personnage…"
+        "savingCharacter": "Enregistrement du personnage…",
+        "estimatedSystemPromptTokens": "{{estimatedTokenCount}} / {{maximumTokens}} jetons estimés"
       },
       "action": {
         "remove": "Retirer",
@@ -4469,6 +4470,12 @@
       "legal": {
         "metadata": {
           "welcomeToVeniceForge": "Bienvenue à Venise Forge"
+        }
+      },
+      "promptLimits": {
+        "notification": {
+          "overLimit": "Le prompt système dépasse la limite de l’application. Taille de secours maximale : {{maximumCodePoints}} points de code Unicode. Détecté : {{codePointCount}} points de code Unicode ({{estimatedTokenCount}} jetons estimés). La politique est conçue pour environ {{maximumTokens}} jetons. Raccourcissez le prompt avant de continuer.",
+          "warning": "Le prompt système approche de la limite de l’application ({{estimatedTokenCount}} / {{maximumTokens}} jetons estimés ; {{codePointCount}} / {{maximumCodePoints}} points de code Unicode)."
         }
       }
     },

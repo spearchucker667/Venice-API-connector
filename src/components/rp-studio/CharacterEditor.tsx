@@ -55,9 +55,9 @@ import {
   saveCharacterCardDraft,
 } from "../../services/characterCards/characterCardDraftService";
 import {
+  checkSystemPromptLimit,
   countPromptCharacters,
-  getUserSystemPromptLimit,
-  USER_SYSTEM_PROMPT_LIMITS,
+  SYSTEM_PROMPT_LIMITS,
 } from "../../shared/promptLimits";
 import {
   applyCharacterCardProposal,
@@ -358,6 +358,7 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
       </div>
     );
   }
+  const draftSystemPromptLimitResult = checkSystemPromptLimit(draft.systemPrompt);
 
   const update = <K extends keyof CharacterCardV1>(
     key: K,
@@ -455,9 +456,14 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
       const current = draft.systemPrompt || "";
       const updated =
         mode === "append" && current ? `${current}\n\n${text}` : text;
-      if (countPromptCharacters(updated) > getUserSystemPromptLimit()) {
+      const promptLimitResult = checkSystemPromptLimit(updated);
+      if (promptLimitResult.isOverLimit) {
         setError(
-          `File content exceeds character system prompt limit (${getUserSystemPromptLimit()} chars).`,
+          promptLimitResult.message ??
+            tRuntime(
+              "runtimeGenerated.components.rpStudio.charactereditor.metadata.systemPromptExceedsApplicationLimit",
+              "System prompt exceeds the application limit.",
+            ),
         );
         return;
       }
@@ -1482,7 +1488,14 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               <div className="flex items-center justify-between mb-1">
                 <Label
                   htmlFor="card-system"
-                  hint={`${countPromptCharacters(draft.systemPrompt)}/${getUserSystemPromptLimit()}`}
+                  hint={tRuntime(
+                    "surface.componentsRpStudioCharactereditor.text.estimatedSystemPromptTokens",
+                    "{{estimatedTokenCount}} / {{maximumTokens}} estimated tokens",
+                    {
+                      estimatedTokenCount: draftSystemPromptLimitResult.estimatedTokenCount.toLocaleString(),
+                      maximumTokens: SYSTEM_PROMPT_LIMITS.maxTokens.toLocaleString(),
+                    },
+                  )}
                 >
                   <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.systemPrompt" />
                 </Label>
@@ -1493,24 +1506,25 @@ export function CharacterEditor({ cardId, onClose, disabled = false }: Props) {
               </div>
               <TextArea
                 value={draft.systemPrompt}
-                onChange={(v) => {
-                  if (countPromptCharacters(v) <= getUserSystemPromptLimit()) {
-                    update("systemPrompt", v);
-                  }
-                }}
+                onChange={(v) => update("systemPrompt", v)}
                 placeholder={tRuntime(
                   "runtimeGenerated.components.rpStudio.charactereditor.attribute.theCharacterSPersonaVoiceAndBehaviouralRules",
                 )}
                 rows={6}
-                maxLength={getUserSystemPromptLimit()}
                 ariaLabel="System prompt"
               />
-              {countPromptCharacters(draft.systemPrompt) >=
-                USER_SYSTEM_PROMPT_LIMITS.warningCharacters && (
+              {draftSystemPromptLimitResult.isWarning && (
                 <div className="text-[12px] text-amber-500 mt-1">
-                  <Trans i18nKey="common:surface.componentsRpStudioCharactereditor.text.approachingSystemPromptSizeLimit" />
-                  {countPromptCharacters(draft.systemPrompt)}/
-                  {getUserSystemPromptLimit()}).
+                  {tRuntime(
+                    "surface.componentsRpStudioCharactereditor.text.approachingSystemPromptSizeLimit",
+                    "System prompt size: {{estimatedTokenCount}} / {{maximumTokens}} estimated tokens; {{codePointCount}} / {{maximumCodePoints}} Unicode code points.",
+                    {
+                      estimatedTokenCount: draftSystemPromptLimitResult.estimatedTokenCount.toLocaleString(),
+                      maximumTokens: SYSTEM_PROMPT_LIMITS.maxTokens.toLocaleString(),
+                      codePointCount: countPromptCharacters(draft.systemPrompt).toLocaleString(),
+                      maximumCodePoints: SYSTEM_PROMPT_LIMITS.maxCodePoints.toLocaleString(),
+                    },
+                  )}
                 </div>
               )}
             </div>

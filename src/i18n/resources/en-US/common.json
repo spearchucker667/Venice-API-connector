@@ -651,7 +651,7 @@
         "loadFromLibrary": "Load from library..."
       },
       "text": {
-        "approachingSystemPromptSizeLimit": "Approaching system prompt size limit ("
+        "approachingSystemPromptSizeLimit": "System prompt size: {{estimatedTokenCount}} / {{maximumTokens}} estimated tokens; {{codePointCount}} / {{maximumCodePoints}} Unicode code points."
       }
     },
     "componentsDocumentsDocumentagentview": {
@@ -1406,6 +1406,7 @@
       "text": {
         "characterNotFound": "Character not found.",
         "estimatedTokens": "Estimated tokens:",
+        "estimatedSystemPromptTokens": "{{estimatedTokenCount}} / {{maximumTokens}} estimated tokens",
         "rawEstimate": "Raw estimate",
         "outputReserve": "· output reserve",
         "editWithCharacterCreator": "Edit with Character Creator",
@@ -1423,7 +1424,7 @@
         "personality": "Personality",
         "scenario": "Scenario",
         "systemPrompt": "System prompt",
-        "approachingSystemPromptSizeLimit": "Approaching system prompt size limit (",
+        "approachingSystemPromptSizeLimit": "System prompt size: {{estimatedTokenCount}} / {{maximumTokens}} estimated tokens; {{codePointCount}} / {{maximumCodePoints}} Unicode code points.",
         "postHistoryInstructions": "Post-history instructions",
         "instructions": "Instructions",
         "firstMessagePrimaryGreeting": "First message (Primary Greeting)",
@@ -4484,6 +4485,12 @@
       }
     },
     "shared": {
+      "promptLimits": {
+        "notification": {
+          "overLimit": "System prompt exceeds the application limit. Maximum fallback size: {{maximumCodePoints}} Unicode code points. Detected: {{codePointCount}} Unicode code points ({{estimatedTokenCount}} estimated tokens). The system-prompt policy is designed for approximately {{maximumTokens}} tokens. Please shorten the prompt before continuing.",
+          "warning": "System prompt is approaching the application limit ({{estimatedTokenCount}} / {{maximumTokens}} estimated tokens; {{codePointCount}} / {{maximumCodePoints}} Unicode code points)."
+        }
+      },
       "legal": {
         "metadata": {
           "welcomeToVeniceForge": "Welcome to Venice Forge"

@@ -526,7 +526,7 @@
         "loadFromLibrary": "Ladda från bibliotek..."
       },
       "text": {
-        "approachingSystemPromptSizeLimit": "Närmar sig storleksgräns för systemprompt ("
+        "approachingSystemPromptSizeLimit": "Systempromptens storlek: {{estimatedTokenCount}} / {{maximumTokens}} uppskattade token; {{codePointCount}} / {{maximumCodePoints}} Unicode-kodpunkter."
       }
     },
     "componentsDocumentsDocumentagentview": {
@@ -1204,7 +1204,7 @@
         "personality": "Personlighet",
         "scenario": "Scenario",
         "systemPrompt": "Systemprompt",
-        "approachingSystemPromptSizeLimit": "Närmar sig storleksgräns för systemprompt (",
+        "approachingSystemPromptSizeLimit": "Systempromptens storlek: {{estimatedTokenCount}} / {{maximumTokens}} uppskattade token; {{codePointCount}} / {{maximumCodePoints}} Unicode-kodpunkter.",
         "postHistoryInstructions": "Post-historia instruktioner",
         "instructions": "Instruktioner",
         "firstMessagePrimaryGreeting": "Första meddelandet (Primär hälsning)",
@@ -1289,7 +1289,8 @@
         "scene": "Skapa 0-scenario",
         "prompt": "Scen:",
         "reApplyTo": "Nästa:",
-        "savingCharacter": "Ansök igen på"
+        "savingCharacter": "Ansök igen på",
+        "estimatedSystemPromptTokens": "{{estimatedTokenCount}} / {{maximumTokens}} uppskattade token"
       },
       "action": {
         "remove": "Ta bort",
@@ -4469,6 +4470,12 @@
       "legal": {
         "metadata": {
           "welcomeToVeniceForge": "Välkommen till Venice Forge"
+        }
+      },
+      "promptLimits": {
+        "notification": {
+          "overLimit": "Systemprompten överskrider programmets gräns. Största reservstorlek: {{maximumCodePoints}} Unicode-kodpunkter. Upptäckt: {{codePointCount}} Unicode-kodpunkter ({{estimatedTokenCount}} uppskattade token). Policyn är utformad för cirka {{maximumTokens}} token. Korta prompten innan du fortsätter.",
+          "warning": "Systemprompten närmar sig programmets gräns ({{estimatedTokenCount}} / {{maximumTokens}} uppskattade token; {{codePointCount}} / {{maximumCodePoints}} Unicode-kodpunkter)."
         }
       }
     },

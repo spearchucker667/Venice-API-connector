@@ -356,6 +356,12 @@ describe('chat-store desktopBridge routing', () => {
     expect(useChatStore.getState().getActiveConversation()).toBeUndefined()
   })
 
+  it('preserves an oversized system prompt so the user can edit it down', () => {
+    const oversized = 'x'.repeat(32_769)
+    useChatStore.getState().setSystemPrompt(oversized)
+    expect(useChatStore.getState().systemPrompt).toBe(oversized)
+  })
+
   it('handles writeConversation fallback and failures', async () => {
     conversationSaveMock.mockResolvedValueOnce({ ok: false, error: 'fail1' })
     chatSaveMock.mockResolvedValueOnce({ ok: false, error: 'fail2' })

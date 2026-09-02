@@ -87,10 +87,13 @@ describe("configSchema", () => {
       expect(result.redactedFields).not.toContain("secrets.venice_api_key");
     });
 
-    it("truncates an oversized system_prompt", () => {
+    it("preserves an oversized system_prompt intact and reports its invalid state", () => {
       const long = "a".repeat(40000);
       const result = validateConfig({ version: 1, chat: { system_prompt: long } });
-      expect(result.config.chat.system_prompt.length).toBeLessThanOrEqual(32768);
+      expect(result.config.chat.system_prompt).toBe(long);
+      expect(result.warnings).toContainEqual(
+        expect.objectContaining({ field: "chat.system_prompt", severity: "error" }),
+      );
     });
 
     it("falls back to a valid default for unknown version", () => {

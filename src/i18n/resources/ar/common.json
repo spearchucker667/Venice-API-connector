@@ -562,7 +562,7 @@
         "loadFromLibrary": "التحميل من المكتبة..."
       },
       "text": {
-        "approachingSystemPromptSizeLimit": "يقترب الحد الأقصى لحجم موجه النظام ("
+        "approachingSystemPromptSizeLimit": "حجم مطالبة النظام: {{estimatedTokenCount}} / {{maximumTokens}} رموز تقديرية؛ {{codePointCount}} / {{maximumCodePoints}} نقاط ترميز Unicode."
       }
     },
     "componentsDocumentsDocumentagentview": {
@@ -1240,7 +1240,7 @@
         "tags": "العلامات",
         "personality": "الشخصية",
         "systemPrompt": "موجه النظام",
-        "approachingSystemPromptSizeLimit": "يقترب من الحد الأقصى لحجم موجه النظام (",
+        "approachingSystemPromptSizeLimit": "حجم مطالبة النظام: {{estimatedTokenCount}} / {{maximumTokens}} رموز تقديرية؛ {{codePointCount}} / {{maximumCodePoints}} نقاط ترميز Unicode.",
         "postHistoryInstructions": "تعليمات ما بعد السجل",
         "instructions": "التعليمات",
         "firstMessagePrimaryGreeting": "الرسالة الأولى (تحية أساسية)",
@@ -1325,7 +1325,8 @@
         "scene": "المشهد:",
         "prompt": "المطالبة:",
         "reApplyTo": "إعادة التقديم على",
-        "savingCharacter": "حفظ الحرف..."
+        "savingCharacter": "حفظ الحرف...",
+        "estimatedSystemPromptTokens": "{{estimatedTokenCount}} / {{maximumTokens}} رموز تقديرية"
       },
       "action": {
         "remove": "إزالة",
@@ -4469,6 +4470,12 @@
       "legal": {
         "metadata": {
           "welcomeToVeniceForge": "مرحبا بكم في البندقية فورج"
+        }
+      },
+      "promptLimits": {
+        "notification": {
+          "overLimit": "تتجاوز مطالبة النظام حد التطبيق. الحد الأقصى للحجم الاحتياطي: {{maximumCodePoints}} نقطة ترميز Unicode. تم اكتشاف: {{codePointCount}} نقطة ترميز Unicode ({{estimatedTokenCount}} رمزًا تقديريًا). صُممت السياسة لنحو {{maximumTokens}} رمز. يرجى تقصير المطالبة قبل المتابعة.",
+          "warning": "تقترب مطالبة النظام من حد التطبيق ({{estimatedTokenCount}} / {{maximumTokens}} رموز تقديرية؛ {{codePointCount}} / {{maximumCodePoints}} نقاط ترميز Unicode)."
         }
       }
     },

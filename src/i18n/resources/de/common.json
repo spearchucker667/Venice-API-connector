@@ -526,7 +526,7 @@
         "loadFromLibrary": "Aus Bibliothek laden..."
       },
       "text": {
-        "approachingSystemPromptSizeLimit": "Nähert sich der Größenbeschränkung für Systemeingabeaufforderungen ("
+        "approachingSystemPromptSizeLimit": "Größe des System-Prompts: {{estimatedTokenCount}} / {{maximumTokens}} geschätzte Token; {{codePointCount}} / {{maximumCodePoints}} Unicode-Codepunkte."
       }
     },
     "componentsDocumentsDocumentagentview": {
@@ -1194,7 +1194,7 @@
         "tags": "Schlagworte",
         "personality": "Persönlichkeit",
         "systemPrompt": "Systemaufforderung",
-        "approachingSystemPromptSizeLimit": "Die Größenbeschränkung für Systemaufforderungen nähert sich (",
+        "approachingSystemPromptSizeLimit": "Größe des System-Prompts: {{estimatedTokenCount}} / {{maximumTokens}} geschätzte Token; {{codePointCount}} / {{maximumCodePoints}} Unicode-Codepunkte.",
         "postHistoryInstructions": "Post-History-Anweisungen",
         "instructions": "Anweisungen",
         "firstMessagePrimaryGreeting": "Erste Nachricht (primäre Begrüßung)",
@@ -1279,7 +1279,8 @@
         "scene": "Szene:",
         "prompt": "Eingabeaufforderung:",
         "reApplyTo": "Erneut anwenden auf",
-        "savingCharacter": "Zeichen speichern…"
+        "savingCharacter": "Zeichen speichern…",
+        "estimatedSystemPromptTokens": "{{estimatedTokenCount}} / {{maximumTokens}} geschätzte Token"
       },
       "action": {
         "remove": "Entfernen",
@@ -4469,6 +4470,12 @@
       "legal": {
         "metadata": {
           "welcomeToVeniceForge": "Willkommen in Venice Forge"
+        }
+      },
+      "promptLimits": {
+        "notification": {
+          "overLimit": "Der System-Prompt überschreitet das Anwendungslimit. Maximale Rückfallgröße: {{maximumCodePoints}} Unicode-Codepunkte. Erkannt: {{codePointCount}} Unicode-Codepunkte ({{estimatedTokenCount}} geschätzte Token). Die Richtlinie ist für ungefähr {{maximumTokens}} Token ausgelegt. Kürzen Sie den Prompt, bevor Sie fortfahren.",
+          "warning": "Der System-Prompt nähert sich dem Anwendungslimit ({{estimatedTokenCount}} / {{maximumTokens}} geschätzte Token; {{codePointCount}} / {{maximumCodePoints}} Unicode-Codepunkte)."
         }
       }
     },

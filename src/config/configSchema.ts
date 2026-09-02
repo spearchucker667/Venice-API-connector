@@ -16,6 +16,7 @@ import { translateRuntime } from "../i18n/runtimeTranslator";
  *     warning so the UI can surface parse problems.
  */
 import { DEFAULT_PROMPT_ENHANCER_MODEL } from "../constants/venice";
+import { checkSystemPromptLimit } from "../shared/promptLimits";
 import { isValidColorValue } from "../theme/validateColor";
 
 /** Current schema version. Bumping this is a breaking change. */
@@ -258,7 +259,6 @@ const MAX_TOKENS_MAX = 200000;
 const KEY_MAX_LENGTH = 512;
 const THEME_NAME_MAX_LENGTH = 128;
 const PATH_MAX_LENGTH = 4096;
-const SYSTEM_PROMPT_MAX_LENGTH = 32768;
 const ENHANCER_PROMPT_MAX_LENGTH = 4096;
 
 /** Returns true if the input is a local filesystem path (no scheme). */
@@ -623,12 +623,20 @@ export function validateConfig(raw: unknown): ConfigValidationResult {
     typeof r.chat === "object" && r.chat !== null
       ? (r.chat as Record<string, unknown>)
       : {};
+  const rawSystemPrompt =
+    typeof chatRaw.system_prompt === "string" ? chatRaw.system_prompt : "";
+  const systemPromptResult = checkSystemPromptLimit(rawSystemPrompt);
+  if (systemPromptResult.isOverLimit) {
+    warnings.push({
+      field: "chat.system_prompt",
+      message: systemPromptResult.message as string,
+      severity: "error",
+    });
+  }
   const chat: YamlChat = {
-    system_prompt: clampString(
-      chatRaw.system_prompt,
-      SYSTEM_PROMPT_MAX_LENGTH,
-      "",
-    ),
+    // Preserve imported content intact so users can edit an invalid legacy
+    // prompt down; request boundaries still prevent it from being sent.
+    system_prompt: rawSystemPrompt,
     temperature: clampNumber(
       chatRaw.temperature,
       TEMPERATURE_MIN,

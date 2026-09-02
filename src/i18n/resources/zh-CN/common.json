@@ -562,7 +562,7 @@
         "loadFromLibrary": "从库加载..."
       },
       "text": {
-        "approachingSystemPromptSizeLimit": "接近系统提示大小限制（"
+        "approachingSystemPromptSizeLimit": "系统提示大小：估算令牌 {{estimatedTokenCount}} / {{maximumTokens}}；Unicode 码点 {{codePointCount}} / {{maximumCodePoints}}。"
       }
     },
     "componentsDocumentsDocumentagentview": {
@@ -1240,7 +1240,7 @@
         "tags": "标签",
         "personality": "个性",
         "systemPrompt": "系统提示",
-        "approachingSystemPromptSizeLimit": "接近系统提示大小限制 (",
+        "approachingSystemPromptSizeLimit": "系统提示大小：估算令牌 {{estimatedTokenCount}} / {{maximumTokens}}；Unicode 码点 {{codePointCount}} / {{maximumCodePoints}}。",
         "postHistoryInstructions": "历史记录说明",
         "instructions": "说明",
         "firstMessagePrimaryGreeting": "第一条消息（主要问候语）",
@@ -1325,7 +1325,8 @@
         "scene": "场景：",
         "prompt": "提示：",
         "reApplyTo": "重新申请",
-        "savingCharacter": "保存角色…"
+        "savingCharacter": "保存角色…",
+        "estimatedSystemPromptTokens": "估算令牌 {{estimatedTokenCount}} / {{maximumTokens}}"
       },
       "action": {
         "remove": "移除",
@@ -4469,6 +4470,12 @@
       "legal": {
         "metadata": {
           "welcomeToVeniceForge": "欢迎来到威尼斯锻造厂"
+        }
+      },
+      "promptLimits": {
+        "notification": {
+          "overLimit": "系统提示超出应用限制。最大回退大小：{{maximumCodePoints}} 个 Unicode 码点。检测到：{{codePointCount}} 个 Unicode 码点（估算 {{estimatedTokenCount}} 个令牌）。系统提示策略按约 {{maximumTokens}} 个令牌设计。请先缩短提示再继续。",
+          "warning": "系统提示接近应用限制（估算令牌 {{estimatedTokenCount}} / {{maximumTokens}}；Unicode 码点 {{codePointCount}} / {{maximumCodePoints}}）。"
         }
       }
     },

@@ -6,6 +6,7 @@ import {
   getCharacterTokenBudget,
   RP_MODEL_CONTEXT_LIMIT,
   RP_RESERVED_OUTPUT_TOKENS,
+  validateCharacterForPersistence,
 } from './rpTokenCounter'
 
 const card: CharacterCardV1 = {
@@ -58,5 +59,13 @@ describe('RP token counting', () => {
     expect(budget.overLimit).toBe(true)
     expect(budget.remainingInputTokens).toBeLessThan(0)
     expect(budget.compiled.isEstimate).toBe(true)
+  })
+
+  it('rejects a character whose system prompt exceeds the static application policy', () => {
+    const result = validateCharacterForPersistence({
+      ...card,
+      systemPrompt: 'x'.repeat(32_769),
+    })
+    expect(result).toMatchObject({ ok: false, message: expect.stringContaining('32,768 Unicode code points') })
   })
 })

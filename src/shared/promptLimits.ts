@@ -1,36 +1,39 @@
-// Phase 4.1 — User-created system prompt budgets are expressed in Unicode
-// code points (per work-order §4.1, §4.3). The historically-binary rounded
-// 8192 / 12288 values conflated 8 KiB with 8 000 characters — the user-facing
-// display reads "7,942 / 12,000 characters", not "7,942 / 12 288 code points".
-export const SYSTEM_PROMPT_WARNING_THRESHOLD = 8_000;
-export const SYSTEM_PROMPT_HARD_LIMIT = 12_000;
-export const SYSTEM_PROMPT_LARGE_CONTEXT_OVERRIDE = 16_000;
+import { translateRuntime } from "../i18n/runtimeTranslator";
 
-// Phase 4.2 — dynamic defensive limit derived from the active model's context.
-// Reserve 10 % of the context window × 4 chars/token for the user-tunable system
-// prompt slot. The raw reservation is clamped to [4 000, 12 000] unless the
-// caller invokes the explicit large-context override (16 000 — Phase 4.2
-// requires a flagged large-context model and explicit user opt-in; the override
-// path must be invoked from a UI boundary that already shows the warning).
-export const USER_SYSTEM_PROMPT_DYNAMIC_MIN = 4_000;
-export const USER_SYSTEM_PROMPT_DYNAMIC_MAX = 12_000;
-export const SYSTEM_PROMPT_CONTEXT_CHAR_PER_TOKEN = 4;
+/** Static application-wide policy for user-authored system prompts. */
+export const SYSTEM_PROMPT_LIMITS = {
+  maxTokens: 8_192,
+  warningTokens: 6_144,
+  maxCodePoints: 32_768,
+  warningCodePoints: 24_576,
+} as const;
+
+export const SYSTEM_PROMPT_MAX_TOKENS = SYSTEM_PROMPT_LIMITS.maxTokens;
+export const SYSTEM_PROMPT_WARNING_TOKENS = SYSTEM_PROMPT_LIMITS.warningTokens;
+export const SYSTEM_PROMPT_MAX_CODE_POINTS = SYSTEM_PROMPT_LIMITS.maxCodePoints;
+export const SYSTEM_PROMPT_WARNING_CODE_POINTS = SYSTEM_PROMPT_LIMITS.warningCodePoints;
+
+export interface EstimatedTokenCount {
+  count: number;
+  method: "approximation";
+  isEstimate: true;
+}
 
 export interface PromptLimitResult {
   codePointCount: number;
+  estimatedTokenCount: number;
+  isTokenCountEstimate: true;
   isWarning: boolean;
   isOverLimit: boolean;
+  reason?: "token-limit" | "code-point-limit";
   message?: string;
 }
 
-export interface DynamicLimitOptions {
-  /** Approved by an explicit user-driven boundary for a flagged large-context model. */
-  allowLargeContextOverride?: boolean;
-}
-
+/** Counts Unicode code points without conflating surrogate pairs with two characters. */
 export function countCodePoints(text: string): number {
-  const normalized = text.normalize('NFC');
-  return Array.from(normalized).length;
+  let count = 0;
+  for (const _codePoint of text) count += 1;
+  return count;
 }
 
 export function countPromptCharacters(text: string): number {
@@ -38,77 +41,114 @@ export function countPromptCharacters(text: string): number {
 }
 
 /**
- * Dynamic defensive user-prompt limit based on the live model's context
- * window. The caller supplies the available token count so the editor can warn
- * if the user's selection is consuming more or less of the available slot than
- * the configured product baseline suggests.
+ * Repository-standard deterministic token estimate. It intentionally reports
+ * itself as an approximation because Venice models do not share one tokenizer.
  */
-export function getUserSystemPromptLimit(
-  availableContextTokens?: number,
-  options: DynamicLimitOptions = {},
-): number {
-  if (typeof availableContextTokens !== "number" || !Number.isFinite(availableContextTokens) || availableContextTokens <= 0) {
-    return SYSTEM_PROMPT_HARD_LIMIT;
-  }
-
-  const reservation = Math.floor(availableContextTokens * 0.1 * SYSTEM_PROMPT_CONTEXT_CHAR_PER_TOKEN);
-  const clamped = Math.min(
-    Math.max(reservation, USER_SYSTEM_PROMPT_DYNAMIC_MIN),
-    USER_SYSTEM_PROMPT_DYNAMIC_MAX,
-  );
-
-  if (options.allowLargeContextOverride && reservation > USER_SYSTEM_PROMPT_DYNAMIC_MAX) {
-    return Math.min(reservation, SYSTEM_PROMPT_LARGE_CONTEXT_OVERRIDE);
-  }
-
-  return clamped;
+export function estimateSystemPromptTokens(text: string): EstimatedTokenCount {
+  const codePointCount = countCodePoints(text);
+  return {
+    count: codePointCount === 0 ? 0 : Math.max(1, Math.ceil(codePointCount / 4)),
+    method: "approximation",
+    isEstimate: true,
+  };
 }
 
-export function checkSystemPromptLimit(systemPrompt: string, maximumCharacters: number = SYSTEM_PROMPT_HARD_LIMIT): PromptLimitResult {
+export function checkSystemPromptLimit(systemPrompt: string): PromptLimitResult {
   const codePointCount = countCodePoints(systemPrompt);
-  const isWarning = codePointCount >= SYSTEM_PROMPT_WARNING_THRESHOLD;
-  const isOverLimit = codePointCount > maximumCharacters;
+  const estimatedTokenCount =
+    codePointCount === 0 ? 0 : Math.max(1, Math.ceil(codePointCount / 4));
+  const exceedsCodePoints = codePointCount > SYSTEM_PROMPT_MAX_CODE_POINTS;
+  const exceedsEstimatedTokens = estimatedTokenCount > SYSTEM_PROMPT_MAX_TOKENS;
+  const reason = exceedsCodePoints
+    ? "code-point-limit"
+    : exceedsEstimatedTokens
+      ? "token-limit"
+      : undefined;
+  const isOverLimit = reason !== undefined;
+  const isWarning =
+    codePointCount >= SYSTEM_PROMPT_WARNING_CODE_POINTS ||
+    estimatedTokenCount >= SYSTEM_PROMPT_WARNING_TOKENS;
 
   let message: string | undefined;
   if (isOverLimit) {
-    message = `System prompt exceeds the maximum allowed length of ${maximumCharacters.toLocaleString("en-US")} Unicode code points (${codePointCount.toLocaleString("en-US")} detected). Please shorten the prompt.`;
+    message = translateRuntime(
+      "runtimeGenerated.shared.promptLimits.notification.overLimit",
+      "System prompt exceeds the application limit. Maximum fallback size: {{maximumCodePoints}} Unicode code points. Detected: {{codePointCount}} Unicode code points ({{estimatedTokenCount}} estimated tokens). The system-prompt policy is designed for approximately {{maximumTokens}} tokens. Please shorten the prompt before continuing.",
+      {
+        maximumCodePoints: SYSTEM_PROMPT_MAX_CODE_POINTS.toLocaleString("en-US"),
+        codePointCount: codePointCount.toLocaleString("en-US"),
+        estimatedTokenCount: estimatedTokenCount.toLocaleString("en-US"),
+        maximumTokens: SYSTEM_PROMPT_MAX_TOKENS.toLocaleString("en-US"),
+      },
+    );
   } else if (isWarning) {
-    message = `System prompt is approaching the limit (${codePointCount.toLocaleString("en-US")} / ${maximumCharacters.toLocaleString("en-US")} code points). Consider shortening to avoid truncation.`;
+    message = translateRuntime(
+      "runtimeGenerated.shared.promptLimits.notification.warning",
+      "System prompt is approaching the application limit ({{estimatedTokenCount}} / {{maximumTokens}} estimated tokens; {{codePointCount}} / {{maximumCodePoints}} Unicode code points).",
+      {
+        estimatedTokenCount: estimatedTokenCount.toLocaleString("en-US"),
+        maximumTokens: SYSTEM_PROMPT_MAX_TOKENS.toLocaleString("en-US"),
+        codePointCount: codePointCount.toLocaleString("en-US"),
+        maximumCodePoints: SYSTEM_PROMPT_MAX_CODE_POINTS.toLocaleString("en-US"),
+      },
+    );
   }
 
   return {
     codePointCount,
+    estimatedTokenCount,
+    isTokenCountEstimate: true,
     isWarning,
     isOverLimit,
+    reason,
     message,
   };
 }
 
-export function enforceSystemPromptLimit(systemPrompt: string, maximumCharacters: number = SYSTEM_PROMPT_HARD_LIMIT): string {
-  const result = checkSystemPromptLimit(systemPrompt, maximumCharacters);
-  if (result.isOverLimit) {
-    throw new Error(result.message);
+/** Validates the complete system-message block so split messages cannot bypass policy. */
+export function checkSystemPromptMessages(messages: unknown): PromptLimitResult | undefined {
+  if (!Array.isArray(messages)) return undefined;
+  const systemParts: string[] = [];
+  for (const message of messages) {
+    if (
+      message &&
+      typeof message === "object" &&
+      (message as Record<string, unknown>).role === "system" &&
+      typeof (message as Record<string, unknown>).content === "string"
+    ) {
+      systemParts.push((message as Record<string, unknown>).content as string);
+    }
   }
+  return systemParts.length > 0
+    ? checkSystemPromptLimit(systemParts.join("\n\n"))
+    : undefined;
+}
+
+export function enforceSystemPromptLimit(systemPrompt: string): string {
+  const result = checkSystemPromptLimit(systemPrompt);
+  if (result.isOverLimit) throw new Error(result.message);
   return systemPrompt;
 }
 
-// Backward compatibility exports
-export const USER_SYSTEM_PROMPT_LIMITS = {
-  warningCharacters: SYSTEM_PROMPT_WARNING_THRESHOLD,
-  maxCharacters: SYSTEM_PROMPT_HARD_LIMIT,
-  largeContextOverride: SYSTEM_PROMPT_LARGE_CONTEXT_OVERRIDE,
-} as const;
-
-export function validateUserSystemPrompt(
-  systemPrompt: string,
-  maximumCharacters: number = SYSTEM_PROMPT_HARD_LIMIT,
-): { valid: boolean; characterCount?: number; warning?: boolean; maximumCharacters?: number; message?: string } {
-  const result = checkSystemPromptLimit(systemPrompt, maximumCharacters);
+export function validateUserSystemPrompt(systemPrompt: string): {
+  valid: boolean;
+  characterCount: number;
+  estimatedTokenCount: number;
+  warning: boolean;
+  maximumCharacters: number;
+  maximumTokens: number;
+  reason?: "token-limit" | "code-point-limit";
+  message?: string;
+} {
+  const result = checkSystemPromptLimit(systemPrompt);
   return {
     valid: !result.isOverLimit,
     characterCount: result.codePointCount,
+    estimatedTokenCount: result.estimatedTokenCount,
     warning: result.isWarning,
-    maximumCharacters,
+    maximumCharacters: SYSTEM_PROMPT_MAX_CODE_POINTS,
+    maximumTokens: SYSTEM_PROMPT_MAX_TOKENS,
+    reason: result.reason,
     message: result.message,
   };
 }

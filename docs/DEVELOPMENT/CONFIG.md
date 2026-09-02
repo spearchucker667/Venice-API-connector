@@ -75,7 +75,7 @@ models:
   upscale: ""
 
 chat:
-  system_prompt: ""               # max 32 KiB
+  system_prompt: ""               # 8,192 estimated-token max; 32,768-code-point fallback ceiling
   temperature: 0.7                # clamped to [0, 2]
   top_p: 1                        # clamped to [0, 1]
   max_tokens: 4096                # clamped to [1, 200000]

@@ -745,10 +745,12 @@ After successful retry, replace volatile renderer state with the canonical stabl
 
 * The immutable tool/runtime knowledge layer remains the first outbound system layer.
 * Date/time context belongs in the designated runtime layer, not user-editable prompt text.
-* Use the centralized user-system-prompt policy:
-  * warning threshold: `8,000` characters,
-  * normal hard maximum: `12,000`,
-  * explicit supported-model override ceiling: `16,000`.
+* Use the centralized static user-system-prompt policy from `src/shared/promptLimits.ts`:
+  * warning threshold: `6,144` estimated tokens,
+  * application maximum: `8,192` estimated tokens,
+  * fallback warning threshold: `24,576` Unicode code points,
+  * fallback hard ceiling: `32,768` Unicode code points.
+* Do not derive the user-system-prompt maximum from model context metadata or restore the removed large-context override. Total request-context budgeting remains model-specific.
 * Changes to prompt ordering, prompt limits, provider system-prompt inclusion, or model-aware prompt construction require focused tests.
 * Use Traffic Inspector or equivalent trusted diagnostics when required to verify the actual outbound composition without leaking secret/user content into logs.
 

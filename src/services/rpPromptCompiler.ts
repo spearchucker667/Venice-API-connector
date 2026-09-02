@@ -1,4 +1,5 @@
 import { translateRuntime } from "../i18n/runtimeTranslator";
+import { SYSTEM_PROMPT_MAX_CODE_POINTS } from "../shared/promptLimits";
 /**
  * @fileoverview Phase 2F — RP Prompt Stack Compiler.
  *
@@ -124,7 +125,7 @@ export interface RpCompileInput {
   characterSystemPromptBehavior?:
     "respect-card" | "prefer-global" | "append-global" | "prepend-global";
   currentUserMessage: string;
-  /** Soft cap on the total system block (chars). Defaults to 16_000. */
+  /** Soft cap on the total system block (Unicode code points). */
   systemBlockBudget?: number;
   /** Max number of recent messages. Defaults to 8. */
   recentMessageBudget?: number;
@@ -177,7 +178,7 @@ export interface RpCompileResult {
   budgetExceeded: boolean;
 }
 
-const DEFAULT_SYSTEM_BUDGET = 16_000;
+const DEFAULT_SYSTEM_BUDGET = SYSTEM_PROMPT_MAX_CODE_POINTS;
 const DEFAULT_RECENT_BUDGET = 8;
 
 /** Stable section id factory. */

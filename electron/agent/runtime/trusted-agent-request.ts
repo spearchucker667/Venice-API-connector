@@ -1,6 +1,6 @@
 import { AppAgentRuntimeContract, TrustedRuntimeLayer, ToolRuntimeLayer, AppAgentRequest, AgentRuntimeLayer } from '../../../src/shared/agentRuntimeContracts';
 import { getTimezoneOffsetMinutes, formatISO } from '../../services/timezoneService';
-import { checkSystemPromptLimit, SYSTEM_PROMPT_HARD_LIMIT } from '../../../src/shared/promptLimits';
+import { checkSystemPromptLimit } from '../../../src/shared/promptLimits';
 
 /** The trusted layer is priority 0 and immutable. Once it is finalized in
  *  the layer list, the contract forbids any additional layer below the
@@ -74,7 +74,7 @@ export function buildToolRuntimeLayer(tools: string[]): ToolRuntimeLayer {
 function validateSystemPrompt(systemPrompt: string): void {
   const result = checkSystemPromptLimit(systemPrompt);
   if (result.isOverLimit) {
-    throw new Error(`System prompt exceeds maximum allowed length of ${SYSTEM_PROMPT_HARD_LIMIT} Unicode code points (${result.codePointCount} detected).`);
+    throw new Error(result.message);
   }
 }
 

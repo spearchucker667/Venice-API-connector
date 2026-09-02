@@ -6,9 +6,8 @@ import { useSettingsStore } from "../../stores/settings-store";
 import { uiSoundController } from "../../services/uiSoundController";
 import { cn } from "../../lib/utils";
 import {
-  countPromptCharacters,
-  getUserSystemPromptLimit,
-  USER_SYSTEM_PROMPT_LIMITS,
+  checkSystemPromptLimit,
+  SYSTEM_PROMPT_LIMITS,
 } from "../../shared/promptLimits";
 import { Trans, useTranslation } from "react-i18next";
 import { supportsFunctionCalling } from "../../shared/modelCapabilities";
@@ -86,6 +85,7 @@ export function VeniceParams() {
   const toolsSupported = supportsFunctionCalling(getModelById(chatModel ?? ""));
 
   const isAutoRead = activeConv?.metadata?.autoReadEnabled ?? globalAutoRead;
+  const systemPromptLimitResult = checkSystemPromptLimit(systemPrompt);
 
   const toggleAutoRead = () => {
     if (activeConv) {
@@ -261,22 +261,19 @@ export function VeniceParams() {
             </div>
             <textarea
               value={systemPrompt}
-              onChange={(e) => {
-                const val = e.target.value;
-                if (countPromptCharacters(val) <= getUserSystemPromptLimit()) {
-                  setSystemPrompt(val);
-                }
-              }}
+              onChange={(e) => setSystemPrompt(e.target.value)}
               placeholder={t("controls.systemPromptPlaceholder")}
               rows={2}
               className="w-full bg-surface-muted border border-border rounded-lg px-3 py-2 text-[15px] text-text-secondary outline-none resize-none placeholder:text-text-muted/30 focus:border-border-strong transition-colors"
             />
-            {countPromptCharacters(systemPrompt) >=
-              USER_SYSTEM_PROMPT_LIMITS.warningCharacters && (
+            {systemPromptLimitResult.isWarning && (
               <div className="text-[12px] text-amber-500 mt-1">
-                <Trans i18nKey="common:surface.componentsChatVeniceParams.text.approachingSystemPromptSizeLimit" />
-                {countPromptCharacters(systemPrompt)}/
-                {getUserSystemPromptLimit()}).
+                {t("common:surface.componentsChatVeniceParams.text.approachingSystemPromptSizeLimit", {
+                  estimatedTokenCount: systemPromptLimitResult.estimatedTokenCount.toLocaleString(),
+                  maximumTokens: SYSTEM_PROMPT_LIMITS.maxTokens.toLocaleString(),
+                  codePointCount: systemPromptLimitResult.codePointCount.toLocaleString(),
+                  maximumCodePoints: SYSTEM_PROMPT_LIMITS.maxCodePoints.toLocaleString(),
+                })}
               </div>
             )}
           </div>

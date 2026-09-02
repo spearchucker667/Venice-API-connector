@@ -562,7 +562,7 @@
         "loadFromLibrary": "Cargar desde biblioteca..."
       },
       "text": {
-        "approachingSystemPromptSizeLimit": "Se acerca el límite de tamaño del mensaje del sistema ("
+        "approachingSystemPromptSizeLimit": "Tamaño del prompt del sistema: {{estimatedTokenCount}} / {{maximumTokens}} tokens estimados; {{codePointCount}} / {{maximumCodePoints}} puntos de código Unicode."
       }
     },
     "componentsDocumentsDocumentagentview": {
@@ -1240,7 +1240,7 @@
         "tags": "Etiquetas",
         "personality": "Personalidad",
         "systemPrompt": "Mensaje del sistema",
-        "approachingSystemPromptSizeLimit": "Se acerca el límite de tamaño del mensaje del sistema (",
+        "approachingSystemPromptSizeLimit": "Tamaño del prompt del sistema: {{estimatedTokenCount}} / {{maximumTokens}} tokens estimados; {{codePointCount}} / {{maximumCodePoints}} puntos de código Unicode.",
         "postHistoryInstructions": "Instrucciones posteriores al historial",
         "instructions": "Instrucciones",
         "firstMessagePrimaryGreeting": "Primer mensaje (saludo principal)",
@@ -1325,7 +1325,8 @@
         "scene": "Escena:",
         "prompt": "Mensaje:",
         "reApplyTo": "Volver a aplicar a",
-        "savingCharacter": "Guardando carácter…"
+        "savingCharacter": "Guardando carácter…",
+        "estimatedSystemPromptTokens": "{{estimatedTokenCount}} / {{maximumTokens}} tokens estimados"
       },
       "action": {
         "remove": "Quitar",
@@ -4469,6 +4470,12 @@
       "legal": {
         "metadata": {
           "welcomeToVeniceForge": "Bienvenido a Forja de Venecia"
+        }
+      },
+      "promptLimits": {
+        "notification": {
+          "overLimit": "El prompt del sistema supera el límite de la aplicación. Tamaño de reserva máximo: {{maximumCodePoints}} puntos de código Unicode. Detectado: {{codePointCount}} puntos de código Unicode ({{estimatedTokenCount}} tokens estimados). La política está diseñada para aproximadamente {{maximumTokens}} tokens. Acorte el prompt antes de continuar.",
+          "warning": "El prompt del sistema se acerca al límite de la aplicación ({{estimatedTokenCount}} / {{maximumTokens}} tokens estimados; {{codePointCount}} / {{maximumCodePoints}} puntos de código Unicode)."
         }
       }
     },

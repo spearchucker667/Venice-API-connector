@@ -53,6 +53,19 @@ describe("Electron IPC validation", () => {
     ).toThrow(/too large/i);
   });
 
+  it("enforces the shared static system-prompt policy at the trusted boundary", () => {
+    const request = (content: string) => ({
+      endpoint: "/chat/completions",
+      method: "POST",
+      body: { messages: [{ role: "system", content }] },
+    });
+
+    expect(() => validateVeniceIpcRequest(request("a".repeat(32_768)))).not.toThrow();
+    expect(() => validateVeniceIpcRequest(request("a".repeat(32_769)))).toThrow(
+      /32,768 Unicode code points.*approximately 8,192 tokens/i,
+    );
+  });
+
   /** Rejects GET bodies, absolute URLs, and forbidden headers. */
   it("rejects GET bodies, absolute urls and forbidden headers", () => {
     expect(() =>

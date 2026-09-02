@@ -17,7 +17,7 @@ import {
 import { VENICE_API_HOST } from "../../src/shared/apiConfig";
 import type { MutationOrigin } from "../../src/types/sync";
 import { assertValidProfileStorageId } from "../../src/utils/profileIdValidation";
-import { countPromptCharacters, SYSTEM_PROMPT_LARGE_CONTEXT_OVERRIDE } from "../../src/shared/promptLimits";
+import { checkSystemPromptMessages } from "../../src/shared/promptLimits";
 import { PROVIDER_REGISTRY } from "../../src/types/provider";
 
 /** Describes a validated Venice IPC request ready for the main process.
@@ -294,16 +294,8 @@ export function validateVeniceIpcRequest(input: unknown): VeniceIpcRequest {
   // Enforce system prompt limits at the request boundary.
   if (endpoint.pathname === "/chat/completions" && request.body && typeof request.body === "object") {
     const body = request.body as Record<string, unknown>;
-    if (Array.isArray(body.messages)) {
-      for (const msg of body.messages) {
-        if (msg && typeof msg === "object" && msg.role === "system" && typeof msg.content === "string") {
-          const length = countPromptCharacters(msg.content);
-          if (length > SYSTEM_PROMPT_LARGE_CONTEXT_OVERRIDE) {
-            throw new Error(`System prompt exceeds maximum allowed length (${length}/${SYSTEM_PROMPT_LARGE_CONTEXT_OVERRIDE} code points).`);
-          }
-        }
-      }
-    }
+    const result = checkSystemPromptMessages(body.messages);
+    if (result?.isOverLimit) throw new Error(result.message);
   }
 
   return {

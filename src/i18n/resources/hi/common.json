@@ -562,7 +562,7 @@
         "loadFromLibrary": "लाइब्रेरी से लोड..."
       },
       "text": {
-        "approachingSystemPromptSizeLimit": "सिस्टम प्रॉम्प्ट आकार सीमा के करीब पहुंच रहा है ("
+        "approachingSystemPromptSizeLimit": "सिस्टम प्रॉम्प्ट आकार: {{estimatedTokenCount}} / {{maximumTokens}} अनुमानित टोकन; {{codePointCount}} / {{maximumCodePoints}} यूनिकोड कोड पॉइंट।"
       }
     },
     "componentsDocumentsDocumentagentview": {
@@ -1240,7 +1240,7 @@
         "tags": "टैग",
         "personality": "व्यक्तित्व",
         "systemPrompt": "सिस्टम प्रॉम्प्ट",
-        "approachingSystemPromptSizeLimit": "सिस्टम प्रॉम्प्ट आकार सीमा के निकट (",
+        "approachingSystemPromptSizeLimit": "सिस्टम प्रॉम्प्ट आकार: {{estimatedTokenCount}} / {{maximumTokens}} अनुमानित टोकन; {{codePointCount}} / {{maximumCodePoints}} यूनिकोड कोड पॉइंट।",
         "postHistoryInstructions": "पोस्ट-इतिहास निर्देश",
         "instructions": "निर्देश",
         "firstMessagePrimaryGreeting": "पहला संदेश (प्राथमिक अभिवादन)",
@@ -1325,7 +1325,8 @@
         "scene": "दृश्य:",
         "prompt": "संकेत:",
         "reApplyTo": "पुनः आवेदन करें",
-        "savingCharacter": "पर पुनः आवेदन करें] चरित्र सहेजा जा रहा है…"
+        "savingCharacter": "पर पुनः आवेदन करें] चरित्र सहेजा जा रहा है…",
+        "estimatedSystemPromptTokens": "{{estimatedTokenCount}} / {{maximumTokens}} अनुमानित टोकन"
       },
       "action": {
         "remove": "हटाएं",
@@ -4469,6 +4470,12 @@
       "legal": {
         "metadata": {
           "welcomeToVeniceForge": "वेनिस फोर्ज में आपका स्वागत है"
+        }
+      },
+      "promptLimits": {
+        "notification": {
+          "overLimit": "सिस्टम प्रॉम्प्ट एप्लिकेशन सीमा से अधिक है। अधिकतम फ़ॉलबैक आकार: {{maximumCodePoints}} यूनिकोड कोड पॉइंट। मिले: {{codePointCount}} यूनिकोड कोड पॉइंट ({{estimatedTokenCount}} अनुमानित टोकन)। नीति लगभग {{maximumTokens}} टोकन के लिए बनाई गई है। जारी रखने से पहले प्रॉम्प्ट छोटा करें।",
+          "warning": "सिस्टम प्रॉम्प्ट एप्लिकेशन सीमा के करीब है ({{estimatedTokenCount}} / {{maximumTokens}} अनुमानित टोकन; {{codePointCount}} / {{maximumCodePoints}} यूनिकोड कोड पॉइंट)।"
         }
       }
     },

@@ -35,6 +35,7 @@ import { JINA_MAX_RESPONSE_BYTES, VENICE_PROXY_MAX_FSM_RESPONSE_BYTES } from "./
 
 import { FetchBodyTooLargeError, parseJsonOrNull, readBoundedFetchBody } from "./src/shared/readBoundedFetchBody";
 import { applyVeniceApiSafeMode } from "./src/shared/veniceSafeMode";
+import { checkSystemPromptMessages } from "./src/shared/promptLimits";
 
 function safeDecodeForScreening(value: string): string {
   try {
@@ -562,6 +563,23 @@ export function createServerApp() {
         }
       }
       req.body = body;
+
+      if (endpoint === "/chat/completions" && Buffer.isBuffer(body)) {
+        try {
+          const parsed = JSON.parse(body.toString("utf8")) as Record<string, unknown>;
+          const promptResult = checkSystemPromptMessages(parsed.messages);
+          if (promptResult?.isOverLimit) {
+            res.status(400).json({ error: promptResult.message });
+            return;
+          }
+        } catch (parseError) {
+          if (parseError instanceof SyntaxError) {
+            // The existing guard/proxy path owns malformed-JSON handling.
+          } else {
+            throw parseError;
+          }
+        }
+      }
       
       let decision;
       const familySafeModeEnabled = isLocalFamilySafeModeEnabled(req);

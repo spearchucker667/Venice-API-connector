@@ -562,7 +562,7 @@
         "loadFromLibrary": "ライブラリからの読み込み..."
       },
       "text": {
-        "approachingSystemPromptSizeLimit": "システム プロンプトのサイズ制限に近づいています ("
+        "approachingSystemPromptSizeLimit": "システムプロンプトのサイズ: 推定トークン {{estimatedTokenCount}} / {{maximumTokens}}、Unicode コードポイント {{codePointCount}} / {{maximumCodePoints}}。"
       }
     },
     "componentsDocumentsDocumentagentview": {
@@ -1240,7 +1240,7 @@
         "tags": "タグ",
         "personality": "性格",
         "systemPrompt": "システム プロンプト",
-        "approachingSystemPromptSizeLimit": "システム プロンプトのサイズ制限に近づいています (",
+        "approachingSystemPromptSizeLimit": "システムプロンプトのサイズ: 推定トークン {{estimatedTokenCount}} / {{maximumTokens}}、Unicode コードポイント {{codePointCount}} / {{maximumCodePoints}}。",
         "postHistoryInstructions": "履歴後の指示",
         "instructions": "指示",
         "firstMessagePrimaryGreeting": "最初のメッセージ (主挨拶)",
@@ -1325,7 +1325,8 @@
         "scene": "シーン:",
         "prompt": "プロンプト:",
         "reApplyTo": "再適用",
-        "savingCharacter": "キャラクターの保存…"
+        "savingCharacter": "キャラクターの保存…",
+        "estimatedSystemPromptTokens": "推定トークン {{estimatedTokenCount}} / {{maximumTokens}}"
       },
       "action": {
         "remove": "削除",
@@ -4469,6 +4470,12 @@
       "legal": {
         "metadata": {
           "welcomeToVeniceForge": "ヴェニス フォージへようこそ"
+        }
+      },
+      "promptLimits": {
+        "notification": {
+          "overLimit": "システムプロンプトがアプリケーションの上限を超えています。フォールバックの最大サイズ: {{maximumCodePoints}} Unicode コードポイント。検出値: {{codePointCount}} Unicode コードポイント（推定 {{estimatedTokenCount}} トークン）。ポリシーは約 {{maximumTokens}} トークン向けに設計されています。続行する前にプロンプトを短くしてください。",
+          "warning": "システムプロンプトがアプリケーションの上限に近づいています（推定トークン {{estimatedTokenCount}} / {{maximumTokens}}、Unicode コードポイント {{codePointCount}} / {{maximumCodePoints}}）。"
         }
       }
     },

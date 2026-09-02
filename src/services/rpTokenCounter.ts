@@ -1,6 +1,10 @@
 import { translateRuntime } from "../i18n/runtimeTranslator";
 import type { CharacterCardV1 } from "../types/rp";
 import { buildCharactersBlock } from "./rp/promptBuilderService";
+import {
+  checkSystemPromptLimit,
+  estimateSystemPromptTokens,
+} from "../shared/promptLimits";
 
 export interface TokenCounter {
   countText(text: string, modelId?: string): Promise<TokenCountResult>;
@@ -20,11 +24,11 @@ export function estimateTokenCount(
   text: string,
   modelId?: string,
 ): TokenCountResult {
+  const estimated = estimateSystemPromptTokens(text);
   return {
-    count: text.length === 0 ? 0 : Math.max(1, Math.ceil(text.length / 4)),
+    ...estimated,
     method: "approximation",
     modelId,
-    isEstimate: true,
   };
 }
 
@@ -101,6 +105,10 @@ export class CharacterValidationError extends Error {
 export function validateCharacterForPersistence(
   card: CharacterCardV1,
 ): { ok: true } | { ok: false; message: string } {
+  const systemPromptResult = checkSystemPromptLimit(card.systemPrompt ?? "");
+  if (systemPromptResult.isOverLimit) {
+    return { ok: false, message: systemPromptResult.message as string };
+  }
   const budget = getCharacterTokenBudget(card);
   if (budget.overLimit) {
     return {

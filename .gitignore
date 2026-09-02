@@ -56,6 +56,7 @@
 /.impeccable/
 /.superpowers/
 /.freebuff/
+/.playwright-cli/
 
 /scripts/dev-tools/venice-styles.json
 

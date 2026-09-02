@@ -1261,9 +1261,7 @@ export const useChatStore = create<ChatState>()(
                 "System prompt exceeds maximum length",
               ),
           );
-          return;
-        }
-        if (limitResult.isWarning) {
+        } else if (limitResult.isWarning) {
           toast.warn(
             limitResult.message ||
               translateRuntime(
@@ -1272,6 +1270,8 @@ export const useChatStore = create<ChatState>()(
               ),
           );
         }
+        // Preserve oversized imported or edited content so the user can edit
+        // it down. Trusted request validation prevents invalid dispatch.
         set({ systemPrompt: prompt });
       },
       setTemperature: (t) => set({ temperature: t }),

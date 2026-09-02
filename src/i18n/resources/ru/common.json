@@ -562,7 +562,7 @@
         "loadFromLibrary": "Загрузка из библиотеки..."
       },
       "text": {
-        "approachingSystemPromptSizeLimit": "Приближается размер системного приглашения ("
+        "approachingSystemPromptSizeLimit": "Размер системного промпта: {{estimatedTokenCount}} / {{maximumTokens}} расчётных токенов; {{codePointCount}} / {{maximumCodePoints}} кодовых точек Unicode."
       }
     },
     "componentsDocumentsDocumentagentview": {
@@ -1240,7 +1240,7 @@
         "tags": "Теги",
         "personality": "Личность",
         "systemPrompt": "Системная подсказка",
-        "approachingSystemPromptSizeLimit": "Приближается размер системного подсказки (",
+        "approachingSystemPromptSizeLimit": "Размер системного промпта: {{estimatedTokenCount}} / {{maximumTokens}} расчётных токенов; {{codePointCount}} / {{maximumCodePoints}} кодовых точек Unicode.",
         "postHistoryInstructions": "Инструкции после истории",
         "instructions": "Инструкции",
         "firstMessagePrimaryGreeting": "Первое сообщение (Основное приветствие)",
@@ -1325,7 +1325,8 @@
         "scene": "Сцена:",
         "prompt": "Подсказка:",
         "reApplyTo": "Повторно применить к",
-        "savingCharacter": "Сохранение персонажа…"
+        "savingCharacter": "Сохранение персонажа…",
+        "estimatedSystemPromptTokens": "{{estimatedTokenCount}} / {{maximumTokens}} расчётных токенов"
       },
       "action": {
         "remove": "Удалить",
@@ -4469,6 +4470,12 @@
       "legal": {
         "metadata": {
           "welcomeToVeniceForge": "Добро пожаловать в Венецианскую кузницу"
+        }
+      },
+      "promptLimits": {
+        "notification": {
+          "overLimit": "Системный промпт превышает лимит приложения. Максимальный резервный размер: {{maximumCodePoints}} кодовых точек Unicode. Обнаружено: {{codePointCount}} кодовых точек Unicode ({{estimatedTokenCount}} расчётных токенов). Политика рассчитана примерно на {{maximumTokens}} токенов. Сократите промпт перед продолжением.",
+          "warning": "Системный промпт приближается к лимиту приложения ({{estimatedTokenCount}} / {{maximumTokens}} расчётных токенов; {{codePointCount}} / {{maximumCodePoints}} кодовых точек Unicode)."
         }
       }
     },

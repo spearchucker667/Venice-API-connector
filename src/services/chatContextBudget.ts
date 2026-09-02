@@ -1,4 +1,5 @@
 import type { ChatMessage, ContentPart, ModelInfo } from "../types/venice";
+import { estimateSystemPromptTokens } from "../shared/promptLimits";
 
 const FALLBACK_CONTEXT_LIMIT = 8192;
 const FALLBACK_MAX_OUTPUT = 4096;
@@ -10,11 +11,7 @@ export interface TokenCountResult {
 }
 
 export function estimateTokenCount(text: string): TokenCountResult {
-  return {
-    count: text.length === 0 ? 0 : Math.max(1, Math.ceil(text.length / 4)),
-    method: 'approximation',
-    isEstimate: true,
-  };
+  return estimateSystemPromptTokens(text);
 }
 
 export function estimateMessageTokens(msg: ChatMessage): number {

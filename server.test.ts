@@ -520,6 +520,17 @@ describe("server.ts safety middleware", () => {
     expect(res.body.mocked).toBe(true);
   });
 
+  it("rejects system prompts over the shared application limit", async () => {
+    const res = await request(app)
+      .post("/api/venice/chat/completions")
+      .send({ messages: [{ role: "system", content: "a".repeat(32_769) }] });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(
+      /32,768 Unicode code points.*approximately 8,192 tokens/i,
+    );
+  });
+
   it("keeps mandatory child safety active when the optional family filter is disabled", async () => {
     const prevOverride = process.env.VENICE_FORGE_ALLOW_CLIENT_SAFETY_OVERRIDE;
     process.env.VENICE_FORGE_ALLOW_CLIENT_SAFETY_OVERRIDE = "true";

@@ -39,8 +39,9 @@ import type {
 import { veniceStreamChat } from "../../services/veniceClient";
 import { selectTriggeredEntries } from "../../services/rp/lorebookService";
 import { Trans, useTranslation } from "react-i18next";
+import { SYSTEM_PROMPT_MAX_CODE_POINTS } from "../../shared/promptLimits";
 
-const SYSTEM_BLOCK_BUDGET = 8_000;
+const SYSTEM_BLOCK_BUDGET = SYSTEM_PROMPT_MAX_CODE_POINTS;
 const RECENT_MESSAGE_BUDGET = 12;
 
 interface Props {

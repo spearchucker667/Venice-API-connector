@@ -562,7 +562,7 @@
         "loadFromLibrary": "라이브러리에서 로드..."
       },
       "text": {
-        "approachingSystemPromptSizeLimit": "시스템 프롬프트 크기 제한에 접근 중("
+        "approachingSystemPromptSizeLimit": "시스템 프롬프트 크기: 예상 토큰 {{estimatedTokenCount}} / {{maximumTokens}}, 유니코드 코드 포인트 {{codePointCount}} / {{maximumCodePoints}}."
       }
     },
     "componentsDocumentsDocumentagentview": {
@@ -1240,7 +1240,7 @@
         "tags": "태그",
         "personality": "성격",
         "systemPrompt": "시스템 프롬프트",
-        "approachingSystemPromptSizeLimit": "시스템 프롬프트 크기 제한에 접근 중 (",
+        "approachingSystemPromptSizeLimit": "시스템 프롬프트 크기: 예상 토큰 {{estimatedTokenCount}} / {{maximumTokens}}, 유니코드 코드 포인트 {{codePointCount}} / {{maximumCodePoints}}.",
         "postHistoryInstructions": "기록 이후 지침",
         "instructions": "지침",
         "firstMessagePrimaryGreeting": "첫 번째 메시지(기본 인사말)",
@@ -1325,7 +1325,8 @@
         "scene": "장면:",
         "prompt": "프롬프트:",
         "reApplyTo": "재신청",
-        "savingCharacter": "에 다시 적용 문자 저장…"
+        "savingCharacter": "에 다시 적용 문자 저장…",
+        "estimatedSystemPromptTokens": "예상 토큰 {{estimatedTokenCount}} / {{maximumTokens}}"
       },
       "action": {
         "remove": "제거",
@@ -4469,6 +4470,12 @@
       "legal": {
         "metadata": {
           "welcomeToVeniceForge": "베니스 포지에 오신 것을 환영합니다"
+        }
+      },
+      "promptLimits": {
+        "notification": {
+          "overLimit": "시스템 프롬프트가 애플리케이션 제한을 초과합니다. 최대 대체 크기: Unicode 코드 포인트 {{maximumCodePoints}}개. 감지됨: Unicode 코드 포인트 {{codePointCount}}개(예상 토큰 {{estimatedTokenCount}}개). 정책은 약 {{maximumTokens}}개 토큰을 기준으로 설계되었습니다. 계속하기 전에 프롬프트를 줄이세요.",
+          "warning": "시스템 프롬프트가 애플리케이션 제한에 근접했습니다(예상 토큰 {{estimatedTokenCount}} / {{maximumTokens}}, Unicode 코드 포인트 {{codePointCount}} / {{maximumCodePoints}})."
         }
       }
     },
