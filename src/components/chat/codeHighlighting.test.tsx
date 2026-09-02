@@ -75,7 +75,13 @@ describe('codeHighlighting', () => {
       const html = renderToString(result as React.ReactElement)
       // The source characters must still appear in order, even when wrapped
       // in token spans. HTML-escaped quotes are expected from React rendering.
-      const textOnly = html.replace(/<[^>]+>/g, '').replace(/&quot;/g, '"')
+      let textOnly = html
+      let previous
+      do {
+        previous = textOnly
+        textOnly = textOnly.replace(/<[^>]+>/g, '')
+      } while (textOnly !== previous)
+      textOnly = textOnly.replace(/&quot;/g, '"')
       expect(textOnly).toBe(source)
     })
 
