@@ -4,6 +4,14 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Latest Session Summary
 
+- **2026-09-01 generation API/UI audit and remediation (HQE-REL-001, HQE-PRIV-001, HQE-UX-001, HQE-REL-002).** Reconciled `groksession.md`, the three-entry traffic capture, current source/tests, the tracked Swagger (`20260821.193530`), and temporary read-only checkout of official `veniceai/api-docs` `main` at `569091e99d8f03c8866dbfb691893f77552a4f56` (`20260826.105305`). Confirmed the captured `wai-Illustrious` 500 is upstream (`{model,prompt}` also failed while Lustify succeeded), not a local proxy or variants omission. Preserved explicit WAI variants support while restoring model-capability gating for all other image models. Fixed Electron video/music queue submission for Unicode prompts by replacing `btoa(JSON)` fingerprints with canonical UTF-8 SHA-256 fingerprints; this also prevents reversible prompt/lyrics content from entering the durable task journal. Unified Electron and paid-queue error extraction so Venice string `details` reaches the sanitized UI error. Focused suites and the broad lint, three-project TypeScript, server, Electron, hooks, media UI, feature/static contract, localization, and production-build gates pass. Live paid-provider replay and headed UI QA were not rerun in this session.
+
+- **2026-09-01 Live WAI generate isolation.** Using a user-supplied admin key (not stored in the repo), `POST /image/generate` for `wai-Illustrious` returned 500 for (1) the Image Studio failing shape, (2) Venice’s official `{ model, prompt }` body, and (3) the same shape without `variants`. Error body: `{ error: "Image generation failed (status: 500)", details: "Data is empty. Likely caused by upstream processing issue." }`. The same key generated `lustify-sdxl` successfully (200, 1 image). WAI is listed `offline: false`. This is a Venice upstream worker failure, not a Forge payload bug. Error readers now append string `details` so Image Studio shows the upstream note. The supplied key was not written to `.env` or docs. Validation: `errors.test.ts` focused PASS; eslint on touched files PASS.
+
+- **2026-09-01 Proxy 500 API Error Fixes.** Fixed the remaining 500 Internal Server Error status codes returned by the Express server. The missing `VENICE_API_KEY` gate now returns a semantically correct `401 Unauthorized` instead of `500` on the Venice API proxy, and the Jina/Scrape proxies now return `502 Bad Gateway` instead of `500` for unexpected upstream fetch errors. Updated `server.test.ts` to expect `502` for the proxy tests. Validation: `npm run test:server` and `npm run test:electron` PASS.
+
+- **2026-09-01 Remove non-compliant traffic logs.** Removed `docs/audits/TODO/venice_forge_traffic_logs_1788307814290.json` (~14.6 MB) from the repository to comply with `AGENTS.md` Rule 6, which prohibits keeping raw generated binary bytes, base64 payloads, and complete provider responses inside the active project directory.
+
 - **2026-09-01 red-CI recovery and release-readiness repair from `f303d3b9`.** Reproduced the hosted `contracts` failure from Actions run `33570344460`: `test:character-cards` completed its assertions, then an unresolved `CharacterLibrary` draft-load promise dispatched React state after jsdom teardown (`ReferenceError: window is not defined`). Added effect cleanup so superseded and unmounted draft loads cannot update state, isolated the persistence boundary in the component test, and added a regression proving an older response cannot overwrite a newer draft refresh. Replaced the Windows-sensitive capability-token expiry test's 1 ms wall-clock race with an injected clock shared by issuance, verification, and safe metrics. `verify:release-readiness` then identified stale generated i18n completion counts (3,990 recorded keys versus 3,992 verified; 509 recorded runtime files versus 520 verified); regenerated both canonical status artifacts. Validation: focused Character Library red/green regression; `test:character-cards` (12 files / 94 tests); custom-protocol tests (18/18); `verify:i18n:release` against a temporary index containing the regenerated artifacts; and the complete `npm run ci` chain all PASS. The complete chain includes ESLint, all three TypeScript projects, server tests (63), Electron tests (106 files / 1,164 tests), ingestion tests (65), the full segmented unit/UI/contract suites, both dependency audits (0 vulnerabilities), web/server/Electron builds, aggregate repository contracts, and `verify:dist`. The ordinary worktree invocation of `verify:i18n:release` intentionally reports the regenerated artifacts as unstaged. No commit, push, release/tag dispatch, or ruleset mutation was performed. Hosted exact-SHA CI and release credential/signature evidence remain unverified until publication is explicitly authorized.
 
 - **2026-09-01 branch/PR consolidation, CI repair, and CodeQL alert remediation.** Reviewed live `main`, PR #101, hosted CI run `33558734879`, PR CI run `33559168383`, and the four open code-scanning alerts (258..261). Merged PR #101's hygiene branch into local `main`, while preserving newly exposed untracked local audit files. Fixed the common CI root cause by adding the required historical banner to `docs/reports/historical/remediation-report-2026-09-01.md`. Removed the impossible `retryAttempted` branch/state in the Electron Venice client without changing the single inline Retry-After retry contract. Reworked the secure-file race regression to atomically rename a prepared replacement over the path, and constructed the malicious `__proto__` theme payload through JSON parsing so the security assertions remain intact without CodeQL misclassifying test setup. During broad validation, found that PR #101 had deleted the roadmap-required audit evidence manifest; restored it as a documented historical provenance artifact and corrected the hygiene reports. Focused tests passed (42/42), the complete segmented CI test matrix passed, both dependency audits reported 0 vulnerabilities, all builds passed, `verify:contracts` passed, and `verify:dist` passed. Hosted exact-SHA CI/CodeQL remains required after publication.
@@ -38,6 +46,74 @@ This is the active handoff and validation ledger. The canonical current-work led
 
 ## Session History
 
+### 2026-09-01 — End-to-end generation API/UI audit and remediation
+
+- **HQE-REL-001 (VERIFIED):** `src/hooks/use-video.ts` and `src/hooks/use-music.ts` used `btoa()` over JSON containing prompts. Unicode input reproduced `InvalidCharacterError` before IPC/API dispatch. Both flows now use `buildLogicalRequestFingerprint()`, which canonicalizes the complete wire payload and hashes its UTF-8 bytes with Web Crypto SHA-256.
+- **HQE-PRIV-001 (VERIFIED):** the old Base64 fingerprint reversibly encoded prompt/lyrics text and was persisted as `requestFingerprint` by the main-process paid queue. The new journal value is an opaque `video-sha256:<hex>` / `audio-sha256:<hex>` digest.
+- **HQE-UX-001 (VERIFIED):** the dirty Image Studio implementation unconditionally passed `supportsVariants: true` and rendered the slider even when the capability contract disabled it. The UI and payload builder again respect `caps.supportsVariants`; `wai-Illustrious` remains explicitly registered with variants support.
+- **HQE-REL-002 (VERIFIED):** renderer error readers already appended Venice string `details`; the Electron service and durable paid-queue path did not. `readResponseError()` now preserves a distinct string detail, and `submitPaidQueueTaskInMain()` uses that canonical reader.
+- **External/provider finding (CONFIRMED, not locally fixable):** supplied traffic entry `mt3zxe1` is a one-shot `wai-Illustrious` `/image/generate` 500 with a schema-valid body. Prior live isolation in this handoff proved the same worker fails for the minimal official body while Lustify succeeds with the same credential. No client-side retry/body permutation is claimed as a fix.
+- **Contract drift (OPEN):** the tracked Swagger is `20260821.193530`; official upstream `main` at `569091e99d8f03c8866dbfb691893f77552a4f56` is `20260826.105305`. Image/audio request schemas used by the app are unchanged, while `QueueVideoRequest` adds optional enhancement/upscaling fields not currently exposed by Forge. This is product-parity scope, not evidence that existing queue bodies are invalid.
+- **Known architecture gap (OPEN):** `src/lib/workflow-engine.ts` image nodes use generic static defaults and do not resolve live `/models` constraints before dispatch. Image Studio is runtime-aware; workflow image generation is not. A coordinated workflow-editor/runtime-model integration remains required rather than silently adding per-model name checks.
+
+### 2026-09-01 Live WAI generate isolation with user-supplied admin key
+
+- Live `GET /models?type=image`: `wai-Illustrious` present, `offline: false`, `steps.default=25`, `steps.max=30`, `widthHeightDivisor=16`.
+- Live `POST /image/generate` WAI: 500 for the Studio failing shape, for `{ model, prompt, safe_mode }` only, and for no-variants. Details: `Data is empty. Likely caused by upstream processing issue.`
+- Live Lustify control with the same key: 200, 1 image.
+- `readDesktopErrorBody` / `readWebErrorBody` / `readVeniceErrorBody` now append string `details` onto the primary error.
+- The supplied key was used only in-process, not written to `.env`, fixtures, or docs.
+- Validation: `npx vitest run src/services/veniceClient/errors.test.ts --no-file-parallelism` 13/13 PASS; eslint on touched files PASS.
+
+### 2026-09-01 Anime (WAI) 500 re-triage against docs/reference
+
+- Compared inspector `r4bacal` / `1zqpurc` (WAI 500) with `50u0fyf` (Lustify 200). Bodies match except `model`. `docs/reference/venice-api-upstream/api-reference/error-codes.mdx` maps this to `INFERENCE_FAILED` (500). `guides/media/image-generation.mdx` allows `variants` 1–4 when `return_binary` is false. `endpoint/image/generate.mdx` says pixel models use `width`/`height`; WAI live constraints have `widthHeightDivisor` and no `aspectRatios`.
+- WAI 500’d both with `cfg_scale: 1` and no variants (prior dump) and with no CFG plus `variants: 3` (this dump). Lustify succeeded with the latter shape. Not a missing variants slider and not a dummy CFG-only bug.
+- Live `GET /models?type=image` (CLI key): WAI present, `offline: false`. Live generate replay blocked by `402` DIEM spend-limit on `.env` key.
+- Applied live `steps.default` when the generate model changes and clamp steps to live max on POST. Does not claim to fix Venice’s WAI worker.
+- Validation: `npx vitest run src/components/image/image-view.test.tsx --no-file-parallelism` 30/30 PASS; eslint on touched files PASS.
+
+### 2026-09-01 Image Studio variants slider on every generate model
+
+- User asked for a 1–4 variants slider on all image-generation models.
+- Image Studio generate now always renders the slider and passes `supportsVariants: true` into the generate payload builder, so a count > 1 is emitted as `variants` regardless of stale registry flags.
+- Set Lustify generate entries to `supportsVariants: true`. Seedream `*-edit` models remain false (edit schema has no variants field).
+- Regression: slider is present with min 1 / max 4 even when capabilities claim `supportsVariants: false`, and count 3 is posted as `variants: 3`.
+- Validation: `npx vitest run src/config/image-model-capabilities.test.ts src/components/image/image-view.test.tsx --no-file-parallelism` 84/84 PASS; eslint on touched files PASS.
+
+### 2026-09-01 Restore Anime (WAI) variants control
+
+- User reported Image Studio has no Variants toggle for Anime (WAI). That was `supportsVariants: false` on `wai-Illustrious`, which also dropped `variants` from the POST body.
+- Venice generate schema allows `variants` 1–4. Recraft/Seedream in the earlier dump succeeded with `variants: 4`. The WAI 500 body had no `variants` field; hiding the control was not a valid 500 fix.
+- Set `supportsVariants: true` for `wai-Illustrious`. Image Studio already shows the slider when that flag is true and emits `variants` when count > 1.
+- Added an ImageView regression: WAI shows the slider, sending count 4 includes `variants: 4` and still omits dummy `cfg_scale`.
+- Lustify remains `supportsVariants: false` (not requested this turn).
+- Validation: `npx vitest run src/config/image-model-capabilities.test.ts src/components/image/image-view.test.tsx --no-file-parallelism` 82/82 PASS; eslint on touched files PASS.
+
+### 2026-09-01 wai-Illustrious Image Studio 500 (CFG default)
+
+- Re-read the inspector dump. Seedream and Recraft `/image/generate` calls were `200`. The only `500` was `wai-Illustrious` without `variants`.
+- The earlier variants-only diagnosis is not supported by that request body. `supportsVariants: false` for WAI remains as a conservative UI gate (the variants slider is now actually hidden), but it did not cause this 500.
+- Root cause: Image Studio always sent `cfg_scale: 1` because `useState(1)` plus `normalizeImageDraft()` clamped a missing CFG to `1`. Venice documents `cfg_scale` as model-dependent; forcing `1` overrides the Illustrious/SDXL default and matches a fast (~1.3s) worker 500.
+- `src/utils/payloadBuilders.ts` now omits `cfg_scale` when unset and still emits a clamped value when a recipe/handoff supplies one.
+- `src/components/image/image-view.tsx` starts CFG as `undefined` and gates the variants slider on `caps.supportsVariants`.
+- Registry id canonicalized to `wai-Illustrious`.
+- Live paid replay blocked: CLI `.env` key returned `402` DIEM spend-limit; Electron traffic showed remaining balance on a different key.
+- Validation: `npx vitest run src/utils/payloadBuilders.test.ts src/utils/payloadBuilders.modelAware.test.ts src/config/image-model-capabilities.test.ts src/components/image/image-view.test.tsx --no-file-parallelism` 158/158 PASS; `npm run test:ui:media:image` 43/43 PASS; eslint on touched files PASS; `npx tsc --noEmit` PASS; `npm run verify:model-aware-recipes` PASS.
+
+### 2026-09-01 Image Model Variants Fix
+- Investigated a user report of a `500 Venice/server retryable error` on `/image/generate` with the `wai-Illustrious` model and `variants: 4`.
+- Discovered that certain new models (like `wai-Illustrious` and `lustify`) fail on the Venice API backend when receiving a `variants` count greater than 1.
+- Updated `src/config/image-model-capabilities.ts` to explicitly register `wai-illustrious` and `lustify` as known models.
+- Set `supportsVariants: false` for both models, which hides the UI image count control and prevents the `variants` parameter from being appended to the payload.
+- Validated via `npm run test:ui` and `npm run test:contracts` to ensure capability matrix regressions did not occur.
+
+### 2026-09-01 Proxy 500 API Error Fixes
+- Fixed the `VENICE_API_KEY is not configured on the server.` error to return a `401 Unauthorized` instead of `500 Internal Server Error`.
+- Fixed the Jina proxy unexpected fetch failure to return `502 Bad Gateway` instead of `500 Internal Server Error`.
+- Fixed the Scraper proxy unexpected fetch failure to return `502 Bad Gateway` instead of `500 Internal Server Error`.
+- Updated tests in `server.test.ts` to expect the new `502` status code.
+- Validated via `npm run test:server` and `npm run test:electron`.
 ### 2026-09-01 — Branch/PR consolidation, CI repair, and CodeQL alert remediation
 
 - **Hosted assessment:** `main` CI run `33558734879` and PR #101 CI run `33559168383` each failed `contracts`, `windows-sensitive-tests`, and `macos-sensitive-tests` at `verify:repository-identity`; all failures named the same missing historical banner. CodeQL workflow runs passed, but alerts 258..261 remained open.
@@ -752,8 +828,74 @@ Investigation only, then four targeted fixes based on the user-reported defects
 * `VF-EXTERNAL-RELEASE-ACCEPTANCE-2026-08-31` remains BETA/INCOMPLETE; signed/paid/two-device/headed release evidence still must be produced on a real publication tag.
 * `CSP-001` is closed by the Meteocon remediation recorded above; the canonical roadmap no longer lists it as unfinished work.
 * `VF-MEDIA-APPROVAL-2026-09-01` (P1 agent media tool contract/authorization/approval) is locally implemented for `media.generateImage`: capability-gated tool visibility, trusted runtime model resolution, immutable approval plans, and approved-plan execution through the durable paid-submission manager. Broader media tool surface (video/audio), custom protocol capability-token wiring, semantic classifier implementation, and release-packaging evidence remain deferred per `docs/ROADMAP.md`.
+* Live paid replay of `wai-Illustrious` `/image/generate` after omitting dummy `cfg_scale: 1` is unverified. The CLI `.env` key returned `402` DIEM spend-limit; the Electron inspector session that captured the 500 used a different funded key.
+* `VF-GENERATION-CONTRACT-PARITY-2026-09-01` remains open for workflow image-node runtime model constraints, tracked Swagger refresh, and optional adoption of newly documented video enhancement fields. Existing Image Studio/image tools/video/music/TTS wire contracts were reconciled; this item does not reclassify the WAI upstream worker outage as a Forge defect.
 
 ## Validation Matrix
+
+### 2026-09-01 — Generation API/UI audit
+
+- Baseline `npm run test:ui:media:image` — PASS (3 files / 46 tests).
+- Baseline generation/client/main-process focused suite — PASS (13 files / 202 tests).
+- `npm run verify:model-aware-recipes` — PASS.
+- `npm run verify:provider-adapters` — PASS (5 files / 84 tests).
+- Unicode/Base64 static reproduction — reproduced `InvalidCharacterError` for Japanese and emoji prompts before the fix.
+- `npx vitest run src/shared/logicalRequestFingerprint.test.ts src/hooks/use-video.test.tsx src/hooks/use-music.test.tsx src/components/image/image-view.test.tsx --no-file-parallelism` — PASS (4 files / 37 tests).
+- ESLint for fingerprint, hooks, and Image Studio files — PASS (0 warnings).
+- `npx tsc --noEmit --pretty false` — PASS.
+- First paid-queue error-detail test run — FAIL because the test fully mocked away `readResponseError`; production code was not implicated. The mock was converted to a partial mock.
+- `npx vitest run electron/services/veniceClient.error.test.ts electron/services/backgroundTaskManager.paidQueue.test.ts src/services/veniceClient/errors.test.ts --no-file-parallelism` — PASS (3 files / 22 tests).
+- ESLint for Electron error/paid-queue files — PASS (0 warnings).
+- `npx tsc --noEmit --project tsconfig.electron.json --pretty false` — PASS.
+- `npx tsc --noEmit --project tsconfig.electron.test.json --pretty false` — PASS.
+- `npm run lint:eslint` — PASS (0 warnings).
+- `npm run typecheck` — PASS (renderer, Electron source, Electron tests).
+- `npm run test:server` — PASS (63 tests).
+- `npm run test:electron` — PASS (106 files / 1,166 tests); the shutdown-cleanup diagnostic is an expected exercised error path and did not fail the suite.
+- `npm run test:unit:hooks` — PASS (16 files / 92 tests).
+- `npm run test:ui:media` — PASS (gallery 7 files / 72 tests; image 3 files / 46 tests).
+- `npm run verify:contracts:features:image` — PASS.
+- `npm run verify:contracts:static` — PASS, including provider adapters (5 files / 84 tests), i18n (12 locales / 12 namespaces), hardcoded-string regression (0), prompt-language, safety, CSP, network, documentation, CI, and release-contract gates.
+- `npm run build` — PASS (renderer, server, Electron).
+- Live paid-provider replay and headed Image/Video/Music UI QA — not run in this session. Hosted CI/CodeQL requires the resulting publication SHA.
+
+### 2026-09-01 — Live WAI generate isolation
+
+- Live WAI generate (exact Studio shape, minimal body, no-variants) — 500 each; details `Data is empty. Likely caused by upstream processing issue.`
+- Live Lustify generate control — 200, 1 image.
+- `npx vitest run src/services/veniceClient/errors.test.ts --no-file-parallelism` — PASS (13/13).
+- `npx eslint src/services/veniceClient/errors.ts src/services/veniceClient/errors.test.ts --max-warnings=0` — PASS.
+- Hosted CI / manual Image Studio QA — not run.
+
+### 2026-09-01 — Anime (WAI) 500 re-triage
+
+- `npx vitest run src/components/image/image-view.test.tsx --no-file-parallelism` — PASS (30/30).
+- `npx eslint src/components/image/image-view.tsx src/components/image/image-view.test.tsx --max-warnings=0` — PASS.
+- `GET https://api.venice.ai/api/v1/models?type=image` — 200; `wai-Illustrious` present, `offline: false`.
+- `POST https://api.venice.ai/api/v1/image/generate` with `.env` key — 402 DIEM spend-limit (not a 500 reproduction).
+- Manual Image Studio QA — not run.
+
+### 2026-09-01 — Image Studio variants slider on every generate model
+
+- `npx vitest run src/config/image-model-capabilities.test.ts src/components/image/image-view.test.tsx --no-file-parallelism` — PASS (2 files / 84 tests).
+- `npx eslint src/config/image-model-capabilities.ts src/config/image-model-capabilities.test.ts src/components/image/image-view.tsx src/components/image/image-view.test.tsx --max-warnings=0` — PASS (0 warnings).
+- Manual Image Studio QA — not run.
+
+### 2026-09-01 — Restore Anime (WAI) variants control
+
+- `npx vitest run src/config/image-model-capabilities.test.ts src/components/image/image-view.test.tsx --no-file-parallelism` — PASS (2 files / 82 tests).
+- `npx eslint src/config/image-model-capabilities.ts src/config/image-model-capabilities.test.ts src/components/image/image-view.test.tsx --max-warnings=0` — PASS (0 warnings).
+- Manual Image Studio QA / live WAI generate — not run.
+
+### 2026-09-01 — wai-Illustrious Image Studio 500 (CFG default)
+
+- `npx vitest run src/utils/payloadBuilders.test.ts src/utils/payloadBuilders.modelAware.test.ts src/config/image-model-capabilities.test.ts src/components/image/image-view.test.tsx --no-file-parallelism` — PASS (4 files / 158 tests).
+- `npx eslint src/utils/payloadBuilders.ts src/utils/payloadBuilders.test.ts src/utils/payloadBuilders.modelAware.test.ts src/config/image-model-capabilities.ts src/config/image-model-capabilities.test.ts src/components/image/image-view.tsx src/components/image/image-view.test.tsx --max-warnings=0` — PASS (0 warnings).
+- `npx tsc --noEmit` — PASS.
+- `npm run test:ui:media:image` — PASS (3 files / 43 tests).
+- `npm run verify:model-aware-recipes` — PASS.
+- Live `POST https://api.venice.ai/api/v1/image/generate` with the `.env` `VENICE_API_KEY` — `402` DIEM spend-limit (not a 500 reproduction). Electron inspector traffic used a different funded key.
+- Hosted CI / CodeQL / manual Image Studio QA against `wai-Illustrious` — not run.
 
 ### 2026-09-01 — Branch/PR consolidation, CI repair, and CodeQL alert remediation
 
@@ -995,3 +1137,9 @@ Investigation only, then four targeted fixes based on the user-reported defects
   - `npx vitest run ...` (11 test files) — PASS (323 tests).
 - **Result:** Improved application security boundaries (Meteocon XSS defense, CSPRNG IDs), increased performance on RP character lookups and workflow validations, and cleaned up deprecated internals. 
 - **Blockers / deferred work:** Full matrix and packaged CI will run in the upcoming publish PR/commit.
+
+### 2026-09-01 — Remove non-compliant traffic logs
+
+- **Scope:** Repository hygiene enforcement.
+- **Action:** Deleted `docs/audits/TODO/venice_forge_traffic_logs_1788307814290.json` (~14.6 MB) upon user confirmation.
+- **Reason:** The file contained raw base64 PNG payloads and complete provider HTTP responses, violating `AGENTS.md` Rule 6 (Secrets, Privacy, and Diagnostics) prohibiting the storage of raw generated binary bytes and complete provider responses.

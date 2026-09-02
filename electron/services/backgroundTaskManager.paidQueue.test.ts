@@ -8,7 +8,8 @@ import {
 } from './backgroundTaskManager';
 import { performVeniceRequest } from './veniceClient';
 
-vi.mock('./veniceClient', () => ({
+vi.mock('./veniceClient', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('./veniceClient')>()),
   performVeniceRequest: vi.fn(),
 }));
 
@@ -123,6 +124,38 @@ describe('Main-Process Paid Queue Submission & Recovery', () => {
     // No background task was stored
     const managerState = __getBackgroundTaskManagerStateForTests();
     expect(Object.keys(managerState.tasks)).toHaveLength(0);
+  });
+
+  it('returns upstream string details when a paid queue request fails', async () => {
+    vi.mocked(performVeniceRequest).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      statusText: 'Internal Server Error',
+      headers: { 'content-type': 'application/json' },
+      body: {
+        error: 'Video generation failed (status: 500)',
+        details: 'Upstream processing returned an empty result.',
+      },
+      contentType: 'application/json',
+    });
+
+    const result = await submitPaidQueueTaskInMain({
+      operation: 'video',
+      profileId: 'default',
+      wirePayload: {
+        model: 'video-model',
+        prompt: 'a lighthouse',
+        duration: '5s',
+      },
+      logicalRequestHash: 'video-sha256:'.concat('a'.repeat(64)),
+    });
+
+    expect(result).toMatchObject({
+      ok: false,
+      error:
+        'Video generation failed (status: 500): Upstream processing returned an empty result.',
+    });
+    expect(Object.keys(__getBackgroundTaskManagerStateForTests().tasks)).toHaveLength(0);
   });
 
   it('recovers pending_finalize tasks to queued state upon restart initialization', async () => {

@@ -120,12 +120,17 @@ describe("normalizeImageDraft", () => {
     expect(high.steps).toBe(50);
   });
 
-  /** Verifies that cfg is clamped to [1, 20]. */
+  /** Verifies that cfg is clamped to [1, 20] when supplied. */
   it("clamps cfg to [1, 20]", () => {
     const low = normalizeImageDraft({ prompt: "test", cfg: -5 });
     expect(low.cfg).toBe(1);
     const high = normalizeImageDraft({ prompt: "test", cfg: 99 });
     expect(high.cfg).toBe(20);
+  });
+
+  it("leaves cfg undefined when the caller omits it", () => {
+    const result = normalizeImageDraft({ prompt: "test" });
+    expect(result.cfg).toBeUndefined();
   });
 
   /** Verifies that imageCount is clamped to the spec's [1, 4] range. */
@@ -204,7 +209,29 @@ describe("buildImagePayload", () => {
     expect(payload.width).toBe(64);
     expect(payload.height).toBe(64);
     expect(payload.steps).toBe(1);
-    expect(payload.cfg_scale).toBe(1);
+    expect(payload).not.toHaveProperty("cfg_scale");
+  });
+
+  it("omits cfg_scale when the caller does not supply cfg", () => {
+    const payload = buildImagePayload("wai-Illustrious", {
+      prompt: "a puppy",
+      width: 1024,
+      height: 1024,
+      steps: 25,
+    });
+    expect(payload).not.toHaveProperty("cfg_scale");
+    expect(payload.steps).toBe(25);
+    expect(payload.model).toBe("wai-Illustrious");
+  });
+
+  it("emits cfg_scale only when the caller supplies a finite cfg", () => {
+    const payload = buildImagePayload("wai-Illustrious", {
+      prompt: "a puppy",
+      width: 1024,
+      height: 1024,
+      cfg: 7.5,
+    });
+    expect(payload.cfg_scale).toBe(7.5);
   });
 
   /** When the caller provides an aspect_ratio, the builder must NOT also

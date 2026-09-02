@@ -21,7 +21,7 @@ import {
 } from "../../src/types/background-task";
 import { sanitizeErrorText } from "../../src/shared/redaction";
 import { MUSIC_SAFE_ERROR_MESSAGES, toUserFacingMusicError, toUserFacingVideoError } from "../../src/services/task-errors";
-import { performVeniceRequest } from "./veniceClient";
+import { performVeniceRequest, readResponseError } from "./veniceClient";
 import { performGuardedVeniceRequest } from "./guardPipeline";
 import { computePayloadHash } from "../../src/shared/venice-media-contract/payload-hash";
 import { identifyAndValidateGeneratedMedia } from "../../src/shared/safety/mediaScreener";
@@ -967,12 +967,7 @@ export async function submitPaidQueueTaskInMain(input: PaidQueueSubmissionInput)
       }
 
       if (response.status < 200 || response.status >= 300) {
-        const errBody = response.body as Record<string, unknown> | undefined;
-        const msg = typeof errBody?.error === 'string'
-          ? errBody.error
-          : (typeof (errBody?.error as { message?: unknown })?.message === 'string'
-            ? String((errBody?.error as { message: unknown }).message)
-            : `Queue request failed (${response.status})`);
+        const msg = readResponseError(response);
         // Provider did not accept a billable job — clean up the intent.
         delete state.tasks[intentTask.id];
         void flushPersist();

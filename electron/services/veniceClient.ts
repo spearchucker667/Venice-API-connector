@@ -674,9 +674,18 @@ export function readResponseError(response: VeniceIpcResponse): string {
     error && typeof error === "object" && "message" in error
       ? (error as { message?: unknown }).message
       : error || body.message;
-  if (top) return typeof top === "object" ? JSON.stringify(top) : String(top);
+  if (top) {
+    const primary = typeof top === "object" ? JSON.stringify(top) : String(top);
+    const details = body.details;
+    if (typeof details === "string") {
+      const detail = details.trim();
+      if (detail && !primary.includes(detail)) return `${primary}: ${detail}`;
+    }
+    return primary;
+  }
   // Venice DetailedError (Zod): { details: { _errors?: string[], field?: { _errors: string[] } } }
   const details = body.details;
+  if (typeof details === "string" && details.trim()) return details.trim();
   if (details && typeof details === "object") {
     const detailRecord = details as Record<string, unknown>;
     if (Array.isArray(detailRecord._errors) && detailRecord._errors.length) return String(detailRecord._errors[0]);

@@ -244,7 +244,7 @@ export function ImageView() {
   const [style, setStyle] = useState("");
   const [styleReferences, setStyleReferences] = useState<StyleReferenceInput[]>([]);
   const [steps, setSteps] = useState(defaultSteps);
-  const [cfgScale, setCfgScale] = useState(1);
+  const [cfgScale, setCfgScale] = useState<number | undefined>(undefined);
   const [variants, setVariants] = useState(1);
   const [hideWatermark] = useState(true);
   const [images, setImages] = useState<string[]>([]);
@@ -348,16 +348,17 @@ export function ImageView() {
       setResolution("");
     }
     setQuality(dimOptions.defaultQuality ?? "");
-    if (defaultSteps && steps === 0) setSteps(defaultSteps);
   }, [
     caps,
     dimOptions,
     hasAspectRatios,
     aspectOptions,
     resolutionOptions,
-    defaultSteps,
-    steps,
   ]);
+
+  useEffect(() => {
+    setSteps(defaultSteps);
+  }, [model, defaultSteps]);
 
   useEffect(() => {
     setStyleReferences([]);
@@ -797,7 +798,7 @@ export function ImageView() {
         quality: dimOptions.qualities?.length
           ? quality || undefined
           : undefined,
-        steps,
+        steps: Math.min(maxSteps, Math.max(1, steps)),
         cfg: cfgScale,
         style: style || undefined,
         safeMode: veniceApiSafeMode,
@@ -821,7 +822,7 @@ export function ImageView() {
       prompt: string;
       model: string;
       steps: number;
-      cfg_scale: number;
+      cfg_scale?: number;
       hide_watermark: boolean;
       return_binary: boolean;
     };
@@ -1577,28 +1578,30 @@ export function ImageView() {
           />
         </div>
       )}
-      <div>
-        <div className="flex justify-between">
-          <Label htmlFor={variantsId}>
-            <Trans i18nKey="common:surface.componentsImageImageView.text.variants" />
-          </Label>
-          <output htmlFor={variantsId} className="text-xs text-text-secondary">
-            {variants}
-          </output>
+      {caps.supportsVariants && (
+        <div>
+          <div className="flex justify-between">
+            <Label htmlFor={variantsId}>
+              <Trans i18nKey="common:surface.componentsImageImageView.text.variants" />
+            </Label>
+            <output htmlFor={variantsId} className="text-xs text-text-secondary">
+              {variants}
+            </output>
+          </div>
+          <input
+            id={variantsId}
+            type="range"
+            min={1}
+            max={4}
+            value={variants}
+            onChange={(e) => setVariants(Number(e.target.value))}
+            className="w-full"
+            aria-valuetext={t("imageStudioRuntime.variantsValue", {
+              count: variants,
+            })}
+          />
         </div>
-        <input
-          id={variantsId}
-          type="range"
-          min={1}
-          max={4}
-          value={variants}
-          onChange={(e) => setVariants(Number(e.target.value))}
-          className="w-full"
-          aria-valuetext={t("imageStudioRuntime.variantsValue", {
-            count: variants,
-          })}
-        />
-      </div>
+      )}
 
       <PrimaryButton
         onClick={handleGenerate}

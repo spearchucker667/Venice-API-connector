@@ -48,6 +48,15 @@ describe('VeniceClient Errors', () => {
     it('should handle complex nested error objects', () => {
        expect(readDesktopErrorBody({ error: { foo: 'bar' } })).toBe('{"foo":"bar"}');
     });
+
+    it('appends Venice string details for upstream inference failures', () => {
+      expect(readDesktopErrorBody({
+        error: 'Image generation failed (status: 500)',
+        details: 'Data is empty. Likely caused by upstream processing issue.',
+      })).toBe(
+        'Image generation failed (status: 500): Data is empty. Likely caused by upstream processing issue.',
+      );
+    });
   });
 
   describe('readWebErrorBody', () => {
@@ -59,6 +68,15 @@ describe('VeniceClient Errors', () => {
     });
     it('should handle validation details', () => {
       expect(readWebErrorBody({ details: { field2: { _errors: ['Web field validation'] } } }, '', '')).toBe('field2: Web field validation');
+    });
+
+    it('appends Venice string details for upstream inference failures', () => {
+      expect(readWebErrorBody({
+        error: 'Image generation failed (status: 500)',
+        details: 'Data is empty. Likely caused by upstream processing issue.',
+      }, '', '')).toBe(
+        'Image generation failed (status: 500): Data is empty. Likely caused by upstream processing issue.',
+      );
     });
   });
 

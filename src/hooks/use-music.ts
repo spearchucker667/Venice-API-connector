@@ -5,6 +5,7 @@ import { veniceFetch } from '../services/veniceClient/fetch'
 import type { MusicQueueRequest, MusicQueueResponse } from '../types/venice'
 import { useBackgroundTaskStore } from '../stores/background-task-store'
 import { MUSIC_SAFE_ERROR_MESSAGES, toUserFacingMusicError } from '../services/task-errors'
+import { buildLogicalRequestFingerprint } from '../shared/logicalRequestFingerprint'
 
 const QUEUE_TIMEOUT_MS = 30000
 
@@ -45,16 +46,9 @@ export function useMusic() {
       // the task before dispatching to the provider, closing the crash window.
       if (isElectron()) {
         const { desktopBackgroundTask } = await import('../services/desktopBridge')
-        // Build a stable logical request fingerprint before crossing IPC
-        // for main-process deduplication across retries and restarts.
-        const fingerprint = JSON.stringify({
-          model: req.model,
-          prompt: String(req.prompt || '').slice(0, 200),
-          duration_seconds: req.duration_seconds ?? '',
-          force_instrumental: req.force_instrumental ?? false,
-          lyrics_prompt: String(req.lyrics_prompt || '').slice(0, 200),
-        })
-        const logicalRequestHash = `audio-${btoa(fingerprint).slice(0, 200)}`
+        // Hash the complete canonical payload so Unicode prompts work and the
+        // durable request journal never contains reversible prompt/lyrics text.
+        const logicalRequestHash = await buildLogicalRequestFingerprint('audio', req)
         const submitRes = await desktopBackgroundTask.submitPaidQueue({
           operation: 'audio',
           wirePayload: req as unknown as Record<string, unknown>,

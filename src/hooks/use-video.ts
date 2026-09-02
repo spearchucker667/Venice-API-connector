@@ -5,6 +5,7 @@ import { veniceFetch } from '../services/veniceClient/fetch'
 import type { VideoQueueRequest, VideoQueueResponse } from '../types/venice'
 import { useBackgroundTaskStore } from '../stores/background-task-store'
 import { toUserFacingVideoError } from '../services/task-errors'
+import { buildLogicalRequestFingerprint } from '../shared/logicalRequestFingerprint'
 
 /** 120 s matches the main-process generation timeout and original specification. */
 const QUEUE_TIMEOUT_MS = 120_000
@@ -48,19 +49,9 @@ export function useVideo() {
       // registering the task locally.
       if (isElectron()) {
         const { desktopBackgroundTask } = await import('../services/desktopBridge')
-        // Build a stable logical request fingerprint before crossing IPC.
-        // This allows the main process to deduplicate across retries and
-        // restarts via the journaled requestFingerprint + payloadHash fields.
-        // Model + prompt + dimensions uniquely identify a video generation
-        // request; identical params produce the same fingerprint.
-        const fingerprint = JSON.stringify({
-          model: req.model,
-          prompt: String(req.prompt || '').slice(0, 200),
-          duration: req.duration ?? '',
-          resolution: req.resolution ?? '',
-          aspect_ratio: req.aspect_ratio ?? '',
-        })
-        const logicalRequestHash = `video-${btoa(fingerprint).slice(0, 200)}`
+        // Hash the complete canonical payload so Unicode prompts work and the
+        // durable request journal never contains reversible prompt text.
+        const logicalRequestHash = await buildLogicalRequestFingerprint('video', req)
         const submitRes = await desktopBackgroundTask.submitPaidQueue({
           operation: 'video',
           wirePayload: req as unknown as Record<string, unknown>,

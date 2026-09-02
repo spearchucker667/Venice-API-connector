@@ -248,6 +248,36 @@ const IMAGE_MODEL_CAPABILITIES: ImageModelCapabilities[] = [
     patternMatch: /^hidream/i,
   },
   {
+    modelId: "wai-Illustrious",
+    // i18n-allow-next-line: provider-defined model display name
+    label: "Anime (WAI)",
+    operation: "text-to-image",
+    dimensionMode: "widthHeight",
+    widthHeightOptions: SD_WIDTH_HEIGHT_PAIRS,
+    defaultDimensions: { width: 1024, height: 1024 },
+    supportsNegativePrompt: true,
+    supportsSeed: true,
+    supportsVariants: true,
+    supportsReferences: false,
+    referenceLimit: 0,
+    patternMatch: /^wai/i,
+  },
+  {
+    modelId: "lustify",
+    // i18n-allow-next-line: provider-defined model display name
+    label: "Lustify",
+    operation: "text-to-image",
+    dimensionMode: "widthHeight",
+    widthHeightOptions: SD_WIDTH_HEIGHT_PAIRS,
+    defaultDimensions: { width: 1024, height: 1024 },
+    supportsNegativePrompt: true,
+    supportsSeed: true,
+    supportsVariants: true,
+    supportsReferences: false,
+    referenceLimit: 0,
+    patternMatch: /^lustify/i,
+  },
+  {
     modelId: "sdxl",
     // i18n-allow-next-line: provider-defined model display name
     label: "SDXL",

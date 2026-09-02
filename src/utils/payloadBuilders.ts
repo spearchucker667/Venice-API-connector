@@ -298,6 +298,14 @@ function clampFloat(value: unknown, min: number, max: number): number {
   return Math.max(min, Math.min(max, n));
 }
 
+/** Returns a clamped CFG only when the caller supplied a finite number. */
+function optionalClampedCfg(value: unknown): number | undefined {
+  if (value === undefined || value === null || value === "") return undefined;
+  const n = Number(value);
+  if (!Number.isFinite(n)) return undefined;
+  return clampFloat(n, 1, 20);
+}
+
 /** Round a dimension to the nearest valid multiple (64px for most SD pipelines).
  *  Capped at 1280 per the Venice swagger `GenerateImageRequest`. */
 function clampDimension(value: unknown): number {
@@ -340,7 +348,8 @@ export function normalizeImageDraft(draft: ImageDraftLike): ImageDraftLike {
     resolution: resolution || undefined,
     quality,
     steps: clampInt(draft.steps, 1, 50),
-    cfg: clampFloat(draft.cfg, 1, 20),
+    // Omit CFG when unset so Venice uses the model-dependent default.
+    cfg: optionalClampedCfg(draft.cfg),
     style: draft.style ?? "",
     safeMode: !!draft.safeMode,
     disableWatermark: !!draft.disableWatermark,
@@ -384,7 +393,6 @@ export function buildImagePayload(
     model,
     prompt: (promptOverride ?? normalized.prompt).trim(),
     steps: normalized.steps,
-    cfg_scale: normalized.cfg,
     hide_watermark: normalized.disableWatermark,
     return_binary: false,
     format: "png",
@@ -418,6 +426,10 @@ export function buildImagePayload(
   // (image-view) reads the live capability contract via
   // `getImageModelCapabilities` and forwards each flag so the form and
   // the network boundary agree.
+  if (typeof normalized.cfg === "number" && Number.isFinite(normalized.cfg)) {
+    payload.cfg_scale = normalized.cfg;
+  }
+
   if (draft.supportsSteps === false) delete payload.steps;
   if (draft.supportsCfgScale === false) delete payload.cfg_scale;
   if (draft.supportsHideWatermark === false) delete payload.hide_watermark;

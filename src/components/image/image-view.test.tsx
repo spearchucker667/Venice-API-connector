@@ -166,6 +166,118 @@ describe("ImageView model-aware payloads", () => {
     expect(request.height).toBeUndefined();
     expect(request.format).toBe("png");
     expect(request).not.toHaveProperty("output_format");
+    expect(request).not.toHaveProperty("cfg_scale");
+  });
+
+  it("shows the variants control for wai-Illustrious and emits variants when count > 1", () => {
+    modelsDataMock.mockReturnValue([
+      {
+        id: "wai-Illustrious",
+        model_spec: {
+          constraints: {
+            promptCharacterLimit: 1500,
+            steps: { default: 25, max: 30 },
+            widthHeightDivisor: 16,
+          },
+        },
+      },
+    ]);
+    useSettingsStore.setState((state) => ({
+      ...state,
+      selectedModels: { ...state.selectedModels, image: "wai-Illustrious" },
+    }));
+
+    render(<ImageView />);
+
+    const variantsSlider = screen.getByRole("slider", { name: /variants/i });
+    fireEvent.change(variantsSlider, { target: { value: "4" } });
+    fireEvent.change(
+      screen.getByPlaceholderText(/serene mountain landscape/i),
+      { target: { value: "a puppy" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Generate" }));
+
+    const request = mutate.mock.calls[0]?.[0] as Record<string, unknown>;
+    expect(request).toMatchObject({
+      model: "wai-Illustrious",
+      prompt: "a puppy",
+      variants: 4,
+      width: 1024,
+      height: 1024,
+    });
+    expect(request).not.toHaveProperty("cfg_scale");
+    expect(request.steps).toBe(25);
+  });
+
+  it("applies live steps.default when switching to wai-Illustrious", () => {
+    modelsDataMock.mockReturnValue([
+      {
+        id: "lustify-sdxl",
+        model_spec: {
+          constraints: {
+            steps: { default: 20, max: 50 },
+            widthHeightDivisor: 8,
+          },
+        },
+      },
+      {
+        id: "wai-Illustrious",
+        model_spec: {
+          constraints: {
+            promptCharacterLimit: 1500,
+            steps: { default: 25, max: 30 },
+            widthHeightDivisor: 16,
+          },
+        },
+      },
+    ]);
+    useSettingsStore.setState((state) => ({
+      ...state,
+      selectedModels: { ...state.selectedModels, image: "lustify-sdxl" },
+    }));
+
+    const { rerender } = render(<ImageView />);
+    expect(screen.getByRole("slider", { name: /^steps$/i })).toHaveValue("20");
+
+    useSettingsStore.setState((state) => ({
+      ...state,
+      selectedModels: { ...state.selectedModels, image: "wai-Illustrious" },
+    }));
+    rerender(<ImageView />);
+
+    expect(screen.getByRole("slider", { name: /^steps$/i })).toHaveValue("25");
+    fireEvent.change(
+      screen.getByPlaceholderText(/serene mountain landscape/i),
+      { target: { value: "a cat" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Generate" }));
+    expect(mutate.mock.calls[0]?.[0]).toMatchObject({
+      model: "wai-Illustrious",
+      steps: 25,
+    });
+  });
+
+  it("hides variants and omits the field when capabilities disable them", () => {
+    const originalGetCapabilities = imageCapabilities.getImageModelCapabilities;
+    vi.spyOn(imageCapabilities, "getImageModelCapabilities").mockImplementation(
+      (modelId) => ({
+        ...originalGetCapabilities(modelId),
+        supportsVariants: false,
+      }),
+    );
+
+    render(<ImageView />);
+
+    expect(
+      screen.queryByRole("slider", { name: /variants/i }),
+    ).not.toBeInTheDocument();
+    fireEvent.change(
+      screen.getByPlaceholderText(/serene mountain landscape/i),
+      { target: { value: "A copper city at dusk" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Generate" }));
+
+    expect(mutate.mock.calls[0]?.[0]).not.toHaveProperty("variants");
   });
 
   it("shows runtime-supported style references and serializes the selected image", async () => {

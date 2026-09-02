@@ -42,6 +42,13 @@ describe("buildImagePayload — model-aware sanitization (VERIFY-043)", () => {
     expect(payload).not.toHaveProperty("cfg_scale");
   });
 
+  it("omits cfg_scale when cfg is unset even if supportsCfgScale is undefined", () => {
+    const payload = buildImagePayload("wai-Illustrious", {
+      prompt: "A copper city at dusk",
+    });
+    expect(payload).not.toHaveProperty("cfg_scale");
+  });
+
   it("omits the seed key when supportsSeed is false", () => {
     const payload = buildImagePayload("flux-dev", {
       prompt: "A copper city at dusk",

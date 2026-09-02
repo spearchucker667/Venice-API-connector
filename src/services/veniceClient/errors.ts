@@ -24,6 +24,14 @@ export class VeniceAPIError extends Error {
  * @param rawMessage The original error message.
  * @returns A formatted error string combining the status and message.
  */
+/** Appends Venice's string `details` field when it adds new information. */
+function withStringDetails(primary: string, details: unknown): string {
+  if (typeof details !== "string") return primary;
+  const detail = details.trim();
+  if (!detail || primary.includes(detail)) return primary;
+  return `${primary}: ${detail}`;
+}
+
 export function normalizeError(status: number | null, rawMessage: string) {
   const base = rawMessage || "Request failed";
   const map: Record<number, string> = {
@@ -63,15 +71,16 @@ export function readDesktopErrorBody(body: unknown): string {
             return "Malformed API error object";
           }
         }
-        return str;
+        return withStringDetails(str, record.details);
       } catch {
         return "[unserializable error]";
       }
     }
-    return String(top);
+    return withStringDetails(String(top), record.details);
   }
 
   const details = record.details;
+  if (typeof details === "string" && details.trim()) return details.trim();
   if (details && typeof details === "object") {
     const detailsRec = details as Record<string, unknown>;
     if (Array.isArray(detailsRec._errors) && detailsRec._errors.length) return String(detailsRec._errors[0]);
@@ -110,15 +119,16 @@ export function readWebErrorBody(parsed: unknown, text: string, statusText: stri
             return "Malformed API error object";
           }
         }
-        return str;
+        return withStringDetails(str, record.details);
       } catch {
         return "[unserializable error]";
       }
     }
-    return String(top);
+    return withStringDetails(String(top), record.details);
   }
 
   const details = record.details;
+  if (typeof details === "string" && details.trim()) return details.trim();
   if (details && typeof details === "object") {
     const detailsRec = details as Record<string, unknown>;
     if (Array.isArray(detailsRec._errors) && detailsRec._errors.length) return String(detailsRec._errors[0]);
@@ -149,14 +159,15 @@ export function readVeniceErrorBody(body: unknown): string {
       try {
         const str = JSON.stringify(top);
         if (str === "{}" || str === "[]") return String(top);
-        return str;
+        return withStringDetails(str, record.details);
       } catch {
         return "[unserializable error]";
       }
     }
-    return String(top);
+    return withStringDetails(String(top), record.details);
   }
   const details = record.details;
+  if (typeof details === "string" && details.trim()) return details.trim();
   if (details && typeof details === "object") {
     const detailsRec = details as Record<string, unknown>;
     if (Array.isArray(detailsRec._errors) && detailsRec._errors.length) return String(detailsRec._errors[0]);

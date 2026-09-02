@@ -26,6 +26,20 @@ describe('readResponseError', () => {
     expect(readResponseError(response)).toBe('Simple error');
   });
 
+  it('appends a distinct upstream string details message', () => {
+    const response = {
+      body: {
+        error: 'Image generation failed (status: 500)',
+        details: 'Data is empty. Likely caused by upstream processing issue.',
+      },
+      statusText: 'Internal Server Error',
+      status: 500,
+    } as any;
+    expect(readResponseError(response)).toBe(
+      'Image generation failed (status: 500): Data is empty. Likely caused by upstream processing issue.',
+    );
+  });
+
   /** Stringifies object error messages to avoid "[object Object]" output. */
   it('stringifies object error message (Bug 3 Fix)', () => {
     const response = {

@@ -49,6 +49,20 @@ describe("getImageModelCapabilities", () => {
     expect(caps.qualities?.length).toBeGreaterThan(0);
     expect(caps.supportsVariants).toBe(true);
   });
+
+  it("registers Venice canonical Anime (WAI) id wai-Illustrious", () => {
+    const caps = getImageModelCapabilities("wai-Illustrious");
+    expect(caps.modelId).toBe("wai-Illustrious");
+    expect(caps.operation).toBe("text-to-image");
+    expect(caps.dimensionMode).toBe("widthHeight");
+    expect(caps.supportsVariants).toBe(true);
+  });
+
+  it("Lustify generate models support variants", () => {
+    for (const id of ["lustify", "lustify-sdxl", "lustify-v7", "lustify-v8"]) {
+      expect(getImageModelCapabilities(id).supportsVariants).toBe(true);
+    }
+  });
 });
 
 describe("buildDimensionOptions — widthHeight fallback", () => {
