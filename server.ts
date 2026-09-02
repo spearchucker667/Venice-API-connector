@@ -535,7 +535,7 @@ export function createServerApp() {
   // the upstream are gated on key presence.
   app.use("/api/venice", (req, res, next) => {
     if (!AppConfig.VENICE_API_KEY && !isDevSessionConfigured(devSessionVeniceApiKey) && AppConfig.NODE_ENV !== "test") {
-      return res.status(500).json({ error: "VENICE_API_KEY is not configured on the server." });
+      return res.status(401).json({ error: "VENICE_API_KEY is not configured on the server." });
     }
     next();
   });
@@ -990,7 +990,7 @@ export function createServerApp() {
         return res.status(504).json({ error: "Request timed out" });
       }
       error("Jina proxy error:", err);
-      return res.status(500).json({ error: "Jina request failed" });
+      return res.status(502).json({ error: "Jina request failed" });
     }
   });
 
@@ -1166,7 +1166,7 @@ export function createServerApp() {
         return res.status(504).json({ error: "Request timed out" });
       }
       error("Scrape proxy error:", err);
-      return res.status(500).json({ error: "Scrape failed" });
+      return res.status(502).json({ error: "Scrape failed" });
     }
   });
 

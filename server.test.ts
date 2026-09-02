@@ -696,7 +696,7 @@ describe("server.ts Jina proxy error handling", () => {
     globalThis.fetch = originalFetch;
   });
 
-  it("returns 500 with a generic message for unexpected fetch errors", async () => {
+  it("returns 502 with a generic message for unexpected fetch errors", async () => {
     globalThis.fetch = vi.fn(async () => {
       throw new Error("detailed internal failure that must not leak");
     }) as unknown as typeof globalThis.fetch;
@@ -706,7 +706,7 @@ describe("server.ts Jina proxy error handling", () => {
       .set("X-Venice-Forge-Family-Safe-Mode", "false")
       .send({ url: "https://r.jina.ai/https://example.com" });
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(502);
     expect(response.body.error).toBe("Jina request failed");
     expect(response.body.error).not.toMatch(/detailed internal failure/i);
   });
@@ -1258,7 +1258,7 @@ describe("server.ts scrape proxy error handling", () => {
         .set("X-Venice-Forge-Family-Safe-Mode", "false")
         .send({ url: "https://public.example.com" });
 
-      expect(response.status).toBe(500);
+      expect(response.status).toBe(502);
       expect(response.body.error).toMatch(/Scrape failed|Content-Type not allowed/i);
     });
   });
