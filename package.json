@@ -18,11 +18,13 @@
     "url": "https://github.com/spearchucker667/Venice_Forge/issues"
   },
   "overrides": {
+    "@xmldom/xmldom": "^0.8.15",
     "esbuild": "^0.28.1",
-    "fast-uri": "^3.1.5",
+    "fast-uri": "^3.1.6",
     "js-yaml": "^4.3.1",
     "nanoid": "^3.3.18",
     "postcss": "^8.5.26",
+    "qs": "^6.16.0",
     "shell-quote": "^1.9.0",
     "undici": "^7.29.0"
   },
