@@ -153,7 +153,7 @@ function maybeAutoReadAssistantMessage(
           .map((p) => p.text)
           .join("\n");
   if (!textToRead.trim()) return;
-  chatTtsController.play(lastMsg.id, textToRead).catch((err: unknown) => {
+  chatTtsController.play(lastMsg.id, textToRead, { isAutoRead: true }).catch((err: unknown) => {
     logger.error("auto-read assistant message failed", err);
   });
 }

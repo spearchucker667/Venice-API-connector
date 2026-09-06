@@ -26,6 +26,22 @@ function createNode(entry: WorkspaceEntry): TreeNode {
   };
 }
 
+function updateNode(rootNode: TreeNode, relativePath: string, updater: (node: TreeNode) => TreeNode): TreeNode {
+  if (rootNode.relativePath === relativePath) {
+    return updater(rootNode);
+  }
+  let changed = false;
+  const newChildren = rootNode.children.map(child => {
+    const newChild = updateNode(child, relativePath, updater);
+    if (newChild !== child) changed = true;
+    return newChild;
+  });
+  if (changed) {
+    return { ...rootNode, children: newChildren };
+  }
+  return rootNode;
+}
+
 interface WorkspaceTreeProps {
   workspaceGrant: WorkspaceGrantView;
   agentSessionId: string;
@@ -74,18 +90,16 @@ export function WorkspaceTree({
   );
 
   const appendPage = useCallback(
-    async (relativeDirectory: string) => {
-      let currentOffset = 0;
+    async (relativeDirectory: string, startingOffset: number = 0) => {
+      let currentOffset = startingOffset;
 
-      setRoot((prev) => {
-        const snapshot = { ...prev };
-        const node = findNode(snapshot, relativeDirectory);
-        if (!node || node.kind !== "directory") return prev;
-        currentOffset = node.nextOffset ?? 0;
-        node.loading = true;
-        node.error = null;
-        return snapshot;
-      });
+      setRoot((prev) =>
+        updateNode(prev, relativeDirectory, (n) => ({
+          ...n,
+          loading: true,
+          error: null,
+        }))
+      );
 
       try {
         let hasMore = true;
@@ -96,30 +110,33 @@ export function WorkspaceTree({
             relativeDirectory,
             currentOffset,
           );
-          setRoot((prev) => {
-            const nextSnapshot = { ...prev };
-            const target = findNode(nextSnapshot, relativeDirectory);
-            if (!target || target.kind !== "directory") return prev;
-            target.children = [...target.children, ...entries.map(createNode)];
-            target.nextOffset = nextOffset;
-            target.loading = false;
-            target.error = null;
-            return nextSnapshot;
-          });
+          setRoot((prev) =>
+            updateNode(prev, relativeDirectory, (target) => {
+              if (target.kind !== "directory") return target;
+              return {
+                ...target,
+                children: [...target.children, ...entries.map(createNode)],
+                nextOffset,
+                loading: false,
+                error: null,
+              };
+            })
+          );
           hasMore = nextOffset !== null;
           currentOffset = nextOffset ?? currentOffset;
         }
       } catch (error) {
-        setRoot((prev) => {
-          const nextSnapshot = { ...prev };
-          const target = findNode(nextSnapshot, relativeDirectory);
-          if (target && target.kind === "directory") {
-            target.loading = false;
-            target.error =
-              error instanceof Error ? error.message : "Workspace list failed.";
-          }
-          return nextSnapshot;
-        });
+        setRoot((prev) =>
+          updateNode(prev, relativeDirectory, (target) => {
+            if (target.kind !== "directory") return target;
+            return {
+              ...target,
+              loading: false,
+              error:
+                error instanceof Error ? error.message : "Workspace list failed.",
+            };
+          })
+        );
       }
     },
     [loadDirectory],
@@ -135,19 +152,31 @@ export function WorkspaceTree({
       children: [],
       nextOffset: null,
     });
-    void appendPage("");
+    void appendPage("", 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceGrant.id, agentSessionId, refreshToken]);
 
   const toggleDirectory = useCallback(
     (relativePath: string) => {
-      const snapshot = { ...root };
-      const node = findNode(snapshot, relativePath);
-      if (!node || node.kind !== "directory") return;
-      node.expanded = !node.expanded;
-      setRoot(snapshot);
-      if (node.expanded && node.children.length === 0 && !node.loading) {
-        void appendPage(relativePath);
+      let needsLoad = false;
+      let nextOffset = 0;
+
+      const node = findNode(root, relativePath);
+      if (node && node.kind === "directory") {
+        const expanded = !node.expanded;
+        needsLoad = expanded && node.children.length === 0 && !node.loading;
+        nextOffset = node.nextOffset ?? 0;
+      }
+
+      setRoot((prev) =>
+        updateNode(prev, relativePath, (n) => {
+          if (n.kind !== "directory") return n;
+          return { ...n, expanded: !n.expanded };
+        })
+      );
+
+      if (needsLoad) {
+        void appendPage(relativePath, nextOffset);
       }
     },
     [appendPage, root],

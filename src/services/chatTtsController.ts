@@ -39,7 +39,7 @@ class ChatTtsControllerImpl {
     return this.currentMessageId;
   }
 
-  public async play(messageId: string, text: string) {
+  public async play(messageId: string, text: string, options?: { isAutoRead?: boolean }) {
     // Resume if already cached and paused for this message
     if (
       this.currentMessageId === messageId &&
@@ -51,13 +51,17 @@ class ChatTtsControllerImpl {
         this.state = "playing";
         this.notify();
       } catch (err) {
-        toast.fromError(
-          err,
-          translateRuntime(
-            "runtimeGenerated.services.chatttscontroller.notification.ttsPlaybackFailed",
-            "TTS playback failed",
-          ),
-        );
+        if (!options?.isAutoRead) {
+          toast.fromError(
+            err,
+            translateRuntime(
+              "runtimeGenerated.services.chatttscontroller.notification.ttsPlaybackFailed",
+              "TTS playback failed",
+            ),
+          );
+        } else {
+          console.error("Auto-read TTS playback failed", err);
+        }
         this.stop();
       }
       return;
@@ -67,12 +71,14 @@ class ChatTtsControllerImpl {
     const requestToken = ++this.requestToken;
 
     if (!text || !text.trim()) {
-      toast.warn(
-        translateRuntime(
-          "runtimeGenerated.services.chatttscontroller.notification.noTextToSpeakInThisMessage",
-          "No text to speak in this message.",
-        ),
-      );
+      if (!options?.isAutoRead) {
+        toast.warn(
+          translateRuntime(
+            "runtimeGenerated.services.chatttscontroller.notification.noTextToSpeakInThisMessage",
+            "No text to speak in this message.",
+          ),
+        );
+      }
       return;
     }
 
@@ -94,12 +100,14 @@ class ChatTtsControllerImpl {
     textToRead = textToRead.trim();
 
     if (!textToRead) {
-      toast.warn(
-        translateRuntime(
-          "runtimeGenerated.services.chatttscontroller.notification.noSpeakableTextRemainingInMessage",
-          "No speakable text remaining in message.",
-        ),
-      );
+      if (!options?.isAutoRead) {
+        toast.warn(
+          translateRuntime(
+            "runtimeGenerated.services.chatttscontroller.notification.noSpeakableTextRemainingInMessage",
+            "No speakable text remaining in message.",
+          ),
+        );
+      }
       this.stop();
       return;
     }
@@ -190,12 +198,14 @@ class ChatTtsControllerImpl {
       audio.onerror = (e) => {
         console.error("TTS playback error", e);
         if (this.audio === audio) {
-          toast.error(
-            translateRuntime(
-              "runtimeGenerated.services.chatttscontroller.notification.ttsPlaybackErrorUnableToLoadAudioElement",
-              "TTS playback error: unable to load audio element.",
-            ),
-          );
+          if (!options?.isAutoRead) {
+            toast.error(
+              translateRuntime(
+                "runtimeGenerated.services.chatttscontroller.notification.ttsPlaybackErrorUnableToLoadAudioElement",
+                "TTS playback error: unable to load audio element.",
+              ),
+            );
+          }
           this.stop();
         }
       };
@@ -219,13 +229,15 @@ class ChatTtsControllerImpl {
       }
     } catch (err) {
       console.error("TTS error", err);
-      toast.error(
-        translateRuntime(
-          "runtimeGenerated.services.chatttscontroller.notification.ttsFailed",
-          "TTS Failed",
-        ),
-        redactErrorMessage(err),
-      );
+      if (!options?.isAutoRead) {
+        toast.error(
+          translateRuntime(
+            "runtimeGenerated.services.chatttscontroller.notification.ttsFailed",
+            "TTS Failed",
+          ),
+          redactErrorMessage(err),
+        );
+      }
       this.stop();
     }
   }
